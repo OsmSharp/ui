@@ -93,8 +93,6 @@ namespace OsmSharp.Osm.Xml
 
                 XmlReader reader = _source.GetReader();
                 _osmObject = xmlSerializer.Deserialize(reader);
-
-                reader.Close();
             }
         }
 
@@ -108,7 +106,6 @@ namespace OsmSharp.Osm.Xml
                 XmlWriter writer = _source.GetWriter();
                 xmlSerializer.Serialize(writer,_osmObject);
                 writer.Flush();
-                writer.Close();
 
                 xmlSerializer = null;
                 writer = null;

@@ -91,24 +91,21 @@ namespace OsmSharp.Osm.API
                 case Method.PUT:
                     request.Method = "PUT";
 
-                    // build the data buffer.
-                    request.ContentLength = data.Length; // set content length.
-
                     // get the request stream and write the data.
                     requestStream = request.GetRequestStream();
                     requestStream.Write(data, 0, data.Length);
-                    requestStream.Close();
+                    requestStream.Dispose();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
-                    enc = System.Text.Encoding.GetEncoding(1252);
+                    enc = System.Text.Encoding.GetEncoding("Windows-1252");
                     responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
                     responseString = responseStream.ReadToEnd();
 
                     // close everything.
-                    response.Close();
-                    responseStream.Close();
+                    response.Dispose();
+                    responseStream.Dispose();
 
                     return responseString;
                 case Method.GET:
@@ -119,14 +116,14 @@ namespace OsmSharp.Osm.API
 
                         // get the response.
                         response = (HttpWebResponse)request.GetResponse();
-                        enc = System.Text.Encoding.GetEncoding(1252);
+                        enc = System.Text.Encoding.GetEncoding("Windows-1252");
                         responseStream =
                            new StreamReader(response.GetResponseStream(), enc);
                         responseString = responseStream.ReadToEnd();
 
                         // close everything.
-                        response.Close();
-                        responseStream.Close();
+                        response.Dispose();
+                        responseStream.Dispose();
                     }
                     catch (WebException ex)
                     {
@@ -154,24 +151,21 @@ namespace OsmSharp.Osm.API
                 case Method.DELETE:
                     request.Method = "DELETE";
 
-                    // build the data buffer.
-                    request.ContentLength = data.Length; // set content length.
-
                     // get the request stream and write the data.
                     requestStream = request.GetRequestStream();
                     requestStream.Write(data, 0, data.Length);
-                    requestStream.Close();
+                    requestStream.Dispose();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
-                    enc = System.Text.Encoding.GetEncoding(1252);
+                    enc = System.Text.Encoding.GetEncoding("Windows-1252");
                     responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
                     responseString = responseStream.ReadToEnd();
 
                     // close everything.
-                    response.Close();
-                    responseStream.Close();
+                    response.Dispose();
+                    responseStream.Dispose();
 
                     return responseString;
                 default:
@@ -197,7 +191,7 @@ namespace OsmSharp.Osm.API
         private void SetBasicAuthHeader(WebRequest req)
         {
             string authInfo = _user + ":" + _pass;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+            authInfo = Convert.ToBase64String(Encoding.Unicode.GetBytes(authInfo));
             req.Headers["Authorization"] = "Basic " + authInfo;
         }
 
@@ -385,7 +379,7 @@ namespace OsmSharp.Osm.API
         public long ChangeSetOpen(string comment)
         {
             return this.ChangeSetOpen(comment, string.Format("OsmSharp v{0}",
-                System.Reflection.Assembly.GetAssembly(typeof(APIConnection)).GetName().Version.ToString(2)));
+                typeof(APIConnection).Assembly.GetName().Version.ToString(2)));
         }
 
         /// <summary>

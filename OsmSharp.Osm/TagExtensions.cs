@@ -232,7 +232,7 @@ namespace OsmSharp.Osm
                 return false;
             }
 
-            if(s.Contains(','))
+            if(s.Contains(","))
             { // refuse comma as a decimal seperator or anywhere else in the number.
                 return false;
             }

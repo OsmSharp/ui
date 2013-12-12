@@ -306,6 +306,7 @@
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeOutMutationOperation.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Problem.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Problems\IProblem.cs" />
+    <Compile Include="PCLExtensions.cs" />
     <Compile Include="Progress\EmptyProgressReporter.cs" />
     <Compile Include="Progress\IProgressEnabled.cs" />
     <Compile Include="Progress\IProgressReporter.cs" />

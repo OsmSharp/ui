@@ -16,15 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-#if !WINDOWS_PHONE && !IOS
-using OsmSharp.Xml.Gpx;
-using OsmSharp.Xml.Gpx.v1_1;
-using OsmSharp.Xml.Sources;
+using OsmSharp.IO.Xml.Gpx;
+using OsmSharp.IO.Xml.Gpx.v1_1;
+using OsmSharp.IO.Xml.Sources;
 
 namespace OsmSharp.Routing.Gpx
 {
@@ -38,9 +34,9 @@ namespace OsmSharp.Routing.Gpx
         /// </summary>
         /// <param name="file"></param>
         /// <param name="route"></param>
-        internal static void Save(FileInfo file, Route route)
+        internal static void Save(Stream stream, Route route)
         {
-            XmlFileSource source = new XmlFileSource(file);
+            XmlStreamSource source = new XmlStreamSource(stream);
             GpxDocument output_document = new GpxDocument(source);
             gpxType output_gpx = new gpxType();
             output_gpx.trk = new trkType[1];
@@ -102,4 +98,3 @@ namespace OsmSharp.Routing.Gpx
         }
     }
 }
-#endif

@@ -45,9 +45,9 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Closes this reader.
         /// </summary>
-        public void Close()
+        public void Dispose()
         {
-            _stream.Close();
+            _stream.Dispose();
         }
 
         /// <summary>

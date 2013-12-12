@@ -31,7 +31,7 @@ namespace OsmSharp.Osm.Xml.Streams
     /// </summary>
     public class XmlOsmStreamTarget : OsmStreamTarget, IDisposable
     {
-        private XmlFragmentWriter _writer;
+        private XmlWriter _writer;
 
         private TextWriter _textWriter;
 
@@ -69,8 +69,6 @@ namespace OsmSharp.Osm.Xml.Streams
 
             _textWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             _textWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
-
-            _writer = new XmlFragmentWriter(_textWriter);
         }
 
         /// <summary>
@@ -373,8 +371,6 @@ namespace OsmSharp.Osm.Xml.Streams
             _writer.Flush();
             _textWriter.WriteLine("</osm>");
             _textWriter.Flush();
-            _writer.Close();
-            _textWriter.Close();
         }
 
         /// <summary>
