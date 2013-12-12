@@ -30,7 +30,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if WINDOWS_PHONE
 using System;
 using System.Collections;
 using System.Globalization;
@@ -45,7 +44,6 @@ namespace System.Collections.Generic
     ///  that are sorted by the keys and are accessible by key
     ///  and by index.
     /// </summary>
-    [ComVisible(false)]
     [DebuggerDisplay("Count={Count}")]
     public class SortedList<TKey, TValue> : IDictionary<TKey, TValue>,
         IDictionary,
@@ -1310,4 +1308,3 @@ namespace System.Collections.Generic
     } // SortedList
 
 } // System.Collections.Generic
-#endif

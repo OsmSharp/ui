@@ -8,6 +8,7 @@ using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion;
 using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
 {
@@ -166,7 +167,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                 { // there is improvement!
                                     originalSolution = solution;
 
-                                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", System.Diagnostics.TraceEventType.Information,
+                                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", TraceEventType.Information,
                                         "IMPROVEMENT: {0}->{1}", route1ActualBefore + route2ActualBefore, route1ActualAfter + route2ActualAfter);
                                 }
 
@@ -274,7 +275,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                     double difference;
                     if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", TraceEventType.Information,
                             "Intra-improvement found {0} {1}->{2}",
                             improvementOperation.Name, newWeight, newWeight + difference);
 
@@ -352,7 +353,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
@@ -392,7 +393,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS.GuidedVNS", TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route2Idx, route1Idx, improvementOperation.Name, totalBefore, totalAfter);
 

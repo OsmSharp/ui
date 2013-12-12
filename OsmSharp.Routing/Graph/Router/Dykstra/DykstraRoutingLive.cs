@@ -25,6 +25,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
 {
@@ -173,7 +174,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             {
                 results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max);
 
-                OsmSharp.Logging.Log.TraceEvent("DykstraRoutingLive", System.Diagnostics.TraceEventType.Information, "Calculating weights... {0}%",
+                OsmSharp.Logging.Log.TraceEvent("DykstraRoutingLive", TraceEventType.Information, "Calculating weights... {0}%",
                     (int)(((float)idx / (float)sources.Length) * 100));
             }
             return results;

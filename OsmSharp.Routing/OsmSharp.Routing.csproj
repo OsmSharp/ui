@@ -101,7 +101,6 @@
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="IO\Gpx\RouteGpx.cs" />
-    <Compile Include="IO\Kml\RouteKml.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Metrics\RouteMetricCalculator.cs" />
     <Compile Include="Metrics\Time\TimeCalculator.cs" />
@@ -205,9 +204,15 @@
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">

@@ -21,6 +21,7 @@ using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Instructions.MicroPlanning.Machines;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -226,7 +227,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="message"></param>
         private void Plan(MicroPlannerMessage message)
         {
-            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", TraceEventType.Information,
                 message.ToString());
 
             // add the message to the stack.
@@ -261,7 +262,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="machine"></param>
         internal void Success(MicroPlannerMachine machine)
         {
-            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", TraceEventType.Information,
                 machine.ToString());
 
             // reset the current point/arc.
