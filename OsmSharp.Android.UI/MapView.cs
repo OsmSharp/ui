@@ -367,7 +367,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         void IMapView.Invalidate()
         {
-            _mapView.Change();
+            _mapView.Change(true);
 		}
 
 		private class MapViewMarkerZoomEvent

@@ -351,9 +351,6 @@ namespace OsmSharp.UI.Renderer.Scene
             // string table.
             _stringTable.Clear();
 
-            // zoom ranges.
-            _zoomRanges.Clear();
-
             // styles.
             _pointStyles.Clear();
             _textStyles.Clear();
@@ -365,7 +362,10 @@ namespace OsmSharp.UI.Renderer.Scene
             _pointsIndex.Clear();
 
             // scene objects.
-            _sceneObjects.Clear();
+            foreach (var sceneObjects in _sceneObjects)
+            {
+                sceneObjects.Clear();
+            }
 
             // lines/polygons.
             _imageIndex.Clear();
@@ -424,110 +424,112 @@ namespace OsmSharp.UI.Renderer.Scene
         {
             SortedSet<Primitive2D> primitives = new SortedSet<Primitive2D>(
                 LayerComparer.GetInstance());
-
-            Dictionary<uint, SceneObject> sceneAtZoom = _sceneObjects[0];
-            // find the part of this scene containing the objects for the requested zoom.
-            for (int idx = 1; idx < _zoomFactors.Count; idx++)
+            if (_sceneObjects.Count > 0)
             {
-                if (zoom <= _zoomFactors[idx])
+                Dictionary<uint, SceneObject> sceneAtZoom = _sceneObjects[0];
+                // find the part of this scene containing the objects for the requested zoom.
+                for (int idx = 1; idx < _zoomFactors.Count; idx++)
                 {
-                    sceneAtZoom = _sceneObjects[idx];
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (sceneAtZoom != null)
-            {
-                foreach (KeyValuePair<uint, SceneObject> sceneObjectPair in sceneAtZoom)
-                { // loop over all primitives in order.
-                    SceneObject sceneObject = sceneObjectPair.Value;
-                    uint id = sceneObjectPair.Key;
-
-                    ScenePoint point;
-                    ScenePoints points;
-                    switch (sceneObject.Enum)
+                    if (zoom <= _zoomFactors[idx])
                     {
-                        case SceneObjectType.IconObject:
-                            SceneIconObject icon = sceneObject as SceneIconObject;
-                            byte[] iconStyle = _imageIndex[(int)icon.StyleId];
-                            //if (Scene2DZoomRange.Contains(zoom))
-                            //{
+                        sceneAtZoom = _sceneObjects[idx];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (sceneAtZoom != null)
+                {
+                    foreach (KeyValuePair<uint, SceneObject> sceneObjectPair in sceneAtZoom)
+                    { // loop over all primitives in order.
+                        SceneObject sceneObject = sceneObjectPair.Value;
+                        uint id = sceneObjectPair.Key;
+
+                        ScenePoint point;
+                        ScenePoints points;
+                        switch (sceneObject.Enum)
+                        {
+                            case SceneObjectType.IconObject:
+                                SceneIconObject icon = sceneObject as SceneIconObject;
+                                byte[] iconStyle = _imageIndex[(int)icon.StyleId];
+                                //if (Scene2DZoomRange.Contains(zoom))
+                                //{
                                 point = _pointIndex.Get(icon.GeoId);
                                 if (view.Contains(point.X, point.Y))
                                 {
                                     primitives.Add(
                                         this.ConvertToPrimitive(id, icon, iconStyle));
                                 }
-                            //}
-                            break;
-                        case SceneObjectType.LineObject:
-                            SceneLineObject line = sceneObject as SceneLineObject;
-                            StyleLine styleLine = _lineStyles.Get(line.StyleId);
-                            points = _pointsIndex.Get(line.GeoId);
-                            if (Scene2DZoomRange.Contains(styleLine.MinZoom, styleLine.MaxZoom, zoom))
-                            {
-                                if (view.IsVisible(points.X, points.Y, false))
+                                //}
+                                break;
+                            case SceneObjectType.LineObject:
+                                SceneLineObject line = sceneObject as SceneLineObject;
+                                StyleLine styleLine = _lineStyles.Get(line.StyleId);
+                                points = _pointsIndex.Get(line.GeoId);
+                                if (Scene2DZoomRange.Contains(styleLine.MinZoom, styleLine.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, line, styleLine));
+                                    if (view.IsVisible(points.X, points.Y, false))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, line, styleLine));
+                                    }
                                 }
-                            }
-                            break;
-                        case SceneObjectType.LineTextObject:
-                            SceneLineTextObject lineText = sceneObject as SceneLineTextObject;
-                            StyleText lineTextStyle = _textStyles.Get(lineText.StyleId);
-                            points = _pointsIndex.Get(lineText.GeoId);
-                            if (Scene2DZoomRange.Contains(lineTextStyle.MinZoom, lineTextStyle.MaxZoom, zoom))
-                            {
-                                if (view.IsVisible(points.X, points.Y, false))
+                                break;
+                            case SceneObjectType.LineTextObject:
+                                SceneLineTextObject lineText = sceneObject as SceneLineTextObject;
+                                StyleText lineTextStyle = _textStyles.Get(lineText.StyleId);
+                                points = _pointsIndex.Get(lineText.GeoId);
+                                if (Scene2DZoomRange.Contains(lineTextStyle.MinZoom, lineTextStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, lineText, lineTextStyle));
+                                    if (view.IsVisible(points.X, points.Y, false))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, lineText, lineTextStyle));
+                                    }
                                 }
-                            }
-                            break;
-                        case SceneObjectType.PointObject:
-                            ScenePointObject pointObject = sceneObject as ScenePointObject;
-                            StylePoint pointStyle = _pointStyles.Get(pointObject.StyleId);
-                            point = _pointIndex.Get(pointObject.GeoId);
-                            if (Scene2DZoomRange.Contains(pointStyle.MinZoom, pointStyle.MaxZoom, zoom))
-                            {
-                                if (view.Contains(point.X, point.Y))
+                                break;
+                            case SceneObjectType.PointObject:
+                                ScenePointObject pointObject = sceneObject as ScenePointObject;
+                                StylePoint pointStyle = _pointStyles.Get(pointObject.StyleId);
+                                point = _pointIndex.Get(pointObject.GeoId);
+                                if (Scene2DZoomRange.Contains(pointStyle.MinZoom, pointStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, pointObject, pointStyle));
+                                    if (view.Contains(point.X, point.Y))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, pointObject, pointStyle));
+                                    }
                                 }
-                            }
-                            break;
-                        case SceneObjectType.PolygonObject:
-                            ScenePolygonObject polygonObject = sceneObject as ScenePolygonObject;
-                            StylePolygon polygonStyle = _polygonStyles.Get(polygonObject.StyleId);
-                            points = _pointsIndex.Get(polygonObject.GeoId);
-                            if (Scene2DZoomRange.Contains(polygonStyle.MinZoom, polygonStyle.MaxZoom, zoom))
-                            {
-                                if (view.IsVisible(points.X, points.Y, false))
+                                break;
+                            case SceneObjectType.PolygonObject:
+                                ScenePolygonObject polygonObject = sceneObject as ScenePolygonObject;
+                                StylePolygon polygonStyle = _polygonStyles.Get(polygonObject.StyleId);
+                                points = _pointsIndex.Get(polygonObject.GeoId);
+                                if (Scene2DZoomRange.Contains(polygonStyle.MinZoom, polygonStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, polygonObject, polygonStyle));
+                                    if (view.IsVisible(points.X, points.Y, false))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, polygonObject, polygonStyle));
+                                    }
                                 }
-                            }
-                            break;
-                        case SceneObjectType.TextObject:
-                            SceneTextObject textObject = sceneObject as SceneTextObject;
-                            StyleText textStyle = _textStyles.Get(textObject.StyleId);
-                            point = _pointIndex.Get(textObject.GeoId);
-                            if (Scene2DZoomRange.Contains(textStyle.MinZoom, textStyle.MaxZoom, zoom))
-                            {
-                                if (view.Contains(point.X, point.Y))
+                                break;
+                            case SceneObjectType.TextObject:
+                                SceneTextObject textObject = sceneObject as SceneTextObject;
+                                StyleText textStyle = _textStyles.Get(textObject.StyleId);
+                                point = _pointIndex.Get(textObject.GeoId);
+                                if (Scene2DZoomRange.Contains(textStyle.MinZoom, textStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, textObject, textStyle));
+                                    if (view.Contains(point.X, point.Y))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, textObject, textStyle));
+                                    }
                                 }
-                            }
-                            break;
+                                break;
+                        }
                     }
                 }
             }

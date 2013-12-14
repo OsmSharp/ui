@@ -37,10 +37,15 @@ namespace OsmSharp.Android.UI
         /// <param name="mapLayout"></param>
         void Initialize(MapView mapLayout);
 
+        /// <summary>
+        /// Notifies change.
+        /// </summary>
+        void Change();
+
 		/// <summary>
 		/// Notifies change.
 		/// </summary>
-		void Change();
+		void Change(bool force);
 
 		/// <summary>
 		/// Gets or sets the width.

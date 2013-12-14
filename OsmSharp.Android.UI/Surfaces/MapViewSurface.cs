@@ -134,8 +134,6 @@ namespace OsmSharp.Android.UI
             _backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
             _cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
                 new CanvasRenderer2D());
-
-            new Timer(InvalidateSimple, null, 0, 50);
         }
 
 		/// <summary>
@@ -158,42 +156,70 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private MapRenderer<global::Android.Graphics.Canvas> _cacheRenderer;
 
-		/// <summary>
-		/// Does the rendering.
-		/// </summary>
-		private bool _render;
+        /// <summary>
+        /// Holds the rendering thread.
+        /// </summary>
+        private Thread _renderingThread;
 
-		/// <summary>
-		/// Notifies change.
-		/// </summary>
-		public void Change()
-		{
-			if (_cacheRenderer.IsRunning) {
-				_cacheRenderer.Cancel ();
-			}
+        /// <summary>
+        /// Holds the extra parameter.
+        /// </summary>
+        private float _extra = 1.25f;
 
-			_render = true;
-		}
+        /// <summary>
+        /// Notifies change
+        /// </summary>
+        public void Change()
+        {
+            this.Change(false);
+        }
 
-		/// <summary>
-		/// Invalidates while rendering.
-		/// </summary>
-		void InvalidateSimple(object state)
-		{
-			if (_cacheRenderer.IsRunning) {
-				this.PostInvalidate ();
-			}
+        /// <summary>
+        /// Notifies change
+        /// </summary>
+        public void Change(bool force)
+        {
+            if (this.SurfaceWidth == 0)
+            { // nothing to render yet!
+                return;
+            }
 
-			if (_render) {
-				_render = false;
+            lock (_cacheRenderer)
+            {
+                // create the view that would be use for rendering.
+                View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
+                 this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                 this.MapCenter, _invertX, _invertY, this.MapTilt);
 
-				if (_cacheRenderer.IsRunning) {
-					_cacheRenderer.Cancel ();
-				}
+                // ... and compare to the previous rendered view.
+                if (!force && 
+                    _previousRenderedZoom != null &&
+                    view.Equals(_previousRenderedZoom))
+                {
+                    return;
+                }
+                _previousRenderedZoom = view;
 
-				this.Render ();
-			}
-		}
+                // end existing rendering thread.
+                if (_renderingThread != null &&
+                 _renderingThread.IsAlive)
+                {
+                    if (_cacheRenderer.IsRunning)
+                    {
+                        _cacheRenderer.CancelAndWait();
+                    }
+                }
+
+                // start new rendering thread.
+                _renderingThread = new Thread(new ThreadStart(Render));
+                _renderingThread.Start();
+            }
+        }
+
+        /// <summary>
+        /// Holds the previous rendered zoom.
+        /// </summary>
+        private View2D _previousRenderedZoom;
 
         private float _surfaceWidth = 0;
 
@@ -232,9 +258,6 @@ namespace OsmSharp.Android.UI
 
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
-                double extra = 1.25;
-                //double extra = 1;
-
 				// build the layers list.
 				var layers = new List<Layer> ();
 				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
@@ -259,12 +282,12 @@ namespace OsmSharp.Android.UI
 
                 // resize image if needed.
                 if (image == null || 
-                    image.Width != (int)(this.SurfaceWidth * extra) ||
-                    image.Height != (int)(this.SurfaceHeight * extra))
+                    image.Width != (int)(this.SurfaceWidth * _extra) ||
+                    image.Height != (int)(this.SurfaceHeight * _extra))
                 {
                     // create a bitmap and render there.
-                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * extra),
-                        (int)(this.SurfaceHeight * extra),
+                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * _extra),
+                        (int)(this.SurfaceHeight * _extra),
                         global::Android.Graphics.Bitmap.Config.Argb8888);
                 }
 
@@ -279,7 +302,7 @@ namespace OsmSharp.Android.UI
 
                 // create the view for this control.
                 View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                         this.SurfaceWidth * extra, this.SurfaceHeight * extra, sceneZoomFactor,
+                                         this.SurfaceWidth * _extra, this.SurfaceHeight * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
@@ -295,10 +318,6 @@ namespace OsmSharp.Android.UI
 				                                "View change took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
-                //// add the current canvas to the scene.
-                //_scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
-                //                                 new byte[0], _canvasBitmap);
-
 				// does the rendering.
                 bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
@@ -309,16 +328,14 @@ namespace OsmSharp.Android.UI
 				if(complete)
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
-                    //lock (_renderCache)
-                    //{
-                        // add the newly rendered image again.            
+                    
+                    // add the newly rendered image again.            
                     _offScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
                     _offScreenBuffer.Tag = image;
 
                     var temp = _onScreenBuffer;
                     _onScreenBuffer = _offScreenBuffer;
                     _offScreenBuffer = temp;
-                    //}
 				}
 
 				this.PostInvalidate ();
@@ -384,10 +401,8 @@ namespace OsmSharp.Android.UI
 		public Map Map {
 			get{ return _map; }
 			set {
-				_map = value; 
-				_map.MapChanged += delegate() {
-					_render = true;
-				};
+				_map = value;
+                this.Change();
 			}
 		}
 
@@ -507,8 +522,6 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public View2D CreateView()
 		{
-            //float height = this.LayoutParameters.Height;
-            //float width = this.LayoutParameters.Width;
             float height = this.SurfaceHeight;
             float width = this.SurfaceWidth;
 
@@ -753,7 +766,7 @@ namespace OsmSharp.Android.UI
 				                                          centerXPixels, centerYPixles);
 				
 				// convert to the projected center.
-				this.MapCenter = this.Map.Projection.ToGeoCoordinates (sceneCenter [0], sceneCenter [1]);
+                _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
 				// do the rotation stuff around the new center.
 				if (_deltaDegrees != 0) {

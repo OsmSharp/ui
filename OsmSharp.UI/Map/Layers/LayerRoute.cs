@@ -16,13 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Routing;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
-using System.Collections.Generic;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -43,7 +42,6 @@ namespace OsmSharp.UI.Map.Layers
         public LayerRoute(IProjection projection)
         {
             _projection = projection;
-
 
             _scene = new Scene2D(projection, 16);
         }

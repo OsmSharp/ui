@@ -150,7 +150,18 @@ namespace OsmSharp.Android.UI
             _scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
         }
 
+        /// <summary>
+        /// Notifies change.
+        /// </summary>
         public void Change()
+        {
+
+        }
+
+        /// <summary>
+        /// Notifies change.
+        /// </summary>
+        public void Change(bool force)
         {
             // notify map layout of changes.
             if (this.Width > 0 && this.Height > 0)
