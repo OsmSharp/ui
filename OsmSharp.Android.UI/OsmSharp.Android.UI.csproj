@@ -83,7 +83,9 @@
       <Name>OsmSharp.UI.Android</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Images\marker_small.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\marker.png" />
   </ItemGroup>

@@ -57,6 +57,16 @@ namespace Android.Views
         /// </summary>
         private readonly long _tapPeriod;
 
+        /// <summary>
+        /// Holds the x-tolerance.
+        /// </summary>
+        private readonly long _xTolerance;
+
+        /// <summary>
+        /// Holds the y-tolerance.
+        /// </summary>
+        private readonly long _yTolerance;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MoveGestureDetector"/> class.
 		/// </summary>
@@ -65,7 +75,9 @@ namespace Android.Views
         public TapGestureDetector(Context context, IOnTapGestureListener listener) 
 			: base(context) {
 			_listener = listener;
-            _tapPeriod = 1000;
+            _tapPeriod = 200;
+            _xTolerance = 10;
+            _yTolerance = 10;
 		}
 
         /// <summary>
@@ -110,7 +122,9 @@ namespace Android.Views
 			switch (actionCode) {
 			case MotionEventActions.Up:
 			case MotionEventActions.Cancel:
-                if (_tapPeriod > (e.EventTime - _firstEventTime))
+                if (_tapPeriod > (e.EventTime - _firstEventTime) &&
+                    _xTolerance >= (System.Math.Abs(e.GetX() - _x)) &&
+                    _yTolerance >= (System.Math.Abs(e.GetY() - _y)))
                 {
                     _listener.OnTap(this);
                     ResetState();

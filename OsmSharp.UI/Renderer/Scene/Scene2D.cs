@@ -183,7 +183,7 @@ namespace OsmSharp.UI.Renderer.Scene
             yDiff = yDiff / 256.0;
 
             // return (float)pixelWidth;
-            return (float)System.Math.Min(xDiff, yDiff) * 4;
+            return (float)System.Math.Min(xDiff, yDiff);
         }
 
         /// <summary>

@@ -105,11 +105,12 @@ namespace OsmSharp.Android.UI.Sample
 
             _mapView = new MapView(this, new MapViewSurface(this));
             //_mapView = new MapView(this, new MapViewGLSurface(this));
+            _mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
             _mapView.Map = map;
 
             (_mapView as IMapView).AutoInvalidate = true;
             _mapView.MapMaxZoomLevel = 20;
-            _mapView.MapMinZoomLevel = 10;
+            _mapView.MapMinZoomLevel = 14;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
             _mapView.MapZoom = 16;
@@ -131,12 +132,17 @@ namespace OsmSharp.Android.UI.Sample
 
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            Timer timer = new Timer(500);
-            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            timer.Start();
+            //Timer timer = new Timer(500);
+            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            //timer.Start();
 
 			SetContentView (layout);
 		}
+
+        void _mapView_MapTapEvent(GeoCoordinate coordinate)
+        {
+            _mapView.AddMarker(coordinate);
+        }
 
         void MainActivity_Click(object sender, EventArgs e)
         {

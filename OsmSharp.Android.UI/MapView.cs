@@ -116,6 +116,7 @@ namespace OsmSharp.Android.UI
 			layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
 			this.AddView (marker, layoutParams);
 
+            this.NotifyMarkerChange(marker);
 			_mapView.Change ();
 		}
 

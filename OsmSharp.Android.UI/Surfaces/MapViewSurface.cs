@@ -252,6 +252,11 @@ namespace OsmSharp.Android.UI
                     image = _offScreenBuffer.Tag as global::Android.Graphics.Bitmap;
 				}
 
+                if (this.SurfaceHeight == 0)
+                {
+                    return;
+                }
+
                 // resize image if needed.
                 if (image == null || 
                     image.Width != (int)(this.SurfaceWidth * extra) ||
@@ -675,6 +680,9 @@ namespace OsmSharp.Android.UI
         /// <returns></returns>
         public bool OnTap(TapGestureDetector detector)
         {
+            OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information,
+                "OnTap            dsqffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+
             // recreate the view.
             View2D view = this.CreateView();
 

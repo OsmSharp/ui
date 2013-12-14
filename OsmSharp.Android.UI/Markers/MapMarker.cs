@@ -61,7 +61,7 @@ namespace OsmSharp.Android.UI
 			if (_defaultImage == null) {
 				_defaultImage = global::Android.Graphics.BitmapFactory.DecodeStream (
 					Assembly.GetExecutingAssembly ().GetManifestResourceStream (
-					"OsmSharp.Android.UI.Images.marker.png"));
+					"OsmSharp.Android.UI.Images.marker_small.png"));
 			}
 			return _defaultImage;
 		}
@@ -111,11 +111,13 @@ namespace OsmSharp.Android.UI
 			_alignment = alignment;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
+            this.SetPadding(0, 0, 0, 0);
+
 			this.SetScaleType (ScaleType.Center);
 			_image = image;
-			this.SetImageBitmap (image);
-			this.SetMinimumWidth (image.Width);
-			this.SetMinimumHeight (image.Height);
+			this.SetMinimumWidth (image.Width + 2);
+            this.SetMinimumHeight(image.Height);
+            this.SetImageBitmap(image);
 		}
 
 		/// <summary>
@@ -165,33 +167,33 @@ namespace OsmSharp.Android.UI
 		/// <param name="pixelsHeight">Pixels height.</param>
 		/// <param name="view">View.</param>
 		/// <param name="projection">Projection.</param>
-		internal bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
-		{
-			double[] projected = projection.ToPixel (this.Location);
-			double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
+        internal bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        {
+            double[] projected = projection.ToPixel(this.Location);
+            double[] locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
 
-//			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
-//			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
+            // set the new location depending on the size of the image and the alignment parameter.
+            double leftMargin = locationPixel[0];
+            double topMargin = locationPixel[1];
 
-				// set the new location depending on the size of the image and the alignment parameter.
-				double leftMargin = locationPixel [0];
-				double topMargin = locationPixel [1];
+            leftMargin = locationPixel[0] - (this.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
 
-				switch (_alignment) {
-				case MapMarkerAlignmentType.CenterBottom:
-					topMargin = locationPixel [1] - (this.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
-					break;
-				case MapMarkerAlignmentType.CenterTop:
-					topMargin = locationPixel [1] + (this.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
-					break;
-				}
+            switch (_alignment)
+            {
+                case MapMarkerAlignmentType.Center:
+                    topMargin = locationPixel[1] - (this.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+                    break;
+                case MapMarkerAlignmentType.CenterTop:
+                    break;
+                case MapMarkerAlignmentType.CenterBottom:
+                    topMargin = locationPixel[1] - (this.LayoutParameters as FrameLayout.LayoutParams).Height;
+                    break;
+            }
 
-				(this.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
-				(this.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
-				return true;
-//			}
-//			return false;
-		}
+            (this.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
+            (this.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
+            return true;
+        }
 	}
 }
 

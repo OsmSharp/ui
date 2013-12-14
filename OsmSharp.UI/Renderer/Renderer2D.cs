@@ -267,8 +267,8 @@ namespace OsmSharp.UI.Renderer
                         continue;
                     }
                 }
-                OsmSharp.Logging.Log.TraceEvent("Renderer2D", System.Diagnostics.TraceEventType.Error,
-                    string.Format("Rendering successfull: simplified {0}/{1} lines", simplifiedLines, droppedLines));
+                //OsmSharp.Logging.Log.TraceEvent("Renderer2D", System.Diagnostics.TraceEventType.Error,
+                //    string.Format("Rendering successfull: simplified {0}/{1} lines", simplifiedLines, droppedLines));
 				return true;
 			}
 			catch(Exception ex) {

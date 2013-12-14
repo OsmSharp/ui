@@ -343,4 +343,5 @@
     <None Include="IO\Xml\Kml\v2_1\kml.xsd" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
 </Project>
