@@ -15,14 +15,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using OsmSharp.Xml;
 
-namespace OsmSharp.Xml.Sources
+using System.Xml;
+
+namespace OsmSharp.IO.Xml.Sources
 {
     /// <summary>
     /// Class implementing an xml reader source.
@@ -99,7 +95,6 @@ namespace OsmSharp.Xml.Sources
         /// </summary>
         public void Close()
         {
-            _reader.Close();
             _reader = null;
         }
 

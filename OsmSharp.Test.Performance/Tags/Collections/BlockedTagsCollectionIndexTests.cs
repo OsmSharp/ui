@@ -45,13 +45,13 @@ namespace OsmSharp.Test.Performance.Tags.Collections
             FileInfo testFile = new FileInfo(@"test.file");
             testFile.Delete();
             Stream writeStream = testFile.OpenWrite();
-            OsmSharp.Logging.Log.TraceEvent("Blocked", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("Blocked", OsmSharp.Logging.TraceEventType.Information,
                 "Serializing blocked file....");
             TagIndexSerializer.SerializeBlocks(writeStream, index, 100);
             writeStream.Flush();
             writeStream.Dispose();
 
-            OsmSharp.Logging.Log.TraceEvent("Blocked", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("Blocked", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("Serialized file: {0}KB", testFile.Length / 1024));
 
 
@@ -60,7 +60,7 @@ namespace OsmSharp.Test.Performance.Tags.Collections
             ITagsCollectionIndexReadonly readOnlyIndex = TagIndexSerializer.DeserializeBlocks(readStream);
 
             // test access.
-            OsmSharp.Logging.Log.TraceEvent("Blocked", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("Blocked", OsmSharp.Logging.TraceEventType.Information,
                 "Started testing random access....");
             ITagCollectionIndexTests.TestRandomAccess("Blocked", readOnlyIndex, 1000);
 

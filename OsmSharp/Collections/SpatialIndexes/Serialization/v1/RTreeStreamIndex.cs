@@ -68,7 +68,7 @@
 //            _serializer.Search(_stream, box, results);
 
 //            long ticksAfter = DateTime.Now.Ticks;
-//            OsmSharp.Logging.Log.TraceEvent("RTreeStreamIndex", System.Diagnostics.TraceEventType.Verbose,
+//            OsmSharp.Logging.Log.TraceEvent("RTreeStreamIndex", OsmSharp.Logging.TraceEventType.Verbose,
 //                string.Format("Deserialized {0} objects in {1}ms.", results.Count,
 //                    (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)));
 //            return results;

@@ -213,7 +213,7 @@ namespace OsmSharp.UI.Animations.Navigation
                 lastTrackInterval = TimeSpan.FromTicks(ticks - _lastTicks.Value);
             }
             _lastTicks = ticks;
-            OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("", OsmSharp.Logging.TraceEventType.Information,
                 "Interval: {0}ms", lastTrackInterval.TotalMilliseconds);
 
             // give location to the route tracker.

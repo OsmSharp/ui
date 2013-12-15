@@ -16,22 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace OsmSharp.Routing.Kml
+namespace OsmSharp.Logging
 {
     /// <summary>
-    /// Converts an OsmSharpRoute into a kml.
+    /// Abstract representation of a trace listener.
     /// </summary>
-    internal class OsmSharpRouteKml
+    public abstract class TraceListener
     {
-        internal static void Save(FileInfo file, Route osmSharpRoute)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// Writes the given message to the console.
+        /// </summary>
+        /// <param name="message"></param>
+        public abstract void Write(string message);
+
+        /// <summary>
+        /// Writes the given message to the console.
+        /// </summary>
+        /// <param name="message"></param>
+        public abstract void WriteLine(string message);
     }
 }

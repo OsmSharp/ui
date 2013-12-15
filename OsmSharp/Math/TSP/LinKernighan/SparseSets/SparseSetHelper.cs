@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Math.TSP.LK.SparseSets
 {

@@ -16,8 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-#if !WINDOWS_PHONE
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,11 +28,20 @@ namespace OsmSharp.Collections.Cache
     /// <typeparam name="TValue"></typeparam>
     public class LRUCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private ConcurrentDictionary<TKey, CacheEntry> _data;
+        /// <summary>
+        /// Holds the cached data.
+        /// </summary>
+        private Dictionary<TKey, CacheEntry> _data;
 
+        /// <summary>
+        /// Holds the next id.
+        /// </summary>
         private long _id;
 
-        private long _last_id;
+        /// <summary>
+        /// Holds the last id.
+        /// </summary>
+        private long _lastId;
 
         /// <summary>
         /// Initializes this cache.
@@ -43,8 +50,8 @@ namespace OsmSharp.Collections.Cache
         public LRUCache(int capacity)
         {
             _id = long.MinValue;
-            _last_id = _id;
-            _data = new ConcurrentDictionary<TKey, CacheEntry>();
+            _lastId = _id;
+            _data = new Dictionary<TKey, CacheEntry>();
 
             this.Capacity = capacity;
         }
@@ -66,8 +73,11 @@ namespace OsmSharp.Collections.Cache
                 Id = _id,
                 Value = value
             };
-            _id++;
-            _data[key] = entry;
+            lock (_data)
+            {
+                _id++;
+                _data[key] = entry;
+            }
 
             this.ResizeCache();
         }
@@ -80,13 +90,16 @@ namespace OsmSharp.Collections.Cache
         /// <returns></returns>
         public bool TryGet(TKey key, out TValue value)
         {
-            CacheEntry entry;
-            _id++;
-            if (_data.TryGetValue(key, out entry))
+            lock (_data)
             {
-                entry.Id = _id;
-                value = entry.Value;
-                return true;
+                CacheEntry entry;
+                _id++;
+                if (_data.TryGetValue(key, out entry))
+                {
+                    entry.Id = _id;
+                    value = entry.Value;
+                    return true;
+                }
             }
             value = default(TValue);
             return false;
@@ -100,11 +113,14 @@ namespace OsmSharp.Collections.Cache
         /// <returns></returns>
         public bool TryPeek(TKey key, out TValue value)
         {
-            CacheEntry entry;
-            if (_data.TryGetValue(key, out entry))
+            lock (_data)
             {
-                value = entry.Value;
-                return true;
+                CacheEntry entry;
+                if (_data.TryGetValue(key, out entry))
+                {
+                    value = entry.Value;
+                    return true;
+                }
             }
             value = default(TValue);
             return false;
@@ -115,8 +131,11 @@ namespace OsmSharp.Collections.Cache
         /// </summary>
         public void Clear()
         {
-            _data.Clear();
-            _last_id = _id;
+            lock(_data)
+            {
+                _data.Clear();
+            }
+            _lastId = _id;
             _id = long.MinValue;
         }
 
@@ -126,8 +145,10 @@ namespace OsmSharp.Collections.Cache
         /// <param name="id"></param>
         public void Remove(TKey id)
         {
-            CacheEntry entry;
-            _data.TryRemove(id, out entry);
+            lock(_data)
+            {
+                _data.Remove(id);
+            }
         }
 
         /// <summary>
@@ -135,52 +156,26 @@ namespace OsmSharp.Collections.Cache
         /// </summary>
         private void ResizeCache()
         {
-            while (_data.Count > this.Capacity)
-            { // oeps: too much data.
-                // remove the 'oldest' item.
-                TKey minKey = default(TKey);
-                long minId = long.MaxValue;
-                foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
-                {
-                    if (pair.Value.Id < minId)
+            lock (_data)
+            {
+                while (_data.Count > this.Capacity)
+                { // oeps: too much data.
+                    // remove the 'oldest' item.
+                    // TODO: remove multiple items at once!
+                    TKey minKey = default(TKey);
+                    long minId = long.MaxValue;
+                    foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
                     {
-                        minId = pair.Value.Id;
-                        minKey = pair.Key;
+                        if (pair.Value.Id < minId)
+                        {
+                            minId = pair.Value.Id;
+                            minKey = pair.Key;
+                        }
                     }
+                    _data.Remove(minKey);
+                    // update the 'last_id'
+                    _lastId++;
                 }
-                CacheEntry entry;
-                _data.TryRemove(minKey, out entry);
-
-                // update the 'last_id'
-                _last_id++;
-
-                //foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
-                //{
-                //    if (pair.Value.Id < id)
-                //    {
-                //        keys.Add(pair.Key);
-                //    }
-                //}
-
-                //int new_capacity = (this.Capacity * 75) / 100; // keep 75%
-
-                //// loop over and remove all with smallest id's.
-                //long id = _id - new_capacity;
-                //List<TKey> keys = new List<TKey>(this.Capacity - new_capacity);
-                //foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
-                //{
-                //    if (pair.Value.Id < id)
-                //    {
-                //        keys.Add(pair.Key);
-                //    }
-                //}
-                //CacheEntry entry;
-                //foreach (TKey key in keys)
-                //{
-                //    _data.TryRemove(key, out entry);
-                //}
-
-                //_last_id = id;
             }
         }
 
@@ -207,7 +202,8 @@ namespace OsmSharp.Collections.Cache
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return _data.Select<KeyValuePair<TKey, CacheEntry>, KeyValuePair<TKey, TValue>>(
-                (source) => {
+                (source) =>
+                {
                     return new KeyValuePair<TKey, TValue>(source.Key, source.Value.Value);
                 }).GetEnumerator();
         }
@@ -226,4 +222,3 @@ namespace OsmSharp.Collections.Cache
         }
     }
 }
-#endif

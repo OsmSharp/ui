@@ -28,6 +28,7 @@ using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.CH
 {
@@ -685,7 +686,7 @@ namespace OsmSharp.Routing.CH
                 targetIds[idx] = 
                     this.SearchBackwardIntoBucket(graph, buckets, sources[idx]);
 
-                OsmSharp.Logging.Log.TraceEvent("CHRouter", System.Diagnostics.TraceEventType.Information, "Calculating backward... {0}%",
+                OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating backward... {0}%",
                     (int)(((float)idx / (float)targets.Length) * 100));
             }
 
@@ -709,7 +710,7 @@ namespace OsmSharp.Routing.CH
                 weights[idx] = toWeights;
                 result.Clear();
                 
-                OsmSharp.Logging.Log.TraceEvent("CHRouter", System.Diagnostics.TraceEventType.Information, "Calculating forward... {0}%",
+                OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating forward... {0}%",
                     (int)(((float)idx / (float)sources.Length) * 100));
             }
             return weights;

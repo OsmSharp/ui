@@ -96,7 +96,7 @@ namespace OsmSharp.Math.TSP.LK
                 Route = init_route,
                 RouteWeight = init_route_weight
             };
-            Console.WriteLine("Route {0}:{1}",
+            OsmSharp.Logging.Log.TraceEvent("LinKernighanSolver", Logging.TraceEventType.Information, "Route {0}:{1}",
                 route.Route.ToString(),
                 route.RouteWeight);
 
@@ -292,7 +292,7 @@ namespace OsmSharp.Math.TSP.LK
                     new_route.RouteWeight = LinKernighanSolver.Weight(problem, new_route.Route);
                     if (new_route.RouteWeight < route.RouteWeight)
                     { // break.
-                        Console.WriteLine("Route {0}:{1}",
+                        OsmSharp.Logging.Log.TraceEvent("LinKernighanSolver", Logging.TraceEventType.Information, "Route {0}:{1}",
                             new_route.Route.ToString(),
                             new_route.RouteWeight);
                         x.RemoveLast(); // remove the latest x here!
@@ -412,7 +412,7 @@ namespace OsmSharp.Math.TSP.LK
                     new_route.RouteWeight = LinKernighanSolver.Weight(problem, new_route.Route);
                     if (new_route.RouteWeight < route.RouteWeight)
                     { // break.
-                        Console.WriteLine("Route {0}:{1}",
+                        OsmSharp.Logging.Log.TraceEvent("LinKernighanSolver", Logging.TraceEventType.Information, "Route {0}:{1}",
                             new_route.Route.ToString(),
                             new_route.RouteWeight);
                         return new_route;
@@ -436,7 +436,7 @@ namespace OsmSharp.Math.TSP.LK
                         new_route = this.AfterSelectt5(problem, route, X, Y, x, y);
                         if (new_route.RouteWeight < route.RouteWeight)
                         { // break.
-                            Console.WriteLine("Route {0}:{1}",
+                            OsmSharp.Logging.Log.TraceEvent("LinKernighanSolver", Logging.TraceEventType.Information, "Route {0}:{1}",
                                 new_route.Route.ToString(),
                                 new_route.RouteWeight);
                             return new_route;

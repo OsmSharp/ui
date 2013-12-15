@@ -26,6 +26,7 @@ using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
 {
@@ -100,7 +101,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 // calculate the weight.
                 vrp_solution_weights[idx] = problem.Time(current);
 
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.MaxTimeRouter", System.Diagnostics.TraceEventType.Information, 
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.MaxTimeRouter", TraceEventType.Information, 
                     "Route {0}: {1}s", idx, vrp_solution_weights[idx]);
 
                 // convert the route.

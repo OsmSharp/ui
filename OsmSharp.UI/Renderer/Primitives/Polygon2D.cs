@@ -507,7 +507,7 @@ namespace OsmSharp.UI.Renderer.Primitives
 
                     if (X.Count <= earIdx)
                     {
-                        OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information, "");
+                        OsmSharp.Logging.Log.TraceEvent("", OsmSharp.Logging.TraceEventType.Information, "");
                         return triangles.ToArray();
                     }
                 }

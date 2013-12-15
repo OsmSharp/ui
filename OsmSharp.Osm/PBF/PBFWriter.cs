@@ -28,9 +28,9 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Closes this writer.
         /// </summary>
-        public void Close()
+        public void Dispose()
         {
-            _stream.Close();
+            _stream.Dispose();
         }
 
         /// <summary>

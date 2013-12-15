@@ -1,27 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</ProjectGuid>
+    <ProjectGuid>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.UI</RootNamespace>
     <AssemblyName>OsmSharp.UI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.UI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,94 +32,41 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>..\Output\Debug\x86\</OutputPath>
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-    <DocumentationFile>..\Output\Debug\x86\OsmSharp.UI.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\Output\Debug\x64\</OutputPath>
-    <DocumentationFile>..\Output\Debug\x64\OsmSharp.UI.XML</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\MapViewAnimator.cs" />
     <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />
     <Compile Include="KnownColor.cs" />
+    <Compile Include="Map\Layers\Layer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerGpx.cs" />
-    <Compile Include="Map\Layers\Layer.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
+    <Compile Include="Map\Layers\LayerRoute.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapRenderer.cs" />
     <Compile Include="Map\Styles\MapCSS\IMapCSSImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
-    <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
-    <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
-    <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneTarget.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreterException.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
-    <Compile Include="Map\Styles\StyleInterpreter.cs" />
-    <Compile Include="Map\Styles\StyleSceneManager.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFloat.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontStyle.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontVariant.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontWeight.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationLineJoin.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
-    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFloat.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationInt.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationLineCap.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationLineJoin.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationString.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationTextDecoration.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationTextPosition.cs" />
@@ -130,10 +78,30 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorTypeEnum.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorZoom.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreterException.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneTarget.cs" />
+    <Compile Include="Map\Styles\StyleInterpreter.cs" />
+    <Compile Include="Map\Styles\StyleSceneManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\IPrimitives2DSource.cs" />
+    <Compile Include="Renderer\Primitives\Icon2D.cs" />
+    <Compile Include="Renderer\Primitives\Image2D.cs" />
+    <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
+    <Compile Include="Renderer\Primitives\Line2D.cs" />
+    <Compile Include="Renderer\Primitives\LineText2D.cs" />
+    <Compile Include="Renderer\Primitives\Point2D.cs" />
+    <Compile Include="Renderer\Primitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Primitives\Primitive2D.cs" />
+    <Compile Include="Renderer\Primitives\Text2D.cs" />
+    <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneIconObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneLineObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneLineTextObject.cs" />
@@ -142,10 +110,7 @@
     <Compile Include="Renderer\Scene\Primitives\ScenePointObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\ScenePolygonObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneTextObject.cs" />
-    <Compile Include="Renderer\Primitives\Icon2D.cs" />
-    <Compile Include="Renderer\Primitives\Image2D.cs" />
-    <Compile Include="Renderer\Primitives\LineText2D.cs" />
-    <Compile Include="Renderer\Primitives\Text2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DZoomRange.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DRTreeDeserializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DSource.cs" />
@@ -159,40 +124,34 @@
     <Compile Include="Renderer\Scene\Styles\StyleText.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2D.cs" />
     <Compile Include="SimpleColor.cs" />
-    <Compile Include="Renderer\Primitives\Primitive2D.cs" />
-    <Compile Include="Renderer\Primitives\Line2D.cs" />
-    <Compile Include="Renderer\Primitives\Point2D.cs" />
-    <Compile Include="Renderer\Primitives\Polygon2D.cs" />
-    <Compile Include="Renderer\Renderer2D.cs" />
-    <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
-    <Compile Include="Map\Layers\LayerRoute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Antlr3 Include="Map\Styles\MapCSS\v0_2\MapCSS.g">
-      <Generator>MSBuild:Compile</Generator>
-    </Antlr3>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

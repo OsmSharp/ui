@@ -34,6 +34,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Android.UI
 {
@@ -488,7 +489,7 @@ namespace OsmSharp.Android.UI
         {
             _deltaDegrees = detector.RotationDegreesDelta;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotate:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
 
             return true;
@@ -501,7 +502,7 @@ namespace OsmSharp.Android.UI
             _deltaX = 0;
             _deltaY = 0;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotateBegin"));
 
             return true;
@@ -511,7 +512,7 @@ namespace OsmSharp.Android.UI
         {
             _deltaDegrees = 0;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotateEnd"));
         }
 

@@ -39,18 +39,7 @@ namespace OsmSharp.Osm.Xml.Streams.ChangeSets
 
         private XmlReader _reader;
 
-        private string _file_name;
-
         private Stream _stream;
-        
-        /// <summary>
-        /// Creates a new changeset source.
-        /// </summary>
-        /// <param name="file_name"></param>
-        public XmlDataProcessorChangeSetSource(string file_name)
-        {
-            _file_name = file_name;
-        }
 
         /// <summary>
         /// Creates a new changeset source.
@@ -76,16 +65,7 @@ namespace OsmSharp.Osm.Xml.Streams.ChangeSets
             settings.CheckCharacters = false;
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
-
-            if (_stream != null)
-            {
-                _reader = XmlReader.Create(_stream, settings);     
-            }
-            else
-            {
-                TextReader text_reader = new StreamReader(new FileInfo(_file_name).OpenRead(), Encoding.UTF8);
-                _reader = XmlReader.Create(text_reader, settings);     
-            }
+            _reader = XmlReader.Create(_stream, settings);
         }
 
         /// <summary>
@@ -158,8 +138,8 @@ namespace OsmSharp.Osm.Xml.Streams.ChangeSets
             settings.IgnoreComments = true;
             settings.IgnoreProcessingInstructions = true;
 
-            TextReader text_reader = new StreamReader(new FileInfo(_file_name).OpenRead(), Encoding.UTF8);
-            _reader = XmlReader.Create(text_reader, settings);     
+            _stream.Seek(0, SeekOrigin.Begin);
+            _reader = XmlReader.Create(_stream, settings);
         }
 
         /// <summary>
@@ -167,11 +147,7 @@ namespace OsmSharp.Osm.Xml.Streams.ChangeSets
         /// </summary>
         public override void Close()
         {
-            if (_stream != null)
-            {
-                _stream.Close();
-            }
-            _reader.Close();
+
         }
     }
 }

@@ -25,6 +25,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -360,7 +361,7 @@ namespace OsmSharp.Routing.Routers
             {
                 connectivityArray[idx] = this.CheckConnectivity(vehicle, point[idx], weight);
 
-                Logging.Log.TraceEvent("TypedRouter<TEdgeData>", System.Diagnostics.TraceEventType.Information, "Checking connectivity... {0}%",
+                Logging.Log.TraceEvent("TypedRouter<TEdgeData>", TraceEventType.Information, "Checking connectivity... {0}%",
                     (int)(((float)idx / (float)point.Length) * 100));
             }
             return connectivityArray;

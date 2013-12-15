@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             stream.Dispose();
             writeStream.Dispose();
 
-            OsmSharp.Logging.Log.TraceEvent("CHSerializer", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("CHSerializer", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
 
             performanceInfo.Stop();

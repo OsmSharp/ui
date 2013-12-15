@@ -80,10 +80,10 @@ namespace OsmSharp.Test.Unittests.GeoCoding.Nominatim
         //    SearchDocument document = new SearchDocument(source);
         //    object search = document.Search;
 
-        //    if (search is OsmSharp.Xml.Nomatim.Search.v1.searchresults)
+        //    if (search is OsmSharp.IO.Xml.Nomatim.Search.v1.searchresults)
         //    { // all ok here!
-        //        Assert.IsTrue((search as OsmSharp.Xml.Nomatim.Search.v1.searchresults).place.Length == 1);
-        //        Assert.IsTrue((search as OsmSharp.Xml.Nomatim.Search.v1.searchresults).place[0].country_code == "be");
+        //        Assert.IsTrue((search as OsmSharp.IO.Xml.Nomatim.Search.v1.searchresults).place.Length == 1);
+        //        Assert.IsTrue((search as OsmSharp.IO.Xml.Nomatim.Search.v1.searchresults).place[0].country_code == "be");
         //    }
         //    else
         //    {

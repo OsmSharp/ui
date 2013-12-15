@@ -33,6 +33,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Android.UI
 {
@@ -307,14 +308,14 @@ namespace OsmSharp.Android.UI
 
 				long before = DateTime.Now.Ticks;
 
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "Rendering Start");
 
 				// notify the map that the view has changed.
 				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
 				                      view);
 				long afterViewChanged = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "View change took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
@@ -322,7 +323,7 @@ namespace OsmSharp.Android.UI
                 bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
 				long afterRendering = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "Rendering took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 				if(complete)
@@ -627,7 +628,7 @@ namespace OsmSharp.Android.UI
 		{
 			_deltaDegrees = detector.RotationDegreesDelta;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotate:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
 
 			return true;
@@ -640,7 +641,7 @@ namespace OsmSharp.Android.UI
 			_deltaX = 0;
             _deltaY = 0;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotateBegin"));
 
 			return true;
@@ -650,7 +651,7 @@ namespace OsmSharp.Android.UI
         {
             _deltaDegrees = 0;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
                 string.Format("OnRotateEnd"));
 		}
 
@@ -693,9 +694,6 @@ namespace OsmSharp.Android.UI
         /// <returns></returns>
         public bool OnTap(TapGestureDetector detector)
         {
-            OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information,
-                "OnTap            dsqffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-
             // recreate the view.
             View2D view = this.CreateView();
 

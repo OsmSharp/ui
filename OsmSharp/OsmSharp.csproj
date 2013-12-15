@@ -1,183 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</ProjectGuid>
+    <ProjectGuid>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp</RootNamespace>
     <AssemblyName>OsmSharp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <TargetFrameworkProfile />
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>3</WarningLevel>
-    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.XML</DocumentationFile>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\Debug\x86\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Debug\x86\OsmSharp.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Output\Release\x86\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Release\x86\OsmSharp.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\Debug\x64\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Debug\x64\OsmSharp.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Output\Release\x64\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Release\x64\OsmSharp.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Runtime.Caching" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
+    <Compile Include="Collections\HashSet.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
+    <Compile Include="Collections\ISet.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
     <Compile Include="Collections\LongIndex\LongIndex.cs" />
     <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
-    <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
-    <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
-    <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
+    <Compile Include="Collections\PermutationEnumerator.cs" />
+    <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
+    <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
+    <Compile Include="Collections\SortedDictionary.cs" />
+    <Compile Include="Collections\SortedList.cs" />
+    <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
-    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
-    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
-    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
-    <Compile Include="Collections\Tags\TagsCollection.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
+    <Compile Include="Collections\Tags\TagsCollection.cs" />
     <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
     <Compile Include="Collections\Tags\TagsTableCollection.cs" />
     <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
     <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\GeoCoordinate.cs" />
+    <Compile Include="Geo\GeoCoordinateBox.cs" />
+    <Compile Include="Geo\GeoCoordinateLine.cs" />
+    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
     <Compile Include="Geo\Geometries\Geometry.cs" />
     <Compile Include="Geo\Geometries\GeometryCollection.cs" />
     <Compile Include="Geo\Geometries\LineairRing.cs" />
@@ -187,42 +92,82 @@
     <Compile Include="Geo\Geometries\MultiPolygon.cs" />
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Geo\Projections\IProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
+    <Compile Include="Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Geo\Projections\WebMercator.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
+    <Compile Include="IClonable.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
     <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
+    <Compile Include="IO\CappedStream.cs" />
     <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
-    <Compile Include="Collections\PermutationEnumerator.cs" />
-    <Compile Include="GeoCoding\AccuracyEnum.cs" />
-    <Compile Include="GeoCoding\Facade.cs" />
-    <Compile Include="GeoCoding\IGeoCoder.cs" />
-    <Compile Include="GeoCoding\IGeoCoderResult.cs" />
-    <Compile Include="GeoCoding\Memory\IndexCommunes.cs" />
-    <Compile Include="GeoCoding\Memory\IndexHouseNumbers.cs" />
-    <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
-    <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
-    <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderQuery.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderResult.cs" />
-    <Compile Include="IO\CappedStream.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\IXmlSource.cs" />
+    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Nominatim\Reverse\v1\reverse.cs">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Nominatim\Search\SearchDocument.cs" />
+    <Compile Include="IO\Xml\Nominatim\Search\v1\search.cs">
+      <DependentUpon>search.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\SourceLevels.cs" />
+    <Compile Include="Logging\TraceEventType.cs" />
+    <Compile Include="Logging\TraceListener.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
     <Compile Include="Math\AI\Genetic\Population.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\ISelector.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\RandomSelector.cs" />
@@ -230,33 +175,13 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Geo\Extensions.cs" />
-    <Compile Include="Geo\GeoCoordinate.cs" />
-    <Compile Include="Geo\GeoCoordinateBox.cs" />
-    <Compile Include="Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
-    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
-    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\DirectionEnum.cs" />
-    <Compile Include="Geo\Meta\RelativeDirection.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Geo\Projections\ScaledProjection.cs" />
-    <Compile Include="Geo\Projections\WebMercator.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Math\Algorithms\Rotation.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
-    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
-    <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerator.cs" />
@@ -264,8 +189,10 @@
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
     <Compile Include="Math\Primitives\LineF2D.cs" />
+    <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
     <Compile Include="Math\Primitives\Polyline2D.cs" />
+    <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Math\Random\IRandomGenerator.cs" />
     <Compile Include="Math\Random\RandomGenerator.cs" />
     <Compile Include="Math\Random\StaticRandomGenerator.cs" />
@@ -320,33 +247,6 @@
     <Compile Include="Math\TSP\RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
     <Compile Include="Math\TSP\Random\RandomSolver.cs" />
     <Compile Include="Math\TSP\SolverBase.cs" />
-    <Compile Include="Progress\EmptyProgressReporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Progress\IProgressEnabled.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Progress\IProgressReporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Progress\ProgressStatus.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Units\Angle\Degree.cs" />
-    <Compile Include="Units\Angle\Radian.cs" />
-    <Compile Include="Units\Distance\Kilometer.cs" />
-    <Compile Include="Units\Distance\Meter.cs" />
-    <Compile Include="Units\Speed\KilometerPerHour.cs" />
-    <Compile Include="Units\Speed\Knots.cs" />
-    <Compile Include="Units\Speed\MeterPerSecond.cs" />
-    <Compile Include="Units\Speed\MilesPerHour.cs" />
-    <Compile Include="Units\Speed\Speed.cs" />
-    <Compile Include="Units\Time\Hour.cs" />
-    <Compile Include="Units\Time\MilliSecond.cs" />
-    <Compile Include="Units\Time\Second.cs" />
-    <Compile Include="Units\Unit.cs" />
-    <Compile Include="Units\Weight\Gram.cs" />
-    <Compile Include="Units\Weight\Kilogram.cs" />
     <Compile Include="Math\VectorF2D.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionHelper.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionResult.cs" />
@@ -406,56 +306,39 @@
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeOutMutationOperation.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Problem.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Problems\IProblem.cs" />
+    <Compile Include="PCLExtensions.cs" />
+    <Compile Include="Progress\EmptyProgressReporter.cs" />
+    <Compile Include="Progress\IProgressEnabled.cs" />
+    <Compile Include="Progress\IProgressReporter.cs" />
+    <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
-    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
-    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
+    <Compile Include="Units\Angle\Degree.cs" />
+    <Compile Include="Units\Angle\Radian.cs" />
+    <Compile Include="Units\Distance\Kilometer.cs" />
+    <Compile Include="Units\Distance\Meter.cs" />
+    <Compile Include="Units\Speed\KilometerPerHour.cs" />
+    <Compile Include="Units\Speed\Knots.cs" />
+    <Compile Include="Units\Speed\MeterPerSecond.cs" />
+    <Compile Include="Units\Speed\MilesPerHour.cs" />
+    <Compile Include="Units\Speed\Speed.cs" />
+    <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\MilliSecond.cs" />
+    <Compile Include="Units\Time\Second.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Weight\Gram.cs" />
+    <Compile Include="Units\Weight\Kilogram.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
-    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
-      <DependentUpon>gpx.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs">
-      <DependentUpon>gpx.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\IXmlSource.cs" />
-    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
-    <Compile Include="IO\Xml\Kml\v2_0\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Nominatim\Reverse\v1\reverse.cs">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Nominatim\Search\SearchDocument.cs" />
-    <Compile Include="IO\Xml\Nominatim\Search\v1\search.cs">
-      <DependentUpon>search.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="IO\Xml\Nominatim\Search\v1\search.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>search.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="IO\Xml\Sources\XmlFileSource.cs" />
-    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
-    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
-    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
-    <Compile Include="Geo\Projections\IProjection.cs" />
-    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
-    <Compile Include="Geo\Projections\SphericalMercator.cs" />
-    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
-    <Compile Include="Math\Primitives\BoxF2D.cs" />
-    <Compile Include="Math\Primitives\RectangleF2D.cs" />
-    <Compile Include="Collections\Tags\ITagsSource.cs" />
-    <Compile Include="Math\Algorithms\Rotation.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">
       <SubType>Designer</SubType>
@@ -472,21 +355,22 @@
     <None Include="IO\Xml\Kml\v2_1\kml.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xsc">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </None>
     <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xsd" />
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xss">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </None>
     <None Include="IO\Xml\Nominatim\Search\v1\search.xsc">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
-    <None Include="IO\Xml\Nominatim\Search\v1\search.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>search.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xsd" />
     <None Include="IO\Xml\Nominatim\Search\v1\search.xss">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

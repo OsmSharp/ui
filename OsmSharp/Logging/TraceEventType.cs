@@ -16,40 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Diagnostics;
-using System;
-
 namespace OsmSharp.Logging
 {
     /// <summary>
-    /// A log trace listener that writes message to the console.
+    /// Represents different types of trace events.
     /// </summary>
-    public class ConsoleTraceListener : TraceListener
+    public enum TraceEventType
     {
-        /// <summary>
-        /// Creates a new console trace listener.
-        /// </summary>
-        public ConsoleTraceListener()
-        {
-
-        }
-
-        /// <summary>
-        /// Writes the given message to the console.
-        /// </summary>
-        /// <param name="message"></param>
-        public override void Write(string message)
-        {
-            Console.Write(message);
-        }
-
-        /// <summary>
-        /// Writes the given message to the console.
-        /// </summary>
-        /// <param name="message"></param>
-        public override void WriteLine(string message)
-        {
-            Console.WriteLine(message);
-        }
+        Critical,
+        Error,
+        Warning,
+        Verbose,
+        Information
     }
 }

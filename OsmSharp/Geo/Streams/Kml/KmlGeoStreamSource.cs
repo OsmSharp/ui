@@ -21,8 +21,8 @@ using System.IO;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
-using OsmSharp.Xml.Kml;
-using OsmSharp.Xml.Sources;
+using OsmSharp.IO.Xml.Kml;
+using OsmSharp.IO.Xml.Sources;
 
 namespace OsmSharp.Geo.Streams.Kml
 {
@@ -93,13 +93,13 @@ namespace OsmSharp.Geo.Streams.Kml
             switch (document.Version)
             {
                 case KmlVersion.Kmlv2_1:
-                    this.ConvertKml(kml as OsmSharp.Xml.Kml.v2_1.KmlType);
+                    this.ConvertKml(kml as OsmSharp.IO.Xml.Kml.v2_1.KmlType);
                     break;
                 case KmlVersion.Kmlv2_0_response:
-                    this.ConvertKml(kml as OsmSharp.Xml.Kml.v2_0_response.kml);
+                    this.ConvertKml(kml as OsmSharp.IO.Xml.Kml.v2_0_response.kml);
                     break;
                 case KmlVersion.Kmlv2_0:
-                    this.ConvertKml(kml as OsmSharp.Xml.Kml.v2_0.kml);
+                    this.ConvertKml(kml as OsmSharp.IO.Xml.Kml.v2_0.kml);
                     break;
             }
         }
@@ -108,7 +108,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// Reads a kml v2.1 object into corresponding geometries.
         /// </summary>
         /// <param name="kmlType"></param>
-        private void ConvertKml(Xml.Kml.v2_1.KmlType kmlType)
+        private void ConvertKml(IO.Xml.Kml.v2_1.KmlType kmlType)
         {
             this.GeometryCollection.Clear();
 
@@ -119,25 +119,25 @@ namespace OsmSharp.Geo.Streams.Kml
         /// Reads a kml v2.0 response object into corresponding geometries.
         /// </summary>
         /// <param name="kml"></param>
-        private void ConvertKml(Xml.Kml.v2_0_response.kml kml)
+        private void ConvertKml(IO.Xml.Kml.v2_0_response.kml kml)
         {
             this.GeometryCollection.Clear();
 
-            if (kml.Item is OsmSharp.Xml.Kml.v2_0_response.Document)
+            if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0_response.Document)
             {
-                this.ConvertDocument(kml.Item as OsmSharp.Xml.Kml.v2_0_response.Document);
+                this.ConvertDocument(kml.Item as OsmSharp.IO.Xml.Kml.v2_0_response.Document);
             }
-            else if (kml.Item is OsmSharp.Xml.Kml.v2_0_response.Folder)
+            else if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0_response.Folder)
             {
-                this.ConvertFolder(kml.Item as OsmSharp.Xml.Kml.v2_0_response.Folder);
+                this.ConvertFolder(kml.Item as OsmSharp.IO.Xml.Kml.v2_0_response.Folder);
             }
-            else if (kml.Item is OsmSharp.Xml.Kml.v2_0_response.Placemark)
+            else if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0_response.Placemark)
             {
-                this.ConvertPlacemark(kml.Item as OsmSharp.Xml.Kml.v2_0_response.Placemark);
+                this.ConvertPlacemark(kml.Item as OsmSharp.IO.Xml.Kml.v2_0_response.Placemark);
             }
-            else if (kml.Item is OsmSharp.Xml.Kml.v2_0_response.Response)
+            else if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0_response.Response)
             {
-                this.ConvertResponse(kml.Item as OsmSharp.Xml.Kml.v2_0_response.Response);
+                this.ConvertResponse(kml.Item as OsmSharp.IO.Xml.Kml.v2_0_response.Response);
             }
         }
 
@@ -145,21 +145,21 @@ namespace OsmSharp.Geo.Streams.Kml
         /// Reads a kml v2.0 object into corresponding geometries.
         /// </summary>
         /// <param name="kml"></param>
-        private void ConvertKml(OsmSharp.Xml.Kml.v2_0.kml kml)
+        private void ConvertKml(OsmSharp.IO.Xml.Kml.v2_0.kml kml)
         {
             this.GeometryCollection.Clear();
 
-            if (kml.Item is OsmSharp.Xml.Kml.v2_0.Document)
+            if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0.Document)
             {
-                this.ConvertDocument(kml.Item as OsmSharp.Xml.Kml.v2_0.Document);
+                this.ConvertDocument(kml.Item as OsmSharp.IO.Xml.Kml.v2_0.Document);
             }
-            else if (kml.Item is OsmSharp.Xml.Kml.v2_0.Folder)
+            else if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0.Folder)
             {
-                this.ConvertFolder(kml.Item as OsmSharp.Xml.Kml.v2_0.Folder);
+                this.ConvertFolder(kml.Item as OsmSharp.IO.Xml.Kml.v2_0.Folder);
             }
-            else if (kml.Item is OsmSharp.Xml.Kml.v2_0.Placemark)
+            else if (kml.Item is OsmSharp.IO.Xml.Kml.v2_0.Placemark)
             {
-                this.ConvertPlacemark(kml.Item as OsmSharp.Xml.Kml.v2_0.Placemark);
+                this.ConvertPlacemark(kml.Item as OsmSharp.IO.Xml.Kml.v2_0.Placemark);
             }
         }
 
@@ -172,38 +172,38 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="placemark"></param>
         /// <returns></returns>
-        private void ConvertPlacemark(OsmSharp.Xml.Kml.v2_0.Placemark placemark)
+        private void ConvertPlacemark(OsmSharp.IO.Xml.Kml.v2_0.Placemark placemark)
         {
             for (int idx = 0; idx < placemark.Items.Length; idx++)
             {
                 switch (placemark.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.LineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.LineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertLineString(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.LineString));
+                            KmlGeoStreamSource.ConvertLineString(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.LineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.MultiGeometry:
-                        this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiGeometry);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.MultiGeometry:
+                        this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiGeometry);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.MultiLineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.MultiLineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiLineString));
+                            KmlGeoStreamSource.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiLineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.MultiPoint:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.MultiPoint:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiPoint));
+                            KmlGeoStreamSource.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiPoint));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.MultiPolygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.MultiPolygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiPolygon));
+                            KmlGeoStreamSource.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiPolygon));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.Point:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.Point:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPoint(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.Point));
+                            KmlGeoStreamSource.ConvertPoint(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Point));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType1.Polygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType1.Polygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPolygon(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0.Polygon));
+                            KmlGeoStreamSource.ConvertPolygon(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Polygon));
                         break;
                 }
             }
@@ -214,7 +214,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        private static Polygon ConvertPolygon(OsmSharp.Xml.Kml.v2_0.Polygon polygon)
+        private static Polygon ConvertPolygon(OsmSharp.IO.Xml.Kml.v2_0.Polygon polygon)
         {
             LineairRing inner = KmlGeoStreamSource.ConvertLinearRing(polygon.innerBoundaryIs.LinearRing);
             LineairRing outer = KmlGeoStreamSource.ConvertLinearRing(polygon.outerBoundaryIs.LinearRing);
@@ -227,7 +227,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="linearRing"></param>
         /// <returns></returns>
-        private static LineairRing ConvertLinearRing(OsmSharp.Xml.Kml.v2_0.LinearRing linearRing)
+        private static LineairRing ConvertLinearRing(OsmSharp.IO.Xml.Kml.v2_0.LinearRing linearRing)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(linearRing.coordinates);
@@ -245,7 +245,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private static Point ConvertPoint(OsmSharp.Xml.Kml.v2_0.Point point)
+        private static Point ConvertPoint(OsmSharp.IO.Xml.Kml.v2_0.Point point)
         {
             // convert the coordiantes.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(point.coordinates);
@@ -265,7 +265,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiPolygon"></param>
         /// <returns></returns>
-        private static MultiPolygon ConvertMultiPolygon(OsmSharp.Xml.Kml.v2_0.MultiPolygon multiPolygon)
+        private static MultiPolygon ConvertMultiPolygon(OsmSharp.IO.Xml.Kml.v2_0.MultiPolygon multiPolygon)
         {
             return new MultiPolygon(new Polygon[] { KmlGeoStreamSource.ConvertPolygon(multiPolygon.Polygon) });
         }
@@ -275,7 +275,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiPoint"></param>
         /// <returns></returns>
-        private static MultiPoint ConvertMultiPoint(OsmSharp.Xml.Kml.v2_0.MultiPoint multiPoint)
+        private static MultiPoint ConvertMultiPoint(OsmSharp.IO.Xml.Kml.v2_0.MultiPoint multiPoint)
         {
             return new MultiPoint(new Point[] { KmlGeoStreamSource.ConvertPoint(multiPoint.Point) });
         }
@@ -285,7 +285,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiLineString"></param>
         /// <returns></returns>
-        private static MultiLineString ConvertMultiLineString(OsmSharp.Xml.Kml.v2_0.MultiLineString multiLineString)
+        private static MultiLineString ConvertMultiLineString(OsmSharp.IO.Xml.Kml.v2_0.MultiLineString multiLineString)
         {
             return new MultiLineString(new LineString[] { KmlGeoStreamSource.ConvertLineString(multiLineString.LineString) });
         }
@@ -295,38 +295,38 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiGeometry"></param>
         /// <returns></returns>
-        private void ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_0.MultiGeometry multiGeometry)
+        private void ConvertMultiGeometry(OsmSharp.IO.Xml.Kml.v2_0.MultiGeometry multiGeometry)
         {
             for (int idx = 0; idx < multiGeometry.Items.Length; idx++)
             {
                 switch (multiGeometry.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.LineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.LineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.LineString));
+                            KmlGeoStreamSource.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.LineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.MultiGeometry:
-                        this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiGeometry);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.MultiGeometry:
+                        this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiGeometry);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.MultiLineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.MultiLineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiLineString));
+                            KmlGeoStreamSource.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiLineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.MultiPoint:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.MultiPoint:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiPoint));
+                            KmlGeoStreamSource.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiPoint));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.MultiPolygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.MultiPolygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.MultiPolygon));
+                            KmlGeoStreamSource.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.MultiPolygon));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.Point:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.Point:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.Point));
+                            KmlGeoStreamSource.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Point));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType.Polygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType.Polygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0.Polygon));
+                            KmlGeoStreamSource.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Polygon));
                         break;
                 }
             }
@@ -337,7 +337,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="lineString"></param>
         /// <returns></returns>
-        private static LineString ConvertLineString(OsmSharp.Xml.Kml.v2_0.LineString lineString)
+        private static LineString ConvertLineString(OsmSharp.IO.Xml.Kml.v2_0.LineString lineString)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(lineString.coordinates);
@@ -355,20 +355,20 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        private void ConvertFolder(OsmSharp.Xml.Kml.v2_0.Folder folder)
+        private void ConvertFolder(OsmSharp.IO.Xml.Kml.v2_0.Folder folder)
         {
             for (int idx = 0; idx < folder.Items.Length; idx++)
             {
                 switch (folder.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType2.Document:
-                        this.ConvertDocument(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0.Document);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType2.Document:
+                        this.ConvertDocument(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Document);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType2.Folder:
-                        this.ConvertFolder(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0.Folder);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType2.Folder:
+                        this.ConvertFolder(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Folder);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType2.Placemark:
-                        this.ConvertPlacemark(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0.Placemark);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType2.Placemark:
+                        this.ConvertPlacemark(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Placemark);
                         break;
                 }
             }
@@ -379,20 +379,20 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        private void ConvertDocument(OsmSharp.Xml.Kml.v2_0.Document document)
+        private void ConvertDocument(OsmSharp.IO.Xml.Kml.v2_0.Document document)
         {
             for (int idx = 0; idx < document.Items.Length; idx++)
             {
                 switch (document.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType3.Document:
-                        this.ConvertDocument(document.Items[idx] as OsmSharp.Xml.Kml.v2_0.Document);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType3.Document:
+                        this.ConvertDocument(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Document);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType3.Folder:
-                        this.ConvertFolder(document.Items[idx] as OsmSharp.Xml.Kml.v2_0.Folder);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType3.Folder:
+                        this.ConvertFolder(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Folder);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0.ItemsChoiceType3.Placemark:
-                        this.ConvertPlacemark(document.Items[idx] as OsmSharp.Xml.Kml.v2_0.Placemark);
+                    case OsmSharp.IO.Xml.Kml.v2_0.ItemsChoiceType3.Placemark:
+                        this.ConvertPlacemark(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0.Placemark);
                         break;
                 }
             }
@@ -408,25 +408,25 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private void ConvertResponse(OsmSharp.Xml.Kml.v2_0_response.Response response)
+        private void ConvertResponse(OsmSharp.IO.Xml.Kml.v2_0_response.Response response)
         {
             foreach (object item in response.Items)
             {
-                if (item is OsmSharp.Xml.Kml.v2_0_response.Document)
+                if (item is OsmSharp.IO.Xml.Kml.v2_0_response.Document)
                 {
-                    this.ConvertDocument(item as OsmSharp.Xml.Kml.v2_0_response.Document);
+                    this.ConvertDocument(item as OsmSharp.IO.Xml.Kml.v2_0_response.Document);
                 }
-                else if (item is OsmSharp.Xml.Kml.v2_0_response.Folder)
+                else if (item is OsmSharp.IO.Xml.Kml.v2_0_response.Folder)
                 {
-                    this.ConvertFolder(item as OsmSharp.Xml.Kml.v2_0_response.Folder);
+                    this.ConvertFolder(item as OsmSharp.IO.Xml.Kml.v2_0_response.Folder);
                 }
-                else if (item is OsmSharp.Xml.Kml.v2_0_response.Placemark)
+                else if (item is OsmSharp.IO.Xml.Kml.v2_0_response.Placemark)
                 {
-                    this.ConvertPlacemark(item as OsmSharp.Xml.Kml.v2_0_response.Placemark);
+                    this.ConvertPlacemark(item as OsmSharp.IO.Xml.Kml.v2_0_response.Placemark);
                 }
-                else if (item is OsmSharp.Xml.Kml.v2_0_response.Response)
+                else if (item is OsmSharp.IO.Xml.Kml.v2_0_response.Response)
                 {
-                    this.ConvertResponse(item as OsmSharp.Xml.Kml.v2_0_response.Response);
+                    this.ConvertResponse(item as OsmSharp.IO.Xml.Kml.v2_0_response.Response);
                 }
             }
         }
@@ -436,38 +436,38 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="placemark"></param>
         /// <returns></returns>
-        private void ConvertPlacemark(OsmSharp.Xml.Kml.v2_0_response.Placemark placemark)
+        private void ConvertPlacemark(OsmSharp.IO.Xml.Kml.v2_0_response.Placemark placemark)
         {
             for (int idx = 0; idx < placemark.Items.Length; idx++)
             {
                 switch (placemark.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.LineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.LineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertLineString(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.LineString));
+                            KmlGeoStreamSource.ConvertLineString(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.LineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiGeometry:
-                        this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiGeometry);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiGeometry:
+                        this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiGeometry);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiLineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiLineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiLineString));
+                            KmlGeoStreamSource.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiLineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPoint:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPoint:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiPoint));
+                            KmlGeoStreamSource.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiPoint));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPolygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPolygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiPolygon));
+                            KmlGeoStreamSource.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiPolygon));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.Point:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.Point:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPoint(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Point));
+                            KmlGeoStreamSource.ConvertPoint(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Point));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType1.Polygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType1.Polygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPolygon(placemark.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Polygon));
+                            KmlGeoStreamSource.ConvertPolygon(placemark.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Polygon));
                         break;
                 }
             }
@@ -478,7 +478,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        private static Polygon ConvertPolygon(OsmSharp.Xml.Kml.v2_0_response.Polygon polygon)
+        private static Polygon ConvertPolygon(OsmSharp.IO.Xml.Kml.v2_0_response.Polygon polygon)
         {
             LineairRing inner = KmlGeoStreamSource.ConvertLinearRing(polygon.innerBoundaryIs.LinearRing);
             LineairRing outer = KmlGeoStreamSource.ConvertLinearRing(polygon.outerBoundaryIs.LinearRing);
@@ -491,7 +491,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="linearRing"></param>
         /// <returns></returns>
-        private static LineairRing ConvertLinearRing(OsmSharp.Xml.Kml.v2_0_response.LinearRing linearRing)
+        private static LineairRing ConvertLinearRing(OsmSharp.IO.Xml.Kml.v2_0_response.LinearRing linearRing)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(linearRing.coordinates);
@@ -509,7 +509,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private static Point ConvertPoint(OsmSharp.Xml.Kml.v2_0_response.Point point)
+        private static Point ConvertPoint(OsmSharp.IO.Xml.Kml.v2_0_response.Point point)
         {
             // convert the coordiantes.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(point.coordinates);
@@ -529,7 +529,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiPolygon"></param>
         /// <returns></returns>
-        private static MultiPolygon ConvertMultiPolygon(OsmSharp.Xml.Kml.v2_0_response.MultiPolygon multiPolygon)
+        private static MultiPolygon ConvertMultiPolygon(OsmSharp.IO.Xml.Kml.v2_0_response.MultiPolygon multiPolygon)
         {
             return new MultiPolygon(new Polygon[] { KmlGeoStreamSource.ConvertPolygon(multiPolygon.Polygon) });
         }
@@ -539,7 +539,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiPoint"></param>
         /// <returns></returns>
-        private static MultiPoint ConvertMultiPoint(OsmSharp.Xml.Kml.v2_0_response.MultiPoint multiPoint)
+        private static MultiPoint ConvertMultiPoint(OsmSharp.IO.Xml.Kml.v2_0_response.MultiPoint multiPoint)
         {
             return new MultiPoint(new Point[] { KmlGeoStreamSource.ConvertPoint(multiPoint.Point) });
         }
@@ -549,7 +549,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiLineString"></param>
         /// <returns></returns>
-        private static MultiLineString ConvertMultiLineString(OsmSharp.Xml.Kml.v2_0_response.MultiLineString multiLineString)
+        private static MultiLineString ConvertMultiLineString(OsmSharp.IO.Xml.Kml.v2_0_response.MultiLineString multiLineString)
         {
             return new MultiLineString(new LineString[] { KmlGeoStreamSource.ConvertLineString(multiLineString.LineString) });
         }
@@ -559,38 +559,38 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiGeometry"></param>
         /// <returns></returns>
-        private void ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_0_response.MultiGeometry multiGeometry)
+        private void ConvertMultiGeometry(OsmSharp.IO.Xml.Kml.v2_0_response.MultiGeometry multiGeometry)
         {
             for (int idx = 0; idx < multiGeometry.Items.Length; idx++)
             {
                 switch (multiGeometry.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.LineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.LineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.LineString));
+                            KmlGeoStreamSource.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.LineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.MultiGeometry:
-                        this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiGeometry);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.MultiGeometry:
+                        this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiGeometry);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.MultiLineString:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.MultiLineString:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiLineString));
+                            KmlGeoStreamSource.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiLineString));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPoint:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPoint:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiPoint));
+                            KmlGeoStreamSource.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiPoint));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPolygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPolygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.MultiPolygon));
+                            KmlGeoStreamSource.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.MultiPolygon));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.Point:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.Point:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Point));
+                            KmlGeoStreamSource.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Point));
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType.Polygon:
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType.Polygon:
                         this.GeometryCollection.Add(
-                            KmlGeoStreamSource.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Polygon));
+                            KmlGeoStreamSource.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Polygon));
                         break;
                 }
             }
@@ -601,7 +601,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="lineString"></param>
         /// <returns></returns>
-        private static LineString ConvertLineString(OsmSharp.Xml.Kml.v2_0_response.LineString lineString)
+        private static LineString ConvertLineString(OsmSharp.IO.Xml.Kml.v2_0_response.LineString lineString)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(lineString.coordinates);
@@ -619,20 +619,20 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        private void ConvertFolder(OsmSharp.Xml.Kml.v2_0_response.Folder folder)
+        private void ConvertFolder(OsmSharp.IO.Xml.Kml.v2_0_response.Folder folder)
         {
             for (int idx = 0; idx < folder.Items.Length; idx++)
             {
                 switch (folder.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType2.Document:
-                        this.ConvertDocument(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Document);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType2.Document:
+                        this.ConvertDocument(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Document);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType2.Folder:
-                        this.ConvertFolder(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Folder);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType2.Folder:
+                        this.ConvertFolder(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Folder);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType2.Placemark:
-                        this.ConvertPlacemark(folder.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Placemark);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType2.Placemark:
+                        this.ConvertPlacemark(folder.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Placemark);
                         break;
                 }
             }
@@ -643,20 +643,20 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        private void ConvertDocument(OsmSharp.Xml.Kml.v2_0_response.Document document)
+        private void ConvertDocument(OsmSharp.IO.Xml.Kml.v2_0_response.Document document)
         {
             for (int idx = 0; idx < document.Items.Length; idx++)
             {
                 switch (document.ItemsElementName[idx])
                 {
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType3.Document:
-                        this.ConvertDocument(document.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Document);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType3.Document:
+                        this.ConvertDocument(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Document);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType3.Folder:
-                        this.ConvertFolder(document.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Folder);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType3.Folder:
+                        this.ConvertFolder(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Folder);
                         break;
-                    case OsmSharp.Xml.Kml.v2_0_response.ItemsChoiceType3.Placemark:
-                        this.ConvertPlacemark(document.Items[idx] as OsmSharp.Xml.Kml.v2_0_response.Placemark);
+                    case OsmSharp.IO.Xml.Kml.v2_0_response.ItemsChoiceType3.Placemark:
+                        this.ConvertPlacemark(document.Items[idx] as OsmSharp.IO.Xml.Kml.v2_0_response.Placemark);
                         break;
                 }
             }
@@ -670,9 +670,9 @@ namespace OsmSharp.Geo.Streams.Kml
         /// Converts all the features into osm elements.
         /// </summary>
         /// <param name="featureType"></param>
-        private void ConvertFeatures(OsmSharp.Xml.Kml.v2_1.FeatureType[] featureType)
+        private void ConvertFeatures(OsmSharp.IO.Xml.Kml.v2_1.FeatureType[] featureType)
         {
-            foreach (OsmSharp.Xml.Kml.v2_1.FeatureType feature in featureType)
+            foreach (OsmSharp.IO.Xml.Kml.v2_1.FeatureType feature in featureType)
             {
                 this.ConvertFeature(feature);
             }
@@ -683,15 +683,15 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="feature"></param>
         /// <returns></returns>
-        private void ConvertFeature(OsmSharp.Xml.Kml.v2_1.FeatureType feature)
+        private void ConvertFeature(OsmSharp.IO.Xml.Kml.v2_1.FeatureType feature)
         {
-            if (feature is OsmSharp.Xml.Kml.v2_1.ContainerType)
+            if (feature is OsmSharp.IO.Xml.Kml.v2_1.ContainerType)
             {
-                this.ConvertContainer(feature as OsmSharp.Xml.Kml.v2_1.ContainerType);
+                this.ConvertContainer(feature as OsmSharp.IO.Xml.Kml.v2_1.ContainerType);
             }
-            else if (feature is OsmSharp.Xml.Kml.v2_1.PlacemarkType)
+            else if (feature is OsmSharp.IO.Xml.Kml.v2_1.PlacemarkType)
             {
-                this.ConvertPlacemark(feature as OsmSharp.Xml.Kml.v2_1.PlacemarkType);
+                this.ConvertPlacemark(feature as OsmSharp.IO.Xml.Kml.v2_1.PlacemarkType);
             }
         }
 
@@ -700,7 +700,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="placemark"></param>
         /// <returns></returns>
-        private void ConvertPlacemark(OsmSharp.Xml.Kml.v2_1.PlacemarkType placemark)
+        private void ConvertPlacemark(OsmSharp.IO.Xml.Kml.v2_1.PlacemarkType placemark)
         {
             this.ConvertGeometry(placemark.Item1);
         }
@@ -710,31 +710,31 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        private void ConvertGeometry(OsmSharp.Xml.Kml.v2_1.GeometryType geometry)
+        private void ConvertGeometry(OsmSharp.IO.Xml.Kml.v2_1.GeometryType geometry)
         {
-            if (geometry is OsmSharp.Xml.Kml.v2_1.PointType)
+            if (geometry is OsmSharp.IO.Xml.Kml.v2_1.PointType)
             {
                 this.GeometryCollection.Add(
-                    KmlGeoStreamSource.ConvertPoint(geometry as OsmSharp.Xml.Kml.v2_1.PointType));
+                    KmlGeoStreamSource.ConvertPoint(geometry as OsmSharp.IO.Xml.Kml.v2_1.PointType));
             }
-            else if (geometry is OsmSharp.Xml.Kml.v2_1.LineStringType)
+            else if (geometry is OsmSharp.IO.Xml.Kml.v2_1.LineStringType)
             {
                 this.GeometryCollection.Add(
-                    KmlGeoStreamSource.ConvertLineString(geometry as OsmSharp.Xml.Kml.v2_1.LineStringType));
+                    KmlGeoStreamSource.ConvertLineString(geometry as OsmSharp.IO.Xml.Kml.v2_1.LineStringType));
             }
-            else if (geometry is OsmSharp.Xml.Kml.v2_1.LinearRingType)
+            else if (geometry is OsmSharp.IO.Xml.Kml.v2_1.LinearRingType)
             {
                 this.GeometryCollection.Add(
-                    KmlGeoStreamSource.ConvertLinearRing(geometry as OsmSharp.Xml.Kml.v2_1.LinearRingType));
+                    KmlGeoStreamSource.ConvertLinearRing(geometry as OsmSharp.IO.Xml.Kml.v2_1.LinearRingType));
             }
-            else if (geometry is OsmSharp.Xml.Kml.v2_1.PolygonType)
+            else if (geometry is OsmSharp.IO.Xml.Kml.v2_1.PolygonType)
             {
                 this.GeometryCollection.Add(
-                    KmlGeoStreamSource.ConvertPolygon(geometry as OsmSharp.Xml.Kml.v2_1.PolygonType));
+                    KmlGeoStreamSource.ConvertPolygon(geometry as OsmSharp.IO.Xml.Kml.v2_1.PolygonType));
             }
-            else if (geometry is OsmSharp.Xml.Kml.v2_1.MultiGeometryType)
+            else if (geometry is OsmSharp.IO.Xml.Kml.v2_1.MultiGeometryType)
             {
-                this.ConvertMultiGeometry(geometry as OsmSharp.Xml.Kml.v2_1.MultiGeometryType);
+                this.ConvertMultiGeometry(geometry as OsmSharp.IO.Xml.Kml.v2_1.MultiGeometryType);
             }
         }
 
@@ -743,9 +743,9 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="multiGeometry"></param>
         /// <returns></returns>
-        private void ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_1.MultiGeometryType multiGeometry)
+        private void ConvertMultiGeometry(OsmSharp.IO.Xml.Kml.v2_1.MultiGeometryType multiGeometry)
         {
-            foreach (OsmSharp.Xml.Kml.v2_1.GeometryType geo in multiGeometry.Items)
+            foreach (OsmSharp.IO.Xml.Kml.v2_1.GeometryType geo in multiGeometry.Items)
             {
                 this.ConvertGeometry(geo);
             }
@@ -756,12 +756,12 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        private static Polygon ConvertPolygon(OsmSharp.Xml.Kml.v2_1.PolygonType polygon)
+        private static Polygon ConvertPolygon(OsmSharp.IO.Xml.Kml.v2_1.PolygonType polygon)
         {
             IEnumerable<LineairRing> inners = KmlGeoStreamSource.ConvertBoundary(polygon.innerBoundaryIs);
             LineairRing outer = KmlGeoStreamSource.ConvertLinearRing(polygon.outerBoundaryIs.LinearRing);
 
-            return new Polygon(outer, inners );
+            return new Polygon(outer, inners);
         }
 
         /// <summary>
@@ -769,10 +769,10 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="boundary"></param>
         /// <returns></returns>
-        private static IEnumerable<LineairRing> ConvertBoundary(OsmSharp.Xml.Kml.v2_1.boundaryType[] boundary)
+        private static IEnumerable<LineairRing> ConvertBoundary(OsmSharp.IO.Xml.Kml.v2_1.boundaryType[] boundary)
         {
             List<LineairRing> rings = new List<LineairRing>();
-            foreach (OsmSharp.Xml.Kml.v2_1.boundaryType geo in boundary)
+            foreach (OsmSharp.IO.Xml.Kml.v2_1.boundaryType geo in boundary)
             {
                 rings.Add(KmlGeoStreamSource.ConvertLinearRing(geo.LinearRing));
             }
@@ -784,7 +784,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="linearRing"></param>
         /// <returns></returns>
-        private static LineairRing ConvertLinearRing(OsmSharp.Xml.Kml.v2_1.LinearRingType linearRing)
+        private static LineairRing ConvertLinearRing(OsmSharp.IO.Xml.Kml.v2_1.LinearRingType linearRing)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(linearRing.coordinates);
@@ -802,7 +802,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="lineString"></param>
         /// <returns></returns>
-        private static LineString ConvertLineString(OsmSharp.Xml.Kml.v2_1.LineStringType lineString)
+        private static LineString ConvertLineString(OsmSharp.IO.Xml.Kml.v2_1.LineStringType lineString)
         {
             // convert the coordinates.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(lineString.coordinates);
@@ -820,7 +820,7 @@ namespace OsmSharp.Geo.Streams.Kml
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private static Point ConvertPoint(OsmSharp.Xml.Kml.v2_1.PointType point)
+        private static Point ConvertPoint(OsmSharp.IO.Xml.Kml.v2_1.PointType point)
         {
             // convert the coordiantes.
             IList<GeoCoordinate> coordinates = KmlGeoStreamSource.ConvertCoordinates(point.coordinates);
@@ -840,19 +840,19 @@ namespace OsmSharp.Geo.Streams.Kml
         /// Converts a container and it's contents to osm elements.
         /// </summary>
         /// <param name="container"></param>
-        private void ConvertContainer(OsmSharp.Xml.Kml.v2_1.ContainerType container)
+        private void ConvertContainer(OsmSharp.IO.Xml.Kml.v2_1.ContainerType container)
         {
             // get the features.
-            if (container is OsmSharp.Xml.Kml.v2_1.FolderType)
+            if (container is OsmSharp.IO.Xml.Kml.v2_1.FolderType)
             {
-                OsmSharp.Xml.Kml.v2_1.FolderType folder = (container as OsmSharp.Xml.Kml.v2_1.FolderType);
+                OsmSharp.IO.Xml.Kml.v2_1.FolderType folder = (container as OsmSharp.IO.Xml.Kml.v2_1.FolderType);
 
                 // items1 are the features. 
                 this.ConvertFeatures(folder.Items1);
             }
-            else if (container is OsmSharp.Xml.Kml.v2_1.DocumentType)
+            else if (container is OsmSharp.IO.Xml.Kml.v2_1.DocumentType)
             {
-                OsmSharp.Xml.Kml.v2_1.DocumentType document = (container as OsmSharp.Xml.Kml.v2_1.DocumentType);
+                OsmSharp.IO.Xml.Kml.v2_1.DocumentType document = (container as OsmSharp.IO.Xml.Kml.v2_1.DocumentType);
 
                 // items1 are the features.
                 this.ConvertFeatures(document.Items1);

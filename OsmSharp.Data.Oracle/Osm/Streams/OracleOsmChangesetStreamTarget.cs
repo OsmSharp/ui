@@ -73,19 +73,19 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     if (geo is Node)
                                     {
                                         this.Create(geo as Node);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "+(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Way)
                                     {
                                         this.Create(geo as Way);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "+(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Relation)
                                     {
                                         this.Create(geo as Relation);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "+(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
@@ -99,7 +99,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     }
                                     else
                                     {
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "+(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
@@ -115,19 +115,19 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     if (geo is Node)
                                     {
                                         this.Delete(geo as Node);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "-(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Way)
                                     {
                                         this.Delete(geo as Way);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "-(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Relation)
                                     {
                                         this.Delete(geo as Relation);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "-(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
@@ -141,7 +141,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     }
                                     else
                                     {
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "-(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
@@ -157,19 +157,19 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     if (geo is Node)
                                     {
                                         this.Modify(geo as Node);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "/(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Way)
                                     {
                                         this.Modify(geo as Way);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "/(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is Relation)
                                     {
                                         this.Modify(geo as Relation);
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "/(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
@@ -183,7 +183,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                                     }
                                     else
                                     {
-                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                                             "/(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
@@ -723,7 +723,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                 }
                 catch(Exception ex)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.Oracle.Osm.Streams.OracleOsmChangesetStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                         "Could not insert way_nodes record for way {0} and node {1}:{2}",
                         id, nodes[idx],
                         ex.Message);

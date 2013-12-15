@@ -27,7 +27,6 @@ namespace OsmSharp.Android.UI.Sample
 		public static void UpdateIdValues()
 		{
 			global::OsmSharp.Android.UI.Resource.String.library_name = global::OsmSharp.Android.UI.Sample.Resource.String.library_name;
-			global::EmptyTemplate.Resource.String.library_name = global::OsmSharp.Android.UI.Sample.Resource.String.library_name;
 		}
 		
 		public partial class Attribute

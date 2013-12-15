@@ -18,7 +18,7 @@
 
 using System.Xml;
 
-namespace OsmSharp.Xml
+namespace OsmSharp.IO.Xml
 {
     /// <summary>
     /// Reprents an xml source.

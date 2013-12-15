@@ -10387,7 +10387,8 @@ public partial class MapCSSParser : Antlr.Runtime.Parser
 		}
 		catch ( RecognitionException re )
 		{
-			System.Console.Error.WriteLine("impossible: "+re);
+            OsmSharp.Logging.Log.TraceEvent("MapCSSParser", OsmSharp.Logging.TraceEventType.Error,
+                "impossible: "+re);
 		}
 		success = !state.failed;
 		input.Rewind(start);

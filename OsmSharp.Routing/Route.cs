@@ -69,22 +69,6 @@ namespace OsmSharp.Routing
 
         #region Save / Load
 
-#if !WINDOWS_PHONE
-        #region Raw Route
-
-        /// <summary>
-        /// Saves a serialized version to a file.
-        /// </summary>
-        /// <param name="file"></param>
-        public void Save(FileInfo file)
-        {
-            Stream stream = file.OpenWrite();
-            this.Save(stream);
-            stream.Flush();
-            stream.Close();
-            stream.Dispose();
-        }
-
         /// <summary>
         /// Saves a serialized version to a stream.
         /// </summary>
@@ -110,16 +94,6 @@ namespace OsmSharp.Routing
             stream.Flush();
             mem_stream.Flush();
             return mem_stream.ToArray();
-        }
-
-        /// <summary>
-        /// Loads a route from file.
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public static Route Load(FileInfo info)
-        {
-            return Route.Load(info.OpenRead());
         }
 
         /// <summary>
@@ -153,34 +127,18 @@ namespace OsmSharp.Routing
 
         #endregion
 
-#if !IOS
         #region Gpx
 
         /// <summary>
         /// Save the route as GPX.
         /// </summary>
-        /// <param name="file"></param>
-        public void SaveAsGpx(FileInfo file)
+        /// <param name="stream"></param>
+        public void SaveAsGpx(Stream stream)
         {
-            OsmSharp.Routing.Gpx.RouteGpx.Save(file, this);
+            OsmSharp.Routing.Gpx.RouteGpx.Save(stream, this);
         }
+
 		#endregion
-#endif
-
-        #region Kml
-
-        /// <summary>
-        /// Saves the route as KML.
-        /// </summary>
-        /// <param name="file"></param>
-        public void SaveAsKml(FileInfo file)
-        {
-            OsmSharp.Routing.Kml.OsmSharpRouteKml.Save(file, this);
-        }
-
-        #endregion
-#endif
-        #endregion
 
         #region Create Routes
 

@@ -143,7 +143,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                     float progress = (float)System.Math.Round((((double)sceneObjectIdx / (double)sceneAtZoom.Count) * 100));
                     if (progress != latestProgress)
                     {
-                        OsmSharp.Logging.Log.TraceEvent("SceneSerializer", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
                             "Indexing scene objects at zoom {1} ({2}/{3})... {0}%", progress, sceneIndex.ZoomFactors[idx],
                                 sceneObjectIdx, sceneAtZoom.Count);
                         latestProgress = progress;
@@ -152,7 +152,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 }
 
                 // serialize the r-tree.
-                OsmSharp.Logging.Log.TraceEvent("SceneSerializer", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
                     "Serializing RTRee...");
                 SceneObjectRTreeSerializer memoryIndexSerializer = new SceneObjectRTreeSerializer(
                     scene, compress, idx, SceneSerializer.CalculateScaleFactor(sceneIndex.ZoomFactors[idx]));

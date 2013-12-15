@@ -31,7 +31,7 @@ namespace OsmSharp.Osm.Xml.Streams
     /// </summary>
     public class XmlOsmStreamTarget : OsmStreamTarget, IDisposable
     {
-        private XmlFragmentWriter _writer;
+        private XmlWriter _writer;
 
         private TextWriter _textWriter;
 
@@ -41,20 +41,7 @@ namespace OsmSharp.Osm.Xml.Streams
 
         private XmlSerializer _serRelation;
 
-        private readonly string _fileName;
-
         private readonly bool _disposeStream = false;
-
-        /// <summary>
-        /// Creates a new Xml data processor target.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public XmlOsmStreamTarget(string fileName)
-            :base()
-        {
-            _fileName = fileName;
-            _disposeStream = true;
-        }
 
         /// <summary>
         /// Creates a new Xml data processor target.
@@ -78,18 +65,10 @@ namespace OsmSharp.Osm.Xml.Streams
             var settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
             settings.ConformanceLevel = ConformanceLevel.Fragment;
-            settings.Encoding = Encoding.ASCII;
-
-            if (_textWriter == null)
-            {
-                _textWriter = File.CreateText(_fileName);
-            }
+            settings.Encoding = Encoding.UTF8;
 
             _textWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             _textWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
-
-            _writer = new XmlFragmentWriter(_textWriter);
-
         }
 
         /// <summary>
@@ -392,8 +371,6 @@ namespace OsmSharp.Osm.Xml.Streams
             _writer.Flush();
             _textWriter.WriteLine("</osm>");
             _textWriter.Flush();
-            _writer.Close();
-            _textWriter.Close();
         }
 
         /// <summary>

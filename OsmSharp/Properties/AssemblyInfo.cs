@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -33,14 +34,6 @@ using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("OsmSharp.UI")]
 [assembly: InternalsVisibleTo("protobuf-net")]
-
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6f378f32-5459-4f3e-a2ce-5985b6d0daf4")]
 
 // Version information for an assembly consists of the following four values:
 //

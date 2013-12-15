@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Units.Time;
 using OsmSharp.Routing;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
 {
@@ -151,7 +152,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
             builder.Append(total_weight);
             builder.Append(": ");
             builder.Append(calculator.Calculate(solution));
-            Console.WriteLine(builder.ToString());
+            OsmSharp.Logging.Log.TraceEvent("TSPPlacementSolver", TraceEventType.Information, builder.ToString());
 
             return solution;
         }

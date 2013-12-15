@@ -13,7 +13,7 @@ namespace OsmSharp.WinForms.UI.Sample
         [STAThread]
         static void Main()
         {
-            OsmSharp.Logging.Log.RegisterConsoleListener();
+            //OsmSharp.Logging.Log.RegisterConsoleListener();
 
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);

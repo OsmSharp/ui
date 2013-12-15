@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.IO;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.IO.Xml.Sources;
 using OsmSharp.Math.Geo;
-using OsmSharp.Xml.Gpx;
-using OsmSharp.Xml.Sources;
+using OsmSharp.IO.Xml.Gpx;
 
 namespace OsmSharp.Geo.Streams.Gpx
 {
@@ -85,7 +85,7 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// Reads the actual Gpx.
         /// </summary>
         private void DoReadGpx()
-        {            
+        {
             // seek to the beginning of the stream.
             if (_stream.CanSeek) { _stream.Seek(0, SeekOrigin.Begin); }
 
@@ -94,13 +94,13 @@ namespace OsmSharp.Geo.Streams.Gpx
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
-            switch(document.Version)
+            switch (document.Version)
             {
                 case GpxVersion.Gpxv1_0:
-                    this.ReadGpxv1_0(gpx as OsmSharp.Xml.Gpx.v1_0.gpx);
+                    this.ReadGpxv1_0(gpx as OsmSharp.IO.Xml.Gpx.v1_0.gpx);
                     break;
                 case GpxVersion.Gpxv1_1:
-                    this.ReadGpxv1_1(gpx as Xml.Gpx.v1_1.gpxType);
+                    this.ReadGpxv1_1(gpx as IO.Xml.Gpx.v1_1.gpxType);
                     break;
             }
         }
@@ -109,7 +109,7 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// Reads a gpx v1.1 object into corresponding geometries.
         /// </summary>
         /// <param name="gpx"></param>
-        private void ReadGpxv1_1(Xml.Gpx.v1_1.gpxType gpx)
+        private void ReadGpxv1_1(IO.Xml.Gpx.v1_1.gpxType gpx)
         {
             this.GeometryCollection.Clear();
 
@@ -259,7 +259,7 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// Reads a gpx v1.0 object into corresponding geometries.
         /// </summary>
         /// <param name="gpx"></param>
-        private void ReadGpxv1_0(OsmSharp.Xml.Gpx.v1_0.gpx gpx)
+        private void ReadGpxv1_0(OsmSharp.IO.Xml.Gpx.v1_0.gpx gpx)
         {
             this.GeometryCollection.Clear();
 

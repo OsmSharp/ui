@@ -27,7 +27,6 @@ namespace OsmSharp.Android.Test.Performance
 		public static void UpdateIdValues()
 		{
 			global::OsmSharp.Android.UI.Resource.String.library_name = global::OsmSharp.Android.Test.Performance.Resource.String.library_name;
-			global::EmptyTemplate.Resource.String.library_name = global::OsmSharp.Android.Test.Performance.Resource.String.library_name;
 		}
 		
 		public partial class Attribute

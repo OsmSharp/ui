@@ -1,53 +1,27 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Net;
 using System.Collections.Generic;
 
-namespace System.Diagnostics
+namespace OsmSharp.Logging
 {
-#if WINDOWS_PHONE
-	/// <summary>
-	/// Another class for compatibility with windows phone.
-	/// </summary>
-	public class TraceSource
-	{
-		public TraceSource(string name)
-		{
-
-		}
-
-		public TraceSource(string name, SourceLevels level)
-		{
-
-		}
-
-		/// <summary>
-		/// Traces an event.
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="id"></param>
-		/// <param name="message"></param>
-		internal void TraceEvent(TraceEventType type, int id, string message)
-		{
-
-		}
-
-		/// <summary>
-		/// Traces an event.
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="id"></param>
-		/// <param name="message"></param>
-		/// <param name="args"></param>
-		internal void TraceEvent(TraceEventType type, int id, string message, object[] args)
-		{
-
-		}
-
-		public List<TraceListener> Listeners { get; set; }
-	}
-
-#endif
-#if __ANDROID__ || IOS
 	/// <summary>
     /// Compatibility class with .NET to use the tracing facilities. 
     /// </summary>
@@ -138,41 +112,4 @@ namespace System.Diagnostics
         /// </summary>
         public List<TraceListener> Listeners { get; private set; }
     }
-
-#endif
-#if WINDOWS_PHONE
-
-    /// <summary>
-    /// Another enum for compatibility with windows phone.
-    /// </summary>
-    public enum TraceEventType
-    {
-        Critical = 1,
-        Error = 2,
-        Warning = 4,
-        Information = 8,
-        Verbose = 16,
-        Start = 256,
-        Stop = 512,
-        Suspend = 1024,
-        Resume = 2048,
-        Transfer = 4096
-    }
-
-    /// <summary>
-    /// A trace listener.
-    /// </summary>
-    public class TraceListener
-    {
-
-    }
-
-    /// <summary>
-    /// A source levels enum.
-    /// </summary>
-    public enum SourceLevels
-    {
-        All
-    }
-#endif
 }

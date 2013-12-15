@@ -15,15 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
-using OsmSharp.Xml;
 
-namespace OsmSharp.Xml.Kml
+using System;
+using System.Xml;
+using System.Xml.Serialization;
+using OsmSharp.IO.Xml;
+
+namespace OsmSharp.IO.Xml.Kml
 {
     /// <summary>
     /// Represents a kml document.
@@ -121,15 +119,15 @@ namespace OsmSharp.Xml.Kml
         private void FindVersionFromObject()
         {
             _version = KmlVersion.Unknown;
-            if (_kml_object is OsmSharp.Xml.Kml.v2_0.kml)
+            if (_kml_object is OsmSharp.IO.Xml.Kml.v2_0.kml)
             {
                 _version = KmlVersion.Kmlv2_0;
             }
-            else if (_kml_object is OsmSharp.Xml.Kml.v2_0_response.kml)
+            else if (_kml_object is OsmSharp.IO.Xml.Kml.v2_0_response.kml)
             {
                 _version = KmlVersion.Kmlv2_0_response;
             }
-            else if (_kml_object is OsmSharp.Xml.Kml.v2_1.KmlType)
+            else if (_kml_object is OsmSharp.IO.Xml.Kml.v2_1.KmlType)
             {
                 _version = KmlVersion.Kmlv2_1;
             }
@@ -179,7 +177,6 @@ namespace OsmSharp.Xml.Kml
                 // check end conditions.
                 if (_version != KmlVersion.Unknown)
                 {
-                    reader.Close();
                     reader = null;
                     break;
                 }
@@ -202,13 +199,13 @@ namespace OsmSharp.Xml.Kml
                     switch (_version)
                     {
                         case KmlVersion.Kmlv2_0:
-                            version_type = typeof(OsmSharp.Xml.Kml.v2_0.kml);
+                            version_type = typeof(OsmSharp.IO.Xml.Kml.v2_0.kml);
                             break;
                         case KmlVersion.Kmlv2_0_response:
-                            version_type = typeof(OsmSharp.Xml.Kml.v2_0_response.kml);
+                            version_type = typeof(OsmSharp.IO.Xml.Kml.v2_0_response.kml);
                             break;
                         case KmlVersion.Kmlv2_1:
-                            version_type = typeof(OsmSharp.Xml.Kml.v2_1.KmlType);
+                            version_type = typeof(OsmSharp.IO.Xml.Kml.v2_1.KmlType);
                             break;
                         case KmlVersion.Unknown:
                             throw new XmlException("Version could not be determined!");
@@ -219,8 +216,6 @@ namespace OsmSharp.Xml.Kml
                     XmlSerializer xmlSerializer = null;
                     xmlSerializer = new XmlSerializer(version_type);
                     _kml_object = xmlSerializer.Deserialize(reader);
-
-                    reader.Close();
                 }
             }
         }
@@ -234,13 +229,13 @@ namespace OsmSharp.Xml.Kml
                 switch (_version)
                 {
                     case KmlVersion.Kmlv2_0:
-                        version_type = typeof(OsmSharp.Xml.Kml.v2_0.kml);
+                        version_type = typeof(OsmSharp.IO.Xml.Kml.v2_0.kml);
                         break;
                     case KmlVersion.Kmlv2_0_response:
-                        version_type = typeof(OsmSharp.Xml.Kml.v2_0_response.kml);
+                        version_type = typeof(OsmSharp.IO.Xml.Kml.v2_0_response.kml);
                         break;
                     case KmlVersion.Kmlv2_1:
-                        version_type = typeof(OsmSharp.Xml.Kml.v2_1.KmlType);
+                        version_type = typeof(OsmSharp.IO.Xml.Kml.v2_1.KmlType);
                         break;
                     case KmlVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -252,7 +247,6 @@ namespace OsmSharp.Xml.Kml
                 XmlWriter writer = _source.GetWriter();
                 xmlSerializer.Serialize(writer, _kml_object);
                 writer.Flush();
-                writer.Close();
 
                 xmlSerializer = null;
                 writer = null;

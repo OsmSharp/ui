@@ -29,6 +29,7 @@ using OsmSharp.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver;
 using OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Generation;
 using OsmSharp.Math.AI.Genetic;
 using OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Math.VRP.MultiSalesman
 {
@@ -166,7 +167,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", TraceEventType.Information,
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -199,7 +200,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", TraceEventType.Information,
                     "Done!");
             }
             return population;
@@ -232,7 +233,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", TraceEventType.Information,
                     "Placing cities {0}/{1}", cities.Count, problem.Cities);
                 if (_registered_progress_reporter != null)
                 {

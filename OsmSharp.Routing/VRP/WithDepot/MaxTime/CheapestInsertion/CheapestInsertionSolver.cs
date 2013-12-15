@@ -29,6 +29,7 @@ using OsmSharp.Routing;
 using OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts;
 using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
 {
@@ -342,7 +343,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                     double difference;
                     if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", TraceEventType.Information,
                             "Intra-improvement found {0} {1}->{2}",
                             improvementOperation.Name, newWeight, newWeight + difference);
 
@@ -419,7 +420,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                         {
                             throw new Exception("this is not an improvement!");
                         }
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
@@ -435,7 +436,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                         improvement = true;
                         globalImprovement = true;
 
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", System.Diagnostics.TraceEventType.Information,
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolver", TraceEventType.Information,
                             "Inter-improvement found {0}<->{1}: {2}",
                             route1Idx, route2Idx, improvementOperation.Name);
 

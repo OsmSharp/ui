@@ -79,7 +79,7 @@ namespace OsmSharp.UI.Renderer
 				return complete;
 			}
 			catch(Exception ex) {
-				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
+				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, 
 				                                 ex.Message);
 				this.SetRunning (false);
 				throw ex;
@@ -267,12 +267,10 @@ namespace OsmSharp.UI.Renderer
                         continue;
                     }
                 }
-                //OsmSharp.Logging.Log.TraceEvent("Renderer2D", System.Diagnostics.TraceEventType.Error,
-                //    string.Format("Rendering successfull: simplified {0}/{1} lines", simplifiedLines, droppedLines));
 				return true;
 			}
 			catch(Exception ex) {
-				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
+				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, 
 				                                 ex.Message);
 				throw ex;
 			}

@@ -45,9 +45,9 @@ namespace OsmSharp.Osm.PBF
         /// <summary>
         /// Closes this reader.
         /// </summary>
-        public void Close()
+        public void Dispose()
         {
-            _stream.Close();
+            _stream.Dispose();
         }
 
         /// <summary>
@@ -215,11 +215,6 @@ namespace OsmSharp.Osm.PBF
         public ZLibStreamWrapper(Stream stream)
         {
             reader = new ZlibStream(stream, CompressionMode.Decompress);
-        }
-        public override void Close()
-        {
-            reader.Close();
-            base.Close();
         }
         protected override int ReadNextBlock(byte[] buffer, int offset, int count)
         {

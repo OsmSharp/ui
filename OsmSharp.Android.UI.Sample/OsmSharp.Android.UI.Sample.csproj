@@ -76,27 +76,26 @@
     <EmbeddedResource Include="images\postbox.png" />
     <EmbeddedResource Include="images\tree.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">
-      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Android</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Android.UI\OsmSharp.Android.UI.csproj">
       <Project>{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}</Project>
       <Name>OsmSharp.Android.UI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
-      <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
-      <Name>OsmSharp.Osm.Android</Name>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
+      <Name>OsmSharp.Osm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.Android.csproj">
-      <Project>{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}</Project>
-      <Name>OsmSharp.Routing.Android</Name>
+    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
+      <Name>OsmSharp.Routing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
-      <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
-      <Name>OsmSharp.UI.Android</Name>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
+      <Name>OsmSharp.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
+      <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

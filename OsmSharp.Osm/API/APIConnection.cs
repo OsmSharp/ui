@@ -18,18 +18,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
 using System.IO;
-using OsmSharp.Osm.Data.Core.API;
-using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.Osm;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Xml.Sources;
-using OsmSharp.Osm.Xml;
-using System.Xml.Serialization;
-using OsmSharp.Math.Geo;
+using System.Net;
+using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
+using OsmSharp.Collections.Tags;
+using OsmSharp.IO.Xml.Sources;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Core.API;
+using OsmSharp.Osm.Xml;
+using OsmSharp.Osm.Xml.v0_6;
 
 namespace OsmSharp.Osm.API
 {
@@ -92,24 +91,21 @@ namespace OsmSharp.Osm.API
                 case Method.PUT:
                     request.Method = "PUT";
 
-                    // build the data buffer.
-                    request.ContentLength = data.Length; // set content length.
-
                     // get the request stream and write the data.
                     requestStream = request.GetRequestStream();
                     requestStream.Write(data, 0, data.Length);
-                    requestStream.Close();
+                    requestStream.Dispose();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
-                    enc = System.Text.Encoding.GetEncoding(1252);
+                    enc = System.Text.Encoding.GetEncoding("Windows-1252");
                     responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
                     responseString = responseStream.ReadToEnd();
 
                     // close everything.
-                    response.Close();
-                    responseStream.Close();
+                    response.Dispose();
+                    responseStream.Dispose();
 
                     return responseString;
                 case Method.GET:
@@ -120,14 +116,14 @@ namespace OsmSharp.Osm.API
 
                         // get the response.
                         response = (HttpWebResponse)request.GetResponse();
-                        enc = System.Text.Encoding.GetEncoding(1252);
+                        enc = System.Text.Encoding.GetEncoding("Windows-1252");
                         responseStream =
                            new StreamReader(response.GetResponseStream(), enc);
                         responseString = responseStream.ReadToEnd();
 
                         // close everything.
-                        response.Close();
-                        responseStream.Close();
+                        response.Dispose();
+                        responseStream.Dispose();
                     }
                     catch (WebException ex)
                     {
@@ -155,24 +151,21 @@ namespace OsmSharp.Osm.API
                 case Method.DELETE:
                     request.Method = "DELETE";
 
-                    // build the data buffer.
-                    request.ContentLength = data.Length; // set content length.
-
                     // get the request stream and write the data.
                     requestStream = request.GetRequestStream();
                     requestStream.Write(data, 0, data.Length);
-                    requestStream.Close();
+                    requestStream.Dispose();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
-                    enc = System.Text.Encoding.GetEncoding(1252);
+                    enc = System.Text.Encoding.GetEncoding("Windows-1252");
                     responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
                     responseString = responseStream.ReadToEnd();
 
                     // close everything.
-                    response.Close();
-                    responseStream.Close();
+                    response.Dispose();
+                    responseStream.Dispose();
 
                     return responseString;
                 default:
@@ -198,7 +191,7 @@ namespace OsmSharp.Osm.API
         private void SetBasicAuthHeader(WebRequest req)
         {
             string authInfo = _user + ":" + _pass;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+            authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
             req.Headers["Authorization"] = "Basic " + authInfo;
         }
 
@@ -386,7 +379,7 @@ namespace OsmSharp.Osm.API
         public long ChangeSetOpen(string comment)
         {
             return this.ChangeSetOpen(comment, string.Format("OsmSharp v{0}",
-                System.Reflection.Assembly.GetAssembly(typeof(APIConnection)).GetName().Version.ToString(2)));
+                typeof(APIConnection).Assembly.GetName().Version.ToString(2)));
         }
 
         /// <summary>

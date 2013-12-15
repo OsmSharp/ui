@@ -74,19 +74,27 @@
     <Folder Include="Resources\layout\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">
-      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
-      <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
-      <Name>OsmSharp.UI.Android</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Images\marker_small.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\marker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
+      <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
+      <Name>OsmSharp.Routing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
+      <Name>OsmSharp.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
+      <Name>OsmSharp</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

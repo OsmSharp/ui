@@ -17,13 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Units.Time;
-using OsmSharp.Units.Angle;
+using System.Threading;
 using OsmSharp.Math.Geo;
-using System.Timers;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.UI.Animations
 {
@@ -193,14 +189,9 @@ namespace OsmSharp.UI.Animations
                 // stop the previous timer.
                 if (_timer != null)
                 { // timer exists.
-                    //_mapView.Invalidate();
-
-                    _timer.Stop();
                     _timer.Dispose();
                     _timer = null;
                 }
-                _timer = new Timer(_minimumTimeSpan.TotalMilliseconds);
-                _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
 
                 // set the targets.
                 _targetCenter = center;
@@ -217,10 +208,10 @@ namespace OsmSharp.UI.Animations
 
 				// calculate the map tilt, make sure it turns along the smallest corner.
 				double diff = _targetTilt.Subtract180(_mapView.MapTilt);
-				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", System.Diagnostics.TraceEventType.Information, diff.ToString());
+				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", OsmSharp.Logging.TraceEventType.Information, diff.ToString());
 				_stepTilt = (diff / _maxSteps);
 
-                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
 				                                string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
                         		_stepZoom, _stepTilt, _stepCenter.ToString(), 
 				              _targetZoom, _targetTilt, _targetCenter.ToString(), 
@@ -231,8 +222,7 @@ namespace OsmSharp.UI.Animations
 				_mapView.RegisterAnimator (this);
 
                 // start the timer.
-                _timer.Enabled = true;
-                _timer.Start();
+                _timer = new Timer(new TimerCallback(_timer_Elapsed), null, 0, (int)_minimumTimeSpan.TotalMilliseconds);
             }
         }
 
@@ -245,7 +235,6 @@ namespace OsmSharp.UI.Animations
             {
                 if (_timer != null)
                 {
-                    _timer.Stop();
                     _timer.Dispose();
                     _timer = null;
 
@@ -258,8 +247,7 @@ namespace OsmSharp.UI.Animations
         /// The timer has elapsed.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        void _timer_Elapsed(object sender)
         {
             _currentStep++;
             if (_currentStep < _maxSteps)
@@ -270,7 +258,7 @@ namespace OsmSharp.UI.Animations
 				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
 				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
 				_mapView.SetMapView (center, mapTilt, mapZoom);
-                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
                 //                                string.Format("Animation Step END: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
                 return;
             }
@@ -280,10 +268,9 @@ namespace OsmSharp.UI.Animations
 			}
 
 			// enable auto invalidate.
-			//_mapView.Invalidate ();
-			//_mapView.AutoInvalidate = true;
-			_mapView.RegisterAnimator (null);
-            _timer.Stop(); // stop the timer.
+            _mapView.RegisterAnimator(null);
+            _timer.Dispose();
+            _timer = null;
         }
     }
 }

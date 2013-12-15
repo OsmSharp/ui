@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Performance
         {
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
-            OsmSharp.Logging.Log.RegisterConsoleListener();
+            //OsmSharp.Logging.Log.RegisterConsoleListener();
 
             // set the seed manually.
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
@@ -79,7 +79,7 @@ namespace OsmSharp.Test.Performance
             //    });
 
             // wait for an exit.
-            OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("Program", OsmSharp.Logging.TraceEventType.Information,
                 "Testing finished.");
             Console.ReadLine();
         }

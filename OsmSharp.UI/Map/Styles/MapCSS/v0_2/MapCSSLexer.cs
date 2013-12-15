@@ -6743,7 +6743,8 @@ public partial class MapCSSLexer : Antlr.Runtime.Lexer
 		}
 		catch ( RecognitionException re )
 		{
-			System.Console.Error.WriteLine("impossible: "+re);
+            OsmSharp.Logging.Log.TraceEvent("MapCSSLexer", OsmSharp.Logging.TraceEventType.Error,
+                "impossible: "+re);
 		}
 		success = !state.failed;
 		input.Rewind(start);

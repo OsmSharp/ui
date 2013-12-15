@@ -67,6 +67,15 @@ namespace OsmSharp.Math.Random
             return _random.NextDouble() * max;
         }
 
+        /// <summary>
+        /// Fills the elements of a specified array of bytes with random numbers.
+        /// </summary>
+        /// <param name="buffer"></param>
+        public void Generate(byte[] buffer)
+        {
+            _random.NextBytes(buffer);
+        }
+
         #endregion
     }
 }

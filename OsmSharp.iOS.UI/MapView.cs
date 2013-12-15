@@ -33,6 +33,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.Logging;
 
 namespace OsmSharp.iOS.UI
 {
@@ -338,7 +339,7 @@ namespace OsmSharp.iOS.UI
         				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
         				                       view);
         				long afterViewChanged = DateTime.Now.Ticks;
-        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", TraceEventType.Information,
         				                                 "View change took: {0}ms @ zoom level {1}",
         				                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
@@ -350,7 +351,7 @@ namespace OsmSharp.iOS.UI
                                                                    layers, view, sceneZoomFactor);
 
         				long afterRendering = DateTime.Now.Ticks;
-        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", TraceEventType.Information,
         				                                 "Rendering took: {0}ms @ zoom level {1}",
         				                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 
@@ -375,7 +376,7 @@ namespace OsmSharp.iOS.UI
         				}
 
         				long after = DateTime.Now.Ticks;
-        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", System.Diagnostics.TraceEventType.Information,
+        				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
         				                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
                     }
                     finally{
@@ -481,7 +482,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="some">Some.</param>
 		private void Pan(UIPanGestureRecognizer pan)
 		{
-			OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Error, 
+			OsmSharp.Logging.Log.TraceEvent ("MapView", TraceEventType.Error, 
 			                                 string.Format("{0} ", pan.State.ToString()));
 
 			//RectangleF2D rect = _rect;

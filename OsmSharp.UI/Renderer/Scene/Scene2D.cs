@@ -422,7 +422,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         public IEnumerable<Primitive2D> Get(View2D view, float zoom)
         {
-            SortedSet<Primitive2D> primitives = new SortedSet<Primitive2D>(
+            OsmSharp.Collections.SortedSet<Primitive2D> primitives = new OsmSharp.Collections.SortedSet<Primitive2D>(
                 LayerComparer.GetInstance());
             if (_sceneObjects.Count > 0)
             {

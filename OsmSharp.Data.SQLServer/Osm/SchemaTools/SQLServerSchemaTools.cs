@@ -48,7 +48,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
             if (!DBNull.Value.Equals(res))
                 return;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", OsmSharp.Logging.TraceEventType.Information,
                 "Creating database schema");
             ExecuteSQL(connection, "SchemaDDL.sql");
         }
@@ -58,7 +58,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         /// </summary>
         public static void Remove(SqlConnection connection)
         {
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", OsmSharp.Logging.TraceEventType.Information, 
                 "Removing database schema");
             ExecuteSQL(connection, "SchemaDROP.sql");
         }
@@ -68,7 +68,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         /// </summary>
         public static void RemoveNonRoutingData(SqlConnection connection)
         {
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", OsmSharp.Logging.TraceEventType.Information, 
                 "Removing non-routing data");
             ExecuteSQL(connection, "SchemaDeleteNonRouting.sql");
         }
@@ -79,7 +79,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         /// <param name="connection"></param>
         public static void AddConstraints(SqlConnection connection)
         {
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", OsmSharp.Logging.TraceEventType.Information, 
                 "Adding database constraints");
             ExecuteSQL(connection, "SchemaConstraints.sql");
         }
