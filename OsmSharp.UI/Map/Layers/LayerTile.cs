@@ -148,8 +148,7 @@ namespace OsmSharp.UI.Map.Layers
             var request = (HttpWebRequest)HttpWebRequest.Create(
                 url);
             request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-            request.UserAgent = "OsmSharp/4.0";
-            request.Timeout = 1000;
+            request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
             WebResponse myResp = request.GetResponse();
             Stream stream = myResp.GetResponseStream();

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.Collections;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage
 {

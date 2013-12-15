@@ -18,11 +18,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using System.Net;
 
 namespace OsmSharp
 {
@@ -128,7 +128,18 @@ namespace OsmSharp
             {
                 tcs.SetException(exc);
             }
-            return tcs.Task.Result;
+            try
+            {
+                return tcs.Task.Result;
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerException is WebException)
+                { // re-throw the webexception.
+                    throw ex.InnerException;
+                }
+                throw ex;
+            }
         }
     }
 }
