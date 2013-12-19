@@ -102,19 +102,19 @@ namespace OsmSharp.iOS.Test.Performance
         /// </summary>
         private void TestRouting(string embeddedResource)
         {
-            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+            Log.TraceEvent("Test", TraceEventType.Information,
                            "Testing: 1 route.");
             OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 embeddedResource),
                 1);
-            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+            Log.TraceEvent("Test", TraceEventType.Information,
                            "Testing: 2 routes.");
             OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 embeddedResource),
                 2);
-            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+            Log.TraceEvent("Test", TraceEventType.Information,
                            "Testing: 100 routes.");
             OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
@@ -128,7 +128,7 @@ namespace OsmSharp.iOS.Test.Performance
         /// <param name="embeddedResource"></param>
         private void TestInstructions(string embeddedResource)
         {
-            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+            Log.TraceEvent("Test", TraceEventType.Information,
                            "Testing: Instruction generation.");
             OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.TestSerializeRoutingInstrictions(
                 "CHInstructions",
@@ -144,7 +144,7 @@ namespace OsmSharp.iOS.Test.Performance
         /// <param name="embeddedResource">Embedded resource.</param>
         private void TestRendering(string embeddedResource) 
         {
-            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+            Log.TraceEvent("Test", TraceEventType.Information,
                            "Testing rendering.");
 
             OsmSharp.Test.Performance.UI.Rendering.RenderingSerializedSceneTests<CGContextWrapper>.Test(

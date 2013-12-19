@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Diagnostics;
 using MonoTouch.UIKit;
+using OsmSharp.Logging;
 
 namespace OsmSharp.iOS.UI.Log
 {
