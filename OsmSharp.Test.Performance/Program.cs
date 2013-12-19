@@ -33,7 +33,8 @@ namespace OsmSharp.Test.Performance
         {
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
-            //OsmSharp.Logging.Log.RegisterConsoleListener();
+            OsmSharp.Logging.Log.RegisterListener(
+                new OsmSharp.WinForms.UI.Logging.ConsoleTraceListener());
 
             // set the seed manually.
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);

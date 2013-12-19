@@ -538,6 +538,14 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Called when the current request has to be cancelled.
+        /// </summary>
+        public void GetCancel()
+        {
+
+        }
+
+        /// <summary>
         /// Converts the given scene object to a primitive.
         /// </summary>
         /// <param name="id"></param>

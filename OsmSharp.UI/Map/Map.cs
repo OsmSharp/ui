@@ -95,6 +95,17 @@ namespace OsmSharp.UI.Map
             }
         }
 
+        /// <summary>
+        /// Cancels any ongoing map change notification.
+        /// </summary>
+        public void ViewChangedCancel()
+        {
+            foreach (var layer in _layers)
+            {
+                layer.ViewChangedCancel();
+            }
+        }
+
         #region Layers
 
         /// <summary>

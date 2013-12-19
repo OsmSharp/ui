@@ -85,6 +85,17 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         }
 
         /// <summary>
+        /// Called an ongoing request has to be cancelled.
+        /// </summary>
+        public void GetCancel()
+        {
+            foreach (var tree in _rTrees)
+            {
+                tree.GetCancel();
+            }
+        }
+
+        /// <summary>
         /// Layer comparer to sort objects by layer.
         /// </summary>
         private class LayerComparer : IComparer<Primitive2D>

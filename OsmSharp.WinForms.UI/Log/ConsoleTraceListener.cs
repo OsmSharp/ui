@@ -16,27 +16,40 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using OsmSharp.Math.Primitives;
+using System;
+using OsmSharp.Logging;
 
-namespace OsmSharp.Collections.SpatialIndexes
+namespace OsmSharp.WinForms.UI.Logging
 {
     /// <summary>
-    /// Abstract representation of a readonly spatial index.
+    /// A log trace listener that writes message to the console.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISpatialIndexReadonly<T>
+    public class ConsoleTraceListener : TraceListener
     {
         /// <summary>
-        /// Queries this index and returns all objects with overlapping bounding boxes.
+        /// Creates a new console trace listener.
         /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        IEnumerable<T> Get(BoxF2D box);
+        public ConsoleTraceListener()
+        {
+
+        }
 
         /// <summary>
-        /// Called when the current request has to be cancelled.
+        /// Writes the given message to the console.
         /// </summary>
-        void GetCancel();
+        /// <param name="message"></param>
+        public override void Write(string message)
+        {
+            Console.Write(message);
+        }
+
+        /// <summary>
+        /// Writes the given message to the console.
+        /// </summary>
+        /// <param name="message"></param>
+        public override void WriteLine(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
 }

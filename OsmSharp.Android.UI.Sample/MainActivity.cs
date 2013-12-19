@@ -110,7 +110,7 @@ namespace OsmSharp.Android.UI.Sample
 
             (_mapView as IMapView).AutoInvalidate = true;
             _mapView.MapMaxZoomLevel = 20;
-            _mapView.MapMinZoomLevel = 14;
+            _mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
             _mapView.MapZoom = 16;

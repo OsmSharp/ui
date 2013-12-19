@@ -230,6 +230,11 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         }
 
         /// <summary>
+        /// Holds the search cancelled boolean.
+        /// </summary>
+        private bool _searchCancelled = false;
+
+        /// <summary>
         /// Deserializes the data that is relevant for the given box.
         /// </summary>
         /// <param name="stream"></param>
@@ -239,6 +244,8 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         public void Search(SpatialIndexSerializerStream stream,
                            BoxF2D box, HashSet<T> result)
         {
+            _searchCancelled = false;
+
             // check if the current leaf/index exists.
             long position = stream.Position;
             KeyValuePair<ChildrenIndex, long> index;
@@ -254,6 +261,11 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                     if (leaf.Key[idx].Overlaps(box))
                     { // adds the object to the result set.
                         result.Add(leaf.Value[idx]);
+
+                        if (_searchCancelled)
+                        { // make sure to exit on cancelled search.
+                            break;
+                        }
                     }
                 }
                 return;
@@ -273,6 +285,11 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                         if (leaf.Key[dataidx].Overlaps(box))
                         { // adds the object to the result set.
                             result.Add(leaf.Value[dataidx]);
+                        }
+
+                        if (_searchCancelled)
+                        { // make sure to exit on cancelled search.
+                            break;
                         }
                     }
                     return;
@@ -328,12 +345,25 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
 
 								this.Search (stream, box, result);
 							}
-						}
+                        }
+
+                        if (_searchCancelled)
+                        { // make sure to exit on cancelled search.
+                            break;
+                        }
 					}
 				}
                 return;
             }
             throw new Exception("Cannot deserialize node!");
+        }
+
+        /// <summary>
+        /// Cancels the current request.
+        /// </summary>
+        public void SearchCancel()
+        {
+            _searchCancelled = true;
         }
 
         /// <summary>

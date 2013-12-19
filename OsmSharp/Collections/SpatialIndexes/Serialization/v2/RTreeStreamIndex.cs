@@ -74,5 +74,13 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                     (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)));
             return results;
         }
+
+        /// <summary>
+        /// Cancels the current request.
+        /// </summary>
+        public void GetCancel()
+        {
+            _serializer.SearchCancel();
+        }
     }
 }

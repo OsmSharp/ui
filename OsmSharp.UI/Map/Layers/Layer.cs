@@ -66,6 +66,14 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
+        /// Called when the last map view change has to be cancelled.
+        /// </summary>
+        internal virtual void ViewChangedCancel()
+        {
+            // override in layer implementation to cancel large map requests.
+        }
+
+        /// <summary>
         /// Raises the layer changed event.
         /// </summary>
         protected void RaiseLayerChanged()

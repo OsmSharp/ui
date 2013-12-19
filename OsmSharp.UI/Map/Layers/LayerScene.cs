@@ -62,6 +62,14 @@ namespace OsmSharp.UI.Map.Layers
             this.BuildScene(map, zoomFactor, center, view);
         }
 
+        /// <summary>
+        /// Called when the last map view change has to be cancelled.
+        /// </summary>
+        internal override void ViewChangedCancel()
+        { // cancel the current get if there is one going on.
+            _index.GetCancel();
+        }
+
         #region Scene Building
 
         /// <summary>

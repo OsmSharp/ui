@@ -121,6 +121,14 @@ namespace OsmSharp.Collections.SpatialIndexes
         }
 
         /// <summary>
+        /// Cancels the current request.
+        /// </summary>
+        public void GetCancel()
+        {
+
+        }
+
+        /// <summary>
         /// Gets the root node.
         /// </summary>
         internal Node Root { get { return _root; } }

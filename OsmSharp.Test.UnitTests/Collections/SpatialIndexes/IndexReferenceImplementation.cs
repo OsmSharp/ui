@@ -16,10 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Collections.SpatialIndexes;
-using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
@@ -59,6 +58,14 @@ namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Cancels the current get-request.
+        /// </summary>
+        public void GetCancel()
+        {
+
         }
 
         /// <summary>

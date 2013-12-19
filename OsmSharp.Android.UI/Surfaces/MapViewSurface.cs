@@ -23,6 +23,7 @@ using Android.App;
 using Android.Content;
 using Android.Util;
 using Android.Views;
+using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
@@ -33,7 +34,6 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
-using OsmSharp.Logging;
 
 namespace OsmSharp.Android.UI
 {
@@ -185,36 +185,34 @@ namespace OsmSharp.Android.UI
                 return;
             }
 
-            lock (_cacheRenderer)
+            // create the view that would be use for rendering.
+            View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
+             this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+             this.MapCenter, _invertX, _invertY, this.MapTilt);
+
+            // ... and compare to the previous rendered view.
+            if (!force &&
+                _previousRenderedZoom != null &&
+                view.Equals(_previousRenderedZoom))
             {
-                // create the view that would be use for rendering.
-                View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
-                 this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-                 this.MapCenter, _invertX, _invertY, this.MapTilt);
-
-                // ... and compare to the previous rendered view.
-                if (!force && 
-                    _previousRenderedZoom != null &&
-                    view.Equals(_previousRenderedZoom))
-                {
-                    return;
-                }
-                _previousRenderedZoom = view;
-
-                // end existing rendering thread.
-                if (_renderingThread != null &&
-                 _renderingThread.IsAlive)
-                {
-                    if (_cacheRenderer.IsRunning)
-                    {
-                        _cacheRenderer.CancelAndWait();
-                    }
-                }
-
-                // start new rendering thread.
-                _renderingThread = new Thread(new ThreadStart(Render));
-                _renderingThread.Start();
+                return;
             }
+            _previousRenderedZoom = view;
+
+            // end existing rendering thread.
+            if (_renderingThread != null &&
+             _renderingThread.IsAlive)
+            {
+                if (_cacheRenderer.IsRunning)
+                {
+                    this.Map.ViewChangedCancel();
+                    _cacheRenderer.CancelAndWait();
+                }
+            }
+
+            // start new rendering thread.
+            _renderingThread = new Thread(new ThreadStart(Render));
+            _renderingThread.Start();
         }
 
         /// <summary>
@@ -258,7 +256,10 @@ namespace OsmSharp.Android.UI
 			}
 
 			// make sure only on thread at the same time is using the renderer.
-			lock (_cacheRenderer) {
+            lock (_cacheRenderer)
+            {
+                this.Map.ViewChangedCancel();
+
 				// build the layers list.
 				var layers = new List<Layer> ();
 				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {

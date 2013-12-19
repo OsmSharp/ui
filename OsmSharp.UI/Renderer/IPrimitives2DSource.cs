@@ -33,5 +33,10 @@ namespace OsmSharp.UI.Renderer
         /// <param name="zoomFactor"></param>
         /// <returns></returns>
         IEnumerable<Primitive2D> Get(View2D view, float zoomFactor);
+
+        /// <summary>
+        /// Called when the current request has to be cancelled.
+        /// </summary>
+        void GetCancel();
     }
 }
