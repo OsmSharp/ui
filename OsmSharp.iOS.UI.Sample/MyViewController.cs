@@ -14,6 +14,7 @@ using System.Timers;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
 using System.Collections.Generic;
+using OsmSharp.Logging;
 
 namespace OsmSharp.iOS.UI.Sample1
 {
@@ -133,7 +134,7 @@ namespace OsmSharp.iOS.UI.Sample1
 				_routeTrackerAnimator.Track(other);
 
 				if (_routeTrackerAnimator.NextInstruction != null) {
-					OsmSharp.Logging.Log.TraceEvent ("SampleView", System.Diagnostics.TraceEventType.Information,
+					OsmSharp.Logging.Log.TraceEvent ("SampleView", TraceEventType.Information,
 					                                _routeTrackerAnimator.NextInstruction.Text);
 				}
 			}
