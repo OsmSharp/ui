@@ -16,11 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
 
 namespace OsmSharp.Test.Unittests
 {
@@ -176,6 +174,219 @@ namespace OsmSharp.Test.Unittests
             Assert.AreEqual(test, test.PadRightAndCut(4));
             Assert.AreEqual("open ", test.PadRightAndCut(5));
             Assert.AreEqual("ope", test.PadRightAndCut(3));
+        }
+
+        /// <summary>
+        /// Tests the copy to extension function.
+        /// </summary>
+        [Test]
+        public void TestListCopyToReverse()
+        {
+            int[] target = new int[3];
+            var source = new List<int>(new int[] { 1, 2, 3 });
+            source.CopyToReverse(target, 0);
+
+            Assert.AreEqual(3, target.Length);
+            Assert.AreEqual(3, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(1, target[2]);
+        }
+
+        /// <summary>
+        /// Tests the copy to range extension function.
+        /// </summary>
+        [Test]
+        public void TestListCopyToReverseRange()
+        {
+            int[] target = new int[3];
+            var source = new List<int>(new int[] { 1, 2, 3, 4, 5, 6 });
+            source.CopyToReverse(3, target, 0, 3);
+
+            Assert.AreEqual(3, target.Length);
+            Assert.AreEqual(6, target[0]);
+            Assert.AreEqual(5, target[1]);
+            Assert.AreEqual(4, target[2]);
+        }
+
+        /// <summary>
+        /// Tests the copy to extension function.
+        /// </summary>
+        [Test]
+        public void TestArrayCopyToRange()
+        {
+            int[] target = new int[3];
+            var source = new int[] { 1, 2, 3, 4, 5, 6 };
+            source.CopyTo(3, target, 0, 3);
+
+            Assert.AreEqual(3, target.Length);
+            Assert.AreEqual(4, target[0]);
+            Assert.AreEqual(5, target[1]);
+            Assert.AreEqual(6, target[2]);
+
+            source = new int[] { 1, 2, 3, 4, 5, 6 };
+            source.CopyTo(0, source, 3, 3);
+
+            Assert.AreEqual(1, source[3]);
+            Assert.AreEqual(2, source[4]);
+            Assert.AreEqual(3, source[5]);
+        }
+
+        /// <summary>
+        /// Tests the copy to extension function.
+        /// </summary>
+        [Test]
+        public void TestArrayCopyToReverse()
+        {
+            int[] target = new int[3];
+            var source = new int[] { 1, 2, 3 };
+            source.CopyToReverse(target, 0);
+
+            Assert.AreEqual(3, target.Length);
+            Assert.AreEqual(3, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(1, target[2]);
+        }
+
+        /// <summary>
+        /// Tests the copy to range extension function.
+        /// </summary>
+        [Test]
+        public void TestArrayCopyToReverseRange()
+        {
+            int[] target = new int[3];
+            var source = new int[] { 1, 2, 3, 4, 5, 6 };
+            source.CopyToReverse(3, target, 0, 3);
+
+            Assert.AreEqual(3, target.Length);
+            Assert.AreEqual(6, target[0]);
+            Assert.AreEqual(5, target[1]);
+            Assert.AreEqual(4, target[2]);
+        }
+
+        /// <summary>
+        /// Tests the insert at extension function.
+        /// </summary>
+        [Test]
+        public void TestArrayInsertAt()
+        {
+            var target = new int[] { 1, 2, 3, 0, 0, 0 };
+            var source = new int[] { 4, 5, 6 };
+
+            source.InsertTo(0, target, 3, 3);
+
+            Assert.AreEqual(6, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+            Assert.AreEqual(6, target[5]);
+
+            target = new int[] { 4, 5, 6, 0, 0, 0 };
+            source = new int[] { 1, 2, 3 };
+
+            source.InsertTo(0, target, 0, 3);
+
+            Assert.AreEqual(6, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+            Assert.AreEqual(6, target[5]);
+
+            target = new int[] { 1, 2, 3, 0, 0 };
+            source = new int[] { 3, 4, 5 };
+
+            source.InsertTo(0, target, 2, 3);
+
+            Assert.AreEqual(5, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+
+            target = new int[] { 3, 4, 5, 0, 0 };
+            source = new int[] { 1, 2, 3 };
+
+            source.InsertTo(0, target, 0, 2);
+
+            Assert.AreEqual(5, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+
+            target = new int[] { 3, 4, 5, 0, 0 };
+            source = new int[] { 1, 1, 2 };
+
+            source.InsertTo(1, target, 0, 2);
+
+            Assert.AreEqual(5, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+        }
+
+        /// <summary>
+        /// Tests the insert at extension function.
+        /// </summary>
+        [Test]
+        public void TestArrayInsertAtReverse()
+        {
+            var target = new int[] { 1, 2, 3, 0, 0, 0 };
+            var source = new int[] { 6, 5, 4 };
+
+            source.InsertToReverse(0, target, 3, 3);
+
+            Assert.AreEqual(6, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+            Assert.AreEqual(6, target[5]);
+
+            target = new int[] { 4, 5, 6, 0, 0, 0 };
+            source = new int[] { 3, 2, 1 };
+
+            source.InsertToReverse(0, target, 0, 3);
+
+            Assert.AreEqual(6, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+            Assert.AreEqual(6, target[5]);
+
+            target = new int[] { 1, 2, 3, 0, 0 };
+            source = new int[] { 5, 4, 3 };
+
+            source.InsertToReverse(0, target, 2, 3);
+
+            Assert.AreEqual(5, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
+
+            target = new int[] { 3, 4, 5, 0, 0 };
+            source = new int[] { 3, 2, 1 };
+
+            source.InsertToReverse(1, target, 0, 2);
+
+            Assert.AreEqual(5, target.Length);
+            Assert.AreEqual(1, target[0]);
+            Assert.AreEqual(2, target[1]);
+            Assert.AreEqual(3, target[2]);
+            Assert.AreEqual(4, target[3]);
+            Assert.AreEqual(5, target[4]);
         }
     }
 }

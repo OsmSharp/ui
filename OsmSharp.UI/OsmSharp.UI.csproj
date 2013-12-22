@@ -112,6 +112,11 @@
     <Compile Include="Renderer\Scene\Primitives\SceneTextObject.cs" />
     <Compile Include="Renderer\Scene\Scene2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DZoomRange.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DObjectMerger.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DStyle.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DStyleLine.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DStyleLineText.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DStylesSet.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DRTreeDeserializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DSource.cs" />
     <Compile Include="Renderer\Scene\Storage\SceneIndex.cs" />
@@ -133,6 +138,7 @@
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>

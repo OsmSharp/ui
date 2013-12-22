@@ -102,19 +102,36 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         private IProjection _projection;
 
+
         /// <summary>
         /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
         /// </summary>
         /// <param name="projection"></param>
-        /// <param name="zoomLevels"></param>
+        /// <param name="zooms"></param>
         public Scene2D(IProjection projection, List<float> zoomLevels)
+            :this(projection, zoomLevels, false)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <param name="zooms"></param>
+        /// <param name="zoomsAreProjected"></param>
+        public Scene2D(IProjection projection, List<float> zooms, bool zoomsAreProjected)
         {
             _nextId = 0;
             _projection = projection;
-            _zoomFactors = new List<float>(zoomLevels.Select((zoomLevel) =>
-            {
-                return (float)projection.ToZoomFactor(zoomLevel);
-            }));
+            _zoomFactors = new List<float>(zooms);
+            if (!zoomsAreProjected)
+            { // the zooms are not projected yet.
+                _zoomFactors = new List<float>(zooms.Select((zoomLevel) =>
+                {
+                    return (float)projection.ToZoomFactor(zoomLevel);
+                }));
+            }
 
             // string table.
             _stringTable = new ObjectTable<string>(true);
@@ -152,6 +169,17 @@ namespace OsmSharp.UI.Renderer.Scene
             : this(projection, new List<float>(new float[] { zoomLevel }))
         {
 
+        }
+
+        /// <summary>
+        /// Returns the projection of this scene.
+        /// </summary>
+        public IProjection Projection
+        {
+            get
+            {
+                return _projection;
+            }
         }
 
         /// <summary>
@@ -217,6 +245,16 @@ namespace OsmSharp.UI.Renderer.Scene
         internal float[] GetZoomFactors()
         {
             return _zoomFactors.ToArray();
+        }
+
+        /// <summary>
+        /// Returns the scene objects.
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        internal Dictionary<uint, SceneObject> GetSceneObjectsAt(int idx)
+        {
+            return _sceneObjects[idx];
         }
 
         /// <summary>
@@ -651,7 +689,7 @@ namespace OsmSharp.UI.Renderer.Scene
             public override bool Equals(object obj)
             {
                 ScenePoints other = obj as ScenePoints;
-                if (obj != null)
+                if (other != null)
                 {
                     for (int idx = 0; idx < this.X.Length; idx++)
                     {
@@ -724,29 +762,10 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
                     // build the style.
                     StylePoint style = new StylePoint()
@@ -832,29 +851,10 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
                     // build the zoom range.
                     // TODO: zoom and layer for icon.
@@ -942,29 +942,10 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
                     // add to stringtable.
                     uint textId = _stringTable.Add(text);
@@ -1065,35 +1046,13 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
-
                     // simplify the algorithm.
-                    double epsilon = this.CalculateSimplificationEpsilon(
-                        System.Math.Min(simplificationFactor, maximumZoomFactor));
-                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
-                                                                    epsilon);
+                    double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
+                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points, epsilon);
                     double distance = epsilon * 2;
                     if (simplified[0].Length == 2)
                     { // check if the simplified version is smaller than epsilon.
@@ -1139,6 +1098,42 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Checks the zoom ranges and limits them if they are visible for the given index.
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="minZoomLimited"></param>
+        /// <param name="maxZoomLimited"></param>
+        /// <param name="simplificationZoom"></param>
+        /// <returns></returns>
+        private bool CheckZoomRanges(int idx, float minZoom, float maxZoom, out float minZoomLimited, out float maxZoomLimited, out float simplificationZoom)
+        {
+            simplificationZoom = _zoomFactors[idx];
+
+            // get the minimum zoom factor.
+            minZoomLimited = float.MinValue;
+            if (idx + 1 < _zoomFactors.Count)
+            { // the next minification is the minimum zoom factor.
+                minZoomLimited = _zoomFactors[idx + 1];
+            }
+
+            // get the maximum zoom factor.
+            maxZoomLimited = float.MaxValue;
+            if (idx > 0)
+            { // the previous minification is the maximum zoom factor.
+                maxZoomLimited = _zoomFactors[idx];
+            }
+
+            // check the current object's zoom range against the current min/max zoom factor.
+            if (!(minZoomLimited >= maxZoom) && !(maxZoomLimited <= minZoom))
+            {
+                return minZoomLimited != maxZoomLimited;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Returns the line style for the given id.
         /// </summary>
         /// <param name="styleId"></param>
@@ -1166,22 +1161,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneLineObject sceneObject, StyleLine style)
         {
-            Line2D primitive = new Line2D();
-            primitive.Id = id;
-
-            // convert image.
-            primitive.Color = style.Color;
-            primitive.LineJoin = style.LineJoin;
-            primitive.Width = style.Width;
-            primitive.Dashes = style.Dashes;
-            primitive.Layer = style.Layer;
-            primitive.MaxZoom = style.MaxZoom;
-            primitive.MinZoom = style.MinZoom;
-
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
-            primitive.X = geo.X;
-            primitive.Y = geo.Y;
+
+            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.Dashes, style.MinZoom, style.MaxZoom);
+            primitive.Id = id;
+            primitive.Layer = style.Layer;
 
             return primitive;
         }
@@ -1209,33 +1194,13 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
 
                     // simplify the algorithm.
-                    double epsilon = this.CalculateSimplificationEpsilon(
-                        System.Math.Min(simplificationFactor, maximumZoomFactor));
+                    double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
                     double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
                                                                     epsilon);
                     double distance = epsilon * 2;
@@ -1314,26 +1279,16 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, SceneLineTextObject sceneObject, StyleText style)
         {
-            LineText2D primitive = new LineText2D();
-            primitive.Id = id;
-
-            // convert image.
-            primitive.Color = style.Color;
-            primitive.Font = style.Font;
-            primitive.HaloColor = style.HaloColor;
-            primitive.HaloRadius = style.HaloRadius;
-            primitive.Size = style.Size;
-            primitive.Layer = style.Layer;
-            primitive.MaxZoom = style.MaxZoom;
-            primitive.MinZoom = style.MinZoom;
-
             // get the text.
-            primitive.Text = _stringTable.Get(sceneObject.TextId);
+            var text = _stringTable.Get(sceneObject.TextId);
 
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
-            primitive.X = geo.X;
-            primitive.Y = geo.Y;
+
+            var primitive = new LineText2D(geo.X, geo.Y, style.Color, style.Size, text, style.HaloColor, style.HaloRadius, style.MinZoom, style.MaxZoom);
+            primitive.Id = id;
+            primitive.Font = style.Font;
+            primitive.Layer = style.Layer;
 
             return primitive;
         }
@@ -1357,33 +1312,13 @@ namespace OsmSharp.UI.Renderer.Scene
 
             for (int idx = 0; idx < _zoomFactors.Count; idx++)
             {
-                // get the simplification factor.
-                float simplificationFactor = _zoomFactors[idx];
-
-                // get the minimum zoom factor.
-                float minimumZoomFactor = float.MinValue;
-                if (idx + 1 < _zoomFactors.Count)
-                { // the next minification is the minimum zoom factor.
-                    minimumZoomFactor = _zoomFactors[idx + 1];
-                }
-
-                // get the maximum zoom factor.
-                float maximumZoomFactor = float.MaxValue;
-                if (idx - 1 > 0)
-                { // the previous minification is the maximum zoom factor.
-                    maximumZoomFactor = _zoomFactors[idx - 1];
-                }
-
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
                 // check the current object's zoom range against the current min/max zoom factor.
-                if (!(minimumZoomFactor >= maxZoom) && !(maximumZoomFactor < minZoom))
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
-                    // limit the object's zoom.
-                    minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
-                    maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
 
                     // simplify the algorithm.
-                    double epsilon = this.CalculateSimplificationEpsilon(
-                        System.Math.Min(simplificationFactor, maximumZoomFactor));
+                    double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
                     double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
                                                                     epsilon);
                     double distance = epsilon * 2;
@@ -1457,21 +1392,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         private Primitive2D ConvertToPrimitive(uint id, ScenePolygonObject sceneObject, StylePolygon style)
         {
-            Polygon2D primitive = new Polygon2D();
-            primitive.Id = id;
-
-            // convert image.
-            primitive.Color = style.Color;
-            primitive.Fill = style.Fill;
-            primitive.Width = style.Width;
-            primitive.Layer = style.Layer;
-            primitive.MaxZoom = style.MaxZoom;
-            primitive.MinZoom = style.MinZoom;
-
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
-            primitive.X = geo.X;
-            primitive.Y = geo.Y;
+
+            var primitive = new Polygon2D(geo.X, geo.Y, style.Color, style.Width, style.Fill, style.MinZoom, style.MaxZoom);
+            primitive.Layer = style.Layer;
+            primitive.Id = id;
 
             return primitive;
         }

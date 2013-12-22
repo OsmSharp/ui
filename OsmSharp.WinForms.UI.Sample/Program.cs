@@ -13,7 +13,9 @@ namespace OsmSharp.WinForms.UI.Sample
         [STAThread]
         static void Main()
         {
-            //OsmSharp.Logging.Log.RegisterConsoleListener();
+            OsmSharp.Logging.Log.Enable();
+            OsmSharp.Logging.Log.RegisterListener(
+                new OsmSharp.WinForms.UI.Logging.ConsoleTraceListener());
 
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);

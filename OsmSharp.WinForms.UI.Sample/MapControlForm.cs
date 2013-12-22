@@ -24,6 +24,12 @@ using OsmSharp.Osm.Data.Memory;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Map.Styles.Streams;
+using OsmSharp.Math.Geo.Projections;
+using System.Collections.Generic;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.UI.Renderer.Scene.Simplification;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -48,18 +54,35 @@ namespace OsmSharp.WinForms.UI.Sample
         {
             base.OnLoad(e);
 
+            // initialize mapcss interpreter.
+            var mapCSSInterpreter = new MapCSSInterpreter(
+                new FileInfo(@"complete.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
 
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
+                16, 14, 12, 10 }));
+            StyleOsmStreamSceneTarget target = new StyleOsmStreamSceneTarget(
+                mapCSSInterpreter, scene, new WebMercator());
+            FileInfo testFile = new FileInfo(@"kempen.osm.pbf");
+            Stream stream = testFile.OpenRead();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
+            target.RegisterSource(progress);
+            target.Pull();
+
+            var merger = new Scene2DObjectMerger();
+            scene = merger.BuildMergedScene(scene);
+
+            map.AddLayer(new LayerScene(scene));
             //var dataSource = MemoryDataSource.CreateFromPBFStream(
             //    new FileInfo(@"kempen.osm.pbf").OpenRead());
-            //var mapCSSInterpreter = new MapCSSInterpreter(
-            //    new FileInfo(@"complete.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
             //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             ////map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            map.AddLayer(new LayerScene(
-                Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
-                    true)));
+            //map.AddLayer(new LayerScene(
+            //    Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
+            //        true)));
 
             // set control properties.
             this.mapControl1.Map = map;

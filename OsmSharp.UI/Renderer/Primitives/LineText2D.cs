@@ -24,13 +24,13 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public class LineText2D : Primitive2D
     {
-        /// <summary>
-        /// Creates a new LineText2D.
-        /// </summary>
-        public LineText2D()
-        {
+        ///// <summary>
+        ///// Creates a new LineText2D.
+        ///// </summary>
+        //public LineText2D()
+        //{
 
-        }
+        //}
 
         /// <summary>
         /// Creates a new line2D.
@@ -93,7 +93,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="maxZoom"></param>
         public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius,
             float minZoom, float maxZoom)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -148,7 +147,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="maxY"></param>
         public LineText2D(double[] x, double[] y, int color, float size, string text,
             int minX, int maxX, int minY, int maxY)
-            : this()
         {
             this.X = x;
             this.Y = y;

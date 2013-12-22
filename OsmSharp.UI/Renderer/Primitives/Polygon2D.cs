@@ -25,13 +25,13 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public class Polygon2D : Primitive2D
     {
-        /// <summary>
-        /// Creates a new Polygon2D.
-        /// </summary>
-        public Polygon2D()
-        {
+        ///// <summary>
+        ///// Creates a new Polygon2D.
+        ///// </summary>
+        //public Polygon2D()
+        //{
 
-        }
+        //}
 
         /// <summary>
         /// Creates a new Polygon2D.
@@ -91,7 +91,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         public Polygon2D(double[] x, double[] y, int color, double width, bool fill, float minZoom, float maxZoom)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -144,7 +143,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="maxY"></param>
         public Polygon2D(double[] x, double[] y, int color, double width, bool fill,
             int minX, int maxX, int minY, int maxY)
-            : this()
         {
             this.X = x;
             this.Y = y;

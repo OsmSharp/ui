@@ -48,6 +48,126 @@ namespace OsmSharp
         }
 
         /// <summary>
+        /// Copies all elements from the list into the given array starting at the given index but in reverse order.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">The list to copy from.</param>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The index to start copying to in the array.</param>
+        public static void CopyToReverse<T>(this List<T> list, T[] array, int arrayIndex)
+        {
+            list.CopyToReverse(0, array, arrayIndex, list.Count);
+        }
+
+        /// <summary>
+        /// Copies elements from the list and the range into the given array starting at the given index.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">The list to copy from.</param>
+        /// <param name="index">The start of the elements </param>
+        /// <param name="length"></param>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The index to start copying to in the array.</param>
+        public static void CopyToReverse<T>(this List<T> list, int index, T[] array, int arrayIndex, int count)
+        {
+            for (int idx = index + count - 1; idx >= index; idx--)
+            {
+                array[arrayIndex] = list[idx];
+                arrayIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Copies elements from the list and the range into the given array starting at the given index.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The array to copy from.</param>
+        /// <param name="index">The start of the elements </param>
+        /// <param name="length"></param>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The index to start copying to in the array.</param>
+        public static void CopyTo<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
+        {
+            for (int idx = index; idx < index + count; idx++)
+            {
+                array[arrayIndex] = source[idx];
+                arrayIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Copies all elements from the list into the given array starting at the given index but in reverse order.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list">The array to copy from.</param>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The index to start copying to in the array.</param>
+        public static void CopyToReverse<T>(this T[] source, T[] array, int arrayIndex)
+        {
+            source.CopyToReverse(0, array, arrayIndex, source.Length);
+        }
+
+        /// <summary>
+        /// Copies elements from the list and the range into the given array starting at the given index.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The array to copy from.</param>
+        /// <param name="index">The start of the elements </param>
+        /// <param name="length"></param>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The index to start copying to in the array.</param>
+        public static void CopyToReverse<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
+        {
+            for (int idx = index + count - 1; idx >= index; idx--)
+            {
+                array[arrayIndex] = source[idx];
+                arrayIndex++;
+            }
+        }
+
+        /// <summary>
+        /// Inserts the given elements at given positions.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="index"></param>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        /// <param name="count"></param>
+        public static void InsertTo<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
+        {
+            // move elements after index to make room.
+            for (int idx = array.Length - 1; idx >= arrayIndex + count; idx--)
+            {
+                array[idx] = array[idx - count];
+            }
+
+            // copy elements from source.
+            source.CopyTo(index, array, arrayIndex, count);
+        }
+
+        /// <summary>
+        /// Inserts the given elements at given positions.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="index"></param>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        /// <param name="count"></param>
+        public static void InsertToReverse<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
+        {
+            // move elements after index to make room.
+            for (int idx = array.Length - 1; idx >= arrayIndex + count; idx--)
+            {
+                array[idx] = array[idx - count];
+            }
+
+            // copy elements from source.
+            source.CopyToReverse(index, array, arrayIndex, count);
+        }
+
+        /// <summary>
         /// Shuffles the list using Fisher-Yates shuffle.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -317,8 +437,6 @@ namespace OsmSharp
 
             return result;
         }
-
-
 
         /// <summary>
         /// Returns the result of the ToString() method or an empty string

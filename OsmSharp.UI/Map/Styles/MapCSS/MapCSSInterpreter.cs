@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
@@ -28,8 +25,11 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Interpreter;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.UI.Renderer.Scene;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {

@@ -27,14 +27,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Creates a new line2D.
         /// </summary>
-        public Line2D()
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new line2D.
-        /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
@@ -94,7 +86,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="maxZoom"></param>
         public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             float minZoom, float maxZoom)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -148,7 +139,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="maxY"></param>
         public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             int minX, int maxX, int minY, int maxY)
-            : this()
         {
             this.X = x;
             this.Y = y;

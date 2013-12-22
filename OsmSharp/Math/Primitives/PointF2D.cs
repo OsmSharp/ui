@@ -245,10 +245,11 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is PointF2D)
+            var other = obj as PointF2D;
+            if (obj != null)
             {
-                return this._values[0] == (obj as PointF2D)[0] &&
-                    this._values[1] == (obj as PointF2D)[1];
+                return this._values[0] == other[0] &&
+                    this._values[1] == other[1];
             }
             return false;
         }

@@ -26,6 +26,7 @@ using OsmSharp.Test.Performance.UI.Scene;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Styles.Streams;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Scene.Simplification;
 
 namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 {
@@ -45,6 +46,9 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 
             // tests map css interpreter.
             MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen-big.osm.pbf");
+
+            //var merger = new Scene2DObjectMerger();
+            //scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
             Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);
