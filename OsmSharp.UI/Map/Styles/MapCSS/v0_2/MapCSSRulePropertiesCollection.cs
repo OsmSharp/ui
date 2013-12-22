@@ -1,6 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
@@ -85,8 +101,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
             var rules = new List<MapCSSRuleProperties>();
             MapCSSRuleProperties currentRule = null;
             string previousRuleString = string.Empty;
-            int minZoom = 0, maxZoom = 25;
-            for (int zoomLevel = 0; zoomLevel < 25; zoomLevel++)
+            int minZoom = 0, maxZoom = 20;
+            for (int zoomLevel = 0; zoomLevel < 20; zoomLevel++)
             {
                 // get the current rule string.
                 string currentRuleString = this.GetRuleStringForZoom(zoomLevel);
@@ -109,7 +125,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         MapCSSRuleProperties props = this.GetRulesForZoom(zoomLevel);
                         if (props != null)
                         {
-                            currentRule = new MapCSSRuleProperties(minZoom, 25);
+                            currentRule = new MapCSSRuleProperties(minZoom, 20);
                             currentRule = currentRule.Merge(props);
                         }
                     }

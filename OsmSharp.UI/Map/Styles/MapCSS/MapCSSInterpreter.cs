@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
@@ -27,9 +30,6 @@ using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -291,11 +291,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="node"></param>
         private void TranslateNode(Scene2D scene, IProjection projection, CompleteNode node)
         {
-//            double? x = projection.LongitudeToX(
-//                node.Coordinate.Longitude);
-//            double? y = projection.LatitudeToY(
-//                node.Coordinate.Latitude);
-            
             // build the rules.
             IEnumerable<MapCSSRuleProperties> rules =
                 this.BuildRules(new MapCSSObject(node));

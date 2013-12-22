@@ -162,10 +162,21 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
             }
 
             // loop until there are no more candidates.
+            int totalLines = lines.Count;
+            float latestProgress = 0;
             while(lines.Count > 0)
             {
                 var line = lines.First();
                 lines.Remove(line.Key);
+
+                // report progress.
+                float progress = (float)System.Math.Round((((double)(totalLines - lines.Count) / (double)totalLines) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
+                        "Merging lines ({1}/{2})... {0}%", progress, totalLines - lines.Count, totalLines);
+                    latestProgress = progress;
+                }
 
                 // copy the coordinates to lists.
                 double[] x = line.Key.X.Clone() as double[];
@@ -210,11 +221,6 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     mergeCount++;
                 }
 
-                if (mergeCount > 1)
-                {
-                    OsmSharp.Logging.Log.TraceEvent("Scene2DObjectMerger", Logging.TraceEventType.Information, "Merged {0} objects together!", mergeCount);
-                }
-
                 // add the new points.
                 uint? pointsId = target.AddPoints(x, y);
 
@@ -229,7 +235,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                             StyleLine styleLine = source.GetStyleLine(scene2DStyleLine.StyleLineId);
                             target.AddStyleLine(pointsId.Value, styleLine.Layer, styleLine.MinZoom, styleLine.MaxZoom,
                                 styleLine.Color, styleLine.Width, styleLine.LineJoin, styleLine.Dashes);
-                            break;
+                            continue;
                         }
                         var scene2DStyleLineText = (style as Scene2DStyleLineText);
                         if (scene2DStyleLineText != null)
@@ -238,7 +244,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                             string text = source.GetText(scene2DStyleLineText.TextId);
                             target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom, 
                                 styleText.Color, styleText.Size, text, styleText.Font, styleText.HaloColor, styleText.HaloRadius);
-                            break;
+                            continue;
                         }
                     }
                 }

@@ -17,19 +17,20 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Map.Styles.Streams;
 using OsmSharp.Math.Geo.Projections;
-using System.Collections.Generic;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Map.Styles.MapCSS;
+using OsmSharp.UI.Map.Styles.Streams;
+using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Scene.Simplification;
+using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -67,7 +68,7 @@ namespace OsmSharp.WinForms.UI.Sample
                 mapCSSInterpreter, scene, new WebMercator());
             FileInfo testFile = new FileInfo(@"kempen.osm.pbf");
             Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            OsmStreamSource source = new PBFOsmStreamSource(stream);
             OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
             target.RegisterSource(progress);
             target.Pull();
