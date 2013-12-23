@@ -174,7 +174,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    {
             double[] transformed = this.Tranform(x, y);
 	        float sizeInPixels = this.ToPixels(size);
-            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), (float)transformed[0], (float)transformed[0],
+            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), (float)transformed[0] - (sizeInPixels / 2.0f), (float)transformed[1] - (sizeInPixels / 2.0f),
                 sizeInPixels, sizeInPixels);
         }
 
