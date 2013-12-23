@@ -111,6 +111,17 @@ namespace OsmSharp.Math.Primitives
             return (double)System.Math.Sqrt(distance);
         }
 
+        /// <summary>
+        /// Creates a 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public BoxF2D CreateBox(double offset)
+        {
+            return new BoxF2D(this[0] - offset, this[1] - offset, 
+                this[0] + offset, this[1] + offset);
+        }
+
         #endregion
         
         #region Operators
