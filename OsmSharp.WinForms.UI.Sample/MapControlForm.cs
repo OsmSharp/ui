@@ -31,6 +31,7 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Scene.Simplification;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Osm.Data.Memory;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -62,24 +63,24 @@ namespace OsmSharp.WinForms.UI.Sample
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
 
-            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-                16, 14, 12, 10 }));
-            StyleOsmStreamSceneTarget target = new StyleOsmStreamSceneTarget(
-                mapCSSInterpreter, scene, new WebMercator());
-            FileInfo testFile = new FileInfo(@"kempen.osm.pbf");
-            Stream stream = testFile.OpenRead();
-            OsmStreamSource source = new PBFOsmStreamSource(stream);
-            OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
-            target.RegisterSource(progress);
-            target.Pull();
+            //Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
+            //    16, 14, 12, 10 }));
+            //StyleOsmStreamSceneTarget target = new StyleOsmStreamSceneTarget(
+            //    mapCSSInterpreter, scene, new WebMercator());
+            //FileInfo testFile = new FileInfo(@"kempen.osm.pbf");
+            //Stream stream = testFile.OpenRead();
+            //OsmStreamSource source = new PBFOsmStreamSource(stream);
+            //OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
+            //target.RegisterSource(progress);
+            //target.Pull();
 
-            var merger = new Scene2DObjectMerger();
-            scene = merger.BuildMergedScene(scene);
+            //var merger = new Scene2DObjectMerger();
+            //scene = merger.BuildMergedScene(scene);
 
-            map.AddLayer(new LayerScene(scene));
-            //var dataSource = MemoryDataSource.CreateFromPBFStream(
-            //    new FileInfo(@"kempen.osm.pbf").OpenRead());
-            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            //map.AddLayer(new LayerScene(scene));
+            var dataSource = MemoryDataSource.CreateFromPBFStream(
+                new FileInfo(@"kempen-big.osm.pbf").OpenRead());
+            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             ////map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             //map.AddLayer(new LayerScene(
             //    Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
@@ -87,7 +88,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
-            this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
+            this.mapControl1.MapCenter = new GeoCoordinate(51.1515,  4.5945);
+            //this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
             this.mapControl1.MapZoom = 16;
         }
     }
