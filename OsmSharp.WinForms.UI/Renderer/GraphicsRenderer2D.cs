@@ -415,7 +415,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 
                 // calculate line length.
                 var lineLength = Polyline2D.Length(x, y);
-                if (lineLength > textLength * 1.5f)
+                if (lineLength > textLength * 1.1f)
                 {
                     // calculate the number of labels.
                     int labelCount = (int)System.Math.Floor(lineLength / (textLength * 10)) + 1;
