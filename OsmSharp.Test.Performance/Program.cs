@@ -19,7 +19,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.Test.Performance
 {
