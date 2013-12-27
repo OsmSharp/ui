@@ -286,13 +286,6 @@ namespace OsmSharp.Routing
                     return false; // no for foot
                 }
             }
-            if (tags.ContainsKey("bicycle"))
-            {
-                if (tags["bicycle"] == "designated")
-                {
-                    return false; // designated bicycle
-                }
-            }
             return AccessibleTags.ContainsKey(highwayType);
         }
 
@@ -404,13 +397,6 @@ namespace OsmSharp.Routing
                     return false; //  no for bicycle
                 }
             }
-            if (tags.ContainsKey("foot"))
-            {
-                if (tags["foot"] == "designated")
-                {
-                    return false; // designated foot
-                }
-            }
             return AccessibleTags.ContainsKey(highwayType);
         }
 
@@ -512,20 +498,6 @@ namespace OsmSharp.Routing
                 if (tags["motor_vehicle"] == "no")
                 {
                     return false;
-                }
-            }
-            if (tags.ContainsKey("foot"))
-            {
-                if (tags["foot"] == "designated")
-                {
-                    return false; // designated foot
-                }
-            }
-            if (tags.ContainsKey("bicycle"))
-            {
-                if (tags["bicycle"] == "designated")
-                {
-                    return false; // designated bicycle
                 }
             }
             return AccessibleTags.ContainsKey(highwayType);

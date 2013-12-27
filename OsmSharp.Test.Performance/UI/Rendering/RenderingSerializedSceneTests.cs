@@ -58,8 +58,6 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// <summary>
         /// Delegate signature to create a renderer.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
         /// <returns></returns>
         public delegate Renderer2D<TTarget> CreateRenderer();
 
@@ -104,6 +102,10 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// <param name="stream"></param>
         /// <param name="box"></param>
         /// <param name="testCount"></param>
+        /// <param name="createTarget"></param>
+        /// <param name="createRenderer"></param>
+        /// <param name="range"></param>
+        /// <param name="minZoom"></param>
         public static void TestRenderScene(CreateTarget createTarget, CreateRenderer createRenderer, 
             Stream stream, GeoCoordinateBox box, int testCount, int range, int minZoom)
         {

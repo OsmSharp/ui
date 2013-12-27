@@ -46,7 +46,6 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// Called right before rendering starts.
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="scenes"></param>
         /// <param name="view"></param>
         protected override void OnBeforeRender(Target2DWrapper<Graphics> target, View2D view)
         {
@@ -67,7 +66,6 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// Called right after rendering.
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="scenes"></param>
         /// <param name="view"></param>
         protected override void OnAfterRender(Target2DWrapper<Graphics> target, View2D view)
         {

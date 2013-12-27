@@ -34,6 +34,9 @@ namespace OsmSharp.WinForms.UI
     /// </summary>
     public partial class MapControl : UserControl, IMapView
     {
+        /// <summary>
+        /// Event raised when the map is touched.
+        /// </summary>
 		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
         /// <summary>

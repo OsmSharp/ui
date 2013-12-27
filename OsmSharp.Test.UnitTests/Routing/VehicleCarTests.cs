@@ -61,10 +61,10 @@ namespace OsmSharp.Test.Unittests.Routing
             base.TestVehicleCanTranverse(vehicle, true, "highway", "motorway_link");
 
             // designated roads.
-            base.TestVehicleCanTranverse(vehicle, false, "highway", "unclassified", "foot", "designated");
+            base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "foot", "designated");
             base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "foot", "yes");
             base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "foot", "no");
-            base.TestVehicleCanTranverse(vehicle, false, "highway", "unclassified", "bicycle", "designated");
+            base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "bicycle", "designated");
             base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "bicycle", "yes");
             base.TestVehicleCanTranverse(vehicle, true, "highway", "unclassified", "bicycle", "no");
         }
