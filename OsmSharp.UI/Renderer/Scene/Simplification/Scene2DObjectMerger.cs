@@ -23,7 +23,6 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
-using OsmSharp.Math.Structures.QTree;
 
 namespace OsmSharp.UI.Renderer.Scene.Simplification
 {
@@ -68,7 +67,6 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <param name="idx"></param>
         private void MergeObjects(Scene2D target, Scene2D source, int idx)
         {
-            QuadTree<PointF2D, Scene2D.ScenePoints> pointsIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
             Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
             Dictionary<PointF2D, HashSet<Scene2D.ScenePoints>> endpoints = new Dictionary<PointF2D, HashSet<Scene2D.ScenePoints>>();
             Dictionary<uint, SceneObject> sceneObjects = source.GetSceneObjectsAt(idx);
@@ -83,11 +81,6 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     { // create styles set.
                         stylesSet = new Scene2DStylesSet();
                         lines.Add(scenePoints, stylesSet);
-
-                        pointsIndex.Add(new PointF2D(scenePoints.X[0], scenePoints.Y[0]), 
-                            scenePoints);
-                        pointsIndex.Add(new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]), 
-                            scenePoints);
                     }
                     stylesSet.AddStyleLine(sceneLineObject.StyleId);
 
@@ -111,11 +104,6 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     { // create styles set.
                         stylesSet = new Scene2DStylesSet();
                         lines.Add(scenePoints, stylesSet);
-
-                        pointsIndex.Add(new PointF2D(scenePoints.X[0], scenePoints.Y[0]), 
-                            scenePoints);
-                        pointsIndex.Add(new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]), 
-                            scenePoints);
                     }
                     stylesSet.AddStyleLineText(sceneLineTextObject.StyleId, sceneLineTextObject.TextId);
 
@@ -155,7 +143,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     StylePolygon stylePolygon = source.GetStylePolygon(sceneObject.Value.StyleId);
 
                     uint? pointsId = target.AddPoints(scenePoints.X, scenePoints.Y);
-                    if(pointsId.HasValue)
+                    if (pointsId.HasValue)
                     {
                         target.AddStylePolygon(pointsId.Value, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
                             stylePolygon.Color, stylePolygon.Width, stylePolygon.Fill);
@@ -176,7 +164,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
             // loop until there are no more candidates.
             int totalLines = lines.Count;
             float latestProgress = 0;
-            while(lines.Count > 0)
+            while (lines.Count > 0)
             {
                 var line = lines.First();
                 lines.Remove(line.Key);
@@ -197,8 +185,8 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 // find a matching line.
                 int mergeCount = 1;
                 Scene2D.ScenePoints found;
-                MatchPosition foundPosition = this.FindMatch(pointsIndex, lines, x, y, line.Value, out found);
-                while(found != null)
+                MatchPosition foundPosition = this.FindMatch(lines, x, y, line.Value, out found);
+                while (found != null)
                 { // TODO: keep expanding and duplicating until not possible anymore.
                     // remove the found line.
                     lines.Remove(found);
@@ -229,7 +217,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     }
 
                     // select a new line.
-                    foundPosition = this.FindMatch(pointsIndex, lines, x, y, line.Value, out found);
+                    foundPosition = this.FindMatch(lines, x, y, line.Value, out found);
                     mergeCount++;
                 }
 
@@ -254,7 +242,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                         {
                             StyleText styleText = source.GetStyleLineText(scene2DStyleLineText.StyleLineTextId);
                             string text = source.GetText(scene2DStyleLineText.TextId);
-                            target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom, 
+                            target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
                                 styleText.Color, styleText.Size, text, styleText.Font, styleText.HaloColor, styleText.HaloRadius);
                             continue;
                         }
@@ -278,82 +266,42 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <param name="lines"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        private MatchPosition FindMatch(QuadTree<PointF2D, Scene2D.ScenePoints> pointsIndex, Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, 
-            double[] x, double[] y, Scene2DStylesSet style, out Scene2D.ScenePoints found)
+        private MatchPosition FindMatch(Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, double[] x, double[] y, Scene2DStylesSet style, out Scene2D.ScenePoints found)
         {
             PointF2D first = new PointF2D(x[0], y[0]);
             PointF2D last = new PointF2D(x[x.Length - 1], y[y.Length - 1]);
 
-
             MatchPosition position = MatchPosition.None;
             found = null;
-            foreach(var scenePoints in pointsIndex.GetInside(first.CreateBox(_epsilon)))
+            foreach (var line in lines)
             {
-                Scene2DStylesSet currentStyle;
-                if (lines.TryGetValue(scenePoints, out currentStyle) &&
-                    currentStyle.Equals(style))
-                { // only check unremoved points.
+                if (line.Value.Equals(style))
+                {
                     // check first.
-                    PointF2D potentialFirst = new PointF2D(scenePoints.X[0], scenePoints.Y[0]);
+                    PointF2D potentialFirst = new PointF2D(line.Key.X[0], line.Key.Y[0]);
                     if (first.Distance(potentialFirst) < _epsilon)
                     {
-                        found = scenePoints;
+                        found = line.Key;
                         position = MatchPosition.FirstFirst;
                         break;
                     }
                     if (last.Distance(potentialFirst) < _epsilon)
                     {
-                        found = scenePoints;
+                        found = line.Key;
                         position = MatchPosition.LastFirst;
                         break;
                     }
 
-                    PointF2D potentialLast = new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]);
+                    PointF2D potentialLast = new PointF2D(line.Key.X[line.Key.X.Length - 1], line.Key.Y[line.Key.Y.Length - 1]);
                     if (first.Distance(potentialLast) < _epsilon)
                     {
-                        found = scenePoints;
+                        found = line.Key;
                         position = MatchPosition.FirstLast;
                         break;
                     }
                     if (last.Distance(potentialLast) < _epsilon)
                     {
-                        found = scenePoints;
-                        position = MatchPosition.LastLast;
-                        break;
-                    }
-                }
-            }
-            foreach (var scenePoints in pointsIndex.GetInside(last.CreateBox(_epsilon)))
-            {
-                Scene2DStylesSet currentStyle;
-                if (lines.TryGetValue(scenePoints, out currentStyle) &&
-                    currentStyle.Equals(style))
-                { // only check unremoved points.
-                    // check first.
-                    PointF2D potentialFirst = new PointF2D(scenePoints.X[0], scenePoints.Y[0]);
-                    if (first.Distance(potentialFirst) < _epsilon)
-                    {
-                        found = scenePoints;
-                        position = MatchPosition.FirstFirst;
-                        break;
-                    }
-                    if (last.Distance(potentialFirst) < _epsilon)
-                    {
-                        found = scenePoints;
-                        position = MatchPosition.LastFirst;
-                        break;
-                    }
-
-                    PointF2D potentialLast = new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]);
-                    if (first.Distance(potentialLast) < _epsilon)
-                    {
-                        found = scenePoints;
-                        position = MatchPosition.FirstLast;
-                        break;
-                    }
-                    if (last.Distance(potentialLast) < _epsilon)
-                    {
-                        found = scenePoints;
+                        found = line.Key;
                         position = MatchPosition.LastLast;
                         break;
                     }

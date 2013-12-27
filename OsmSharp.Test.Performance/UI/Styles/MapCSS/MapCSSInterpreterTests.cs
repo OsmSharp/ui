@@ -42,13 +42,13 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         {
             // create a layered scene.
             Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-                16, 14, 12, 10 }));
+                16, 13, 10 }));
 
             // tests map css interpreter.
             MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen-big.osm.pbf");
 
-            //var merger = new Scene2DObjectMerger();
-            //scene = merger.BuildMergedScene(scene);
+            var merger = new Scene2DObjectMerger();
+            scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
             Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);

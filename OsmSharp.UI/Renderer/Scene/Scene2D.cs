@@ -1128,6 +1128,15 @@ namespace OsmSharp.UI.Renderer.Scene
             // check the current object's zoom range against the current min/max zoom factor.
             if (!(minZoomLimited >= maxZoom) && !(maxZoomLimited <= minZoom))
             {
+                // make sure to adjust limits to the object's limits.
+                if(maxZoomLimited > maxZoom)
+                {
+                    maxZoomLimited = maxZoom;
+                }
+                if(minZoomLimited < minZoom)
+                {
+                    minZoomLimited = minZoom;
+                }
                 return minZoomLimited != maxZoomLimited;
             }
             return false;
