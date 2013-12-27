@@ -84,11 +84,12 @@ namespace OsmSharp.Android.UI
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
-		/// <param name="mapLayout">Mapview.</param>
 		public MapViewSurface (Context context) :
 			base (context)
-		{
-
+        {
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
 		}
 
 		/// <summary>
@@ -98,8 +99,10 @@ namespace OsmSharp.Android.UI
 		/// <param name="attrs">Attrs.</param>
 		public MapViewSurface (Context context, IAttributeSet attrs) :
 			base (context, attrs)
-		{
-
+        {
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
 		}
 
         /// <summary>
@@ -477,6 +480,33 @@ namespace OsmSharp.Android.UI
 			set;
 		}
 
+        /// <summary>
+        /// Gets or sets the map tilt flag.
+        /// </summary>
+        public bool MapAllowTilt
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map pan flag.
+        /// </summary>
+        public bool MapAllowPan
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map zoom flag.
+        /// </summary>
+        public bool MapAllowZoom
+        {
+            get;
+            set;
+        }
+
 		/// <summary>
 		/// Holds the renderer.
 		/// </summary>
@@ -518,9 +548,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Creates a view.
 		/// </summary>
-		/// <param name="map"></param>
-		/// <param name="zoomFactor"></param>
-		/// <param name="center"></param>
 		/// <returns></returns>
 		public View2D CreateView()
 		{
@@ -737,41 +764,56 @@ namespace OsmSharp.Android.UI
 			_rotateGestureDetector.OnTouchEvent (e);
 			_moveGestureDetector.OnTouchEvent (e);
 
-			if (_deltaX != 0 || _deltaY != 0 || // was there movement?
-				_deltaScale != 1.0 || // was there scale?
-				_deltaDegrees != 0) { // was there rotation?
-				if (_deltaScale != 1.0) {
-					// calculate the scale.
-					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
-					zoomFactor = zoomFactor * _deltaScale;
-					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
-				}
+            if (_deltaX != 0 || _deltaY != 0 || // was there movement?
+                _deltaScale != 1.0 || // was there scale?
+                _deltaDegrees != 0)
+            { // was there rotation?
+                bool movement = false;
+                if (this.MapAllowZoom &&
+                    _deltaScale != 1.0)
+                {
+                    // calculate the scale.
+                    double zoomFactor = this.Map.Projection.ToZoomFactor(this.MapZoom);
+                    zoomFactor = zoomFactor * _deltaScale;
+                    this.MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-				// stop the animation.
-                this.StopCurrentAnimation();
+                    movement = true;
+                }
 
-                //OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-                //    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
+                if (this.MapAllowPan)
+                {
+                    // stop the animation.
+                    this.StopCurrentAnimation();
 
-				// recreate the view.
-				View2D view = this.CreateView ();
-							
-				// calculate the new center in pixels.
-                double centerXPixels = this.SurfaceWidth / 2.0f - _deltaX;
-                double centerYPixles = this.SurfaceHeight / 2.0f - _deltaY;
-							
-				// calculate the new center from the view.
-                double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight, 
-				                                          centerXPixels, centerYPixles);
-				
-				// convert to the projected center.
-                _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                    // recreate the view.
+                    View2D view = this.CreateView();
 
-				// do the rotation stuff around the new center.
-				if (_deltaDegrees != 0) {
-					View2D rotatedView = view.RotateAroundCenter ((Degree)(-_deltaDegrees));
-					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
-				}
+                    // calculate the new center in pixels.
+                    double centerXPixels = this.SurfaceWidth / 2.0f - _deltaX;
+                    double centerYPixles = this.SurfaceHeight / 2.0f - _deltaY;
+
+                    // calculate the new center from the view.
+                    double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight,
+                                                              centerXPixels, centerYPixles);
+
+                    // convert to the projected center.
+                    _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+
+                    movement = true;
+                }
+
+                // do the rotation stuff around the new center.
+                if (this.MapAllowTilt &&
+                    _deltaDegrees != 0)
+                {
+                    // recreate the view.
+                    View2D view = this.CreateView();
+
+                    View2D rotatedView = view.RotateAroundCenter((Degree)(-_deltaDegrees));
+                    _mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
+
+                    movement = true;
+                }
 
                 _deltaScale = 1;
                 _deltaDegrees = 0;
@@ -779,9 +821,12 @@ namespace OsmSharp.Android.UI
                 _deltaY = 0;
 
                 // notify touch.
-                _mapView.RaiseMapTouched();
+                if (movement)
+                {
+                    _mapView.RaiseMapTouched();
 
-				this.NotifyMovement ();
+                    this.NotifyMovement();
+                }
             }
 			return true;
 		}
@@ -880,6 +925,8 @@ namespace OsmSharp.Android.UI
         /// Zooms to the given list of markers.
         /// </summary>
         /// <param name="markers"></param>
+        /// <param name="percentage"></param>
+        /// <param name="notifyChange"></param>
         public void ZoomToMarkers(List<MapMarker> markers, double percentage, bool notifyChange)
         {
             float height = this.SurfaceHeight;

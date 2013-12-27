@@ -121,7 +121,22 @@ namespace OsmSharp.Android.UI
 		float? MapMaxZoomLevel {
 			get;
 			set;
-		}
+        }
+
+        /// <summary>
+        /// Gets or sets the tilt interaction flag.
+        /// </summary>
+        bool MapAllowTilt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allow pan flag.
+        /// </summary>
+        bool MapAllowPan { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allow zoom flag.
+        /// </summary>
+        bool MapAllowZoom { get; set; }
 
         /// <summary>
         /// Sets a the map view parameters in one go.

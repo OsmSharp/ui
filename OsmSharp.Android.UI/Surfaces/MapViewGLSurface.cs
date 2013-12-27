@@ -16,16 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.Opengl;
 using Android.Util;
 using Android.Views;
+using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations;
 using OsmSharp.UI.Map;
@@ -33,8 +32,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Logging;
+using System.Collections.Generic;
 
 namespace OsmSharp.Android.UI
 {
@@ -95,11 +93,12 @@ namespace OsmSharp.Android.UI
         /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
         /// </summary>
         /// <param name="context">Context.</param>
-        /// <param name="mapLayout">Mapview.</param>
         public MapViewGLSurface(Context context) :
             base(context)
         {
-
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
         }
 
         /// <summary>
@@ -110,7 +109,9 @@ namespace OsmSharp.Android.UI
         public MapViewGLSurface(Context context, IAttributeSet attrs) :
             base(context, attrs)
         {
-
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
         }
 
         /// <summary>
@@ -341,6 +342,33 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Gets or sets the map tilt flag.
+        /// </summary>
+        public bool MapAllowTilt
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map pan flag.
+        /// </summary>
+        public bool MapAllowPan
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map zoom flag.
+        /// </summary>
+        public bool MapAllowZoom
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Raises the layout event.
         /// </summary>
         /// <param name="changed">If set to <c>true</c> changed.</param>
@@ -381,9 +409,6 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Creates a view.
         /// </summary>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
         /// <returns></returns>
         public View2D CreateView()
         {
@@ -601,7 +626,8 @@ namespace OsmSharp.Android.UI
                 _deltaScale != 1.0 || // was there scale?
                 _deltaDegrees != 0)
             { // was there rotation?
-                if (_deltaScale != 1.0)
+                if (this.MapAllowZoom &&
+                    _deltaScale != 1.0)
                 {
                     // calculate the scale.
                     double zoomFactor = this.Map.Projection.ToZoomFactor(this.MapZoom);
@@ -609,29 +635,36 @@ namespace OsmSharp.Android.UI
                     this.MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
                 }
 
-                // stop the animation.
-                this.StopCurrentAnimation();
+                if (this.MapAllowPan)
+                {
+                    // stop the animation.
+                    this.StopCurrentAnimation();
 
-                //OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-                //    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
+                    //OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                    //    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
 
-                // recreate the view.
-                View2D view = this.CreateView();
+                    // recreate the view.
+                    View2D view = this.CreateView();
 
-                // calculate the new center in pixels.
-                double centerXPixels = this.Width / 2.0f - _deltaX;
-                double centerYPixles = this.Height / 2.0f - _deltaY;
+                    // calculate the new center in pixels.
+                    double centerXPixels = this.Width / 2.0f - _deltaX;
+                    double centerYPixles = this.Height / 2.0f - _deltaY;
 
-                // calculate the new center from the view.
-                double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
-                                                          centerXPixels, centerYPixles);
+                    // calculate the new center from the view.
+                    double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
+                                                              centerXPixels, centerYPixles);
 
-                // convert to the projected center.
-                this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                    // convert to the projected center.
+                    this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                }
 
                 // do the rotation stuff around the new center.
-                if (_deltaDegrees != 0)
+                if (this.MapAllowTilt &&
+                    _deltaDegrees != 0)
                 {
+                    // recreate the view.
+                    View2D view = this.CreateView();
+
                     View2D rotatedView = view.RotateAroundCenter((Degree)(-_deltaDegrees));
                     _mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
                 }
@@ -641,7 +674,11 @@ namespace OsmSharp.Android.UI
                 _deltaX = 0;
                 _deltaY = 0;
 
-                this.NotifyMovement();
+                // notify touch.
+                if (this.MapAllowPan || this.MapAllowTilt || this.MapAllowZoom)
+                {
+                    this.NotifyMovement();
+                }
             }
             return true;
         }

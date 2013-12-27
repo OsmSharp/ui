@@ -69,6 +69,21 @@ namespace OsmSharp.UI
         GeoCoordinate MapCenter { get; set; }
 
         /// <summary>
+        /// Gets or sets the tilt interaction flag.
+        /// </summary>
+        bool MapAllowTilt { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allow pan flag.
+        /// </summary>
+        bool MapAllowPan { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allow zoom flag.
+        /// </summary>
+        bool MapAllowZoom { get; set; }
+
+        /// <summary>
         /// Gets or sets the MapTilt.
         /// </summary>
         Degree MapTilt { get; set; }

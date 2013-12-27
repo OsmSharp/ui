@@ -245,7 +245,52 @@ namespace OsmSharp.Android.UI
 		public float? MapMaxZoomLevel {
 			get { return _mapView.MapMaxZoomLevel; }
 			set { _mapView.MapMaxZoomLevel = value; }
-		}
+        }
+
+        /// <summary>
+        /// Gets or sets the map tilt flag.
+        /// </summary>
+        public bool MapAllowTilt
+        {
+            get
+            {
+                return _mapView.MapAllowTilt;
+            }
+            set
+            {
+                _mapView.MapAllowTilt = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the map pan flag.
+        /// </summary>
+        public bool MapAllowPan
+        {
+            get
+            {
+                return _mapView.MapAllowPan;
+            }
+            set
+            {
+                _mapView.MapAllowPan = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the map zoom flag.
+        /// </summary>
+        public bool MapAllowZoom
+        {
+            get
+            {
+                return _mapView.MapAllowZoom;
+            }
+            set
+            {
+                _mapView.MapAllowZoom = value;
+            }
+        }
 
 		/// <summary>
 		/// Gets or sets the map.

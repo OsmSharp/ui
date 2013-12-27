@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Timers;
 using Android.App;
 using Android.OS;
 using Android.Widget;
@@ -33,6 +29,10 @@ using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer.Scene;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Timers;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -107,6 +107,10 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView = new MapView(this, new MapViewGLSurface(this));
             _mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
             _mapView.Map = map;
+
+            _mapView.MapAllowPan = true;
+            _mapView.MapAllowTilt = true;
+            _mapView.MapAllowZoom = true;
 
             (_mapView as IMapView).AutoInvalidate = true;
             _mapView.MapMaxZoomLevel = 20;

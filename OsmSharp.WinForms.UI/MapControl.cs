@@ -48,6 +48,9 @@ namespace OsmSharp.WinForms.UI
 
             this.DoubleBuffered = true;
             _renderer = new MapRenderer<Graphics>(new GraphicsRenderer2D());
+
+            this.MapAllowPan = true;
+            this.MapAllowZoom = true;
         }
 
         /// <summary>
@@ -187,7 +190,6 @@ namespace OsmSharp.WinForms.UI
             }
         }
 
-
         #region Drag/Zoom
 
         /// <summary>
@@ -199,6 +201,39 @@ namespace OsmSharp.WinForms.UI
         /// Coordinates of the old center.
         /// </summary>
         private GeoCoordinate _oldCenter;
+
+        /// <summary>
+        /// Gets or sets the map tilt flag.
+        /// </summary>
+        public bool MapAllowTilt
+        {
+            get
+            {
+                return false;
+            }
+            set
+            {
+                // no map tilt functionality.
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the map pan flag.
+        /// </summary>
+        public bool MapAllowPan
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map zoom flag.
+        /// </summary>
+        public bool MapAllowZoom
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Raises the onmousedown event.
@@ -224,7 +259,8 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseMove(e);
 
-            if (e.Button == MouseButtons.Left &&
+            if (this.MapAllowPan && 
+                e.Button == MouseButtons.Left &&
                 _draggingCoordinates != null)
             {
                 var currentCoordinates = new double[] { e.X, e.Y };
@@ -259,7 +295,10 @@ namespace OsmSharp.WinForms.UI
 
             _draggingCoordinates = null;
             _quickMode = false;
-            this.Invalidate();
+            if (this.MapAllowPan)
+            {
+                this.Invalidate();
+            }
         }
 
         /// <summary>
@@ -270,9 +309,12 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseWheel(e);
 
-            this.MapZoom += (float)(e.Delta / 2000.0);
+            if (this.MapAllowZoom)
+            {
+                this.MapZoom += (float)(e.Delta / 2000.0);
 
-            this.QueueNotifyMapViewChanged();
+                this.QueueNotifyMapViewChanged();
+            }
         }
 
         /// <summary>

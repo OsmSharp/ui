@@ -401,7 +401,8 @@ namespace OsmSharp.iOS.UI
 		private void Rotate(UIRotationGestureRecognizer rotation){
 			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0) {
+			if (this.MapAllowTilt &&
+                rect.Width > 0) {
 				this.StopCurrentAnimation ();
 				if (rotation.State == UIGestureRecognizerState.Ended) { 
 //					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
@@ -440,7 +441,8 @@ namespace OsmSharp.iOS.UI
 		{
 			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0) {
+			if (this.MapAllowZoom && 
+                rect.Width > 0) {
 				this.StopCurrentAnimation ();
 				if (pinch.State == UIGestureRecognizerState.Ended) {
 //					_mapZoom = _mapZoomLevelBefore.Value;
@@ -487,7 +489,8 @@ namespace OsmSharp.iOS.UI
 
 			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0) {
+			if (this.MapAllowPan &&
+                rect.Width > 0) {
 				this.StopCurrentAnimation ();
 				PointF offset = pan.TranslationInView (this);
 				if (pan.State == UIGestureRecognizerState.Ended) {
@@ -564,7 +567,8 @@ namespace OsmSharp.iOS.UI
 		private void DoubleTap(UITapGestureRecognizer tap){
 			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
-			if(rect.Width > 0 && rect.Height > 0) {
+			if(this.MapAllowZoom &&
+                rect.Width > 0 && rect.Height > 0) {
 				this.StopCurrentAnimation ();
 				
 				View2D view = this.CreateView (rect);
@@ -713,7 +717,34 @@ namespace OsmSharp.iOS.UI
 
 				this.InvokeOnMainThread (InvalidateMap);
 			}
-		}
+        }
+
+        /// <summary>
+        /// Gets or sets the map tilt flag.
+        /// </summary>
+        public bool MapAllowTilt
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map pan flag.
+        /// </summary>
+        public bool MapAllowPan
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map zoom flag.
+        /// </summary>
+        public bool MapAllowZoom
+        {
+            get;
+            set;
+        }
 
 		#region IMapView implementation
 
