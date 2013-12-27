@@ -16,22 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows.Forms;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.UI.Map.Styles.Streams;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Renderer.Scene.Simplification;
-using OsmSharp.Osm.Streams;
-using OsmSharp.Osm.Xml.Streams;
-using OsmSharp.Osm.Data.Memory;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -83,7 +74,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             ////map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             map.AddLayer(new LayerScene(
-                Scene2D.Deserialize(new FileInfo(@"complete.map").OpenRead(),
+                Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
                     true)));
 
             // set control properties.
