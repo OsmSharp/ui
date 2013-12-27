@@ -30,6 +30,7 @@ using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
 {
@@ -95,12 +96,18 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
             }
 
             // create the stream.
+            TagsCollectionBase metaTags = new TagsCollection();
+            metaTags.Add("SomeTestKey", "SomeTestValue");
             var stream = new MemoryStream();
-            scene.Serialize(stream, true);
+            scene.Serialize(stream, true, metaTags);
 
             // deserialize the stream.
+            metaTags = null;
             stream.Seek(0, SeekOrigin.Begin);
-            IPrimitives2DSource sceneSource = Scene2D.Deserialize(stream, true);
+            IPrimitives2DSource sceneSource = Scene2D.Deserialize(stream, true, out metaTags);
+
+            // test meta tags.
+            Assert.IsTrue(metaTags.ContainsKeyValue("SomeTestKey", "SomeTestValue"));
 
             if (box != null)
             {

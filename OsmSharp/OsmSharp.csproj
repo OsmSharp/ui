@@ -66,6 +66,7 @@
     <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\ITagsSource.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagsCollectionSerializer.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />

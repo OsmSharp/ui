@@ -28,6 +28,8 @@ using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
 using ProtoBuf.Meta;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Serializer;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage
 {
@@ -75,15 +77,22 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// <param name="stream"></param>
         /// <param name="scene"></param>
         /// <param name="compress"></param>
-        public static void Serialize(Stream stream, Scene2D scene, bool compress)
+        public static void Serialize(Stream stream, TagsCollectionBase metaTags, Scene2D scene, bool compress)
         {
             RuntimeTypeModel typeModel = SceneSerializer.BuildRuntimeTypeModel();
 
-            // [SeneIndexLength:4][SceneIndex][SceneLengths:4*zoomFactors.length][Scenes]
+            // [MetaIndexLenght:4][Metadata][SeneIndexLength:4][SceneIndex][SceneLengths:4*zoomFactors.length][Scenes]
+            // MetaIndexLenght: int The lenght of the meta index.
+            // Metadata: a number of serialized tags.
             // SceneIndexLength: int The length of the sceneindex in bytes.
             // SceneIndex: the serialized scene index.
             // SceneLengths: int[] The lengths of the scenes per zoom level as in the zoomfactors array.
             // Scenes: The serialized scenes themselves.
+
+            // serialize meta tags.
+            byte[] tagsBytes = (new TagsCollectionSerializer()).Serialize(metaTags);
+            stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
+            stream.Write(tagsBytes, 0, tagsBytes.Length);
 
             // index index.
             SceneIndex sceneIndex = new SceneIndex();
@@ -96,17 +105,18 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             sceneIndex.IconImage = scene.GetImages();
 
             // write SceneIndex
-            stream.Seek(4, SeekOrigin.Begin);
+            long positionAfterMeta = stream.Position;
+            stream.Seek(positionAfterMeta + 4, SeekOrigin.Begin);
             long indexStart = stream.Position;
             typeModel.Serialize(stream, sceneIndex);
 
             // write SeneIndexLength
             int indexSize = (int)(stream.Position - indexStart);
-            stream.Seek(0, SeekOrigin.Begin);
+            stream.Seek(positionAfterMeta + 0, SeekOrigin.Begin);
             stream.Write(BitConverter.GetBytes(indexSize), 0, 4);
 
             // write Scenes.
-            stream.Seek(4 + indexSize + 4 * sceneIndex.ZoomFactors.Length, SeekOrigin.Begin);
+            stream.Seek(positionAfterMeta + 4 + indexSize + 4 * sceneIndex.ZoomFactors.Length, SeekOrigin.Begin);
             // index into r-trees and serialize.
             int[] lengths = new int[sceneIndex.ZoomFactors.Length];
             for (int idx = 0; idx < lengths.Length; idx++)
@@ -163,7 +173,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
             // write SceneLengths
             long end = stream.Position;
-            stream.Seek(4 + indexSize, SeekOrigin.Begin);
+            stream.Seek(positionAfterMeta + 4 + indexSize, SeekOrigin.Begin);
             for (int idx = 0; idx < lengths.Length; idx++)
             {
                 stream.Write(BitConverter.GetBytes(lengths[idx]), 0, 4);
@@ -176,19 +186,38 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
+        /// <param name="metaData"></param>
         /// <returns></returns>
-        public static Primitive2DSource Deserialize(Stream stream, bool compress)
+        public static Primitive2DSource Deserialize(Stream stream, bool compress, out TagsCollectionBase metaData)
         {
             RuntimeTypeModel typeModel = SceneSerializer.BuildRuntimeTypeModel();
 
-            // [SeneIndexLength:4][SceneIndex][SceneLengths:4*zoomFactors.length][Scenes]
+            // [MetaIndexLenght:4][Metadata][SeneIndexLength:4][SceneIndex][SceneLengths:4*zoomFactors.length][Scenes]
+            // MetaIndexLenght: int The lenght of the meta index.
+            // Metadata: a number of serialized tags.
             // SceneIndexLength: int The length of the sceneindex in bytes.
             // SceneIndex: the serialized scene index.
             // SceneLengths: int[] The lengths of the scenes per zoom level as in the zoomfactors array.
             // Scenes: The serialized scenes themselves.
 
-            // read SeneIndexLength.
+            // read metaLength.
             byte[] intBytes = new byte[4];
+            stream.Read(intBytes, 0, 4);
+            int metaLength = BitConverter.ToInt32(intBytes, 0);
+            if (metaLength > 0)
+            {
+                // read meta byte array.
+                byte[] tagsBytes = new byte[metaLength];
+                stream.Read(tagsBytes, 0, metaLength);
+                metaData = (new TagsCollectionSerializer()).Deserialize(tagsBytes);
+            }
+            else
+            { // no metadata here!
+                metaData = new TagsCollection();
+            }
+
+            // read SeneIndexLength.
+            intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
             int indexLength = BitConverter.ToInt32(intBytes, 0);
 

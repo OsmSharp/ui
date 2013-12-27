@@ -29,6 +29,7 @@ using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Storage;
 using OsmSharp.UI.Renderer.Scene.Styles;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -614,9 +615,23 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
-        public void Serialize(Stream stream, bool compress)
+        public void Serialize(Stream stream, bool compress, TagsCollectionBase metaData)
         {
-            SceneSerializer.Serialize(stream, this, compress);
+            SceneSerializer.Serialize(stream, metaData, this, compress);
+        }
+
+        /// <summary>
+        /// Deserializes a primitive source from a stream of a previously serialized scene.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="compress"></param>
+        /// <returns></returns>
+        public static IPrimitives2DSource Deserialize(Stream stream, bool compress, out TagsCollectionBase metaData)
+		{
+			// make sure the stream seeks to the beginning.
+			stream.Seek(0, SeekOrigin.Begin);
+
+            return SceneSerializer.Deserialize(stream, compress, out metaData);
         }
 
         /// <summary>
@@ -626,11 +641,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="compress"></param>
         /// <returns></returns>
         public static IPrimitives2DSource Deserialize(Stream stream, bool compress)
-		{
-			// make sure the stream seeks to the beginning.
-			stream.Seek(0, SeekOrigin.Begin);
-
-            return SceneSerializer.Deserialize(stream, compress);
+        {
+            TagsCollectionBase metaData;
+            return Scene2D.Deserialize(stream, compress, out metaData);
         }
 
         /// <summary>

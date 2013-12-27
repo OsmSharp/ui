@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Performance.UI.Scene
 {
@@ -64,7 +65,9 @@ namespace OsmSharp.Test.Performance.UI.Scene
             performanceInfo.Start();
             performanceInfo.Report("Serializing stream...");
 
-            scene.Serialize(stream, compress);
+            TagsCollectionBase metaTags = new TagsCollection();
+            metaTags.Add("generated_by", "performance_test");
+            scene.Serialize(stream, compress, metaTags);
 
             performanceInfo.Stop();
 

@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using OsmSharp.Collections.SpatialIndexes;
-using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Collections;
+using OsmSharp.Collections.SpatialIndexes;
+using OsmSharp.Collections.Tags;
+using OsmSharp.UI.Renderer.Primitives;
+using System.Collections.Generic;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage
 {
@@ -46,8 +46,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// <param name="rTrees"></param>
         internal Primitive2DSource(float[] zoomFactors, ISpatialIndexReadonly<Primitive2D>[] rTrees)
         {
-            this._zoomFactors = zoomFactors;
-            this._rTrees = rTrees;
+            _zoomFactors = zoomFactors;
+            _rTrees = rTrees;
         }
 
         /// <summary>

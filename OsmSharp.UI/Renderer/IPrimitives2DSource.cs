@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UI.Renderer
 {

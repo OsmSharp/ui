@@ -23,6 +23,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Performance.UI.Rendering
 {
@@ -110,8 +111,9 @@ namespace OsmSharp.Test.Performance.UI.Rendering
 
             // build a map.
             Map map = new Map();
+            TagsCollectionBase metaTags;
             map.AddLayer(new LayerScene(
-                Scene2D.Deserialize(stream, true)));
+                Scene2D.Deserialize(stream, true, out metaTags)));
 
             // build the target and renderer.
             TTarget target = createTarget.Invoke(TargetWidth, TargetHeight);

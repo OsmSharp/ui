@@ -132,6 +132,10 @@
       <Link>kempen-big.osm.pbf.routing</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\Output\Debug\Any CPU\TestFiles\mapcss\complete.map">
+      <Link>complete.map</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="kempen-highways.osm.pbf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
