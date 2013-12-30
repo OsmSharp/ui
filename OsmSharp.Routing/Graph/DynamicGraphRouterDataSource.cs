@@ -115,6 +115,14 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Returns all supported profiles.
+        /// </summary>
+        public IEnumerable<Vehicle> GetSupportedProfiles()
+        {
+            return _supportedVehicles;
+        }
+
+        /// <summary>
         /// Returns all arcs inside the given bounding box.
         /// </summary>
         /// <param name="box"></param>

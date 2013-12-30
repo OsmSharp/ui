@@ -68,6 +68,8 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+
+            _projection = new WebMercator();
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the map projection.
         /// </summary>
-        private IProjection _projection;
+        private readonly IProjection _projection;
 
         /// <summary>
         /// Loads the tiles async.

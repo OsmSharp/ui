@@ -19,6 +19,7 @@
 using Android.App;
 using Android.OS;
 using Android.Widget;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
@@ -86,9 +87,10 @@ namespace OsmSharp.Android.UI.Sample
 
             var routingSerializer = 
                 new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
+            TagsCollectionBase metaData = null;
             var graphDeserialized = routingSerializer.Deserialize(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing"), true);
+                    "OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing"), out metaData, true);
 
             _router = Router.CreateCHFrom(
                 graphDeserialized, new CHRouter(),

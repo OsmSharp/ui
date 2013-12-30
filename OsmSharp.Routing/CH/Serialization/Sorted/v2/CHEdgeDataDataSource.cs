@@ -49,15 +49,21 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         private CHEdgeDataDataSourceSerializer _serializer;
 
         /// <summary>
+        /// Holds the supported vehicles.
+        /// </summary>
+        private readonly HashSet<string> _vehicles;
+
+        /// <summary>
         /// Creates a new CH edge data source.
         /// </summary>
-        public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer,
+        public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
             int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
             int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
             ITagsCollectionIndexReadonly tagsIndex)
         {
             _stream = stream;
             _serializer = serializer;
+            _vehicles = new HashSet<string>(vehicles);
 
             this.InitializeRegions(startOfRegions, regionIndex, zoom);
             this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
@@ -74,8 +80,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// <returns></returns>
         public bool SupportsProfile(Vehicle vehicle)
         {
-            // TODO: also save the profiles.
-            return true;
+            return _vehicles.Contains(vehicle.UniqueName);
         }
 
         /// <summary>
@@ -85,7 +90,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// <returns></returns>
         public void AddSupportedProfile(Vehicle vehicle)
         {
-            // TODO: also save the profiles.
+            throw new InvalidOperationException("Cannot add extra vehicle profiles to a read-only source.");
         }
 
         /// <summary>

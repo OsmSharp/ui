@@ -18,10 +18,13 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using OsmSharp.IO;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
+using System.Collections.Generic;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.Routing.Graph.Serialization
 {
@@ -136,6 +139,73 @@ namespace OsmSharp.Routing.Graph.Serialization
 
         #endregion
 
+        #region Vehicle Profiles
+
+        /// <summary>
+        /// Builds vehicles runtime type model.
+        /// </summary>
+        /// <returns></returns>
+        private RuntimeTypeModel BuildVehiclesRuntimeTypeModel()
+        {
+            RuntimeTypeModel typeModel = TypeModel.Create();
+            typeModel.Add(typeof(List<string>), true);
+            return typeModel;
+        }
+
+        /// <summary>
+        /// Reads the vehicle profiles from the stream starting at the given position.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        private IEnumerable<string> ReadVehicleProfiles(Stream stream)
+        {
+            List<string> vehicles = null;
+            byte[] intBytes = new byte[4];
+            stream.Read(intBytes, 0, 4);
+            int metaLength = BitConverter.ToInt32(intBytes, 0);
+            if (metaLength > 0)
+            {
+                // read meta byte array.
+                byte[] tagsBytes = new byte[metaLength];
+                stream.Read(tagsBytes, 0, metaLength);
+                vehicles = this.BuildVehiclesRuntimeTypeModel().Deserialize(new MemoryStream(tagsBytes), null, typeof(List<string>)) as List<string>;
+            }
+            else
+            { // no metadata here!
+                vehicles = new List<string>();
+            }
+            return vehicles;
+        }
+
+        /// <summary>
+        /// Writes the meta-data to the stream starting at the given position.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="vehicleProfiles"></param>
+        private void WriteVehicleProfiles(Stream stream, IEnumerable<Vehicle> vehicleProfiles)
+        {
+            List<string> vehicles = new List<string>(
+                vehicleProfiles.Select(x => x.UniqueName));
+            this.WriteVehicleProfiles(stream, vehicles);
+        }
+
+        /// <summary>
+        /// Writes the meta-data to the stream starting at the given position.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="vehicleProfiles"></param>
+        private void WriteVehicleProfiles(Stream stream, IEnumerable<string> vehicleProfiles)
+        {
+            MemoryStream vehiclesStream = new MemoryStream();
+            this.BuildVehiclesRuntimeTypeModel().Serialize(vehiclesStream, new List<string>(vehicleProfiles));
+
+            byte[] tagsBytes = vehiclesStream.ToArray();
+            stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
+            stream.Write(tagsBytes, 0, tagsBytes.Length);
+        }
+
+        #endregion
+
         /// <summary>
         /// Returns true if this serializer can deserialize the data in the given stream.
         /// </summary>
@@ -162,6 +232,9 @@ namespace OsmSharp.Routing.Graph.Serialization
 
             // write the header.
             this.WriteVersionHeader(stream);
+
+            // write the vehicles.
+            this.WriteVehicleProfiles(stream, graph.GetSupportedProfiles());
 
             // write the meta-data.
             this.WriteMeta(stream, metaTags);
@@ -201,6 +274,9 @@ namespace OsmSharp.Routing.Graph.Serialization
                 // read/verify the current version header.
                 this.ReadAndValidateHeader(stream);
 
+                // read vehicle profiles.
+                IEnumerable<string> vehicles = this.ReadVehicleProfiles(stream);
+
                 // deserialize meta data.
                 metaTags = this.ReadMeta(stream);
 
@@ -208,7 +284,7 @@ namespace OsmSharp.Routing.Graph.Serialization
                 var routingSerializerStream = new LimitedStream(stream);
 
                 // do the actual version-specific deserialization.
-                return this.DoDeserialize(routingSerializerStream, lazy);
+                return this.DoDeserialize(routingSerializerStream, lazy, vehicles);
             }
             throw new ArgumentOutOfRangeException("stream", "Cannot deserialize the given stream, version unsupported or content unrecognized!");
         }
@@ -220,6 +296,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="metaTags"></param>
         /// <returns></returns>
-        protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy);
+        protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
     }
 }

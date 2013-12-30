@@ -40,8 +40,6 @@ namespace OsmSharp.Osm.Xml.Streams
 
         private OsmGeo _next;
 
-        private readonly string _fileName;
-
         private Stream _stream;
 
         private readonly bool _gzip;
@@ -118,11 +116,7 @@ namespace OsmSharp.Osm.Xml.Streams
         {
             get
             {
-                if (_fileName == null)
-                {
-                    return _stream.CanSeek;
-                }
-                return true;
+                return _stream.CanSeek;
             }
         }
 

@@ -378,9 +378,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="vehicles"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<CHEdgeData> DoDeserialize(
-            LimitedStream stream, bool lazy)
+            LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
@@ -407,7 +408,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
             stream.Seek(startOfTags, SeekOrigin.Begin);
             ITagsCollectionIndexReadonly tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
 
-            return new v2.CHEdgeDataDataSource(stream, this, sizeRegionIndex + 12,
+            return new v2.CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 12,
                 chVertexRegionIndex, _regionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, (uint)_blockVertexSize,
                 tagsIndex);
         }

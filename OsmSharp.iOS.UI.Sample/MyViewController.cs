@@ -15,6 +15,7 @@ using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
 using System.Collections.Generic;
 using OsmSharp.Logging;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.iOS.UI.Sample1
 {
@@ -74,10 +75,11 @@ namespace OsmSharp.iOS.UI.Sample1
 			mapView.MapZoom = 16;
 			mapView.MapTilt = 30;
 
+            TagsCollectionBase metaData;
 			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
 			var graphDeserialized = routingSerializer.Deserialize(
 				Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing"), true);
+                    "OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing"), out metaData, true);
 
 			_router = Router.CreateCHFrom(
 				graphDeserialized, new CHRouter(),

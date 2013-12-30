@@ -16,11 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using NUnit.Framework;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
@@ -28,8 +26,10 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Math.Geo;
-using OsmSharp.Collections.Tags;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Tiled
 {
@@ -89,6 +89,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Tiled
             IBasicRouterDataSource<CHEdgeData> deserializedVersion =
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
+            Assert.IsTrue(deserializedVersion.SupportsProfile(Vehicle.Car));
+            Assert.IsFalse(deserializedVersion.SupportsProfile(Vehicle.Bicycle));
 
             // try to do some routing on the deserialized version.
             var basicRouter =

@@ -16,12 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Units.Speed;
-using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Osm;
+using OsmSharp.Units.Speed;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing
 {
@@ -234,6 +233,14 @@ namespace OsmSharp.Routing
         /// <param name="highwayType"></param>
         /// <returns></returns>
         protected abstract bool IsVehicleAllowed(TagsCollectionBase tags, string highwayType);
+        
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public abstract string UniqueName
+        {
+            get;
+        }
     }
 
     /// <summary>
@@ -346,6 +353,14 @@ namespace OsmSharp.Routing
         {
             return 5;
         }
+
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "Pedestrian"; }
+        }
     }
 
     /// <summary>
@@ -456,6 +471,14 @@ namespace OsmSharp.Routing
         protected override KilometerPerHour MaxSpeed()
         {
             return 15;
+        }
+
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "Bicycle"; }
         }
     }
 
@@ -574,6 +597,14 @@ namespace OsmSharp.Routing
         {
             return 40;
         }
+
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "Moped"; }
+        }
     }
 
     /// <summary>
@@ -581,7 +612,13 @@ namespace OsmSharp.Routing
     /// </summary>
     public class MotorCycle : MotorVehicle
     {
-
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "MotorCycle"; }
+        }
     }
 
     /// <summary>
@@ -589,7 +626,13 @@ namespace OsmSharp.Routing
     /// </summary>
     public class Car : MotorVehicle
     {
-
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "Car"; }
+        }
     }
 
     /// <summary>
@@ -597,7 +640,13 @@ namespace OsmSharp.Routing
     /// </summary>
     public class SmallTruck : MotorVehicle
     {
-
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "SmallTruck"; }
+        }
     }
 
     /// <summary>
@@ -605,7 +654,13 @@ namespace OsmSharp.Routing
     /// </summary>
     public class BigTruck : MotorVehicle
     {
-
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "BigTruck"; }
+        }
     }
 
     /// <summary>
@@ -613,6 +668,12 @@ namespace OsmSharp.Routing
     /// </summary>
     public class Bus : MotorVehicle
     {
-
+        /// <summary>
+        /// Returns a unique name this vehicle type.
+        /// </summary>
+        public override string UniqueName
+        {
+            get { return "Bus"; }
+        }
     }
 }

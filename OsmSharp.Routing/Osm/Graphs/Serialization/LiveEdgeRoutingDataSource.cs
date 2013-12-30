@@ -56,6 +56,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         private readonly ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
 
         /// <summary>
+        /// Holds the list of vehicles.
+        /// </summary>
+        private readonly HashSet<string> _vehicles;
+
+        /// <summary>
         /// Creates a new router data source.
         /// </summary>
         /// <param name="stream"></param>
@@ -63,16 +68,19 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="tileMetas"></param>
         /// <param name="zoom"></param>
         /// <param name="v1RoutingDataSourceSerializer"></param>
+        /// <param name="vehicles"></param>
         /// <param name="initialCapacity"></param>
         internal V2RouterLiveEdgeDataSource(
             Stream stream, bool compressed,
             V2RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
             int zoom, V2RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
+            IEnumerable<string> vehicles,
             int initialCapacity = 1000)
         {
             _tagsIndex = new TagsTableCollectionIndex();
             _vertices = new SparseArray<Vertex>(initialCapacity);
             _coordinates = new SparseArray<Location>(initialCapacity);
+            _vehicles = new HashSet<string>(vehicles);
 
             _vertexIndex = new QuadTree<GeoCoordinate, uint>();
 
@@ -103,8 +111,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <returns></returns>
         public bool SupportsProfile(Vehicle vehicle)
         {
-            // TODO: also save the profiles.
-            return true;
+            return _vehicles.Contains(vehicle.UniqueName);
         }
 
         /// <summary>
@@ -114,7 +121,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <returns></returns>
         public void AddSupportedProfile(Vehicle vehicle)
         {
-            // TODO: also save the profiles.
+            throw new InvalidOperationException("Cannot add extra vehicle profiles to a read-only source.");
         }
 
         /// <summary>

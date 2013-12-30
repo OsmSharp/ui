@@ -84,7 +84,6 @@ namespace OsmSharp.UI.Renderer
 				this.SetRunning (false);
 				throw ex;
 			}
-			return false;
 		}
 
 		#region Running/Cancelling/State

@@ -52,6 +52,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             _vehicle = vehicle;
         }
+        
+        /// <summary>
+        /// Initializes the processing.
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            base.DynamicGraph.AddSupportedProfile(_vehicle);
+        }
 
         /// <summary>
         /// Calculates edge data.

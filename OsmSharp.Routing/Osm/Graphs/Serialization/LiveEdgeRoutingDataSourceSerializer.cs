@@ -254,9 +254,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="vehicles"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<LiveEdge> DoDeserialize(
-            LimitedStream stream, bool lazy)
+            LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             // serialize all tile meta data.
             stream.Seek(0, SeekOrigin.Begin);
@@ -279,7 +280,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
 
             // create the datasource.
             var routerDataSource = new V2RouterLiveEdgeDataSource(stream, decompress, metas, Zoom,
-                    this, 1000);
+                    this, vehicles, 1000);
             if (!lazy)
             {
                 // pre-load everything.

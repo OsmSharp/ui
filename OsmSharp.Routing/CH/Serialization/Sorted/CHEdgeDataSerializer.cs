@@ -63,8 +63,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
         public CHEdgeDataDataSourceSerializer(bool compress)
         {
-//            _compress = compress;
-
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.
             typeModel.Add(typeof(CHBlock), true); // the block definition.
@@ -352,9 +350,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="vehicles"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<CHEdgeData> DoDeserialize(
-            LimitedStream stream, bool lazy)
+            LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
@@ -375,7 +374,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 new CappedStream(stream, stream.Position, sizeBlockIndex), null,
                     typeof(CHBlockIndex));
 
-            return new CHEdgeDataDataSource(stream, this, sizeRegionIndex + 8,
+            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 8,
                 chVertexRegionIndex, RegionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, BlockVertexSize);
         }
 

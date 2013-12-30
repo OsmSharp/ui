@@ -16,21 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Ionic.Zlib;
-using OsmSharp.Osm;
+using OsmSharp.Collections.Tags;
+using OsmSharp.IO;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Serialization;
-using OsmSharp.Collections.Tags;
-using OsmSharp.IO;
-using OsmSharp.Math.Geo;
 using ProtoBuf;
 using ProtoBuf.Meta;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Routing.CH.Serialization.Tiled
 {
@@ -276,9 +275,10 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="vehicles"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<CHEdgeData> DoDeserialize(
-            LimitedStream stream, bool lazy)
+            LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
             // serialize all tile meta data.
             stream.Seek(0, SeekOrigin.Begin);
@@ -301,7 +301,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                     typeof(SerializableGraphTileMetas));
 
             // create the datasource.
-            var routerDataSource = new CHEdgeDataDataSource(stream, decompress, metas, Zoom,
+            var routerDataSource = new CHEdgeDataDataSource(stream, decompress, vehicles, metas, Zoom,
                     this, 1000);
             if (!lazy)
             {

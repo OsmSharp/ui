@@ -154,6 +154,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// Returns the target graph.
+        /// </summary>
+        public IDynamicGraphRouterDataSource<TEdgeData> DynamicGraph
+        {
+            get { return _dynamicGraph; }
+        }
+
+        /// <summary>
         /// Holds the bounds of the nodes that have been added up until now.
         /// </summary>
         private GeoCoordinateBox _bounds = null;
