@@ -31,6 +31,7 @@ using System.Diagnostics;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -62,12 +63,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
 
             // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
                 try
                 {
-                    routingSerializer.Serialize(stream, original);
+                    routingSerializer.Serialize(stream, original, metaData);
                     byteArray = stream.ToArray();
                 }
                 catch (Exception)
@@ -81,7 +84,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             IBasicRouterDataSource<CHEdgeData> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray));
+                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // create reference router.

@@ -85,13 +85,15 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             IBasicRouterDataSource<LiveEdge> deserializedVersion;
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
                 try
                 {
-                    routingSerializer.Serialize(stream, original);
+                    routingSerializer.Serialize(stream, original, metaData);
                     byteArray = stream.ToArray();
                 }
                 catch (Exception)
@@ -107,7 +109,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             {
                 try
                 {
-                    deserializedVersion = routingSerializer.Deserialize(stream, false);
+                    deserializedVersion = routingSerializer.Deserialize(stream, out metaData, false);
                 }
                 catch (Exception)
                 {
@@ -161,12 +163,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
                 try
                 {
-                    routingSerializer.Serialize(stream, original);
+                    routingSerializer.Serialize(stream, original, metaData);
                     byteArray = stream.ToArray();
                 }
                 catch (Exception)
@@ -180,7 +184,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             IBasicRouterDataSource<LiveEdge> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray));
+                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
@@ -251,12 +255,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 
             // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
                 try
                 {
-                    routingSerializer.Serialize(stream, original);
+                    routingSerializer.Serialize(stream, original, metaData);
                     byteArray = stream.ToArray();
                 }
                 catch (Exception)
@@ -270,7 +276,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             IBasicRouterDataSource<LiveEdge> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray));
+                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
@@ -339,12 +345,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             byte[] byteArray;
             using (var stream = new MemoryStream())
             {
                 try
                 {
-                    routingSerializer.Serialize(stream, original);
+                    routingSerializer.Serialize(stream, original, metaData);
                     byteArray = stream.ToArray();
                 }
                 catch (Exception)
@@ -358,7 +366,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             IBasicRouterDataSource<LiveEdge> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray));
+                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
 //            // try to do some routing on the deserialized version.

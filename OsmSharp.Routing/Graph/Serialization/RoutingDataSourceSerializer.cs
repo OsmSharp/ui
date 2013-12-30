@@ -20,6 +20,8 @@ using System;
 using System.IO;
 using OsmSharp.IO;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Serializer;
 
 namespace OsmSharp.Routing.Graph.Serialization
 {
@@ -93,6 +95,47 @@ namespace OsmSharp.Routing.Graph.Serialization
 
         #endregion
 
+        #region Metadata
+
+        /// <summary>
+        /// Reads the meta-data from the stream starting at the given position.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        private TagsCollectionBase ReadMeta(Stream stream)
+        {
+            TagsCollectionBase metaData;
+            byte[] intBytes = new byte[4];
+            stream.Read(intBytes, 0, 4);
+            int metaLength = BitConverter.ToInt32(intBytes, 0);
+            if (metaLength > 0)
+            {
+                // read meta byte array.
+                byte[] tagsBytes = new byte[metaLength];
+                stream.Read(tagsBytes, 0, metaLength);
+                metaData = (new TagsCollectionSerializer()).Deserialize(tagsBytes);
+            }
+            else
+            { // no metadata here!
+                metaData = new TagsCollection();
+            }
+            return metaData;
+        }
+
+        /// <summary>
+        /// Writes the meta-data to the stream starting at the given position.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="metaTags"></param>
+        private void WriteMeta(Stream stream, TagsCollectionBase metaTags)
+        {
+            byte[] tagsBytes = (new TagsCollectionSerializer()).Serialize(metaTags);
+            stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
+            stream.Write(tagsBytes, 0, tagsBytes.Length);
+        }
+
+        #endregion
+
         /// <summary>
         /// Returns true if this serializer can deserialize the data in the given stream.
         /// </summary>
@@ -109,15 +152,19 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph)
+        /// <param name="metaTags"></param>
+        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
         {
-            if (stream == null)
+           if (stream == null)
                 throw new ArgumentNullException("stream");
             if (graph == null)
                 throw new ArgumentNullException("graph");
 
             // write the header.
             this.WriteVersionHeader(stream);
+
+            // write the meta-data.
+            this.WriteMeta(stream, metaTags);
 
             // wrap the stream.
             var routingSerializerStream = new LimitedStream(stream);
@@ -139,8 +186,9 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="metaTags"></param>
         /// <returns></returns>
-        public IBasicRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
+        public IBasicRouterDataSource<TEdgeData> Deserialize(Stream stream, out TagsCollectionBase metaTags, bool lazy = true)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -153,6 +201,9 @@ namespace OsmSharp.Routing.Graph.Serialization
                 // read/verify the current version header.
                 this.ReadAndValidateHeader(stream);
 
+                // deserialize meta data.
+                metaTags = this.ReadMeta(stream);
+
                 // wrap the stream.
                 var routingSerializerStream = new LimitedStream(stream);
 
@@ -162,12 +213,12 @@ namespace OsmSharp.Routing.Graph.Serialization
             throw new ArgumentOutOfRangeException("stream", "Cannot deserialize the given stream, version unsupported or content unrecognized!");
         }
 
-
         /// <summary>
         /// Deserializes the given stream into a routable graph.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
+        /// <param name="metaTags"></param>
         /// <returns></returns>
         protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy);
     }

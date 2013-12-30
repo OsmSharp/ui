@@ -25,6 +25,7 @@ using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -89,9 +90,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Start();
             performanceInfo.Report("Routing {0} routes...", testCount);
 
+            TagsCollectionBase metaData = null;
             var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
             var graphDeserialized = routingSerializer.Deserialize(
-                stream, true);
+                stream, out metaData, true);
 
             var router = Router.CreateCHFrom(
                 graphDeserialized, new CHRouter(),
@@ -153,9 +155,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Start();
             performanceInfo.Report("Routing & generating instructions...");
 
+            TagsCollectionBase metaData = null;
             var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
             var graphDeserialized = routingSerializer.Deserialize(
-                stream, true);
+                stream, out metaData, true);
 
             var interpreter = new OsmRoutingInterpreter();
             var router = Router.CreateCHFrom(

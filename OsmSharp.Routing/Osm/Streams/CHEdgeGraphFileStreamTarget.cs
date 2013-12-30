@@ -117,9 +117,12 @@ namespace OsmSharp.Routing.Osm.Streams
                 _graph, edgeDifference, witnessCalculator);
             preProcessor.Start();
 
+            // create tags.
+            TagsCollectionBase metaTags = new TagsCollection();
+
             // create serializer.
             var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
-            routingSerializer.Serialize(_graphStream, _graph);
+            routingSerializer.Serialize(_graphStream, _graph, metaTags);
             _graphStream.Flush();
         }
     }

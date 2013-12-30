@@ -23,6 +23,7 @@ using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -65,8 +66,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
                 source, new OsmRoutingInterpreter(), Vehicle.Car);
 
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
             var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
-            routingSerializer.Serialize(writeStream, data);
+            routingSerializer.Serialize(writeStream, data, metaData);
 
             stream.Dispose();
             writeStream.Dispose();
