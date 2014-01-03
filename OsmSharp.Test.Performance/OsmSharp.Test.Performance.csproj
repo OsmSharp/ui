@@ -151,6 +151,10 @@
       <Link>TestFiles\mapcss\complete.mapcss</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\OsmSharpTestFiles\mapcss\dark_roads.mapcss">
+      <Link>TestFiles\mapcss\dark_roads.mapcss</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
       <Link>TestFiles\map\kempen-big.osm.pbf.scene.layered</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

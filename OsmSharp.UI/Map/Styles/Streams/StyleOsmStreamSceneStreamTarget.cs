@@ -29,7 +29,7 @@ namespace OsmSharp.UI.Map.Styles.Streams
     /// <summary>
     /// Implements a streaming target that converts the given OSM-data into a MapCSS translated scene.
     /// </summary>
-    public class StyleOsmStreamSceneTarget : OsmCompleteStreamTarget
+    public class StyleOsmStreamSceneStreamTarget : OsmCompleteStreamTarget
     {
         /// <summary>
         /// Holds the interpreter.
@@ -57,12 +57,14 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// <param name="styleInterpreter"></param>
         /// <param name="scene"></param>
         /// <param name="projection"></param>
-        public StyleOsmStreamSceneTarget(StyleInterpreter styleInterpreter, 
-            Scene2D scene, IProjection projection)
+        /// <param name="stream"></param>
+        public StyleOsmStreamSceneStreamTarget(StyleInterpreter styleInterpreter,
+            Scene2D scene, IProjection projection, Stream stream)
         {
             _projection = projection;
             _scene = scene;
             _styleInterpreter = styleInterpreter;
+            _stream = stream;
         }
 
         /// <summary>
@@ -105,6 +107,16 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// </summary>
         public override void Flush()
         {
+            // merge objects.
+            var merger = new Scene2DObjectMerger();
+            Scene2D mergedScene = merger.BuildMergedScene(_scene);
+            _scene = null;
+
+            // serialize scene.
+            TagsCollectionBase metaTags = new TagsCollection();
+            mergedScene.Serialize(_stream, true, metaTags);
+
+            _stream.Flush();
             base.Flush();
         }
     }

@@ -60,6 +60,9 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
       <Link>kempen-big.osm.pbf.scene.layered</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\OSM\bin\kempen-big.dark_roads.map">
+      <Link>kempen-big.dark_roads.map</Link>
+    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

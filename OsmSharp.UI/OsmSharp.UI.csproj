@@ -87,6 +87,7 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
     <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneStreamTarget.cs" />
     <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneTarget.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\Styles\StyleSceneManager.cs" />
