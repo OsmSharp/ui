@@ -26,8 +26,8 @@ OsmSharp started as a project for logistical optimisation. There are several sol
 OpenStreetMap data can be hard to handle sometimes. Basic filtering, conversion and database providers exists to import/export OpenStreetMap data.
 
 <p>
-	<img src="http://osmsharp.com/sites/default/files/Screenshot_2013-08-28-15-19-24.png" width="300"/><img src="http://osmsharp.com/sites/default/files/Screenshot_2013-08-28-15-19-38.png" width="300"/>
-	<img src="http://osmsharp.com/sites/default/files/IPad3.jpg" width="600"/>
+	<img src="http://osmsharp.com/sites/default/files/iphone_screenshot1.png" width="300"/><img src="http://osmsharp.com/sites/default/files/iphone_screenshot2.png" width="300"/>
+	<img src="http://osmsharp.com/sites/default/files/optimization.png" width="600"/>
 </p>
 
 Contribute
