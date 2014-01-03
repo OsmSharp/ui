@@ -27,3 +27,4 @@ OutputWindowsPhone*/
 *.psess
 test-results*/
 *.vsp
+.DotSettings
