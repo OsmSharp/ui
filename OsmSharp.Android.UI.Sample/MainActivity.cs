@@ -80,7 +80,7 @@ namespace OsmSharp.Android.UI.Sample
 				new LayerScene(
 				    Scene2D.Deserialize(
 					    Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                            @"OsmSharp.Android.UI.Sample.kempen-big.osm.dark_roads.map"), true)));
+                            @"OsmSharp.Android.UI.Sample.kempen-big/osm.pbf.scene.layered"), true)));
 
             var from = new GeoCoordinate(51.261203, 4.780760);
             var to = new GeoCoordinate(51.267797, 4.801362);
