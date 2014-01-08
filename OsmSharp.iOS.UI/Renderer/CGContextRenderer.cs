@@ -19,7 +19,6 @@
 using System;
 using System.Drawing;
 using System.Linq;
-using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -29,6 +28,7 @@ using OsmSharp.UI;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Primitives;
+using MonoTouch.CoreGraphics;
 
 namespace OsmSharp.iOS.UI
 {
@@ -38,9 +38,24 @@ namespace OsmSharp.iOS.UI
 	public class CGContextRenderer : Renderer2D<CGContextWrapper>
 	{
 		/// <summary>
+		/// Holds the default font to use when not font is specified.
+		/// </summary>
+		private const string DefaultFontName = "Arial";
+
+		/// <summary>
 		/// Holds the scale factor to enable higher resolution renderings.
 		/// </summary>
 		private float _scaleFactor;
+
+		/// <summary>
+		/// Holds the latest font to prevent creating it over and over.
+		/// </summary>
+		private CTFont _font = null;
+
+		/// <summary>
+		/// Holds the latest font name used to instantiate the latest font.
+		/// </summary>
+		private string _fontName = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.CGContextRenderer"/> class.
@@ -139,6 +154,38 @@ namespace OsmSharp.iOS.UI
 		/// <param name="y">The y coordinates.</param>
 		private double[][] TransformAll(double[] x, double[] y) {
 			return _view.ToViewPort(_target.Width * _scaleFactor, _target.Height * _scaleFactor, x, y);
+		}
+
+		/// <summary>
+		/// Gets the font for the given fontname and textSize.
+		/// </summary>
+		/// <returns>The font.</returns>
+		/// <param name="fontName">Font name.</param>
+		private CTFont GetFont(string fontName, float textSize) {
+			if (string.IsNullOrWhiteSpace (fontName)) {
+				fontName = CGContextRenderer.DefaultFontName;
+			}
+			if (_font == null)
+			{
+				_fontName = fontName;
+				_font = new CTFont (fontName, textSize);
+			}
+			if (_fontName != fontName)
+			{
+				_font.Dispose();
+
+				_fontName = fontName;
+				_font = new CTFont (fontName, textSize);
+			}
+			if (_font.Size != textSize)
+			{
+				_font.Dispose();
+
+				_fontName = fontName;
+				_font = new CTFont (fontName, textSize);
+			}
+			CTFont font = _font;
+			return font;
 		}
 
 		/// <summary>
@@ -374,10 +421,7 @@ namespace OsmSharp.iOS.UI
 			float textSize = this.ToPixels(size) * _scaleFactor;
 
 			// get the glyhps/paths from the font.
-			if (string.IsNullOrWhiteSpace (fontName)) {
-				fontName = "ArialMT";
-			}
-			CTFont font = new CTFont (fontName, textSize);
+			CTFont font = this.GetFont(fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {
 				ForegroundColorFromContext =  true,
 				Font = font
@@ -458,10 +502,7 @@ namespace OsmSharp.iOS.UI
 			target.Target.CGContext.SetShouldAntialias (true);
 
 			// get the glyhps/paths from the font.
-			if (string.IsNullOrWhiteSpace (fontName)) {
-				fontName = "ArialMT";
-			}
-			CTFont font = new CTFont (fontName, textSize);
+			CTFont font = this.GetFont(fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {
 				ForegroundColorFromContext =  true,
 				Font = font
