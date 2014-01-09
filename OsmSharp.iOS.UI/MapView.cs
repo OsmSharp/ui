@@ -90,6 +90,11 @@ namespace OsmSharp.iOS.UI
 		/// <param name="defaultMapZoom">Default map zoom.</param>
 		public void Initialize(GeoCoordinate defaultMapCenter, Map defaultMap, Degree defaultMapTilt, float defaultMapZoom)
 		{
+            // enable all interactions by default.
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
+
             // set clip to bounds to prevent objects from being rendered/show outside of the mapview.
             this.ClipsToBounds = true;
 
