@@ -44,10 +44,17 @@ namespace OsmSharp.UI.Animations
         private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 100);
 
         /// <summary>
+        /// Holds a synchronization object for the timer elapsed event.
+        /// </summary>
+        private static object TimerElapsedSync = new object();
+
+        /// <summary>
         /// Creates a new MapView Animator.
         /// </summary>
         public MapViewAnimator(IMapView mapView)
         {
+            if (_mapView == null) { throw new ArgumentNullException("mapView"); }
+
             _mapView = mapView;
             _defaultTimeSpan = new TimeSpan(0, 0, 1);
         }
@@ -249,28 +256,32 @@ namespace OsmSharp.UI.Animations
         /// <param name="sender"></param>
         void _timer_Elapsed(object sender)
         {
-            _currentStep++;
-            if (_currentStep < _maxSteps)
-			{ // there is still need for a change.
-				GeoCoordinate center = new GeoCoordinate( // update center.
-				                                       (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
-				                                       (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
-				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
-				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
-				_mapView.SetMapView (center, mapTilt, mapZoom);
-                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
-                //                                string.Format("Animation Step END: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
-                return;
-            }
-            else if (_currentStep == _maxSteps)
-            { // this is the last step.
-				_mapView.SetMapView (_targetCenter, _targetTilt, _targetZoom);
-			}
+            lock (TimerElapsedSync)
+            {
+                // make sure that timer still exists.
+                if (_timer != null)
+                {
+                    _currentStep++;
+                    if (_currentStep < _maxSteps)
+                    { // there is still need for a change.
+                        GeoCoordinate center = new GeoCoordinate( // update center.
+                                                               (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
+                                                               (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
+                        float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
+                        Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
+                        _mapView.SetMapView(center, mapTilt, mapZoom);
+                        return;
+                    }
+                    else if (_currentStep == _maxSteps)
+                    { // this is the last step.
+                        _mapView.SetMapView(_targetCenter, _targetTilt, _targetZoom);
+                    }
 
-			// enable auto invalidate.
-            _mapView.RegisterAnimator(null);
-            _timer.Dispose();
-            _timer = null;
+                    // enable auto invalidate.
+                    _mapView.RegisterAnimator(null);
+                    _timer.Dispose();
+                }
+            }
         }
     }
 }
