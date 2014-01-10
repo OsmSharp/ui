@@ -141,6 +141,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="DataProviderOsmTests.cs" />
     <Compile Include="Oracle\OracleProviderOsmTests.cs" />
     <Compile Include="PostgreSQL\PostgreSQLProviderOsmTests.cs" />

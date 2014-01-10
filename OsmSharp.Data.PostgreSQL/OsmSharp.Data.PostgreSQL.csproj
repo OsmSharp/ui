@@ -178,6 +178,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Osm\PostgreSQLDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

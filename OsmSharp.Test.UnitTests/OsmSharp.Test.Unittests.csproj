@@ -137,6 +137,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />

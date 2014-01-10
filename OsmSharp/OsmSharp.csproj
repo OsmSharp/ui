@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />

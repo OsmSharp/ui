@@ -37,6 +37,9 @@
     <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Animations\MapViewAnimator.cs" />
     <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />

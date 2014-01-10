@@ -41,6 +41,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="API\APICapabilities.cs" />
     <Compile Include="API\APIConnection.cs" />
     <Compile Include="API\APIException.cs" />

@@ -166,6 +166,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Osm\Cache\OsmDataCacheRedis.cs" />
     <Compile Include="Osm\GeoHash.cs" />
     <Compile Include="Osm\OsmHash.cs" />

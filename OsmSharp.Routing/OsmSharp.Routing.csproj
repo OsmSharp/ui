@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="ArcAggregation\AggregatedHelper.cs" />
     <Compile Include="ArcAggregation\ArcAggregator.cs" />
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />

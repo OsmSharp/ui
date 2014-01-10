@@ -115,6 +115,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Osm\Streams\SQLiteOsmStreamSource.cs" />
     <Compile Include="Osm\Streams\SQLiteOsmStreamTarget.cs" />
     <Compile Include="Osm\SQLiteDataSource.cs" />

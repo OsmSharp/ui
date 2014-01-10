@@ -17,17 +17,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("OsmSharp.Osm")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OsmSharp.Osm")]
-[assembly: AssemblyCopyright("Ben Abelshausen 2013")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("4.0.0.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
+[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.

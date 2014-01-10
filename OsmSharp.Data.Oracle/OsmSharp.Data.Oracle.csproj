@@ -172,6 +172,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="OracleCommandExtension.cs" />
     <Compile Include="Osm\OracleDataSource.cs" />
     <Compile Include="Osm\OracleSchemaTools.cs" />

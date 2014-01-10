@@ -78,6 +78,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParserTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSInterpretationTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParserTests.cs" />
