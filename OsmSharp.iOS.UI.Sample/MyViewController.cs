@@ -75,35 +75,35 @@ namespace OsmSharp.iOS.UI.Sample1
 			mapView.MapZoom = 16;
 			mapView.MapTilt = 30;
 
-            TagsCollectionBase metaData;
-			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
-			var graphDeserialized = routingSerializer.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing"), out metaData, true);
-
-			_router = Router.CreateCHFrom(
-				graphDeserialized, new CHRouter(),
-				new OsmRoutingInterpreter());
-
-            var from = new GeoCoordinate(51.261203, 4.780760);
-            var to = new GeoCoordinate(51.267797, 4.801362);
-
-			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
-			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
-			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			_enumerator = route1.GetRouteEnumerable(10).GetEnumerator();
-
-			_routeLayer = new LayerRoute(map.Projection);
-			_routeLayer.AddRoute (route1);
-			map.AddLayer(_routeLayer);
+//            TagsCollectionBase metaData;
+//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
+//			var graphDeserialized = routingSerializer.Deserialize(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream(
+//                    "OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing"), out metaData, true);
+//
+//			_router = Router.CreateCHFrom(
+//				graphDeserialized, new CHRouter(),
+//				new OsmRoutingInterpreter());
+//
+//            var from = new GeoCoordinate(51.261203, 4.780760);
+//            var to = new GeoCoordinate(51.267797, 4.801362);
+//
+//			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
+//			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
+//			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+//			_enumerator = route1.GetRouteEnumerable(10).GetEnumerator();
+//
+//			_routeLayer = new LayerRoute(map.Projection);
+//			_routeLayer.AddRoute (route1);
+//			map.AddLayer(_routeLayer);
 
 			View = mapView;
 
-			mapView.AddMarker(from);
-			mapView.AddMarker(to);
+//			mapView.AddMarker(from);
+//			mapView.AddMarker(to);
 			
-			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
-			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
+//			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
+//			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
 
 //            Timer timer = new Timer (250);
 //            timer.Elapsed += new ElapsedEventHandler (TimerHandler);
