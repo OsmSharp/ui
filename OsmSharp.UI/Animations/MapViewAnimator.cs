@@ -53,7 +53,7 @@ namespace OsmSharp.UI.Animations
         /// </summary>
         public MapViewAnimator(IMapView mapView)
         {
-            if (_mapView == null) { throw new ArgumentNullException("mapView"); }
+            if (mapView == null) { throw new ArgumentNullException("mapView"); }
 
             _mapView = mapView;
             _defaultTimeSpan = new TimeSpan(0, 0, 1);
