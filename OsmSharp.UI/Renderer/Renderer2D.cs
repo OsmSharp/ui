@@ -76,6 +76,8 @@ namespace OsmSharp.UI.Renderer
 				
 				this.SetRunning (false);
 
+				GC.Collect();
+
 				return complete;
 			}
 			catch(Exception ex) {
@@ -202,11 +204,9 @@ namespace OsmSharp.UI.Renderer
                             double distance = epsilon * 2;
                             if (simplified[0].Length == 2)
                             { // check if the simplified version is smaller than epsilon.
-                                OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(
-                                    simplified[0][0], simplified[1][0]);
-                                OsmSharp.Math.Primitives.PointF2D point2 = new OsmSharp.Math.Primitives.PointF2D(
-                                    simplified[0][1], simplified[1][1]);
-                                distance = point1.Distance(point2);
+								distance = System.Math.Sqrt(
+									System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) + 
+									System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
                             }
                             if (distance < epsilon)
                             {
