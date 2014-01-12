@@ -23,6 +23,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI;
@@ -38,7 +39,7 @@ using System.Timers;
 namespace OsmSharp.Android.UI.Sample
 {
 	/// <summary>
-	/// Activity1.
+	/// The main activity.
 	/// </summary>
 	[Activity]
     public class MainActivity : Activity
@@ -58,6 +59,21 @@ namespace OsmSharp.Android.UI.Sample
         /// </summary>
         private TextView _textView;
 
+        /// <summary>
+        /// Holds the map view.
+        /// </summary>
+        private MapView _mapView;
+
+        /// <summary>
+        /// Holds the router tracker animator.
+        /// </summary>
+        private RouteTrackerAnimator _routeTrackerAnimator;
+
+        /// <summary>
+        /// Holds the coordinate enumerator.
+        /// </summary>
+        private IEnumerator<GeoCoordinate> _enumerator;
+
 		/// <summary>
 		/// Raises the create event.
 		/// </summary>
@@ -66,119 +82,97 @@ namespace OsmSharp.Android.UI.Sample
 		{
 			base.OnCreate (bundle);
 
+            // enable the logggin.
             OsmSharp.Logging.Log.Enable();
-            OsmSharp.Logging.Log.RegisterListener(
-                new OsmSharp.Android.UI.Log.LogTraceListener());
+            OsmSharp.Logging.Log.RegisterListener(new OsmSharp.Android.UI.Log.LogTraceListener());
 
 			// initialize map.
 			var map = new Map();
+            // add a tile layer.
 			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            // add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
-//			map.AddLayer(new LayerScene(Scene2DSimple.Deserialize(
-//							Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
-			map.AddLayer(
-				new LayerScene(
-				    Scene2D.Deserialize(
-					    Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                            @"OsmSharp.Android.UI.Sample.kempen-big/osm.pbf.scene.layered"), true)));
+            // add a pre-processed vector data file.
+            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered");
+            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
+            // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
             var to = new GeoCoordinate(51.267797, 4.801362);
 
-            var routingSerializer = 
-                new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
+            // deserialize the pre-processed graph.
+            var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
             TagsCollectionBase metaData = null;
-            var graphDeserialized = routingSerializer.Deserialize(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing"), out metaData, true);
+            var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
+            var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
 
-            _router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(),
-                new OsmRoutingInterpreter());
+            // initialize router.
+            _router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
+
+            // resolve points.
             RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
             RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
-            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-            RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
-            _enumerator = route1.GetRouteEnumerable(10).GetEnumerator();
 
+            // calculate route.
+            Route route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+            RouteTracker routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
+            _enumerator = route.GetRouteEnumerable(10).GetEnumerator();
+
+            // add a router layer.
             _routeLayer = new LayerRoute(map.Projection);
-            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
+            _routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
             map.AddLayer(_routeLayer);
 
+            // define the mapview.
             _mapView = new MapView(this, new MapViewSurface(this));
             //_mapView = new MapView(this, new MapViewGLSurface(this));
-            _mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
-            _mapView.Map = map;
-
-            _mapView.MapAllowPan = true;
-            _mapView.MapAllowTilt = true;
-            _mapView.MapAllowZoom = true;
-
+            //_mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
             (_mapView as IMapView).AutoInvalidate = true;
+            _mapView.Map = map;
             _mapView.MapMaxZoomLevel = 20;
             _mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
             _mapView.MapZoom = 16;
 
+            // initialize a text view to display routing instructions.
             _textView = new TextView(this);
             _textView.SetBackgroundColor(global::Android.Graphics.Color.White);
             _textView.SetTextColor(global::Android.Graphics.Color.Black);
 
-			//Create the user interface in code
+			// add the mapview to the linear layout.
             var layout = new LinearLayout(this);
             layout.Orientation = Orientation.Vertical;
             layout.AddView(_textView);
             layout.AddView(_mapView);
 
-            //_mapView.AddMarker(from);
-            //_mapView.AddMarker(to);
-
-            //_mapView.ZoomToMarkers();
-
+            // create the route tracker animator.
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            //Timer timer = new Timer(500);
+            //// simulate a number of gps-location update along the calculated route.
+            //Timer timer = new Timer(1000);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
 			SetContentView (layout);
 		}
 
-        void _mapView_MapTapEvent(GeoCoordinate coordinate)
-        {
-            _mapView.AddMarker(coordinate);
-        }
-
-        void MainActivity_Click(object sender, EventArgs e)
-        {
-            if (sender is MapMarker)
-            {
-                var marker = sender as MapMarker;
-                _mapView.RemoveMarker(marker);
-            }
-        }
-
-        private MapView _mapView;
-
-        private RouteTrackerAnimator _routeTrackerAnimator;
-
-        private IEnumerator<GeoCoordinate> _enumerator;
-
+        /// <summary>
+        /// Handles the timer event from the timer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
-            //_mapView.ZoomToMarkers();
-            this.MoveNext();
-        }
-
-        private void MoveNext()
-        {
             if (_enumerator.MoveNext())
-            {
-                GeoCoordinate other = _enumerator.Current.OffsetRandom(1);
+            { // move to the next dummy gps location.
+                // randomize the route to simulate actual gps location data.
+                GeoCoordinate other = _enumerator.Current.OffsetRandom(10);
+
+                // git the location to the route tracker.
                 _routeTrackerAnimator.Track(other);
                 if (_routeTrackerAnimator.NextInstruction != null)
-                {
+                { // 
                     this.RunOnUiThread(() =>
                     {
                         _textView.Text = _routeTrackerAnimator.NextInstruction.Text;

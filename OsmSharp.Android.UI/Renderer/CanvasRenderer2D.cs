@@ -363,14 +363,6 @@ namespace OsmSharp.Android.UI
 		{
 			global::Android.Graphics.Bitmap image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
 				imageData, 0, imageData.Length);
-
-//			// calculate target rectangle.
-//			double sceneSizeX = this.FromPixels(target, _view, image.Width) / 2.0f;
-//			double sceneSizeY = this.FromPixels(target, _view, image.Height) / 2.0f;
-//			double sceneTop = x + sceneSizeX;
-//			double sceneBottom = x - sceneSizeX;
-//			double sceneLeft = y - sceneSizeY;
-//			double sceneRight = y + sceneSizeY;
 			
 			double[] transformed = this.Tranform (x, y);
 

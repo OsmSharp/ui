@@ -56,8 +56,8 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         {
             _streamCache = new MemoryCachedStream();
 
-            _cachedLeaves = new LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>>(100);
-            _cachedIndexes = new LRUCache<long, KeyValuePair<ChildrenIndex, long>>(100);
+            _cachedLeaves = new LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>>(10);
+            _cachedIndexes = new LRUCache<long, KeyValuePair<ChildrenIndex, long>>(10);
         }
 
         /// <summary>

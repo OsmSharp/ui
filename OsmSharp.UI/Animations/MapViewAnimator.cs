@@ -191,7 +191,7 @@ namespace OsmSharp.UI.Animations
         /// <param name="time"></param>
         public void Start(GeoCoordinate center, float zoomLevel, Degree mapTilt, TimeSpan time)
         {
-            lock (this)
+            lock (TimerElapsedSync)
             {
                 // stop the previous timer.
                 if (_timer != null)
@@ -238,7 +238,7 @@ namespace OsmSharp.UI.Animations
         /// </summary>
         public void Stop()
         {
-            lock (this)
+            lock (TimerElapsedSync)
             {
                 if (_timer != null)
                 {
