@@ -132,7 +132,7 @@ namespace OsmSharp.IO
         /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (offset >= _length)
+            if (offset > _length)
             {
                 throw new Exception();
             }
