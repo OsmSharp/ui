@@ -222,7 +222,7 @@ namespace OsmSharp.UI.Animations.Navigation
             // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
             float zoom = this.DefaultZoom;
             GeoCoordinate center = _routeTracker.PositionRoute;
-			double nextDistance = 20;
+			double nextDistance = 50;
 			Degree tilt = _mapView.MapTilt;
 			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
 			if (next != null) {
