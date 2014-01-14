@@ -41,7 +41,7 @@ namespace OsmSharp.UI.Animations
         /// <summary>
         /// Holds the minimum allowed timespan.
         /// </summary>
-        private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 100);
+		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 150);
 
         /// <summary>
         /// Holds a synchronization object for the timer elapsed event.
@@ -255,33 +255,34 @@ namespace OsmSharp.UI.Animations
         /// </summary>
         /// <param name="sender"></param>
         void _timer_Elapsed(object sender)
-        {
-            lock (TimerElapsedSync)
-            {
-                // make sure that timer still exists.
-                if (_timer != null)
-                {
-                    _currentStep++;
-                    if (_currentStep < _maxSteps)
-                    { // there is still need for a change.
-                        GeoCoordinate center = new GeoCoordinate( // update center.
-                                                               (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
-                                                               (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
-                        float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
-                        Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
-                        _mapView.SetMapView(center, mapTilt, mapZoom);
-                        return;
-                    }
-                    else if (_currentStep == _maxSteps)
-                    { // this is the last step.
-                        _mapView.SetMapView(_targetCenter, _targetTilt, _targetZoom);
-                    }
+		{
+			_currentStep++;
+			if (_currentStep < _maxSteps)
+			{ // there is still need for a change.
+				GeoCoordinate center = new GeoCoordinate(// update center.
+					                        (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
+					                        (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
+				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
+				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
+				_mapView.SetMapView(center, mapTilt, mapZoom);
+				return;
+			}
+			else if (_currentStep == _maxSteps)
+			{ // this is the last step.
+				_mapView.SetMapView(_targetCenter, _targetTilt, _targetZoom);
+			}
 
-                    // enable auto invalidate.
-                    _mapView.RegisterAnimator(null);
-                    _timer.Dispose();
-                }
-            }
-        }
+			// enable auto invalidate.
+			_mapView.RegisterAnimator(null);
+
+			// dispose of the the timer but only if this has not been done yet!
+			lock (TimerElapsedSync)
+			{
+				if (_timer != null)
+				{
+					_timer.Dispose();
+				}
+			}
+		}
     }
 }
