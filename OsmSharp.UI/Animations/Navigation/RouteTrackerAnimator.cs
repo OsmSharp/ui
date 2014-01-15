@@ -55,7 +55,7 @@ namespace OsmSharp.UI.Animations.Navigation
         {
 			this.MinZoom = 16;
 			this.MaxZoom = 30;
-			this.DefaultZoom = 17f;
+			this.DefaultZoom = 18f;
 
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
@@ -76,7 +76,7 @@ namespace OsmSharp.UI.Animations.Navigation
         /// <param name="defaultZoom">The default zoom.</param>
         public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker, Second restartAfterTouch, float defaultZoom)
         {
-            this.MinZoom = 16;
+			this.MinZoom = 18;
             this.MaxZoom = 30;
             this.DefaultZoom = defaultZoom;
 

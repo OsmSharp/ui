@@ -877,7 +877,7 @@ namespace OsmSharp.Android.UI
 			this.MapZoom = mapZoom;
 
 			if(invalidate) {
-				(this.Context as Activity).RunOnUiThread(Invalidate);
+				(this.Context as Activity).RunOnUiThread(NotifyMovement);
                 this.InvalidateMapCenter();
 			}
 		}
