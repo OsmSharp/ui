@@ -106,6 +106,7 @@
     <Compile Include="Renderer\Primitives\Point2D.cs" />
     <Compile Include="Renderer\Primitives\Polygon2D.cs" />
     <Compile Include="Renderer\Primitives\Primitive2D.cs" />
+    <Compile Include="Renderer\Primitives\Primitive2DType.cs" />
     <Compile Include="Renderer\Primitives\Text2D.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneIconObject.cs" />

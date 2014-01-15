@@ -169,6 +169,14 @@ namespace OsmSharp.UI.Renderer.Primitives
         public uint Id { get; set; }
 
         /// <summary>
+        /// Returns the type of this primitive.
+        /// </summary>
+        public override Primitive2DType Primitive2DType
+        {
+            get { return Primitives.Primitive2DType.LineText2D; }
+        }
+
+        /// <summary>
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>

@@ -40,6 +40,11 @@ namespace OsmSharp.UI.Renderer.Primitives
         public abstract BoxF2D GetBox();
 
         /// <summary>
+        /// Returns the type of this primitive.
+        /// </summary>
+        public abstract Primitive2DType Primitive2DType { get; }
+
+        /// <summary>
         /// Gets or sets the layer.
         /// </summary>
         public uint Layer { get; set; }

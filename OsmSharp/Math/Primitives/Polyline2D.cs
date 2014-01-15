@@ -37,9 +37,10 @@ namespace OsmSharp.Math.Primitives
             if (x.Length > 1)
             {
                 for (int idx = 1; idx < x.Length; idx++)
-                {
-                    length = length + new LineF2D(new PointF2D(x[idx - 1], y[idx - 1]),
-                        new PointF2D(x[idx], y[idx])).Length;
+				{
+					double xDiff = (x [idx - 1] - x [idx]);
+					double yDiff = (y [idx - 1] - y [idx]);
+					length = length + System.Math.Sqrt ((xDiff * xDiff) + (yDiff * yDiff));
                 }
             }
             return length;
@@ -57,20 +58,24 @@ namespace OsmSharp.Math.Primitives
             if (x.Length < 2) throw new ArgumentOutOfRangeException("Given coordinates do not represent a polyline.");
 
             double lenght = 0;
-            LineF2D localLine = null;
+			LineF2D localLine;
             for (int idx = 1; idx < x.Length; idx++)
             {
-                localLine = new LineF2D(new PointF2D(x[idx - 1], y[idx - 1]),
-                    new PointF2D(x[idx], y[idx]));
-                double localLength = localLine.Length;
+				double xDiff = (x [idx - 1] - x [idx]);
+				double yDiff = (y [idx - 1] - y [idx]);
+				double localLength = System.Math.Sqrt ((xDiff * xDiff) + (yDiff * yDiff));
                 if(lenght + localLength > position)
-                { // position is between point at idx and idx + 1.
+				{ // position is between point at idx and idx + 1.
+					localLine = new LineF2D(new PointF2D(x[idx - 1], y[idx - 1]),
+						new PointF2D(x[idx], y[idx]));
                     double localPosition = position - lenght;
                     VectorF2D vector = localLine.Direction.Normalize() * localPosition;
                     return localLine.Point1 + vector;
                 }
                 lenght = lenght + localLength;
             }
+			localLine = new LineF2D(new PointF2D(x[x.Length - 2], y[x.Length - 2]),
+				new PointF2D(x[x.Length - 1], y[x.Length - 1]));
             return localLine.Point1 + (localLine.Direction.Normalize() * (position - lenght));
         }
     }

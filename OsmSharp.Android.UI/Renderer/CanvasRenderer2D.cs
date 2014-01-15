@@ -49,6 +49,8 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private global::Android.Graphics.Paint _paint;
 
+		private double[] _transformed1 = new double[2];
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.AndroidCanvasRenderer"/> class.
 		/// </summary>
@@ -76,11 +78,11 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private global::Android.Graphics.Path _path;
 
-//		/// <summary>
-//		/// Holds the bitmap cache.
-//		/// </summary>
-//		private global::Android.Graphics.Bitmap _cache;
-		
+		/// <summary>
+		/// Holds the current view.
+		/// </summary>
+		private View2D _view;
+
 		/// <summary>
 		/// Called right before rendering starts.
 		/// </summary>
@@ -89,18 +91,6 @@ namespace OsmSharp.Android.UI
 		/// <param name="view"></param>
 		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
-//			if (_cache == null || _cache.Width != target.Width || _cache.Height != target.Height) {
-//				// create a bitmap and render there.
-//				_cache = global::Android.Graphics.Bitmap.CreateBitmap ((int)target.Width, (int)target.Height,
-//				                                                       global::Android.Graphics.Bitmap.Config.Argb8888);
-//			} else {
-//				// clear the cache???
-//			}
-//			target.BackTarget = target.Target;
-//			target.Target = new global::Android.Graphics.Canvas(_cache);
-//			target.Target.DrawColor(global::Android.Graphics.Color.Transparent);
-//			
-//			target.Tag = _cache;
 			_path = new global::Android.Graphics.Path ();
 		}
 		
@@ -112,13 +102,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="view"></param>
 		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
-//			target.Target.Dispose(); // dispose of the old target.
-//			target.Target = target.BackTarget;
-//			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
-//			if (bitmap != null)
-//			{
-//				target.Target.DrawBitmap(bitmap, 0, 0, _paint);
-//			}
+			_path.Dispose ();
 		}
 		
 		#endregion
@@ -135,11 +119,6 @@ namespace OsmSharp.Android.UI
 			return new Target2DWrapper<global::Android.Graphics.Canvas>(
 				target, target.Width, target.Height);
 		}
-
-		/// <summary>
-		/// Holds the view.
-		/// </summary>
-		private View2D _view;
 
 		/// <summary>
 		/// Holds the target.
@@ -162,9 +141,33 @@ namespace OsmSharp.Android.UI
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		private double[] Tranform(double x, double y)
+		private double[] Transform(double x, double y)
 		{
 			return _view.ToViewPort(_target.Width, _target.Height, x, y);
+		}
+
+		/// <summary>
+		/// Transforms the y-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="transformed"></param>
+		/// <returns></returns>
+		private void Transform(double x, double y, double[] transformed)
+		{
+			_view.ToViewPort(_target.Width, _target.Height, x, y, transformed);
+		}
+
+		/// <summary>
+		/// Transforms the y-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="transformed"></param>
+		/// <returns></returns>
+		private  double[] TransformReverse(double x, double y)
+		{
+			return _view.FromViewPort(_target.Width, _target.Height, x, y);
 		}
 		
 		/// <summary>
@@ -215,7 +218,7 @@ namespace OsmSharp.Android.UI
 			_paint.StrokeWidth = 1;
 			_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
 
-			double[] transformed = this.Tranform (x, y);
+			double[] transformed = this.Transform (x, y);
 			target.Target.DrawCircle((float)transformed[0], (float)transformed[1], sizeInPixels,
 			                  _paint);
 		}
@@ -223,12 +226,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws a line on the target. The coordinates given are scene coordinates.
 		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="casingWidth">Casing width.</param>
-		/// <param name="casingColor">Casing color.</param>
 		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
 		                                  int color, double width, LineJoin lineJoine, int[] dashes)
 		{
@@ -253,9 +250,9 @@ namespace OsmSharp.Android.UI
 
 				// convert to the weid android api array!
 				_path.Rewind ();
-				double[] transformed = this.Tranform (x [0], y [0]);
-				xT = (float)transformed [0];
-				yT = (float)transformed [1];
+				this.Transform (x [0], y [0], _transformed1);
+				xT = (float)_transformed1 [0];
+				yT = (float)_transformed1 [1];
 				_path.MoveTo (xT, yT);
 				if (xT < minX) { minX = xT; }
 				if (xT > maxX) { maxX = xT; }
@@ -263,9 +260,9 @@ namespace OsmSharp.Android.UI
 				if (yT > maxY) { maxY = yT; }
 				for(int idx = 1; idx < x.Length; idx++)
 				{		
-					transformed = this.Tranform (x [idx], y [idx]);
-					xT = (float)transformed[0];
-					yT = (float)transformed[1];
+					this.Transform (x [idx], y [idx], _transformed1);
+					xT = (float)_transformed1 [0];
+					yT = (float)_transformed1 [1];
 					_path.LineTo (xT, yT);
 					if (xT < minX) { minX = xT; }
 					if (xT > maxX) { maxX = xT; }
@@ -273,12 +270,6 @@ namespace OsmSharp.Android.UI
 					if (yT > maxY) { maxY = yT; }
 				}
 				if ((maxX - minX) > 1 || (maxY - minY) > 1) {
-//					if (casingWidth > 0) {
-//						float casingWidthInPixels = this.ToPixels (casingWidth + width);
-//						_paint.Color = new global::Android.Graphics.Color (casingColor);
-//						_paint.StrokeWidth = casingWidthInPixels;
-//						target.Target.DrawPath (_path, _paint);
-//					}
 					float widthInPixels = this.ToPixels (width);
 					_paint.Color = new global::Android.Graphics.Color (color);
 					_paint.StrokeWidth = widthInPixels;
@@ -291,11 +282,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws a polygon on the target. The coordinates given are scene coordinates.
 		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="fill">If set to <c>true</c> fill.</param>
 		protected override void DrawPolygon (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
 		                                     int color, double width, bool fill)
 		{
@@ -317,9 +303,9 @@ namespace OsmSharp.Android.UI
 
 				// convert android path object.
 				_path.Rewind ();
-				double[] transformed = this.Tranform (x [0], y [0]);
-				xT = (float)transformed [0];
-				yT = (float)transformed [1];
+				this.Transform (x [0], y [0], _transformed1);
+				xT = (float)_transformed1 [0];
+				yT = (float)_transformed1 [1];
 				_path.MoveTo (xT, yT);
 				if (xT < minX) { minX = xT; }
 				if (xT > maxX) { maxX = xT; }
@@ -327,18 +313,18 @@ namespace OsmSharp.Android.UI
 				if (yT > maxY) { maxY = yT; }
 				for(int idx = 1; idx < x.Length; idx++)
 				{
-					transformed = this.Tranform (x [idx], y [idx]);
-					xT = (float)transformed[0];
-					yT = (float)transformed[1];
+					this.Transform (x [idx], y [idx], _transformed1);
+					xT = (float)_transformed1[0];
+					yT = (float)_transformed1[1];
 					_path.LineTo (xT, yT);
 					if (xT < minX) { minX = xT; }
 					if (xT > maxX) { maxX = xT; }
 					if (yT < minY) { minY = yT; }
 					if (yT > maxY) { maxY = yT; }
 				}
-				transformed = this.Tranform (x [0], y [0]);
-				xT = (float)transformed [0];
-				yT = (float)transformed [1];
+				this.Transform (x [0], y [0], _transformed1);
+				xT = (float)_transformed1 [0];
+				yT = (float)_transformed1 [1];
 				_path.LineTo (xT, yT);
 				if (xT < minX) { minX = xT; }
 				if (xT > maxX) { maxX = xT; }
@@ -364,7 +350,7 @@ namespace OsmSharp.Android.UI
 			global::Android.Graphics.Bitmap image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
 				imageData, 0, imageData.Length);
 			
-			double[] transformed = this.Tranform (x, y);
+			double[] transformed = this.Transform (x, y);
 
 			target.Target.DrawBitmap(image, (float)transformed [0], (float)transformed [1], null);
 			image.Dispose();
@@ -391,8 +377,8 @@ namespace OsmSharp.Android.UI
 					imageData, 0, imageData.Length);
 			}
 
-			double[] topleft = this.Tranform(left, top);
-			double[] bottomright = this.Tranform(right, bottom);
+			double[] topleft = this.Transform(left, top);
+			double[] bottomright = this.Transform(right, bottom);
 			float leftPixels = (float)topleft[0];
 			float topPixels = (float)topleft[1];
 			float rightPixels = (float)bottomright[0];
@@ -420,10 +406,12 @@ namespace OsmSharp.Android.UI
 				image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
 					imageData, 0, imageData.Length);
 			}
-
-			PointF2D bottomLeft = new PointF2D(this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]));
-			PointF2D bottomRight = new PointF2D(this.Tranform (bounds.BottomRight [0], bounds.BottomRight [1]));
-			PointF2D topLeft = new PointF2D(this.Tranform (bounds.TopLeft [0], bounds.TopLeft [1]));
+			this.Transform (bounds.BottomLeft [0], bounds.BottomLeft [1], _transformed1);
+			PointF2D bottomLeft = new PointF2D(_transformed1[0], _transformed1[1]);
+			this.Transform (bounds.BottomRight [0], bounds.BottomRight [1], _transformed1);
+			PointF2D bottomRight = new PointF2D(_transformed1[0], _transformed1[1]);
+			this.Transform (bounds.TopLeft [0], bounds.TopLeft [1], _transformed1);
+			PointF2D topLeft = new PointF2D(_transformed1[0], _transformed1[1]);
 			//PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
 			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
@@ -454,12 +442,10 @@ namespace OsmSharp.Android.UI
 		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
 		                                  string text, int color, double size, int? haloColor, int? haloRadius, string fontName)
 		{
-			double[] transformed = this.Tranform(x, y);
-			float xPixels = (float)transformed[0];
-			float yPixels = (float)transformed[1];
+			this.Transform(x, y, _transformed1);
+			float xPixels = (float)_transformed1[0];
+			float yPixels = (float)_transformed1[1];
             float textSize = this.ToPixels(size);
-            //transformed = this.Tranform(x + size, y);
-            //float textSize = 10;
 
 			_paint.AntiAlias = true;
 			_paint.SubpixelText = true;
@@ -468,10 +454,6 @@ namespace OsmSharp.Android.UI
 			// get some metrics on the texts.
 			float[] characterWidths = new float[text.Length];
 			_paint.GetTextWidths (text, characterWidths);
-            //for (int idx = 0; idx < characterWidths.Length; idx++)
-            //{
-            //    characterWidths[idx] = _target, _view, characterWidths[idx];
-            //}
 			var characterHeight = (float)size;
 			var textLength = characterWidths.Sum();
 
@@ -528,12 +510,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws text along a given line.
 		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="color"></param>
-		/// <param name="size"></param>
-		/// <param name="text">Text.</param>
 		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xa, double[] ya, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
 		{
@@ -548,18 +524,14 @@ namespace OsmSharp.Android.UI
 				double[] xTransformed = new double[xa.Length];
 				double[] yTransformed = new double[ya.Length];
 				for (int idx = 0; idx < xa.Length; idx++) {
-					double[] transformed = this.Tranform (xa[idx], ya[idx]);
-					xTransformed [idx] = transformed [0];
-					yTransformed [idx] = transformed [1];
+					this.Transform (xa[idx], ya[idx], _transformed1);
+					xTransformed [idx] = _transformed1 [0];
+					yTransformed [idx] = _transformed1 [1];
 				}
 
 				// get some metrics on the texts.
 				float[] characterWidths = new float[text.Length];
 				_paint.GetTextWidths (text, characterWidths);
-//				for (int idx = 0; idx < characterWidths.Length; idx++)
-//				{
-//					characterWidths[idx] = _target, _view, characterWidths[idx];
-//				}
                 var characterHeight = (float)sizeInPixels;
 				var textLength = characterWidths.Sum();
 
@@ -583,6 +555,21 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
+		/// <summary>
+		/// Draws the line text segment.
+		/// </summary>
+		/// <param name="target">Target.</param>
+		/// <param name="xTransformed">X transformed.</param>
+		/// <param name="yTransformed">Y transformed.</param>
+		/// <param name="text">Text.</param>
+		/// <param name="color">Color.</param>
+		/// <param name="size">Size.</param>
+		/// <param name="haloColor">Halo color.</param>
+		/// <param name="haloRadius">Halo radius.</param>
+		/// <param name="middlePosition">Middle position.</param>
+		/// <param name="characterWidths">Character widths.</param>
+		/// <param name="textLength">Text length.</param>
+		/// <param name="characterHeight">Character height.</param>
 		public void DrawLineTextSegment(Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xTransformed, double[] yTransformed, string text, int color,
 		                                double size, int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths, double textLength,
 		                                float characterHeight)
@@ -594,13 +581,11 @@ namespace OsmSharp.Android.UI
 			double averageAngle = 0;
 			double first = middlePosition - (textLength / 2.0);
 			PointF2D current = Polyline2D.PositionAtPosition(xTransformed, yTransformed, first);
+			bool isVisible = false;
 			for (int idx = 0; idx < text.Length; idx++)
 			{
 				double nextPosition = middlePosition - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
 				PointF2D next = Polyline2D.PositionAtPosition(xTransformed, yTransformed, nextPosition);
-
-				// Translate to the final position, the center of line-segment between 'current' and 'next'
-				//PointF2D position = current + ((next - current) / 2.0);
 
 				// calculate the angle.
 				VectorF2D vector = next - current;
@@ -608,17 +593,32 @@ namespace OsmSharp.Android.UI
 				double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
 				averageAngle = averageAngle + angleDegrees;
 				current = next;
+
+				double[] untransformed = this.TransformReverse (next [0], next [1]);
+				if (_view.Contains (untransformed [0], untransformed [1])) {
+					isVisible = true;
+				}
 			}
 			averageAngle = averageAngle / text.Length;
+
+			if (!isVisible) {
+				return;
+			}
 
 			// reverse if 'upside down'.
 			double[] xText = xTransformed;
 			double[] yText = yTransformed;
-			if (averageAngle > 90 && averageAngle < 180 + 90)
-			{ // the average angle is > PI => means upside down.
-				xText = xTransformed.Reverse<double>().ToArray<double>();
-				yText = yTransformed.Reverse<double>().ToArray<double>();
-			}
+//			if (averageAngle > 90 && averageAngle < 180 + 90)
+//			{ // the average angle is > PI => means upside down.
+//				for (int idx = 0; idx < (xTransformed.Length / 2) + 1; idx++) {
+//					double other = xTransformed [xTransformed.Length - idx - 1];
+//					xTransformed [xTransformed.Length - idx - 1] = xTransformed [0];
+//					xTransformed [0] = other;
+//					other = yTransformed [yTransformed.Length - idx - 1];
+//					yTransformed [yTransformed.Length - idx - 1] = yTransformed [0];
+//					yTransformed [0] = other;
+//				}
+//			}
 
 			// calculate a central position along the line.
 			first = middlePosition - (textLength / 2.0);
@@ -630,53 +630,51 @@ namespace OsmSharp.Android.UI
 				//double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
 				PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition2);
 				char currentChar = text[idx];
-				global::Android.Graphics.Path characterPath = new global::Android.Graphics.Path ();
+				global::Android.Graphics.Path characterPath = new global::Android.Graphics.Path ();;
 				_paint.GetTextPath (text, idx, idx + 1, 0, 0, characterPath);
-				using (characterPath)
-				{
+				using (characterPath) {
 					// Transformation matrix to move the character to the correct location. 
 					// Note that all actions on the Matrix class are prepended, so we apply them in reverse.
-					var transform = new Matrix();
+					using (var transform = new Matrix ()) {
 
-					// Translate to the final position, the center of line-segment between 'current' and 'next'
-					PointF2D position = current;
-					//PointF2D position = current + ((next - current) / 2.0);
-					//double[] transformed = this.Tranform(position[0], position[1]);
-					transform.SetTranslate((float)position[0], (float)position[1]);
+						// Translate to the final position, the center of line-segment between 'current' and 'next'
+						PointF2D position = current;
+						//PointF2D position = current + ((next - current) / 2.0);
+						//double[] transformed = this.Tranform(position[0], position[1]);
+						transform.SetTranslate ((float)position [0], (float)position [1]);
 
-					// calculate the angle.
-					VectorF2D vector = next - current;
-					VectorF2D horizontal = new VectorF2D(1, 0);
-					double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+						// calculate the angle.
+						VectorF2D vector = next - current;
+						VectorF2D horizontal = new VectorF2D (1, 0);
+						double angleDegrees = ((Degree)horizontal.Angle (vector)).Value;
 
-					// Rotate the character
-					transform.PreRotate((float)angleDegrees);
+						// Rotate the character
+						transform.PreRotate ((float)angleDegrees);
 
-					// Translate the character so the centre of its base is over the origin
-					transform.PreTranslate(0, characterHeight / 2.5f);
+						// Translate the character so the centre of its base is over the origin
+						transform.PreTranslate (0, characterHeight / 2.5f);
 
-					//transform.Scale((float)this.FromPixels(_target, _view, 1), 
-					//    (float)this.FromPixels(_target, _view, 1));
-					characterPath.Transform(transform);
+						//transform.Scale((float)this.FromPixels(_target, _view, 1), 
+						//    (float)this.FromPixels(_target, _view, 1));
+						characterPath.Transform (transform);
 
-					if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
-					{
-						_paint.SetStyle (global::Android.Graphics.Paint.Style.FillAndStroke);
-						_paint.StrokeWidth = haloRadius.Value;
-						_paint.Color = new global::Android.Graphics.Color(haloColor.Value);
-						using (global::Android.Graphics.Path haloPath = new global::Android.Graphics.Path())
-						{
-							_paint.GetFillPath (characterPath, haloPath);
-							// Draw the character
-							target.Target.DrawPath(haloPath, _paint);
+						if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0) {
+							_paint.SetStyle (global::Android.Graphics.Paint.Style.FillAndStroke);
+							_paint.StrokeWidth = haloRadius.Value;
+							_paint.Color = new global::Android.Graphics.Color (haloColor.Value);
+							using (global::Android.Graphics.Path haloPath = new global::Android.Graphics.Path ()) {
+								_paint.GetFillPath (characterPath, haloPath);
+								// Draw the character
+								target.Target.DrawPath (haloPath, _paint);
+							}
 						}
-					}
 
-					// Draw the character
-					_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
-					_paint.StrokeWidth = 0;
-					_paint.Color = new global::Android.Graphics.Color(color);
-					target.Target.DrawPath(characterPath, _paint);
+						// Draw the character
+						_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
+						_paint.StrokeWidth = 0;
+						_paint.Color = new global::Android.Graphics.Color (color);
+						target.Target.DrawPath (characterPath, _paint);
+					}
 				}
 				current = next;
 			}

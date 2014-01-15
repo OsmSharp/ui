@@ -67,8 +67,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             this.InitializeRegions(startOfRegions, regionIndex, zoom);
             this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
 
-            _blocks = new LRUCache<uint, CHBlock>(1000);
-            _regions = new LRUCache<ulong, CHVertexRegion>(1000);
+            _blocks = new LRUCache<uint, CHBlock>(10);
+            _regions = new LRUCache<ulong, CHVertexRegion>(10);
             _tagsIndex = new TagsTableCollectionIndex();
         }
 

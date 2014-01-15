@@ -543,6 +543,14 @@ namespace OsmSharp.Math.Primitives
 		/// <summary>
 		/// Transforms the given the coordinates to a coordinate system defined inside this rectangle.
 		/// </summary>
+		public void TransformTo(double width, double height, bool reverseX, bool reverseY,
+			double x, double y, double[] transformed){
+			this.TransformTo (width, height, reverseX, reverseY, new PointF2D (x, y), transformed);
+		}
+
+		/// <summary>
+		/// Transforms the given the coordinates to a coordinate system defined inside this rectangle.
+		/// </summary>
 		/// <param name="width">The width of the rectangle in the coordinate system of the given coordinates.</param>
 		/// <param name="height">The height of the rectangle in the coordinate system of the given coordinates.</param>
 		/// <param name="reverseX">Assumes that the origin of the x-axis is on the top of this rectangle if false.</param>
@@ -594,11 +602,60 @@ namespace OsmSharp.Math.Primitives
 		/// <summary>
 		/// Transforms the given the coordinates to a coordinate system defined inside this rectangle.
 		/// </summary>
-		/// <param name="width">The width of the rectangle in the coordinate system of the given coordinates.</param>
-		/// <param name="height">The height of the rectangle in the coordinate system of the given coordinates.</param>
-		/// <param name="reverseX">Assumes that the origin of the x-axis is on the top of this rectangle if false.</param>
-		/// <param name="reverseY">Assumes that the origin of the y-axis is on the right of this rectangle if false.</param>
-		/// <param name="point">The coordinate to transform.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="height">Height.</param>
+		/// <param name="reverseX">If set to <c>true</c> reverse x.</param>
+		/// <param name="reverseY">If set to <c>true</c> reverse y.</param>
+		/// <param name="point">Point.</param>
+		/// <param name="transformed">Transformed.</param>
+		public void TransformTo(double width, double height, bool reverseX, bool reverseY,
+			PointF2D point, double[] transformed){
+			if (transformed == null) {
+				throw new ArgumentNullException ();
+			}
+			if (transformed.Length != 2) {
+				throw new ArgumentException ("Tranformed array needs to be of length 2.");
+			}
+
+			PointF2D reference = _bottomLeft;
+			VectorF2D vectorX = _vectorX;
+			VectorF2D vectorY = _vectorY;
+
+			if (reverseX && !reverseY) {
+				reference = this.BottomRight;
+				vectorX = _vectorX * -1;
+			} else if (!reverseX && reverseY) {
+				reference = this.TopLeft;
+				vectorY = _vectorY * -1;
+			} else if (reverseX && reverseY) {
+				reference = this.TopRight;
+				vectorX = _vectorX * -1;
+				vectorY = _vectorY * -1;
+			}
+
+			LineF2D xLine = new LineF2D (point, point + vectorX, false);
+			PointF2D yIntersection = xLine.Intersection (new LineF2D (reference, reference + vectorY)) as PointF2D;
+			VectorF2D yIntersectionVector = (yIntersection - reference);
+			double yFactor = yIntersectionVector.Size / vectorY.Size;
+			if (!yIntersectionVector.CompareNormalized (vectorY, 0.0001)) {
+				yFactor = -yFactor;
+			}
+
+			LineF2D yLine = new LineF2D (point, point + vectorY);
+			PointF2D xIntersection = yLine.Intersection (new LineF2D (reference, reference + vectorX)) as PointF2D;
+			VectorF2D xIntersectionVector = (xIntersection - reference);
+			double xFactor = xIntersectionVector.Size / vectorX.Size;
+			if (!xIntersectionVector.CompareNormalized (vectorX, 0.0001)) {
+				xFactor = -xFactor;
+			}
+
+			transformed [0] = xFactor * width;
+			transformed [1] = yFactor * height;
+		}
+
+		/// <summary>
+		/// Transforms the given the coordinates to a coordinate system defined inside this rectangle.
+		/// </summary>
 		public double[] TransformTo(double width, double height, bool reverseX, bool reverseY,
 		                            PointF2D point){
 			PointF2D reference = _bottomLeft;

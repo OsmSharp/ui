@@ -149,10 +149,10 @@ namespace OsmSharp.Android.UI.Sample
             // create the route tracker animator.
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            //// simulate a number of gps-location update along the calculated route.
-            //Timer timer = new Timer(1000);
-            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            //timer.Start();
+            // simulate a number of gps-location update along the calculated route.
+            Timer timer = new Timer(1000);
+            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            timer.Start();
 
 			SetContentView (layout);
 		}

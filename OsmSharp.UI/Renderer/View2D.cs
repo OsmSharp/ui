@@ -417,7 +417,20 @@ namespace OsmSharp.UI.Renderer
 		/// <returns></returns>
 		public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
 		{ // the right and going down.
-			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
+            return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
+		}
+
+		/// <summary>
+		/// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
+		/// </summary>
+		/// <param name="pixelsWidth"></param>
+		/// <param name="pixelsHeight"></param>
+		/// <param name="sceneX"></param>
+		/// <param name="sceneY"></param>
+		/// <returns></returns>
+		public void ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY, double[] transformed)
+		{ // the right and going down.
+			_rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY, transformed);
 		}
 
         /// <summary>

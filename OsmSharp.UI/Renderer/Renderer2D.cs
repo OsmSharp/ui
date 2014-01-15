@@ -76,8 +76,6 @@ namespace OsmSharp.UI.Renderer
 				
 				this.SetRunning (false);
 
-				GC.Collect();
-
 				return complete;
 			}
 			catch(Exception ex) {
@@ -166,15 +164,6 @@ namespace OsmSharp.UI.Renderer
             IEnumerable<Primitive2D> primitives)
         {
 			try {
-                Icon2D icon;
-                Image2D image;
-                ImageTilted2D imageTilted;
-                Line2D line;
-                LineText2D lineText;
-                Point2D point;
-                Polygon2D polygon;
-                Text2D text;
-
                 // calculate current simplification epsilon.
                 double epsilon = Scene2D.CalculateSimplificationEpsilon(new WebMercator(), zoomFactor);
 
@@ -187,83 +176,77 @@ namespace OsmSharp.UI.Renderer
 						return false; // stop rendering on cancel and return false for an incomplete rendering.
 					}
 
-                    line = (primitive as Line2D);
-                    if (line != null) {
-                        double[] x = line.X;
-                        double[] y = line.Y;
-                        if (x.Length > 4)
-                        { // try and simplify.
-                            double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
-                                epsilon);
-                            if (simplified[0].Length < line.X.Length)
-                            {
-                                simplifiedLines++;
-                                x = simplified[0];
-                                y = simplified[1];
+                    if(primitive == null)
+                    {
+                        continue;
+                    }
+
+                    switch (primitive.Primitive2DType)
+                    {
+                        case Primitive2DType.Line2D:
+                            Line2D line = (Line2D)primitive;
+
+                            double[] x = line.X;
+                            double[] y = line.Y;
+                            if (x.Length > 4)
+                            { // try and simplify.
+                                double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                                    epsilon);
+                                if (simplified[0].Length < line.X.Length)
+                                {
+                                    simplifiedLines++;
+                                    x = simplified[0];
+                                    y = simplified[1];
+                                }
+                                double distance = epsilon * 2;
+                                if (simplified[0].Length == 2)
+                                { // check if the simplified version is smaller than epsilon.
+                                    distance = System.Math.Sqrt(
+                                        System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
+                                        System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
+                                }
+                                if (distance < epsilon)
+                                {
+                                    droppedLines++;
+                                    continue;
+                                }
                             }
-                            double distance = epsilon * 2;
-                            if (simplified[0].Length == 2)
-                            { // check if the simplified version is smaller than epsilon.
-								distance = System.Math.Sqrt(
-									System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) + 
-									System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
-                            }
-                            if (distance < epsilon)
-                            {
-                                droppedLines++;
-                                continue;
-                            }
-                        }
-                        this.DrawLine(target, x, y, line.Color,
-                            this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
-                        continue;
-					}
-                    polygon = (primitive as Polygon2D);
-                    if(polygon != null)
-                    {
-                        this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color,
-                            this.FromPixels(target, view, polygon.Width), polygon.Fill);
-                        continue;
-                    }
-                    lineText = (primitive as LineText2D);
-                    if(lineText != null)
-                    {
-                        this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
-                            this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
-                        continue;
-                    }
-                    point = (primitive as Point2D);
-                    if(point != null)
-                    {
-                        this.DrawPoint(target, point.X, point.Y, point.Color,
-                            this.FromPixels(target, view, point.Size));
-                        continue;
-                    }
-                    icon = (primitive as Icon2D);
-                    if(icon != null)
-                    {
-                        this.DrawIcon(target, icon.X, icon.Y, icon.Image);
-                        continue;
-                    }
-                    imageTilted = (primitive as ImageTilted2D);
-                    if(imageTilted != null)
-                    {
-                        imageTilted.Tag = this.DrawImage (target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
-                        continue;
-                    }
-                    image = (primitive as Image2D);
-                    if(image != null)
-                    {
-                        image.Tag = this.DrawImage (target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
-                            image.Tag);
-                        continue;
-                    }
-                    text = (primitive as Text2D);
-                    if (text != null)
-                    {
-                        this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-                            this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
-                        continue;
+                            this.DrawLine(target, x, y, line.Color,
+                                this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                            break;
+                        case Primitive2DType.Polygon2D:
+                            Polygon2D polygon = (Polygon2D)primitive;
+                            this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color,
+                                this.FromPixels(target, view, polygon.Width), polygon.Fill);
+                            break;
+                        case Primitive2DType.LineText2D:
+                            LineText2D lineText = (LineText2D)primitive;
+                            this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
+                                this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
+                            break;
+                        case Primitive2DType.Point2D:
+                            Point2D point = (Point2D)primitive;
+                            this.DrawPoint(target, point.X, point.Y, point.Color,
+                                this.FromPixels(target, view, point.Size));
+                            break;
+                        case Primitive2DType.Icon2D:
+                            Icon2D icon = (Icon2D)primitive;
+                            this.DrawIcon(target, icon.X, icon.Y, icon.Image);
+                            break;
+                        case Primitive2DType.ImageTilted2D:
+                            ImageTilted2D imageTilted = (ImageTilted2D)primitive;
+                            imageTilted.Tag = this.DrawImage(target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
+                            break;
+                        case Primitive2DType.Image2D:
+                            Image2D image = (Image2D)primitive;
+                            image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData,
+                                image.Tag);
+                            break;
+                        case Primitive2DType.Text2D:
+                            Text2D text = (Text2D)primitive;
+                            this.DrawText(target, text.X, text.Y, text.Text, text.Color,
+                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
+                            break;
                     }
                 }
 				return true;

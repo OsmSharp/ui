@@ -54,6 +54,14 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
+        /// Returns the type of this primitive.
+        /// </summary>
+        public override Primitive2DType Primitive2DType
+        {
+            get { return Primitives.Primitive2DType.ImageTilted2D; }
+        }
+
+        /// <summary>
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
