@@ -83,7 +83,7 @@ namespace OsmSharp.UI.Animations.Navigation
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
             _routeTracker = routeTracker;
-            _minimumTrackGap = new TimeSpan(0, 0, 0, 0, 500).Ticks;
+			_minimumTrackGap = new TimeSpan(0, 0, 0, 0, 500).Ticks;
 
             this.RestartAfterTouch = restartAfterTouch;
 
@@ -206,7 +206,7 @@ namespace OsmSharp.UI.Animations.Navigation
 			_lastTrack = now;
 
 			// animate the next step(s).
-            TimeSpan lastTrackInterval = new TimeSpan(0, 0, 0, 0, 750);
+			TimeSpan lastTrackInterval = new TimeSpan(0, 0, 0, 0, 750);
             long ticks = DateTime.Now.Ticks;
             if (_lastTicks.HasValue)
             { // update the last track interval.
@@ -240,7 +240,7 @@ namespace OsmSharp.UI.Animations.Navigation
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();
-            _animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 150)));
+			_animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 150)));
         }
 
         /// <summary>

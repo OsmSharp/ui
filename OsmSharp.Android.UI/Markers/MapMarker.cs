@@ -79,6 +79,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
+		/// <param name="context">Context.</param>
 		/// <param name="location">Coordinate.</param>
 		public MapMarker (Context context, GeoCoordinate location)
 			: this(context, location, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
@@ -89,6 +90,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
+		/// <param name="context">Context.</param>
 		/// <param name="location">Coordinate.</param>
 		/// <param name="alignment">The alignment.</param>
 		public MapMarker (Context context, GeoCoordinate location, 
@@ -101,23 +103,24 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="context">Context.</param>
+		/// <param name="location">Coordinate.</param>
 		/// <param name="bitmap">Bitmap.</param>
 		/// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
 		                 MapMarkerAlignmentType alignment, global::Android.Graphics.Bitmap image)
-			: base(context){
+			: base(context) {
 			_location = location;
 			_alignment = alignment;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
-            this.SetPadding(0, 0, 0, 0);
+			this.SetPadding(1, 1, 1, 1);
 
-			this.SetScaleType (ScaleType.Center);
 			_image = image;
-			this.SetMinimumWidth (image.Width + 2);
+			this.SetMinimumWidth (image.Width);
             this.SetMinimumHeight(image.Height);
-            this.SetImageBitmap(image);
+			this.SetImageBitmap(image);
+			this.SetScaleType (ScaleType.FitCenter);
 		}
 
 		/// <summary>

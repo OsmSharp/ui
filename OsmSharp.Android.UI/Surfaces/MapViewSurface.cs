@@ -385,7 +385,7 @@ namespace OsmSharp.Android.UI
             if (_autoInvalidate)
             {
                 if (_previousRenderingMapCenter == null ||
-                 _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 30)
+					_previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 60)
                 {
                     // TODO: update this with a more resonable measure depending on the zoom.
                     this.Change();

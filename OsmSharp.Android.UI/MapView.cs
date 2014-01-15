@@ -169,7 +169,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public void ZoomToMarkers()
         {
-            this.ZoomToMarkers(15);
+			this.ZoomToMarkers(15);
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Zoom to the given makers list.
         /// </summary>
-        /// <param name="marker"></param>
+		/// <param name="markers"></param>
         public void ZoomToMarkers(List<MapMarker> markers)
         {
             this.ZoomToMarkers(markers, 15);
@@ -192,7 +192,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Zoom to the given makers list.
         /// </summary>
-        /// <param name="marker"></param>
+		/// <param name="markers"></param>
         public void ZoomToMarkers(List<MapMarker> markers, double percentage)
         {
             _mapView.ZoomToMarkers(markers, percentage);
