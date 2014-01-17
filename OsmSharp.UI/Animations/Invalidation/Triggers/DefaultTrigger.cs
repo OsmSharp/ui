@@ -142,7 +142,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             }
 
             // detect changes by angle offset.
-            double angleDifference = System.Math.Abs(_latestTriggeredView.Angle.Subtract180(view.Angle));
+            double angleDifference = System.Math.Abs(_latestTriggeredView.Angle.SmallestDifference(view.Angle));
             if(angleDifference > DegreeOffset)
             { // the angle difference change was detected.
                 if (this.LatestRenderingFinished ||

@@ -60,13 +60,16 @@ namespace OsmSharp.Test.Unittests
         public void TestDegreeSubstract180()
         {
             Degree angle = 30;
-            Assert.AreEqual(60, angle.Subtract180(330));
-            Assert.AreEqual(-60, angle.Subtract180(90));
+            Assert.AreEqual(60, angle.SmallestDifference(330));
+            Assert.AreEqual(-60, angle.SmallestDifference(90));
 
-            Assert.AreEqual(-20, ((Degree)350).Subtract180(10));
-            Assert.AreEqual(20, ((Degree)10).Subtract180(350));
-            Assert.AreEqual(20, ((Degree)350).Subtract180(330));
-            Assert.AreEqual(20, ((Degree)40).Subtract180(20));
+            Assert.AreEqual(-20, ((Degree)350).SmallestDifference(10));
+            Assert.AreEqual(20, ((Degree)10).SmallestDifference(350));
+            Assert.AreEqual(20, ((Degree)350).SmallestDifference(330));
+            Assert.AreEqual(20, ((Degree)40).SmallestDifference(20));
+
+            Assert.AreEqual(-2, ((Degree)179).SmallestDifference((Degree)181));
+            Assert.AreEqual(2, ((Degree)181).SmallestDifference((Degree)179));
         }
 	}
 }

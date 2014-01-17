@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,10 +81,9 @@ namespace OsmSharp.Units.Angle
         /// </summary>
         /// <param name="angle"></param>
         /// <returns></returns>
-        public double Subtract180(Degree angle)
+        public double SmallestDifference(Degree angle)
         {
-			double diff = -angle.Range180() + this.Range180();
-			return (diff + 180) % 360 - 180;
+            return (this - angle).Range180();
         }
 
         #region Conversion
