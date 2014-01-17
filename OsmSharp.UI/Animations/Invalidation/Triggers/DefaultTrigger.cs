@@ -1,4 +1,4 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -76,6 +76,11 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         /// </summary>
         private double _latestZoom;
 
+		/// <summary>
+		/// Holds the latests timestamp after rendering finished.
+		/// </summary>
+		private int _latestTimestamp;
+
         /// <summary>
         /// Holds the latest successfully rendered view.
         /// </summary>
@@ -126,11 +131,11 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             newCenter[1] = System.Math.Abs(newCenter[1] - 50.0);
             if(newCenter[0] > PanPercentage || newCenter[1] > PanPercentage)
             { // the pan percentage change was detected.
-                OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-                    "Rendering triggered: Pan detection.");
                 if (this.LatestRenderingFinished ||
                     !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-                { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+						"Rendering triggered: Pan detection.");
                     this.Render();
                 }
                 return;
@@ -140,11 +145,11 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             double angleDifference = System.Math.Abs(_latestTriggeredView.Angle.Subtract180(view.Angle));
             if(angleDifference > DegreeOffset)
             { // the angle difference change was detected.
-                OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-                    "Rendering triggered: Angle detection.");
                 if (this.LatestRenderingFinished ||
                     !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-                { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+						"Rendering triggered: Angle detection.");
                     this.Render();
                 }
                 return;
@@ -154,11 +159,11 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             double zoomDifference = System.Math.Abs(_latestTriggeredZoom - _currentZoom);
             if(zoomDifference > ZoomOffset)
             { // the zoom difference change was detected.
-                OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-                    "Rendering triggered: Zoom detection.");
                 if (this.LatestRenderingFinished ||
                     !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-                { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+						"Rendering triggered: Zoom detection.");
                     this.Render();
                 }
                 return;
@@ -173,7 +178,10 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         public override void NotifyRenderSuccess(View2D view, double zoom, int millis)
         {
             _latestView = view;
-            _latestMillis = millis;
+			if (millis > 0)
+			{
+				_latestMillis = millis;
+			}
             _latestZoom = zoom;
 
             if (_latestTriggeredView == null)
@@ -182,17 +190,17 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
                 _latestTriggeredZoom = zoom;
             }
 
-            // set latest rendering flag.
-            this.LatestRenderingFinished = true;
+			// the triggered renderings is finished.
+			this.LatestRenderingFinished = true;
         }
 
         /// <summary>
         /// Returns true when the latest rendering finished.
         /// </summary>
         private bool LatestRenderingFinished
-        {
-            get;
-            set;
+		{
+			get;
+			set;
         }
 
         /// <summary>
@@ -215,8 +223,8 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             _latestTriggeredView = _currentView;
             _latestTriggeredZoom = _currentZoom;
 
-            // reset latest rendering flag.
-            this.LatestRenderingFinished = false;
+			// a new rendering was triggered
+			this.LatestRenderingFinished = false;
 
             // trigger the renderer.
             base.Render();

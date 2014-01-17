@@ -21,20 +21,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using MonoTouch.CoreGraphics;
+using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations;
+using OsmSharp.UI.Animations.Invalidation.Triggers;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
-using OsmSharp.UI.Renderer.Primitives;
-using OsmSharp.Logging;
-using MonoTouch.Foundation;
 
 namespace OsmSharp.iOS.UI
 {
@@ -42,7 +43,7 @@ namespace OsmSharp.iOS.UI
 	/// Map view.
 	/// </summary>
 	[Register("MapView")]
-	public class MapView : UIView, IMapView
+	public class MapView : UIView, IMapView, IInvalidatableMapSurface
 	{
 		private bool _invertX = false;
 		private bool _invertY = false;
@@ -52,21 +53,37 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
+		/// </summary>
+		/// <param name="handle">Handle.</param>
 		public MapView(IntPtr handle) : base(handle)
 		{
 			this.Initialize(new GeoCoordinate(0, 0), new Map(), 0, 16);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
+		/// </summary>
+		/// <param name="t">T.</param>
 		public MapView(NSObjectFlag t) : base(t)
 		{
 			this.Initialize(new GeoCoordinate(0, 0), new Map(), 0, 16);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
+		/// </summary>
+		/// <param name="coder">Coder.</param>
 		public MapView(NSCoder coder) : base(coder)
 		{
 			this.Initialize(new GeoCoordinate(0, 0), new Map(), 0, 16);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
+		/// </summary>
+		/// <param name="frame">Frame.</param>
 		public MapView(RectangleF frame) : base(frame)
 		{
 			this.Initialize(new GeoCoordinate(0, 0), new Map(), 0, 16);
@@ -112,6 +129,9 @@ namespace OsmSharp.iOS.UI
 		/// <param name="defaultMapZoom">Default map zoom.</param>
 		public void Initialize(GeoCoordinate defaultMapCenter, Map defaultMap, Degree defaultMapTilt, float defaultMapZoom)
 		{
+			// register the default listener.
+			(this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
+
 			// enable all interactions by default.
 			this.MapAllowPan = true;
 			this.MapAllowTilt = true;
@@ -287,8 +307,7 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Notifies change
 		/// </summary>
-		/// <param name="touch">If set to <c>true</c> change was trigger by touch.</param>
-		internal void Change(bool touch)
+		internal void TriggerRendering()
 		{
 			if (_rect.Width == 0)
 			{
@@ -298,17 +317,19 @@ namespace OsmSharp.iOS.UI
 			lock (_cacheRenderer)
 			{
 				// create the view that would be use for rendering.
-				View2D view = _cacheRenderer.Create((int)(_rect.Width * _extra), (int)(_rect.Height * _extra),
+				float size = System.Math.Max(_rect.Width, _rect.Height);
+				View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
 					              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
 					              this.MapCenter, _invertX, _invertY, this.MapTilt);
 
 				// ... and compare to the previous rendered view.
-				if (_previousRenderedZoom != null &&
-				    view.Equals(_previousRenderedZoom))
+				if (_previouslyRenderedView != null &&
+				    view.Equals(_previouslyRenderedView))
 				{
+					_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
 					return;
 				}
-				_previousRenderedZoom = view;
+				_previouslyRenderedView = view;
 
 				// end existing rendering thread.
 				if (_renderingThread != null &&
@@ -323,11 +344,21 @@ namespace OsmSharp.iOS.UI
 				// start new rendering thread.
 				_renderingThread = new Thread(new ThreadStart(Render));
 				_renderingThread.Start();
+			}
+		}
 
-				// raise touched event.
-				if (touch)
+		/// <summary>
+		/// Stops the current rendering.
+		/// </summary>
+		internal void StopRendering()
+		{
+			// end existing rendering thread.
+			if (_renderingThread != null &&
+				_renderingThread.IsAlive)
+			{
+				if (_cacheRenderer.IsRunning)
 				{
-					this.RaiseMapTouched();
+					_cacheRenderer.CancelAndWait();
 				}
 			}
 		}
@@ -336,14 +367,16 @@ namespace OsmSharp.iOS.UI
 		/// Holds the scale factor.
 		/// </summary>
 		private float _scaleFactor = 1;
+
 		/// <summary>
 		/// Holds the extra border.
 		/// </summary>
-		private float _extra = 1.4f;
+		private float _extra = 1.5f;
+
 		/// <summary>
 		/// Holds the previous rendered zoom.
 		/// </summary>
-		private View2D _previousRenderedZoom;
+		private View2D _previouslyRenderedView;
 
 		/// <summary>
 		/// Render the current complete scene.
@@ -357,7 +390,8 @@ namespace OsmSharp.iOS.UI
 					RectangleF rect = _rect;
 
 					// create the view.
-					View2D view = _cacheRenderer.Create((int)(rect.Width * _extra), (int)(rect.Height * _extra),
+					float size = System.Math.Max(_rect.Width, _rect.Height);
+					View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
 						              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
 						              this.MapCenter, _invertX, _invertY, this.MapTilt);
 					if (rect.Width == 0)
@@ -366,8 +400,8 @@ namespace OsmSharp.iOS.UI
 					}
                         
 					// calculate width/height.
-					int imageWidth = (int)(rect.Width * _extra * _scaleFactor);
-					int imageHeight = (int)(rect.Height * _extra * _scaleFactor);
+					int imageWidth = (int)(size * _extra * _scaleFactor);
+					int imageHeight = (int)(size * _extra * _scaleFactor);
 
 					// create a new bitmap context.
 					CGColorSpace space = CGColorSpace.CreateDeviceRGB();
@@ -405,11 +439,12 @@ namespace OsmSharp.iOS.UI
 							"View change took: {0}ms @ zoom level {1}",
 							(new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
+						float zoomFactor = this.MapZoom;
 						float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
 						// does the rendering.
 						bool complete = _cacheRenderer.Render(new CGContextWrapper(image,
-							                new RectangleF(0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))),
+							new RectangleF(0, 0, (int)(size * _extra), (int)(size * _extra))),
 							                layers, view, sceneZoomFactor);
 
 						long afterRendering = DateTime.Now.Ticks;
@@ -432,15 +467,21 @@ namespace OsmSharp.iOS.UI
 								_onScreenBuffer.Tag = image.ToImage();
 
 								// store the previous view.
-								_previousRenderedZoom = view;
+								_previouslyRenderedView = view;
 							}
 
-							this.InvokeOnMainThread(InvalidateMap);
+							// make sure this view knows that there is a new rendering.
+							this.InvokeOnMainThread(SetNeedsDisplay);
 						}
 
 						long after = DateTime.Now.Ticks;
 						OsmSharp.Logging.Log.TraceEvent("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
 							"Rendering in {0}ms", new TimeSpan(after - before).TotalMilliseconds);
+
+						if(complete)
+						{ // notify invalidation listener about a succesfull rendering.
+							_listener.NotifyRenderSuccess(view, zoomFactor, (int)new TimeSpan(after - before).TotalMilliseconds);
+						}
 					}
 					finally
 					{
@@ -465,20 +506,14 @@ namespace OsmSharp.iOS.UI
 		/// <param name="rotation">Rotation.</param>
 		private void Rotate(UIRotationGestureRecognizer rotation)
 		{
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (this.MapAllowTilt &&
 			    rect.Width > 0)
 			{
 				this.StopCurrentAnimation();
 				if (rotation.State == UIGestureRecognizerState.Ended)
-				{ 
-//					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
-//					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
-//					PointF2D sceneCenter = rotatedView.Rectangle.Center;
-//					_mapCenter = this.Map.Projection.ToGeoCoordinates (
-//						sceneCenter [0], sceneCenter [1]);
-					this.Change(true);
+				{
+					this.InvokeOnMainThread(NotifyMovement);
 
 					_mapViewBefore = null;
 				}
@@ -495,7 +530,7 @@ namespace OsmSharp.iOS.UI
 					_mapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.InvokeOnMainThread(InvalidateMap);
+					this.InvokeOnMainThread(NotifyMovement);
 				}
 			}
 		}
@@ -511,7 +546,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="pinch">Pinch.</param>
 		private void Pinch(UIPinchGestureRecognizer pinch)
 		{
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (this.MapAllowZoom &&
 			    rect.Width > 0)
@@ -519,15 +553,7 @@ namespace OsmSharp.iOS.UI
 				this.StopCurrentAnimation();
 				if (pinch.State == UIGestureRecognizerState.Ended)
 				{
-//					_mapZoom = _mapZoomLevelBefore.Value;
-//
-//					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
-//					zoomFactor = zoomFactor * pinch.Scale;
-//					_mapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
-//
-//					this.NormalizeZoom ();
-
-					this.Change(true); // notifies change.
+					this.InvokeOnMainThread(NotifyMovement);
 
 					_mapZoomLevelBefore = null;
 				}
@@ -545,7 +571,7 @@ namespace OsmSharp.iOS.UI
 
 					this.NormalizeZoom();
 
-					this.InvokeOnMainThread(InvalidateMap);
+					this.InvokeOnMainThread(NotifyMovement);
 				}
 			}
 		}
@@ -561,10 +587,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="some">Some.</param>
 		private void Pan(UIPanGestureRecognizer pan)
 		{
-			OsmSharp.Logging.Log.TraceEvent("MapView", TraceEventType.Error, 
-				string.Format("{0} ", pan.State.ToString()));
-
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (this.MapAllowPan &&
 			    rect.Width > 0)
@@ -574,8 +596,8 @@ namespace OsmSharp.iOS.UI
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
 					_beforePan = null;
-					
-					this.Change(true); // notifies change.
+
+					this.InvokeOnMainThread(NotifyMovement);
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
@@ -600,7 +622,7 @@ namespace OsmSharp.iOS.UI
 					_mapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.InvokeOnMainThread(InvalidateMap);
+					this.InvokeOnMainThread(NotifyMovement);
 				}
 			}
 		}
@@ -618,7 +640,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="tap">Tap.</param>
 		private void SingleTap(UITapGestureRecognizer tap)
 		{
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
@@ -650,7 +671,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="tap">Tap.</param>
 		private void DoubleTap(UITapGestureRecognizer tap)
 		{
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (this.MapAllowZoom &&
 			    rect.Width > 0 && rect.Height > 0)
@@ -667,9 +687,8 @@ namespace OsmSharp.iOS.UI
 					this.DoubleMapTapEvent(geoLocation);
 				}
 				else
-				{
-					// minimum zoom.
-					float tapRequestZoom = (float)System.Math.Max(_mapZoom + 1, 19);
+				{ // minimum zoom.
+					float tapRequestZoom = (float)System.Math.Max(_mapZoom + 0.5, 19);
 					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 1));
 				}
 			}
@@ -695,26 +714,66 @@ namespace OsmSharp.iOS.UI
 			{ 
 				_mapCenter = value;
 
-				this.InvokeOnMainThread(InvalidateMap);
-				this.InvalidateMapCenter();
+				this.InvokeOnMainThread(NotifyMovement);
 			}
 		}
 
 		/// <summary>
-		/// Invalidates the map center.
+		/// Notifies that there was movement.
 		/// </summary>
-		private void InvalidateMapCenter()
+		private void NotifyMovement()
 		{
-			if (_autoInvalidate)
+			// invalidate the map.
+			this.InvalidateMap();
+
+			// change the map markers.
+			RectangleF rect = this.Frame;
+			if (rect.Width > 0 && rect.Height > 0)
 			{
-				if (_previousRenderingMapCenter == null ||
-				    _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 40)
-				{ 
-					// TODO: update this with a more resonable measure depending on the zoom.
-					this.Change(false);
-					_previousRenderingMapCenter = _mapCenter;
-				} 
+				// create the current view.
+				View2D view = this.CreateView(rect);
+
+				_listener.NotifyChange(view, this.MapZoom);
 			}
+		}
+
+		/// <summary>
+		/// Holds the current invalidation listener.
+		/// </summary>
+		private TriggerBase _listener;
+
+		/// <summary>
+		/// Triggers rendering.
+		/// </summary>
+		void IInvalidatableMapSurface.Render()
+		{
+			this.TriggerRendering();
+		}
+
+		/// <summary>
+		/// Cancels the current rendering.
+		/// </summary>
+		/// <returns><c>true</c> if this instance cancel render; otherwise, <c>false</c>.</returns>
+		void IInvalidatableMapSurface.CancelRender()
+		{
+			this.StopRendering();
+		}
+
+		/// <summary>
+		/// Registers the listener.
+		/// </summary>
+		/// <param name="listener">Listener.</param>
+		void IInvalidatableMapSurface.RegisterListener(TriggerBase listener)
+		{
+			_listener = listener;
+		}
+
+		/// <summary>
+		/// Resets the listener.
+		/// </summary>
+		void IInvalidatableMapSurface.ResetListener()
+		{
+			_listener = null;
 		}
 
 		/// <summary>
@@ -728,16 +787,8 @@ namespace OsmSharp.iOS.UI
 		/// <value>The map.</value>
 		public Map Map
 		{
-			get
-			{
-				return _map;
-			}
-			set
-			{
-				_map = value;
-
-				this.InvokeOnMainThread(InvalidateMap);
-			}
+			get { return _map; }
+			set { _map = value; }
 		}
 
 		/// <summary>
@@ -761,7 +812,7 @@ namespace OsmSharp.iOS.UI
 
 				this.NormalizeZoom();
 
-				this.InvokeOnMainThread(InvalidateMap);
+				this.InvokeOnMainThread(NotifyMovement);
 			}
 		}
 
@@ -821,7 +872,7 @@ namespace OsmSharp.iOS.UI
 			{
 				_mapTilt = value;
 
-				this.InvokeOnMainThread(InvalidateMap);
+				this.InvokeOnMainThread(NotifyMovement);
 			}
 		}
 
@@ -865,9 +916,8 @@ namespace OsmSharp.iOS.UI
 			_mapCenter = center;
 			_mapTilt = mapTilt;
 			this.MapZoom = mapZoom;
-			this.InvalidateMapCenter();
 
-			this.InvokeOnMainThread(InvalidateMap);
+			this.InvokeOnMainThread(NotifyMovement);
 		}
 
 		/// <summary>
@@ -896,32 +946,11 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
-		/// The auto invalidate flag.
-		/// </summary>
-		private bool _autoInvalidate = true;
-
-		/// <summary>
 		/// Invalidate this instance.
 		/// </summary>
 		void IMapView.Invalidate()
 		{
-			this.Change(false);
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="OsmSharp.iOS.UI.MapView"/> auto invalidate.
-		/// </summary>
-		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
-		bool IMapView.AutoInvalidate
-		{
-			get
-			{
-				return _autoInvalidate;
-			}
-			set
-			{
-				_autoInvalidate = value;
-			}
+			this.TriggerRendering();
 		}
 
 		#endregion
@@ -951,7 +980,6 @@ namespace OsmSharp.iOS.UI
 		private void InvalidateMap()
 		{
 			// change the map markers.
-			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
@@ -959,6 +987,8 @@ namespace OsmSharp.iOS.UI
 
 				this.NotifyMapChangeToMarkers(rect.Width, rect.Height, view, this.Map.Projection);
 			}
+
+			// tell this view it needs to refresh.
 			this.SetNeedsDisplay();
 		}
 
@@ -1120,8 +1150,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="marker"></param>
 		public void ZoomToMarkers(List<MapMarker> markers, double percentage)
 		{
-//            float height = _rect.Height;
-//            float width = _rect.Width;
 			float width = this.Frame.Width;
 			float height = this.Frame.Height;
 			RectangleF rect = this.Frame;
@@ -1133,7 +1161,6 @@ namespace OsmSharp.iOS.UI
 					points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
 				}
 				View2D view = this.CreateView(rect);
-//                View2D view = this.CreateView(this.Frame);
 				View2D fittedView = view.Fit(points, percentage);
 
 				float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
@@ -1144,7 +1171,7 @@ namespace OsmSharp.iOS.UI
 				_mapCenter = center;
 				this.MapZoom = zoom;
 
-				this.Change(false);
+				this.InvokeOnMainThread(NotifyMovement);
 			}
 		}
 
@@ -1238,7 +1265,6 @@ namespace OsmSharp.iOS.UI
 
 			_renderingThread.Abort();
 			_renderingThread = null;
-			//_bytescache = null;
 		}
 	}
 }

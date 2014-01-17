@@ -1,4 +1,4 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -62,7 +62,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         {
             _surface.CancelRender();
             _surface.Render();
-        }
+		}
 
         /// <summary>
         /// Notifies the current view has changed.
