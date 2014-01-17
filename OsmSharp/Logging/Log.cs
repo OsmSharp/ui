@@ -80,7 +80,51 @@ namespace OsmSharp.Logging
         public static void DontIgnore(string name)
         {
             _ignore.Remove(name);
-        }
+		}
+
+		/// <summary>
+		/// Holds the sources to whitelist.
+		/// </summary>
+		private static HashSet<string> _whitelist = new HashSet<string>();
+
+		/// <summary>
+		/// Clears the whitelist.
+		/// </summary>
+		public static void ClearWhitelist()
+		{
+			_whitelist.Clear();
+		}
+
+		/// <summary>
+		/// Adds the given name to the logging whitelist.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		public static void AddToWhiteList(string name)
+		{
+			_whitelist.Add(name);
+		}
+
+		/// <summary>
+		/// Removes the given name from the loggin whitelist.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		public static void RemoveFromWhiteList(string name)
+		{
+			_whitelist.Remove(name);
+		}
+
+		/// <summary>
+		/// Returns true if the events with the given name need to be reported.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		private static bool ReportAbout(string name)
+		{
+			if (_whitelist.Count > 0)
+			{
+				return _whitelist.Contains(name);
+			}
+			return !_ignore.Contains(name);
+		}
 
         /// <summary>
         /// Writes a trace event message.
@@ -90,11 +134,11 @@ namespace OsmSharp.Logging
         /// <param name="message"></param>
         public static void TraceEvent(string name, TraceEventType type, string message)
         {
-            if (_loggingEnabled && !_ignore.Contains(name))
+			if (_loggingEnabled && Log.ReportAbout(name))
             {
                 _source.TraceEvent(type, 0, "[" + name + "]: " + message);
             }
-        }
+		}
 
         /// <summary>
         /// Writes a trace event message.
@@ -105,7 +149,7 @@ namespace OsmSharp.Logging
         /// <param name="args"></param>
         public static void TraceEvent(string name, TraceEventType type, string message, params object[] args)
         {
-            if (_loggingEnabled && !_ignore.Contains(name))
+			if (_loggingEnabled && Log.ReportAbout(name))
             {
                 _source.TraceEvent(type, 0, "[" + name + "]: " + message, args);
             }

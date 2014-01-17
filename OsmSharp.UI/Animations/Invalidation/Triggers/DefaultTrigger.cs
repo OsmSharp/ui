@@ -211,7 +211,10 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         {
             OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
                 "Rendering triggered: Static detection.");
-            this.Render();
+			if (!this.Surface.StillMoving())
+			{ // the surface reports there is no more movement.
+				this.Render();
+			}
         }
 
         /// <summary>

@@ -309,17 +309,12 @@ namespace OsmSharp.Android.UI
 		#region IMapView implementation
 
 		/// <summary>
-		/// Holds the map view animator.
-		/// </summary>
-		private MapViewAnimator _mapViewAnimator;
-
-		/// <summary>
 		/// Registers the animator.
 		/// </summary>
 		/// <param name="mapViewAnimator">Map view animator.</param>
 		void IMapView.RegisterAnimator (MapViewAnimator mapViewAnimator)
 		{
-			_mapViewAnimator = mapViewAnimator;
+			(_mapView as IMapViewSurface).RegisterAnimator(mapViewAnimator);
 		}
 
 		/// <summary>

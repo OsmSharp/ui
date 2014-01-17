@@ -850,7 +850,7 @@ namespace OsmSharp.Android.UI
 		/// Registers the animator.
 		/// </summary>
 		/// <param name="mapViewAnimator">Map view animator.</param>
-		internal void RegisterAnimator (MapViewAnimator mapViewAnimator)
+		public void RegisterAnimator (MapViewAnimator mapViewAnimator)
 		{
 			_mapViewAnimator = mapViewAnimator;
 		}
@@ -944,6 +944,14 @@ namespace OsmSharp.Android.UI
         /// Holds the trigger listener.
         /// </summary>
         private TriggerBase _listener;
+
+		/// <summary>
+		/// Returns true if this surface is sure that is going to keep moving.
+		/// </summary>
+		bool IInvalidatableMapSurface.StillMoving()
+		{
+			return _mapViewAnimator != null;
+		}
 
         /// <summary>
         /// Triggers the rendering.

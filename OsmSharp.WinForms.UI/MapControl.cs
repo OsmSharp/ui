@@ -684,11 +684,6 @@ namespace OsmSharp.WinForms.UI
 
 		}
 
-		bool IMapView.AutoInvalidate {
-			get;
-			set;
-		}
-
 		#endregion
 
         /// <summary>

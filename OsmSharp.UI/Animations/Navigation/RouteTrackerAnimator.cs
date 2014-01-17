@@ -102,7 +102,7 @@ namespace OsmSharp.UI.Animations.Navigation
 		/// <param name="newZoom">New zoom.</param>
 		/// <param name="newTilt">New tilt.</param>
 		/// <param name="newCenter">New center.</param>
-		private void MapViewMapTouched(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter){
+		private void MapViewMapTouched(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter) {
 			if (newZoom > this.MinZoom) {
 				this.DefaultZoom = System.Math.Min (newZoom, this.MaxZoom);
 			} else {
@@ -213,7 +213,7 @@ namespace OsmSharp.UI.Animations.Navigation
                 lastTrackInterval = TimeSpan.FromTicks(ticks - _lastTicks.Value);
             }
             _lastTicks = ticks;
-            OsmSharp.Logging.Log.TraceEvent("", OsmSharp.Logging.TraceEventType.Information,
+			OsmSharp.Logging.Log.TraceEvent("RouteTrackerAnimator", OsmSharp.Logging.TraceEventType.Information,
                 "Interval: {0}ms", lastTrackInterval.TotalMilliseconds);
 
             // give location to the route tracker.
@@ -237,6 +237,10 @@ namespace OsmSharp.UI.Animations.Navigation
             {
                 tilt = angle;
             }
+
+
+			OsmSharp.Logging.Log.TraceEvent("RouteTrackerAnimator", OsmSharp.Logging.TraceEventType.Information,
+				"Tracking Event: {0}, {1}, {2}", center, zoom, tilt);
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();

@@ -55,6 +55,18 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             _surface.ResetListener();
         }
 
+		/// <summary>
+		/// Gets the surface.
+		/// </summary>
+		/// <value>The surface.</value>
+		public IInvalidatableMapSurface Surface
+		{
+			get
+			{
+				return _surface;
+			}
+		}
+
         /// <summary>
         /// Triggers rendering.
         /// </summary>

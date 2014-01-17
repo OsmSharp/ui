@@ -16,11 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Osm
 {
@@ -45,11 +44,11 @@ namespace OsmSharp.Test.Unittests.Osm
                 Assert.AreEqual(expected.Count, actual.Count);
                 foreach (Tag tag in expected)
                 {
-                    Assert.IsTrue(actual.Contains(tag));
+					Assert.IsTrue(actual.ContainsKeyValue(tag.Key, tag.Value));
                 }
                 foreach (Tag tag in actual)
                 {
-                    Assert.IsTrue(expected.Contains(tag));
+					Assert.IsTrue(expected.ContainsKeyValue(tag.Key, tag.Value));
                 }
             }
         }
@@ -289,7 +288,8 @@ namespace OsmSharp.Test.Unittests.Osm
         /// </summary>
         /// <param name="expectedList"></param>
         /// <param name="actualList"></param>
-        public static void CompareComplete(List<CompleteOsmGeo> expectedList, List<CompleteOsmGeo> actualList)
+        public static void CompareComplete(System.Collections.Generic.List<CompleteOsmGeo> expectedList, 
+			System.Collections.Generic.List<CompleteOsmGeo> actualList)
         {
             foreach (CompleteOsmGeo actual in actualList)
             {

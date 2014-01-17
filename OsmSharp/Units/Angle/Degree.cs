@@ -82,7 +82,8 @@ namespace OsmSharp.Units.Angle
         /// <returns></returns>
         public double Subtract180(Degree angle)
         {
-            return -angle.Range180() + this.Range180();
+			double diff = -angle.Range180() + this.Range180();
+			return (diff + 180) % 360 - 180;
         }
 
         #region Conversion

@@ -23,6 +23,7 @@ using OsmSharp.Units.Angle;
 using OsmSharp.UI.Map;
 using OsmSharp.UI;
 using System.Collections.Generic;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.Android.UI
 {
@@ -136,7 +137,13 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Gets or sets the allow zoom flag.
         /// </summary>
-        bool MapAllowZoom { get; set; }
+		bool MapAllowZoom { get; set; }
+
+		/// <summary>
+		/// Registers the animator.
+		/// </summary>
+		/// <param name="mapViewAnimator">Map view animator.</param>
+		void RegisterAnimator (MapViewAnimator mapViewAnimator);
 
         /// <summary>
         /// Sets a the map view parameters in one go.

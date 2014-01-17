@@ -710,7 +710,7 @@ namespace OsmSharp.Android.UI
         /// Registers the animator.
         /// </summary>
         /// <param name="mapViewAnimator">Map view animator.</param>
-        internal void RegisterAnimator(MapViewAnimator mapViewAnimator)
+		public void RegisterAnimator(MapViewAnimator mapViewAnimator)
         {
             _mapViewAnimator = mapViewAnimator;
         }
