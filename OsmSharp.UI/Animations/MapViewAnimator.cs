@@ -41,7 +41,7 @@ namespace OsmSharp.UI.Animations
         /// <summary>
         /// Holds the minimum allowed timespan.
         /// </summary>
-		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 150);
+		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 50);
 
         /// <summary>
         /// Holds a synchronization object for the timer elapsed event.
