@@ -127,7 +127,6 @@ namespace OsmSharp.Android.UI.Sample
             _mapView = new MapView(this, new MapViewSurface(this));
             //_mapView = new MapView(this, new MapViewGLSurface(this));
             //_mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
-            (_mapView as IMapView).AutoInvalidate = true;
             _mapView.Map = map;
             _mapView.MapMaxZoomLevel = 20;
             _mapView.MapMinZoomLevel = 10;
@@ -151,10 +150,10 @@ namespace OsmSharp.Android.UI.Sample
             layout.AddView(_mapView);
 
             // create the route tracker animator.
-			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 18);
+			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
             // simulate a number of gps-location update along the calculated route.
-			Timer timer = new Timer(500);
+            Timer timer = new Timer(250);
             timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             timer.Start();
 

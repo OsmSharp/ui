@@ -42,6 +42,9 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Animations\Invalidation\IInvalidatableMapSurface.cs" />
+    <Compile Include="Animations\Invalidation\Triggers\DefaultTrigger.cs" />
+    <Compile Include="Animations\Invalidation\Triggers\TriggerBase.cs" />
     <Compile Include="Animations\MapViewAnimator.cs" />
     <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />

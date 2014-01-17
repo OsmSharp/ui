@@ -240,7 +240,7 @@ namespace OsmSharp.UI.Animations.Navigation
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();
-			_animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 150)));
+			_animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 50)));
         }
 
         /// <summary>

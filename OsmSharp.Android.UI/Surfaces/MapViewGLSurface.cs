@@ -155,7 +155,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Notifies change.
         /// </summary>
-        public void Change()
+        public void TriggerRendering()
         {
 
         }
@@ -163,7 +163,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Notifies change.
         /// </summary>
-        public void Change(bool force)
+        public void TriggerRendering(bool force)
         {
             // notify map layout of changes.
             if (this.Width > 0 && this.Height > 0)
@@ -566,7 +566,7 @@ namespace OsmSharp.Android.UI
 
         public void OnMoveEnd(MoveGestureDetector detector)
         {
-            this.Change();
+            this.TriggerRendering();
         }
 
         #endregion

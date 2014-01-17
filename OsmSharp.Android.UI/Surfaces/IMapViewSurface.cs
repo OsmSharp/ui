@@ -40,12 +40,12 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Notifies change.
         /// </summary>
-        void Change();
+        void TriggerRendering();
 
 		/// <summary>
 		/// Notifies change.
 		/// </summary>
-		void Change(bool force);
+		void TriggerRendering(bool force);
 
 		/// <summary>
 		/// Gets or sets the width.
@@ -145,11 +145,6 @@ namespace OsmSharp.Android.UI
         /// <param name="mapTilt"></param>
         /// <param name="zoom"></param>
         void SetMapView(GeoCoordinate center, Degree mapTilt, float zoom);
-
-        /// <summary>
-        /// Gets or sets the auto invalidate flag.
-        /// </summary>
-        bool AutoInvalidate { get; set; }
 
         /// <summary>
         /// Zooms to the given list of markers.

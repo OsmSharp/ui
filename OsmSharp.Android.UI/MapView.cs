@@ -16,8 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
@@ -28,6 +26,8 @@ using OsmSharp.UI.Animations;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Android.UI
 {
@@ -42,15 +42,14 @@ namespace OsmSharp.Android.UI
         public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
         /// <summary>
-        /// Raises the map touched event.
+        /// Occurs when the map was tapped at a certain location.
         /// </summary>
-        internal void RaiseMapTouched()
-        {
-            if (this.MapTouched != null)
-            {
-                this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
-            }
-        }
+        public event MapViewEvents.MapTapEventDelegate MapTapEvent;
+
+        /// <summary>
+        /// Occurs when the map was touched for a longer time at a certain location.
+        /// </summary>
+        public event MapViewEvents.MapTapEventDelegate MapHoldEvent;
 
 		/// <summary>
 		/// Holds the mapview.
@@ -77,16 +76,6 @@ namespace OsmSharp.Android.UI
 			this.Initialize ();
 		}
 
-		/// <summary>
-		/// Occurs when the map was tapped at a certain location.
-		/// </summary>
-        public event MapViewEvents.MapTapEventDelegate MapTapEvent;
-
-        /// <summary>
-        /// Occurs when the map was touched for a longer time at a certain location.
-        /// </summary>
-        public event MapViewEvents.MapTapEventDelegate MapHoldEvent;
-
         /// <summary>
         /// Raises the map tap event.
         /// </summary>
@@ -96,6 +85,17 @@ namespace OsmSharp.Android.UI
             if (this.MapTapEvent != null)
             {
                 this.MapTapEvent(coordinate);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        internal void RaiseMapTouched()
+        {
+            if (this.MapTouched != null)
+            {
+                this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 
@@ -117,7 +117,7 @@ namespace OsmSharp.Android.UI
 			this.AddView (marker, layoutParams);
 
             this.NotifyMarkerChange(marker);
-			_mapView.Change ();
+			_mapView.TriggerRendering ();
 		}
 
 		/// <summary>
@@ -203,8 +203,7 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="mapMarker"></param>
 		public void NotifyMarkerChange (MapMarker mapMarker)
-		{
-			// notify map layout of changes.
+		{ // notify map layout of changes.
 			if (_mapView.Width > 0 && _mapView.Height > 0) {
 				View2D view = _mapView.CreateView ();
 
@@ -224,7 +223,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map zoom level.
 		/// </summary>
 		/// <value>The map zoom level.</value>
-		public float MapZoom {
+		public float MapZoom
+        {
 			get { return _mapView.MapZoom; }
 			set { _mapView.MapZoom = value; }
 		}
@@ -233,7 +233,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-		public float? MapMinZoomLevel {
+		public float? MapMinZoomLevel
+        {
 			get { return _mapView.MapMinZoomLevel; }
 			set { _mapView.MapMinZoomLevel = value; }
 		}
@@ -242,7 +243,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-		public float? MapMaxZoomLevel {
+		public float? MapMaxZoomLevel
+        {
 			get { return _mapView.MapMaxZoomLevel; }
 			set { _mapView.MapMaxZoomLevel = value; }
         }
@@ -252,14 +254,8 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public bool MapAllowTilt
         {
-            get
-            {
-                return _mapView.MapAllowTilt;
-            }
-            set
-            {
-                _mapView.MapAllowTilt = value;
-            }
+            get { return _mapView.MapAllowTilt; }
+            set { _mapView.MapAllowTilt = value; }
         }
 
         /// <summary>
@@ -267,14 +263,8 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public bool MapAllowPan
         {
-            get
-            {
-                return _mapView.MapAllowPan;
-            }
-            set
-            {
-                _mapView.MapAllowPan = value;
-            }
+            get { return _mapView.MapAllowPan; }
+            set { _mapView.MapAllowPan = value; }
         }
 
         /// <summary>
@@ -282,53 +272,38 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public bool MapAllowZoom
         {
-            get
-            {
-                return _mapView.MapAllowZoom;
-            }
-            set
-            {
-                _mapView.MapAllowZoom = value;
-            }
+            get { return _mapView.MapAllowZoom; }
+            set { _mapView.MapAllowZoom = value; }
         }
 
 		/// <summary>
 		/// Gets or sets the map.
 		/// </summary>
 		/// <value>The map.</value>
-		public Map Map {
-			get {
-				return _mapView.Map;
-			}
-			set {
-				_mapView.Map = value;
-			}
+		public Map Map
+        {
+			get { return _mapView.Map; }
+			set { _mapView.Map = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the map center.
 		/// </summary>
 		/// <value>The map center.</value>
-		public GeoCoordinate MapCenter {
-			get { 
-				return _mapView.MapCenter; 
-			}
-			set { 
-				_mapView.MapCenter = value; 
-			}
+		public GeoCoordinate MapCenter
+        {
+			get { return _mapView.MapCenter; }
+			set { _mapView.MapCenter = value; }
 		}
 
 		/// <summary>
 		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public Degree MapTilt {
-			get {
-				return _mapView.MapTilt;
-			}
-			set {
-				_mapView.MapTilt = value;
-			}
+		public Degree MapTilt
+        {
+			get { return _mapView.MapTilt; }
+			set { _mapView.MapTilt = value; }
         }
 
 		#region IMapView implementation
@@ -358,19 +333,6 @@ namespace OsmSharp.Android.UI
 			_mapView.SetMapView (center, mapTilt, mapZoom);
 		}
 
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="OsmSharp.Android.UI.MapView"/> auto invalidates.
-		/// </summary>
-		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
-		bool IMapView.AutoInvalidate {
-			get {
-				return _mapView.AutoInvalidate;
-			}
-			set {
-				_mapView.AutoInvalidate = value;
-			}
-		}
-
 		#endregion
 
 		/// <summary>
@@ -383,7 +345,7 @@ namespace OsmSharp.Android.UI
 		public void NotifyMapChange (double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
 		{
 			if (_markers != null) {
-				foreach (var marker in _markers) {
+				foreach (var marker in _markers){
 					this.NotifyMapChangeToMarker (pixelsWidth, pixelsHeight, view, projection, marker);
 				}
 			}
@@ -412,7 +374,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         void IMapView.Invalidate()
         {
-            _mapView.Change(true);
+            _mapView.TriggerRendering(true);
 		}
 
 		private class MapViewMarkerZoomEvent
@@ -421,7 +383,8 @@ namespace OsmSharp.Android.UI
 			/// Gets or sets the markers.
 			/// </summary>
 			/// <value>The markers.</value>
-			public List<MapMarker> Markers {
+			public List<MapMarker> Markers
+            {
 				get;
 				set;
 			}
@@ -430,7 +393,8 @@ namespace OsmSharp.Android.UI
 			/// Gets or sets the percentage.
 			/// </summary>
 			/// <value>The percentage.</value>
-			public float Percentage {
+			public float Percentage 
+            {
 				get;
 				set;
 			}

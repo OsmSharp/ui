@@ -36,15 +36,6 @@ namespace OsmSharp.UI
 		event MapViewDelegates.MapTouchedDelegate MapTouched;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="OsmSharp.UI.IMapView"/> auto invalidate.
-		/// </summary>
-		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
-	    bool AutoInvalidate {
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Invalidates this instance.
 		/// </summary>
 		void Invalidate ();

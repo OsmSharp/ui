@@ -398,6 +398,47 @@ namespace OsmSharp.Math.Primitives
 			return false;
 		}
 
+        /// <summary>
+        /// Returns true if this rectangle overlaps with the given box.
+        /// </summary>
+        /// <param name="rectangle">Rectangle.</param>
+        public bool Overlaps(RectangleF2D rectangle)
+        {
+            // Yes, I know this code can be shorter but it would turn into a mess!
+            if (rectangle.Contains(this.BottomLeft) || rectangle.Contains(this.BottomRight) ||
+                rectangle.Contains(this.TopLeft) || rectangle.Contains(this.TopRight))
+            {
+                return true;
+            }
+            if (this.Contains(rectangle.BottomLeft) || this.Contains(rectangle.BottomRight) ||
+                this.Contains(rectangle.TopLeft) || this.Contains(rectangle.TopRight))
+            {
+                return true;
+            }
+
+            List<LineF2D> lines = new List<LineF2D>();
+            lines.Add(new LineF2D(this.BottomLeft, this.BottomRight, true));
+            lines.Add(new LineF2D(this.BottomRight, this.TopRight, true));
+            lines.Add(new LineF2D(this.TopRight, this.TopLeft, true));
+            lines.Add(new LineF2D(this.TopLeft, this.BottomLeft, true));
+            List<LineF2D> otherLines = new List<LineF2D>();
+            otherLines.Add(new LineF2D(rectangle.BottomLeft, rectangle.BottomRight, true));
+            otherLines.Add(new LineF2D(rectangle.BottomRight, rectangle.TopRight, true));
+            otherLines.Add(new LineF2D(rectangle.TopRight, rectangle.TopLeft, true));
+            otherLines.Add(new LineF2D(rectangle.TopLeft, rectangle.BottomLeft, true));
+            foreach (LineF2D line in lines)
+            {
+                foreach (LineF2D otherLine in otherLines)
+                {
+                    if (line.Intersects(otherLine))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
 		/// <summary>
 		/// Rotates this rectangle around it's center point with a given angle in clockwise direction.
 		/// </summary>

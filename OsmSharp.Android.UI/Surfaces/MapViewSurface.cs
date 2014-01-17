@@ -16,9 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.Util;
@@ -29,11 +26,15 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations;
+using OsmSharp.UI.Animations.Invalidation.Triggers;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace OsmSharp.Android.UI
 {
@@ -45,7 +46,8 @@ namespace OsmSharp.Android.UI
 			RotateGestureDetector.IOnRotateGestureListener,
 			MoveGestureDetector.IOnMoveGestureListener,
             TapGestureDetector.IOnTapGestureListener,
-			global::Android.Views.View.IOnTouchListener
+			global::Android.Views.View.IOnTouchListener,
+            IInvalidatableMapSurface
 	{
 		private bool _invertX = false;
 		private bool _invertY = false;
@@ -87,6 +89,9 @@ namespace OsmSharp.Android.UI
 		public MapViewSurface (Context context) :
 			base (context)
         {
+            // register default invalidation trigger.
+            (this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
+
             this.MapAllowPan = true;
             this.MapAllowTilt = true;
             this.MapAllowZoom = true;
@@ -100,6 +105,9 @@ namespace OsmSharp.Android.UI
 		public MapViewSurface (Context context, IAttributeSet attrs) :
 			base (context, attrs)
         {
+            // register default invalidation trigger.
+            (this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
+
             this.MapAllowPan = true;
             this.MapAllowTilt = true;
             this.MapAllowZoom = true;
@@ -168,20 +176,20 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Holds the extra parameter.
         /// </summary>
-        private float _extra = 1.25f;
+        private float _extra = 1.5f;
 
         /// <summary>
-        /// Notifies change
+        /// Triggers rendering.
         /// </summary>
-        public void Change()
+        public void TriggerRendering()
         {
-            this.Change(false);
+            this.TriggerRendering(false);
         }
 
         /// <summary>
-        /// Notifies change
+        /// Triggers rendering.
         /// </summary>
-        public void Change(bool force)
+        public void TriggerRendering(bool force)
         {
             if (this.SurfaceWidth == 0)
             { // nothing to render yet!
@@ -190,21 +198,20 @@ namespace OsmSharp.Android.UI
 
             // create the view that would be use for rendering.
             View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
-             this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-             this.MapCenter, _invertX, _invertY, this.MapTilt);
+                this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                this.MapCenter, _invertX, _invertY, this.MapTilt);
 
             // ... and compare to the previous rendered view.
-            if (!force &&
-                _previousRenderedZoom != null &&
-                view.Equals(_previousRenderedZoom))
+            if (!force && _previouslyRenderedView != null &&
+                view.Equals(_previouslyRenderedView))
             {
                 return;
             }
-            _previousRenderedZoom = view;
+            _previouslyRenderedView = view;
 
             // end existing rendering thread.
             if (_renderingThread != null &&
-             _renderingThread.IsAlive)
+                _renderingThread.IsAlive)
             {
                 if (_cacheRenderer.IsRunning)
                 {
@@ -219,9 +226,26 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Stops the current rendering if in progress.
+        /// </summary>
+        internal void StopRendering()
+        {
+            // stop current rendering.
+            if (_renderingThread != null &&
+                _renderingThread.IsAlive)
+            {
+                if (_cacheRenderer.IsRunning)
+                {
+                    this.Map.ViewChangedCancel();
+                    _cacheRenderer.CancelAndWait();
+                }
+            }
+        }
+
+        /// <summary>
         /// Holds the previous rendered zoom.
         /// </summary>
-        private View2D _previousRenderedZoom;
+        private View2D _previouslyRenderedView;
 
         private float _surfaceWidth = 0;
 
@@ -252,7 +276,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Renders the current complete scene.
 		/// </summary>
-		void Render()
+		private void Render()
 		{	
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.CancelAndWait ();
@@ -286,13 +310,13 @@ namespace OsmSharp.Android.UI
                 }
 
                 // resize image if needed.
-                if (image == null || 
-                    image.Width != (int)(this.SurfaceWidth * _extra) ||
-                    image.Height != (int)(this.SurfaceHeight * _extra))
-                {
-                    // create a bitmap and render there.
-                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * _extra),
-                        (int)(this.SurfaceHeight * _extra),
+                float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
+                if (image == null ||
+                    image.Width != (int)(size * _extra) ||
+                    image.Height != (int)(size * _extra))
+                { // create a bitmap and render there.
+                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(size * _extra),
+                        (int)(size * _extra),
                         global::Android.Graphics.Bitmap.Config.Argb8888);
                 }
 
@@ -303,11 +327,12 @@ namespace OsmSharp.Android.UI
 
 				// create the view.
                 double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+                float mapZoom = this.MapZoom;
                 float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
                 // create the view for this control.
                 View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                         this.SurfaceWidth * _extra, this.SurfaceHeight * _extra, sceneZoomFactor,
+                                         size * _extra, size * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
@@ -343,9 +368,15 @@ namespace OsmSharp.Android.UI
                     _offScreenBuffer = temp;
 				}
 
-				this.PostInvalidate ();
+                // notify the the current surface of the new rendering.
+                this.PostInvalidate();
 				
 				long after = DateTime.Now.Ticks;
+
+                if (complete)
+                { // report a successfull render to listener.
+                    _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
+                }
 			}
 		}
 
@@ -353,11 +384,6 @@ namespace OsmSharp.Android.UI
         /// The map center.
         /// </summary>
         private GeoCoordinate _mapCenter;
-
-        /// <summary>
-        /// The map center on the previous rendering.
-        /// </summary>
-        private GeoCoordinate _previousRenderingMapCenter;
 
         /// <summary>
         /// Gets or sets the center.
@@ -372,25 +398,9 @@ namespace OsmSharp.Android.UI
             set
             {
                 _mapCenter = value;
-                (this.Context as Activity).RunOnUiThread(Invalidate);
-                this.InvalidateMapCenter();
-            }
-        }
 
-        /// <summary>
-        /// Invalidates the map center.
-        /// </summary>
-        private void InvalidateMapCenter()
-        {
-            if (_autoInvalidate)
-            {
-                if (_previousRenderingMapCenter == null ||
-					_previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 60)
-                {
-                    // TODO: update this with a more resonable measure depending on the zoom.
-                    this.Change();
-                    _previousRenderingMapCenter = _mapCenter;
-                }
+                // report 
+                (this.Context as Activity).RunOnUiThread(NotifyMovement);
             }
         }
 
@@ -403,12 +413,10 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map.
 		/// </summary>
 		/// <value>The map.</value>
-		public Map Map {
-			get{ return _map; }
-			set {
-				_map = value;
-                this.Change();
-			}
+		public Map Map
+        {
+			get { return _map; }
+			set { _map = value; }
 		}
 
 		/// <summary>
@@ -422,16 +430,13 @@ namespace OsmSharp.Android.UI
 		/// <value>The map tilt.</value>
         public Degree MapTilt
         {
-			get{
-				return _mapTilt;
-			}
-			set {
+			get { return _mapTilt; }
+            set
+            {
                 _mapTilt = value;
-				
-				if (_autoInvalidate) {
-					(this.Context as Activity).RunOnUiThread (Invalidate);
-				}
-			}
+
+                (this.Context as Activity).RunOnUiThread(NotifyMovement);
+            }
 		}
 
 		/// <summary>
@@ -443,7 +448,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the zoom factor.
 		/// </summary>
 		/// <value>The zoom factor.</value>
-		public float MapZoom {
+		public float MapZoom
+        {
 			get { return _mapZoomLevel; }
 			set { 
 				if (this.MapMaxZoomLevel.HasValue &&
@@ -456,9 +462,7 @@ namespace OsmSharp.Android.UI
 					_mapZoomLevel = value;
                 }
 				
-				if (_autoInvalidate) {
-					(this.Context as Activity).RunOnUiThread (Invalidate);
-				}
+                (this.Context as Activity).RunOnUiThread (NotifyMovement);
 			}
 		}
 
@@ -466,7 +470,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-		public float? MapMaxZoomLevel {
+		public float? MapMaxZoomLevel
+        {
 			get;
 			set;
 		}
@@ -475,7 +480,8 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-		public float? MapMinZoomLevel {
+		public float? MapMinZoomLevel
+        {
 			get;
 			set;
 		}
@@ -516,9 +522,9 @@ namespace OsmSharp.Android.UI
 		/// Raises the draw event.
 		/// </summary>
 		/// <param name="canvas">Canvas.</param>
-		protected override void OnDraw (global::Android.Graphics.Canvas canvas)
-		{
-			base.OnDraw (canvas);
+        protected override void OnDraw(global::Android.Graphics.Canvas canvas)
+        {
+            base.OnDraw(canvas);
 
             // set the height/width.
             if (_surfaceHeight != canvas.Height ||
@@ -527,23 +533,20 @@ namespace OsmSharp.Android.UI
                 _surfaceHeight = canvas.Height;
                 _surfaceWidth = canvas.Width;
 
-                // notify change.
-                this.Change();
+                // trigger rendering.
+                this.TriggerRendering();
             }
 
-			// render only the cached scene.
-            //lock(_renderCache)
-            //{
-                canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
-                View2D view = this.CreateView();
-                float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
-                _renderer.SceneRenderer.Render(
-                    canvas,
-                    view,
-                    zoomFactor,
-                    new Primitive2D[] { _onScreenBuffer });
-            //}
-		}
+            // render only the cached scene.
+            canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
+            View2D view = this.CreateView();
+            float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+            _renderer.SceneRenderer.Render(
+                canvas,
+                view,
+                zoomFactor,
+                new Primitive2D[] { _onScreenBuffer });
+        }
 		
 		/// <summary>
 		/// Creates a view.
@@ -579,14 +582,11 @@ namespace OsmSharp.Android.UI
 			{ // there was a suspended call.
 				this.ZoomToMarkers(
 					_latestZoomCall.Markers,
-					_latestZoomCall.Percentage, false);
+					_latestZoomCall.Percentage);
 			}
 
-			// notify there was movement.
-			this.NotifyMovement();
-
 			if (_onScreenBuffer == null) {
-				this.Change (); // force a rendering on the first layout-event.
+				this.TriggerRendering (); // force a rendering on the first layout-event.
 			}
 		}
 
@@ -601,9 +601,14 @@ namespace OsmSharp.Android.UI
 			// notify map layout of changes.
             if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
             {
+                // create the current view.
 				View2D view = this.CreateView ();
 
+                // notify map change to reposition markers.
                 _mapView.NotifyMapChange(this.SurfaceWidth, this.SurfaceHeight, view, this.Map.Projection);
+
+                // notify listener.
+                _listener.NotifyChange(view, this.MapZoom);
 			}
 		}
 
@@ -622,6 +627,7 @@ namespace OsmSharp.Android.UI
 		public bool OnScale (ScaleGestureDetector detector)
 		{
 			_deltaScale = detector.ScaleFactor;
+
 			return true;
 		}
 		
@@ -656,9 +662,6 @@ namespace OsmSharp.Android.UI
 		{
 			_deltaDegrees = detector.RotationDegreesDelta;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                string.Format("OnRotate:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
-
 			return true;
 		}
 
@@ -669,18 +672,12 @@ namespace OsmSharp.Android.UI
 			_deltaX = 0;
             _deltaY = 0;
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                string.Format("OnRotateBegin"));
-
 			return true;
 		}
 
 		public void OnRotateEnd (RotateGestureDetector detector)
         {
             _deltaDegrees = 0;
-
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                string.Format("OnRotateEnd"));
 		}
 
 		#endregion
@@ -708,7 +705,7 @@ namespace OsmSharp.Android.UI
 
 		public void OnMoveEnd (MoveGestureDetector detector)
 		{
-			this.Change ();
+
 		}
 
 		#endregion
@@ -838,11 +835,6 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private MapViewAnimator _mapViewAnimator;
 
-		/// <summary>
-		/// Holds the auto invalidate flag.
-		/// </summary>
-		private bool _autoInvalidate = true;
-
         /// <summary>
         /// Stops the current animation.
         /// </summary>
@@ -869,41 +861,13 @@ namespace OsmSharp.Android.UI
 		/// <param name="center">Center.</param>
 		/// <param name="mapTilt">Map tilt.</param>
 		/// <param name="mapZoom">Map zoom.</param>
-		/// <param name="invalidate">If set to <c>true</c> invalidate.</param>
-		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom, bool invalidate)
+		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
 		{
 			_mapCenter = center;
 			_mapTilt = mapTilt;
 			this.MapZoom = mapZoom;
 
-			if(invalidate) {
-				(this.Context as Activity).RunOnUiThread(NotifyMovement);
-                this.InvalidateMapCenter();
-			}
-		}
-
-		/// <summary>
-		/// Sets the map view.
-		/// </summary>
-		/// <param name="center">Center.</param>
-		/// <param name="mapTilt">Map tilt.</param>
-		/// <param name="mapZoom">Map zoom.</param>
-		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
-		{
-			this.SetMapView (center, mapTilt, mapZoom, true);
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="OsmSharp.Android.UI.MapViewSurface"/> auto invalidate.
-		/// </summary>
-		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
-		public bool AutoInvalidate {
-			get {
-				return _autoInvalidate;
-			}
-			set {
-				_autoInvalidate = value;
-			}
+		    (this.Context as Activity).RunOnUiThread(NotifyMovement);
 		}
 
 		/// <summary>
@@ -916,18 +880,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="markers"></param>
         /// <param name="percentage"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage) 
-        {
-            this.ZoomToMarkers(markers, percentage, true);
-        }
-
-        /// <summary>
-        /// Zooms to the given list of markers.
-        /// </summary>
-        /// <param name="markers"></param>
-        /// <param name="percentage"></param>
-        /// <param name="notifyChange"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage, bool notifyChange)
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
         {
             float height = this.SurfaceHeight;
             float width = this.SurfaceWidth;
@@ -944,13 +897,7 @@ namespace OsmSharp.Android.UI
 				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates (
 					                                   fittedView.Center [0], fittedView.Center [1]);
 
-				if (notifyChange) {
-					this.SetMapView (center, this.MapTilt, zoom, true);
-					this.NotifyMovement ();
-					this.Change ();
-				} else {
-					this.SetMapView (center, this.MapTilt, zoom, false);
-				}
+                this.SetMapView (center, this.MapTilt, zoom);
 			} else {
                 _latestZoomCall = new MapViewMarkerZoomEvent()
                 {
@@ -990,5 +937,47 @@ namespace OsmSharp.Android.UI
         {
             get { return (int)this.SurfaceHeight; }
         }
+
+        #region IInvalidatableMapSurface Interface
+
+        /// <summary>
+        /// Holds the trigger listener.
+        /// </summary>
+        private TriggerBase _listener;
+
+        /// <summary>
+        /// Triggers the rendering.
+        /// </summary>
+        void IInvalidatableMapSurface.Render()
+        {
+            this.TriggerRendering();
+        }
+
+        /// <summary>
+        /// Cancels the current rendering.
+        /// </summary>
+        void IInvalidatableMapSurface.CancelRender()
+        {
+            this.StopRendering();
+        }
+
+        /// <summary>
+        /// Registers an invalidation listenener.
+        /// </summary>
+        /// <param name="listener"></param>
+        void IInvalidatableMapSurface.RegisterListener(TriggerBase listener)
+        {
+            _listener = listener;
+        }
+
+        /// <summary>
+        /// Unregisters the current listener.
+        /// </summary>
+        void IInvalidatableMapSurface.ResetListener()
+        {
+            _listener = null;
+        }
+
+        #endregion
     }
 }
