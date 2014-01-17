@@ -743,6 +743,15 @@ namespace OsmSharp.iOS.UI
 		private TriggerBase _listener;
 
 		/// <summary>
+		/// Returns true if the map view is sure that it is still moving.
+		/// </summary>
+		/// <returns><c>true</c>, if moving was stilled, <c>false</c> otherwise.</returns>
+		bool IInvalidatableMapSurface.StillMoving()
+		{
+			return _mapViewAnimator != null;
+		}
+
+		/// <summary>
 		/// Triggers rendering.
 		/// </summary>
 		void IInvalidatableMapSurface.Render()
