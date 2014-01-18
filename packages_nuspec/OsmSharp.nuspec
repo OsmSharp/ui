@@ -11,7 +11,7 @@
         <iconUrl>http://raw.github.com/xivk/OsmSharp/master/packages_nuspec/osmsharp_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>OsmSharp is an open-source mapping project.</description>
-        <summary>OsmSharp is an open-source mapping project available on Android & iOS using Xamarin and other platforms using Mono/.NET</summary>
+        <summary>OsmSharp is an open-source mapping project available on Android and iOS using Xamarin and other platforms using Mono/.NET</summary>
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap, routing, rendering, xamarin, mapping</tags>
         <dependencies>
