@@ -1,1 +1,14 @@
-Contains all builds for Mono/.NET/Mono for Android/Monotouch/Windows Phone.
+Contains all builds for Mono/.NET/Xamarin.Android/Xamarin.iOS:
+
+This is the first OsmSharp release of v4. A high-level overview of new features since v3:
+
+For Xamarin.Android & Xamarin.iOS:
+
+- (Offline) Rendering on Android/iOS.
+- (Offline) Routing on Android/iOS.
+- MapViews on Android/iOS.
+
+All platforms:
+
+- Serializable routing graph for offline routing.
+- Serializable vector format for offline map rendering.
