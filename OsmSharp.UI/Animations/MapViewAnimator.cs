@@ -43,10 +43,10 @@ namespace OsmSharp.UI.Animations
         /// </summary>
 		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 50);
 
-        /// <summary>
-        /// Holds a synchronization object for the timer elapsed event.
-        /// </summary>
-        private static object TimerElapsedSync = new object();
+//        /// <summary>
+//        /// Holds a synchronization object for the timer elapsed event.
+//        /// </summary>
+//        private static object TimerElapsedSync = new object();
 
         /// <summary>
         /// Creates a new MapView Animator.
@@ -172,6 +172,11 @@ namespace OsmSharp.UI.Animations
         /// </summary>
         private Timer _timer;
 
+		/// <summary>
+		/// Holds the timer status.
+		/// </summary>
+		private AnimatorStatus _timerStatus;
+
         /// <summary>
         /// Holds the current step.
         /// </summary>
@@ -190,65 +195,65 @@ namespace OsmSharp.UI.Animations
         /// <param name="mapTilt"></param>
         /// <param name="time"></param>
         public void Start(GeoCoordinate center, float zoomLevel, Degree mapTilt, TimeSpan time)
-        {
-            lock (TimerElapsedSync)
-            {
-                // stop the previous timer.
-                if (_timer != null)
-                { // timer exists.
-                    _timer.Dispose();
-                    _timer = null;
-                }
+		{
+			// stop the previous timer.
+			if (_timer != null)
+			{ // timer exists, it might be active disable it immidiately.
+				// cancel previous status.
+				_timerStatus.Cancelled = true;
+				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+				_timer.Dispose();
+			}
 
-                // set the targets.
-                _targetCenter = center;
-                _targetTilt = mapTilt;
-                _targetZoom = zoomLevel;
+			// set the targets.
+			_targetCenter = center;
+			_targetTilt = mapTilt;
+			_targetZoom = zoomLevel;
 
-                // calculate the animation steps.
-                _maxSteps = (int)System.Math.Round((double)time.TotalMilliseconds / (double)_minimumTimeSpan.TotalMilliseconds, 0);
-                _currentStep = 0;
-                _stepCenter = new GeoCoordinate(
-                    (_targetCenter.Latitude - _mapView.MapCenter.Latitude) / _maxSteps,
-                    (_targetCenter.Longitude - _mapView.MapCenter.Longitude) / _maxSteps);
-                _stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
+			// calculate the animation steps.
+			_maxSteps = (int)System.Math.Round((double)time.TotalMilliseconds / (double)_minimumTimeSpan.TotalMilliseconds, 0);
+			_currentStep = 0;
+			_stepCenter = new GeoCoordinate(
+				(_targetCenter.Latitude - _mapView.MapCenter.Latitude) / _maxSteps,
+				(_targetCenter.Longitude - _mapView.MapCenter.Longitude) / _maxSteps);
+			_stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
 
-				// calculate the map tilt, make sure it turns along the smallest corner.
-				double diff = _targetTilt.SmallestDifference(_mapView.MapTilt);
-				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", OsmSharp.Logging.TraceEventType.Information, diff.ToString());
+			// calculate the map tilt, make sure it turns along the smallest corner.
+			double diff = _targetTilt.SmallestDifference(_mapView.MapTilt);
+			OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Information, diff.ToString());
 				_stepTilt = (diff / _maxSteps);
 
-                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
-				                                string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
-                        		_stepZoom, _stepTilt, _stepCenter.ToString(), 
-				              _targetZoom, _targetTilt, _targetCenter.ToString(), 
-				              _mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter.ToString()));
+			OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
+				string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
+					_stepZoom, _stepTilt, _stepCenter.ToString(), 
+					_targetZoom, _targetTilt, _targetCenter.ToString(), 
+					_mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter.ToString()));
 
-				// disable auto invalidate.
-				//_mapView.AutoInvalidate = false;
-				_mapView.RegisterAnimator (this);
+			// disable auto invalidate.
+			_mapView.RegisterAnimator(this);
 
-                // start the timer.
-                _timer = new Timer(new TimerCallback(_timer_Elapsed), null, 0, (int)_minimumTimeSpan.TotalMilliseconds);
-            }
-        }
+			// start the timer.
+			// create a new timer.
+			_timerStatus = new AnimatorStatus();
+			_timer = new Timer(new TimerCallback(_timer_Elapsed), _timerStatus, 0, (int)_minimumTimeSpan.TotalMilliseconds);
+		}
 
         /// <summary>
         /// Stops the animation.
         /// </summary>
         public void Stop()
-        {
-            lock (TimerElapsedSync)
-            {
-                if (_timer != null)
-                {
-                    _timer.Dispose();
-                    _timer = null;
+		{
+			if (_timer != null)
+			{ // disable timer.
+				// cancel previous status.
+				_timerStatus.Cancelled = true;
+				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+				_timer.Dispose();
+			}
 
-					_mapView.RegisterAnimator (null);
-                }
-            }
-        }
+			// unregister this animator, it has been stopped.
+			_mapView.RegisterAnimator(null);
+		}
 
         /// <summary>
         /// The timer has elapsed.
@@ -256,32 +261,59 @@ namespace OsmSharp.UI.Animations
         /// <param name="sender"></param>
         void _timer_Elapsed(object sender)
 		{
+			var status = sender as AnimatorStatus;
+			if (status.Cancelled)
+			{ // check status when cancelled return.
+				return;
+			} 
+
 			_currentStep++;
 			if (_currentStep < _maxSteps)
 			{ // there is still need for a change.
 				GeoCoordinate center = new GeoCoordinate(// update center.
-					                        (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
-					                        (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
+					                       (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
+					                       (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
 				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
 				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
+
 				_mapView.SetMapView(center, mapTilt, mapZoom);
 				return;
 			}
 			else if (_currentStep == _maxSteps)
 			{ // this is the last step.
+				// enable auto invalidate.
+				_mapView.RegisterAnimator(null);
+
+				// stop the timer, animation has been finished.
+				_timerStatus.Cancelled = true;
+				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+				_timer.Dispose();
+
+				// set mapview.
 				_mapView.SetMapView(_targetCenter, _targetTilt, _targetZoom);
 			}
+			else
+			{ // hmm animator should be finished?
+				// enable auto invalidate.
+				_mapView.RegisterAnimator(null);
 
-			// enable auto invalidate.
-			_mapView.RegisterAnimator(null);
+				// stop the timer, animation has been finished.
+				_timerStatus.Cancelled = true;
+				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+				_timer.Dispose();
+			}
+		}
 
-			// dispose of the the timer but only if this has not been done yet!
-			lock (TimerElapsedSync)
+		private class AnimatorStatus
+		{
+			public AnimatorStatus()
 			{
-				if (_timer != null)
-				{
-					_timer.Dispose();
-				}
+				this.Cancelled = false;
+			}
+
+			public bool Cancelled {
+				get;
+				set;
 			}
 		}
     }

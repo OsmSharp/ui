@@ -19,11 +19,11 @@
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Units.Angle;
+using OsmSharp.Units.Distance;
 using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Units.Distance;
-using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Routing.Navigation
 {
