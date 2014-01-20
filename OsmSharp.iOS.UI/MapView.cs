@@ -1272,8 +1272,11 @@ namespace OsmSharp.iOS.UI
 				(_onScreenBuffer.Tag as UIImage).Dispose();
 			}
 
-			_renderingThread.Abort();
-			_renderingThread = null;
+			if (_renderingThread != null)
+			{
+				_renderingThread.Abort();
+				_renderingThread = null;
+			}
 		}
 	}
 }
