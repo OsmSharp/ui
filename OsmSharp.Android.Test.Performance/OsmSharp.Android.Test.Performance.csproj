@@ -62,8 +62,8 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
       <Link>kempen-big.osm.pbf.routing</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
-      <Link>kempen-big.osm.pbf.scene.layered</Link>
+    <EmbeddedResource Include="..\..\OsmSharpTestFiles\map\default.map">
+      <Link>default.map</Link>
     </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

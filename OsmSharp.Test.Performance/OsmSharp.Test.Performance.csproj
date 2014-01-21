@@ -150,16 +150,28 @@
       <Link>TestFiles\kempen.osm.pbf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\OsmSharpTestFiles\mapcss\complete.mapcss">
-      <Link>TestFiles\mapcss\complete.mapcss</Link>
+    <None Include="..\OsmSharpTestFiles\mapcss\blue.mapcss">
+      <Link>TestFiles\mapcss\blue.mapcss</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\OsmSharpTestFiles\mapcss\dark_roads.mapcss">
       <Link>TestFiles\mapcss\dark_roads.mapcss</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
-      <Link>TestFiles\map\kempen-big.osm.pbf.scene.layered</Link>
+    <None Include="..\OsmSharpTestFiles\mapcss\default.mapcss">
+      <Link>TestFiles\mapcss\default.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\map\blue.map">
+      <Link>TestFiles\map\blue.map</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\map\dark_roads.map">
+      <Link>TestFiles\map\dark_roads.map</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\map\default.map">
+      <Link>TestFiles\map\default.map</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">

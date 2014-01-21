@@ -95,7 +95,7 @@ namespace OsmSharp.iOS.UI.Sample
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			// add a pre-processed vector data file.
 			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-				"OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.scene.layered");
+				"OsmSharp.iOS.UI.Sample.default.map");
 			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
 			// define dummy from and to points.

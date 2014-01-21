@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// </summary>
         public static void Test(CreateTarget createTarget, CreateRenderer createRenderer)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\map\{0}", "kempen-big.osm.pbf.scene.layered"));
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\map\{0}", "default.map"));
             Stream stream = testFile.OpenRead();
 
             Test(stream, createTarget, createRenderer);

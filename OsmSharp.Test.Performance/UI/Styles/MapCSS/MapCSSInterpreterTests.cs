@@ -27,6 +27,8 @@ using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Styles.Streams;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Scene.Simplification;
+using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 {
@@ -45,13 +47,13 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 16, 13, 10 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\dark_roads.mapcss", scene, "kempen-big.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\blue.mapcss", scene, "kempen-big.osm.pbf");
 
             var merger = new Scene2DObjectMerger();
             scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
-            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\dark_roads.map", scene, true);
+            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\blue.map", scene, true);
         }
 
         /// <summary>
@@ -85,7 +87,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 interpreter, scene, new WebMercator());
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfSource));
             Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            OsmStreamSource source = new PBFOsmStreamSource(stream);
             OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
             target.RegisterSource(progress);
 

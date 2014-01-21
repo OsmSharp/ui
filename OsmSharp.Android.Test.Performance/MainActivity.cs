@@ -68,7 +68,7 @@ namespace OsmSharp.Android.Test.Performance
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
-            this.TestRendering("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.scene.layered");
+            this.TestRendering("OsmSharp.Android.Test.Performance.default.map");
         }
 
         /// <summary>

@@ -95,6 +95,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
+      <Link>default.map</Link>
+    </EmbeddedResource>
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
@@ -138,9 +141,6 @@
     <BundleResource Include="Resources\Icon-72%402x.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
-      <Link>kempen-big.osm.pbf.scene.layered</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
       <Link>kempen-big.osm.pbf.routing</Link>
     </EmbeddedResource>

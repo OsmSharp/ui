@@ -129,12 +129,20 @@
       <Link>kempen.osm.pbf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\OsmSharpTestFiles\mapcss\complete.mapcss">
-      <Link>complete.mapcss</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="..\OsmSharpTestFiles\mapcss\blue.mapcss">
+      <Link>blue.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
-      <Link>kempen-big.osm.pbf.scene.layered</Link>
+    <None Include="..\OsmSharpTestFiles\mapcss\dark_roads.mapcss">
+      <Link>dark_roads.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\mapcss\default.mapcss">
+      <Link>default.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\map\default.map">
+      <Link>default.map</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">

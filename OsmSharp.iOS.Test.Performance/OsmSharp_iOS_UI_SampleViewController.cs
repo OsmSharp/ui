@@ -94,7 +94,7 @@ namespace OsmSharp.iOS.Test.Performance
 
             //this.TestInstructions("OsmSharp.iOS.Test.Performance.kempen-big.osm.pbf.routing");
             
-            this.TestRendering("OsmSharp.iOS.Test.Performance.kempen-big.osm.pbf.scene.layered");
+            this.TestRendering("OsmSharp.iOS.Test.Performance.default.map");
         }
 
         /// <summary>

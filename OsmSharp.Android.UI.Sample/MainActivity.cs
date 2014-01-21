@@ -93,7 +93,7 @@ namespace OsmSharp.Android.UI.Sample
             // add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a pre-processed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered");
+            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
             map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
