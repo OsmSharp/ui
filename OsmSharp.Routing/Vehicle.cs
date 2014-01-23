@@ -70,6 +70,31 @@ namespace OsmSharp.Routing
         public static readonly Vehicle Bus = new Bus();
 
         /// <summary>
+        /// Hols the vehicles by name.
+        /// </summary>
+        private static readonly Dictionary<string, Vehicle> _vehiclesByName = new Dictionary<string,Vehicle>();
+
+        /// <summary>
+        /// Creates a new vehicle.
+        /// </summary>
+        public Vehicle()
+        {
+            _vehiclesByName.Add(this.UniqueName, this);
+        }
+
+        /// <summary>
+        /// Returns the vehicle with the given name.
+        /// </summary>
+        /// <param name="uniqueName"></param>
+        /// <returns></returns>
+        public static Vehicle GetByUniqueName(string uniqueName)
+        {
+            Vehicle vehicle = null;
+            _vehiclesByName.TryGetValue(uniqueName, out vehicle);
+            return vehicle;
+        }
+
+        /// <summary>
         /// Contains Accessiblity Rules
         /// </summary>
         protected readonly Dictionary<string, string> AccessibleTags = new Dictionary<string, string>();
