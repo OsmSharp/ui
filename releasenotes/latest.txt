@@ -1,14 +1,8 @@
-Contains all builds for Mono/.NET/Xamarin.Android/Xamarin.iOS:
+Contains all builds for Mono/.NET/Xamarin.Android/Xamarin.iOS.
 
-This is the first OsmSharp release of v4. A high-level overview of new features since v3:
-
-For Xamarin.Android & Xamarin.iOS:
-
-- (Offline) Rendering on Android/iOS.
-- (Offline) Routing on Android/iOS.
-- MapViews on Android/iOS.
-
-All platforms:
-
-- Serializable routing graph for offline routing.
-- Serializable vector format for offline map rendering.
+- Bufgix in MapView dispose.
+- Fixed threading issue in MapView, MapViewAnimator and RouteTracker.
+- Fixed CoreText warning message on iOS (thanks @macjon)
+- Added the option to create a TagCollection from a Dictionary<string, string>.
+- Updated the Vehicle class with serialization options.
+- Added two more offline map sample files.
