@@ -59,6 +59,22 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Creates a new tags collection initialized with the given existing tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        public TagsCollection(IDictionary<string, string> tags)
+        {
+            _tags = new List<Tag>();
+            if(tags != null)
+            {
+                foreach(KeyValuePair<string, string> pair in tags)
+                {
+                    _tags.Add(new Tag(pair.Key, pair.Value));
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the number of tags in this collection.
         /// </summary>
         public override int Count
