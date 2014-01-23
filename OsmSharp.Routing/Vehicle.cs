@@ -72,14 +72,18 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Hols the vehicles by name.
         /// </summary>
-        private static readonly Dictionary<string, Vehicle> _vehiclesByName = new Dictionary<string,Vehicle>();
+        private static Dictionary<string, Vehicle> VehiclesByName = null;
 
         /// <summary>
         /// Creates a new vehicle.
         /// </summary>
         public Vehicle()
         {
-            _vehiclesByName.Add(this.UniqueName, this);
+            if(VehiclesByName == null)
+            { // initialize the vehicle by name dictionary.
+                VehiclesByName = new Dictionary<string, Vehicle>();
+            }
+            VehiclesByName.Add(this.UniqueName, this);
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace OsmSharp.Routing
         public static Vehicle GetByUniqueName(string uniqueName)
         {
             Vehicle vehicle = null;
-            _vehiclesByName.TryGetValue(uniqueName, out vehicle);
+            VehiclesByName.TryGetValue(uniqueName, out vehicle);
             return vehicle;
         }
 
