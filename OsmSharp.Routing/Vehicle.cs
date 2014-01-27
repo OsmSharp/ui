@@ -20,6 +20,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Units.Speed;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing
@@ -70,7 +71,22 @@ namespace OsmSharp.Routing
         public static readonly Vehicle Bus = new Bus();
 
         /// <summary>
-        /// Hols the vehicles by name.
+        /// Registers all default vehicles.
+        /// </summary>
+        public static void RegisterVehicles()
+        {
+            Car.Register();
+            Pedestrian.Register();
+            Bicycle.Register();
+            Moped.Register();
+            MotorCycle.Register();
+            SmallTruck.Register();
+            BigTruck.Register();
+            Bus.Register();
+        }
+
+        /// <summary>
+        /// Holds the vehicles by name.
         /// </summary>
         private static Dictionary<string, Vehicle> VehiclesByName = null;
 
@@ -79,11 +95,19 @@ namespace OsmSharp.Routing
         /// </summary>
         public Vehicle()
         {
-            if(VehiclesByName == null)
+
+        }
+
+        /// <summary>
+        /// Registers this vehicle by name.
+        /// </summary>
+        public void Register()
+        {
+            if (VehiclesByName == null)
             { // initialize the vehicle by name dictionary.
                 VehiclesByName = new Dictionary<string, Vehicle>();
             }
-            VehiclesByName.Add(this.UniqueName, this);
+            VehiclesByName[this.UniqueName] = this;
         }
 
         /// <summary>
@@ -94,7 +118,14 @@ namespace OsmSharp.Routing
         public static Vehicle GetByUniqueName(string uniqueName)
         {
             Vehicle vehicle = null;
-            VehiclesByName.TryGetValue(uniqueName, out vehicle);
+            if(VehiclesByName == null)
+            { // no vehicles have been registered.
+                throw new InvalidOperationException("No vehicles have been registered.");
+            }
+            if(!VehiclesByName.TryGetValue(uniqueName, out vehicle))
+            { // vehicle name not registered.
+                throw new ArgumentOutOfRangeException(string.Format("Vehicle profile with name {0} not found or not registered.", uniqueName));
+            }
             return vehicle;
         }
 
