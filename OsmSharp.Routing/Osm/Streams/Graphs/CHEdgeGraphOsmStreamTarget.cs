@@ -147,7 +147,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             var edgeDifference = new EdgeDifference(
                     dynamicGraphRouterDataSource, witnessCalculator);
             var preProcessor = new CHPreProcessor(
-                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator, keepDirectNeighbours);
+                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator, keepDirectNeighbours, preProcessingPercentage);
             preProcessor.Start();
 
             return dynamicGraphRouterDataSource;
