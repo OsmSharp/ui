@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator,
                 bool keepDirectNeighbours)
-            : this(target, calculator, witnessCalculator, true, .9) { }
+            : this(target, calculator, witnessCalculator, true, 1) { }
 
         /// <summary>
         /// Creates a new pre-processor.
