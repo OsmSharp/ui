@@ -150,7 +150,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             return dynamicGraphRouterDataSource;
         }
-
         
         /// <summary>
         /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.

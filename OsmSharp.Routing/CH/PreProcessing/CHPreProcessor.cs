@@ -44,6 +44,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         private bool _keepDirectNeighbours = true;
 
+        /// <summary>
+        /// Holds the pre-processing percentage.
+        /// </summary>
+        private double _preProcessingPercentage = .9;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -54,8 +58,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="keepDirectNeighbours"></param>
         public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
-                INodeWitnessCalculator witnessCalculator, 
-                bool keepDirectNeighbours)
+                INodeWitnessCalculator witnessCalculator,
+                bool keepDirectNeighbours,
+                double preProcessingPercentage)
         {
             _comparer = new CHEdgeDataComparer();
 
@@ -65,10 +70,24 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             _calculator = calculator;
             _witnessCalculator = witnessCalculator;
+            _preProcessingPercentage = preProcessingPercentage;
 
             _queue = new CHPriorityQueue();
             _contracted = new bool[1000];
         }
+
+        /// <summary>
+        /// Creates a new pre-processor.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="calculator"></param>
+        /// <param name="witnessCalculator"></param>
+        /// <param name="keepDirectNeighbours"></param>
+        public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
+                INodeWeightCalculator calculator,
+                INodeWitnessCalculator witnessCalculator,
+                bool keepDirectNeighbours)
+            : this(target, calculator, witnessCalculator, true, .9) { }
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -105,23 +124,21 @@ namespace OsmSharp.Routing.CH.PreProcessing
             uint total = _target.VertexCount;
             uint current = 1;
 
-            float latestProgress = 0;
-            for(uint current_vertex = 1; current_vertex <= total; current_vertex++)
+            double latestProgress = 0;
+            for (uint current_vertex = 1; current_vertex <= total; current_vertex++)
             {
                 float priority = _calculator.Calculate(current_vertex);
-                //lock (_queue)
-                //{
-                    _queue.Enqueue(current_vertex, priority);
 
-                    float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
-                    if (progress != latestProgress)
-                    {
-                        OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                            "Building CH Queue... {0}%", progress);
-                        latestProgress = progress;
-                    }
-                    current++;
-                //}
+                _queue.Enqueue(current_vertex, priority);
+
+                float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Building CH Queue... {0}%", progress);
+                    latestProgress = progress;
+                }
+                current++;
             }
 
             // loop over the priority queue until it's empty.
@@ -136,15 +153,23 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 // select the next vertex.
                 vertex = this.SelectNext();
 
-                float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
+                double realProgress = (double)current / (double)total;
+                double progress = (float)System.Math.Round(realProgress * 100);
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                         "Pre-processing... {0}%", progress);
                     latestProgress = progress;
                 }
+                if (realProgress > _preProcessingPercentage)
+                { // stop at a certain percentage.
+                    break;
+                }
                 current++;
             }
+
+            OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                "Pre-processing finsihed!");
         }
 
         /// <summary>
