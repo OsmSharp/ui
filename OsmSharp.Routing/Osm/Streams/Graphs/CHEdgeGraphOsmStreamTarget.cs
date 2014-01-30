@@ -128,9 +128,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <param name="keepDirectNeighbours"></param>
+        /// <param name="preProcessingPercentage"></param>
         /// <returns></returns>
         public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle, bool keepDirectNeighbours)
+            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle,
+            bool keepDirectNeighbours, double preProcessingPercentage)
         {
             // pull in the data.
             var dynamicGraphRouterDataSource =
@@ -150,6 +152,22 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             return dynamicGraphRouterDataSource;
         }
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="keepDirectNeighbours"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle,
+            bool keepDirectNeighbours)
+        {
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, true, 1);
+        }
         
         /// <summary>
         /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
@@ -165,6 +183,22 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                                                         Vehicle vehicle)
         {
             return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, true);
+        }
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="preProcessingPercentage"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+                                                                        IOsmRoutingInterpreter interpreter,
+                                                                        Vehicle vehicle,
+                                                                        double preProcessingPercentage)
+        {
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle, true, preProcessingPercentage);
         }
 
         /// <summary>
