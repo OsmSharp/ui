@@ -95,7 +95,7 @@ namespace OsmSharp.Collections
         public void BuildReverseIndex()
         {
             _reverseIndex = new Dictionary<Type, uint>();
-            for(uint idx = 0; idx < _strings.Length; idx++)
+            for(uint idx = 0; idx < _nextIdx; idx++)
             {
                 Type value = _strings[idx];
                 if (value != null)

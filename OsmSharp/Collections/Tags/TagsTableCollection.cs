@@ -91,11 +91,7 @@ namespace OsmSharp.Collections.Tags
         /// <param name="value"></param>
         public override void Add(string key, string value)
         {
-            this.Add(new Tag()
-            {
-                Key = key,
-                Value = value
-            });
+            this.Add(new Tag(key, value));
         }
 
         /// <summary>
@@ -119,7 +115,7 @@ namespace OsmSharp.Collections.Tags
                 Tag tag = _tagsTable.Get(_tags[idx]);
                 if (tag.Key == key)
                 {
-                    tag.Value = value;
+                    tag = new Tag(tag.Key, value);
                     _tags[idx] = _tagsTable.Add(tag);
                     return;
                 }

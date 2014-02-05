@@ -235,9 +235,7 @@ namespace OsmSharp.Data.Redis.Osm
                 {
                     foreach (RedisTag redisTag in tags)
                     {
-                        Tag tag = new Tag();
-                        tag.Key = redisTag.Key;
-                        tag.Value = redisTag.Value;
+                        Tag tag = new Tag(redisTag.Key, redisTag.Value);
 
                         redisTags.Add(tag);
                     }

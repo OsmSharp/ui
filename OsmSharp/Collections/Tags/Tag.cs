@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using ProtoBuf.Meta;
+using System.IO;
 namespace OsmSharp.Collections.Tags
 {
     /// <summary>
@@ -24,6 +26,16 @@ namespace OsmSharp.Collections.Tags
     public struct Tag
     {
         /// <summary>
+        /// Holds all the tag-data.
+        /// </summary>
+        private byte[] _data;
+
+        /// <summary>
+        /// Holds the value index.
+        /// </summary>
+        private short _valueIdx;
+
+        /// <summary>
         /// Creates a new tag.
         /// </summary>
         /// <param name="key"></param>
@@ -31,19 +43,36 @@ namespace OsmSharp.Collections.Tags
         public Tag(string key, string value)
             :this()
         {
-            this.Key = key;
-            this.Value = value;
+            var keyData = Tag.Encode(key);
+            var valueData = Tag.Encode(value);
+
+            _data = new byte[keyData.Length + valueData.Length];
+            _valueIdx = (short)keyData.Length;
+            keyData.CopyTo(_data, 0);
+            valueData.CopyTo(_data, _valueIdx);
         }
 
         /// <summary>
         /// The key (or the actual tag name).
         /// </summary>
-        public string Key { get; set; }
+        public string Key
+        {
+            get
+            {
+                return Tag.Decode(_data, 0, _valueIdx);
+            }
+        }
 
         /// <summary>
         /// The value of the tag.
         /// </summary>
-        public string Value { get; set; }
+        public string Value
+        {
+            get
+            {
+                return Tag.Decode(_data, _valueIdx, _data.Length - _valueIdx);
+            }
+        }
 
         /// <summary>
         /// Creates a new tag.
@@ -74,8 +103,18 @@ namespace OsmSharp.Collections.Tags
         {
             if (obj is Tag)
             {
-                return this.Key == ((Tag)obj).Key &&
-                    this.Value == ((Tag)obj).Value;
+                Tag other = (Tag)obj;
+                if(other._data.Length == this._data.Length)
+                { // array are same size.
+                    for(int idx = 0; idx < other._data.Length; idx++)
+                    {
+                        if(other._data[idx] != this._data[idx])
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -86,22 +125,51 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override int GetHashCode()
         {
-            if (this.Key == null && this.Value == null)
+            int hash = 140011346;
+            for (int idx = 0; idx < this._data.Length; idx++)
             {
-                return 1501234;
+                hash = hash ^ this._data[idx].GetHashCode();
             }
-            else if (this.Key == null)
-            {
-                return 140011346 ^
-                    this.Value.GetHashCode();
-            }
-            else if (this.Value == null)
-            {
-                return 103254761 ^
-                    this.Key.GetHashCode();
-            }
-            return this.Key.GetHashCode() ^
-                this.Value.GetHashCode();
+            return hash;
+        }
+
+        /// <summary>
+        /// Holds the protobuf typemodel.
+        /// </summary>
+        private static TypeModel _typeModel = TypeModel.Create();
+
+        /// <summary>
+        /// Holds the memory stream use to decode/encode tags.
+        /// </summary>
+        private static MemoryStream _stream = new MemoryStream();
+
+        /// <summary>
+        /// Encodes and compresses a string to a byte array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static byte[] Encode(string value)
+        {
+            _stream.SetLength(0);
+
+            _typeModel.Serialize(_stream, value);
+            return _stream.ToArray();
+        }
+
+        /// <summary>
+        /// Decodes and decompresses a string from a byte array.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        private static string Decode(byte[] data, int index, int count)
+        {
+            _stream.SetLength(0);
+            _stream.Write(data, index, count);
+            _stream.Seek(0, SeekOrigin.Begin);
+
+            return _typeModel.Deserialize(_stream, null, typeof(string)) as string;
         }
     }
 }

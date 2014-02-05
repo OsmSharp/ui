@@ -166,11 +166,7 @@ namespace OsmSharp.Collections.Tags
         {
             foreach (var tagEncoded in _tagsList)
             {
-                var tag = new Tag()
-                              {
-                                  Key = _stringTable.Get(tagEncoded.Key),
-                                  Value = _stringTable.Get(tagEncoded.Value)
-                              };
+                var tag = new Tag(_stringTable.Get(tagEncoded.Key), _stringTable.Get(tagEncoded.Value));
                 yield return tag;
             }
         }

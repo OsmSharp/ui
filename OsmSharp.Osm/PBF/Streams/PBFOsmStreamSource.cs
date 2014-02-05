@@ -140,7 +140,7 @@ namespace OsmSharp.Osm.PBF.Streams
 
                         if (!simpleNode.Tags.ContainsKey(key))
                         {
-                            simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
+                            simpleNode.Tags.Add(new Tag(key, value));
                         }
                     }
                 }
