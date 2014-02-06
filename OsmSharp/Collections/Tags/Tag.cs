@@ -153,7 +153,7 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static byte[] Encode(string value)
+        public static byte[] Encode(string value)
         {
             if (value == null || value.Length == 0)
             { // when null, also return null.
@@ -170,10 +170,20 @@ namespace OsmSharp.Collections.Tags
         /// Decodes and decompresses a string from a byte array.
         /// </summary>
         /// <param name="data"></param>
+        /// <returns></returns>
+        public static string Decode(byte[] data)
+        {
+            return Tag.Decode(data, 0, data.Length);
+        }
+
+        /// <summary>
+        /// Decodes and decompresses a string from a byte array.
+        /// </summary>
+        /// <param name="data"></param>
         /// <param name="index"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        private static string Decode(byte[] data, int index, int count)
+        public static string Decode(byte[] data, int index, int count)
         {
             _stream.SetLength(0);
             _stream.Write(data, index, count);

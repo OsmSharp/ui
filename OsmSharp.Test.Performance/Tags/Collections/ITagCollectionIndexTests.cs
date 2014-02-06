@@ -54,10 +54,10 @@ namespace OsmSharp.Test.Performance.Tags.Collections
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
                 for (int idx = 0; idx < tagCollectionSize; idx++)
                 {
-                    int tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(100);
                     tagsCollection.Add(
-                        string.Format("key_{0}", tagValue),
-                        string.Format("value_{0}", tagValue));
+                        OsmSharp.Utilities.GenerateRandomAlphanumeric(OsmSharp.Math.Random.StaticRandomGenerator.Get(), 2),
+                        OsmSharp.Utilities.GenerateRandomAlphanumeric(OsmSharp.Math.Random.StaticRandomGenerator.Get(),
+                            OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1));
                 }
                 int addCount = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) + 1;
                 for (int idx = 0; idx < addCount; idx++)

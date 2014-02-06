@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using OsmSharp.Math.Random;
 
 namespace OsmSharp
 {
@@ -570,6 +571,27 @@ namespace OsmSharp
                 }
             }
             return longArray;
+        }
+
+        /// <summary>
+        /// Holds a string of all alphanumeric chars.
+        /// </summary>
+        private static string AllAlphanumericChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        /// <summary>
+        /// Generates a random alphanumeric string with a given length.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string GenerateRandomAlphanumeric(IRandomGenerator random, int length)
+        {
+            var chars = new char[length];
+            for (int idx = 0; idx < length; idx++)
+            {
+                chars[idx] = AllAlphanumericChars[random.Generate(AllAlphanumericChars.Length)];
+            }
+            return new string(chars);
         }
     }
 

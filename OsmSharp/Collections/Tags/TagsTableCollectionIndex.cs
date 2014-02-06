@@ -25,12 +25,12 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// An osm tags index.
     /// </summary>
-    public class TagsTableCollectionIndex : ITagsCollectionIndex
+    public class TagsTableCollectionIndex : ITagsCollectionIndex, IEqualityComparer<uint[]>
     {
         /// <summary>
         /// Holds all the tags objects.
         /// </summary>
-        private readonly ObjectTable<OsmTags> _tagsCollectionTable;
+        private readonly ObjectTable<uint[]> _tagsCollectionTable;
 
         /// <summary>
         /// Holds all the tags objects.
@@ -43,7 +43,7 @@ namespace OsmSharp.Collections.Tags
         public TagsTableCollectionIndex()
         {
             _tagsTable = new ObjectTable<Tag>(true);
-            _tagsCollectionTable = new ObjectTable<OsmTags>(true);
+            _tagsCollectionTable = new ObjectTable<uint[]>(true, this);
 
             this.Add(new TagsCollection());
         }
@@ -55,7 +55,7 @@ namespace OsmSharp.Collections.Tags
         public TagsTableCollectionIndex(ObjectTable<Tag> tagsTable)
         {
             _tagsTable = tagsTable;
-            _tagsCollectionTable = new ObjectTable<OsmTags>(true);
+            _tagsCollectionTable = new ObjectTable<uint[]>(true);
 
             this.Add(new TagsCollection());
         }
@@ -67,14 +67,14 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public TagsCollectionBase Get(uint tagsId)
         {
-            OsmTags osmTags = _tagsCollectionTable.Get(tagsId);
+            uint[] osmTags = _tagsCollectionTable.Get(tagsId);
             if (osmTags != null)
             {
                 TagsCollection collection = new TagsCollection();
-                for (int idx = 0; idx < osmTags.Tags.Length; idx++)
+                for (int idx = 0; idx < osmTags.Length; idx++)
                 {
                     collection.Add(
-                        _tagsTable.Get(osmTags.Tags[idx]));
+                        _tagsTable.Get(osmTags[idx]));
                 }
                 return collection;
             }
@@ -95,12 +95,7 @@ namespace OsmSharp.Collections.Tags
                 tagsArray[idx] = _tagsTable.Add(tag);
                 idx++;
             }
-            var osmTags = new OsmTags(tagsArray);
-            if (osmTags != null)
-            {
-                return _tagsCollectionTable.Add(osmTags);
-            }
-            throw new ArgumentNullException("tags", "Tags dictionary cannot be null or empty!");
+            return _tagsCollectionTable.Add(tagsArray);
         }
 
         /// <summary>
@@ -149,7 +144,7 @@ namespace OsmSharp.Collections.Tags
                             // make sure all object in the first are in the second and vice-versa.
                             for (int idx1 = 0; idx1 < this._tags.GetLength(0); idx1++)
                             {
-                                if(!other._tags.Contains(this._tags[idx1]))
+                                if (!other._tags.Contains(this._tags[idx1]))
                                 {
                                     return false;
                                 }
@@ -189,6 +184,57 @@ namespace OsmSharp.Collections.Tags
         public uint Max
         {
             get { return _tagsCollectionTable.Count; }
+        }
+
+        /// <summary>
+        /// Returns true if the two given objects are considered equal.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        bool IEqualityComparer<uint[]>.Equals(uint[] x, uint[] y)
+        {
+            if (x == null && y == null)
+            { // their both null!
+                return true;
+            }
+            else if (x == null || y == null)
+            { // only one of them is null.
+                return false;
+            }
+            else
+            { // compare arrays.
+                if (x.Length == y.Length)
+                { // array are same size.
+                    for (int idx = 0; idx < x.Length; idx++)
+                    {
+                        if (x[idx] != y[idx])
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns a proper hashcode.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        int IEqualityComparer<uint[]>.GetHashCode(uint[] obj)
+        {
+            int code = 132467897;
+            if (obj != null)
+            {
+                for (int idx = 0; idx < obj.Length; idx++)
+                {
+                    code = code ^ obj[idx].GetHashCode();
+                }
+            }
+            return code;
         }
     }
 }

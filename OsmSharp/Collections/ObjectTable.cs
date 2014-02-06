@@ -39,6 +39,11 @@ namespace OsmSharp.Collections
         private Dictionary<Type, uint> _reverseIndex;
 
         /// <summary>
+        /// Holds a custom comparer.
+        /// </summary>
+        private IEqualityComparer<Type> _comparer;
+
+        /// <summary>
         /// Holds the initial capacity and is also used as an allocation step.
         /// </summary>
         private int _initCapacity;
@@ -62,14 +67,37 @@ namespace OsmSharp.Collections
         /// Creates a new string table.
         /// </summary>
         /// <param name="reverseIndex">The reverse index is enable if true.</param>
-        /// <param name="initCapacity"></param>
+        /// <param name="comparer">A custom comparer.</param>
+        public ObjectTable(bool reverseIndex, IEqualityComparer<Type> comparer)
+            :this(reverseIndex, 1000, comparer)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new string table.
+        /// </summary>
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="initCapacity">The initial capacity estimate.</param>
         public ObjectTable(bool reverseIndex, int initCapacity)
+            : this(reverseIndex, initCapacity, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new string table.
+        /// </summary>
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="initCapacity">The initial capacity estimate.</param>
+        /// <param name="comparer">A custom comparer.</param>
+        public ObjectTable(bool reverseIndex, int initCapacity, IEqualityComparer<Type> comparer)
         {
             _strings = new Type[initCapacity];
             _initCapacity = initCapacity;
-
+            _comparer = comparer;
             if (reverseIndex)
-            {
+            { // build a reverse index.
                 this.BuildReverseIndex();
             }
         }
@@ -94,7 +122,14 @@ namespace OsmSharp.Collections
         /// </summary>
         public void BuildReverseIndex()
         {
-            _reverseIndex = new Dictionary<Type, uint>();
+            if (_comparer != null)
+            { // there is a custom comparer.
+                _reverseIndex = new Dictionary<Type, uint>(_comparer);
+            }
+            else
+            { // no custom comparer.
+                _reverseIndex = new Dictionary<Type, uint>();
+            }
             for(uint idx = 0; idx < _nextIdx; idx++)
             {
                 Type value = _strings[idx];
