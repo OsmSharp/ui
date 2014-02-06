@@ -16,10 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.WinForms.UI.Renderer;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.Test.Performance
 {

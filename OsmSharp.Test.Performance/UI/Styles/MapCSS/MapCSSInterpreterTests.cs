@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 16, 13, 10 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\blue.mapcss", scene, "kempen-big.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\blue.mapcss", scene, "kempen.osm.pbf");
 
             var merger = new Scene2DObjectMerger();
             scene = merger.BuildMergedScene(scene);
