@@ -94,7 +94,7 @@ namespace OsmSharp.Geo.Attributes
             for (int idx = 0; idx < _attributes.Count; idx++)
             {
                 GeometryAttribute attribute = _attributes[idx];
-                if (attribute.Key == key)
+                if (attribute.Key.Equals(key))
                 {
                     attribute.Value = value;
                     _attributes[idx] = attribute;
@@ -120,7 +120,7 @@ namespace OsmSharp.Geo.Attributes
         /// <returns></returns>
         public override bool ContainsKey(string key)
         {
-            return this.Any(tag => tag.Key == key);
+            return this.Any(tag => tag.Key.Equals(key));
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace OsmSharp.Geo.Attributes
         /// <returns></returns>
         public override bool TryGetValue(string key, out object value)
         {
-            foreach (var tag in this.Where(tag => tag.Key == key))
+            foreach (var tag in this.Where(tag => tag.Key.Equals(key)))
             {
                 value = tag.Value;
                 return true;
@@ -148,7 +148,7 @@ namespace OsmSharp.Geo.Attributes
         /// <returns></returns>
         public override bool ContainsKeyValue(string key, object value)
         {
-            return this.Any(tag => tag.Key == key && tag.Value == value);
+            return this.Any(tag => tag.Key.Equals(key) && tag.Value.Equals(value));
         }
 
         /// <summary>

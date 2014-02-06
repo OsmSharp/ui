@@ -144,12 +144,22 @@ namespace OsmSharp.Collections.Tags
         private static MemoryStream _stream = new MemoryStream();
 
         /// <summary>
+        /// Holds an empty array for null/empty strings.
+        /// </summary>
+        private static byte[] _emptyArray = new byte[0];
+
+        /// <summary>
         /// Encodes and compresses a string to a byte array.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         private static byte[] Encode(string value)
         {
+            if (value == null || value.Length == 0)
+            { // when null, also return null.
+                return _emptyArray;
+            }
+
             _stream.SetLength(0);
 
             _typeModel.Serialize(_stream, value);
