@@ -164,8 +164,8 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="tags"></param>
         /// <returns></returns>
         public bool IsRestriction(OsmGeoType type, TagsCollectionBase tags)
-        {
-            return true;
+        { // at least there need to be some tags.
+            return type == OsmGeoType.Node && tags != null && tags.Count > 0;
         }
 
         /// <summary>
