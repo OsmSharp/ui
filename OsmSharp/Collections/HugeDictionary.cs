@@ -44,7 +44,7 @@ namespace OsmSharp.Collections
         public HugeDictionary()
         {
             _dictionary = new List<IDictionary<TKey, TValue>>();
-            _dictionary.Add(new Dictionary<TKey, TValue>(_MAX_DIC_SIZE));
+            _dictionary.Add(new Dictionary<TKey, TValue>());
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace OsmSharp.Collections
             }
             if (!added)
             { // add the key-values.
-                _dictionary.Add(new Dictionary<TKey, TValue>(_MAX_DIC_SIZE));
+                _dictionary.Add(new Dictionary<TKey, TValue>());
                 _dictionary[_dictionary.Count - 1].Add(key, value);
             }
         }
@@ -194,7 +194,7 @@ namespace OsmSharp.Collections
         public void Clear()
         {
             _dictionary = new List<IDictionary<TKey, TValue>>();
-            _dictionary.Add(new Dictionary<TKey, TValue>(_MAX_DIC_SIZE));
+            _dictionary.Add(new Dictionary<TKey, TValue>());
         }
 
         /// <summary>
@@ -221,9 +221,10 @@ namespace OsmSharp.Collections
         /// <param name="arrayIndex"></param>
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            for (int idx = arrayIndex; idx < array.Length; idx++)
+            foreach (KeyValuePair<TKey, TValue> element in this)
             {
-                this.Add(array[idx]);
+                array[arrayIndex] = element;
+                arrayIndex++;
             }
         }
 

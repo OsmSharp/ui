@@ -136,8 +136,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _tagsIndex = tagsIndex;
             _idTransformations = idTransformations;
             _preIndexMode = true;
-            _preIndex = new HashSet<long>();
-            _usedTwiceOrMore = new HashSet<long>();
+            _preIndex = new OsmSharp.Collections.HugeHashSet<long>();
+            _usedTwiceOrMore = new OsmSharp.Collections.HugeHashSet<long>();
 
             _dataCache = new OsmDataCacheMemory();
         }
@@ -174,7 +174,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the index of all relevant nodes.
         /// </summary>
-        private HashSet<long> _preIndex;
+        private OsmSharp.Collections.HugeHashSet<long> _preIndex;
 
         /// <summary>
         /// Holds the id transformations.
@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private readonly HashSet<long> _usedTwiceOrMore;
+        private readonly OsmSharp.Collections.HugeHashSet<long> _usedTwiceOrMore;
 
         /// <summary>
         /// Returns the boundingbox of all accepted nodes.
