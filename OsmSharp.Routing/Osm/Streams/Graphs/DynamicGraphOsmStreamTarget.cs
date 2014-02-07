@@ -225,8 +225,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         }
                         else
                         { // expand bounds.
-                            _bounds = _bounds + new GeoCoordinateBox(
-                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
+                            _bounds.ExpandWith(
                                 new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
                         }
 

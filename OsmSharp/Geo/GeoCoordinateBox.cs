@@ -63,6 +63,23 @@ namespace OsmSharp.Math.Geo
         {
 
         }
+
+        /// <summary>
+        /// Expands this geo coordinate box with the given coordinate.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        public void ExpandWith(GeoCoordinate coordinate)
+        {
+            if (!this.Contains(coordinate))
+            {
+                PointF2D[] newCorners = new PointF2D[3];
+                newCorners[0] = this.TopLeft;
+                newCorners[1] = this.BottomRight;
+                newCorners[2] = coordinate;
+
+                this.Mutate(newCorners);
+            }
+        }
         
         #region Calculations
 

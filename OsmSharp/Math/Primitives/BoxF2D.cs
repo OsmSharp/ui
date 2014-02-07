@@ -116,7 +116,7 @@ namespace OsmSharp.Math.Primitives
         /// Mutates this generic box to another generic box.
         /// </summary>
         /// <param name="points"></param>
-        private void Mutate(
+        protected void Mutate(
             PointF2D[] points)
         {
             // initialize the maximum array.
