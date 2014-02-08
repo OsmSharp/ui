@@ -150,6 +150,45 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// Adds an edge.
+        /// </summary>
+        /// <param name="forward"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="tags"></param>
+        protected override bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to)
+        {
+            float latitude;
+            float longitude;
+            GeoCoordinate fromCoordinate = null;
+            if (this.DynamicGraph.GetVertex(from, out latitude, out longitude))
+            { // 
+                fromCoordinate = new GeoCoordinate(latitude, longitude);
+            }
+            GeoCoordinate toCoordinate = null;
+            if (this.DynamicGraph.GetVertex(to, out latitude, out longitude))
+            { // 
+                toCoordinate = new GeoCoordinate(latitude, longitude);
+            }
+
+            if (fromCoordinate != null && toCoordinate != null)
+            { // calculate the edge data.
+                LiveEdge edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate);
+
+                this.DynamicGraph.AddArc(from, to, edgeData, this.EdgeComparer);
+
+                // add reverse edge and return true.
+                LiveEdge reverseEdgeData = new LiveEdge()
+                {
+                    Forward = !edgeData.Forward,
+                    Tags = edgeData.Tags
+                };
+                this.DynamicGraph.AddArc(to, from, edgeData, this.EdgeComparer);
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Calculates edge data.
         /// </summary>
         /// <param name="tagsIndex"></param>
@@ -168,10 +207,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (from == null) throw new ArgumentNullException("from");
             if (to == null) throw new ArgumentNullException("to");
 
+            uint tagsId = tagsIndex.Add(tags);
+
             return new LiveEdge()
             {
                 Forward = directionForward,
-                Tags = tagsIndex.Add(tags)
+                Tags = tagsId
             };
         }
 

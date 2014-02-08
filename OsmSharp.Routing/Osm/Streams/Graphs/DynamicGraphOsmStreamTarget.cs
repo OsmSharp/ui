@@ -27,6 +27,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -162,6 +163,22 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// Returns the osm routing interpreter.
+        /// </summary>
+        public IOsmRoutingInterpreter Interpreter
+        {
+            get { return _interpreter; }
+        }
+
+        /// <summary>
+        /// Returns the edge comparer.
+        /// </summary>
+        public IDynamicGraphEdgeComparer<TEdgeData> EdgeComparer
+        {
+            get { return _edgeComparer; }
+        }
+
+        /// <summary>
         /// Holds the bounds of the nodes that have been added up until now.
         /// </summary>
         private GeoCoordinateBox _bounds = null;
@@ -169,7 +186,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private OsmSharp.Collections.HugeDictionary<long, float[]> _coordinates;
+        private OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple> _coordinates;
 
         /// <summary>
         /// Holds the index of all relevant nodes.
@@ -186,7 +203,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new OsmSharp.Collections.HugeDictionary<long, float[]>();
+            _coordinates = new OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple>();
         }
 
         /// <summary>
@@ -210,7 +227,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                     if (_box == null || _box.Contains(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
                     { // the coordinate is acceptable.
-                        _coordinates[node.Id.Value] = new float[] { (float)node.Latitude.Value, (float)node.Longitude.Value };
+                        _coordinates[node.Id.Value] = new GeoCoordinateSimple() {
+                            Latitude = (float)node.Latitude.Value, 
+                            Longitude = (float)node.Longitude.Value};
                         if (_coordinates.Count == _preIndex.Count)
                         {
                             _preIndex.Clear();
@@ -348,11 +367,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (!_idTransformations.TryGetValue(nodeId, out id))
             {
                 // get coordinates.
-                float[] coordinates;
+                GeoCoordinateSimple coordinates;
                 if (_coordinates.TryGetValue(nodeId, out coordinates))
                 { // the coordinate is present.
                     id = _dynamicGraph.AddVertex(
-                        coordinates[0], coordinates[1]);
+                        coordinates.Latitude, coordinates.Longitude);
                     _coordinates.Remove(nodeId); // free the memory again!
 
                     if (_usedTwiceOrMore.Contains(nodeId))
@@ -373,7 +392,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        private bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to)
+        protected virtual bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to)
         {
             float latitude;
             float longitude;

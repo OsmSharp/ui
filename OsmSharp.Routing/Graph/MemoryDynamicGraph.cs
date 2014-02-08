@@ -54,12 +54,22 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Creates a new in-memory graph.
+        /// </summary>
+        public MemoryDynamicGraph(int sizeEstimate)
+        {
+            _nextId = 1;
+            _vertices = new KeyValuePair<uint, TEdgeData>[sizeEstimate][];
+            _coordinates = new GeoCoordinateSimple[sizeEstimate];
+        }
+
+        /// <summary>
         /// Increases the memory allocation for this dynamic graph.
         /// </summary>
         private void IncreaseSize()
         {
-            Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 1000);
-            Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, _vertices.Length + 1000);
+            Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 10000);
+            Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, _vertices.Length + 10000);
         }
 
         /// <summary>

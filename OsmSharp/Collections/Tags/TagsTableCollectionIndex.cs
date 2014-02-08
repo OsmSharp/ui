@@ -61,6 +61,24 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Drops reverse indexes only need when adding tags.
+        /// </summary>
+        public void DropReverseIndexex()
+        {
+            _tagsCollectionTable.DropReverseIndex();
+            _tagsTable.DropReverseIndex();
+        }
+
+        /// <summary>
+        /// Builds the reverse indexes (again) for adding tags.
+        /// </summary>
+        public void BuildReverseIndex()
+        {
+            _tagsCollectionTable.BuildReverseIndex();
+            _tagsTable.BuildReverseIndex();
+        }
+
+        /// <summary>
         /// Returns the tags with the given id.
         /// </summary>
         /// <param name="tagsId"></param>
