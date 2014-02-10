@@ -179,11 +179,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                 // add reverse edge and return true.
                 LiveEdge reverseEdgeData = new LiveEdge()
-                {
-                    Forward = !edgeData.Forward,
-                    Tags = edgeData.Tags
-                };
-                this.DynamicGraph.AddArc(to, from, edgeData, this.EdgeComparer);
+                    {
+                        Forward = !edgeData.Forward,
+                        Tags = edgeData.Tags
+                    };
+                this.DynamicGraph.AddArc(to, from, reverseEdgeData, this.EdgeComparer);
             }
             return true;
         }
