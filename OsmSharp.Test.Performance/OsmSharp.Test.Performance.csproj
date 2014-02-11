@@ -134,6 +134,7 @@
     <Compile Include="Routing\CH\CHEdgeGraphFileStreamTargetTests.cs" />
     <Compile Include="Routing\CH\CHPreProcessorTest.cs" />
     <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
+    <Compile Include="Routing\LivePreProcessorTest.cs" />
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />

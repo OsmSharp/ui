@@ -27,16 +27,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
     /// <summary>
     /// Represents the data on a CH edge.
     /// </summary>
-    public class CHEdgeData : IDynamicGraphEdgeData
+    public struct CHEdgeData : IDynamicGraphEdgeData
     {
-        /// <summary>
-        /// Creates an empty CHEdge data class.
-        /// </summary>
-        public CHEdgeData()
-        {
-
-        }
-
         /// <summary>
         /// Creates a new CHEdge data class.
         /// </summary>
@@ -44,6 +36,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="forward"></param>
         /// <param name="backward"></param>
         public CHEdgeData(float weight, bool forward, bool backward)
+            : this()
         {
             this.Weight = weight;
             this.SetDirection(forward, backward);
@@ -57,6 +50,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="backward"></param>
         /// <param name="toHigher"></param>
         public CHEdgeData(float weight, bool forward, bool backward, bool toHigher)
+            : this()
         {
             this.Weight = weight;
             this.SetDirection(forward, backward, toHigher);
@@ -72,6 +66,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="contractedVertexId"></param>
         /// <param name="tags"></param>
         public CHEdgeData(float weight, bool forward, bool backward, bool toHigher, uint contractedVertexId, uint tags)
+            : this()
         {
             this.Weight = weight;
             this.SetDirection(forward, backward, toHigher);

@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Graph
     /// Abstract a comparer for edges.
     /// </summary>
     public interface IDynamicGraphEdgeComparer<in TEdgeData>
-        where TEdgeData: IDynamicGraphEdgeData
+        where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Returns true if the data in the edge2 is useless if the data in edge1 is present.

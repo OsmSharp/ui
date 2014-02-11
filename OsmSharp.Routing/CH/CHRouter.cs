@@ -1248,17 +1248,17 @@ namespace OsmSharp.Routing.CH
             KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(edge.From.VertexId));
 
             // find the edge with lowest weight.
-            var arc = new KeyValuePair<uint, CHEdgeData>(0, null);
+            var arc = new KeyValuePair<uint, CHEdgeData?>(0, null);
             foreach (KeyValuePair<uint, CHEdgeData> forwardArc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
                 a => a.Key == edge.VertexId && a.Value.Forward))
             {
                 if (arc.Value == null)
                 {
-                    arc = forwardArc;
+                    arc = new KeyValuePair<uint,CHEdgeData?>(forwardArc.Key, forwardArc.Value);
                 }
-                else if (arc.Value.Weight > forwardArc.Value.Weight)
+                else if (arc.Value.Value.Weight > forwardArc.Value.Weight)
                 {
-                    arc = forwardArc;
+                    arc = new KeyValuePair<uint, CHEdgeData?>(forwardArc.Key, forwardArc.Value);
                 }
             }
             if (arc.Value == null)
@@ -1269,18 +1269,18 @@ namespace OsmSharp.Routing.CH
                 {
                     if (arc.Value == null)
                     {
-                        arc = backward;
+                        arc = new KeyValuePair<uint, CHEdgeData?>(backward.Key, backward.Value);
                     }
-                    else if (arc.Value.Weight > backward.Value.Weight)
+                    else if (arc.Value.Value.Weight > backward.Value.Weight)
                     {
-                        arc = backward;
+                        arc = new KeyValuePair<uint, CHEdgeData?>(backward.Key, backward.Value);
                     }
                 }
-                return this.ConvertArc(graph, edge, arc.Key, Convert.ToUInt32(arc.Value.ContractedVertexId), Convert.ToUInt32(edge.VertexId));
+                return this.ConvertArc(graph, edge, arc.Key, Convert.ToUInt32(arc.Value.Value.ContractedVertexId), Convert.ToUInt32(edge.VertexId));
             }
             else
             {
-                return this.ConvertArc(graph, edge, Convert.ToUInt32(edge.From.VertexId), arc.Value.ContractedVertexId, arc.Key);
+                return this.ConvertArc(graph, edge, Convert.ToUInt32(edge.From.VertexId), arc.Value.Value.ContractedVertexId, arc.Key);
             }
         }
 
