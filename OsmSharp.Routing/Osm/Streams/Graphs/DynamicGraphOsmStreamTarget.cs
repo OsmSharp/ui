@@ -28,6 +28,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Graph.PreProcessor;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -515,6 +516,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// Returns a pre-processor if needed.
+        /// </summary>
+        /// <returns></returns>
+        public virtual IPreProcessor GetPreprocessor()
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Registers the source for this target.
         /// </summary>
         /// <param name="source"></param>
@@ -558,6 +568,21 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _preIndexMode = false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Called right after pull.
+        /// </summary>
+        public override void OnAfterPull()
+        {
+            base.OnAfterPull();
+
+            // execute pre-processor.
+            IPreProcessor preProcessor = this.GetPreprocessor();
+            if(preProcessor != null)
+            { // there is a pre-processor, trigger execution.
+                preProcessor.Start();
+            }
         }
     }
 }

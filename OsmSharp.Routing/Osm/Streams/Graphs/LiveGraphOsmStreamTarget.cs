@@ -16,17 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -238,6 +239,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 return false;
             }
             return edgeInterpreter.IsRoutable(tags);
+        }
+
+        /// <summary>
+        /// Returns the pre-processor.
+        /// </summary>
+        /// <returns></returns>
+        public override IPreProcessor GetPreprocessor()
+        {
+            return new LiveEdgePreprocessor(this.DynamicGraph);
         }
 
         #region Static Processing Functions
