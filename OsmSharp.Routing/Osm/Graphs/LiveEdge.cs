@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.Osm.Graphs
@@ -74,6 +75,11 @@ namespace OsmSharp.Routing.Osm.Graphs
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets the list of intermediate coordinates.
+        /// </summary>
+        public GeoCoordinateSimple[] Coordinates { get; set; }
 
         /// <summary>
         /// Returns true if this edge represents a neighbour-relation.

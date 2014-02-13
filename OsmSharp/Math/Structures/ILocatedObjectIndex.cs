@@ -40,5 +40,10 @@ namespace OsmSharp.Math.Structures
         /// <param name="location"></param>
         /// <param name="data"></param>
         void Add(TPointType location, TDataType data);
+
+        /// <summary>
+        /// Clears all data from this index.
+        /// </summary>
+        void Clear();
     }
 }
