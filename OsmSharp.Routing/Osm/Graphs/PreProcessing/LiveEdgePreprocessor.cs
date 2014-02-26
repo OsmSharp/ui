@@ -32,13 +32,13 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private IDynamicGraphRouterDataSource<LiveEdge> _graph;
+        private IDynamicGraph<LiveEdge> _graph;
 
         /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
-        public LiveEdgePreprocessor(IDynamicGraphRouterDataSource<LiveEdge> graph)
+        public LiveEdgePreprocessor(IDynamicGraph<LiveEdge> graph)
         {
             _graph = graph;
         }
@@ -195,12 +195,12 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
             OsmSharp.Logging.Log.TraceEvent("", Logging.TraceEventType.Critical, "");
 
             // initialize status variables.
-            uint vertex = 0;
-            uint nextCompressedPosition = 0;
+            uint vertex = 1;
+            uint nextCompressedPosition = 1;
 
             // search edge until a real node.
             float latitude, longitude;
-            while (vertex < _graph.VertexCount)
+            while (vertex <= _graph.VertexCount)
             {
                 var edges = _graph.GetArcs(vertex);
                 if (edges != null && edges.Length > 0)

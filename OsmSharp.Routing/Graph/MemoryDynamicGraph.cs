@@ -295,6 +295,8 @@ namespace OsmSharp.Routing.Graph
         {
             Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)max);
             Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, (int)max);
+
+            _nextId = max;
         }
 
         /// <summary>

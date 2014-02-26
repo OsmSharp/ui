@@ -16,16 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Logging;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Routing.Routers
 {
