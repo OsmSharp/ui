@@ -139,6 +139,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         { // add the empty coordinate list.
                             var oldEdgeValue = oldEdge.Value;
                             oldEdgeValue.Coordinates = emptyCoordinateList;
+                            _graph.DeleteArc(vertexToProcess, oldEdge.Key); // remove first edge.
                             _graph.AddArc(vertexToProcess, oldEdge.Key, oldEdgeValue, null);
                             break;
                         }
