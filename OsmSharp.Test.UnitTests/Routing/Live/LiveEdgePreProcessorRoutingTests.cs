@@ -93,6 +93,22 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
             Assert.AreEqual(vertex3Coordinate.Latitude, route.Entries[2].Latitude);
             Assert.AreEqual(vertex3Coordinate.Longitude, route.Entries[2].Longitude);
+
+            // 1 -> 2: 1 -> 2.
+            router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            resolved1 = router.Resolve(Vehicle.Car, vertex1Coordinate);
+            var resolved2 = router.Resolve(Vehicle.Car, vertex2Coordinate);
+            route = router.Calculate(Vehicle.Car, resolved1, resolved2);
+
+            // verify the simple route result.
+            Assert.IsNotNull(route);
+            Assert.AreEqual(2, route.Entries.Length);
+            Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
+            Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
+
+            // TODO: fix here!
+            Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
+            Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
         }
     }
 }
