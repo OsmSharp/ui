@@ -250,6 +250,15 @@ namespace OsmSharp.Routing.Routers
             {
                 get { return true; }
             }
+
+            /// <summary>
+            /// Gets or sets intermediate coordinates (if any).
+            /// </summary>
+            public Math.Geo.Simple.GeoCoordinateSimple[] Coordinates
+            {
+                get;
+                set;
+            }
         }
     }
 }

@@ -119,7 +119,6 @@
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
-    <Compile Include="Osm\Router.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />

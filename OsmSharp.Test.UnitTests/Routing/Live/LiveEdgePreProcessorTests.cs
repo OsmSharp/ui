@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.PreProcessing;
+using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Routing.Live
 {
