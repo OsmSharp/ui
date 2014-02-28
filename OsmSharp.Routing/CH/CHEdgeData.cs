@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -240,6 +241,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Returns the tags (0 means no tags). 
         /// </summary>
         public uint Tags { get; set; }
+
+        /// <summary>
+        /// Returns intermediate coordinates (if any).
+        /// </summary>
+        public GeoCoordinateSimple[] Coordinates
+        {
+            get { return null; }
+        }
 
         /// <summary>
         /// Returns true if this edge represents a neighbour-relation.

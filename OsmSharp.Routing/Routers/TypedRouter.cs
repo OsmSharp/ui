@@ -462,7 +462,7 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        ///     Generates a list of entries.
+        /// Generates a list of entries.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertices"></param>
@@ -495,9 +495,26 @@ namespace OsmSharp.Routing.Routers
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
                 // STEP1: Get the names.
-                TagsCollectionBase currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
-                string name = _interpreter.EdgeInterpreter.GetName(currentTags);
-                Dictionary<string, string> names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+                var currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
+                var name = _interpreter.EdgeInterpreter.GetName(currentTags);
+                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+
+                // add intermediate entries.
+                if (edge.Coordinates != null)
+                { // loop over coordinates.
+                    for (int coordinateIdx = 0; coordinateIdx < edge.Coordinates.Length; coordinateIdx++)
+                    {
+                        var entry = new RoutePointEntry();
+                        entry.Latitude = edge.Coordinates[coordinateIdx].Latitude;
+                        entry.Longitude = edge.Coordinates[coordinateIdx].Longitude;
+                        entry.Type = RoutePointEntryType.Along;
+                        entry.Tags = currentTags.ConvertFrom();
+                        entry.WayFromName = name;
+                        entry.WayFromNames = names.ConvertFrom();
+
+                        entries.Add(entry);
+                    }
+                }
 
                 // STEP2: Get the side streets
                 IList<RoutePointEntrySideStreet> sideStreets = new List<RoutePointEntrySideStreet>();
@@ -554,14 +571,37 @@ namespace OsmSharp.Routing.Routers
                 int last_idx = vertices.Length - 1;
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[last_idx - 1], vertices[last_idx]);
                 TagsCollectionBase tags = _dataGraph.TagsIndex.Get(edge.Tags);
+
+                // get names.
+                var name = _interpreter.EdgeInterpreter.GetName(tags);
+                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+
+                // add intermediate entries.
+                if (edge.Coordinates != null)
+                { // loop over coordinates.
+                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    {
+                        var entry = new RoutePointEntry();
+                        entry.Latitude = edge.Coordinates[idx].Latitude;
+                        entry.Longitude = edge.Coordinates[idx].Longitude;
+                        entry.Type = RoutePointEntryType.Along;
+                        entry.Tags = tags.ConvertFrom();
+                        entry.WayFromName = name;
+                        entry.WayFromNames = names;
+
+                        entries.Add(entry);
+                    }
+                }
+
+                // add last entry.
                 coordinate = this.GetCoordinate(vehicle, vertices[last_idx]);
                 var last = new RoutePointEntry();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
                 last.Tags = tags.ConvertFrom();
-                last.WayFromName = _interpreter.EdgeInterpreter.GetName(tags);
-                last.WayFromNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                last.WayFromName = name;
+                last.WayFromNames = names;
 
                 entries.Add(last);
             }

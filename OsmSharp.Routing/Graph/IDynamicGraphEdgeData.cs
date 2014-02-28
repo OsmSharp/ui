@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo.Simple;
+
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
@@ -35,17 +36,17 @@ namespace OsmSharp.Routing.Graph
         bool RepresentsNeighbourRelations { get; }
 
         /// <summary>
+        /// Returns intermidiate coordinates (if any).
+        /// </summary>
+        GeoCoordinateSimple[] Coordinates { get; }
+
+        /// <summary>
         /// Returns the tags identifier.
         /// </summary>
         uint Tags
         {
             get;
         }
-
-        /// <summary>
-        /// Returns the intermediate coordinates.
-        /// </summary>
-        GeoCoordinateSimple[] Coordinates { get; }
     }
 
     /// <summary>

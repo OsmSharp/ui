@@ -141,7 +141,8 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         protected bool TryGetHighwayType(TagsCollectionBase tags, out string highwayType)
         {
-            return tags.TryGetValue("highway", out highwayType);
+            highwayType = string.Empty;
+            return tags != null && tags.TryGetValue("highway", out highwayType);
         }
 
         /// <summary>
