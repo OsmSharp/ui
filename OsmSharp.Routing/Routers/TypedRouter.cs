@@ -1070,7 +1070,7 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        /// Holds the resolved graph.
+        /// Holds the resolved graphs per used vehicle type.
         /// </summary>
         private readonly Dictionary<Vehicle, TypedRouterResolvedGraph> _resolvedGraphs;
 
@@ -1109,165 +1109,161 @@ namespace OsmSharp.Routing.Routers
             { // the vertices in this path.
                 vertices = path.ToArray();
             }
+
             // should contain vertex1 and vertex2.
-            if (vertices.Length == 0 ||
-                (vertices[0] == vertex1 && vertices[vertices.Length - 1] == vertex2))
-            {
-                // the vertices match.
-                float longitude1, latitude1, longitude2, latitude2;
-                if (_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) &&
-                   _dataGraph.GetVertex(vertex2, out latitude2, out longitude2))
-                { // the two vertices are contained in the home graph.
-                    var vertex1Coordinate = new GeoCoordinate(
-                        latitude1, longitude1);
-                    var vertex2Coordinate = new GeoCoordinate(
-                        latitude2, longitude2);
-
-                    var resolvedCoordinate = new GeoCoordinate(
-                        latitude1 * (1.0 - position) + latitude2 * position,
-                        longitude1 * (1.0 - position) + longitude2 * position);
-                    if (vertices.Length == 0)
-                    { // the path has a length of 0; the vertices are not in the resolved graph yet!
-
-                        // add the vertices in the resolved graph.
-                        float latitudeDummy, longitudeDummy;
-                        if (!graph.GetVertex(vertex1, out latitudeDummy, out longitudeDummy))
-                        {
-                            graph.AddVertex(vertex1, latitude1, longitude1);
-                        }
-                        if (!graph.GetVertex(vertex2, out latitudeDummy, out longitudeDummy))
-                        {
-                            graph.AddVertex(vertex2, latitude2, longitude2);
-                        }
-
-                        // find the arc(s).
-                        KeyValuePair<uint, TEdgeData>? arc = null;
-                        KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(vertex1);
-                        for (int idx = 0; idx < arcs.Length; idx++)
-                        {
-                            if (arcs[idx].Key == vertex2)
-                            { // arc is found!
-                                arc = arcs[idx];
-                            }
-                        }
-                        // find backward arc if needed.
-                        if (!arc.HasValue)
-                        {
-                            arcs = _dataGraph.GetArcs(vertex2);
-                            for (int idx = 0; idx < arcs.Length; idx++)
-                            {
-                                if (arcs[idx].Key == vertex1)
-                                { // arc is found!
-                                    arc = arcs[idx];
-                                }
-                            }
-                        }
-
-                        // check if an arc was found!
-                        if (!arc.HasValue)
-                        {
-                            throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                        }
-
-                        // add the arc (in both directions)
-                        graph.AddArc(vertex1, vertex2, 
-                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                                 arc.Value.Value.Forward));
-                        graph.AddArc(vertex2, vertex1, 
-                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                                !arc.Value.Value.Forward));
-
-                        // create the route manually.
-                        vertices = new long[2];
-                        vertices[0] = vertex1;
-                        vertices[1] = vertex2;
-                    }
-                    else if (vertices.Length == 2)
-                    { // paths of length two are impossible!
-                        throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                    }
-
-                    // calculate positions.
-                    int positionIdx = 0;
-                    double total = vertex1Coordinate.Distance(vertex2Coordinate);
-                    for (int idx = 1; idx < vertices.Length; idx++)
-                    { // calculate positions.
-                        float latitudeResolved, longitudeResolved;
-                        if (graph.GetVertex(vertices[idx], out latitudeResolved, out longitudeResolved))
-                        { // vertex found
-                            double currentPosition = (vertex1Coordinate.Distance(new GeoCoordinate(
-                                latitudeResolved, longitudeResolved))) / total;
-                            if (currentPosition > position)
-                            { // the position is found.
-                                positionIdx = idx - 1;
-                                break;
-                            }
-                        }
-                        else
-                        { // oeps; vertex was not found!
-                            throw new Exception(string.Format("Vertex with id {0} not found!", vertices[idx]));
-                        }
-                    }
-
-                    // get the vertices and the arc between them.
-                    long vertexFrom = vertices[positionIdx];
-                    long vertexTo = vertices[positionIdx + 1];
-
-                    KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>? fromToArc = null;
-                    KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] fromArcs =
-                        graph.GetArcs(vertexFrom);
-                    for (int idx = 0; idx < fromArcs.Length; idx++)
-                    {
-                        if (fromArcs[idx].Key == vertexTo)
-                        { // arc is found!
-                            fromToArc = fromArcs[idx];
-                        }
-                    }
-
-                    // check if an arc was found!
-                    if (!fromToArc.HasValue)
-                    {
-                        throw new Exception("A resolved position can only exist on an arc between two vertices.");
-                    }
-
-                    // remove the arc.
-                    graph.DeleteArc(vertexFrom, vertexTo);
-                    graph.DeleteArc(vertexTo, vertexFrom);
-
-                    // add new vertex.
-                    long resolvedVertex = this.GetNextResolvedId();
-                    graph.AddVertex(resolvedVertex, (float)resolvedCoordinate.Latitude,
-                        (float)resolvedCoordinate.Longitude);
-
-                    // add the arcs.
-                    graph.AddArc(vertexFrom, resolvedVertex,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              fromToArc.Value.Value.Forward));
-                    graph.AddArc(resolvedVertex, vertexFrom,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              !fromToArc.Value.Value.Forward));
-                    graph.AddArc(resolvedVertex, vertexTo,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              fromToArc.Value.Value.Forward));
-                    graph.AddArc(vertexTo, resolvedVertex,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              !fromToArc.Value.Value.Forward));
-
-                    return new RouterPoint(resolvedVertex, resolvedCoordinate);
-                }
-                else
-                {
-                    throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                }
-            }
-            else
+            if (vertices.Length > 0 &&
+                (vertices[0] != vertex1 || vertices[vertices.Length - 1] != vertex2))
             {
                 throw new Exception("A shortest path between two vertices has to contain at least the source and target!");
             }
+            // the vertices match.
+            float longitude1, latitude1, longitude2, latitude2;
+            if (!_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) ||
+                !_dataGraph.GetVertex(vertex2, out latitude2, out longitude2))
+            { // oeps, one of the vertices is not routable!
+                throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+            }
+
+            var vertex1Coordinate = new GeoCoordinate(
+                latitude1, longitude1);
+            var vertex2Coordinate = new GeoCoordinate(
+                latitude2, longitude2);
+
+            var resolvedCoordinate = new GeoCoordinate(
+                latitude1 * (1.0 - position) + latitude2 * position,
+                longitude1 * (1.0 - position) + longitude2 * position);
+            if (vertices.Length == 0)
+            { // the path has a length of 0; the vertices are not in the resolved graph yet!
+
+                // add the vertices in the resolved graph.
+                float latitudeDummy, longitudeDummy;
+                if (!graph.GetVertex(vertex1, out latitudeDummy, out longitudeDummy))
+                {
+                    graph.AddVertex(vertex1, latitude1, longitude1);
+                }
+                if (!graph.GetVertex(vertex2, out latitudeDummy, out longitudeDummy))
+                {
+                    graph.AddVertex(vertex2, latitude2, longitude2);
+                }
+
+                // find the arc(s).
+                KeyValuePair<uint, TEdgeData>? arc = null;
+                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(vertex1);
+                for (int idx = 0; idx < arcs.Length; idx++)
+                {
+                    if (arcs[idx].Key == vertex2)
+                    { // arc is found!
+                        arc = arcs[idx];
+                    }
+                }
+                // find backward arc if needed.
+                if (!arc.HasValue)
+                {
+                    arcs = _dataGraph.GetArcs(vertex2);
+                    for (int idx = 0; idx < arcs.Length; idx++)
+                    {
+                        if (arcs[idx].Key == vertex1)
+                        { // arc is found!
+                            arc = arcs[idx];
+                        }
+                    }
+                }
+
+                // check if an arc was found!
+                if (!arc.HasValue)
+                {
+                    throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+                }
+
+                // add the arc (in both directions)
+                graph.AddArc(vertex1, vertex2,
+                    new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
+                                                                         arc.Value.Value.Forward));
+                graph.AddArc(vertex2, vertex1,
+                    new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
+                                                                        !arc.Value.Value.Forward));
+
+                // create the route manually.
+                vertices = new long[2];
+                vertices[0] = vertex1;
+                vertices[1] = vertex2;
+            }
+            else if (vertices.Length == 2)
+            { // paths of length two are impossible!
+                throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+            }
+
+            // calculate positions.
+            int positionIdx = 0;
+            double total = vertex1Coordinate.Distance(vertex2Coordinate);
+            for (int idx = 1; idx < vertices.Length; idx++)
+            { // calculate positions.
+                float latitudeResolved, longitudeResolved;
+                if (graph.GetVertex(vertices[idx], out latitudeResolved, out longitudeResolved))
+                { // vertex found
+                    double currentPosition = (vertex1Coordinate.Distance(new GeoCoordinate(
+                        latitudeResolved, longitudeResolved))) / total;
+                    if (currentPosition > position)
+                    { // the position is found.
+                        positionIdx = idx - 1;
+                        break;
+                    }
+                }
+                else
+                { // oeps; vertex was not found!
+                    throw new Exception(string.Format("Vertex with id {0} not found!", vertices[idx]));
+                }
+            }
+
+            // get the vertices and the arc between them.
+            long vertexFrom = vertices[positionIdx];
+            long vertexTo = vertices[positionIdx + 1];
+
+            KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>? fromToArc = null;
+            KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] fromArcs =
+                graph.GetArcs(vertexFrom);
+            for (int idx = 0; idx < fromArcs.Length; idx++)
+            {
+                if (fromArcs[idx].Key == vertexTo)
+                { // arc is found!
+                    fromToArc = fromArcs[idx];
+                }
+            }
+
+            // check if an arc was found!
+            if (!fromToArc.HasValue)
+            {
+                throw new Exception("A resolved position can only exist on an arc between two vertices.");
+            }
+
+            // remove the arc.
+            graph.DeleteArc(vertexFrom, vertexTo);
+            graph.DeleteArc(vertexTo, vertexFrom);
+
+            // add new vertex.
+            long resolvedVertex = this.GetNextResolvedId();
+            graph.AddVertex(resolvedVertex, (float)resolvedCoordinate.Latitude,
+                (float)resolvedCoordinate.Longitude);
+
+            // add the arcs.
+            graph.AddArc(vertexFrom, resolvedVertex,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      fromToArc.Value.Value.Tags,
+                                      fromToArc.Value.Value.Forward));
+            graph.AddArc(resolvedVertex, vertexFrom,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      fromToArc.Value.Value.Tags,
+                                      !fromToArc.Value.Value.Forward));
+            graph.AddArc(resolvedVertex, vertexTo,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      fromToArc.Value.Value.Tags,
+                                      fromToArc.Value.Value.Forward));
+            graph.AddArc(vertexTo, resolvedVertex,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      fromToArc.Value.Value.Tags,
+                                      !fromToArc.Value.Value.Forward));
+
+            return new RouterPoint(resolvedVertex, resolvedCoordinate);
         }
 
         /// <summary>

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
@@ -40,6 +41,11 @@ namespace OsmSharp.Routing.Graph
         {
             get;
         }
+
+        /// <summary>
+        /// Returns the intermediate coordinates.
+        /// </summary>
+        GeoCoordinateSimple[] Coordinates { get; }
     }
 
     /// <summary>
