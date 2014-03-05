@@ -1251,6 +1251,7 @@ namespace OsmSharp.Routing.Routers
                 var ratio = currentDistance / totalDistance;
                 if(ratio >= position)
                 { // the resolved position has been reached.
+                    positionIdx = idx - 1;
                     var ratioBefore = previousDistance / totalDistance;
                     var ratioLocal = (position - ratioBefore) / (ratio - ratioBefore);
                     resolvedCoordinate = new GeoCoordinate(
