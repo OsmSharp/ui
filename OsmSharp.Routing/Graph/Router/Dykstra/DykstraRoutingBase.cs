@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Interpreter;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
 {
@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="matcher"></param>
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
@@ -67,11 +67,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
-            var closestWithMatch = new SearchClosestResult(double.MaxValue, 0);
-            var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
+            var closestWithMatch = new SearchClosestResult<TEdgeData>(double.MaxValue, 0);
+            var closestWithoutMatch = new SearchClosestResult<TEdgeData>(double.MaxValue, 0);
 
             double searchBoxSize = delta;
             // create the search box.
@@ -104,13 +104,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                             if (distance < 0.00001)
                             { // the distance is smaller than the tolerance value.
-                                closestWithoutMatch = new SearchClosestResult(
+                                closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, arc.Key);
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
-                                    closestWithMatch = new SearchClosestResult(
+                                    closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, arc.Key);
                                     break;
                                 }
@@ -118,7 +118,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult(
+                                closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, arc.Key);
                             }
                             if (distance < closestWithMatch.Distance)
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
                                 {
-                                    closestWithMatch = new SearchClosestResult(
+                                    closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, arc.Key);
                                 }
                             }
@@ -136,7 +136,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult(
+                                closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, arc.Value.Key);
                             }
                             if (distance < closestWithMatch.Distance)
@@ -145,7 +145,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
-                                    closestWithMatch = new SearchClosestResult(
+                                    closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, arc.Value.Key);
                                 }
                             }
@@ -190,8 +190,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                                 double distancePoint = previous.Distance(projectedPoint) + distanceToSegment;
                                                 double position = distancePoint / distanceTotal;
 
-                                                closestWithoutMatch = new SearchClosestResult(
-                                                    distance, arc.Key, arc.Value.Key, position);
+                                                closestWithoutMatch = new SearchClosestResult<TEdgeData>(
+                                                    distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
                                             }
                                         }
                                         if (distance < closestWithMatch.Distance)
@@ -210,8 +210,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                                 {
 
-                                                    closestWithMatch = new SearchClosestResult(
-                                                        distance, arc.Key, arc.Value.Key, position);
+                                                    closestWithMatch = new SearchClosestResult<TEdgeData>(
+                                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
                                                 }
                                             }
                                         }
@@ -240,8 +240,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                         double distancePoint = previous.Distance(projectedPoint) + distanceToSegment;
                                         double position = distancePoint / distanceTotal;
 
-                                        closestWithoutMatch = new SearchClosestResult(
-                                            distance, arc.Key, arc.Value.Key, position);
+                                        closestWithoutMatch = new SearchClosestResult<TEdgeData>(
+                                            distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
                                     }
                                 }
                                 if (distance < closestWithMatch.Distance)
@@ -260,8 +260,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                             matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                         {
 
-                                            closestWithMatch = new SearchClosestResult(
-                                                distance, arc.Key, arc.Value.Key, position);
+                                            closestWithMatch = new SearchClosestResult<TEdgeData>(
+                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
                                         }
                                     }
                                 }                               
@@ -284,7 +284,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         double distance = coordinate.Distance(vertexCoordinate);
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                 distance, arc.Key);
                         }
 
@@ -292,7 +292,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         distance = coordinate.Distance(vertexCoordinate);
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                 distance, arc.Value.Key);
                         }
                     }

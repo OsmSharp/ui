@@ -148,7 +148,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="matcher">The matcher to match to edges.</param>
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <returns></returns>
-        SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags);
 
         /// <summary>
@@ -163,14 +163,14 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <param name="verticesOnly">Only match vertices.</param>
         /// <returns></returns>
-        SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly);
     }
 
     /// <summary>
     /// The result the search closest returns.
     /// </summary>
-    public struct SearchClosestResult
+    public struct SearchClosestResult<TEdgeData>
     {
         /// <summary>
         /// The result is located exactly at one vertex.
@@ -193,13 +193,14 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="position"></param>
-        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position)
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position, TEdgeData edge)
             : this()
         {
             this.Distance = distance;
             this.Vertex1 = vertex1;
             this.Vertex2 = vertex2;
             this.Position = position;
+            this.Edge = edge;
         }
 
         /// <summary>
@@ -221,5 +222,10 @@ namespace OsmSharp.Routing.Graph.Router
         /// The distance from the point being resolved.
         /// </summary>
         public double Distance { get; private set; }
+
+        /// <summary>
+        /// The edge data.
+        /// </summary>
+        public TEdgeData Edge { get; private set; }
     }
 }

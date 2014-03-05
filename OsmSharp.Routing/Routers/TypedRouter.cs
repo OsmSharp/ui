@@ -165,7 +165,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             // calculate the route.
-            PathSegment<long> route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
+            var route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(vehicle, source), this.RouteResolvedGraph(vehicle, targets), max);
 
             // find the target.
@@ -203,7 +203,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            PathSegment<long>[][] routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources),
+            var routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources),
                 this.RouteResolvedGraph(vehicle, targets), double.MaxValue);
 
             var constructedRoutes = new Route[sources.Length][];
@@ -923,7 +923,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter,
+            SearchClosestResult<TEdgeData> result = _router.SearchClosest(_dataGraph, _interpreter,
                 vehicle, coordinate, delta, matcher, matchingTags, verticesOnly); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
@@ -941,7 +941,7 @@ namespace OsmSharp.Routing.Routers
                 else
                 { // the result is on an edge.
                     return this.Normalize(
-                        this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position));
+                        this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position, result.Edge));
                 }
             }
             return null; // no routable object was found closeby.
@@ -1069,7 +1069,8 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate,
+            // search for a close edge/vertex.
+            var result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate,
                 delta, null, null, verticesOnly); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
@@ -1137,13 +1138,15 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="position"></param>
+        /// <param name="edgeData"></param>
         /// <returns></returns>
-        private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position)
+        private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position, TEdgeData edgeData)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
 
-            PathSegment<long> path = this.Shortest(vehicle, vertex1, vertex2);
+            // calculate a shorted path in the resolved graph.
+            PathSegment<long> path = this.ResolvedShortest(vehicle, vertex1, vertex2);
             var vertices = new long[0];
             if (path != null)
             { // the vertices in this path.
@@ -1156,6 +1159,7 @@ namespace OsmSharp.Routing.Routers
             {
                 throw new Exception("A shortest path between two vertices has to contain at least the source and target!");
             }
+
             // the vertices match.
             float longitude1, latitude1, longitude2, latitude2;
             if (!_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) ||
@@ -1163,18 +1167,13 @@ namespace OsmSharp.Routing.Routers
             { // oeps, one of the vertices is not routable!
                 throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
             }
-
             var vertex1Coordinate = new GeoCoordinate(
                 latitude1, longitude1);
             var vertex2Coordinate = new GeoCoordinate(
                 latitude2, longitude2);
 
-            var resolvedCoordinate = new GeoCoordinate(
-                latitude1 * (1.0 - position) + latitude2 * position,
-                longitude1 * (1.0 - position) + longitude2 * position);
             if (vertices.Length == 0)
             { // the path has a length of 0; the vertices are not in the resolved graph yet!
-
                 // add the vertices in the resolved graph.
                 float latitudeDummy, longitudeDummy;
                 if (!graph.GetVertex(vertex1, out latitudeDummy, out longitudeDummy))
@@ -1186,73 +1185,80 @@ namespace OsmSharp.Routing.Routers
                     graph.AddVertex(vertex2, latitude2, longitude2);
                 }
 
-                // find the arc(s).
-                KeyValuePair<uint, TEdgeData>? arc = null;
-                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(vertex1);
-                for (int idx = 0; idx < arcs.Length; idx++)
-                {
-                    if (arcs[idx].Key == vertex2)
-                    { // arc is found!
-                        arc = arcs[idx];
-                    }
-                }
-                // find backward arc if needed.
-                if (!arc.HasValue)
-                {
-                    arcs = _dataGraph.GetArcs(vertex2);
-                    for (int idx = 0; idx < arcs.Length; idx++)
+                if (edgeData.Coordinates != null)
+                { // add intermediate points.
+                    // create the route manually.
+                    vertices = new long[2 + edgeData.Coordinates.Length];
+                    vertices[0] = vertex1;
+
+                    long previousVertex = vertex1;
+                    for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
                     {
-                        if (arcs[idx].Key == vertex1)
-                        { // arc is found!
-                            arc = arcs[idx];
-                        }
+                        long intermediateId = this.GetNextResolvedId();
+                        graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                        graph.AddArc(previousVertex, intermediateId,
+                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                                 edgeData.Forward));
+                        graph.AddArc(intermediateId, previousVertex,
+                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                                 !edgeData.Forward));
+                        vertices[idx + 1] = intermediateId;
+                        previousVertex = intermediateId;
                     }
+                    graph.AddArc(previousVertex, vertex2,
+                        new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                             edgeData.Forward));
+                    graph.AddArc(vertex2, previousVertex,
+                        new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                             !edgeData.Forward));
+                    vertices[vertices.Length - 1] = vertex2;
                 }
-
-                // check if an arc was found!
-                if (!arc.HasValue)
-                {
-                    throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+                else
+                { // no intermediate points, just create the route manually.
+                    vertices = new long[2];
+                    vertices[0] = vertex1;
+                    vertices[1] = vertex2;
                 }
-
-                // add the arc (in both directions)
-                graph.AddArc(vertex1, vertex2,
-                    new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                         arc.Value.Value.Forward));
-                graph.AddArc(vertex2, vertex1,
-                    new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                        !arc.Value.Value.Forward));
-
-                // create the route manually.
-                vertices = new long[2];
-                vertices[0] = vertex1;
-                vertices[1] = vertex2;
             }
             else if (vertices.Length == 2)
             { // paths of length two are impossible!
                 throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
             }
 
-            // calculate positions.
+            // calculate positions/resolved coordinates.
             int positionIdx = 0;
-            double total = vertex1Coordinate.Distance(vertex2Coordinate);
+            double totalDistance = 0;
+            float latitude, longitude;
+            graph.GetVertex(vertices[0], out latitude, out longitude);
+            var previous = new GeoCoordinate(latitude, longitude);
             for (int idx = 1; idx < vertices.Length; idx++)
-            { // calculate positions.
-                float latitudeResolved, longitudeResolved;
-                if (graph.GetVertex(vertices[idx], out latitudeResolved, out longitudeResolved))
-                { // vertex found
-                    double currentPosition = (vertex1Coordinate.Distance(new GeoCoordinate(
-                        latitudeResolved, longitudeResolved))) / total;
-                    if (currentPosition > position)
-                    { // the position is found.
-                        positionIdx = idx - 1;
-                        break;
-                    }
+            {
+                graph.GetVertex(vertices[idx], out latitude, out longitude);
+                var current = new GeoCoordinate(latitude, longitude);
+                totalDistance = totalDistance + current.Distance(previous);
+                previous = current;
+            }
+            double currentDistance = 0;
+            graph.GetVertex(vertices[0], out latitude, out longitude);
+            previous = new GeoCoordinate(latitude, longitude);
+            GeoCoordinate resolvedCoordinate = null; 
+            for (int idx = 1; idx < vertices.Length; idx++)
+            {
+                graph.GetVertex(vertices[idx], out latitude, out longitude);
+                var current = new GeoCoordinate(latitude, longitude);
+                var previousDistance = currentDistance;
+                currentDistance = currentDistance + current.Distance(previous);
+                var ratio = currentDistance / totalDistance;
+                if(ratio >= position)
+                { // the resolved position has been reached.
+                    var ratioBefore = previousDistance / totalDistance;
+                    var ratioLocal = (position - ratioBefore) / (ratio - ratioBefore);
+                    resolvedCoordinate = new GeoCoordinate(
+                        previous.Latitude * (1.0 - ratioLocal) + current.Latitude * ratioLocal,
+                        previous.Longitude * (1.0 - ratioLocal) + current.Longitude * ratioLocal);
+                    break;
                 }
-                else
-                { // oeps; vertex was not found!
-                    throw new Exception(string.Format("Vertex with id {0} not found!", vertices[idx]));
-                }
+                previous = current;
             }
 
             // get the vertices and the arc between them.
@@ -1405,7 +1411,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        private PathSegment<long> Shortest(Vehicle vehicle, long vertex1, long vertex2)
+        private PathSegment<long> ResolvedShortest(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);

@@ -26,7 +26,7 @@ namespace OsmSharp.Routing.Graph
     public interface IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Returns the forward flag.
+        /// Returns the forward flag relative to the tags.
         /// </summary>
         bool Forward { get; }
 

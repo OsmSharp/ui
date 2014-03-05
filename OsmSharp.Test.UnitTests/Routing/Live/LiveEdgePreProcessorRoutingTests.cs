@@ -105,8 +105,6 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             Assert.AreEqual(2, route.Entries.Length);
             Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
             Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
-
-            // TODO: fix here!
             Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
             Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
         }
