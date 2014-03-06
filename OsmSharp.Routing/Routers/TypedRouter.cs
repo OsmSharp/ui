@@ -1229,15 +1229,18 @@ namespace OsmSharp.Routing.Routers
             int positionIdx = 0;
             double totalDistance = 0;
             float latitude, longitude;
-            graph.GetVertex(vertices[0], out latitude, out longitude);
-            var previous = new GeoCoordinate(latitude, longitude);
-            for (int idx = 1; idx < vertices.Length; idx++)
-            {
-                graph.GetVertex(vertices[idx], out latitude, out longitude);
-                var current = new GeoCoordinate(latitude, longitude);
-                totalDistance = totalDistance + current.Distance(previous);
-                previous = current;
-            }
+            graph.GetVertex(vertices[0], out latitude1, out longitude1);
+            graph.GetVertex(vertices[vertices.Length - 1], out latitude2, out longitude2);
+            var previous = new GeoCoordinate(latitude1, longitude1);
+            var current = new GeoCoordinate(latitude2, longitude2);
+            totalDistance = current.Distance(previous);
+            //for (int idx = 1; idx < vertices.Length; idx++)
+            //{
+            //    graph.GetVertex(vertices[idx], out latitude, out longitude);
+            //    var current = new GeoCoordinate(latitude, longitude);
+            //    totalDistance = totalDistance + current.Distance(previous);
+            //    previous = current;
+            //}
             double currentDistance = 0;
             graph.GetVertex(vertices[0], out latitude, out longitude);
             previous = new GeoCoordinate(latitude, longitude);
@@ -1245,7 +1248,7 @@ namespace OsmSharp.Routing.Routers
             for (int idx = 1; idx < vertices.Length; idx++)
             {
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
-                var current = new GeoCoordinate(latitude, longitude);
+                current = new GeoCoordinate(latitude, longitude);
                 var previousDistance = currentDistance;
                 currentDistance = currentDistance + current.Distance(previous);
                 var ratio = currentDistance / totalDistance;
@@ -1266,23 +1269,6 @@ namespace OsmSharp.Routing.Routers
             long vertexFrom = vertices[positionIdx];
             long vertexTo = vertices[positionIdx + 1];
 
-            KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>? fromToArc = null;
-            KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] fromArcs =
-                graph.GetArcs(vertexFrom);
-            for (int idx = 0; idx < fromArcs.Length; idx++)
-            {
-                if (fromArcs[idx].Key == vertexTo)
-                { // arc is found!
-                    fromToArc = fromArcs[idx];
-                }
-            }
-
-            // check if an arc was found!
-            if (!fromToArc.HasValue)
-            {
-                throw new Exception("A resolved position can only exist on an arc between two vertices.");
-            }
-
             // remove the arc.
             graph.DeleteArc(vertexFrom, vertexTo);
             graph.DeleteArc(vertexTo, vertexFrom);
@@ -1295,20 +1281,20 @@ namespace OsmSharp.Routing.Routers
             // add the arcs.
             graph.AddArc(vertexFrom, resolvedVertex,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                      fromToArc.Value.Value.Tags,
-                                      fromToArc.Value.Value.Forward));
+                                      edgeData.Tags,
+                                      edgeData.Forward));
             graph.AddArc(resolvedVertex, vertexFrom,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                      fromToArc.Value.Value.Tags,
-                                      !fromToArc.Value.Value.Forward));
+                                      edgeData.Tags,
+                                      !edgeData.Forward));
             graph.AddArc(resolvedVertex, vertexTo,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                      fromToArc.Value.Value.Tags,
-                                      fromToArc.Value.Value.Forward));
+                                      edgeData.Tags,
+                                      edgeData.Forward));
             graph.AddArc(vertexTo, resolvedVertex,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                      fromToArc.Value.Value.Tags,
-                                      !fromToArc.Value.Value.Forward));
+                                      edgeData.Tags,
+                                      !edgeData.Forward));
 
             return new RouterPoint(resolvedVertex, resolvedCoordinate);
         }

@@ -92,42 +92,36 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void RoutingRegressionTest2()
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-
-            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
+            var interpreter = new OsmRoutingInterpreter();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<LiveEdge> memory_data =
-                new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
-            LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, tags_index);
-            XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
-            OsmStreamFilterSort sorter = new OsmStreamFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
-            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
-            Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
+            var basicRouter = new DykstraRoutingLive();
+            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // build coordinates list of resolved points.
-            List<GeoCoordinate> testPoints = new List<GeoCoordinate>();
+            var testPoints = new List<GeoCoordinate>();
             testPoints.Add(new GeoCoordinate(51.0582204, 3.7193524));
             testPoints.Add(new GeoCoordinate(51.0582199, 3.7194002));
-            //testPoints.Add(new GeoCoordinate(51.0582178, 3.7195025));
 
             testPoints.Add(new GeoCoordinate(51.0581727, 3.7195833));
             testPoints.Add(new GeoCoordinate(51.0581483, 3.7195553));
-            //testPoints.Add(new GeoCoordinate(51.0581219, 3.7195231));
-            //testPoints.Add(new GeoCoordinate(51.0580965, 3.7194918));
 
             testPoints.Add(new GeoCoordinate(51.0581883, 3.7196617));
             testPoints.Add(new GeoCoordinate(51.0581628, 3.7196889));
 
             // build a matrix of routes between all points.
-            Route[][] referenceRoutes = new Route[testPoints.Count][];
-            int[] permuationArray = new int[testPoints.Count];
+            var referenceRoutes = new Route[testPoints.Count][];
+            var permuationArray = new int[testPoints.Count];
             for (int fromIdx = 0; fromIdx < testPoints.Count; fromIdx++)
             {
                 permuationArray[fromIdx] = fromIdx;
@@ -136,11 +130,11 @@ namespace OsmSharp.Test.Unittests.Routing
                 {
                     // create router from scratch.
                     router = Router.CreateLiveFrom(
-                        memory_data, basic_router, interpreter);
+                        memoryData, basicRouter, interpreter);
 
                     // resolve points.
-                    RouterPoint from = router.Resolve(Vehicle.Car, testPoints[fromIdx]);
-                    RouterPoint to = router.Resolve(Vehicle.Car, testPoints[toIdx]);
+                    var from = router.Resolve(Vehicle.Car, testPoints[fromIdx]);
+                    var to = router.Resolve(Vehicle.Car, testPoints[toIdx]);
 
                     // calculate route.
                     referenceRoutes[fromIdx][toIdx] = router.Calculate(Vehicle.Car, from, to);
@@ -153,38 +147,11 @@ namespace OsmSharp.Test.Unittests.Routing
                 permuationArray);
             foreach (int[] permutation in enumerator)
             {
-                //int[] permutation = new int[] { 5, 0, 1, 2, 4, 3, 6, 7, 8 };
-
-                //// incrementally resolve points.
-                //// create router from scratch.
-                //router = new Router<SimpleWeighedEdge>(memory_data, interpreter, basic_router);
-
-                //// resolve in the order of the permutation.
-                //RouterPoint[] resolvedPoints = new RouterPoint[permutation.Length];
-                //resolvedPoints[permutation[0]] = router.Resolve(VehicleEnum.Car, testPoints[permutation[0]]);
-                //for (int idx = 1; idx < permutation.Length; idx++)
-                //{
-                //    resolvedPoints[permutation[idx]] = router.Resolve(VehicleEnum.Car, testPoints[permutation[idx]]);
-
-                //    for (int fromIdx = 0; fromIdx <= idx; fromIdx++)
-                //    {
-                //        for (int toIdx = 0; toIdx <= idx; toIdx++)
-                //        {
-                //            // calculate route.
-                //            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
-                //                resolvedPoints[permutation[fromIdx]], resolvedPoints[permutation[toIdx]]);
-
-                //            Assert.AreEqual(referenceRoutes[permutation[fromIdx]][permutation[toIdx]].TotalDistance, 
-                //                route.TotalDistance, 0.1);
-                //        }
-                //    }
-                //}
-
                 // create router from scratch.
-                router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
+                router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
                 // resolve in the order of the permutation.
-                RouterPoint[] resolvedPoints = new RouterPoint[permutation.Length];
+                var resolvedPoints = new RouterPoint[permutation.Length];
                 for (int idx = 0; idx < permutation.Length; idx++)
                 {
                     resolvedPoints[permutation[idx]] = router.Resolve(Vehicle.Car, testPoints[permutation[idx]]);
@@ -195,7 +162,7 @@ namespace OsmSharp.Test.Unittests.Routing
                     for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                     {
                         // calculate route.
-                        Route route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
+                        var route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
 
                         Assert.AreEqual(referenceRoutes[fromIdx][toIdx].TotalDistance, route.TotalDistance, 0.1);
                     }
@@ -210,24 +177,22 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void RoutingRegressionTest3()
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-
-            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
+            var interpreter = new OsmRoutingInterpreter();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<LiveEdge> memory_data =
-                new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
-            LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, tags_index);
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            LiveGraphOsmStreamTarget targetData = new LiveGraphOsmStreamTarget(
+                memoryData, interpreter, tagsIndex);
             XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
-            Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
+            Router router = Router.CreateLiveFrom(memoryData, basic_router, interpreter);
 
             // build coordinates list of resolved points.
             List<GeoCoordinate> testPoints = new List<GeoCoordinate>();
@@ -247,7 +212,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 {
                     // create router from scratch.
                     router = Router.CreateLiveFrom(
-                        memory_data, basic_router, interpreter);
+                        memoryData, basic_router, interpreter);
 
                     // resolve points.
                     RouterPoint from = router.Resolve(Vehicle.Car, testPoints[fromIdx]);
@@ -265,7 +230,7 @@ namespace OsmSharp.Test.Unittests.Routing
             foreach (int[] permutation in enumerator)
             {
                 // create router from scratch.
-                router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
+                router = Router.CreateLiveFrom(memoryData, basic_router, interpreter);
 
                 // resolve in the order of the permutation.
                 RouterPoint[] resolvedPoints = new RouterPoint[permutation.Length];
