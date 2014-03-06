@@ -77,30 +77,30 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
-            float latitude, longitude;
-            data.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
+            // float latitude, longitude;
+            // data.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922278, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
 
-            data.GetVertex(21, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
+            // data.GetVertex(21, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
+            Assert.AreEqual(3.71956539, route.Entries[1].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
 
-            data.GetVertex(16, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
+            // data.GetVertex(16, out latitude, out longitude);
+            Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
+            Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
 
-            data.GetVertex(22, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
+            // data.GetVertex(22, out latitude, out longitude);
+            Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
+            Assert.AreEqual(3.71965814, route.Entries[3].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
 
-            data.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
+            // data.GetVertex(23, out latitude, out longitude);
+            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71918, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
         }
 
@@ -123,18 +123,18 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
-            float latitude, longitude;
-            data.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
+            // float latitude, longitude;
+            // data.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922278, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
             Assert.IsNotNull(route.Entries[0].Points[0].Tags);
             Assert.AreEqual(1, route.Entries[0].Points[0].Tags.Length);
             Assert.AreEqual("source", route.Entries[0].Points[0].Tags[0].Value);
 
-            data.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
+            // data.GetVertex(23, out latitude, out longitude);
+            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71918, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
             Assert.IsNotNull(route.Entries[4].Points[0].Tags);
             Assert.AreEqual(1, route.Entries[4].Points[0].Tags.Length);
@@ -372,96 +372,6 @@ namespace OsmSharp.Test.Unittests.Routing
                     Assert.AreEqual(idx, (point as RouterPoint).Id);
                 }
             }
-        }
-
-        /// <summary>
-        /// Test resolving all nodes.
-        /// </summary>
-        protected void DoTestResolveBetweenNodes()
-        {
-            var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-
-            const float delta = 0.01f;
-            var result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null);
-            Assert.IsTrue((result.Vertex1 == 20 && result.Vertex2 == 21) ||
-                (result.Vertex1 == 21 && result.Vertex2 == 20));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0576510, 3.7194124), delta, null, null); //,-104, -14, -12
-            Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 23) ||
-                (result.Vertex1 == 23 && result.Vertex2 == 22));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0576829, 3.7196791), delta, null, null); //,-105, -12, -10
-            Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 16) ||
-                (result.Vertex1 == 16 && result.Vertex2 == 22));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577819, 3.7196308), delta, null, null); //,-106, -10,  -8
-            Assert.IsTrue((result.Vertex1 == 21 && result.Vertex2 == 16) ||
-                (result.Vertex1 == 16 && result.Vertex2 == 21));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577516, 3.7198975), delta, null, null); //,-107, -10, -18
-            Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 16) ||
-                (result.Vertex1 == 16 && result.Vertex2 == 17));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578218, 3.7200626), delta, null, null); //,-108, -18, -20
-            Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 7) ||
-                (result.Vertex1 == 7 && result.Vertex2 == 17));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578170, 3.7202480), delta, null, null); //,-109, -20, -76
-            Assert.IsTrue((result.Vertex1 == 6 && result.Vertex2 == 7) ||
-                (result.Vertex1 == 7 && result.Vertex2 == 6));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577580, 3.7204004), delta, null, null); //,-110, -76, -74
-            Assert.IsTrue((result.Vertex1 == 5 && result.Vertex2 == 6) ||
-                (result.Vertex1 == 6 && result.Vertex2 == 5));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579032, 3.7204258), delta, null, null); //,-111, -74, -72
-            Assert.IsTrue((result.Vertex1 == 1 && result.Vertex2 == 5) ||
-                (result.Vertex1 == 5 && result.Vertex2 == 1));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580453, 3.7204614), delta, null, null); //,-112, -72, -70
-            Assert.IsTrue((result.Vertex1 == 4 && result.Vertex2 == 1) ||
-                (result.Vertex1 == 1 && result.Vertex2 == 4));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581938, 3.7203953), delta, null, null); //,-113, -70, -68
-            Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 4) ||
-                (result.Vertex1 == 4 && result.Vertex2 == 3));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581826, 3.7201413), delta, null, null); //,-114, -46, -68
-            Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 2) ||
-                (result.Vertex1 == 2 && result.Vertex2 == 3));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580310, 3.7201998), delta, null, null); //,-115, -46, -72
-            Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 1) ||
-                (result.Vertex1 == 1 && result.Vertex2 == 2));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579208, 3.7200525), delta, null, null); //,-116, -20, -22
-            Assert.IsTrue((result.Vertex1 == 11 && result.Vertex2 == 7) ||
-                (result.Vertex1 == 7 && result.Vertex2 == 11));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580134, 3.7199966), delta, null, null); //,-117, -46, -22
-            Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 11) ||
-                (result.Vertex1 == 11 && result.Vertex2 == 2));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581251, 3.7198950), delta, null, null); //,-118, -46, -48
-            Assert.IsTrue((result.Vertex1 == 18 && result.Vertex2 == 2) ||
-                (result.Vertex1 == 2 && result.Vertex2 == 18));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579479, 3.7197985), delta, null, null); //,-119, -22, -56
-            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 11) ||
-                (result.Vertex1 == 11 && result.Vertex2 == 10));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580166, 3.7195496), delta, null, null); //,-120, -56, -65
-            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 9) ||
-                (result.Vertex1 == 9 && result.Vertex2 == 10));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581299, 3.7195673), delta, null, null); //,-121, -65, -50
-            Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 9) ||
-                (result.Vertex1 == 9 && result.Vertex2 == 8));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581651, 3.7196664), delta, null, null); //,-122, -50, -48
-            Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 18) ||
-                (result.Vertex1 == 18 && result.Vertex2 == 8));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0582050, 3.7194505), delta, null, null); //,-123, -50, -52
-            Assert.IsTrue((result.Vertex1 == 19 && result.Vertex2 == 8) ||
-                (result.Vertex1 == 8 && result.Vertex2 == 19));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0582082, 3.7191330), delta, null, null); //,-124, -52, -54
-            Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 19) ||
-                (result.Vertex1 == 19 && result.Vertex2 == 15));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581651, 3.7189628), delta, null, null); //,-125, -54, -62
-            Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 14) ||
-                (result.Vertex1 == 14 && result.Vertex2 == 15));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580725, 3.7189781), delta, null, null); //,-126, -62, -60
-            Assert.IsTrue((result.Vertex1 == 14 && result.Vertex2 == 13) ||
-                (result.Vertex1 == 13 && result.Vertex2 == 14));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580006, 3.7191305), delta, null, null); //,-127, -60, -58
-            Assert.IsTrue((result.Vertex1 == 13 && result.Vertex2 == 12) ||
-                (result.Vertex1 == 12 && result.Vertex2 == 13));
-            result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579783, 3.7194149), delta, null, null); //,-128, -58, -56
-            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 12) ||
-                (result.Vertex1 == 12 && result.Vertex2 == 10));
         }
 
         /// <summary>
