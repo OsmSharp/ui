@@ -47,41 +47,33 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void RoutingRegressionTest1()
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-
-            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
+            var interpreter = new OsmRoutingInterpreter();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<LiveEdge> memory_data =
-                new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
-            LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, tags_index);
-            XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
-            OsmStreamFilterSort sorter = new OsmStreamFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
-            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
-            Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
+            var basicRouter = new DykstraRoutingLive();
+            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // resolve the three points in question.
-            GeoCoordinate point35 = new GeoCoordinate(51.01257, 4.000753);
-            RouterPoint point35resolved = router.Resolve(Vehicle.Car, point35);
-//            GeoCoordinate point40 = new GeoCoordinate(51.01250, 4.000013);
-//            RouterPoint point40resolved = router.Resolve(Vehicle.Car, point40);
-            GeoCoordinate point45 = new GeoCoordinate(51.01315, 3.999588);
-            RouterPoint point45resolved = router.Resolve(Vehicle.Car, point45);
+            var point35 = new GeoCoordinate(51.01257, 4.000753);
+            var point35resolved = router.Resolve(Vehicle.Car, point35);
+            var point45 = new GeoCoordinate(51.01315, 3.999588);
+            var point45resolved = router.Resolve(Vehicle.Car, point45);
 
             // route between 35 and 45.
-            Route routebefore = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
-
-//            GeoCoordinate point129 = new GeoCoordinate(51.01239, 3.999573);
-//            RouterPoint point129resolved = router.Resolve(Vehicle.Car, point129);
+            var routebefore = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
 
             // route between 35 and 45.
-            Route routeafter = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
+            var routeafter = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
             Assert.AreEqual(routebefore.TotalDistance, routeafter.TotalDistance);
         }
 

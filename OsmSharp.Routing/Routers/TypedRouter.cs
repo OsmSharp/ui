@@ -759,6 +759,16 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
+        /// Returns a routerpoint for the given location.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        private bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
+        {
+            return _routerPoints.TryGetValue(location, out point);
+        }
+
+        /// <summary>
         /// Resolves the given coordinate to the closest routable point.
         /// </summary>
         /// <param name="vehicle"></param>
@@ -923,7 +933,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            SearchClosestResult<TEdgeData> result = _router.SearchClosest(_dataGraph, _interpreter,
+            var result = _router.SearchClosest(_dataGraph, _interpreter,
                 vehicle, coordinate, delta, matcher, matchingTags, verticesOnly); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
@@ -935,13 +945,11 @@ namespace OsmSharp.Routing.Routers
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
                     }
-                    return this.Normalize(
-                        new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
+                    return this.Normalize(new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
                 }
                 else
                 { // the result is on an edge.
-                    return this.Normalize(
-                        this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position, result.Edge));
+                    return this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position, result.Edge);
                 }
             }
             return null; // no routable object was found closeby.
@@ -1111,6 +1119,27 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
+        /// Holds the intermediate points ids.
+        /// </summary>
+        private const long IntermediatePoints = long.MinValue + (long.MaxValue / 1);
+
+        /// <summary>
+        /// Holds the id of the next intermediate point.
+        /// </summary>
+        private long _nextIntermediateId = long.MinValue;
+
+        /// <summary>
+        /// Returns the next intermediate id.
+        /// </summary>
+        /// <returns></returns>
+        private long GetNextIntermediateId()
+        {
+            long next = _nextIntermediateId;
+            _nextIntermediateId++;
+            return next;
+        }
+
+        /// <summary>
         /// Holds the resolved graphs per used vehicle type.
         /// </summary>
         private readonly Dictionary<Vehicle, TypedRouterResolvedGraph> _resolvedGraphs;
@@ -1143,10 +1172,62 @@ namespace OsmSharp.Routing.Routers
         private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position, TEdgeData edgeData)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
-            // calculate a shorted path in the resolved graph.
-            PathSegment<long> path = this.ResolvedShortest(vehicle, vertex1, vertex2);
+            // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
+            PathSegment<long> path = null;
+            var intermediates = new List<long>();
+            if(edgeData.Coordinates != null)
+            { // the resolved edge has intermediate coordinates.
+                RouterPoint intermediaRouterpoint;
+                for(int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                {
+                    if(this.GetRouterPoint(new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude), 
+                        out intermediaRouterpoint))
+                    {
+                        intermediates.Add(intermediaRouterpoint.Id);
+                    }
+                }
+
+                // check if there are intermediate points, if yes calculate route along points.
+                if(intermediates.Count > 0)
+                {
+                    long previousId = vertex1;
+                    for(int idx = 0; idx < intermediates.Count; idx++)
+                    {
+                        long currentId = intermediates[idx];
+                        var currentRoute = this.ResolvedShortest(vehicle, previousId, currentId);
+                        if(path == null)
+                        {
+                            path = currentRoute;
+                        }
+                        else
+                        {
+                            path = currentRoute.ConcatenateAfter(path);
+                        }
+                        previousId = currentId;
+                    }
+                    path = this.ResolvedShortest(vehicle, previousId, vertex2).ConcatenateAfter(path);
+                }
+            }
+            else
+            { // calculate a route between the two points and make sure there are no other intermediate points in between.
+                // there can be only one edge without intermediate points.
+                path = this.ResolvedShortest(vehicle, vertex1, vertex2);
+                if(path != null)
+                {
+                    foreach(long vertex in path.ToArray())
+                    {
+                        if(vertex < TypedRouter<TEdgeData>.IntermediatePoints)
+                        { // oeps, another intermediate point, discard current path.
+                            path = null;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // augement path if any to include resolved point.
             var vertices = new long[0];
             if (path != null)
             { // the vertices in this path.
@@ -1194,7 +1275,7 @@ namespace OsmSharp.Routing.Routers
                     long previousVertex = vertex1;
                     for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
                     {
-                        long intermediateId = this.GetNextResolvedId();
+                        long intermediateId = this.GetNextIntermediateId();
                         graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
                         graph.AddArc(previousVertex, intermediateId,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
@@ -1203,6 +1284,11 @@ namespace OsmSharp.Routing.Routers
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  !edgeData.Forward));
                         vertices[idx + 1] = intermediateId;
+
+                        // add as a resolved point.
+                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                            edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude)));
+
                         previousVertex = intermediateId;
                     }
                     graph.AddArc(previousVertex, vertex2,
@@ -1298,7 +1384,8 @@ namespace OsmSharp.Routing.Routers
                                       edgeData.Tags,
                                       !edgeData.Forward));
 
-            return new RouterPoint(resolvedVertex, resolvedCoordinate);
+            return this.Normalize(
+                        new RouterPoint(resolvedVertex, resolvedCoordinate));
         }
 
         /// <summary>
