@@ -1229,18 +1229,20 @@ namespace OsmSharp.Routing.Routers
             int positionIdx = 0;
             double totalDistance = 0;
             float latitude, longitude;
-            graph.GetVertex(vertices[0], out latitude1, out longitude1);
-            graph.GetVertex(vertices[vertices.Length - 1], out latitude2, out longitude2);
             var previous = new GeoCoordinate(latitude1, longitude1);
-            var current = new GeoCoordinate(latitude2, longitude2);
-            totalDistance = current.Distance(previous);
-            //for (int idx = 1; idx < vertices.Length; idx++)
-            //{
-            //    graph.GetVertex(vertices[idx], out latitude, out longitude);
-            //    var current = new GeoCoordinate(latitude, longitude);
-            //    totalDistance = totalDistance + current.Distance(previous);
-            //    previous = current;
-            //}
+            GeoCoordinate current;
+            if (edgeData.Coordinates != null)
+            {
+                for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                {
+                    current = new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                    totalDistance = totalDistance + current.DistanceReal(previous).Value;
+                    previous = current;
+                }
+            }
+            current = new GeoCoordinate(latitude2, longitude2);
+            totalDistance = totalDistance + current.DistanceReal(previous).Value;
+
             double currentDistance = 0;
             graph.GetVertex(vertices[0], out latitude, out longitude);
             previous = new GeoCoordinate(latitude, longitude);
@@ -1250,7 +1252,7 @@ namespace OsmSharp.Routing.Routers
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
                 current = new GeoCoordinate(latitude, longitude);
                 var previousDistance = currentDistance;
-                currentDistance = currentDistance + current.Distance(previous);
+                currentDistance = currentDistance + current.DistanceReal(previous).Value;
                 var ratio = currentDistance / totalDistance;
                 if(ratio >= position)
                 { // the resolved position has been reached.

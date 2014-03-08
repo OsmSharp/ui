@@ -134,50 +134,51 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             nextEdges = _graph.GetArcs(current);
                         }
 
-                        // check if the edge contains form-points.
+                        // check if the edge contains intermediate points.
                         if (vertices.Count == 2)
-                        { // add the empty coordinate list.
+                        { // no intermediate points: add the empty coordinate list.
                             var oldEdgeValue = oldEdge.Value;
                             oldEdgeValue.Coordinates = emptyCoordinateList;
                             _graph.DeleteArc(vertexToProcess, oldEdge.Key); // remove first edge.
                             _graph.AddArc(vertexToProcess, oldEdge.Key, oldEdgeValue, null);
-                            break;
                         }
-
-                        // STEP2: Build array of coordinates.
-                        var coordinates = new GeoCoordinateSimple[vertices.Count - 2];
-                        float latitude, longitude;
-                        for (int idx = 1; idx < vertices.Count - 1; idx++)
-                        {
-                            _graph.GetVertex(vertices[idx], out latitude, out longitude);
-                            coordinates[idx - 1] = new GeoCoordinateSimple()
+                        else
+                        { // intermediate points: build array.
+                            // STEP2: Build array of coordinates.
+                            var coordinates = new GeoCoordinateSimple[vertices.Count - 2];
+                            float latitude, longitude;
+                            for (int idx = 1; idx < vertices.Count - 1; idx++)
                             {
-                                Latitude = latitude,
-                                Longitude = longitude
-                            };
-                        }
+                                _graph.GetVertex(vertices[idx], out latitude, out longitude);
+                                coordinates[idx - 1] = new GeoCoordinateSimple()
+                                {
+                                    Latitude = latitude,
+                                    Longitude = longitude
+                                };
+                            }
 
-                        // STEP3: Remove all unneeded edges.
-                        _graph.DeleteArc(vertices[0], vertices[1]); // remove first edge.
-                        for (int idx = 1; idx < vertices.Count - 1; idx++)
-                        { // delete all intermidiate arcs.
-                            _graph.DeleteArc(vertices[idx]);
-                        }
-                        _graph.DeleteArc(vertices[vertices.Count - 1], vertices[vertices.Count - 2]); // remove last edge.
+                            // STEP3: Remove all unneeded edges.
+                            _graph.DeleteArc(vertices[0], vertices[1]); // remove first edge.
+                            for (int idx = 1; idx < vertices.Count - 1; idx++)
+                            { // delete all intermidiate arcs.
+                                _graph.DeleteArc(vertices[idx]);
+                            }
+                            _graph.DeleteArc(vertices[vertices.Count - 1], vertices[vertices.Count - 2]); // remove last edge.
 
-                        // STEP4: Add new edges.
-                        _graph.AddArc(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
-                        {
-                            Coordinates = coordinates,
-                            Forward = oldEdge.Value.Forward,
-                            Tags = oldEdge.Value.Tags
-                        }, this);
-                        _graph.AddArc(vertices[vertices.Count - 1], vertices[0], new LiveEdge()
-                        {
-                            Coordinates = coordinates,
-                            Forward = !oldEdge.Value.Forward,
-                            Tags = oldEdge.Value.Tags
-                        }, this);
+                            // STEP4: Add new edges.
+                            _graph.AddArc(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
+                            {
+                                Coordinates = coordinates,
+                                Forward = oldEdge.Value.Forward,
+                                Tags = oldEdge.Value.Tags
+                            }, this);
+                            _graph.AddArc(vertices[vertices.Count - 1], vertices[0], new LiveEdge()
+                            {
+                                Coordinates = coordinates,
+                                Forward = !oldEdge.Value.Forward,
+                                Tags = oldEdge.Value.Tags
+                            }, this);
+                        }
                     }
                 }
                 // move to the next position.
