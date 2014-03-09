@@ -211,15 +211,6 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         }
 
         /// <summary>
-        /// Tests resolving coordinates to routable points.
-        /// </summary>
-        [Test]
-        public void TestDykstraLiveResolveBetweenNodes()
-        {
-            this.DoTestResolveBetweenNodes();
-        }
-
-        /// <summary>
         /// Regression test on routing resolved nodes.
         /// </summary>
         [Test]

@@ -16,34 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.Math.Structures
+namespace OsmSharp.Routing.Graph.PreProcessor
 {
     /// <summary>
-    /// Abstracts a data structure indexing objects by their location.
+    /// Abstract representation of a pre-processor.
     /// </summary>
-    public interface ILocatedObjectIndex<TPointType, TDataType>
-        where TPointType : PointF2D
+    public interface IPreProcessor
     {
         /// <summary>
-        /// Returns all objects inside the given bounding box.
+        /// Starts the pre-processing.
         /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-		IEnumerable<TDataType> GetInside(BoxF2D box);
-
-        /// <summary>
-        /// Adds new located data.
-        /// </summary>
-        /// <param name="location"></param>
-        /// <param name="data"></param>
-        void Add(TPointType location, TDataType data);
-
-        /// <summary>
-        /// Clears all data from this index.
-        /// </summary>
-        void Clear();
+        void Start();
     }
 }

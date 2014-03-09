@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
+
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
@@ -24,7 +26,7 @@ namespace OsmSharp.Routing.Graph
     public interface IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Returns the forward flag.
+        /// Returns the forward flag relative to the tags.
         /// </summary>
         bool Forward { get; }
 
@@ -32,6 +34,11 @@ namespace OsmSharp.Routing.Graph
         /// Returns true if this edge represents a neighbour relation.
         /// </summary>
         bool RepresentsNeighbourRelations { get; }
+
+        /// <summary>
+        /// Returns intermidiate coordinates (if any).
+        /// </summary>
+        GeoCoordinateSimple[] Coordinates { get; }
 
         /// <summary>
         /// Returns the tags identifier.

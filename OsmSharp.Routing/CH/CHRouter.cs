@@ -1358,7 +1358,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<CHEdgeData> SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
@@ -1375,11 +1375,11 @@ namespace OsmSharp.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<CHEdgeData> SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             // first try a very small area.
-            SearchClosestResult result = this.DoSearchClosest(graph, interpreter,
+            SearchClosestResult<CHEdgeData> result = this.DoSearchClosest(graph, interpreter,
                 vehicle, coordinate, delta / 10, matcher, pointTags, verticesOnly);
             if (result.Distance < double.MaxValue)
             { // success!
@@ -1400,7 +1400,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        private SearchClosestResult DoSearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        private SearchClosestResult<CHEdgeData> DoSearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             double searchBoxSize = delta;
@@ -1414,8 +1414,8 @@ namespace OsmSharp.Routing.CH
             KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs = graph.GetArcs(searchBox);
 
             // loop over all.
-            var closestWithMatch = new SearchClosestResult(double.MaxValue, 0);
-            var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
+            var closestWithMatch = new SearchClosestResult<CHEdgeData>(double.MaxValue, 0);
+            var closestWithoutMatch = new SearchClosestResult<CHEdgeData>(double.MaxValue, 0);
             if (!verticesOnly)
             {
                 foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
@@ -1432,14 +1432,14 @@ namespace OsmSharp.Routing.CH
 
                         if (distance < 0.00001)
                         { // the distance is smaller than the tolerance value.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
                             TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                             if (matcher == null ||
                                 (pointTags == null || pointTags.Count == 0) ||
                                 matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
-                                closestWithMatch = new SearchClosestResult(
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                     distance, arc.Key);
                                 break;
                             }
@@ -1447,7 +1447,7 @@ namespace OsmSharp.Routing.CH
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
 
                             // try and match.
@@ -1458,7 +1458,7 @@ namespace OsmSharp.Routing.CH
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Value.Key);
 
                             // try and match.
@@ -1499,7 +1499,7 @@ namespace OsmSharp.Routing.CH
 
                                 if (distance < closestWithoutMatch.Distance)
                                 { // the distance is smaller.
-                                    closestWithoutMatch = new SearchClosestResult(
+                                    closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                         distance, arc.Key);
 
                                     // try and match.
@@ -1531,8 +1531,8 @@ namespace OsmSharp.Routing.CH
                                     double distancePoint = fromCoordinates.Distance(projectedPoint);
                                     double position = distancePoint / distanceTotal;
 
-                                    closestWithoutMatch = new SearchClosestResult(
-                                        distance, uncontracted.Key, uncontracted.Value.Key, position);
+                                    closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value);
 
                                     // try and match.
                                     //if(matcher.Match(_
@@ -1556,7 +1556,7 @@ namespace OsmSharp.Routing.CH
                         double distance = coordinate.Distance(vertexCoordinate);
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
                         }
 
@@ -1564,7 +1564,7 @@ namespace OsmSharp.Routing.CH
                         distance = coordinate.Distance(vertexCoordinate);
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Value.Key);
                         }
                     }

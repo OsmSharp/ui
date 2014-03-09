@@ -187,6 +187,14 @@ namespace OsmSharp.Math.Structures.QTree
         }
 
         /// <summary>
+        /// Clears all data.
+        /// </summary>
+        public void Clear()
+        {
+            _root = null;
+        }
+
+        /// <summary>
         /// An implementation of a quad tree.
         /// </summary>
         private class QuadTreeNode

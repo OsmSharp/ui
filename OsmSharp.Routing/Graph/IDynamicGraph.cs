@@ -33,6 +33,14 @@ namespace OsmSharp.Routing.Graph
         uint AddVertex(float latitude, float longitude);
 
         /// <summary>
+        /// Sets the vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        void SetVertex(uint vertex, float latitude, float longitude);
+
+        /// <summary>
         /// Adds a vertex.
         /// </summary>
         /// <param name="latitude"></param>
@@ -51,10 +59,22 @@ namespace OsmSharp.Routing.Graph
         void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
 
         /// <summary>
+        /// Deletes all arcs starting at the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        void DeleteArc(uint vertex);
+
+        /// <summary>
         /// Delete all arcs arc between two vertices.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         void DeleteArc(uint from, uint to);
+
+        /// <summary>
+        /// Trims the graph to store a max number of vertices.
+        /// </summary>
+        /// <param name="max"></param>
+        void Trim(uint max);
     }
 }

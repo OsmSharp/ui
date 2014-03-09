@@ -55,5 +55,13 @@ namespace OsmSharp.Math.Structures
         {
             _data.Add(new KeyValuePair<PointType, DataType>(location, data));
         }
+
+        /// <summary>
+        /// Clears all data from this index.
+        /// </summary>
+        public void Clear()
+        {
+            _data.Clear();
+        }
     }
 }

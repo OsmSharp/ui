@@ -16,11 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Logging;
+using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Logging;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -115,7 +114,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Starts pre-processing all nodes
         /// </summary>
-        /// <remarks>Returns the last-contracted vertex.</remarks>
         public void Start()
         {
             _misses_queue = new Queue<bool>();

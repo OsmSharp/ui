@@ -231,7 +231,7 @@ namespace OsmSharp.Test.Unittests.Routing
             IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
 
             const float delta = 0.001f;
-            SearchClosestResult result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null);
+            var result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null);
             Assert.IsTrue((result.Vertex1 == 20 && result.Vertex2 == 21) ||
                 (result.Vertex1 == 21 && result.Vertex2 == 20));
             result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0576510, 3.7194124), delta, null, null); //,-104, -14, -12

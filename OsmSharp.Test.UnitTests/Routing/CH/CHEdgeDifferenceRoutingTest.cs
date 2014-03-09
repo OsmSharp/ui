@@ -212,15 +212,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         }
 
         /// <summary>
-        /// Tests a simple shortest route calculation.
-        /// </summary>
-        [Test]
-        public void TestCHEdgeDifferenceResolveBetweenNodes()
-        {
-            this.DoTestResolveBetweenNodes();
-        }
-
-        /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
         [Test]

@@ -111,6 +111,18 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Sets a vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        public void SetVertex(uint vertex, float latitude, float longitude)
+        {
+            _coordinates[vertex].Latitude = latitude;
+            _coordinates[vertex].Longitude = longitude;
+        }
+
+        /// <summary>
         /// Returns the information in the current vertex.
         /// </summary>
         /// <param name="id"></param>
@@ -195,6 +207,15 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Removes all arcs starting at vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public void DeleteArc(uint vertex)
+        {
+            _vertices[vertex] = null;
+        }
+
+        /// <summary>
         /// Removes all arcs starting at from ending at to.
         /// </summary>
         /// <param name="from"></param>
@@ -264,6 +285,18 @@ namespace OsmSharp.Routing.Graph
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Trims the size of this graph.
+        /// </summary>
+        /// <param name="max"></param>
+        public void Trim(uint max)
+        {
+            Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)max);
+            Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, (int)max);
+
+            _nextId = max;
         }
 
         /// <summary>

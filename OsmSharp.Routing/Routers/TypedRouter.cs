@@ -16,16 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Logging;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -165,7 +165,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             // calculate the route.
-            PathSegment<long> route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
+            var route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(vehicle, source), this.RouteResolvedGraph(vehicle, targets), max);
 
             // find the target.
@@ -203,7 +203,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            PathSegment<long>[][] routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources),
+            var routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources),
                 this.RouteResolvedGraph(vehicle, targets), double.MaxValue);
 
             var constructedRoutes = new Route[sources.Length][];
@@ -462,7 +462,7 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        ///     Generates a list of entries.
+        /// Generates a list of entries.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertices"></param>
@@ -489,35 +489,63 @@ namespace OsmSharp.Routing.Routers
             {
                 // get all the data needed to calculate the next route entry.
                 long nodeCurrent = vertices[idx];
+                var nodePreviousCoordinate = coordinate;
+                var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1]);
                 //long nodeNext = vertices[idx + 1];
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
 
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
                 // STEP1: Get the names.
-                TagsCollectionBase currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
-                string name = _interpreter.EdgeInterpreter.GetName(currentTags);
-                Dictionary<string, string> names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+                var currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
+                var name = _interpreter.EdgeInterpreter.GetName(currentTags);
+                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+
+                // add intermediate entries.
+                if (edge.Coordinates != null)
+                { // loop over coordinates.
+                    for (int coordinateIdx = 0; coordinateIdx < edge.Coordinates.Length; coordinateIdx++)
+                    {
+                        var entry = new RoutePointEntry();
+                        entry.Latitude = edge.Coordinates[coordinateIdx].Latitude;
+                        entry.Longitude = edge.Coordinates[coordinateIdx].Longitude;
+                        entry.Type = RoutePointEntryType.Along;
+                        entry.Tags = currentTags.ConvertFrom();
+                        entry.WayFromName = name;
+                        entry.WayFromNames = names.ConvertFrom();
+
+                        entries.Add(entry);
+                    }
+                }
 
                 // STEP2: Get the side streets
-                IList<RoutePointEntrySideStreet> sideStreets = new List<RoutePointEntrySideStreet>();
-                Dictionary<long, IDynamicGraphEdgeData> neighbours = this.GetNeighboursUndirectedWithEdges(
-                    vehicle, nodeCurrent);
-                HashSet<long> consideredNeighbours = new HashSet<long>();
+                var sideStreets = new List<RoutePointEntrySideStreet>();
+                var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent);
+                var consideredNeighbours = new HashSet<GeoCoordinate>();
                 if (neighbours.Count > 2)
                 {
                     // construct neighbours list.
                     foreach (var neighbour in neighbours)
                     {
-                        if (!consideredNeighbours.Contains(neighbour.Key))
-                        {
-                            if (neighbour.Key != nodePrevious && neighbour.Key != vertices[idx + 1])
-                            {
+                        var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                        if (neighbour.Value.Coordinates != null &&
+                            neighbour.Value.Coordinates.Length > 0)
+                        { // get the first of the coordinates array.
+                            neighbourKeyCoordinate = new GeoCoordinate(
+                                neighbour.Value.Coordinates[0].Latitude,
+                                neighbour.Value.Coordinates[0].Longitude);
+                        }
+                        if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
+                        { // neighbour has not been considered yet.
+                            consideredNeighbours.Add(neighbourKeyCoordinate);
+                            if (neighbourKeyCoordinate != nodePreviousCoordinate &&
+                                neighbourKeyCoordinate != nodeNextCoordinate)
+                            { // the neighbour is not the node before or the node after the current one.
+                                var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                                var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
+
+                                // build the side street info.
                                 var sideStreet = new RoutePointEntrySideStreet();
-
-                                GeoCoordinate neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                                TagsCollectionBase tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
-
                                 sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
                                 sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
                                 sideStreet.Tags = tags.ConvertFrom();
@@ -527,12 +555,11 @@ namespace OsmSharp.Routing.Routers
                                 sideStreets.Add(sideStreet);
                             }
                         }
-                        consideredNeighbours.Add(neighbour.Key);
                     }
                 }
 
                 // create the route entry.
-                GeoCoordinate nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
+                var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
 
                 var routeEntry = new RoutePointEntry();
                 routeEntry.Latitude = (float)nextCoordinate.Latitude;
@@ -554,14 +581,37 @@ namespace OsmSharp.Routing.Routers
                 int last_idx = vertices.Length - 1;
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[last_idx - 1], vertices[last_idx]);
                 TagsCollectionBase tags = _dataGraph.TagsIndex.Get(edge.Tags);
+
+                // get names.
+                var name = _interpreter.EdgeInterpreter.GetName(tags);
+                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+
+                // add intermediate entries.
+                if (edge.Coordinates != null)
+                { // loop over coordinates.
+                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    {
+                        var entry = new RoutePointEntry();
+                        entry.Latitude = edge.Coordinates[idx].Latitude;
+                        entry.Longitude = edge.Coordinates[idx].Longitude;
+                        entry.Type = RoutePointEntryType.Along;
+                        entry.Tags = tags.ConvertFrom();
+                        entry.WayFromName = name;
+                        entry.WayFromNames = names;
+
+                        entries.Add(entry);
+                    }
+                }
+
+                // add last entry.
                 coordinate = this.GetCoordinate(vehicle, vertices[last_idx]);
                 var last = new RoutePointEntry();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
                 last.Tags = tags.ConvertFrom();
-                last.WayFromName = _interpreter.EdgeInterpreter.GetName(tags);
-                last.WayFromNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                last.WayFromName = name;
+                last.WayFromNames = names;
 
                 entries.Add(last);
             }
@@ -580,21 +630,21 @@ namespace OsmSharp.Routing.Routers
             long vertex1)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
             var neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
             {
-                KeyValuePair<uint, TEdgeData>[] arcs = this.GetNeighboursUndirected(vertex1);
-                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
+                var arcs = this.GetNeighboursUndirected(vertex1);
+                foreach (var arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
                 }
             }
             else
             {
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetArcs(vertex1);
-                foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
+                var arcs = graph.GetArcs(vertex1);
+                foreach (var arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
                 }
@@ -716,6 +766,16 @@ namespace OsmSharp.Routing.Routers
                 normalize = point;
             }
             return normalize;
+        }
+
+        /// <summary>
+        /// Returns a routerpoint for the given location.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        private bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
+        {
+            return _routerPoints.TryGetValue(location, out point);
         }
 
         /// <summary>
@@ -883,7 +943,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter,
+            var result = _router.SearchClosest(_dataGraph, _interpreter,
                 vehicle, coordinate, delta, matcher, matchingTags, verticesOnly); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
@@ -895,13 +955,11 @@ namespace OsmSharp.Routing.Routers
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
                     }
-                    return this.Normalize(
-                        new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
+                    return this.Normalize(new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
                 }
                 else
                 { // the result is on an edge.
-                    return this.Normalize(
-                        this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position));
+                    return this.AddResolvedPoint(vehicle, result.Vertex1.Value, result.Vertex2.Value, result.Position, result.Edge);
                 }
             }
             return null; // no routable object was found closeby.
@@ -1029,7 +1087,8 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate,
+            // search for a close edge/vertex.
+            var result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate,
                 delta, null, null, verticesOnly); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
@@ -1070,7 +1129,28 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        /// Holds the resolved graph.
+        /// Holds the intermediate points ids.
+        /// </summary>
+        private const long IntermediatePoints = long.MinValue + (long.MaxValue / 2);
+
+        /// <summary>
+        /// Holds the id of the next intermediate point.
+        /// </summary>
+        private long _nextIntermediateId = long.MinValue;
+
+        /// <summary>
+        /// Returns the next intermediate id.
+        /// </summary>
+        /// <returns></returns>
+        private long GetNextIntermediateId()
+        {
+            long next = _nextIntermediateId;
+            _nextIntermediateId++;
+            return next;
+        }
+
+        /// <summary>
+        /// Holds the resolved graphs per used vehicle type.
         /// </summary>
         private readonly Dictionary<Vehicle, TypedRouterResolvedGraph> _resolvedGraphs;
 
@@ -1097,177 +1177,225 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="position"></param>
+        /// <param name="edgeData"></param>
         /// <returns></returns>
-        private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position)
+        private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position, TEdgeData edgeData)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
-            PathSegment<long> path = this.Shortest(vehicle, vertex1, vertex2);
+            // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
+            PathSegment<long> path = null;
+            var intermediates = new List<long>();
+            if(edgeData.Coordinates != null)
+            { // the resolved edge has intermediate coordinates.
+                RouterPoint intermediaRouterpoint;
+                for(int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                {
+                    if(this.GetRouterPoint(new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude), 
+                        out intermediaRouterpoint))
+                    {
+                        intermediates.Add(intermediaRouterpoint.Id);
+                    }
+                }
+
+                // check if there are intermediate points, if yes calculate route along points.
+                if(intermediates.Count > 0)
+                {
+                    long previousId = vertex1;
+                    for(int idx = 0; idx < intermediates.Count; idx++)
+                    {
+                        long currentId = intermediates[idx];
+                        var currentRoute = this.ResolvedShortest(vehicle, previousId, currentId);
+                        if(path == null)
+                        {
+                            path = currentRoute;
+                        }
+                        else
+                        {
+                            path = currentRoute.ConcatenateAfter(path);
+                        }
+                        previousId = currentId;
+                    }
+                    path = this.ResolvedShortest(vehicle, previousId, vertex2).ConcatenateAfter(path);
+                }
+            }
+            else
+            { // calculate a route between the two points and make sure there are no other intermediate points in between.
+                // there can be only one edge without intermediate points.
+                path = this.ResolvedShortest(vehicle, vertex1, vertex2);
+                if(path != null)
+                {
+                    foreach(long vertex in path.ToArray())
+                    {
+                        if(vertex < TypedRouter<TEdgeData>.IntermediatePoints)
+                        { // oeps, another intermediate point, discard current path.
+                            path = null;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // augement path if any to include resolved point.
             var vertices = new long[0];
             if (path != null)
             { // the vertices in this path.
                 vertices = path.ToArray();
             }
+
             // should contain vertex1 and vertex2.
-            if (vertices.Length == 0 ||
-                (vertices[0] == vertex1 && vertices[vertices.Length - 1] == vertex2))
-            {
-                // the vertices match.
-                float longitude1, latitude1, longitude2, latitude2;
-                if (_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) &&
-                   _dataGraph.GetVertex(vertex2, out latitude2, out longitude2))
-                { // the two vertices are contained in the home graph.
-                    var vertex1Coordinate = new GeoCoordinate(
-                        latitude1, longitude1);
-                    var vertex2Coordinate = new GeoCoordinate(
-                        latitude2, longitude2);
-
-                    var resolvedCoordinate = new GeoCoordinate(
-                        latitude1 * (1.0 - position) + latitude2 * position,
-                        longitude1 * (1.0 - position) + longitude2 * position);
-                    if (vertices.Length == 0)
-                    { // the path has a length of 0; the vertices are not in the resolved graph yet!
-
-                        // add the vertices in the resolved graph.
-                        float latitudeDummy, longitudeDummy;
-                        if (!graph.GetVertex(vertex1, out latitudeDummy, out longitudeDummy))
-                        {
-                            graph.AddVertex(vertex1, latitude1, longitude1);
-                        }
-                        if (!graph.GetVertex(vertex2, out latitudeDummy, out longitudeDummy))
-                        {
-                            graph.AddVertex(vertex2, latitude2, longitude2);
-                        }
-
-                        // find the arc(s).
-                        KeyValuePair<uint, TEdgeData>? arc = null;
-                        KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(vertex1);
-                        for (int idx = 0; idx < arcs.Length; idx++)
-                        {
-                            if (arcs[idx].Key == vertex2)
-                            { // arc is found!
-                                arc = arcs[idx];
-                            }
-                        }
-                        // find backward arc if needed.
-                        if (!arc.HasValue)
-                        {
-                            arcs = _dataGraph.GetArcs(vertex2);
-                            for (int idx = 0; idx < arcs.Length; idx++)
-                            {
-                                if (arcs[idx].Key == vertex1)
-                                { // arc is found!
-                                    arc = arcs[idx];
-                                }
-                            }
-                        }
-
-                        // check if an arc was found!
-                        if (!arc.HasValue)
-                        {
-                            throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                        }
-
-                        // add the arc (in both directions)
-                        graph.AddArc(vertex1, vertex2, 
-                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                                 arc.Value.Value.Forward));
-                        graph.AddArc(vertex2, vertex1, 
-                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(arc.Value.Value.Tags,
-                                                                                !arc.Value.Value.Forward));
-
-                        // create the route manually.
-                        vertices = new long[2];
-                        vertices[0] = vertex1;
-                        vertices[1] = vertex2;
-                    }
-                    else if (vertices.Length == 2)
-                    { // paths of length two are impossible!
-                        throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                    }
-
-                    // calculate positions.
-                    int positionIdx = 0;
-                    double total = vertex1Coordinate.Distance(vertex2Coordinate);
-                    for (int idx = 1; idx < vertices.Length; idx++)
-                    { // calculate positions.
-                        float latitudeResolved, longitudeResolved;
-                        if (graph.GetVertex(vertices[idx], out latitudeResolved, out longitudeResolved))
-                        { // vertex found
-                            double currentPosition = (vertex1Coordinate.Distance(new GeoCoordinate(
-                                latitudeResolved, longitudeResolved))) / total;
-                            if (currentPosition > position)
-                            { // the position is found.
-                                positionIdx = idx - 1;
-                                break;
-                            }
-                        }
-                        else
-                        { // oeps; vertex was not found!
-                            throw new Exception(string.Format("Vertex with id {0} not found!", vertices[idx]));
-                        }
-                    }
-
-                    // get the vertices and the arc between them.
-                    long vertexFrom = vertices[positionIdx];
-                    long vertexTo = vertices[positionIdx + 1];
-
-                    KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>? fromToArc = null;
-                    KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] fromArcs =
-                        graph.GetArcs(vertexFrom);
-                    for (int idx = 0; idx < fromArcs.Length; idx++)
-                    {
-                        if (fromArcs[idx].Key == vertexTo)
-                        { // arc is found!
-                            fromToArc = fromArcs[idx];
-                        }
-                    }
-
-                    // check if an arc was found!
-                    if (!fromToArc.HasValue)
-                    {
-                        throw new Exception("A resolved position can only exist on an arc between two vertices.");
-                    }
-
-                    // remove the arc.
-                    graph.DeleteArc(vertexFrom, vertexTo);
-                    graph.DeleteArc(vertexTo, vertexFrom);
-
-                    // add new vertex.
-                    long resolvedVertex = this.GetNextResolvedId();
-                    graph.AddVertex(resolvedVertex, (float)resolvedCoordinate.Latitude,
-                        (float)resolvedCoordinate.Longitude);
-
-                    // add the arcs.
-                    graph.AddArc(vertexFrom, resolvedVertex,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              fromToArc.Value.Value.Forward));
-                    graph.AddArc(resolvedVertex, vertexFrom,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              !fromToArc.Value.Value.Forward));
-                    graph.AddArc(resolvedVertex, vertexTo,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              fromToArc.Value.Value.Forward));
-                    graph.AddArc(vertexTo, resolvedVertex,
-                                          new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                                              fromToArc.Value.Value.Tags,
-                                              !fromToArc.Value.Value.Forward));
-
-                    return new RouterPoint(resolvedVertex, resolvedCoordinate);
-                }
-                else
-                {
-                    throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
-                }
-            }
-            else
+            if (vertices.Length > 0 &&
+                (vertices[0] != vertex1 || vertices[vertices.Length - 1] != vertex2))
             {
                 throw new Exception("A shortest path between two vertices has to contain at least the source and target!");
             }
+
+            // the vertices match.
+            float longitude1, latitude1, longitude2, latitude2;
+            if (!_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) ||
+                !_dataGraph.GetVertex(vertex2, out latitude2, out longitude2))
+            { // oeps, one of the vertices is not routable!
+                throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+            }
+            var vertex1Coordinate = new GeoCoordinate(
+                latitude1, longitude1);
+            var vertex2Coordinate = new GeoCoordinate(
+                latitude2, longitude2);
+
+            if (vertices.Length == 0)
+            { // the path has a length of 0; the vertices are not in the resolved graph yet!
+                // add the vertices in the resolved graph.
+                float latitudeDummy, longitudeDummy;
+                if (!graph.GetVertex(vertex1, out latitudeDummy, out longitudeDummy))
+                {
+                    graph.AddVertex(vertex1, latitude1, longitude1);
+                }
+                if (!graph.GetVertex(vertex2, out latitudeDummy, out longitudeDummy))
+                {
+                    graph.AddVertex(vertex2, latitude2, longitude2);
+                }
+
+                if (edgeData.Coordinates != null)
+                { // add intermediate points.
+                    // create the route manually.
+                    vertices = new long[2 + edgeData.Coordinates.Length];
+                    vertices[0] = vertex1;
+
+                    long previousVertex = vertex1;
+                    for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                    {
+                        long intermediateId = this.GetNextIntermediateId();
+                        graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                        graph.AddArc(previousVertex, intermediateId,
+                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                                 edgeData.Forward));
+                        graph.AddArc(intermediateId, previousVertex,
+                            new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                                 !edgeData.Forward));
+                        vertices[idx + 1] = intermediateId;
+
+                        // add as a resolved point.
+                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                            edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude)));
+
+                        previousVertex = intermediateId;
+                    }
+                    graph.AddArc(previousVertex, vertex2,
+                        new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                             edgeData.Forward));
+                    graph.AddArc(vertex2, previousVertex,
+                        new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
+                                                                             !edgeData.Forward));
+                    vertices[vertices.Length - 1] = vertex2;
+                }
+                else
+                { // no intermediate points, just create the route manually.
+                    vertices = new long[2];
+                    vertices[0] = vertex1;
+                    vertices[1] = vertex2;
+                }
+            }
+            else if (vertices.Length == 2)
+            { // paths of length two are impossible!
+                throw new Exception("A resolved position can only exist on an arc between two routable vertices.");
+            }
+
+            // calculate positions/resolved coordinates.
+            int positionIdx = 0;
+            double totalDistance = 0;
+            float latitude, longitude;
+            var previous = new GeoCoordinate(latitude1, longitude1);
+            GeoCoordinate current;
+            if (edgeData.Coordinates != null)
+            {
+                for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                {
+                    current = new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                    totalDistance = totalDistance + current.DistanceReal(previous).Value;
+                    previous = current;
+                }
+            }
+            current = new GeoCoordinate(latitude2, longitude2);
+            totalDistance = totalDistance + current.DistanceReal(previous).Value;
+
+            double currentDistance = 0;
+            graph.GetVertex(vertices[0], out latitude, out longitude);
+            previous = new GeoCoordinate(latitude, longitude);
+            GeoCoordinate resolvedCoordinate = null; 
+            for (int idx = 1; idx < vertices.Length; idx++)
+            {
+                graph.GetVertex(vertices[idx], out latitude, out longitude);
+                current = new GeoCoordinate(latitude, longitude);
+                var previousDistance = currentDistance;
+                currentDistance = currentDistance + current.DistanceReal(previous).Value;
+                var ratio = currentDistance / totalDistance;
+                if(ratio >= position)
+                { // the resolved position has been reached.
+                    positionIdx = idx - 1;
+                    var ratioBefore = previousDistance / totalDistance;
+                    var ratioLocal = (position - ratioBefore) / (ratio - ratioBefore);
+                    resolvedCoordinate = new GeoCoordinate(
+                        previous.Latitude * (1.0 - ratioLocal) + current.Latitude * ratioLocal,
+                        previous.Longitude * (1.0 - ratioLocal) + current.Longitude * ratioLocal);
+                    break;
+                }
+                previous = current;
+            }
+
+            // get the vertices and the arc between them.
+            long vertexFrom = vertices[positionIdx];
+            long vertexTo = vertices[positionIdx + 1];
+
+            // remove the arc.
+            graph.DeleteArc(vertexFrom, vertexTo);
+            graph.DeleteArc(vertexTo, vertexFrom);
+
+            // add new vertex.
+            long resolvedVertex = this.GetNextResolvedId();
+            graph.AddVertex(resolvedVertex, (float)resolvedCoordinate.Latitude,
+                (float)resolvedCoordinate.Longitude);
+
+            // add the arcs.
+            graph.AddArc(vertexFrom, resolvedVertex,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      edgeData.Tags,
+                                      edgeData.Forward));
+            graph.AddArc(resolvedVertex, vertexFrom,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      edgeData.Tags,
+                                      !edgeData.Forward));
+            graph.AddArc(resolvedVertex, vertexTo,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      edgeData.Tags,
+                                      edgeData.Forward));
+            graph.AddArc(vertexTo, resolvedVertex,
+                                  new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
+                                      edgeData.Tags,
+                                      !edgeData.Forward));
+
+            return this.Normalize(
+                        new RouterPoint(resolvedVertex, resolvedCoordinate));
         }
 
         /// <summary>
@@ -1369,7 +1497,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        private PathSegment<long> Shortest(Vehicle vehicle, long vertex1, long vertex2)
+        private PathSegment<long> ResolvedShortest(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);

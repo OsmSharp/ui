@@ -211,6 +211,17 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Sets a vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        public void SetVertex(uint vertex, float latitude, float longitude)
+        {
+            _graph.SetVertex(vertex, latitude, longitude);
+        }
+
+        /// <summary>
         /// Adds a new arc.
         /// </summary>
         /// <param name="from"></param>
@@ -220,6 +231,15 @@ namespace OsmSharp.Routing.Graph
         public void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
             _graph.AddArc(from, to, data, comparer);
+        }
+
+        /// <summary>
+        /// Removes all arcs starting at vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public void DeleteArc(uint vertex)
+        {
+            _graph.DeleteArc(vertex);
         }
 
         /// <summary>
@@ -240,6 +260,26 @@ namespace OsmSharp.Routing.Graph
             get
             {
                 return _tagsIndex;
+            }
+        }
+
+        /// <summary>
+        /// Trims this graph.
+        /// </summary>
+        /// <param name="max"></param>
+        public void Trim(uint max)
+        {
+            _graph.Trim(max);
+
+            // rebuild index.
+            float latitude, longitude;
+            _vertexIndex.Clear();
+            for (uint idx = 0; idx < max; idx++)
+            {
+                if (_graph.GetVertex(idx, out latitude, out longitude))
+                {
+                    _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
+                }
             }
         }
 
