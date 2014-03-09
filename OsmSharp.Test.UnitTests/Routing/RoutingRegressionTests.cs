@@ -135,8 +135,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // resolve points in some order and compare the resulting routes.
             // they should be identical in length except for some numerical rounding errors.
-            PermutationEnumerable<int> enumerator = new PermutationEnumerable<int>(
-                permuationArray);
+            var enumerator = new PermutationEnumerable<int>(permuationArray);
             foreach (int[] permutation in enumerator)
             {
                 // create router from scratch.
@@ -156,7 +155,8 @@ namespace OsmSharp.Test.Unittests.Routing
                         // calculate route.
                         var route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
 
-                        Assert.AreEqual(referenceRoutes[fromIdx][toIdx].TotalDistance, route.TotalDistance, 0.1);
+                        // TODO: changed the resolve accuracy to .5m. Make sure this is more accurate in the future.
+                        Assert.AreEqual(referenceRoutes[fromIdx][toIdx].TotalDistance, route.TotalDistance, 1);
                     }
                 }
             }

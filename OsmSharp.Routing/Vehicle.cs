@@ -246,6 +246,30 @@ namespace OsmSharp.Routing
         }
 
         /// <summary>
+        /// Returns the weight between points on an edge with the given tags for the vehicle.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="from"></param>
+        /// <param name="intermediate"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public virtual float Weight(TagsCollectionBase tags, GeoCoordinate from, GeoCoordinate[] intermediate, GeoCoordinate to)
+        {
+            double distance = 0;
+            var previous = from;
+            if(intermediate != null)
+            {
+                for(int idx = 0; idx < intermediate.Length; idx++)
+                {
+                    var current = intermediate[idx];
+                    distance = distance + this.Weight(tags, previous, current);
+                    previous = current;
+                }
+            }
+            return (float)(distance + this.Weight(tags, previous, to));
+        }
+
+        /// <summary>
         ///     Returns true if the edge is one way forward, false if backward, null if bidirectional.
         /// </summary>
         /// <param name="tags"></param>

@@ -489,6 +489,8 @@ namespace OsmSharp.Routing.Routers
             {
                 // get all the data needed to calculate the next route entry.
                 long nodeCurrent = vertices[idx];
+                var nodePreviousCoordinate = coordinate;
+                var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1]);
                 //long nodeNext = vertices[idx + 1];
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
 
@@ -517,24 +519,33 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // STEP2: Get the side streets
-                IList<RoutePointEntrySideStreet> sideStreets = new List<RoutePointEntrySideStreet>();
-                Dictionary<long, IDynamicGraphEdgeData> neighbours = this.GetNeighboursUndirectedWithEdges(
-                    vehicle, nodeCurrent);
-                HashSet<long> consideredNeighbours = new HashSet<long>();
+                var sideStreets = new List<RoutePointEntrySideStreet>();
+                var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent);
+                var consideredNeighbours = new HashSet<GeoCoordinate>();
                 if (neighbours.Count > 2)
                 {
                     // construct neighbours list.
                     foreach (var neighbour in neighbours)
                     {
-                        if (!consideredNeighbours.Contains(neighbour.Key))
-                        {
-                            if (neighbour.Key != nodePrevious && neighbour.Key != vertices[idx + 1])
-                            {
+                        var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                        if (neighbour.Value.Coordinates != null &&
+                            neighbour.Value.Coordinates.Length > 0)
+                        { // get the first of the coordinates array.
+                            neighbourKeyCoordinate = new GeoCoordinate(
+                                neighbour.Value.Coordinates[0].Latitude,
+                                neighbour.Value.Coordinates[0].Longitude);
+                        }
+                        if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
+                        { // neighbour has not been considered yet.
+                            consideredNeighbours.Add(neighbourKeyCoordinate);
+                            if (neighbourKeyCoordinate != nodePreviousCoordinate &&
+                                neighbourKeyCoordinate != nodeNextCoordinate)
+                            { // the neighbour is not the node before or the node after the current one.
+                                var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                                var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
+
+                                // build the side street info.
                                 var sideStreet = new RoutePointEntrySideStreet();
-
-                                GeoCoordinate neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                                TagsCollectionBase tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
-
                                 sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
                                 sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
                                 sideStreet.Tags = tags.ConvertFrom();
@@ -544,12 +555,11 @@ namespace OsmSharp.Routing.Routers
                                 sideStreets.Add(sideStreet);
                             }
                         }
-                        consideredNeighbours.Add(neighbour.Key);
                     }
                 }
 
                 // create the route entry.
-                GeoCoordinate nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
+                var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
 
                 var routeEntry = new RoutePointEntry();
                 routeEntry.Latitude = (float)nextCoordinate.Latitude;
@@ -620,21 +630,21 @@ namespace OsmSharp.Routing.Routers
             long vertex1)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
             var neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
             {
-                KeyValuePair<uint, TEdgeData>[] arcs = this.GetNeighboursUndirected(vertex1);
-                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
+                var arcs = this.GetNeighboursUndirected(vertex1);
+                foreach (var arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
                 }
             }
             else
             {
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetArcs(vertex1);
-                foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
+                var arcs = graph.GetArcs(vertex1);
+                foreach (var arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
                 }
@@ -1121,7 +1131,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds the intermediate points ids.
         /// </summary>
-        private const long IntermediatePoints = long.MinValue + (long.MaxValue / 1);
+        private const long IntermediatePoints = long.MinValue + (long.MaxValue / 2);
 
         /// <summary>
         /// Holds the id of the next intermediate point.
