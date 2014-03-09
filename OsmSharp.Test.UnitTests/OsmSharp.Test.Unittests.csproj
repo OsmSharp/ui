@@ -200,6 +200,9 @@
     <Compile Include="Routing\Instructions\LanguageGenerator\LanguageTestGenerator.cs" />
     <Compile Include="Routing\Live\LiveEdgePreProcessorRoutingTests.cs" />
     <Compile Include="Routing\Live\LiveEdgePreProcessorTests.cs" />
+    <Compile Include="Routing\Live\LiveEdgeRoutingComparisonTests.cs" />
+    <Compile Include="Routing\Live\LiveEdgeRoutingTest.cs" />
+    <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\DynamicGraphTests.cs" />
