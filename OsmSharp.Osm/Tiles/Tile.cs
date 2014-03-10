@@ -1,4 +1,6 @@
 ﻿using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Osm.Tiles
@@ -274,6 +276,21 @@ namespace OsmSharp.Osm.Tiles
             int n = (int)System.Math.Floor(System.Math.Pow(2, this.Zoom));
 
             return new Tile(this.X, n - this.Y - 1, this.Zoom);
+        }
+
+        /// <summary>
+        /// Converts this tile definition into a projected box.
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <returns></returns>
+        public BoxF2D ToBox(IProjection projection)
+        {
+            double left = projection.LongitudeToX(this.TopLeft[0]);
+            double right = projection.LongitudeToX(this.BottomRight[0]);
+            double bottom = projection.LatitudeToY(this.BottomRight[1]);
+            double top = projection.LatitudeToY(this.TopLeft[1]);
+
+            return new BoxF2D(left, bottom, right, top);
         }
 
         #endregion

@@ -54,7 +54,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         public LayerTile(string tilesURL)
-            : this(tilesURL, 20)
+            : this(tilesURL, 200)
         {
 
         }
@@ -150,7 +150,7 @@ namespace OsmSharp.UI.Map.Layers
             var request = (HttpWebRequest)HttpWebRequest.Create(
                 url);
             request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-            request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
+            //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
             WebResponse myResp = request.GetResponse();
             Stream stream = myResp.GetResponseStream();
@@ -162,8 +162,8 @@ namespace OsmSharp.UI.Map.Layers
                 stream.CopyTo(memoryStream);
 
                 image = memoryStream.ToArray();
-                image2D = new Image2D(tile.Box.BottomLeft[0], tile.Box.TopLeft[1],
-                    tile.Box.BottomLeft[0], tile.BottomRight[1], image,
+                var box = tile.ToBox(_projection);
+                image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image,
                     (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
                     (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
                 
@@ -171,6 +171,9 @@ namespace OsmSharp.UI.Map.Layers
                 { // add the result to the cache.
                     _cache.Add(tile, image2D);
                 }
+
+                // raise the layer changed event.
+                this.RaiseLayerChanged();
             }
         }
 
@@ -183,10 +186,10 @@ namespace OsmSharp.UI.Map.Layers
         /// <returns></returns>
         internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
-            List<Primitive2D> primitives = new List<Primitive2D>();
+            var primitives = new List<Primitive2D>();
             lock (_cache)
             {
-                foreach (KeyValuePair<Tile, Image2D> tile in _cache)
+                foreach (var tile in _cache)
                 {
                     if (tile.Value.IsVisibleIn(view, zoomFactor))
                     {
@@ -215,10 +218,12 @@ namespace OsmSharp.UI.Map.Layers
 			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
 
             // build the tile range.        
-            lock (_tileRange)
+            lock (_cache)
             { // make sure the tile range is not in use.
                 _tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
             }
+
+            this.TilesLoading();
         }
     }
 }
