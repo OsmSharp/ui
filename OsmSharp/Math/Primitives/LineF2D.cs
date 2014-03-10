@@ -598,6 +598,11 @@ namespace OsmSharp.Math.Primitives
         /// <returns>The projection point if it occurs inside the segmented line.</returns>
         public PointF2D ProjectOn(PointF2D point)
         {
+            if(this.Length == 0 && this.IsSegment)
+            { // cannot project on a line of length zero.
+                return null;
+            }
+
             // get the direction.
             VectorF2D direction = this.Direction;
 

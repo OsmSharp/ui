@@ -409,6 +409,10 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
             Assert.AreEqual(0, entryIdx);
 
+            location = route1.PositionAfter(distanceFromStart);
+            Assert.AreEqual(location.Latitude, projected.Latitude, delta);
+            Assert.AreEqual(location.Longitude, projected.Longitude, delta);
+
             distance = 15.0;
             location = route1.PositionAfter(distance);
             Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
@@ -417,6 +421,10 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
             Assert.AreEqual(1, entryIdx);
 
+            location = route1.PositionAfter(distanceFromStart);
+            Assert.AreEqual(location.Latitude, projected.Latitude, delta);
+            Assert.AreEqual(location.Longitude, projected.Longitude, delta);
+
             distance = 25;
             location = route1.PositionAfter(distance);
             Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
@@ -424,6 +432,10 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
             Assert.AreEqual(2, entryIdx);
+
+            location = route1.PositionAfter(distanceFromStart);
+            Assert.AreEqual(location.Latitude, projected.Latitude, delta);
+            Assert.AreEqual(location.Longitude, projected.Longitude, delta);
         }
     }
 }
