@@ -90,13 +90,13 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			// add a pre-processed vector data file.
-			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-				"OsmSharp.iOS.UI.Sample.default.map");
-			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+//			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+//				"OsmSharp.iOS.UI.Sample.default.map");
+//			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
 			// define dummy from and to points.
 			var from = new GeoCoordinate(51.261203, 4.780760);
@@ -129,9 +129,10 @@ namespace OsmSharp.iOS.UI.Sample
 			// define the mapview.
 			_mapView = new MapView();
 			//_mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
+            _mapView.MapAllowTilt = false;
 			_mapView.Map = map;
-			_mapView.MapMaxZoomLevel = 20;
-			_mapView.MapMinZoomLevel = 10;
+            _mapView.MapMaxZoomLevel = 19;
+            _mapView.MapMinZoomLevel = 0;
 			_mapView.MapTilt = 0;
 			_mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
 			_mapView.MapZoom = 18;
@@ -143,10 +144,10 @@ namespace OsmSharp.iOS.UI.Sample
 			// create the route tracker animator.
 			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-			// simulate a number of gps-location update along the calculated route.
-			Timer timer = new Timer(250);
-			timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-			timer.Start();
+//			// simulate a number of gps-location update along the calculated route.
+//			Timer timer = new Timer(250);
+//			timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+//			timer.Start();
 
 			View = _mapView;
 		}

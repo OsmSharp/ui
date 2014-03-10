@@ -106,67 +106,81 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         /// </summary>
         public override void NotifyChange(View2D view, double zoom)
         {
-            _currentView = view;
-            _currentZoom = zoom;
-
-            // reset the timer.
-            if (_timer == null)
-            { // create the timer.
-                _timer = new System.Threading.Timer(this.StaticDetectionCallback, null, StaticDetectionTriggerMillis, System.Threading.Timeout.Infinite);
-            }
-            else
-            { // change the timer.
-                _timer.Change(StaticDetectionTriggerMillis, System.Threading.Timeout.Infinite);
-            }
-
-            // no rendering was succesfull up until now, only start invalidating after first successfull render.
-            if (_latestTriggeredView == null)
+            lock (this)
             {
-                return;
-            }
+                _currentView = view;
+                _currentZoom = zoom;
 
-            // detect changes by % of view pan.
-            double[] newCenter = _latestTriggeredView.ToViewPort(100, 100, view.Center[0], view.Center[1]);
-            newCenter[0] = System.Math.Abs(newCenter[0] - 50.0);
-            newCenter[1] = System.Math.Abs(newCenter[1] - 50.0);
-            if(newCenter[0] > PanPercentage || newCenter[1] > PanPercentage)
-            { // the pan percentage change was detected.
-                if (this.LatestRenderingFinished ||
-                    !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
-					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-						"Rendering triggered: Pan detection.");
-                    this.Render();
+                // reset the timer.
+                if (_timer == null)
+                { // create the timer.
+                    _timer = new System.Threading.Timer(this.StaticDetectionCallback, null, StaticDetectionTriggerMillis, System.Threading.Timeout.Infinite);
                 }
-                return;
-            }
+                else
+                { // change the timer.
+                    _timer.Change(StaticDetectionTriggerMillis, System.Threading.Timeout.Infinite);
+                }
 
-            // detect changes by angle offset.
-            double angleDifference = System.Math.Abs(_latestTriggeredView.Angle.SmallestDifference(view.Angle));
-            if(angleDifference > DegreeOffset)
-            { // the angle difference change was detected.
-                if (this.LatestRenderingFinished ||
-                    !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
-					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-						"Rendering triggered: Angle detection.");
-                    this.Render();
+                // no rendering was succesfull up until now, only start invalidating after first successfull render.
+                if (_latestTriggeredView == null)
+                {
+                    return;
                 }
-                return;
-            }
 
-            // detect changes by zoom offset.
-            double zoomDifference = System.Math.Abs(_latestTriggeredZoom - _currentZoom);
-            if(zoomDifference > ZoomOffset)
-            { // the zoom difference change was detected.
-                if (this.LatestRenderingFinished ||
+                // detect changes by % of view pan.
+                double[] newCenter = _latestTriggeredView.ToViewPort(100, 100, view.Center[0], view.Center[1]);
+                newCenter[0] = System.Math.Abs(newCenter[0] - 50.0);
+                newCenter[1] = System.Math.Abs(newCenter[1] - 50.0);
+                if (newCenter[0] > PanPercentage || newCenter[1] > PanPercentage)
+                { // the pan percentage change was detected.
+                    if (this.LatestRenderingFinished ||
                     !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
-				{ // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
-					OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
-						"Rendering triggered: Zoom detection.");
-                    this.Render();
+                    { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+                        OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+                            "Rendering triggered: Pan detection.");
+                        this.Render();
+                    }
+                    return;
                 }
-                return;
+
+                // detect changes by angle offset.
+                double angleDifference = System.Math.Abs(_latestTriggeredView.Angle.SmallestDifference(view.Angle));
+                if (angleDifference > DegreeOffset)
+                { // the angle difference change was detected.
+                    if (this.LatestRenderingFinished ||
+                    !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
+                    { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+                        OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+                            "Rendering triggered: Angle detection.");
+                        this.Render();
+                    }
+                    return;
+                }
+
+                // detect changes by zoom offset.
+                double zoomDifference = System.Math.Abs(_latestTriggeredZoom - _currentZoom);
+                if (zoomDifference > ZoomOffset)
+                { // the zoom difference change was detected.
+                    if (this.LatestRenderingFinished ||
+                    !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))
+                    { // the last rendering was finished or the latest triggered view does not overlap with the current rendering.
+                        OsmSharp.Logging.Log.TraceEvent("DefaultTrigger", Logging.TraceEventType.Information,
+                            "Rendering triggered: Zoom detection.");
+                        this.Render();
+                    }
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// A way for the surface to complain that it is invalid.
+        /// </summary>
+        public override void Invalidate()
+        {
+            lock (this)
+            {
+                _latestTriggeredView = null;
             }
         }
 

@@ -28,7 +28,7 @@ namespace OsmSharp.UI.Animations
     public interface IInvalidatableMapSurface
     {
 		/// <summary>
-		/// Returns true if the surface know for sure that it will continue moving.
+        /// Returns true if the surface knows for sure that it will continue moving.
 		/// </summary>
 		bool StillMoving();
 

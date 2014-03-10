@@ -145,6 +145,8 @@ namespace OsmSharp.iOS.UI
 			_mapTilt = defaultMapTilt;
 			_mapZoom = defaultMapZoom;
 
+            _map.MapChanged += MapChanged;
+
 			_doubleTapAnimator = new MapViewAnimator(this);
 
 			this.BackgroundColor = UIColor.White;
@@ -829,7 +831,17 @@ namespace OsmSharp.iOS.UI
 		public Map Map
 		{
 			get { return _map; }
-			set { _map = value; }
+			set { 
+                if (_map != null)
+                {
+                    _map.MapChanged-=MapChanged;
+                }
+                _map = value;
+                if (_map != null)
+                {
+                    _map.MapChanged+=MapChanged;
+                }
+            }
 		}
 
 		/// <summary>
@@ -1278,6 +1290,19 @@ namespace OsmSharp.iOS.UI
 		{
 
 		}
+
+        /// <summary>
+        /// Handles the changed event.
+        /// </summary>
+        private void MapChanged()
+        {
+            if (_listener != null)
+            {
+                _listener.Invalidate();
+            }
+            _previouslyRenderedView = null;
+            this.NotifyMovementByInvoke();
+        }
 
 		/// <summary>
 		/// Raises the map touched event.

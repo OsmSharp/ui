@@ -334,22 +334,47 @@ namespace OsmSharp.iOS.UI
 			}
 			else
 			{
-				// TODO: figurate out how to use this horroble IOS api to instantiate an image from a bytearray.
-				//CGImage image = CGImage.FromPNG(
+                image = UIImage.LoadFromData(NSData.FromArray(imageData)).CGImage;
 			}
 
-			if (image != null)
-			{ // there is an image. draw it!
-				double[] topleft = this.Tranform(left, top);
-				double[] bottomright = this.Tranform(right, bottom);
-				float leftPixels = (float)topleft[0];
-				float topPixels = (float)topleft[1];
-				float rightPixels = (float)bottomright[0];
-				float bottomPixels = (float)bottomright[1];
+            if (image != null)
+            { // there is an image. draw it!
+//				double[] topleft = this.Tranform(left, top);
+//				double[] bottomright = this.Tranform(right, bottom);
+//				float leftPixels = (float)topleft[0];
+//				float topPixels = (float)topleft[1];
+//				float rightPixels = (float)bottomright[0];
+//				float bottomPixels = (float)bottomright[1];
+//
+                var bounds = new RectangleF2D(left, bottom, (left - right),
+                                 (top - bottom));
 
-				target.Target.CGContext.DrawImage(new RectangleF(leftPixels, topPixels, (rightPixels - leftPixels),
-					(bottomPixels - topPixels)), image);
-			}
+                target.Target.CGContext.SetAllowsFontSubpixelQuantization(true);
+                target.Target.CGContext.SetAllowsFontSmoothing(true);
+                target.Target.CGContext.SetAllowsAntialiasing(true);
+                target.Target.CGContext.SetAllowsSubpixelPositioning(true);
+                target.Target.CGContext.SetShouldAntialias(true);
+
+                PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
+                PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
+                PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
+                //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+
+                RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+                                               topLeft - bottomLeft);
+
+                target.Target.CGContext.SaveState();
+                target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
+                target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
+                target.Target.CGContext.ScaleCTM(-1, 1);
+
+                target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
+                    (float)transformed.Width, (float)transformed.Height), image);
+
+                target.Target.CGContext.RestoreState();
+
+                return tag;
+            }
 			else if (layer != null)
 			{
 				double[] topleft = this.Tranform(left, top);

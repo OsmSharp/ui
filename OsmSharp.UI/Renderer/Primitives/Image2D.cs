@@ -41,7 +41,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="bottom"></param>
         /// <param name="right"></param>
         /// <param name="imageData"></param>
-        public Image2D(float left, float top, float bottom, float right, byte[] imageData)
+        public Image2D(double left, double top, double bottom, double right, byte[] imageData)
         {
             this.ImageData = imageData;
             this.Left = left;

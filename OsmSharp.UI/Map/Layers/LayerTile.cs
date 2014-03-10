@@ -33,7 +33,7 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A tile layer.
     /// </summary>
-    public class LayerTile : Layer
+    public class LayerTile : Layer, IComparer<Primitive2D>
     {
         /// <summary>
         /// Holds the tile url.
@@ -46,16 +46,41 @@ namespace OsmSharp.UI.Map.Layers
         private readonly LRUCache<Tile, Image2D> _cache;
 
         /// <summary>
+        /// Holds the minimum zoom level.
+        /// </summary>
+        private readonly int _minZoomLevel = 0;
+
+        /// <summary>
+        /// Holds the maximum zoom level.
+        /// </summary>
+        private readonly int _maxZoomLevel = 18;
+
+        /// <summary>
         /// Holds the offset to calculate the minimum zoom.
         /// </summary>
         private const float _zoomMinOffset = 0.5f;
+
+        /// <summary>
+        /// Holds the maximum threads.
+        /// </summary>
+        private const int _maxThreads = 3;
+        
+        /// <summary>
+        /// Holds the tile to-load queue.
+        /// </summary>
+        private readonly Queue<Tile> _queue = new Queue<Tile>();
+
+        /// <summary>
+        /// Holds the timer.
+        /// </summary>
+        private Timer _timer;
 
         /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         public LayerTile(string tilesURL)
-            : this(tilesURL, 200)
+            : this(tilesURL, 40)
         {
 
         }
@@ -69,14 +94,10 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+            _timer = null;
 
             _projection = new WebMercator();
         }
-
-        /// <summary>
-        /// Holds the tile range of the current view.
-        /// </summary>
-        private TileRange _tileRange = null;
 
         /// <summary>
         /// Holds the map projection.
@@ -84,37 +105,24 @@ namespace OsmSharp.UI.Map.Layers
         private readonly IProjection _projection;
 
         /// <summary>
-        /// Loads the tiles async.
+        /// The timer callback.
         /// </summary>
-        private void TilesLoading()
+        /// <param name="status">Status.</param>
+        private void LoadQueuedTiles(object status)
         {
-            TileRange tileRange = null;
-
-            // build the tile range list.
-            List<Tile> tiles = null;
-            lock (_tileRange)
-            { // make sure the tile range does not change.
-                tiles = new List<Tile>(
-                    _tileRange);
-                tileRange = _tileRange;
-            }
-            foreach (Tile tile in tiles)
-            {
-                if (_tileRange != tileRange)
-                { // keep looping until a new different tile range is requested.
-                    break;
+            lock (_queue)
+            { // make sure that access to the queue is synchronized.
+                int queue = _queue.Count;
+                while (_queue.Count > queue - _maxThreads && _queue.Count > 0)
+                { // there are queued items.
+                    LoadTile(_queue.Dequeue());
+//                    ThreadPool.QueueUserWorkItem(
+//                        LoadTile, _queue.Dequeue());
                 }
 
-                // check if tile is cached.
-                lock (_cache)
-                {
-                    Image2D image;
-                    if (!_cache.TryGet(tile, out image))
-                    { // the tile has to be loaded.
-                        ThreadPool.QueueUserWorkItem(
-                            new WaitCallback(LoadTile), 
-                            new KeyValuePair<TileRange, Tile>(tileRange, tile));
-                    }
+                if (_queue.Count == 0)
+                { // dispose of timer.
+                    _timer.Dispose();
                 }
             }
         }
@@ -124,21 +132,14 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         private void LoadTile(object state)
         {
-            // get job.
-            KeyValuePair<TileRange, Tile> job = (KeyValuePair<TileRange, Tile>)state;
-
-            if (_tileRange != job.Key)
-            { // only load tile if range is unchanged.
-                return;
-            }
-
             // a tile was found to load.
-            Tile tile = job.Value;
+            Tile tile = state as Tile;
             Image2D image2D;
             lock (_cache)
             { // check again for the tile.
                 if (_cache.TryGet(tile, out image2D))
                 { // tile is already there!
+                    _cache.Add(tile, image2D); // add again to update status.
                     return;
                 }
             }
@@ -155,37 +156,69 @@ namespace OsmSharp.UI.Map.Layers
 
             try
             {
-
-                WebResponse myResp = request.GetResponse();
-                Stream stream = myResp.GetResponseStream();
-                byte[] image = null;
-                if (stream != null)
-                {
-                    // there is data: read it.
-                    var memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
-
-                    image = memoryStream.ToArray();
-                    var delta = 0.0015;
-                    var box = tile.ToBox(_projection);
-                    image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1] + delta, box.Max[0] + delta, image,
-                        (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
-                        (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
-
-                    lock (_cache)
-                    { // add the result to the cache.
-                        _cache.Add(tile, image2D);
-                    }
-
-                    // raise the layer changed event.
-                    this.RaiseLayerChanged();
-                }
+                this.DoWithResponse(request, ((HttpWebResponse obj) => { this.Response(obj, tile); }));
             }
             catch(Exception ex)
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
         }
+
+        void DoWithResponse(HttpWebRequest request, Action<HttpWebResponse> responseAction)
+        {
+            Action wrapperAction = () =>
+            {
+                request.BeginGetResponse(new AsyncCallback((iar) =>
+                {
+                    var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
+                    responseAction(response);
+                }), request);
+            };
+            wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
+            {
+                var action = (Action)iar.AsyncState;
+                action.EndInvoke(iar);
+            }), wrapperAction);
+        }
+
+        /// <summary>
+        /// Response the specified myResp and tile.
+        /// </summary>
+        /// <param name="myResp">My resp.</param>
+        /// <param name="tile">Tile.</param>
+        private void Response(WebResponse myResp, Tile tile) {
+            Stream stream = myResp.GetResponseStream();
+            byte[] image = null;
+            if (stream != null)
+            {
+                // there is data: read it.
+                var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+
+                image = memoryStream.ToArray();
+                var box = tile.ToBox(_projection);
+                var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image);
+                image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
+
+                lock (_cache)
+                { // add the result to the cache.
+                    _cache.Add(tile, image2D);
+                }
+
+                // raise the layer changed event.
+                this.RaiseLayerChanged();
+            }
+        }
+
+        /// <summary>
+        /// Holds the previous zoom factor.
+        /// </summary>
+        private float _previousZoomFactor = 1;
+
+        /// <summary>
+        /// Holds the ascending boolean.
+        /// </summary>
+        private bool _ascending = false;
 
         /// <summary>
         /// Returns all primitives from this layer visible for the given parameters.
@@ -204,11 +237,46 @@ namespace OsmSharp.UI.Map.Layers
                     if (tile.Value.IsVisibleIn(view, zoomFactor))
                     {
                         primitives.Add(tile.Value);
+                        Image2D temp;
+                        double minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
+                        double maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
+                        if (zoomFactor < maxZoom && zoomFactor > minZoom)
+                        {
+                            _cache.TryGet(tile.Key, out temp);
+                        }
                     }
                 }
             }
+
+            // set the ascending flag.
+            if (_previousZoomFactor != zoomFactor)
+            { // only change flag when difference.
+                _ascending = (_previousZoomFactor < zoomFactor);
+                _previousZoomFactor = zoomFactor;
+            }
+
+            primitives.Sort(this);
             return primitives;
         }
+
+        #region IComparer implementation
+
+        /// <summary>
+        /// Compare the specified x and y.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        int IComparer<Primitive2D>.Compare(Primitive2D x, Primitive2D y)
+        {
+            if (_ascending)
+            {
+                return y.Layer.CompareTo(x.Layer);
+            }
+            return x.Layer.CompareTo(y.Layer);
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Notifies this layer the mapview has changed.
@@ -222,18 +290,37 @@ namespace OsmSharp.UI.Map.Layers
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
 
-			// build the boundingbox.
-			var viewBox = view.OuterBox;
-			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
-			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
+            if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
+            {
+                // build the boundingbox.
+                var viewBox = view.OuterBox;
+                var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                    map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
-            // build the tile range.        
-            lock (_cache)
-            { // make sure the tile range is not in use.
-                _tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
+                // build the tile range.
+                lock (_queue)
+                { // make sure the tile range is not in use.
+                    _queue.Clear();
+
+                    lock (_cache)
+                    {
+                        foreach (var tile in TileRange.CreateAroundBoundingBox(box, zoomLevel))
+                        {
+                            Image2D temp;
+                            if (!_cache.TryPeek(tile, out temp))
+                            {
+                                _queue.Enqueue(tile);
+                            }
+                        }
+
+                        if (_timer != null)
+                        { // dispose of previous timer.
+                            _timer.Dispose();
+                        }
+                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 200);
+                    }
+                }
             }
-
-            this.TilesLoading();
         }
     }
 }

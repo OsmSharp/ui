@@ -55,6 +55,14 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             _surface.ResetListener();
         }
 
+        /// <summary>
+        /// A way for the surface to complain that it is invalid.
+        /// </summary>
+        public virtual void Invalidate()
+        {
+
+        }
+
 		/// <summary>
 		/// Gets the surface.
 		/// </summary>
