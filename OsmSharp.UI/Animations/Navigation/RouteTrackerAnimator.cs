@@ -224,7 +224,7 @@ namespace OsmSharp.UI.Animations.Navigation
             GeoCoordinate center = _routeTracker.PositionRoute;
 			double nextDistance = 50;
 			Degree tilt = _mapView.MapTilt;
-			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
+			GeoCoordinate next = _routeTracker.PositionAfter(nextDistance);
 			if (next != null) {
 				IProjection projection = _mapView.Map.Projection;
 				VectorF2D direction = new PointF2D(projection.ToPixel(next)) -

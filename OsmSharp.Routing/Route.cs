@@ -316,17 +316,17 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public GeoCoordinate PositionAfter(Meter m)
         {
-            double distanceMeter = 0;
-            List<GeoCoordinate> points = this.GetPoints();
+            var distanceMeter = 0.0;
+            var points = this.GetPoints();
             for (int idx = 0; idx < points.Count - 1; idx++)
             {
-                double currentDistance = points[idx].DistanceReal(points[idx + 1]).Value;
+                var currentDistance = points[idx].DistanceReal(points[idx + 1]).Value;
                 if (distanceMeter + currentDistance >= m.Value)
                 { // the current distance should be in this segment.
-                    double segmentDistance = m.Value - distanceMeter;
-                    VectorF2D direction = points[idx + 1] - points[idx];
+                    var segmentDistance = m.Value - distanceMeter;
+                    var direction = points[idx + 1] - points[idx];
                     direction = direction * (segmentDistance / currentDistance);
-                    PointF2D position = points[idx] + direction;
+                    var position = points[idx] + direction;
                     return new GeoCoordinate(position[1], position[0]);
                 }
 				distanceMeter += currentDistance;
@@ -335,28 +335,103 @@ namespace OsmSharp.Routing
         }
 
         /// <summary>
-        /// Calculates the closest point on the route.
+        /// Calculates the closest point on the route relative to the given coordinate.
         /// </summary>
         /// <param name="coordinates"></param>
+        /// <param name="projectedCoordinates"></param>
         /// <returns></returns>
-        public GeoCoordinate ProjectOn(GeoCoordinate coordinates)
+        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates)
+        {
+            int entryIdx;
+            Meter distanceToProjected;
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+        }
+
+        /// <summary>
+        /// Calculates the closest point on the route relative to the given coordinate.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="projectedCoordinates"></param>
+        /// <param name="distanceToProjected"></param>
+        /// <returns></returns>
+        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out Meter distanceToProjected)
+        {
+            int entryIdx;
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+        }
+
+        /// <summary>
+        /// Calculates the closest point on the route relative to the given coordinate.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="distanceToProjected"></param>
+        /// <returns></returns>
+        public bool ProjectOn(GeoCoordinate coordinates, out Meter distanceToProjected)
+        {
+            int entryIdx;
+            GeoCoordinate projectedCoordinates;
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+        }
+
+        /// <summary>
+        /// Calculates the closest point on the route relative to the given coordinate.
+        /// </summary>
+        /// <returns></returns>
+        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out int entryIndex, out Meter distanceFromStart)
         {
             double distance = double.MaxValue;
-            GeoCoordinate closests = null;
-            List<GeoCoordinate> points = this.GetPoints();
+            distanceFromStart = 0;
+            double currentDistanceFromStart = 0;
+            projectedCoordinates = null;
+            entryIndex = -1;
+
+            // loop over all points and try to project onto the line segments.
+            GeoCoordinate projected;
+            double currentDistance;
+            var points = this.GetPoints();
             for (int idx = 0; idx < points.Count - 1; idx++)
             {
-                GeoCoordinateLine line = new GeoCoordinateLine(points[idx], points[idx + 1]);
-                PointF2D projectedPoint = line.ProjectOn(coordinates);
-                GeoCoordinate projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
-                double currentDistance = coordinates.Distance(projected);
-                if (currentDistance < distance)
-                {
-                    closests = projected;
-                    distance = currentDistance;
+                var line = new GeoCoordinateLine(points[idx], points[idx + 1], true, true);
+                var projectedPoint = line.ProjectOn(coordinates);
+                if (projectedPoint != null)
+                { // there was a projected point.
+                    projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
+                    currentDistance = coordinates.Distance(projected);
+                    if (currentDistance < distance)
+                    { // this point is closer.
+                        projectedCoordinates = projected;
+                        entryIndex = idx;
+                        distance = currentDistance;
+                        distanceFromStart = currentDistanceFromStart + projected.DistanceReal(points[idx]);
+                    }
                 }
+
+                // check first point.
+                projected = points[idx];
+                currentDistance = coordinates.Distance(projected);
+                if (currentDistance < distance)
+                { // this point is closer.
+                    projectedCoordinates = projected;
+                    entryIndex = idx;
+                    distance = currentDistance;
+                    distanceFromStart = currentDistanceFromStart + projected.DistanceReal(points[idx]);
+                }
+                
+                // update distance from start.
+                currentDistanceFromStart = currentDistanceFromStart + points[idx].DistanceReal(points[idx + 1]).Value;
             }
-            return closests;
+
+            // check last point.
+            projected = points[points.Count - 1];
+            currentDistance = coordinates.Distance(projected);
+            if (currentDistance < distance)
+            { // this point is closer.
+                projectedCoordinates = projected;
+                entryIndex = points.Count - 1;
+                distance = currentDistance;
+                distanceFromStart = currentDistanceFromStart;
+            }
+            return true;
         }
 
         /// <summary>

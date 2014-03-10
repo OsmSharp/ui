@@ -142,7 +142,7 @@ namespace OsmSharp.Routing.Navigation
         /// </summary>
         /// <param name="distance"></param>
         /// <returns></returns>
-        public GeoCoordinate PositionIn(Meter distance)
+        public GeoCoordinate PositionAfter(Meter distance)
         {
             return _route.PositionAfter(_distanceFromStart + distance);
         }
@@ -206,18 +206,18 @@ namespace OsmSharp.Routing.Navigation
         /// <param name="location">The measured location.</param>
         public void Track(GeoCoordinate location)
         {
-            // project onto the route.
-            KeyValuePair<int, GeoCoordinate> projectedResult = this.ProjectOn(_route, location);
-
-            // set the current/route position.
+            // set the current location.
             _currentPosition = location;
-            _currentRoutePosition = projectedResult.Value;
+
+            // project onto the route.
+            int entryIdx;
+            _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart);
 
             // find the next instruction.
             for (int instructionIdx = 0; instructionIdx < _instructions.Count; instructionIdx++)
             {
                 Instruction instruction = _instructions[instructionIdx];
-                if (instruction.EntryIdx >= projectedResult.Key)
+                if (instruction.EntryIdx >= entryIdx)
                 { // stop here!
                     _nextInstructionIdx = instructionIdx;
                     break;
@@ -225,69 +225,16 @@ namespace OsmSharp.Routing.Navigation
             }
 
             // calculate the distance to the next instruction.
-            GeoCoordinate previous = (new GeoCoordinate(_route.Entries[projectedResult.Key].Latitude, 
-                _route.Entries[projectedResult.Key].Longitude));
-            Meter distance = previous.DistanceReal(projectedResult.Value);
-            for (int idx = projectedResult.Key; idx < _instructions[_nextInstructionIdx].EntryIdx - 1; idx++)
+            var previous = (new GeoCoordinate(_route.Entries[entryIdx].Latitude, 
+                _route.Entries[entryIdx].Longitude));
+            var distance = previous.DistanceReal(_currentRoutePosition);
+            for (int idx = entryIdx; idx < _instructions[_nextInstructionIdx].EntryIdx - 1; idx++)
             {
                 GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx + 1].Latitude, _route.Entries[idx + 1].Longitude));
                 distance = distance + previous.DistanceReal(next);
                 previous = next;
             }
             _distanceNextInstruction = distance;
-
-            // calculate the distance from start.
-            previous = (new GeoCoordinate(_route.Entries[0].Latitude, _route.Entries[0].Longitude));
-            distance = 0;
-            for (int idx = 0; idx < projectedResult.Key - 1; idx++)
-            {
-                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx + 1].Latitude, _route.Entries[idx + 1].Longitude));
-                distance = distance + previous.DistanceReal(next);
-                previous = next;
-            }
-            distance = distance + previous.DistanceReal(projectedResult.Value);
-            _distanceFromStart = distance;
-        }
-
-        /// <summary>
-        /// Project on route and return the next entry index and coordinate.
-        /// </summary>
-        /// <param name="route"></param>
-        /// <param name="coordinates"></param>
-        /// <returns></returns>
-        private KeyValuePair<int, GeoCoordinate> ProjectOn(Route route, GeoCoordinate coordinates)
-        {
-            double distance = double.MaxValue;
-            GeoCoordinate closest = null;
-            int closestIdx = -1;
-            List<GeoCoordinate> points = route.GetPoints();
-            for (int idx = 0; idx < points.Count - 1; idx++)
-            {
-                GeoCoordinateLine line = new GeoCoordinateLine(points[idx], points[idx + 1], true, true);
-				PointF2D projectedPoint = line.ProjectOn(coordinates);
-				GeoCoordinate projected;
-				double currentDistance;
-				if (projectedPoint != null) {
-					projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
-					currentDistance = coordinates.Distance(projected);
-					if (currentDistance < distance)
-					{
-						closest = projected;
-						closestIdx = idx + 1;
-						distance = currentDistance;
-					}
-				}
-				projected = points[idx];
-				currentDistance = coordinates.Distance(projected);
-				if (currentDistance < distance)
-				{
-					closest = projected;
-					closestIdx = idx;
-					distance = currentDistance;
-				}
-
-            }
-            return new KeyValuePair<int,GeoCoordinate>(closestIdx, closest);
         }
     }
 }
