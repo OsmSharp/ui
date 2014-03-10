@@ -25,13 +25,13 @@ using OsmSharp.Routing;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test.Unittests.Routing
 {
     /// <summary>
     /// Does some unittesting on the OsmSharpRoute data format.
     /// </summary>
     [TestFixture]
-    public class OsmSharpRouteTests
+    public class RouteTests
     {
         /// <summary>
         /// Tests the presence of tags in a calculated route.

@@ -202,6 +202,7 @@
     <Compile Include="Routing\Live\LiveEdgePreProcessorTests.cs" />
     <Compile Include="Routing\Live\LiveEdgeRoutingComparisonTests.cs" />
     <Compile Include="Routing\Live\LiveEdgeRoutingTest.cs" />
+    <Compile Include="Routing\Navigation\RouterTrackerTests.cs" />
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
