@@ -38,8 +38,6 @@ namespace OsmSharp.WinForms.UI.Renderer
 	{
 	    private Pen _pen = new Pen(Color.Black);
 
-        //private _pen = new Pen(Color.FromArgb(color), widthInPixels);
-
         #region Caching Implementation
 
         /// <summary>
@@ -309,6 +307,11 @@ namespace OsmSharp.WinForms.UI.Renderer
                 image = Image.FromStream(new MemoryStream(imageData));
             }
 
+            // set interpolation mode to default. Only used when displaying tiles.
+            var previousInterpolationMode = target.Target.InterpolationMode;
+            target.Target.InterpolationMode = InterpolationMode.Default;
+
+            // draw image.
             double[] topleft = this.Tranform(left, top);
             double[] bottomright = this.Tranform(right, bottom);
 	        float x = (float)topleft[0];
@@ -317,6 +320,10 @@ namespace OsmSharp.WinForms.UI.Renderer
             float height = (float)bottomright[1] - y;
             target.Target.DrawImage(image, new RectangleF(x, y,
                 width, height));
+
+            // reset interpolation mode to default.
+            target.Target.InterpolationMode = previousInterpolationMode;
+
             return image;
         }
 

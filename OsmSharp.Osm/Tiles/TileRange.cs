@@ -137,7 +137,6 @@ namespace OsmSharp.Osm.Tiles
             return new TileRangeEnumerator(this);
         }
 
-
         /// <summary>
         /// Returns en enumerator of tiles.
         /// </summary>

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Primitives;
+
 namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>

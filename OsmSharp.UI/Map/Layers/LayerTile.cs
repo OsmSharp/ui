@@ -162,8 +162,9 @@ namespace OsmSharp.UI.Map.Layers
                 stream.CopyTo(memoryStream);
 
                 image = memoryStream.ToArray();
+                var delta = 0.0015;
                 var box = tile.ToBox(_projection);
-                image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image,
+                image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1] + delta, box.Max[0] + delta, image,
                     (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
                     (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
                 

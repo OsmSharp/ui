@@ -136,19 +136,17 @@ namespace OsmSharp.WinForms.UI
         {
             long ticksBefore = DateTime.Now.Ticks;
 
-            Graphics g = e.Graphics;
+            var g = e.Graphics;
 
             if (!_quickMode)
-            {
-                // set the nice graphics properties.
+            { // set the nice graphics properties.
                 g.SmoothingMode = SmoothingMode.HighQuality;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 g.CompositingQuality = CompositingQuality.HighQuality;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             }
             else
-            {
-                // set the quickmode graphics properties.
+            { // set the quickmode graphics properties.
                 g.SmoothingMode = SmoothingMode.HighSpeed;
                 g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
                 g.CompositingQuality = CompositingQuality.HighSpeed;
@@ -156,7 +154,7 @@ namespace OsmSharp.WinForms.UI
             }
 
             // render the map.
-            View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+            var view = _renderer.Create(this.Width, this.Height, this.Map,
                 (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             if (_quickMode)
             { // only render the cached scene.
