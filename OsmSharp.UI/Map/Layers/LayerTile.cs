@@ -26,6 +26,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
+using System;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -152,29 +153,37 @@ namespace OsmSharp.UI.Map.Layers
             request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
             //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
-            WebResponse myResp = request.GetResponse();
-            Stream stream = myResp.GetResponseStream();
-            byte[] image = null;
-            if (stream != null)
+            try
             {
-                // there is data: read it.
-                var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
 
-                image = memoryStream.ToArray();
-                var delta = 0.0015;
-                var box = tile.ToBox(_projection);
-                image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1] + delta, box.Max[0] + delta, image,
-                    (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
-                    (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
-                
-                lock (_cache)
-                { // add the result to the cache.
-                    _cache.Add(tile, image2D);
+                WebResponse myResp = request.GetResponse();
+                Stream stream = myResp.GetResponseStream();
+                byte[] image = null;
+                if (stream != null)
+                {
+                    // there is data: read it.
+                    var memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
+
+                    image = memoryStream.ToArray();
+                    var delta = 0.0015;
+                    var box = tile.ToBox(_projection);
+                    image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1] + delta, box.Max[0] + delta, image,
+                        (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
+                        (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
+
+                    lock (_cache)
+                    { // add the result to the cache.
+                        _cache.Add(tile, image2D);
+                    }
+
+                    // raise the layer changed event.
+                    this.RaiseLayerChanged();
                 }
-
-                // raise the layer changed event.
-                this.RaiseLayerChanged();
+            }
+            catch(Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
         }
 
