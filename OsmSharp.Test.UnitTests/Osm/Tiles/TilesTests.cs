@@ -120,5 +120,127 @@ namespace OsmSharp.Test.Unittests.Osm.Tiles
                 Assert.AreEqual(id, tile.Id);
             }
         }
+
+        /// <summary>
+        /// Tests the tile range count property.
+        /// </summary>
+        [Test]
+        public void TestTileRangeCount()
+        {
+            var range = new TileRange(0, 0, 0, 0, 16);
+            Assert.AreEqual(1, range.Count);
+            range = new TileRange(0, 0, 1, 0, 16);
+            Assert.AreEqual(2, range.Count);
+            range = new TileRange(0, 0, 1, 1, 16);
+            Assert.AreEqual(4, range.Count);
+        }
+
+        /// <summary>
+        /// Tests a tile range spiral enumerator.
+        /// </summary>
+        [Test]
+        public void TestTileSpiralEnumerator()
+        {
+            // simplest case, range with one tile.
+            var range = new TileRange(0, 0, 0, 0, 16);
+            var enumerator = new TileRange.TileRangeCenteredEnumerator(range);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsFalse(enumerator.MoveNext());
+
+            // a range with 2 tiles.
+            range = new TileRange(0, 0, 1, 0, 16);
+            enumerator = new TileRange.TileRangeCenteredEnumerator(range);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsFalse(enumerator.MoveNext());
+
+            // a range with 4 tiles.
+            range = new TileRange(0, 0, 1, 1, 16);
+            enumerator = new TileRange.TileRangeCenteredEnumerator(range);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsFalse(enumerator.MoveNext());
+
+            // a range with 6 tiles.
+            range = new TileRange(0, 0, 2, 1, 16);
+            enumerator = new TileRange.TileRangeCenteredEnumerator(range);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(2, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(2, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsFalse(enumerator.MoveNext());
+
+            // a range with 9 tiles.
+            range = new TileRange(0, 0, 2, 2, 16);
+            enumerator = new TileRange.TileRangeCenteredEnumerator(range);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(2, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(2, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(2, enumerator.Current.X);
+            Assert.AreEqual(2, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(1, enumerator.Current.X);
+            Assert.AreEqual(2, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(2, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(1, enumerator.Current.Y);
+            Assert.IsTrue(enumerator.MoveNext());
+            Assert.AreEqual(0, enumerator.Current.X);
+            Assert.AreEqual(0, enumerator.Current.Y);
+            Assert.IsFalse(enumerator.MoveNext());
+
+            // rudementary tests.
+            range = new TileRange(-10, -10, 10, 10, 16);
+            var tiles = new HashSet<Tile>(range.EnumerateInCenterFirst());
+            Assert.AreEqual(range.Count, tiles.Count);
+
+            // rudementary tests.
+            range = new TileRange(33638, 21862, 33640, 21864, 16);
+            tiles = new HashSet<Tile>(range.EnumerateInCenterFirst());
+            Assert.AreEqual(range.Count, tiles.Count);
+        }
     }
 }

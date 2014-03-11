@@ -304,7 +304,8 @@ namespace OsmSharp.UI.Map.Layers
 
                     lock (_cache)
                     {
-                        foreach (var tile in TileRange.CreateAroundBoundingBox(box, zoomLevel))
+                        var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
+                        foreach (var tile in tileRange.EnumerateInCenterFirst())
                         {
                             Image2D temp;
                             if (!_cache.TryPeek(tile, out temp))
