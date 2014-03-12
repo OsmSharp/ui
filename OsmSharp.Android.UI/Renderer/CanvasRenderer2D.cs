@@ -370,24 +370,26 @@ namespace OsmSharp.Android.UI
 		                                     double left, double top, double right, double bottom, byte[] imageData,
 		                                   object tag)
 		{
-			global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
-			if(image == null)
-			{
-				image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
-					imageData, 0, imageData.Length);
-			}
+            var rectangle = new RectangleF2D(left, bottom, right - left, bottom - top);
+            return this.DrawImage(target, rectangle, imageData, tag);
+            //global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
+            //if(image == null)
+            //{
+            //    image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
+            //        imageData, 0, imageData.Length);
+            //}
 
-			double[] topleft = this.Transform(left, top);
-			double[] bottomright = this.Transform(right, bottom);
-			float leftPixels = (float)topleft[0];
-			float topPixels = (float)topleft[1];
-			float rightPixels = (float)bottomright[0];
-			float bottomPixels = (float)bottomright[1];
+            //double[] topleft = this.Transform(left, top);
+            //double[] bottomright = this.Transform(right, bottom);
+            //float leftPixels = (float)topleft[0];
+            //float topPixels = (float)topleft[1];
+            //float rightPixels = (float)bottomright[0];
+            //float bottomPixels = (float)bottomright[1];
 
-			target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
-			                         new global::Android.Graphics.RectF(leftPixels, topPixels, rightPixels, bottomPixels),
-			                         null);
-			return image;
+            //target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
+            //                         new global::Android.Graphics.RectF(leftPixels, topPixels, rightPixels, bottomPixels),
+            //                         null);
+            //return image;
 		}
 
 		/// <summary>

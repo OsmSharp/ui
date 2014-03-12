@@ -89,12 +89,12 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             // add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a pre-processed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
@@ -110,12 +110,12 @@ namespace OsmSharp.Android.UI.Sample
             _router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
 
             // resolve points.
-            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
-            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
-
+            var routerPoint1 = _router.Resolve(Vehicle.Car, from);
+            var routerPoint2 = _router.Resolve(Vehicle.Car, to);
+            
             // calculate route.
-            Route route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-            RouteTracker routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
+            var route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+            var routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
             _enumerator = route.GetRouteEnumerable(10).GetEnumerator();
 
             // add a router layer.
@@ -152,10 +152,10 @@ namespace OsmSharp.Android.UI.Sample
             // create the route tracker animator.
 			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            // simulate a number of gps-location update along the calculated route.
-            Timer timer = new Timer(250);
-            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            timer.Start();
+            //// simulate a number of gps-location update along the calculated route.
+            //Timer timer = new Timer(250);
+            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            //timer.Start();
 
 			SetContentView (layout);
 		}

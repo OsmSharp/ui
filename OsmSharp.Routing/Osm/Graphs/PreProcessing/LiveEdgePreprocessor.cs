@@ -89,8 +89,14 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                 { // ok, the vertex was not already processed.
                     nextPosition++;
                     var oldEdges = edges.Clone() as KeyValuePair<uint, LiveEdge>[];
+                    var ignoreList = new HashSet<uint>();
                     foreach (var oldEdge in oldEdges)
                     { 
+                        if(ignoreList.Contains(oldEdge.Key))
+                        { // ignore this edge: already removed in a previous iteration.
+                            break;
+                        }
+
                         // don't re-process edges that already have coordinates.
                         if (oldEdge.Value.Coordinates != null)
                         { // this edge has already been processed.
@@ -125,6 +131,12 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                 break;
                             }
 
+                            // check for intermediates.
+                            if(nextEdge.Value.Coordinates != null)
+                            { // oeps, there are intermediates already, this can occur when two osm-ways are drawn on top of eachother.
+                                break;
+                            }
+
                             // set current/previous.
                             previous = current;
                             current = nextEdge.Key;
@@ -139,8 +151,29 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         { // no intermediate points: add the empty coordinate list.
                             var oldEdgeValue = oldEdge.Value;
                             oldEdgeValue.Coordinates = emptyCoordinateList;
-                            _graph.DeleteArc(vertexToProcess, oldEdge.Key); // remove first edge.
+                            
+                            // keep edges that already have intermediates.
+                            var edgesToKeep = new List<KeyValuePair<uint, LiveEdge>>();
+                            foreach(var edgeToKeep in _graph.GetArcs(vertexToProcess))
+                            {
+                                if(edgeToKeep.Key == oldEdge.Key && 
+                                    edgeToKeep.Value.Coordinates != null)
+                                {
+                                    edgesToKeep.Add(edgeToKeep);
+                                }
+                            }
+
+                            // delete olds arcs.
+                            _graph.DeleteArc(vertexToProcess, oldEdge.Key);
+
+                            // add new arc.
                             _graph.AddArc(vertexToProcess, oldEdge.Key, oldEdgeValue, null);
+
+                            // add edges to keep.
+                            foreach(var edgeToKeep in edgesToKeep)
+                            {
+                                _graph.AddArc(vertexToProcess, edgeToKeep.Key, edgeToKeep.Value, null);
+                            }
                         }
                         else
                         { // intermediate points: build array.
@@ -164,6 +197,11 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                 _graph.DeleteArc(vertices[idx]);
                             }
                             _graph.DeleteArc(vertices[vertices.Count - 1], vertices[vertices.Count - 2]); // remove last edge.
+                            if (vertices[0] == vertices[vertices.Count - 1])
+                            { // also remove outgoing edge.
+                                ignoreList.Add(vertices[vertices.Count - 2]); // make sure this arc is ignored in next iteration.
+                            }
+
 
                             // STEP4: Add new edges.
                             _graph.AddArc(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
@@ -172,9 +210,11 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                 Forward = oldEdge.Value.Forward,
                                 Tags = oldEdge.Value.Tags
                             }, this);
+                            var reverse = new GeoCoordinateSimple[coordinates.Length];
+                            coordinates.CopyToReverse(reverse, 0);
                             _graph.AddArc(vertices[vertices.Count - 1], vertices[0], new LiveEdge()
                             {
-                                Coordinates = coordinates,
+                                Coordinates = reverse,
                                 Forward = !oldEdge.Value.Forward,
                                 Tags = oldEdge.Value.Tags
                             }, this);
@@ -218,19 +258,29 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         _graph.DeleteArc(nextCompressedPosition);
                         foreach (var edge in edges)
                         { // add all arcs.
-                            _graph.AddArc(nextCompressedPosition, edge.Key, edge.Value, null);
+                            if (edge.Key != vertex)
+                            { // this edge is not an edge that has the same end-start point.
+                                _graph.AddArc(nextCompressedPosition, edge.Key, edge.Value, null);
+                            }
+                            else
+                            { // this edge is an edge that has the same end-start point.
+                                _graph.AddArc(nextCompressedPosition, nextCompressedPosition, edge.Value, null);
+                            }
 
                             // update other arcs.
-                            var reverseEdges = _graph.GetArcs(edge.Key);
-                            if (reverseEdges != null)
-                            { // there are reverse edges, check if there is a reference to vertex.
-                                reverseEdges = reverseEdges.Clone() as KeyValuePair<uint, LiveEdge>[];
-                                foreach (var reverseEdge in reverseEdges)
-                                { // check each edge for vertex.
-                                    if (reverseEdge.Key == vertex)
-                                    { // ok, replace this edge.
-                                        _graph.DeleteArc(edge.Key, vertex);
-                                        _graph.AddArc(edge.Key, nextCompressedPosition, edge.Value, null);
+                            if (edge.Key != vertex)
+                            { // do not update other arcs if other vertex is the same.
+                                var reverseEdges = _graph.GetArcs(edge.Key);
+                                if (reverseEdges != null)
+                                { // there are reverse edges, check if there is a reference to vertex.
+                                    reverseEdges = reverseEdges.Clone() as KeyValuePair<uint, LiveEdge>[];
+                                    foreach (var reverseEdge in reverseEdges)
+                                    { // check each edge for vertex.
+                                        if (reverseEdge.Key == vertex)
+                                        { // ok, replace this edge.
+                                            _graph.DeleteArc(edge.Key, vertex);
+                                            _graph.AddArc(edge.Key, nextCompressedPosition, reverseEdge.Value, null);
+                                        }
                                     }
                                 }
                             }

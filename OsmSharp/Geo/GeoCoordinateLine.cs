@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Math.Geo
 {
@@ -56,6 +57,32 @@ namespace OsmSharp.Math.Geo
             : base(point1, point2, is_segment1, is_segment2)
         {
 
+        }
+
+        /// <summary>
+        /// Projects the given point onto this line and calculates the real distance.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public Meter DistanceReal(GeoCoordinate coordinate)
+        {
+            var projected = this.ProjectOn(coordinate);
+            if(projected == null)
+            {
+                return double.MaxValue;
+            }
+            return new GeoCoordinate(projected).DistanceReal(coordinate);
+        }
+
+        /// <summary>
+        /// Returns the length of this line in Meters.
+        /// </summary>
+        public Meter LengthReal
+        {
+            get
+            {
+                return new GeoCoordinate(this.Point1).DistanceReal(new GeoCoordinate(this.Point2));
+            }
         }
 
         /// <summary>

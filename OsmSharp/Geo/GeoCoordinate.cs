@@ -47,6 +47,15 @@ namespace OsmSharp.Math.Geo
         /// <summary>
         /// Creates a geo coordinate.
         /// </summary>
+        public GeoCoordinate(PointF2D point)
+            : this(point[1], point[0])
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a geo coordinate.
+        /// </summary>
         /// <param name="longitude"></param>
         /// <param name="latitude"></param>
         public GeoCoordinate(double latitude,double longitude)

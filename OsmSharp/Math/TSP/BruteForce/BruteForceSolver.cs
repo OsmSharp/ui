@@ -44,13 +44,13 @@ namespace OsmSharp.Math.TSP.BruteForce
             PermutationEnumerable<int> enumerator = new PermutationEnumerable<int>(
                 solution.ToArray());
             int[] best = null;
-            double best_weight = double.MaxValue;
+            double bestWeight = double.MaxValue;
             foreach (int[] permutation in enumerator)
             {
-                double weigth = RouteExtensions.CalculateWeight(permutation, problem.First == problem.Last, problem);
-                if (weigth < best_weight)
+                double weight = RouteExtensions.CalculateWeight(permutation, problem.First == problem.Last, problem);
+                if (weight < bestWeight)
                 { // the best weight has improved.
-                    best_weight = weigth;
+                    bestWeight = weight;
                     best = permutation;
                 }
             }

@@ -93,7 +93,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperTwo()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+            var route = this.CalculateTSP(Assembly.GetExecutingAssembly()
                                                             .GetManifestResourceStream(
                                                                 @"OsmSharp.Test.Unittests.tsp_real.osm"),
                                                     Assembly.GetExecutingAssembly()
@@ -156,6 +156,17 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
                 }
             }
 
+            // test if routes exists.
+            for(int fromIdx = 0; fromIdx < points.Count; fromIdx++)
+            {
+                for (int toIdx = 0; toIdx < points.Count; toIdx++)
+                {
+                    var route = router.Calculate(Vehicle.Car, points[fromIdx], points[toIdx]);
+                    Assert.IsNotNull(route);
+                }
+            }
+
+            // create and execute solver.
             var tspSolver = new RouterTSPWrapper<RouterTSP>(
                 new RouterTSPAEXGenetic(), router, interpreter);
             return tspSolver.CalculateTSP(vehicleEnum, points.ToArray());

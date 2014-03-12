@@ -302,23 +302,24 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestManyToMany1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(
                 data, interpreter, basicRouter);
+
             var resolvedPoints = new RouterPoint[3];
             resolvedPoints[0] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             resolvedPoints[1] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             resolvedPoints[2] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
-            double[][] weights = router.CalculateManyToManyWeight(Vehicle.Car, resolvedPoints, resolvedPoints);
+            var weights = router.CalculateManyToManyWeight(Vehicle.Car, resolvedPoints, resolvedPoints);
 
             for (int x = 0; x < weights.Length; x++)
             {
                 for (int y = 0; y < weights.Length; y++)
                 {
-                    double manyToMany = weights[x][y];
-                    double pointToPoint = router.CalculateWeight(Vehicle.Car, resolvedPoints[x], resolvedPoints[y]);
+                    var manyToMany = weights[x][y];
+                    var pointToPoint = router.CalculateWeight(Vehicle.Car, resolvedPoints[x], resolvedPoints[y]);
 
                     Assert.AreEqual(pointToPoint, manyToMany);
                 }
@@ -382,13 +383,13 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolveBetweenRouteToSelf()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(data, interpreter, basicRouter);
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
             
             // first test a non-between node.
-            RouterPoint resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            Route route = router.Calculate(Vehicle.Car, resolved, resolved);
+            var resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            var route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
@@ -420,7 +421,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // initialize data.
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
 
             var vertex20 = new GeoCoordinate(51.0578532, 3.7192229);
             var vertex21 = new GeoCoordinate(51.0578518, 3.7195654);
@@ -428,7 +429,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             for (double position1 = 0.1; position1 < 0.91; position1 = position1 + 0.1)
             {
-                PointF2D point = vertex20 + ((vertex21 - vertex20) * position1);
+                var point = vertex20 + ((vertex21 - vertex20) * position1);
                 var vertex2021 = new GeoCoordinate(point[1], point[0]);
                 for (double position2 = 0.1; position2 < 0.91; position2 = position2 + 0.1)
                 {
@@ -436,10 +437,10 @@ namespace OsmSharp.Test.Unittests.Routing
                     var vertex2116 = new GeoCoordinate(point[1], point[0]);
 
                     // calculate route.
-                    IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-                    Router router = this.BuildRouter(data, interpreter, basicRouter);
+                    var basicRouter = this.BuildBasicRouter(data);
+                    var router = this.BuildRouter(data, interpreter, basicRouter);
 
-                    Route route = router.Calculate(Vehicle.Car, 
+                    var route = router.Calculate(Vehicle.Car, 
                         router.Resolve(Vehicle.Car, vertex2021),
                         router.Resolve(Vehicle.Car, vertex2116));
 
@@ -463,7 +464,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // initialize data.
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
 
             var vertex20 = new GeoCoordinate(51.0578532, 3.7192229);
             var vertex21 = new GeoCoordinate(51.0578518, 3.7195654);
@@ -546,32 +547,29 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // initialize data.
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
 
             var vertex20 = new GeoCoordinate(51.0578532, 3.7192229);
             var vertex21 = new GeoCoordinate(51.0578518, 3.7195654);
 //            var vertex16 = new GeoCoordinate(51.0577299, 3.719745);
 
-            PointF2D point = vertex20 + ((vertex21 - vertex20) * 0.25);
+            var point = vertex20 + ((vertex21 - vertex20) * 0.25);
             var vertex20211 = new GeoCoordinate(point[1], point[0]);
 
             point = vertex20 + ((vertex21 - vertex20) * 0.75);
             var vertex20212 = new GeoCoordinate(point[1], point[0]);
 
             // calculate route.
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(data, interpreter, basicRouter);
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
 
-            Route route = router.Calculate(Vehicle.Car,
+            var route = router.Calculate(Vehicle.Car,
                 router.Resolve(Vehicle.Car, vertex20211),
                 router.Resolve(Vehicle.Car, vertex20212));
 
             Assert.AreEqual(2, route.Entries.Length);
             Assert.AreEqual(vertex20211.Latitude, route.Entries[0].Latitude, 0.0001);
             Assert.AreEqual(vertex20211.Longitude, route.Entries[0].Longitude, 0.0001);
-
-            //Assert.AreEqual(vertex_21.Latitude, route.Entries[1].Latitude, 0.0001);
-            //Assert.AreEqual(vertex_21.Longitude, route.Entries[1].Longitude, 0.0001);
 
             Assert.AreEqual(vertex20212.Latitude, route.Entries[1].Latitude, 0.0001);
             Assert.AreEqual(vertex20212.Longitude, route.Entries[1].Longitude, 0.0001);
@@ -586,11 +584,11 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // initialize data.
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
 
             // create router.
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(data, interpreter, basicRouter);
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
 
             // define test tags.
             var tags1 = new Dictionary<string, string>();
@@ -599,7 +597,7 @@ namespace OsmSharp.Test.Unittests.Routing
             tags2.Add("test2", "yes");
 
             // resolve points.
-            RouterPoint point1 = router.Resolve(Vehicle.Car, vertex16);
+            var point1 = router.Resolve(Vehicle.Car, vertex16);
             point1.Tags.Add(new KeyValuePair<string, string>("test1","yes"));
 
             // test presence of tags.
@@ -614,6 +612,60 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(1, point2.Tags.Count);
             Assert.AreEqual("test1", point2.Tags[0].Key);
             Assert.AreEqual("yes", point2.Tags[0].Value);
+        }
+
+        /// <summary>
+        /// Tests many-to-many routing.
+        /// </summary>
+        protected void DoTestManyToMany(string filename)
+        {
+            // initialize data.
+            var interpreter = new OsmRoutingInterpreter();
+            var data = this.BuildData(interpreter, string.Format("OsmSharp.Test.Unittests.{0}", filename));
+
+            // create router.
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
+
+            var resolved = new RouterPoint[data.VertexCount - 1];
+            for (uint idx = 1; idx < data.VertexCount; idx++)
+            { // resolve each vertex.
+                float latitude, longitude;
+                if (data.GetVertex(idx, out latitude, out longitude))
+                {
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude).OffsetRandom(20), true);
+                }
+
+                // reference and resolved have to exist.
+                Assert.IsNotNull(resolved[idx - 1]);
+            }
+
+            // limit tests to a fixed number.
+            int pointSize = 100;
+            int testEveryOther = resolved.Length / pointSize;
+            testEveryOther = System.Math.Max(testEveryOther, 1);
+
+            // check all the routes having the same weight(s).
+            var points = new List<RouterPoint>();
+            for (int idx = 0; idx < resolved.Length; idx++)
+            {
+                int testNumber = idx;
+                if (testNumber % testEveryOther == 0)
+                {
+                    points.Add(resolved[idx]);
+                }
+            }
+
+            // calculate many-to-many weights.
+            var weights = router.CalculateManyToManyWeight(Vehicle.Car, points.ToArray(), points.ToArray());
+            for(int fromIdx = 0; fromIdx < points.Count; fromIdx++)
+            {
+                for (int toIdx = 0; toIdx < points.Count; toIdx++)
+                {
+                    var weight = router.CalculateWeight(Vehicle.Car, points[fromIdx], points[toIdx]);
+                    Assert.AreEqual(weight, weights[fromIdx][toIdx]);
+                }
+            }
         }
     }
 }
