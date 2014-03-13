@@ -29,6 +29,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Logging;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing.CH
 {
@@ -1403,6 +1404,8 @@ namespace OsmSharp.Routing.CH
         private SearchClosestResult<CHEdgeData> DoSearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
+            Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.
+
             double searchBoxSize = delta;
             // build the search box.
             var searchBox = new GeoCoordinateBox(new GeoCoordinate(
@@ -1428,9 +1431,9 @@ namespace OsmSharp.Routing.CH
                         graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                        distance = coordinate.Distance(fromCoordinates);
+                        distance = coordinate.DistanceReal(fromCoordinates).Value;
 
-                        if (distance < 0.00001)
+                        if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
@@ -1454,7 +1457,7 @@ namespace OsmSharp.Routing.CH
                             //if(matcher.Match(_
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.Distance(toCoordinates);
+                        distance = coordinate.DistanceReal(toCoordinates).Value;
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
@@ -1495,7 +1498,7 @@ namespace OsmSharp.Routing.CH
                             if (graph.GetVertex(uncontracted.Value.Key, out toLatitude, out toLongitude))
                             { // the to vertex was found
                                 toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                                distance = coordinate.Distance(toCoordinates);
+                                distance = coordinate.DistanceReal(toCoordinates).Value;
 
                                 if (distance < closestWithoutMatch.Distance)
                                 { // the distance is smaller.
@@ -1514,11 +1517,11 @@ namespace OsmSharp.Routing.CH
 
                         // by now the arc is uncontracted.
                         // create a line.
-                        double distanceTotal = fromCoordinates.Distance(toCoordinates);
+                        double distanceTotal = fromCoordinates.DistanceReal(toCoordinates).Value;
                         if (distanceTotal > 0)
                         { // the from/to are not the same location.
                             var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
-                            distance = line.Distance(coordinate);
+                            distance = line.DistanceReal(coordinate).Value;
 
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller.
@@ -1528,7 +1531,7 @@ namespace OsmSharp.Routing.CH
                                 // calculate the position.
                                 if (projectedPoint != null)
                                 { // calculate the distance
-                                    double distancePoint = fromCoordinates.Distance(projectedPoint);
+                                    double distancePoint = fromCoordinates.DistanceReal(new GeoCoordinate(projectedPoint)).Value;
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
@@ -1553,7 +1556,7 @@ namespace OsmSharp.Routing.CH
                         graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     {
                         var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
-                        double distance = coordinate.Distance(vertexCoordinate);
+                        double distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
@@ -1561,7 +1564,7 @@ namespace OsmSharp.Routing.CH
                         }
 
                         vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.Distance(vertexCoordinate);
+                        distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
