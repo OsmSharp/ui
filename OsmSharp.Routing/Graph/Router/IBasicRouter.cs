@@ -187,6 +187,23 @@ namespace OsmSharp.Routing.Graph.Router
         }
 
         /// <summary>
+        /// The result is located between two other vertices but on an intermediate point.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="position"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, int intermediateIndex, TEdgeData edge)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex1;
+            this.Vertex2 = vertex2;
+            this.IntermediateIndex = intermediateIndex;
+            this.Edge = edge;
+        }
+
+        /// <summary>
         /// The result is located between two other vertices.
         /// </summary>
         /// <param name="distance"></param>
@@ -212,6 +229,11 @@ namespace OsmSharp.Routing.Graph.Router
         /// The second vertex.
         /// </summary>
         public uint? Vertex2 { get; private set; }
+
+        /// <summary>
+        /// The intermediate point position.
+        /// </summary>
+        public int? IntermediateIndex { get; private set; }
 
         /// <summary>
         /// The position between vertex1 and vertex2 (0=vertex1, 1=vertex2).

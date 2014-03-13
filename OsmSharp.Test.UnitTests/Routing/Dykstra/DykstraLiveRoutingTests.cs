@@ -245,5 +245,23 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         {
             this.DoTestResolveCase2();
         }
+
+        /// <summary>
+        /// Tests many to many routing.
+        /// </summary>
+        [Test]
+        public void TestManyToManyBigNetwork()
+        {
+            this.DoTestManyToMany("test_network_big.osm");
+        }
+
+        ///// <summary>
+        ///// Tests many to many routing.
+        ///// </summary>
+        //[Test]
+        //public void TestManyToManyTSPReal()
+        //{
+        //    this.DoTestManyToMany("tsp_real.osm");
+        //}
     }
 }

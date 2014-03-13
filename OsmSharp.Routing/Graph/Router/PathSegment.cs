@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.Graph.Router
             while (next.From != null)
             {
                 route = new PathSegment<TIdType>(next.From.VertexId,
-                    next.Weight + route.Weight, route);
+                    (next.Weight - next.From.Weight) + route.Weight, route);
                 next = next.From;
             }
             return route;

@@ -84,5 +84,31 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(1, segment_12345.From.From.From.From.VertexId);
             Assert.AreEqual(45, segment_12345.Weight);
         }
+
+        /// <summary>
+        /// Tests reversing the path segment.
+        /// </summary>
+        [Test]
+        public void TestPathSegmentReverse()
+        {
+            // define segment 4 -(10)> 3 -(10)> 2 -(10)> 1
+            var segment = new PathSegment<long>(1, 30,
+                new PathSegment<long>(2, 20,
+                    new PathSegment<long>(3, 10, new PathSegment<long>(4))));
+
+            // reverse segment to 1 -(10)> 2 -(20)> 3 -(30)> 4
+            var reverse = segment.Reverse();
+            Assert.AreEqual(segment.Weight, reverse.Weight);
+            Assert.AreEqual(4, reverse.VertexId);
+
+            Assert.AreEqual(3, reverse.From.VertexId);
+            Assert.AreEqual(20, reverse.From.Weight);
+
+            Assert.AreEqual(2, reverse.From.From.VertexId);
+            Assert.AreEqual(10, reverse.From.From.Weight);
+
+            Assert.AreEqual(1, reverse.From.From.From.VertexId);
+            Assert.AreEqual(0, reverse.From.From.From.Weight);
+        }
     }
 }
