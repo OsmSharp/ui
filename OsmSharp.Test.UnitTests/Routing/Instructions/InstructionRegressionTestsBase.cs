@@ -31,6 +31,7 @@ using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -83,111 +84,26 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             double delta = 0.0001;
 
             if (reference.Entries == null)
-            {
+            { // both routes are empty.
                 Assert.IsNull(route.Entries);
             }
             else
-            {
-                Assert.AreEqual(reference.Entries.Length, route.Entries.Length);
+            { // compare the geometry of the routes.
                 for (int idx = 0; idx < reference.Entries.Length; idx++)
                 {
-                    Assert.AreEqual(reference.Entries[idx].Distance,
-                        route.Entries[idx].Distance);
-                    Assert.AreEqual(reference.Entries[idx].Latitude,
-                        route.Entries[idx].Latitude);
-                    Assert.AreEqual(reference.Entries[idx].Longitude,
-                        route.Entries[idx].Longitude);
-                    Assert.AreEqual(reference.Entries[idx].Time,
-                        route.Entries[idx].Time);
-                    Assert.AreEqual(reference.Entries[idx].Type,
-                        route.Entries[idx].Type);
-                    Assert.AreEqual(reference.Entries[idx].WayFromName,
-                        route.Entries[idx].WayFromName);
+                    var referenceCoordinate = new GeoCoordinate(reference.Entries[idx].Latitude,
+                        reference.Entries[idx].Longitude);
+                    Meter referenceDistance, distance;
+                    GeoCoordinate referenceProjected, projected;
+                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out referenceDistance);
+                    route.ProjectOn(referenceCoordinate, out projected, out distance);
 
-                    // something that is allowed to be different in this case!
-                    // route3540.Entries[idx].Points != null
-
-                    // check sidestreets.
-                    if (reference.Entries[idx].SideStreets != null &&
-                        reference.Entries[idx].SideStreets.Length > 0)
-                    { // check if the sidestreets represent the same information.
-                        Assert.AreEqual(reference.Entries[idx].SideStreets.Length,
-                            route.Entries[idx].SideStreets.Length);
-                        for (int metricIdx = 0; metricIdx < reference.Entries[idx].SideStreets.Length; metricIdx++)
-                        {
-                            Assert.AreEqual(reference.Entries[idx].SideStreets[metricIdx].WayName,
-                                route.Entries[idx].SideStreets[metricIdx].WayName);
-                            Assert.AreEqual(reference.Entries[idx].SideStreets[metricIdx].Latitude,
-                                route.Entries[idx].SideStreets[metricIdx].Latitude);
-                            Assert.AreEqual(reference.Entries[idx].SideStreets[metricIdx].Longitude,
-                                route.Entries[idx].SideStreets[metricIdx].Longitude);
-                        }
-                    }
-                    else
-                    { // check if the sidestreets represent the same information.
-                        Assert.IsTrue(route.Entries[idx].SideStreets == null ||
-                            route.Entries[idx].SideStreets.Length == 0);
-                    }
-
-                    if (reference.Entries[idx].Tags != null &&
-                        reference.Entries[idx].Tags.Length > 0)
-                    { // check if the Tags represent the same information.
-                        Assert.AreEqual(reference.Entries[idx].Tags.Length,
-                            route.Entries[idx].Tags.Length);
-                        for (int metricIdx = 0; metricIdx < route.Entries[idx].Tags.Length; metricIdx++)
-                        {
-                            Assert.AreEqual(reference.Entries[idx].Tags[metricIdx].Key,
-                                route.Entries[idx].Tags[metricIdx].Key);
-                            Assert.AreEqual(reference.Entries[idx].Tags[metricIdx].Value,
-                                route.Entries[idx].Tags[metricIdx].Value);
-                        }
-                    }
-                    else
-                    { // check if the sidestreets represent the same information.
-                        Assert.IsTrue(route.Entries[idx].Tags == null ||
-                            route.Entries[idx].Tags.Length == 0);
-                    }
-
-                    Assert.AreEqual(reference.Entries[idx].Distance, route.Entries[idx].Distance);
-                }
-                if (reference.Tags != null &&
-                    reference.Tags.Length > 0)
-                {
-                    for (int tagIdx = 0; tagIdx < reference.Tags.Length; tagIdx++)
-                    {
-                        if (reference.Tags[tagIdx].Key != "debug_route")
-                        {
-                            Assert.AreEqual(reference.Tags[tagIdx].Key,
-                                route.Tags[tagIdx].Key);
-                            Assert.AreEqual(reference.Tags[tagIdx].Value,
-                                route.Tags[tagIdx].Value);
-                        }
-                    }
-                }
-                else
-                {
-                    Assert.IsTrue(route.Tags == null ||
-                        route.Tags.Length == 0);
-                }
-                if (reference.Metrics != null)
-                {
-                    for (int metricIdx = 0; metricIdx < reference.Entries.Length; metricIdx++)
-                    {
-                        Assert.AreEqual(reference.Metrics[metricIdx].Key,
-                            route.Metrics[metricIdx].Key);
-                        Assert.AreEqual(reference.Metrics[metricIdx].Value,
-                            route.Metrics[metricIdx].Value);
-                    }
-                }
-                else
-                {
-                    Assert.IsNull(route.Metrics);
+                    Assert.AreEqual(0, referenceProjected.DistanceReal(projected).Value, delta); // projected points have to match.
+                    Assert.AreEqual(referenceDistance.Value, distance.Value, 0.1); // compare calculated distance to 10cm accuracy.
+                    Assert.AreEqual(referenceProjected.Latitude, projected.Latitude, delta);
+                    Assert.AreEqual(referenceProjected.Longitude, projected.Longitude, delta);
                 }
             }
-
-            Assert.AreEqual(reference.TotalDistance, route.TotalDistance, delta);
-            Assert.AreEqual(reference.TotalTime, route.TotalTime, delta);
-            //Assert.AreEqual(reference.Vehicle, route.Vehicle, delta);
         }
 
         /// <summary>
@@ -329,24 +245,30 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <param name="point2"></param>
         protected void DoInstructionComparisonTest(string embeddedXml, GeoCoordinate point1, GeoCoordinate point2)
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            Meter delta = 1;
 
-            Router router = this.CreateRouter(interpreter,
+            var interpreter = new OsmRoutingInterpreter();
+
+            var router = this.CreateRouter(interpreter,
                 embeddedXml);
-            Router referenceRouter = this.CreateReferenceRouter(interpreter,
+            var referenceRouter = this.CreateReferenceRouter(interpreter,
                 embeddedXml);
 
             // resolve the three points in question.
-            RouterPoint point1resolved = router.Resolve(Vehicle.Car, point1, true);
-            RouterPoint point2resolved = router.Resolve(Vehicle.Car, point2, true);
+            var point1resolved = router.Resolve(Vehicle.Car, point1, true);
+            var point2resolved = router.Resolve(Vehicle.Car, point2, true);
 
             // calculate two smaller routes.
-            Route route12 = router.Calculate(Vehicle.Car,
+            var route12 = router.Calculate(Vehicle.Car,
                 point1resolved, point2resolved);
 
             // resolve the three points in question.
             RouterPoint pointReference1resolved = referenceRouter.Resolve(Vehicle.Car, point1, true);
             RouterPoint pointReference2resolved = referenceRouter.Resolve(Vehicle.Car, point2, true);
+
+            // test the resolved points.
+            Assert.AreEqual(0, point1resolved.Location.DistanceReal(pointReference1resolved.Location).Value, delta.Value);
+            Assert.AreEqual(0, point2resolved.Location.DistanceReal(pointReference2resolved.Location).Value, delta.Value);
 
             // calculate two smaller routes.
             Route routeReference12 = referenceRouter.Calculate(Vehicle.Car,

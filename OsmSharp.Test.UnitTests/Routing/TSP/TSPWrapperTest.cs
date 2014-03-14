@@ -157,12 +157,13 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
             }
 
             // test if routes exists.
+            var weights = router.CalculateManyToManyWeight(Vehicle.Car, points.ToArray(), points.ToArray());
             for(int fromIdx = 0; fromIdx < points.Count; fromIdx++)
             {
                 for (int toIdx = 0; toIdx < points.Count; toIdx++)
                 {
-                    var route = router.Calculate(Vehicle.Car, points[fromIdx], points[toIdx]);
-                    Assert.IsNotNull(route);
+                    var weight = router.CalculateWeight(Vehicle.Car, points[fromIdx], points[toIdx]);
+                    Assert.AreEqual(weight, weights[fromIdx][toIdx]);
                 }
             }
 

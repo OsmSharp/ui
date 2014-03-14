@@ -295,17 +295,18 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             bool stopAtFirst, bool returnAtWeight, bool forward)
         {
             // make copies of the target and source visitlist.
-            PathSegmentVisitList source = sourceList.Clone() as PathSegmentVisitList;
-            PathSegmentVisitList[] targets = new PathSegmentVisitList[targetList.Length];
+            var source = sourceList.Clone() as PathSegmentVisitList;
+            var targets = new PathSegmentVisitList[targetList.Length];
+            var targetsCount = new int[targetList.Length];
             for (int targetIdx = 0; targetIdx < targetList.Length; targetIdx++)
             {
                 targets[targetIdx] = targetList[targetIdx].Clone() as PathSegmentVisitList;
+                targetsCount[targetIdx] = targetList[targetIdx].Count;
             }
 
             //  initialize the result data structures.
             var segmentsAtWeight = new List<PathSegment<long>>();
             var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
-            long foundTargets = 0;
 
             // intialize dykstra data structures.
             IPriorityQueue<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>();
@@ -344,7 +345,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             // loop over all targets
             for (int idx = 0; idx < targets.Length; idx++)
             { // check for each target if there are paths to the source.
-                foreach (long targetVertex in targets[idx].GetVertices())
+                foreach (long targetVertex in new List<long>(targets[idx].GetVertices()))
                 {
                     PathSegment<long> targetPath = targets[idx].GetPathTo(targetVertex); // get the target path.
                     targetPath = targetPath.From;
@@ -358,7 +359,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             if (existing == null)
                             { // a path did not exist yet!
                                 segmentsToTarget[idx] = targetPath.Reverse().ConcatenateAfter(pathFromSource);
-                                foundTargets++;
+                                targets[idx].Remove(targetVertex);
                             }
                             else if (existing.Weight > targetPath.Weight + pathFromSource.Weight)
                             { // a new path is found with a lower weight.
@@ -369,14 +370,24 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     }
                 }
             }
-            if (foundTargets == targets.Length && targets.Length > 0)
+            if (targets.Length > 0 && targets.All(x => x.Count == 0))
             { // routing is finished!
                 return segmentsToTarget.ToArray();
             }
 
             if (stopAtFirst)
             { // only one entry is needed.
-                if (foundTargets > 0)
+                var oneFound = false;
+                for (int idx = 0; idx < targets.Length; idx++)
+                {
+                    if(targets[idx].Count < targetsCount[idx])
+                    {
+                        oneFound = true;
+                        break;
+                    }
+                }
+
+                if (oneFound)
                 { // targets found, return the shortest!
                     PathSegment<long> shortest = null;
                     foreach (PathSegment<long> foundTarget in segmentsToTarget)
@@ -404,12 +415,12 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             // test for identical start/end point.
             for (int idx = 0; idx < targets.Length; idx++)
             {
-                PathSegmentVisitList target = targets[idx];
+                var target = targets[idx];
                 if (returnAtWeight)
                 { // add all the reached vertices larger than weight to the results.
                     if (current.Weight > weight)
                     {
-                        PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                        var toPath = target.GetPathTo(current.VertexId);
                         toPath.Reverse();
                         toPath = toPath.ConcatenateAfter(current);
                         segmentsAtWeight.Add(toPath);
@@ -417,7 +428,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 }
                 else if (target.Contains(current.VertexId))
                 { // the current is a target!
-                    PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                    var toPath = target.GetPathTo(current.VertexId);
                     toPath = toPath.Reverse();
                     toPath = toPath.ConcatenateAfter(current);
 
@@ -431,9 +442,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         // check if routing is finished.
                         if (segmentsToTarget[idx] == null)
                         { // make sure only the first route is set.
-                            foundTargets++;
                             segmentsToTarget[idx] = toPath;
-                            if (foundTargets == targets.Length)
+                            if (targets.All(x => x.Count == 0))
                             { // routing is finished!
                                 return segmentsToTarget.ToArray();
                             }
@@ -447,8 +457,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             }
 
             // start OsmSharp.Routing.
-            KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(
-                Convert.ToUInt32(current.VertexId));
+            var arcs = graph.GetArcs(Convert.ToUInt32(current.VertexId));
             chosenVertices.Add(current.VertexId);
 
             // loop until target is found and the route is the shortest!
@@ -541,8 +550,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 // while the visit list is not empty.
                 current = null;
                 if (heap.Count > 0)
-                {
-                    // choose the next vertex.
+                { // choose the next vertex.
                     current = heap.Pop();
                     while (current != null &&
                         chosenVertices.Contains(current.VertexId))
@@ -582,7 +590,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     PathSegmentVisitList target = targets[idx];
                     if (target.Contains(current.VertexId))
                     { // the current is a target!
-                        PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                        var toPath = target.GetPathTo(current.VertexId);
                         toPath = toPath.Reverse();
                         toPath = toPath.ConcatenateAfter(current);
 
@@ -609,8 +617,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             // if this target is empty it's optimal route has been found.
                             if (target.Count == 0)
                             { // now the shortest route has been found for sure!
-                                foundTargets++;
-                                if (foundTargets == targets.Length)
+                                if (targets.All(x => x.Count == 0))
                                 { // routing is finished!
                                     return segmentsToTarget.ToArray();
                                 }
