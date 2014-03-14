@@ -47,13 +47,13 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 16, 13, 10 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\blue.mapcss", scene, "kempen-big.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\default.mapcss", scene, "kempen.osm.pbf");
 
             var merger = new Scene2DObjectMerger();
             scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
-            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\blue.map", scene, true);
+            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\default.map", scene, true);
         }
 
         /// <summary>

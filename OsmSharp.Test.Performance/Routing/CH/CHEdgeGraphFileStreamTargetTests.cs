@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf");
+            CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen.osm.pbf");
         }
 
         /// <summary>

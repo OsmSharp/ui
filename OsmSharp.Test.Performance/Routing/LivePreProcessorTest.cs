@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "belgium-latest.highways.osm.pbf");
+            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "kempen.osm.pbf");
         }
 
         /// <summary>

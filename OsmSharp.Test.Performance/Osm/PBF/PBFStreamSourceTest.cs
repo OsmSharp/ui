@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Performance.Osm.PBF
         /// </summary>
         public static void Test()
         {
-            FileInfo testFile = new FileInfo(@".\TestFiles\kempen-big.osm.pbf");
+            FileInfo testFile = new FileInfo(@".\TestFiles\kempen.osm.pbf");
             Stream stream = testFile.OpenRead();
             PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
             OsmStreamTargetEmpty emptyTarget = new OsmStreamTargetEmpty();
