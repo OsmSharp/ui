@@ -12,6 +12,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
@@ -54,6 +55,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             typeModel.Add(typeof(SerializableGraphTile), true); // one tile of data.
             typeModel.Add(typeof(SerializableTags), true); // a list of tags.
             typeModel.Add(typeof(SerializableGraphArcs), true); // a list of arcs.
+            typeModel.Add(typeof(GeoCoordinateSimple), true); // a list of arcs.
 
             _runtimeTypeModel = typeModel;
         }
@@ -83,7 +85,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (graph.GetVertex(vertex, out latitude, out longitude))
                 { // the vertex was found.
                     // build the correct tile.
-                    Tile tile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
+                    var tile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
                     UnserializedTileData serializableGraphTile;
                     if (!dataPerTile.TryGetValue(tile, out serializableGraphTile))
                     { // create the new tile.
@@ -105,7 +107,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(vertex);
+                    var arcs = graph.GetArcs(vertex);
 
                     // serialize the arcs.
                     if (arcs != null && arcs.Length > 0)
@@ -116,23 +118,25 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         serializableGraphArcs.TileX = new int[arcs.Length];
                         serializableGraphArcs.TileY = new int[arcs.Length];
                         serializableGraphArcs.Tags = new SerializableTags[arcs.Length];
+                        serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Length];
 
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
-                            KeyValuePair<uint, LiveEdge> arc = arcs[idx];
+                            var arc = arcs[idx];
                             // get destination tile.
                             if (graph.GetVertex(arc.Key, out latitude, out longitude))
                             { // the destionation was found.
-                                Tile destinationTile = Tile.CreateAroundLocation(
-                                    new GeoCoordinate(latitude, longitude), Zoom);
+                                var destinationTile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
                                 serializableGraphArcs.DestinationId[idx] = arc.Key;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
                                 serializableGraphArcs.Forward[idx] = arc.Value.Forward;
+                                serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
+                                    Coordinates = SerializableCoordinate.FromSimpleArray(arc.Value.Coordinates)
+                                };
 
                                 // get the tags.
-                                TagsCollectionBase tagsCollection = 
-                                    graph.TagsIndex.Get(arc.Value.Tags);
+                                var tagsCollection = graph.TagsIndex.Get(arc.Value.Tags);
                                 if (tagsCollection != null)
                                 {
                                     serializableGraphArcs.Tags[idx] = new SerializableTags();
@@ -455,6 +459,85 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             [ProtoMember(5)]
             public SerializableTags[] Tags { get; set; }
+
+            /// <summary>
+            /// Gets/sets the intermediates.
+            /// </summary>
+            [ProtoMember(6)]
+            public SerializableCoordinates[] Intermediates { get; set; }
+        }
+
+        /// <summary>
+        /// Serializable coordinates list.
+        /// </summary>
+        [ProtoContract]
+        internal class SerializableCoordinates
+        {
+            /// <summary>
+            /// Gets/sets the intermediates.
+            /// </summary>
+            [ProtoMember(1)]
+            public SerializableCoordinate[] Coordinates { get; set; }
+        }
+
+        /// <summary>
+        /// Serializable coordinate.
+        /// </summary>
+        [ProtoContract]
+        internal class SerializableCoordinate
+        {
+            /// <summary>
+            /// Gets/sets the latitude.
+            /// </summary>
+            [ProtoMember(1)]
+            public float Latitude { get; set; }
+
+            /// <summary>
+            /// Gets/sets the longitude.
+            /// </summary>
+            [ProtoMember(2)]
+            public float Longitude { get; set; }
+
+            /// <summary>
+            /// Returns a simple array.
+            /// </summary>
+            /// <param name="coordinates"></param>
+            /// <returns></returns>
+            public static GeoCoordinateSimple[] ToSimpleArray(SerializableCoordinate[] coordinates)
+            {
+                if(coordinates == null)
+                {
+                    return null;
+                }
+                var simples = new GeoCoordinateSimple[coordinates.Length];
+                for(int idx = 0; idx < coordinates.Length; idx++)
+                {
+                    simples[idx].Latitude = coordinates[idx].Latitude;
+                    simples[idx].Longitude = coordinates[idx].Longitude;
+                }
+                return simples;
+            }
+
+            /// <summary>
+            /// Returns a simple array.
+            /// </summary>
+            /// <param name="coordinates"></param>
+            /// <returns></returns>
+            public static SerializableCoordinate[] FromSimpleArray(GeoCoordinateSimple[] simples)
+            {
+                if(simples == null)
+                {
+                    return null;
+                }
+                var coordinates = new SerializableCoordinate[simples.Length];
+                for (int idx = 0; idx < simples.Length; idx++)
+                {
+                    coordinates[idx] = new SerializableCoordinate();
+                    coordinates[idx].Latitude = simples[idx].Latitude;
+                    coordinates[idx].Longitude = simples[idx].Longitude;
+                }
+                return coordinates;
+            }
         }
 
         /// <summary>

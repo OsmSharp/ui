@@ -392,8 +392,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 TileStreamPosition meta;
                 if (_graphTileMetas.TryGetValue(tile, out meta))
                 { // the meta data is available.
-                    V2RoutingDataSourceLiveEdgeSerializer.SerializableGraphTile tileData =
-                        _routingDataSourceSerializer.DeserializeTile(_stream, meta.Offset, meta.Length, _compressed);
+                    var tileData = _routingDataSourceSerializer.DeserializeTile(_stream, meta.Offset, meta.Length, _compressed);
                     double top = tile.TopLeft.Latitude;
                     double left = tile.TopLeft.Longitude;
                     for(int vertexIdx = 0; vertexIdx < tileData.Ids.Length; vertexIdx++)
@@ -417,7 +416,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             for (int idx = 0; idx < tileData.Arcs[vertexIdx].DestinationId.Length; idx++)
                             {
                                 // create the tags collection.
-                                TagsCollectionBase tagsCollection = new TagsCollection();
+                                var tagsCollection = new TagsCollection();
                                 for (int tagsIdx = 0;
                                      tagsIdx < tileData.Arcs[vertexIdx].Tags[idx].Keys.Length;
                                      tagsIdx++)
@@ -433,6 +432,8 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 var edge = new Osm.Graphs.LiveEdge();
                                 edge.Forward = tileData.Arcs[vertexIdx].Forward[idx];
                                 edge.Tags = tags;
+                                edge.Coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
+                                    tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
 
                                 // convert the arc.
                                 arcs[idx] = new KeyValuePair<uint, Osm.Graphs.LiveEdge>(

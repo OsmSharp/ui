@@ -36,9 +36,9 @@ namespace OsmSharp.Test.Unittests.Routing.Live
     {
         /// <summary>
         /// Tests a simple removal of one sparse vertex and then serveral different routing queries.
-        /// from    1 <-> 2 <-> 3
+        /// from    1 - 2 - 3
         ///     
-        /// to      1 <-> 2
+        /// to      1 - 2
         /// </summary>
         [Test]
         public void TestSparseRemoval1Routing()

@@ -32,9 +32,9 @@ namespace OsmSharp.Test.Unittests.Routing.Live
     {
         /// <summary>
         /// Tests a simple removal of one sparse vertex.
-        /// from    1 <-> 2 <-> 3
+        /// from    1 - 2 - 3
         ///     
-        /// to      1 <-> 3
+        /// to      1 - 3
         /// </summary>
         [Test]
         public void TestSparseRemoval1()

@@ -247,6 +247,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <returns></returns>
         public override IPreProcessor GetPreprocessor()
         {
+            //return null;
             return new LiveEdgePreprocessor(this.DynamicGraph);
         }
 

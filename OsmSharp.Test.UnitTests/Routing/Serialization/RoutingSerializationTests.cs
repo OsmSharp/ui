@@ -32,7 +32,6 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -183,8 +182,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<LiveEdge> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
+            var deserializedVersion = routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
@@ -201,29 +199,29 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             Assert.AreEqual(5, route.Entries.Length);
 
             float latitude, longitude;
-            deserializedVersion.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
 
-            deserializedVersion.GetVertex(21, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(21, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
+            Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
 
-            deserializedVersion.GetVertex(16, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(16, out latitude, out longitude);
+            Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
+            Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
 
-            deserializedVersion.GetVertex(22, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(22, out latitude, out longitude);
+            Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
+            Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
+            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
         }
 
@@ -275,47 +273,46 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
 
-            IBasicRouterDataSource<LiveEdge> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
+            var deserializedVersion = routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
             var basicRouter = new DykstraRoutingLive();
-            Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
-            RouterPoint source = router.Resolve(Vehicle.Car,
+            var router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
+            var source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
-            RouterPoint target = router.Resolve(Vehicle.Car,
+            var target = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0576193, 3.7191801));
 
             // calculate the route.
-            Route route = router.Calculate(Vehicle.Car, source, target);
+            var route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
             float latitude, longitude;
-            deserializedVersion.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
 
-            deserializedVersion.GetVertex(21, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(21, out latitude, out longitude);
+            Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
+            Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
 
-            deserializedVersion.GetVertex(16, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(16, out latitude, out longitude);
+            Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
+            Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
 
-            deserializedVersion.GetVertex(22, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
+            //deserializedVersion.GetVertex(22, out latitude, out longitude);
+            Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
+            Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
+            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
         }
 
@@ -335,11 +332,6 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter);
-
-            // create the original routing.
-//            var basicRouterOriginal = new DykstraRoutingLive(original.TagsIndex);
-//            Router referenceRouter = Router.CreateLiveFrom(
-//                original, basicRouterOriginal, interpreter);
 
             // create serializer.
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
