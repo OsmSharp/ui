@@ -17,13 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo.Simple;
+using System;
 
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
     /// Abstracts edge information.
     /// </summary>
-    public interface IDynamicGraphEdgeData
+    public interface IDynamicGraphEdgeData : IEquatable<IDynamicGraphEdgeData>
     {
         /// <summary>
         /// Returns the forward flag relative to the tags.
@@ -47,6 +48,13 @@ namespace OsmSharp.Routing.Graph
         {
             get;
         }
+
+        /// <summary>
+        /// Returns true if the given edge equals this edge geometrically.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        bool EqualsGeometrically(IDynamicGraphEdgeData other);
     }
 
     /// <summary>

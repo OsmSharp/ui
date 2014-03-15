@@ -88,5 +88,83 @@ namespace OsmSharp.Routing.Osm.Graphs
         {
             get { return true; }
         }
+
+        /// <summary>
+        /// Returns true if the other edge represents the same information than this edge.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IDynamicGraphEdgeData other)
+        {
+            if(other is LiveEdge)
+            { // ok, type is the same.
+                var otherLive = (LiveEdge)other;
+                if(otherLive._value != this._value)
+                { // basic info different.
+                    return false;
+                }
+
+                // only the coordinates can be different now.
+                if (this.Coordinates != null)
+                { // both have to contain the same coordinates.
+                    if (this.Coordinates.Length != otherLive.Coordinates.Length)
+                    { // impossible, different number of coordinates.
+                        return false;
+                    }
+
+                    for (int idx = 0; idx < otherLive.Coordinates.Length; idx++)
+                    {
+                        if (this.Coordinates[idx].Longitude != otherLive.Coordinates[idx].Longitude ||
+                            this.Coordinates[idx].Latitude != otherLive.Coordinates[idx].Latitude)
+                        { // oeps, coordinates are different!
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                { // both are null.
+                    return otherLive.Coordinates == null;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the other edge represents the same geographical information than this edge.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool EqualsGeometrically(IDynamicGraphEdgeData other)
+        {
+            if (other is LiveEdge)
+            { // ok, type is the same.
+                var otherLive = (LiveEdge)other;
+
+                // only the coordinates can be different now.
+                if (this.Coordinates != null)
+                { // both have to contain the same coordinates.
+                    if (this.Coordinates.Length != otherLive.Coordinates.Length)
+                    { // impossible, different number of coordinates.
+                        return false;
+                    }
+
+                    for (int idx = 0; idx < otherLive.Coordinates.Length; idx++)
+                    {
+                        if (this.Coordinates[idx].Longitude != otherLive.Coordinates[idx].Longitude ||
+                            this.Coordinates[idx].Latitude != otherLive.Coordinates[idx].Latitude)
+                        { // oeps, coordinates are different!
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                { // both are null.
+                    return otherLive.Coordinates == null;
+                }
+            }
+            return false;
+        }
     }
 }

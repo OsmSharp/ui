@@ -642,6 +642,10 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0)
             { // only check 'real' vertices for any neighbours, intermediates will not have extra neighbours.
                 var arcs = this.GetNeighboursUndirected(vertex1);
+
+                // remove duplicates.
+                arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
+
                 foreach (var arc in arcs)
                 {
                     if (arc.Key == previousVertex)
@@ -726,6 +730,35 @@ namespace OsmSharp.Routing.Routers
 
             return neighbours;
         }
+
+        /// <summary>
+        /// An equality comparer to filter doubles from an arcs-list/array.
+        /// </summary>
+        private class ArcEqualityComparer : IEqualityComparer<KeyValuePair<uint, TEdgeData>>
+        {
+            /// <summary>
+            /// Returns true when two edges are the same.
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public bool Equals(KeyValuePair<uint, TEdgeData> x, KeyValuePair<uint, TEdgeData> y)
+            {
+                return x.Key == y.Key &&
+                    x.Value.EqualsGeometrically(y.Value);
+            }
+
+            /// <summary>
+            /// Returns a hashcode for each edge.
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public int GetHashCode(KeyValuePair<uint, TEdgeData> obj)
+            {
+                return obj.Key.GetHashCode();
+            }
+        }
+
 
         /// <summary>
         /// Returns all the arcs representing neighbours for the given vertex.

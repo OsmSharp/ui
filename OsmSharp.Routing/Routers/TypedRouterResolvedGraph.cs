@@ -259,6 +259,85 @@ namespace OsmSharp.Routing.Routers
                 get;
                 set;
             }
+
+            /// <summary>
+            /// Returns true if the other edge represents the same information than this edge.
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            public bool Equals(IDynamicGraphEdgeData other)
+            {
+                var otherResolved = (other as RouterResolvedGraphEdge);
+                if(otherResolved != null)
+                { // the same type already!
+                    if(this.Tags != otherResolved.Tags ||
+                        this.Forward != otherResolved.Forward ||
+                        this.IsVirtual != otherResolved.IsVirtual)
+                    { // something is different!
+                        return false;
+                    }
+
+                    // only the coordinates can be different now.
+                    if(this.Coordinates != null)
+                    { // both have to contain the same coordinates.
+                        if(this.Coordinates.Length != otherResolved.Coordinates.Length)
+                        { // impossible, different number of coordinates.
+                            return false;
+                        }
+
+                        for(int idx = 0; idx < otherResolved.Coordinates.Length; idx++)
+                        {
+                            if(this.Coordinates[idx].Longitude != otherResolved.Coordinates[idx].Longitude ||
+                                this.Coordinates[idx].Latitude != otherResolved.Coordinates[idx].Latitude)
+                            { // oeps, coordinates are different!
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    else
+                    { // both are null.
+                        return otherResolved.Coordinates == null;
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Returns true if the other edge represents the same geographical information than this edge.
+            /// </summary>
+            /// <param name="other"></param>
+            /// <returns></returns>
+            public bool EqualsGeometrically(IDynamicGraphEdgeData other)
+            {
+                var otherResolved = (other as RouterResolvedGraphEdge);
+                if (otherResolved != null)
+                { // the same type already!
+                    // only the coordinates can be different now.
+                    if (this.Coordinates != null)
+                    { // both have to contain the same coordinates.
+                        if (this.Coordinates.Length != otherResolved.Coordinates.Length)
+                        { // impossible, different number of coordinates.
+                            return false;
+                        }
+
+                        for (int idx = 0; idx < otherResolved.Coordinates.Length; idx++)
+                        {
+                            if (this.Coordinates[idx].Longitude != otherResolved.Coordinates[idx].Longitude ||
+                                this.Coordinates[idx].Latitude != otherResolved.Coordinates[idx].Latitude)
+                            { // oeps, coordinates are different!
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    else
+                    { // both are null.
+                        return otherResolved.Coordinates == null;
+                    }
+                }
+                return false;
+            }
         }
     }
 }

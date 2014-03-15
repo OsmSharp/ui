@@ -301,6 +301,87 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             return informativeData;
         }
+
+        /// <summary>
+        /// Returns true if the other edge represents the same information than this edge.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(IDynamicGraphEdgeData other)
+        {
+            if (other is CHEdgeData)
+            { // ok, type is the same.
+                var otherCH = (CHEdgeData)other;
+                if (otherCH.Direction != this.Direction &&
+                    otherCH.ContractedVertexId != this.ContractedVertexId &&
+                    otherCH.Weight != this.Weight &&
+                    otherCH.Tags != this.Tags)
+                { // basic info different.
+                    return false;
+                }
+
+                // only the coordinates can be different now.
+                if (this.Coordinates != null)
+                { // both have to contain the same coordinates.
+                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
+                    { // impossible, different number of coordinates.
+                        return false;
+                    }
+
+                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
+                    {
+                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
+                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
+                        { // oeps, coordinates are different!
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                { // both are null.
+                    return otherCH.Coordinates == null;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the other edge represents the same geographical information than this edge.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool EqualsGeometrically(IDynamicGraphEdgeData other)
+        {
+            if (other is CHEdgeData)
+            { // ok, type is the same.
+                var otherCH = (CHEdgeData)other;
+
+                // only the coordinates can be different now.
+                if (this.Coordinates != null)
+                { // both have to contain the same coordinates.
+                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
+                    { // impossible, different number of coordinates.
+                        return false;
+                    }
+
+                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
+                    {
+                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
+                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
+                        { // oeps, coordinates are different!
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                { // both are null.
+                    return otherCH.Coordinates == null;
+                }
+            }
+            return false;
+        }
     }
 
     /// <summary>
