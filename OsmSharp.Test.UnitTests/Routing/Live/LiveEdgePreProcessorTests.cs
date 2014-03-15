@@ -68,11 +68,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
         /// <summary>
         /// Tests a simple removal of one sparse vertex.
-        /// from    1 <-> 2 <-> 3 <-> 4 <-> 5
-        ///         3 <-> 6
+        /// from    1 - 2 - 3 - 4 - 5
+        ///         3 - 6
         ///     
-        /// to      1 <-> 2 <-> 3
-        ///         2 <-> 4
+        /// to      1 - 2 - 3
+        ///         2 - 4
         /// </summary>
         [Test]
         public void TestSparseRemoval2()

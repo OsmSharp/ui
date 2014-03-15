@@ -216,13 +216,38 @@ namespace OsmSharp.Test.Unittests.Routing
                         reference.Entries[idx].Longitude);
                     Meter referenceDistance, distance;
                     GeoCoordinate referenceProjected, projected;
-                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out referenceDistance);
-                    route.ProjectOn(referenceCoordinate, out projected, out distance);
+                    int entryIdx;
+                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out entryIdx, out referenceDistance);
+                    route.ProjectOn(referenceCoordinate, out projected, out entryIdx, out distance);
 
                     Assert.AreEqual(0, referenceProjected.DistanceReal(projected).Value, delta); // projected points have to match.
                     Assert.AreEqual(referenceDistance.Value, distance.Value, 0.1); // compare calculated distance to 10cm accuracy.
                     Assert.AreEqual(referenceProjected.Latitude, projected.Latitude, delta);
                     Assert.AreEqual(referenceProjected.Longitude, projected.Longitude, delta);
+
+                    var referenceEntry = reference.Entries[entryIdx];
+                    var routeEntry = route.Entries[entryIdx];
+
+                    Assert.AreEqual(referenceEntry.WayFromName, routeEntry.WayFromName);
+                    if(referenceEntry.WayFromNames != null)
+                    { // there are way names.
+                        for(int namesIdx = 0; namesIdx < referenceEntry.WayFromNames.Length; namesIdx++)
+                        {
+                            Assert.AreEqual(referenceEntry.WayFromNames[idx], routeEntry.WayFromNames[idx]);
+                        }
+                    }
+                    else
+                    { // there are no way names.
+                        Assert.IsNull(routeEntry.WayFromNames);
+                    }
+                    if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
+                    { // there are way names.
+                        Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);
+                    }
+                    else
+                    { // there are no way names.
+                        Assert.IsTrue(routeEntry.SideStreets == null || routeEntry.SideStreets.Length == 0);
+                    }
                 }
             }
         }

@@ -485,15 +485,15 @@ namespace OsmSharp.Routing.Routers
             entries.Add(first);
 
             // create all the other entries except the last one.
-            long nodePrevious = vertices[0];
+            var nodePrevious = vertices[0];
             for (int idx = 1; idx < vertices.Length - 1; idx++)
             {
                 // get all the data needed to calculate the next route entry.
-                long nodeCurrent = vertices[idx];
+                var nodeCurrent = vertices[idx];
                 var nodePreviousCoordinate = coordinate;
                 var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1]);
-                //long nodeNext = vertices[idx + 1];
-                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
+                long nodeNext = vertices[idx + 1];
+                var edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
 
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
@@ -521,11 +521,10 @@ namespace OsmSharp.Routing.Routers
 
                 // STEP2: Get the side streets
                 var sideStreets = new List<RoutePointEntrySideStreet>();
-                var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent);
+                var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent, nodePrevious, nodeNext);
                 var consideredNeighbours = new HashSet<GeoCoordinate>();
-                if (neighbours.Count > 2)
-                {
-                    // construct neighbours list.
+                if (neighbours.Count > 0)
+                { // construct neighbours list.
                     foreach (var neighbour in neighbours)
                     {
                         var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
@@ -539,22 +538,19 @@ namespace OsmSharp.Routing.Routers
                         if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
                         { // neighbour has not been considered yet.
                             consideredNeighbours.Add(neighbourKeyCoordinate);
-                            if (neighbourKeyCoordinate != nodePreviousCoordinate &&
-                                neighbourKeyCoordinate != nodeNextCoordinate)
-                            { // the neighbour is not the node before or the node after the current one.
-                                var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                                var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
 
-                                // build the side street info.
-                                var sideStreet = new RoutePointEntrySideStreet();
-                                sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
-                                sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
-                                sideStreet.Tags = tags.ConvertFrom();
-                                sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                                sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                            var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                            var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
 
-                                sideStreets.Add(sideStreet);
-                            }
+                            // build the side street info.
+                            var sideStreet = new RoutePointEntrySideStreet();
+                            sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
+                            sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
+                            sideStreet.Tags = tags.ConvertFrom();
+                            sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
+                            sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+
+                            sideStreets.Add(sideStreet);
                         }
                     }
                 }
@@ -622,34 +618,112 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        /// Returns all the neighbours of the given vertex.
+        /// Returns all the edges to the neighbours of the given vertex except the shortest 
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        private Dictionary<long, IDynamicGraphEdgeData> GetNeighboursUndirectedWithEdges(Vehicle vehicle, 
-            long vertex1)
+        private List<KeyValuePair<long, IDynamicGraphEdgeData>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
+            long vertex1, long previousVertex, long nextVertex)
         {
+            var neighbours = new List<KeyValuePair<long, IDynamicGraphEdgeData>>();
+            var distanceToPrevious = double.MaxValue;
+            var distanceToNext = double.MaxValue;
+            var indexOfPrevious = -1;
+            var indexOfNext = -1;
+
+            var vertex1Coordinate = this.GetCoordinate(vehicle, vertex1);
+            var nextCoordinate = this.GetCoordinate(vehicle, nextVertex);
+            var previousCoordinate = this.GetCoordinate(vehicle, previousVertex);
+
             // get the resolved graph for the given profile.
             var graph = this.GetForProfile(vehicle);
 
-            var neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
-            {
+            { // only check 'real' vertices for any neighbours, intermediates will not have extra neighbours.
                 var arcs = this.GetNeighboursUndirected(vertex1);
                 foreach (var arc in arcs)
                 {
-                    neighbours[arc.Key] = arc.Value;
+                    if (arc.Key == previousVertex)
+                    { // this is an arc to the previous point.
+                        var distance = 0.0;
+                        var previous = vertex1Coordinate;
+                        if (arc.Value.Coordinates != null)
+                        { // there are intermediates.
+                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            {
+                                var current = new GeoCoordinate(arc.Value.Coordinates[idx].Latitude,
+                                    arc.Value.Coordinates[idx].Longitude);
+                                distance = distance + previous.DistanceReal(current).Value;
+                                previous = current;
+                            }
+                        }
+                        distance = distance + previous.DistanceReal(previousCoordinate).Value;
+                        if (distance < distanceToPrevious)
+                        { // a new shortest.
+                            distanceToPrevious = distance;
+                            indexOfPrevious = neighbours.Count;
+                        }
+                    }
+                    else if (arc.Key == nextVertex)
+                    { // this is an arc to the next point.
+                        var distance = 0.0;
+                        var previous = vertex1Coordinate;
+                        if (arc.Value.Coordinates != null)
+                        { // there are intermediates.
+                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            {
+                                var current = new GeoCoordinate(arc.Value.Coordinates[idx].Latitude,
+                                    arc.Value.Coordinates[idx].Longitude);
+                                distance = distance + previous.DistanceReal(current).Value;
+                                previous = current;
+                            }
+                        }
+                        distance = distance + previous.DistanceReal(nextCoordinate).Value;
+                        if (distance < distanceToNext)
+                        { // a new shortest.
+                            distanceToNext = distance;
+                            indexOfNext = neighbours.Count;
+                        }
+                    }
+                    else if(nextVertex < 0 || previousVertex < 0)
+                    { // check all intermeditate coordinates for next/previous.
+                        if(arc.Value.Coordinates != null)
+                        { // loop over coordinates.
+                            for(int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            {
+                                if(arc.Value.Coordinates[idx].Latitude == nextCoordinate.Latitude &&
+                                    arc.Value.Coordinates[idx].Longitude == nextCoordinate.Longitude)
+                                {
+                                    indexOfNext = neighbours.Count;
+                                }
+                                if (arc.Value.Coordinates[idx].Latitude == previousCoordinate.Latitude &&
+                                    arc.Value.Coordinates[idx].Longitude == previousCoordinate.Longitude)
+                                {
+                                    indexOfPrevious = neighbours.Count;
+                                }
+                            }
+                        }
+                    }
+                    neighbours.Add(new KeyValuePair<long, IDynamicGraphEdgeData>(arc.Key, arc.Value));
                 }
             }
-            else
-            {
-                var arcs = graph.GetArcs(vertex1);
-                foreach (var arc in arcs)
-                {
-                    neighbours[arc.Key] = arc.Value;
+
+            // remove next/previous from the list.
+            if (neighbours.Count > 0)
+            { // there have been actual neighoubrs found.
+                if (indexOfPrevious < indexOfNext)
+                { // remove next first.
+                    if (indexOfNext > -1) { neighbours.RemoveAt(indexOfNext); }
+                    if (indexOfPrevious > -1 && neighbours.Count > indexOfPrevious) { neighbours.RemoveAt(indexOfPrevious); }
+                }
+                else
+                { // remove previous first.
+                    if (indexOfPrevious > -1) { neighbours.RemoveAt(indexOfPrevious); }
+                    if (indexOfNext > -1 && neighbours.Count > indexOfNext) { neighbours.RemoveAt(indexOfNext); }
                 }
             }
+
             return neighbours;
         }
 

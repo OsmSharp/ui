@@ -281,10 +281,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             var languageGenerator = new LanguageTestGenerator();
 
             // generate the instructions.
-            List<Instruction> instructions =
-                InstructionGenerator.Generate(route12, interpreter, languageGenerator);
-            List<Instruction> instructionsReference =
-                InstructionGenerator.Generate(routeReference12, interpreter, languageGenerator);
+            var instructions =  InstructionGenerator.Generate(route12, interpreter, languageGenerator);
+            var instructionsReference = InstructionGenerator.Generate(routeReference12, interpreter, languageGenerator);
 
             Assert.AreEqual(instructions.Count, instructionsReference.Count);
             for (int idx = 0; idx < instructions.Count; idx++)

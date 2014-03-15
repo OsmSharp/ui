@@ -75,5 +75,14 @@ namespace OsmSharp.Routing.Instructions
         /// Gets/sets some extras if needed.
         /// </summary>
         public Dictionary<string, object> Extras { get; set; }
+
+        /// <summary>
+        /// Returns a string that represents the current coordinate.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.Text;
+        }
     }
 }
