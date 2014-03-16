@@ -690,7 +690,7 @@ namespace OsmSharp.Routing.Routers
                             indexOfNext = neighbours.Count;
                         }
                     }
-                    else if(nextVertex < 0 || previousVertex < 0)
+                    if(nextVertex < 0 || previousVertex < 0)
                     { // check all intermeditate coordinates for next/previous.
                         if(arc.Value.Coordinates != null)
                         { // loop over coordinates.
