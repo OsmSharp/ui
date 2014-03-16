@@ -646,6 +646,16 @@ namespace OsmSharp.Routing.Routers
                 // remove duplicates.
                 arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
 
+                // get 'real' neighbours.
+                if(previousVertex < 0)
+                { // get the real neighbour.
+                    previousVertex = this.GetRealNeighbour(vehicle, vertex1, previousVertex);
+                }
+                if (nextVertex < 0)
+                { // get the real neighbour.
+                    nextVertex = this.GetRealNeighbour(vehicle, vertex1, nextVertex);
+                }
+
                 foreach (var arc in arcs)
                 {
                     if (arc.Key == previousVertex)
@@ -918,6 +928,17 @@ namespace OsmSharp.Routing.Routers
         private bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
         {
             return _routerPoints.TryGetValue(location, out point);
+        }
+
+        /// <summary>
+        /// Returns a routerpoint for the given resolvedId.
+        /// </summary>
+        /// <param name="resolvedId"></param>
+        /// <returns></returns>
+        private bool GetRouterPoint(long resolvedId, out RouterPoint point)
+        {
+            point = _routerPoints.Values.First(x => x.Id == resolvedId);
+            return point != null;
         }
 
         /// <summary>
@@ -1739,6 +1760,8 @@ namespace OsmSharp.Routing.Routers
                         new RouterPoint(resolvedVertex, resolvedCoordinate));
         }
 
+        #region Resolved Graph Routing
+
         /// <summary>
         /// Calculates all routes from a given resolved point to the routable graph.
         /// </summary>
@@ -1746,7 +1769,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="resolvedPoint"></param>
         /// <param name="backwards"></param>
         /// <returns></returns>
-        private PathSegmentVisitList RouteResolvedGraph(Vehicle vehicle, RouterPoint resolvedPoint, bool backwards)
+        private PathSegmentVisitList RouteResolvedGraph(Vehicle vehicle, RouterPoint resolvedPoint, bool? backwards)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
@@ -1798,9 +1821,9 @@ namespace OsmSharp.Routing.Routers
                         // check oneway.
                         TagsCollectionBase tags = _dataGraph.TagsIndex.Get(arc.Value.Tags);
                         bool? oneway = vehicle.IsOneWay(tags);
-                        if (!oneway.HasValue || 
-                            (!backwards && oneway.Value == arc.Value.Forward) ||
-                            (backwards && oneway.Value != arc.Value.Forward))
+                        if (!oneway.HasValue || (!backwards.HasValue || 
+                            ((!backwards.Value && oneway.Value == arc.Value.Forward) ||
+                            (backwards.Value && oneway.Value != arc.Value.Forward))))
                         { // ok edge is not oneway or oneway in the right direction.
                             graph.GetVertex(arc.Key, out latitude, out longitude);
                             var neighbourCoordinates = new GeoCoordinate(latitude, longitude);
@@ -1833,7 +1856,37 @@ namespace OsmSharp.Routing.Routers
             return visitLists;
         }
 
-        #region Resolved Graph Routing
+
+        /// <summary>
+        /// Returns the 'real' other neighour of vertex1 in the direction of resolvedVertex.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="resolvedVertex"></param>
+        /// <returns></returns>
+        private long GetRealNeighbour(Vehicle vehicle, long vertex1, long resolvedVertex)
+        {
+            RouterPoint resolvedPoint;
+            if (!this.GetRouterPoint(resolvedVertex, out resolvedPoint))
+            { // oeps, point not found!
+                throw new Exception("Resolved point detected but not found as a router point!");
+            }
+            var visitList = this.RouteResolvedGraph(vehicle, resolvedPoint, null);
+            var visitSet = new HashSet<long>(visitList.GetVertices());
+            if(visitSet.Count == 2)
+            { // two points found.
+                visitSet.Remove(vertex1);
+            } 
+            else if(visitSet.Count == 0)
+            { // oeps, router point found without neighours!
+                throw new Exception("Resolved point detected but did not find neighbours!");
+            }
+            else if (visitSet.Count > 2)
+            { // oeps, router point found but with more than 2 neighours!
+                throw new Exception("Resolved point detected but with more than 2 neighours!");
+            }
+            return visitSet.First();
+        }
 
         /// <summary>
         /// Calculates the shortest path between two points in the resolved vertex.
