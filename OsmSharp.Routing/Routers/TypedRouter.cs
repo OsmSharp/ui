@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
@@ -646,14 +647,73 @@ namespace OsmSharp.Routing.Routers
                 // remove duplicates.
                 arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
 
+                // check if arcs left.
+                if(arcs.Length == 0)
+                { // no neighbours for sure.
+                    return neighbours;
+                }
+
                 // get 'real' neighbours.
-                if(previousVertex < 0)
+                bool checkIntermediates = false;
+                if (previousVertex < 0)
                 { // get the real neighbour.
-                    previousVertex = this.GetRealNeighbour(vehicle, vertex1, previousVertex);
+                    checkIntermediates = true;
+                    RouterPoint resolvedPoint;
+                    if (!this.GetRouterPoint(previousVertex, out resolvedPoint))
+                    { // oeps, point not found!
+                        throw new Exception("Resolved point detected but not found as a router point!");
+                    }
+                    var visitList = this.RouteResolvedGraph(vehicle, resolvedPoint, null);
+                    if(visitList.Count == 2)
+                    { // two points.
+                        var vertices = new HashSet<long>(visitList.GetVertices());
+                        vertices.Remove(vertex1);
+                        var other = vertices.First();
+                        var path = visitList.GetPathTo(vertex1).ConcatenateAfter(
+                            visitList.GetPathTo(other).Reverse()).Reverse();
+
+                        // match path with edge.
+                        for (int idx = 0; idx < arcs.Length; idx++)
+                        {
+                            if(this.MatchArc(vehicle, vertex1, arcs[idx].Value.Coordinates, arcs[idx].Key, path))
+                            { // arc matches, remove from array.
+                                var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
+                                newArcs.RemoveAt(idx);
+                                arcs = newArcs.ToArray();
+                                break;
+                            }
+                        }
+                    }
                 }
                 if (nextVertex < 0)
                 { // get the real neighbour.
-                    nextVertex = this.GetRealNeighbour(vehicle, vertex1, nextVertex);
+                    checkIntermediates = true;
+                    RouterPoint resolvedPoint;
+                    if (!this.GetRouterPoint(nextVertex, out resolvedPoint))
+                    { // oeps, point not found!
+                        throw new Exception("Resolved point detected but not found as a router point!");
+                    }
+                    var visitList = this.RouteResolvedGraph(vehicle, resolvedPoint, null);
+                    if(visitList.Count == 2)
+                    { // two points.
+                        var vertices = new HashSet<long>(visitList.GetVertices());
+                        vertices.Remove(vertex1);
+                        var other = vertices.First();
+                        var path = visitList.GetPathTo(other).ConcatenateAfter(
+                            visitList.GetPathTo(vertex1).Reverse());
+
+                        // match path with edge.
+                        for (int idx = 0; idx < arcs.Length; idx++)
+                        {
+                            if(this.MatchArc(vehicle, vertex1, arcs[idx].Value.Coordinates, arcs[idx].Key, path))
+                            { // arc matches, remove from array.
+                                var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
+                                newArcs.RemoveAt(idx);
+                                arcs = newArcs.ToArray();
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 foreach (var arc in arcs)
@@ -700,13 +760,13 @@ namespace OsmSharp.Routing.Routers
                             indexOfNext = neighbours.Count;
                         }
                     }
-                    if(nextVertex < 0 || previousVertex < 0)
+                    if (checkIntermediates)
                     { // check all intermeditate coordinates for next/previous.
-                        if(arc.Value.Coordinates != null)
+                        if (arc.Value.Coordinates != null)
                         { // loop over coordinates.
-                            for(int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
                             {
-                                if(arc.Value.Coordinates[idx].Latitude == nextCoordinate.Latitude &&
+                                if (arc.Value.Coordinates[idx].Latitude == nextCoordinate.Latitude &&
                                     arc.Value.Coordinates[idx].Longitude == nextCoordinate.Longitude)
                                 {
                                     indexOfNext = neighbours.Count;
@@ -739,6 +799,47 @@ namespace OsmSharp.Routing.Routers
             }
 
             return neighbours;
+        }
+
+        /// <summary>
+        /// Tries to match an arc with a given path.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="geoCoordinateSimple"></param>
+        /// <param name="p"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private bool MatchArc(Vehicle vehicle, long from, GeoCoordinateSimple[] along, long to, PathSegment<long> path)
+        {
+            var vertices = path.ToArray();
+            if(vertices[0] != from)
+            { // this one is wrong at the start.
+                return false;
+            }
+            if (vertices[vertices.Length - 1] != to)
+            { // this one is wrong at the ned.
+                return false;
+            }
+            int intermediateIdx = 0;
+            for(int idx = 1; idx < vertices.Length; idx++)
+            { // check for intermediates!
+                if(this.IsIntermediate(vertices[idx]))
+                { // this is an intermediate.
+                    if(along == null || intermediateIdx >= along.Length)
+                    { // oeps, more intermediates!
+                        return false;
+                    }
+                    var intermediateCoordinate = this.GetCoordinate(vehicle, vertices[idx]);
+                    if(intermediateCoordinate.Latitude != along[intermediateIdx].Latitude ||
+                       intermediateCoordinate.Longitude != along[intermediateIdx].Longitude)
+                    { // a deviation of the intermediates.
+                        return false;
+                    }
+                    intermediateIdx++;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -1318,6 +1419,16 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
+        /// Returns true if the given vertex is an intermediate.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        private bool IsIntermediate(long vertex)
+        {
+            return vertex >= long.MinValue && vertex <= IntermediatePoints;
+        }
+
+        /// <summary>
         /// Holds the resolved graphs per used vehicle type.
         /// </summary>
         private readonly Dictionary<Vehicle, TypedRouterResolvedGraph> _resolvedGraphs;
@@ -1856,37 +1967,36 @@ namespace OsmSharp.Routing.Routers
             return visitLists;
         }
 
-
-        /// <summary>
-        /// Returns the 'real' other neighour of vertex1 in the direction of resolvedVertex.
-        /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="vertex1"></param>
-        /// <param name="resolvedVertex"></param>
-        /// <returns></returns>
-        private long GetRealNeighbour(Vehicle vehicle, long vertex1, long resolvedVertex)
-        {
-            RouterPoint resolvedPoint;
-            if (!this.GetRouterPoint(resolvedVertex, out resolvedPoint))
-            { // oeps, point not found!
-                throw new Exception("Resolved point detected but not found as a router point!");
-            }
-            var visitList = this.RouteResolvedGraph(vehicle, resolvedPoint, null);
-            var visitSet = new HashSet<long>(visitList.GetVertices());
-            if(visitSet.Count == 2)
-            { // two points found.
-                visitSet.Remove(vertex1);
-            } 
-            else if(visitSet.Count == 0)
-            { // oeps, router point found without neighours!
-                throw new Exception("Resolved point detected but did not find neighbours!");
-            }
-            else if (visitSet.Count > 2)
-            { // oeps, router point found but with more than 2 neighours!
-                throw new Exception("Resolved point detected but with more than 2 neighours!");
-            }
-            return visitSet.First();
-        }
+        ///// <summary>
+        ///// Returns the 'real' other neighour of vertex1 in the direction of resolvedVertex.
+        ///// </summary>
+        ///// <param name="vehicle"></param>
+        ///// <param name="vertex1"></param>
+        ///// <param name="resolvedVertex"></param>
+        ///// <returns></returns>
+        //private long GetRealNeighbour(Vehicle vehicle, long vertex1, long resolvedVertex)
+        //{
+        //    RouterPoint resolvedPoint;
+        //    if (!this.GetRouterPoint(resolvedVertex, out resolvedPoint))
+        //    { // oeps, point not found!
+        //        throw new Exception("Resolved point detected but not found as a router point!");
+        //    }
+        //    var visitList = this.RouteResolvedGraph(vehicle, resolvedPoint, null);
+        //    var visitSet = new HashSet<long>(visitList.GetVertices());
+        //    if(visitSet.Count == 2)
+        //    { // two points found.
+        //        visitSet.Remove(vertex1);
+        //    } 
+        //    else if(visitSet.Count == 0)
+        //    { // oeps, router point found without neighours!
+        //        throw new Exception("Resolved point detected but did not find neighbours!");
+        //    }
+        //    else if (visitSet.Count > 2)
+        //    { // oeps, router point found but with more than 2 neighours!
+        //        throw new Exception("Resolved point detected but with more than 2 neighours!");
+        //    }
+        //    return visitSet.First();
+        //}
 
         /// <summary>
         /// Calculates the shortest path between two points in the resolved vertex.

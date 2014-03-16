@@ -225,8 +225,8 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                 nextToProcess++;
             }
 
-            //// compress the graph.
-            //this.CompressGraph();
+            // compress the graph.
+            this.CompressGraph();
         }
 
         /// <summary>
