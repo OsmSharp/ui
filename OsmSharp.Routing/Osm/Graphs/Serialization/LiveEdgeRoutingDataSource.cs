@@ -434,6 +434,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 edge.Tags = tags;
                                 edge.Coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
                                     tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
+                                edge.Distance = tileData.Arcs[vertexIdx].Distances[idx];
 
                                 // convert the arc.
                                 arcs[idx] = new KeyValuePair<uint, Osm.Graphs.LiveEdge>(

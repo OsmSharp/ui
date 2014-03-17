@@ -174,15 +174,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
-                LiveEdge edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate);
+                var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate);
 
                 this.DynamicGraph.AddArc(from, to, edgeData, this.EdgeComparer);
 
                 // add reverse edge and return true.
-                LiveEdge reverseEdgeData = new LiveEdge()
+                var reverseEdgeData = new LiveEdge()
                     {
                         Forward = !edgeData.Forward,
-                        Tags = edgeData.Tags
+                        Tags = edgeData.Tags,
+                        Distance = edgeData.Distance
                     };
                 this.DynamicGraph.AddArc(to, from, reverseEdgeData, this.EdgeComparer);
             }
@@ -213,7 +214,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             return new LiveEdge()
             {
                 Forward = directionForward,
-                Tags = tagsId
+                Tags = tagsId,
+                Distance = (float)from.DistanceEstimate(to).Value
             };
         }
 

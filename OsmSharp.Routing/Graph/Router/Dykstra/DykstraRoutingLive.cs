@@ -522,19 +522,19 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                 var neighbourCoordinates = new GeoCoordinate(latitude, longitude);
 
                                 // calculate the weight.
-                                double weightToNeighbour = 0;
-                                var previous = currentCoordinates;
-                                if(neighbour.Value.Coordinates != null)
-                                {
-                                    for(int idx = 0; idx < neighbour.Value.Coordinates.Length; idx++)
-                                    {
-                                        var intermediate = new GeoCoordinate(neighbour.Value.Coordinates[idx].Latitude,
-                                            neighbour.Value.Coordinates[idx].Longitude);
-                                        weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, intermediate);
-                                        previous = intermediate;
-                                    }
-                                }
-                                weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, neighbourCoordinates);
+                                double weightToNeighbour = vehicle.Weight(tags, neighbour.Value.Distance);
+                                //var previous = currentCoordinates;
+                                //if(neighbour.Value.Coordinates != null)
+                                //{
+                                //    for(int idx = 0; idx < neighbour.Value.Coordinates.Length; idx++)
+                                //    {
+                                //        var intermediate = new GeoCoordinate(neighbour.Value.Coordinates[idx].Latitude,
+                                //            neighbour.Value.Coordinates[idx].Longitude);
+                                //        weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, intermediate);
+                                //        previous = intermediate;
+                                //    }
+                                //}
+                                //weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, neighbourCoordinates);
 
                                 // calculate neighbours weight.
                                 double totalWeight = current.Weight + weightToNeighbour;

@@ -82,6 +82,11 @@ namespace OsmSharp.Routing.Osm.Graphs
         public GeoCoordinateSimple[] Coordinates { get; set; }
 
         /// <summary>
+        /// Gets/or sets the total distance of this edge.
+        /// </summary>
+        public float Distance { get; set; }
+
+        /// <summary>
         /// Returns true if this edge represents a neighbour-relation.
         /// </summary>
         public bool RepresentsNeighbourRelations

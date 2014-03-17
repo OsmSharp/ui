@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "kempen.osm.pbf");
+            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "england-latest.osm.pbf");
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Performance.Routing
             stream.Dispose();
 
             performanceInfo.Stop();
-            // make sure the route is still here after GC to note the memory difference.
+            // make sure the router is still here after GC to note the memory difference.
             OsmSharp.Logging.Log.TraceEvent("LivePreProcessor", Logging.TraceEventType.Information, router.ToString());
             router = null;
 

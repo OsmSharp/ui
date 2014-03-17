@@ -240,9 +240,8 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public virtual float Weight(TagsCollectionBase tags, GeoCoordinate from, GeoCoordinate to)
         {
-            var distance = from.DistanceEstimate(to).Value;
-
-            return (float)(distance / (this.ProbableSpeed(tags).Value) * 3.6);
+            var distance = (float)from.DistanceEstimate(to).Value;
+            return this.Weight(tags, distance);
         }
 
         /// <summary>
@@ -267,6 +266,17 @@ namespace OsmSharp.Routing
                 }
             }
             return (float)(distance + this.Weight(tags, previous, to));
+        }
+
+        /// <summary>
+        /// Returns the weight between points based on the tags and distance.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public virtual float Weight(TagsCollectionBase tags, float distance)
+        {
+            return (float)(distance / (this.ProbableSpeed(tags).Value) * 3.6);
         }
 
         /// <summary>

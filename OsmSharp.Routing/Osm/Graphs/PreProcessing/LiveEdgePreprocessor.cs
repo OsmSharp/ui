@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Logging;
+using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
@@ -57,6 +59,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
             uint nextPosition = 0;
 
             // search edge until a real node.
+            double latestProgress = 0;
             while(nextToProcess < _graph.VertexCount)
             { // keep looping until all vertices have been processed.
                 // select a new vertext to select.
@@ -106,6 +109,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         // STEP1: Build list of vertices that are only for form.
 
                         // set current/previous.
+                        var distance = oldEdge.Value.Distance;
                         var current = oldEdge.Key;
                         var previous = vertexToProcess;
 
@@ -136,6 +140,9 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             { // oeps, there are intermediates already, this can occur when two osm-ways are drawn on top of eachother.
                                 break;
                             }
+
+                            // add distance.
+                            distance = distance + nextEdge.Value.Distance;
 
                             // set current/previous.
                             previous = current;
@@ -202,13 +209,13 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                 ignoreList.Add(vertices[vertices.Count - 2]); // make sure this arc is ignored in next iteration.
                             }
 
-
                             // STEP4: Add new edges.
                             _graph.AddArc(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
                             {
                                 Coordinates = coordinates,
                                 Forward = oldEdge.Value.Forward,
-                                Tags = oldEdge.Value.Tags
+                                Tags = oldEdge.Value.Tags,
+                                Distance = distance
                             }, this);
                             var reverse = new GeoCoordinateSimple[coordinates.Length];
                             coordinates.CopyToReverse(reverse, 0);
@@ -216,13 +223,23 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             {
                                 Coordinates = reverse,
                                 Forward = !oldEdge.Value.Forward,
-                                Tags = oldEdge.Value.Tags
+                                Tags = oldEdge.Value.Tags,
+                                Distance = distance
                             }, this);
                         }
                     }
                 }
                 // move to the next position.
                 nextToProcess++;
+
+                // report progress.
+                float progress = (float)System.Math.Round((((double)nextToProcess / (double)_graph.VertexCount) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                        "Compressing graph... {0}%", progress);
+                    latestProgress = progress;
+                }
             }
 
             // compress the graph.

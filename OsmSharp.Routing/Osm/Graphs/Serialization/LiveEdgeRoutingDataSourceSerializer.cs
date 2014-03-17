@@ -119,6 +119,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         serializableGraphArcs.TileY = new int[arcs.Length];
                         serializableGraphArcs.Tags = new SerializableTags[arcs.Length];
                         serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Length];
+                        serializableGraphArcs.Distances = new float[arcs.Length];
 
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
@@ -134,6 +135,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
                                     Coordinates = SerializableCoordinate.FromSimpleArray(arc.Value.Coordinates)
                                 };
+                                serializableGraphArcs.Distances[idx] = arc.Value.Distance;
 
                                 // get the tags.
                                 var tagsCollection = graph.TagsIndex.Get(arc.Value.Tags);
@@ -465,6 +467,12 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             [ProtoMember(6)]
             public SerializableCoordinates[] Intermediates { get; set; }
+
+            /// <summary>
+            /// Gets/sets the distances.
+            /// </summary>
+            [ProtoMember(7)]
+            public float[] Distances { get; set; }
         }
 
         /// <summary>
