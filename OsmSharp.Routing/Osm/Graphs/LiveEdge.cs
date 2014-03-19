@@ -33,6 +33,21 @@ namespace OsmSharp.Routing.Osm.Graphs
         private uint _value;
 
         /// <summary>
+        /// Gets/sets the value.
+        /// </summary>
+        internal uint Value
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                _value = value;
+            }
+        }
+
+        /// <summary>
         /// Flag indicating if this is a forward or backward edge relative to the tag descriptions.
         /// </summary>
         public bool Forward 

@@ -27,6 +27,7 @@ using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Osm.Streams
 {

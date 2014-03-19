@@ -34,4 +34,3 @@ namespace OsmSharp
 		bool TryGetValue(string key, out string value);
 	}
 }
-

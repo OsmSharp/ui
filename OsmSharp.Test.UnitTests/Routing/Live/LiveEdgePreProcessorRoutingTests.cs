@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;

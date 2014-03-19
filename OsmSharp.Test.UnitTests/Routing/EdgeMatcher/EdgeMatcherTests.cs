@@ -13,6 +13,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
 {

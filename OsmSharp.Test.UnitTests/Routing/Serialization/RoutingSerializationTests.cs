@@ -35,6 +35,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {

@@ -56,6 +56,7 @@
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="CH\Serialization\CHEdgeFlatfileSerializer.cs" />
     <Compile Include="CH\Serialization\Sorted\CHBlock.cs" />
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
@@ -112,7 +113,9 @@
     <Compile Include="Metrics\Time\TimeCalculator.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
+    <Compile Include="Osm\Graphs\LiveEdgeFlatfileSerializer.cs" />
     <Compile Include="Osm\Graphs\PreProcessing\LiveEdgePreprocessor.cs" />
+    <Compile Include="Graph\Serialization\FlatfileSerializer.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />

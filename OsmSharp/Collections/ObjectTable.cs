@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -31,7 +32,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// The array containing all strings.
         /// </summary>
-        private Type[] _strings;
+        private Type[] _objects;
 
         /// <summary>
         /// A dictionary containing the index of each string.
@@ -65,7 +66,7 @@ namespace OsmSharp.Collections
         /// <param name="initCapacity"></param>
         public ObjectTable(bool reverseIndex, int initCapacity)
         {
-            _strings = new Type[initCapacity];
+            _objects = new Type[initCapacity];
             _initCapacity = initCapacity;
 
             if (reverseIndex)
@@ -79,7 +80,7 @@ namespace OsmSharp.Collections
         /// </summary>
         public void Clear()
         {
-            _strings = new Type[_initCapacity];
+            _objects = new Type[_initCapacity];
             _nextIdx = 0;
             if (_reverseIndex != null)
             {
@@ -95,9 +96,9 @@ namespace OsmSharp.Collections
         public void BuildReverseIndex()
         {
             _reverseIndex = new Dictionary<Type, uint>();
-            for(uint idx = 0; idx < _strings.Length; idx++)
+            for(uint idx = 0; idx < _objects.Length; idx++)
             {
-                Type value = _strings[idx];
+                Type value = _objects[idx];
                 if (value != null)
                 {
                     _reverseIndex[value] = idx;
@@ -117,15 +118,20 @@ namespace OsmSharp.Collections
 
         #region Table
 
-        private uint AddString(Type value)
+        /// <summary>
+        /// Adds a new object.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private uint AddObject(Type value)
         {
             uint value_int = _nextIdx;
 
-            if (_strings.Length <= _nextIdx)
+            if (_objects.Length <= _nextIdx)
             { // the string table is not big enough anymore.
-                Array.Resize<Type>(ref _strings, _strings.Length + _initCapacity);
+                Array.Resize<Type>(ref _objects, _objects.Length + _initCapacity);
             }
-            _strings[_nextIdx] = value;
+            _objects[_nextIdx] = value;
 
             if (_reverseIndex != null)
             {
@@ -161,15 +167,15 @@ namespace OsmSharp.Collections
             { // add string based on the reverse index, is faster.
                 if (!_reverseIndex.TryGetValue(value, out valueInt))
                 { // string was not found.
-                    valueInt = this.AddString(value);
+                    valueInt = this.AddObject(value);
                 }
             }
             else
             {
-                int idx = Array.IndexOf<Type>(_strings, value); // this is O(n), a lot worse compared to the best-case O(1).
+                int idx = Array.IndexOf<Type>(_objects, value); // this is O(n), a lot worse compared to the best-case O(1).
                 if (idx < 0)
                 { // string was not found.
-                    valueInt = this.AddString(value);
+                    valueInt = this.AddObject(value);
                 }
                 else
                 { // string was found.
@@ -186,7 +192,7 @@ namespace OsmSharp.Collections
         /// <returns></returns>
         public Type Get(uint valueIdx)
         {
-            return _strings[valueIdx];
+            return _objects[valueIdx];
         }
 
         /// <summary>
@@ -198,9 +204,73 @@ namespace OsmSharp.Collections
             Type[] copy = new Type[_nextIdx];
             for (int idx = 0; idx < _nextIdx; idx++)
             {
-                copy[idx] = _strings[idx];
+                copy[idx] = _objects[idx];
             }
             return copy;
+        }
+
+        /// <summary>
+        /// Serializes/deserializes an object table.
+        /// </summary>
+        public abstract class ObjectTableSerializer
+        {
+            /// <summary>
+            /// Serializes the given object table to the stream.
+            /// </summary>
+            /// <param name="stream"></param>
+            public void Serialize(Stream stream, ObjectTable<Type> objectTable)
+            {
+                // [OBJECT_COUNT][OBJECT_DATA]
+                lock (objectTable)
+                {
+                    // write object-count.
+                    var countBytes = BitConverter.GetBytes(objectTable._nextIdx);
+                    stream.Write(countBytes, 0, 4);
+
+                    for (int idx = 0; idx < objectTable._nextIdx; idx++)
+                    { // serialize objects one-by-one.
+                        this.SerializeObject(stream, objectTable._objects[idx]);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Serializes one object.
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="value"></param>
+            public abstract void SerializeObject(Stream stream, Type value);
+
+            /// <summary>
+            /// Deserializes an object table.
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <returns></returns>
+            public ObjectTable<Type> Deserialize(Stream stream)
+            {
+                // deserialize count.
+                var countBytes = new byte[4];
+                stream.Read(countBytes, 0, 4);
+                int count = BitConverter.ToInt32(countBytes, 0);
+
+                // deserialize objects.
+                var objectTable = new ObjectTable<Type>(false, count);
+                int idx = 0;
+                while(idx < count)
+                {
+                    objectTable._objects[idx] = this.DeserializeObject(stream);
+                    idx++;
+                }
+                return objectTable;
+            }
+
+            /// <summary>
+            /// Deserializes one object.
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public abstract Type DeserializeObject(Stream stream);
         }
     }
 }

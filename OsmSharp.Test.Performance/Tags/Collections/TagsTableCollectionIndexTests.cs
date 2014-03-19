@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Performance.Tags.Collections
 {

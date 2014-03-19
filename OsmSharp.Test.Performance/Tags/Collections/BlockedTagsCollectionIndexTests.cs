@@ -23,6 +23,8 @@ using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
 using System.IO;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Tags.Serializer.Index;
 
 namespace OsmSharp.Test.Performance.Tags.Collections
 {

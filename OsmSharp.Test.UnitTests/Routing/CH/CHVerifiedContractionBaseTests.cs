@@ -36,6 +36,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Math.Geo;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {

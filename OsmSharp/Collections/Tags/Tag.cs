@@ -16,11 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using ProtoBuf;
+
 namespace OsmSharp.Collections.Tags
 {
     /// <summary>
     /// Represents a tag (a key-value pair).
     /// </summary>
+    [ProtoContract]
     public struct Tag
     {
         /// <summary>
@@ -38,11 +41,13 @@ namespace OsmSharp.Collections.Tags
         /// <summary>
         /// The key (or the actual tag name).
         /// </summary>
+        [ProtoMember(1)]
         public string Key { get; set; }
 
         /// <summary>
         /// The value of the tag.
         /// </summary>
+        [ProtoMember(2)]
         public string Value { get; set; }
 
         /// <summary>

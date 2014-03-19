@@ -107,22 +107,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         private TagsCollectionBase ReadMeta(Stream stream)
         {
-            TagsCollectionBase metaData;
-            byte[] intBytes = new byte[4];
-            stream.Read(intBytes, 0, 4);
-            int metaLength = BitConverter.ToInt32(intBytes, 0);
-            if (metaLength > 0)
-            {
-                // read meta byte array.
-                byte[] tagsBytes = new byte[metaLength];
-                stream.Read(tagsBytes, 0, metaLength);
-                metaData = (new TagsCollectionSerializer()).Deserialize(tagsBytes);
-            }
-            else
-            { // no metadata here!
-                metaData = new TagsCollection();
-            }
-            return metaData;
+            return (new TagsCollectionSerializer()).DeserializeWithSize(stream);
         }
 
         /// <summary>
@@ -132,9 +117,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="metaTags"></param>
         private void WriteMeta(Stream stream, TagsCollectionBase metaTags)
         {
-            byte[] tagsBytes = (new TagsCollectionSerializer()).Serialize(metaTags);
-            stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
-            stream.Write(tagsBytes, 0, tagsBytes.Length);
+            (new TagsCollectionSerializer()).SerializeWithSize(metaTags, stream);
         }
 
         #endregion

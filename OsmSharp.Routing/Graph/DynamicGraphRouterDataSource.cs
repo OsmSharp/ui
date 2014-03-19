@@ -23,6 +23,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Graph
 {

@@ -31,6 +31,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {

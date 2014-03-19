@@ -25,6 +25,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
 {

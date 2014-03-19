@@ -6,6 +6,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Performance.Tags.Collections
 {

@@ -23,6 +23,8 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
 using OsmSharp.Test.Unittests.Osm;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Tags.Serializer.Index;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
 {

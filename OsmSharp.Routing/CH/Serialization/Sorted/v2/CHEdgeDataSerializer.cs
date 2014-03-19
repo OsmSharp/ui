@@ -30,6 +30,8 @@ using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf.Meta;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Serializer.Index;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
 {

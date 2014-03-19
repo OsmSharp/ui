@@ -16,26 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Collections.Tags
+namespace OsmSharp.Collections.Tags.Index
 {
     /// <summary>
     /// Abstracts an index containing tags.
     /// </summary>
-    public interface ITagsCollectionIndexReadonly
+    public interface ITagsCollectionIndex : ITagsCollectionIndexReadonly
     {
         /// <summary>
-        /// Returns the maxium possible number of tags in this index.
+        /// Adds new tags.
         /// </summary>
-        uint Max
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns the tags that belong to the given id.
-        /// </summary>
-        /// <param name="tagsId"></param>
+        /// <param name="tags"></param>
         /// <returns></returns>
-        TagsCollectionBase Get(uint tagsId);
+        uint Add(TagsCollectionBase tags);
     }
 }

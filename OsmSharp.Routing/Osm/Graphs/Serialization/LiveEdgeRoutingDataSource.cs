@@ -27,6 +27,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {

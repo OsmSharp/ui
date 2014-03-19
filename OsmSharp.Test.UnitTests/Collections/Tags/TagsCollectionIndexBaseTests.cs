@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags
 {

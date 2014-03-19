@@ -31,56 +31,31 @@ namespace OsmSharp.Collections.Tags.Serializer
     public class TagsCollectionSerializer
     {
         /// <summary>
-        /// Serializes a tags collection to a byte array.
+        /// Serializes a tags collection to a byte array and addes the size in the first 4 bytes.
         /// </summary>
         /// <param name="collection"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
-        public byte[] Serialize(TagsCollectionBase collection)
+        public void SerializeWithSize(TagsCollectionBase collection, Stream stream)
         {
-            if (collection.Count > 0)
-            {
-                RuntimeTypeModel typeModel = TypeModel.Create();
-                typeModel.Add(typeof(List<KeyValuePair<string, string>>), true);
+            RuntimeTypeModel typeModel = TypeModel.Create();
+            typeModel.Add(typeof(Tag), true);
 
-                List<KeyValuePair<string, string>> tagsList = new List<KeyValuePair<string, string>>();
-                foreach (var tag in collection)
-                {
-                    tagsList.Add(new KeyValuePair<string, string>(tag.Key, tag.Value));
-                }
-
-                byte[] tagsBytes = null;
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    typeModel.Serialize(stream, tagsList);
-                    tagsBytes = stream.ToArray();
-                }
-                return tagsBytes;
-            }
-            return new byte[0];
+            var tagsList = new List<Tag>(collection);
+            typeModel.SerializeWithSize(stream, tagsList);
         }
 
         /// <summary>
-        /// Deserializes a tags collection from a byte array.
+        /// Deserializes a tags collection from a byte array and takes the data size from the first 4 bytes.
         /// </summary>
-        /// <param name="tagsBytes"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
-        public TagsCollectionBase Deserialize(byte[] tagsBytes)
+        public TagsCollectionBase DeserializeWithSize(Stream stream)
         {
             RuntimeTypeModel typeModel = TypeModel.Create();
-            typeModel.Add(typeof(List<KeyValuePair<string, string>>), true);
-
-            List<KeyValuePair<string, string>> tagsList = null;
-            using (MemoryStream stream = new MemoryStream(tagsBytes))
-            {
-                tagsList = typeModel.Deserialize(stream, null, typeof(List<KeyValuePair<string, string>>)) as List<KeyValuePair<string, string>>;
-            }
-
-            TagsCollection tagsCollection = new TagsCollection();
-            foreach(KeyValuePair<string, string> tag in tagsList)
-            {
-                tagsCollection.Add(tag.Key, tag.Value);
-            }
-            return tagsCollection;
+            typeModel.Add(typeof(Tag), true);
+            return new TagsCollection(typeModel.DeserializeWithSize(stream, 
+                null, typeof(List<Tag>)) as List<Tag>);
         }
     }
 }

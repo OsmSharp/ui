@@ -23,8 +23,9 @@ using System.Text;
 using System.IO;
 using ProtoBuf.Meta;
 using OsmSharp.IO;
+using OsmSharp.Collections.Tags.Index;
 
-namespace OsmSharp.Collections.Tags.Serializer
+namespace OsmSharp.Collections.Tags.Serializer.Index
 {
     /// <summary>
     /// Contains serialize/deserialize functionalities.

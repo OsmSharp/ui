@@ -29,6 +29,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph.PreProcessor;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {

@@ -68,17 +68,17 @@
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
-    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
-    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
+    <Compile Include="Collections\Tags\Index\ITagsCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\Index\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\ITagsSource.cs" />
-    <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
+    <Compile Include="Collections\Tags\Index\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\Serializer\TagsCollectionSerializer.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
     <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
     <Compile Include="Collections\Tags\TagsTableCollection.cs" />
-    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\Index\TagsTableCollectionIndex.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
@@ -377,6 +377,7 @@
       <DependentUpon>search.xsd</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -90,9 +90,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             // Scenes: The serialized scenes themselves.
 
             // serialize meta tags.
-            byte[] tagsBytes = (new TagsCollectionSerializer()).Serialize(metaTags);
-            stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
-            stream.Write(tagsBytes, 0, tagsBytes.Length);
+            (new TagsCollectionSerializer()).SerializeWithSize(metaTags, stream);
 
             // index index.
             SceneIndex sceneIndex = new SceneIndex();
@@ -201,23 +199,10 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             // Scenes: The serialized scenes themselves.
 
             // read metaLength.
-            byte[] intBytes = new byte[4];
-            stream.Read(intBytes, 0, 4);
-            int metaLength = BitConverter.ToInt32(intBytes, 0);
-            if (metaLength > 0)
-            {
-                // read meta byte array.
-                byte[] tagsBytes = new byte[metaLength];
-                stream.Read(tagsBytes, 0, metaLength);
-                metaData = (new TagsCollectionSerializer()).Deserialize(tagsBytes);
-            }
-            else
-            { // no metadata here!
-                metaData = new TagsCollection();
-            }
+            metaData = (new TagsCollectionSerializer()).DeserializeWithSize(stream);
 
             // read SeneIndexLength.
-            intBytes = new byte[4];
+            var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
             int indexLength = BitConverter.ToInt32(intBytes, 0);
 

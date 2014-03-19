@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Collections.Tags
+namespace OsmSharp.Collections.Tags.Index
 {
     /// <summary>
     /// An osm tags index.

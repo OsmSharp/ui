@@ -16,9 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace OsmSharp
@@ -570,6 +572,55 @@ namespace OsmSharp
                 }
             }
             return longArray;
+        }
+
+        /// <summary>
+        /// Serializes to the given stream but writes the size of the serialized data in the first 4 bytes.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="dest"></param>
+        /// <param name="value"></param>
+        public static void SerializeWithSize(this RuntimeTypeModel model, Stream dest, object value)
+        {
+            // save position.
+            long position = dest.Position;
+
+            // seek until after 4 bytes to store size.
+            dest.Seek(4, System.IO.SeekOrigin.Current);
+
+            // serialize.
+            model.Serialize(dest, value);
+
+            // calculate size.
+            long size = dest.Position - position - 4;
+            dest.Seek(position, System.IO.SeekOrigin.Begin);
+            byte[] sizeBytes = BitConverter.GetBytes((int)size);
+            dest.Write(sizeBytes, 0, 4);
+            dest.Seek(size, System.IO.SeekOrigin.Current);
+        }
+
+        /// <summary>
+        /// Deserializes an object from the given stream but uses the first 4 bytes as an indication of size and limits the data accordingly.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="source"></param>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static object DeserializeWithSize(this RuntimeTypeModel model, Stream source, object value, Type type)
+        {
+            // read only the relevant data from the stream.
+            var sizeBytes = new byte[4];
+            source.Read(sizeBytes, 0, 4);
+            int size = BitConverter.ToInt32(sizeBytes, 0);
+            var data = new byte[size];
+            source.Read(data, 0, size);
+
+            // deserialize.
+            var dataStream = new MemoryStream(data);
+            var deserializedValue = model.Deserialize(dataStream, value, type);
+            dataStream.Dispose();
+            return deserializedValue;
         }
     }
 
