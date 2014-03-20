@@ -149,7 +149,7 @@ namespace OsmSharp.Routing.Graph.Serialization
                 // adjust array size if needed.
                 if (vertices.Length > graph.VertexCount - vertex)
                 { // shrink array.
-                    vertices = new SerializableVertex[graph.VertexCount - vertex];
+                    vertices = new SerializableVertex[graph.VertexCount - vertex + 1];
                 }
 
                 // build block.
@@ -216,15 +216,14 @@ namespace OsmSharp.Routing.Graph.Serialization
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
 
-            var vertices = new SerializableVertex[10];
             long position = stream.Position;
             uint vertex = 0;
             while (stream.Position - position < size)
             { // keep reading vertices until the appriated number of bytes have been read.
-                typeModel.DeserializeWithSize(stream, vertices, typeof(SerializableVertex[]));
+                var vertices = typeModel.DeserializeWithSize(stream, null, typeof(SerializableVertex[])) as SerializableVertex[];
                 if (vertices != null)
                 { // there are a vertices.
-                    for (int idx = 0; idx < 10; idx++)
+                    for (int idx = 0; idx < vertices.Length; idx++)
                     {
                         if(vertices[idx] != null)
                         { // there is a vertex.
@@ -251,12 +250,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="tagsCollectionIndex"></param>
         /// <param name="size"></param>
         protected virtual void DeserializeTags(LimitedStream stream, long size, ITagsCollectionIndex tagsCollectionIndex)
-        {
-            if(tagsCollectionIndex.Max != null)
-            { // cannot deserialize tags to a non-empty tags index.
-                throw new Exception("Cannot deserialize to a non-empty tags index.");
-            }
-            
+        {           
             // read tags collection-count.
             var countBytes = new byte[4];
             stream.Read(countBytes, 0, 4);

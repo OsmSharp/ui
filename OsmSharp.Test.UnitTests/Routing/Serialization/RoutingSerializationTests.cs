@@ -36,6 +36,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.CH.Serialization;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -408,92 +409,136 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         //    }
         }
 
-        ///// <summary>
-        ///// Tests serializing/deserializing DynamicGraphRouterDataSource using the flatfile serializer for LiveEdge data.
-        ///// </summary>
-        //[Test]
-        //public void RoutingSerializationFlatfileLiveEdge()
-        //{
-        //    const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+        /// <summary>
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the flatfile serializer for LiveEdge data.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationFlatfileLiveEdge()
+        {
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
-        //    // load the network.
-        //    var referenceNetwork = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-        //        Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
+            // load the network.
+            var referenceNetwork = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
 
-        //    // serialize network.
-        //    var routingSerializer = new LiveEdgeFlatfileSerializer();
-        //    TagsCollectionBase metaData = new TagsCollection();
-        //    metaData.Add("some_key", "some_value");
-        //    DynamicGraphRouterDataSource<LiveEdge> network;
-        //    byte[] byteArray;
-        //    using (var stream = new MemoryStream())
-        //    {
-        //        try
-        //        {
-        //            routingSerializer.Serialize(stream, referenceNetwork, metaData);
-        //            byteArray = stream.ToArray();
-        //        }
-        //        catch (Exception)
-        //        {
-        //            if (Debugger.IsAttached)
-        //            {
-        //                Debugger.Break();
-        //            }
-        //            throw;
-        //        }
-        //    }
-        //    using (var stream = new MemoryStream(byteArray))
-        //    {
-        //        try
-        //        {
-        //            network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<LiveEdge>;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            if (Debugger.IsAttached)
-        //            {
-        //                Debugger.Break();
-        //            }
-        //            throw;
-        //        }
-        //    }
+            // serialize network.
+            var routingSerializer = new LiveEdgeFlatfileSerializer();
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
+            DynamicGraphRouterDataSource<LiveEdge> network;
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                routingSerializer.Serialize(stream, referenceNetwork, metaData);
+                byteArray = stream.ToArray();
+            }
+            using (var stream = new MemoryStream(byteArray))
+            {
+                network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<LiveEdge>;
+            }
 
-        //    // compare networks.
-        //    Assert.IsNotNull(network);
-        //    Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
-        //    for (uint vertex = 0; vertex < network.VertexCount; vertex++)
-        //    {
-        //        float referenceLatitude, referenceLongitude, latitude, longitude;
-        //        Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));
-        //        Assert.IsTrue(network.GetVertex(vertex, out latitude, out longitude));
-        //        Assert.AreEqual(referenceLatitude, latitude);
-        //        Assert.AreEqual(referenceLongitude, longitude);
+            // compare networks.
+            Assert.IsNotNull(network);
+            Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
+            for (uint vertex = 0; vertex < network.VertexCount; vertex++)
+            {
+                float referenceLatitude, referenceLongitude, latitude, longitude;
+                Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));
+                Assert.IsTrue(network.GetVertex(vertex, out latitude, out longitude));
+                Assert.AreEqual(referenceLatitude, latitude);
+                Assert.AreEqual(referenceLongitude, longitude);
 
-        //        var referenceArcs = referenceNetwork.GetArcs(vertex);
-        //        var arcs = network.GetArcs(vertex);
-        //        for (int idx = 0; idx < referenceArcs.Length; idx++)
-        //        {
-        //            Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
-        //            Assert.AreEqual(referenceArcs[idx].Value.Distance, arcs[idx].Value.Distance);
-        //            Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
-        //            Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
-        //            Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
-        //            if (referenceArcs[idx].Value.Coordinates == null)
-        //            { // other arc coordinates also null?
-        //                Assert.IsNull(arcs[idx].Value.Coordinates);
-        //            }
-        //            else
-        //            { // compare coordinates.
-        //                for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
-        //                {
-        //                    Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
-        //                        arcs[idx].Value.Coordinates[coordIdx].Latitude);
-        //                    Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
-        //                        arcs[idx].Value.Coordinates[coordIdx].Longitude);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+                var referenceArcs = referenceNetwork.GetArcs(vertex);
+                var arcs = network.GetArcs(vertex);
+                for (int idx = 0; idx < referenceArcs.Length; idx++)
+                {
+                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
+                    Assert.AreEqual(referenceArcs[idx].Value.Distance, arcs[idx].Value.Distance);
+                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
+                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
+                    if (referenceArcs[idx].Value.Coordinates == null)
+                    { // other arc coordinates also null?
+                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                    }
+                    else
+                    { // compare coordinates.
+                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        {
+                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
+                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
+                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the flatfile serializer for CHEdge data.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationFlatfileCHEdgeData()
+        {
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+
+            // load the network.
+            var referenceNetwork = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter(), Vehicle.Car);
+
+            // serialize network.
+            var routingSerializer = new CHEdgeFlatfileSerializer();
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
+            DynamicGraphRouterDataSource<CHEdgeData> network;
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                routingSerializer.Serialize(stream, referenceNetwork, metaData);
+                byteArray = stream.ToArray();
+            }
+            using (var stream = new MemoryStream(byteArray))
+            {
+                network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<CHEdgeData>;
+            }
+
+            // compare networks.
+            Assert.IsNotNull(network);
+            Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
+            for (uint vertex = 0; vertex < network.VertexCount; vertex++)
+            {
+                float referenceLatitude, referenceLongitude, latitude, longitude;
+                Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));
+                Assert.IsTrue(network.GetVertex(vertex, out latitude, out longitude));
+                Assert.AreEqual(referenceLatitude, latitude);
+                Assert.AreEqual(referenceLongitude, longitude);
+
+                var referenceArcs = referenceNetwork.GetArcs(vertex);
+                var arcs = network.GetArcs(vertex);
+                for (int idx = 0; idx < referenceArcs.Length; idx++)
+                {
+                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
+                    Assert.AreEqual(referenceArcs[idx].Value.Weight, arcs[idx].Value.Weight);
+                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
+                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
+                    if (referenceArcs[idx].Value.Coordinates == null)
+                    { // other arc coordinates also null?
+                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                    }
+                    else
+                    { // compare coordinates.
+                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        {
+                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
+                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
+                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
