@@ -113,7 +113,7 @@
     <Compile Include="Metrics\Time\TimeCalculator.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
-    <Compile Include="Osm\Graphs\LiveEdgeFlatfileSerializer.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeFlatfileSerializer.cs" />
     <Compile Include="Osm\Graphs\PreProcessing\LiveEdgePreprocessor.cs" />
     <Compile Include="Graph\Serialization\FlatfileSerializer.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />

@@ -44,25 +44,15 @@ namespace OsmSharp.Routing.Graph.Serialization
             DynamicGraphRouterDataSource<TEdgeData> graph)
         {
             // LAYOUT:
-            // [SIZE_OF_PROFILES(4bytes)][PROFILES][SIZE_OF_VERTICES(8bytes)][VERTICES][SIZE_OF_EDGES(8bytes)][EDGES][SIZE_OF_TAGS(8bytes][TAGS]
-
-            // serialize supported profiles.
-            stream.Seek(4, System.IO.SeekOrigin.Current);
-            long position = stream.Position;
-            this.SerializeProfiles(stream, graph.GetSupportedProfiles());
-            long size = stream.Position - position;
-            stream.Seek(position, System.IO.SeekOrigin.Begin);
-            byte[] sizeBytes = BitConverter.GetBytes((int)size);
-            stream.Write(sizeBytes, 0, 4);
-            stream.Seek(size, System.IO.SeekOrigin.Current);
+            // [SIZE_OF_VERTICES(8bytes)][VERTICES][SIZE_OF_EDGES(8bytes)][EDGES][SIZE_OF_TAGS(8bytes][TAGS]
 
             // serialize coordinates.
             stream.Seek(8, System.IO.SeekOrigin.Current);
-            position = stream.Position;
+            long position = stream.Position;
             this.SerializeVertices(stream, graph);
-            size = stream.Position - position;
-            stream.Seek(position, System.IO.SeekOrigin.Begin);
-            sizeBytes = BitConverter.GetBytes(size);
+            long size = stream.Position - position;
+            stream.Seek(position - 8, System.IO.SeekOrigin.Begin);
+            var sizeBytes = BitConverter.GetBytes(size);
             stream.Write(sizeBytes, 0, 8);
             stream.Seek(size, System.IO.SeekOrigin.Current);
 
@@ -71,7 +61,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             position = stream.Position;
             this.SerializeEdges(stream, graph);
             size = stream.Position - position;
-            stream.Seek(position, System.IO.SeekOrigin.Begin);
+            stream.Seek(position - 8, System.IO.SeekOrigin.Begin);
             sizeBytes = BitConverter.GetBytes(size);
             stream.Write(sizeBytes, 0, 8);
             stream.Seek(size, System.IO.SeekOrigin.Current);
@@ -81,7 +71,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             position = stream.Position;
             this.SerializeTags(stream, graph.TagsIndex);
             size = stream.Position - position;
-            stream.Seek(position, System.IO.SeekOrigin.Begin);
+            stream.Seek(position - 8, System.IO.SeekOrigin.Begin);
             sizeBytes = BitConverter.GetBytes(size);
             stream.Write(sizeBytes, 0, 8);
             stream.Seek(size, System.IO.SeekOrigin.Current);
@@ -97,22 +87,14 @@ namespace OsmSharp.Routing.Graph.Serialization
         protected override IBasicRouterDataSource<TEdgeData> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            ITagsCollectionIndex tagsCollectionIndex = null;
-            DynamicGraphRouterDataSource<TEdgeData> graph = null;
-
-            // deserialize vehicle profiles.
-            var sizeBytes = new byte[4];
-            stream.Read(sizeBytes, 0, 4);
-            long position = stream.Position;
-            long size = BitConverter.ToInt32(sizeBytes, 0);
-            this.DeserializeProfiles(stream, size, graph);
-            stream.Seek(position + size, System.IO.SeekOrigin.Begin);
+            ITagsCollectionIndex tagsCollectionIndex = this.CreateTagsCollectionIndex();
+            DynamicGraphRouterDataSource<TEdgeData> graph = this.CreateGraph(tagsCollectionIndex);
 
             // deserialize vertices.
-            sizeBytes = new byte[8];
+            var sizeBytes = new byte[8];
             stream.Read(sizeBytes, 0, 8);
-            position = stream.Position;
-            size = BitConverter.ToInt32(sizeBytes, 0);
+            var position = stream.Position;
+            var size = BitConverter.ToInt32(sizeBytes, 0);
             this.DeserializeVertices(stream, size, graph);
             stream.Seek(position + size, System.IO.SeekOrigin.Begin);
 
@@ -134,16 +116,18 @@ namespace OsmSharp.Routing.Graph.Serialization
         }
 
         /// <summary>
-        /// Serializes the supported vehicle profiles.
+        /// Creates the graph.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="profiles"></param>
-        protected virtual void SerializeProfiles(LimitedStream stream, IEnumerable<Vehicle> profiles)
-        {
-            string[] profileIds = profiles.Select(x => x.UniqueName).ToArray();
+        /// <returns></returns>
+        protected abstract DynamicGraphRouterDataSource<TEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex);
 
-            var typeModel = RuntimeTypeModel.Create();
-            typeModel.SerializeWithSize(stream, profileIds);
+        /// <summary>
+        /// Creates the tags collection index.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual ITagsCollectionIndex CreateTagsCollectionIndex()
+        {
+            return new TagsTableCollectionIndex();
         }
 
         /// <summary>
@@ -158,12 +142,18 @@ namespace OsmSharp.Routing.Graph.Serialization
 
             int blockSize = 10;
             var vertices = new SerializableVertex[blockSize];
-            uint vertex = 0;
+            uint vertex = 1;
             float latitude, longitude;
             while(vertex <= graph.VertexCount)
             {
+                // adjust array size if needed.
+                if (vertices.Length > graph.VertexCount - vertex)
+                { // shrink array.
+                    vertices = new SerializableVertex[graph.VertexCount - vertex];
+                }
+
                 // build block.
-                for(uint idx = 0; idx < blockSize; idx++)
+                for (uint idx = 0; idx < vertices.Length; idx++)
                 {
                     uint current = vertex + idx;
                     if (vertex <= graph.VertexCount && graph.GetVertex(current, out latitude, out longitude))
@@ -174,11 +164,10 @@ namespace OsmSharp.Routing.Graph.Serialization
                         }
                         vertices[idx].Latitude = latitude;
                         vertices[idx].Longitude = longitude;
-                        vertices[idx].Id = vertex + idx;
                     }
                     else
                     { // vertex not in the graph.
-                        vertices[idx] = null;
+                        throw new Exception("Cannot serialize non-existing vertices!");
                     }
                 }
 
@@ -217,23 +206,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         }
 
         /// <summary>
-        /// Deserializes the supported vehicle profiles.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="profiles"></param>
-        /// <param name="size"></param>
-        protected virtual void DeserializeProfiles(LimitedStream stream, long size, DynamicGraphRouterDataSource<TEdgeData> graph)
-        {
-            var typeModel = RuntimeTypeModel.Create();
-            string[] profileIds = typeModel.DeserializeWithSize(stream, null, typeof(string[])) as string[];
-
-            foreach(string profileId in profileIds)
-            {
-                graph.AddSupportedProfile(Vehicle.GetByUniqueName(profileId));
-            }
-        }
-
-        /// <summary>
         /// Deserializes the vertices
         /// </summary>
         /// <param name="stream"></param>
@@ -249,7 +221,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             uint vertex = 0;
             while (stream.Position - position < size)
             { // keep reading vertices until the appriated number of bytes have been read.
-                typeModel.DeserializeWithSize(stream, vertices, typeof(SerializableVertex));
+                typeModel.DeserializeWithSize(stream, vertices, typeof(SerializableVertex[]));
                 if (vertices != null)
                 { // there are a vertices.
                     for (int idx = 0; idx < 10; idx++)
@@ -317,12 +289,6 @@ namespace OsmSharp.Routing.Graph.Serialization
             /// </summary>
             [ProtoMember(2)]
             public float Longitude { get; set; }
-
-            /// <summary>
-            /// Gets/sets the vertex id.
-            /// </summary>
-            [ProtoMember(3)]
-            public uint Id { get; set; }
         }
 
         #endregion

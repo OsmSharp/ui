@@ -103,7 +103,11 @@ namespace OsmSharp.IO
         /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return _stream.Seek(offset + _offset, origin);
+            if (origin == SeekOrigin.Begin)
+            {
+                return _stream.Seek(offset + _offset, origin);
+            }
+            return _stream.Seek(offset, origin);
         }
 
         /// <summary>

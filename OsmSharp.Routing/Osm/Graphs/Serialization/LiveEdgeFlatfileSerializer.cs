@@ -27,14 +27,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OsmSharp.Collections.Tags.Index;
 
-namespace OsmSharp.Routing.Osm.Graphs
+namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
     /// <summary>
     /// Serializes/deserializes edges.
     /// </summary>
     public class LiveEdgeFlatfileSerializer : FlatfileSerializer<LiveEdge>
     {
+        /// <summary>
+        /// Creates the graph to deserialize into.
+        /// </summary>
+        /// <param name="tagsCollectionIndex"></param>
+        /// <returns></returns>
+        protected override DynamicGraphRouterDataSource<LiveEdge> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
+        {
+            return new DynamicGraphRouterDataSource<LiveEdge>(tagsCollectionIndex);
+        }
+
         /// <summary>
         /// Serializes all edges.
         /// </summary>

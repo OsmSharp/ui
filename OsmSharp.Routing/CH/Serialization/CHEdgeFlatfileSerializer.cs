@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization
 {
@@ -35,6 +36,16 @@ namespace OsmSharp.Routing.CH.Serialization
     /// </summary>
     public class CHEdgeFlatfileSerializer : FlatfileSerializer<CHEdgeData>
     {
+        /// <summary>
+        /// Creates the graph to serialize into.
+        /// </summary>
+        /// <param name="tagsCollectionIndex"></param>
+        /// <returns></returns>
+        protected override DynamicGraphRouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
+        {
+            return new DynamicGraphRouterDataSource<CHEdgeData>(tagsCollectionIndex);
+        }
+
         /// <summary>
         /// Serializes all edges.
         /// </summary>
