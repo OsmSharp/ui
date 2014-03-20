@@ -1,0 +1,8 @@
+Contains all builds for Mono/.NET/Xamarin.Android/Xamarin.iOS.
+
+- Bufgix in MapView dispose.
+- Fixed threading issue in MapView, MapViewAnimator and RouteTracker.
+- Fixed CoreText warning message on iOS (thanks @macjon)
+- Added the option to create a TagCollection from a Dictionary<string, string>.
+- Updated the Vehicle class with serialization options.
+- Added two more offline map sample files.
