@@ -55,18 +55,35 @@ namespace OsmSharp.Osm.PBF.Streams
         }
 
         /// <summary>
-        /// Moves to the next object.
+        /// Move to the next item in the stream.
         /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
         /// <returns></returns>
-        public override bool MoveNext()
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            KeyValuePair<PrimitiveBlock, object> nextPBFPrimitive = 
-                this.MoveToNextPrimitive();
-
-            if (nextPBFPrimitive.Value != null)
-            { // there is a primitive.
-                _current = this.Convert(nextPBFPrimitive);
-                return true;
+            var nextPBFPrimitive = this.MoveToNextPrimitive();
+            while(nextPBFPrimitive.Value != null)
+            {
+                OsmSharp.Osm.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Node);
+                if(node != null && !ignoreNodes)
+                { // next primitve is a node.
+                    _current = this.ConvertNode(nextPBFPrimitive.Key, node);
+                    return true;
+                }
+                OsmSharp.Osm.PBF.Way way = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Way);
+                if(way != null && !ignoreWays)
+                { // next primitive is a way.
+                    _current = this.ConvertWay(nextPBFPrimitive.Key, way);
+                    return true;
+                }
+                OsmSharp.Osm.PBF.Relation relation = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Relation);
+                if (relation != null && !ignoreRelations)
+                { // next primitive is a relation.
+                    _current = this.ConvertRelation(nextPBFPrimitive.Key, relation);
+                    return true;
+                }
             }
             return false;
         }
@@ -108,156 +125,155 @@ namespace OsmSharp.Osm.PBF.Streams
         #region Primitive Conversion
 
         /// <summary>
-        /// Converts simple primitives.
+        /// Converts the PBF node into an OsmSharp-node.
         /// </summary>
-        /// <param name="pbfPrimitive"></param>
+        /// <param name="block"></param>
+        /// <param name="node"></param>
         /// <returns></returns>
-        internal OsmSharp.Osm.OsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbfPrimitive)
+        internal OsmSharp.Osm.Node ConvertNode(PrimitiveBlock block, OsmSharp.Osm.PBF.Node node)
         {
-            if (pbfPrimitive.Value == null || pbfPrimitive.Key == null)
+            var simpleNode = new OsmSharp.Osm.Node();
+            simpleNode.ChangeSetId = node.info.changeset;
+            simpleNode.Id = node.id;
+            simpleNode.Latitude = .000000001 * ((double)block.lat_offset
+                + ((double)block.granularity * (double)node.lat));
+            simpleNode.Longitude = .000000001 * ((double)block.lon_offset
+                + ((double)block.granularity * (double)node.lon));
+            if (node.keys.Count > 0)
             {
-                throw new ArgumentNullException("pbfPrimitive");
-            }
-
-            PrimitiveBlock block = pbfPrimitive.Key; // get the block properties this object comes from.
-            if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Node)
-            {
-                var node = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Node);
-                var simpleNode = new OsmSharp.Osm.Node();
-                simpleNode.ChangeSetId = node.info.changeset;
-                simpleNode.Id = node.id;
-                simpleNode.Latitude = .000000001 * ((double)block.lat_offset 
-                    + ((double)block.granularity * (double)node.lat));
-                simpleNode.Longitude = .000000001 * ((double)block.lon_offset
-                    + ((double)block.granularity * (double)node.lon));
-                if (node.keys.Count > 0)
+                simpleNode.Tags = new TagsCollection();
+                for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
-                    simpleNode.Tags = new TagsCollection();
-                    for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
-                    {
-                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
-                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
+                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
+                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
 
-                        if (!simpleNode.Tags.ContainsKey(key))
-                        {
-                            simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
-                        }
+                    if (!simpleNode.Tags.ContainsKey(key))
+                    {
+                        simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
                     }
                 }
-                simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp * 
+            }
+            simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp *
+                (long)block.date_granularity);
+            simpleNode.Visible = true;
+            simpleNode.Version = (uint)node.info.version;
+            simpleNode.UserId = node.info.uid;
+            simpleNode.UserName = Encoding.UTF8.GetString(block.stringtable.s[node.info.user_sid]);
+            simpleNode.Version = (ulong)node.info.version;
+            simpleNode.Visible = true;
+
+            return simpleNode;
+        }
+
+        /// <summary>
+        /// Converts a PBF way into an OsmSharp-way.
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="way"></param>
+        /// <returns></returns>
+        internal OsmSharp.Osm.Way ConvertWay(PrimitiveBlock block, OsmSharp.Osm.PBF.Way way)
+        {
+            var simpleWay = new OsmSharp.Osm.Way();
+            simpleWay.Id = way.id;
+            simpleWay.Nodes = new List<long>(way.refs.Count);
+            long node_id = 0;
+            for (int node_idx = 0; node_idx < way.refs.Count; node_idx++)
+            {
+                node_id = node_id + way.refs[node_idx];
+                simpleWay.Nodes.Add(node_id);
+            }
+            if (way.keys.Count > 0)
+            {
+                simpleWay.Tags = new TagsCollection();
+                for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
+                {
+                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
+                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
+
+                    if (!simpleWay.Tags.ContainsKey(key))
+                    {
+                        simpleWay.Tags.Add(new Tag(key, value));
+                    }
+                }
+            }
+            if (way.info != null)
+            { // add the metadata if any.
+                simpleWay.ChangeSetId = way.info.changeset;
+                simpleWay.TimeStamp = Utilities.FromUnixTime((long)way.info.timestamp *
                     (long)block.date_granularity);
-                simpleNode.Visible = true;
-                simpleNode.Version = (uint)node.info.version;
-                simpleNode.UserId = node.info.uid;
-                simpleNode.UserName = Encoding.UTF8.GetString(block.stringtable.s[node.info.user_sid]);
-                simpleNode.Version = (ulong)node.info.version;
-                simpleNode.Visible = true;
-
-                return simpleNode;
+                simpleWay.UserId = way.info.uid;
+                simpleWay.UserName = Encoding.UTF8.GetString(block.stringtable.s[way.info.user_sid]);
+                simpleWay.Version = (ulong)way.info.version;
             }
-            else if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Way)
+            simpleWay.Visible = true;
+
+            return simpleWay;
+        }
+        
+        /// <summary>
+        /// Converts a PBF way into an OsmSharp-relation.
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="relation"></param>
+        /// <returns></returns>
+        internal OsmSharp.Osm.Relation ConvertRelation(PrimitiveBlock block, OsmSharp.Osm.PBF.Relation relation)
+        {
+            var simpleRelation = new OsmSharp.Osm.Relation();
+            simpleRelation.Id = relation.id;
+            if (relation.types.Count > 0)
             {
-                var way = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Way);
-
-                var simple_way = new OsmSharp.Osm.Way();
-                simple_way.Id = way.id;
-                simple_way.Nodes = new List<long>(way.refs.Count);
-                long node_id = 0;
-                for (int node_idx = 0; node_idx < way.refs.Count; node_idx++)
+                simpleRelation.Members = new List<OsmSharp.Osm.RelationMember>();
+                long member_id = 0;
+                for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
                 {
-                    node_id = node_id + way.refs[node_idx];
-                    simple_way.Nodes.Add(node_id);
-                }
-                if (way.keys.Count > 0)
-                {
-                    simple_way.Tags = new TagsCollection();
-                    for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
+                    member_id = member_id + relation.memids[member_idx];
+                    string role = Encoding.UTF8.GetString(
+                        block.stringtable.s[relation.roles_sid[member_idx]]);
+                    var member = new OsmSharp.Osm.RelationMember();
+                    member.MemberId = member_id;
+                    member.MemberRole = role;
+                    switch (relation.types[member_idx])
                     {
-                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
-                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
-
-                        if (!simple_way.Tags.ContainsKey(key))
-                        {
-                            simple_way.Tags.Add(new Tag(key, value));
-                        }
+                        case Relation.MemberType.NODE:
+                            member.MemberType = OsmSharp.Osm.OsmGeoType.Node;
+                            break;
+                        case Relation.MemberType.WAY:
+                            member.MemberType = OsmSharp.Osm.OsmGeoType.Way;
+                            break;
+                        case Relation.MemberType.RELATION:
+                            member.MemberType = OsmSharp.Osm.OsmGeoType.Relation;
+                            break;
                     }
-                }
-                if (way.info != null)
-                { // add the metadata if any.
-                    simple_way.ChangeSetId = way.info.changeset;
-                    simple_way.TimeStamp = Utilities.FromUnixTime((long)way.info.timestamp *
-                        (long)block.date_granularity);
-                    simple_way.UserId = way.info.uid;
-                    simple_way.UserName = Encoding.UTF8.GetString(block.stringtable.s[way.info.user_sid]);
-                    simple_way.Version = (ulong)way.info.version;
-                }
-                simple_way.Visible = true;
 
-                return simple_way;
+                    simpleRelation.Members.Add(member);
+                }
             }
-            else if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Relation)
+            if (relation.keys.Count > 0)
             {
-                var relation = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Relation);
-
-                var simple_relation = new OsmSharp.Osm.Relation();
-                simple_relation.Id = relation.id;
-                if (relation.types.Count > 0)
+                simpleRelation.Tags = new TagsCollection();
+                for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
-                    simple_relation.Members = new List<OsmSharp.Osm.RelationMember>();
-                    long member_id = 0;
-                    for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
-                    {
-                        member_id = member_id + relation.memids[member_idx];
-                        string role = Encoding.UTF8.GetString(
-                            block.stringtable.s[relation.roles_sid[member_idx]]);
-                        var member = new OsmSharp.Osm.RelationMember();
-                        member.MemberId = member_id;
-                        member.MemberRole = role;
-                        switch (relation.types[member_idx])
-                        {
-                            case Relation.MemberType.NODE:
-                                member.MemberType = OsmSharp.Osm.OsmGeoType.Node;
-                                break;
-                            case Relation.MemberType.WAY:
-                                member.MemberType = OsmSharp.Osm.OsmGeoType.Way;
-                                break;
-                            case Relation.MemberType.RELATION:
-                                member.MemberType = OsmSharp.Osm.OsmGeoType.Relation;
-                                break;
-                        }
+                    string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
+                    string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
 
-                        simple_relation.Members.Add(member);
+                    if (!simpleRelation.Tags.ContainsKey(key))
+                    {
+                        simpleRelation.Tags.Add(new Tag(key, value));
                     }
                 }
-                if (relation.keys.Count > 0)
-                {
-                    simple_relation.Tags = new TagsCollection();
-                    for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
-                    {
-                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
-                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
-
-                        if (!simple_relation.Tags.ContainsKey(key))
-                        {
-                            simple_relation.Tags.Add(new Tag(key, value));
-                        }
-                    }
-                }
-                if (relation.info != null)
-                { // read metadata if any.
-                    simple_relation.ChangeSetId = relation.info.changeset;
-                    simple_relation.TimeStamp = Utilities.FromUnixTime((long)relation.info.timestamp *
-                        (long)block.date_granularity);
-                    simple_relation.UserId = relation.info.uid;
-                    simple_relation.UserName = Encoding.UTF8.GetString(block.stringtable.s[relation.info.user_sid]);
-                    simple_relation.Version = (ulong)relation.info.version;
-                }
-                simple_relation.Visible = true;
-
-                return simple_relation;
             }
-            throw new Exception(string.Format("PBF primitive with type {0} not supported!",
-                pbfPrimitive.GetType().ToString()));
+            if (relation.info != null)
+            { // read metadata if any.
+                simpleRelation.ChangeSetId = relation.info.changeset;
+                simpleRelation.TimeStamp = Utilities.FromUnixTime((long)relation.info.timestamp *
+                    (long)block.date_granularity);
+                simpleRelation.UserId = relation.info.uid;
+                simpleRelation.UserName = Encoding.UTF8.GetString(block.stringtable.s[relation.info.user_sid]);
+                simpleRelation.Version = (ulong)relation.info.version;
+            }
+            simpleRelation.Visible = true;
+
+            return simpleRelation;
         }
 
         #endregion

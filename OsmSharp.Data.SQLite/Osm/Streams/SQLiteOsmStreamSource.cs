@@ -74,29 +74,54 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
         }
 
         /// <summary>
-        /// Moves to the next object.
+        /// Move to the next item in the stream.
         /// </summary>
-        /// <returns>True if successfull.</returns>
-        public override bool MoveNext()
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
+        /// <returns></returns>
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            bool next = false;
             switch (_currentType)
             {
                 case OsmGeoType.Node:
-                    if (this.MoveNextNode())
+                    while (this.DoMoveNextNode())
                     {
-                        return true;
+                        if (!ignoreNodes)
+                        {
+                            return true;
+                        }
                     }
-                    return this.MoveNext();
+                    return this.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 case OsmGeoType.Way:
-                    if (this.MoveNextWay())
+                    if (this.DoMoveNextWay())
                     {
-                        return true;
+                        if (!ignoreWays)
+                        {
+                            return true;
+                        }
                     }
-                    return this.MoveNext();
+                    return this.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 case OsmGeoType.Relation:
-                    return this.MoveNextRelation();
+                    if (ignoreRelations)
+                    {
+                        return false;
+                    }
+                    return this.DoMoveNextRelation();
             }
-            return false;
+            return next;
+        }
+
+        /// <summary>
+        /// Returns true if this source is sorted.
+        /// </summary>
+        public override bool IsSorted
+        {
+            get
+            {
+                return true;
+            }
         }
 
         #region MoveNext fuctions
@@ -109,7 +134,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
         private SQLiteDataReader _relationTagReader;
         private SQLiteDataReader _relationMemberReader;
 
-        private bool MoveNextRelation()
+        private bool DoMoveNextRelation()
         {
             if (_relationReader == null)
             {
@@ -262,7 +287,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
             }
         }
 
-        private bool MoveNextNode()
+        private bool DoMoveNextNode()
         {
         	if (_nodeReader == null)
         	{
@@ -319,7 +344,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
         	return false;
         }
 
-    	private bool MoveNextWay()
+    	private bool DoMoveNextWay()
         {
 					if (_wayReader == null)
 					{

@@ -121,14 +121,20 @@ namespace OsmSharp.Osm.Xml.Streams
         }
 
         /// <summary>
-        /// Moves this source to the next object.
+        /// Move to the next item in the stream.
         /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
         /// <returns></returns>
-        public override bool MoveNext()
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             while (_reader.Read())
             {
-                if (_reader.NodeType == XmlNodeType.Element && (_reader.Name == "node" || _reader.Name == "way" || _reader.Name == "relation"))
+                if (_reader.NodeType == XmlNodeType.Element && 
+                    (_reader.Name == "node" && !ignoreNodes) || 
+                    (_reader.Name == "way" && !ignoreWays) || 
+                    (_reader.Name == "relation" && !ignoreRelations))
                 {
                     // create a stream for only this element.
                     string name = _reader.Name;

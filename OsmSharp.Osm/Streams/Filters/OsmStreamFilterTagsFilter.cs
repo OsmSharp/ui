@@ -61,10 +61,40 @@ namespace OsmSharp.Osm.Streams.Filters
         private OsmGeo _current;
 
         /// <summary>
+        /// Move to the next item in the stream.
+        /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
+        /// <returns></returns>
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+        {
+            while (this.DoMoveNext())
+            {
+                if (this.Current().Type == OsmGeoType.Node &&
+                    !ignoreNodes)
+                { // there is a node and it is not to be ignored.
+                    return true;
+                }
+                else if (this.Current().Type == OsmGeoType.Way &&
+                        !ignoreWays)
+                { // there is a way and it is not to be ignored.
+                    return true;
+                }
+                else if (this.Current().Type == OsmGeoType.Relation &&
+                        !ignoreRelations)
+                { // there is a relation and it is not to be ignored.
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Moves to the next object.
         /// </summary>
         /// <returns></returns>
-        public override bool MoveNext()
+        private bool DoMoveNext()
         {
             if (this.Source.MoveNext())
             {

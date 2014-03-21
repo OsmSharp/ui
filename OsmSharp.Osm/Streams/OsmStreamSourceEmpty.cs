@@ -34,11 +34,14 @@ namespace OsmSharp.Osm.Streams
         }
 
         /// <summary>
-        /// Moves to the next object.
+        /// Move to the next item in the stream.
         /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
         /// <returns></returns>
-        public override bool MoveNext()
-        {
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+        {  
             return false;
         }
 

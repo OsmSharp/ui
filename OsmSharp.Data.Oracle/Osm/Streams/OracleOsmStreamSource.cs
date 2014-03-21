@@ -16,14 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using Oracle.ManagedDataAccess.Client;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Streams;
-using Oracle.ManagedDataAccess.Client;
-using OsmSharp.Osm;
-using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
 {
@@ -40,7 +37,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
         /// <summary>
         /// Holds the current type.
         /// </summary>
-        private OsmGeoType _current_type;
+        private OsmGeoType _currentType;
 
         /// <summary>
         /// Holds the current OsmGeo-object.
@@ -70,7 +67,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
             _connection.Open();
 
             _current = null;
-            _current_type = OsmGeoType.Node;
+            _currentType = OsmGeoType.Node;
 
             _nodeReader = null;
             _nodeTagReader = null;
@@ -88,33 +85,57 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
         private OracleDataReader _relationMemberReader;
 
         /// <summary>
-        /// Move to the next object.
+        /// Move to the next item in the stream.
         /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
         /// <returns></returns>
-        public override bool MoveNext()
+        public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             bool next = false;
-            switch (_current_type)
+            switch (_currentType)
             {
                 case OsmGeoType.Node:
-                    if (this.MoveNextNode())
+                    while (this.DoMoveNextNode())
                     {
-                        return true;
+                        if(!ignoreNodes)
+                        {
+                            return true;
+                        }
                     }
-                    return this.MoveNext();
+                    return this.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 case OsmGeoType.Way:
-                    if (this.MoveNextWay())
+                    if (this.DoMoveNextWay())
                     {
-                        return true;
+                        if (!ignoreWays)
+                        {
+                            return true;
+                        }
                     }
-                    return this.MoveNext();
+                    return this.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
                 case OsmGeoType.Relation:
-                    return this.MoveNextRelation();
+                    if(ignoreRelations)
+                    {
+                        return false;
+                    }
+                    return this.DoMoveNextRelation();
             }
             return next;
         }
 
-        private bool MoveNextRelation()
+        /// <summary>
+        /// Returns true if this source is sorted.
+        /// </summary>
+        public override bool IsSorted
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        private bool DoMoveNextRelation()
         {
             if (_relationReader == null)
             {
@@ -262,13 +283,13 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
                 _relationTagReader.Dispose();
                 _relationTagReader = null;
 
-                _current_type = OsmGeoType.Relation;
+                _currentType = OsmGeoType.Relation;
 
                 return false;
             }
         }
 
-        private bool MoveNextNode()
+        private bool DoMoveNextNode()
         {
             if (_nodeReader == null)
             {
@@ -361,13 +382,13 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
                 _nodeTagReader.Dispose();
                 _nodeTagReader = null;
 
-                _current_type = OsmGeoType.Way;
+                _currentType = OsmGeoType.Way;
 
                 return false;
             }
         }
 
-        private bool MoveNextWay()
+        private bool DoMoveNextWay()
         {
             if (_wayReader == null)
             {
@@ -493,7 +514,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
                 _wayTagReader.Dispose();
                 _wayTagReader = null;
 
-                _current_type = OsmGeoType.Relation;
+                _currentType = OsmGeoType.Relation;
 
                 return false;
             }
@@ -514,7 +535,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm.Streams
         public override void Reset()
         {
             _current = null;
-            _current_type = OsmGeoType.Node;
+            _currentType = OsmGeoType.Node;
 
             if (_nodeReader != null)
             {

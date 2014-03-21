@@ -44,7 +44,46 @@ namespace OsmSharp.Osm.Streams
         /// Move to the next item in the stream.
         /// </summary>
         /// <returns></returns>
-        public abstract bool MoveNext();
+        public bool MoveNext()
+        {
+            return this.MoveNext(false, false, false);
+        }
+
+        /// <summary>
+        /// Move to the next node.
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNextNode()
+        {
+            return this.MoveNext(false, true, true);
+        }
+
+        /// <summary>
+        /// Move to the next way.
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNextWay()
+        {
+            return this.MoveNext(true, false, true);
+        }
+
+        /// <summary>
+        /// Move to the next relation.
+        /// </summary>
+        /// <returns></returns>
+        public bool MoveNextRelation()
+        {
+            return this.MoveNext(true, true, false);
+        }
+
+        /// <summary>
+        /// Move to the next item in the stream.
+        /// </summary>
+        /// <param name="ignoreNodes">Makes this source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes this source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes this source skip all relations.</param>
+        /// <returns></returns>
+        public abstract bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations);
 
         /// <summary>
         /// Returns the current item in the stream.

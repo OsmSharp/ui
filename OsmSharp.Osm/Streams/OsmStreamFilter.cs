@@ -74,12 +74,6 @@ namespace OsmSharp.Osm.Streams
         public abstract override void Initialize();
 
         /// <summary>
-        /// Moves to the next object.
-        /// </summary>
-        /// <returns></returns>
-        public abstract override bool MoveNext();
-
-        /// <summary>
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>
