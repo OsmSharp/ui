@@ -161,10 +161,7 @@ namespace OsmSharp.Logging
         /// <param name="listener"></param>
         public static void RegisterListener(TraceListener listener)
         {
-            if (_loggingEnabled)
-            {
-                _source.Listeners.Add(listener);
-            }
+            _source.Listeners.Add(listener);
         }
     }
 }
