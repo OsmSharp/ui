@@ -32,6 +32,21 @@ namespace OsmSharp.Osm.Streams.Filters
         private OsmGeoType _currentType = OsmGeoType.Node;
 
         /// <summary>
+        /// Holds a flag indicating that the source is already sorted.
+        /// </summary>
+        private bool? _isSourceSorted = null;
+
+        /// <summary>
+        /// Holds the first way.
+        /// </summary>
+        private bool _firstWay = true;
+
+        /// <summary>
+        /// Holds the first relation.
+        /// </summary>
+        private bool _firstRelation = true;
+
+        /// <summary>
         /// Initializes this filter.
         /// </summary>
         public override void Initialize()
@@ -50,38 +65,74 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext()
         {
-            if (this.Source.MoveNext())
-            {
-                bool finished = false;
-                while (this.Current().Type != _currentType)
-                {
-                    if (!this.Source.MoveNext())
+            if (this.Source.IsSorted || (_isSourceSorted.HasValue && _isSourceSorted.Value))
+            { // the source is already sorted.
+                return this.Source.MoveNext();
+            }
+            else
+            { // leave it to this filter to sort this.
+                if (this.Source.MoveNext())
+                { // make sure this object is of the correct type.
+                    bool finished = false;
+                    bool invalid = this.Current().Type != _currentType;
+                    while (this.Current().Type != _currentType)
+                    { // check if source is at the end.
+                        if (!this.Source.MoveNext())
+                        {
+                            finished = true;
+                            break;
+                        }
+                    }
+
+                    if (invalid && !finished)
+                    { // an object was found but first another one was found.
+                        if (_currentType == OsmGeoType.Node)
+                        { // ok, this source is definetly not sorted.
+                            _isSourceSorted = false;
+                        }
+                        else if (_currentType == OsmGeoType.Way)
+                        { // the current type is way.
+                            if (!_firstWay)
+                            { // a way after a relation.
+                                _isSourceSorted = false;
+                            }
+                            _firstWay = false;
+                        }
+                        else if (_currentType == OsmGeoType.Relation)
+                        { // the current type is relation.
+                            if (!_firstRelation)
+                            { // a way after a relation.
+                                _isSourceSorted = false;
+                            }
+                            _firstRelation = false;
+                        }
+                    }
+
+                    if (!finished && this.Current().Type == _currentType)
                     {
-                        finished = true;
-                        break;
+                        return true;
                     }
                 }
 
-                if (!finished && this.Current().Type == _currentType)
+                switch (_currentType)
                 {
-                    return true;
+                    case OsmGeoType.Node:
+                        this.Source.Reset();
+                        _currentType = OsmGeoType.Way;
+                        return this.MoveNext();
+                    case OsmGeoType.Way:
+                        this.Source.Reset();
+                        _currentType = OsmGeoType.Relation;
+                        return this.MoveNext();
+                    case OsmGeoType.Relation:
+                        if (!_isSourceSorted.HasValue)
+                        { // no invalid order was found.
+                            _isSourceSorted = true;
+                        }
+                        return false;
                 }
+                throw new InvalidOperationException("Unkown SimpleOsmGeoType");
             }
-
-            switch (_currentType)
-            {
-                case OsmGeoType.Node:
-                    this.Source.Reset();
-                    _currentType = OsmGeoType.Way;
-                    return this.MoveNext();
-                case OsmGeoType.Way:
-                    this.Source.Reset();
-                    _currentType = OsmGeoType.Relation;
-                    return this.MoveNext();
-                case OsmGeoType.Relation:
-                    return false;
-            }
-            throw new InvalidOperationException("Unkown SimpleOsmGeoType");
         }
 
         /// <summary>
@@ -91,6 +142,17 @@ namespace OsmSharp.Osm.Streams.Filters
         public override OsmGeo Current()
         {
             return this.Source.Current();
+        }
+
+        /// <summary>
+        /// Returns true if this source is sorted.
+        /// </summary>
+        public override bool IsSorted
+        {
+            get
+            {
+                return true;
+            }
         }
 
         /// <summary>

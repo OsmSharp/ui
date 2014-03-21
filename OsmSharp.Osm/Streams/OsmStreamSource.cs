@@ -39,7 +39,7 @@ namespace OsmSharp.Osm.Streams
         /// Initializes this source.
         /// </summary>
         public abstract void Initialize();
-        
+
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
@@ -64,6 +64,18 @@ namespace OsmSharp.Osm.Streams
         public abstract bool CanReset
         {
             get;
+        }
+
+        /// <summary>
+        /// Returns true if this source never returns a way or relation before an node or a relation before a way.
+        /// </summary>
+        /// <remarks>Make sure to only return true if this is absolutely certain, some stream depend on this.</remarks>
+        public virtual bool IsSorted
+        {
+            get
+            {
+                return false;
+            }
         }
 
         #region IEnumerator/IEnumerable Implementation

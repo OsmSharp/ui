@@ -224,11 +224,11 @@ namespace OsmSharp.Routing.Navigation
             _currentPosition = location;
 
             // calculate the total distance.
-            var previous = _currentRoutePosition;
+            var previous = new GeoCoordinate(_route.Entries[0].Latitude, _route.Entries[0].Longitude); ;
             var totalDistance = 0.0;
-            for (int idx = 0; idx < _route.Entries.Length; idx++)
+            for (int idx = 1; idx < _route.Entries.Length; idx++)
             {
-                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude));
+                GeoCoordinate next = new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude);
                 totalDistance = totalDistance + previous.DistanceReal(next).Value;
                 previous = next;
             }
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.Navigation
             }
 
             // calculate the distance to the next instruction.
-            var previous = _currentRoutePosition;
+            previous = _currentRoutePosition;
             var distance = 0.0;
             for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].EntryIdx && idx < _route.Entries.Length; idx++)
             {
