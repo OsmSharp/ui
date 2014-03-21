@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Threading;
 using OsmSharp.Collections.Cache;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -27,6 +23,10 @@ using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Threading;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -116,8 +116,6 @@ namespace OsmSharp.UI.Map.Layers
                 while (_queue.Count > queue - _maxThreads && _queue.Count > 0)
                 { // there are queued items.
                     LoadTile(_queue.Dequeue());
-//                    ThreadPool.QueueUserWorkItem(
-//                        LoadTile, _queue.Dequeue());
                 }
 
                 if (_queue.Count == 0)
@@ -236,13 +234,13 @@ namespace OsmSharp.UI.Map.Layers
                 {
                     if (tile.Value.IsVisibleIn(view, zoomFactor))
                     {
-                        primitives.Add(tile.Value);
                         Image2D temp;
-                        double minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
-                        double maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
+                        var minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
+                        var maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
                         if (zoomFactor < maxZoom && zoomFactor > minZoom)
                         {
                             _cache.TryGet(tile.Key, out temp);
+                            primitives.Add(tile.Value);
                         }
                     }
                 }
@@ -318,7 +316,7 @@ namespace OsmSharp.UI.Map.Layers
                         { // dispose of previous timer.
                             _timer.Dispose();
                         }
-                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 200);
+                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 50);
                     }
                 }
             }
