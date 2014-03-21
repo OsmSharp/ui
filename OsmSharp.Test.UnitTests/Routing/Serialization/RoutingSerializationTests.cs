@@ -415,7 +415,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         [Test]
         public void RoutingSerializationFlatfileLiveEdge()
         {
-            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
             // load the network.
             var referenceNetwork = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
@@ -471,6 +471,22 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                 arcs[idx].Value.Coordinates[coordIdx].Longitude);
                         }
                     }
+
+                    // check tags.
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
+                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    if (referenceTags == null)
+                    { // other tags also have to be null.
+                        Assert.IsNull(tags);
+                    }
+                    else
+                    { // contents need to be the same.
+                        Assert.AreEqual(referenceTags.Count, tags.Count);
+                        foreach (var referenceTag in referenceTags)
+                        {
+                            Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                        }
+                    }
                 }
             }
         }
@@ -481,7 +497,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         [Test]
         public void RoutingSerializationFlatfileCHEdgeData()
         {
-            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
             // load the network.
             var referenceNetwork = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
@@ -535,6 +551,22 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                 arcs[idx].Value.Coordinates[coordIdx].Latitude);
                             Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
                                 arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                        }
+                    }
+
+                    // check tags.
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
+                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    if (referenceTags == null)
+                    { // other tags also have to be null.
+                        Assert.IsNull(tags);
+                    }
+                    else
+                    { // contents need to be the same.
+                        Assert.AreEqual(referenceTags.Count, tags.Count);
+                        foreach (var referenceTag in referenceTags)
+                        {
+                            Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
                         }
                     }
                 }
