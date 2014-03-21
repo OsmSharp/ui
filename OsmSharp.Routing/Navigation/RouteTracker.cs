@@ -18,12 +18,10 @@
 
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Units.Angle;
-using OsmSharp.Units.Distance;
 using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing.Navigation
 {
@@ -138,6 +136,22 @@ namespace OsmSharp.Routing.Navigation
         }
 
         /// <summary>
+        /// Holds the distance to the end location.
+        /// </summary>
+        private Meter _distanceToEnd;
+
+        /// <summary>
+        /// Returns the distance between the end position and the current position.
+        /// </summary>
+        public Meter DistanceToEnd
+        {
+            get
+            {
+                return _distanceToEnd;
+            }
+        }
+
+        /// <summary>
         /// Returns the position after the given distance is travelled relative to the current position.
         /// </summary>
         /// <param name="distance"></param>
@@ -209,9 +223,20 @@ namespace OsmSharp.Routing.Navigation
             // set the current location.
             _currentPosition = location;
 
+            // calculate the total distance.
+            var previous = _currentRoutePosition;
+            var totalDistance = 0.0;
+            for (int idx = 0; idx < _route.Entries.Length; idx++)
+            {
+                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude));
+                totalDistance = totalDistance + previous.DistanceReal(next).Value;
+                previous = next;
+            }
+
             // project onto the route.
             int entryIdx;
             _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart);
+            _distanceToEnd = totalDistance - _distanceFromStart;
 
             // find the next instruction.
             _nextInstructionIdx = -1;

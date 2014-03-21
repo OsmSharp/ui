@@ -21,9 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing
