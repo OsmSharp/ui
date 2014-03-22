@@ -655,5 +655,17 @@ namespace OsmSharp
         {
             return Enum.TryParse<TEnum>(value, ignoreCase, out result);
         }
+
+        /// <summary>
+        /// Returns a string representing the object in a culture invariant way.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string ToInvariantString(this object obj)
+        {
+            return obj is IConvertible ? ((IConvertible)obj).ToString(CultureInfo.InvariantCulture)
+                : obj is IFormattable ? ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture)
+                : obj.ToString();
+        }
     }
 }
