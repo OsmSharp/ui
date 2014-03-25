@@ -237,7 +237,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
-                        "Compressing graph... {0}%", progress);
+                        "Removing edges... {0}%", progress);
                     latestProgress = progress;
                 }
             }
@@ -251,14 +251,13 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// </summary>
         private void CompressGraph()
         {
-            OsmSharp.Logging.Log.TraceEvent("", Logging.TraceEventType.Critical, "");
-
             // initialize status variables.
             uint vertex = 1;
             uint nextCompressedPosition = 1;
 
             // search edge until a real node.
             float latitude, longitude;
+            float latestProgress = -1;
             while (vertex <= _graph.VertexCount)
             {
                 var edges = _graph.GetArcs(vertex);
@@ -309,6 +308,15 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
 
                 // move to the next vertex.
                 vertex++;
+
+                // report progress.
+                float progress = (float)System.Math.Round((((double)vertex / (double)_graph.VertexCount) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                        "Compressing graph... {0}%", progress);
+                    latestProgress = progress;
+                }
             }
 
             // remove all extra space.

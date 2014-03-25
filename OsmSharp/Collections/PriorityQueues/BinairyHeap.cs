@@ -60,10 +60,10 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Creates a new binairy heap.
         /// </summary>
-        public BinairyHeap(uint initial_size)
+        public BinairyHeap(uint initialSize)
         {
-            _heap = new T[initial_size];
-            _priorities = new float[initial_size];
+            _heap = new T[initialSize];
+            _priorities = new float[initialSize];
 
             _count = 0;
             _latest_index = 1;

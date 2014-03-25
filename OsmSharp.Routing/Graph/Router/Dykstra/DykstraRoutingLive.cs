@@ -309,7 +309,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
 
             // intialize dykstra data structures.
-            IPriorityQueue<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>();
+            IPriorityQueue<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>(100);
             var chosenVertices = new HashSet<long>();
             var labels = new Dictionary<long, IList<RoutingLabel>>();
             foreach (long vertex in source.GetVertices())
@@ -518,26 +518,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                             if (constraintsOk)
                             { // all constraints are validated or there are none.
-                                graph.GetVertex(Convert.ToUInt32(neighbour.Key), out latitude, out longitude);
-                                var neighbourCoordinates = new GeoCoordinate(latitude, longitude);
-
-                                // calculate the weight.
-                                double weightToNeighbour = vehicle.Weight(tags, neighbour.Value.Distance);
-                                //var previous = currentCoordinates;
-                                //if(neighbour.Value.Coordinates != null)
-                                //{
-                                //    for(int idx = 0; idx < neighbour.Value.Coordinates.Length; idx++)
-                                //    {
-                                //        var intermediate = new GeoCoordinate(neighbour.Value.Coordinates[idx].Latitude,
-                                //            neighbour.Value.Coordinates[idx].Longitude);
-                                //        weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, intermediate);
-                                //        previous = intermediate;
-                                //    }
-                                //}
-                                //weightToNeighbour = weightToNeighbour + vehicle.Weight(tags, previous, neighbourCoordinates);
-
                                 // calculate neighbours weight.
-                                double totalWeight = current.Weight + weightToNeighbour;
+                                double totalWeight = current.Weight + vehicle.Weight(tags, neighbour.Value.Distance);
 
                                 // update the visit list;
                                 var neighbourRoute = new PathSegment<long>(neighbour.Key, totalWeight, current);
