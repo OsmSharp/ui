@@ -87,7 +87,6 @@ namespace OsmSharp.Android.UI
 		/// Called right before rendering starts.
 		/// </summary>
 		/// <param name="target"></param>
-		/// <param name="scenes"></param>
 		/// <param name="view"></param>
 		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
@@ -98,11 +97,12 @@ namespace OsmSharp.Android.UI
 		/// Called right after rendering.
 		/// </summary>
 		/// <param name="target"></param>
-		/// <param name="scenes"></param>
 		/// <param name="view"></param>
 		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
 			_path.Dispose ();
+
+            GC.Collect();
 		}
 		
 		#endregion
@@ -163,7 +163,6 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		/// <param name="transformed"></param>
 		/// <returns></returns>
 		private  double[] TransformReverse(double x, double y)
 		{
@@ -370,7 +369,7 @@ namespace OsmSharp.Android.UI
 		                                     double left, double top, double right, double bottom, byte[] imageData,
 		                                   object tag)
 		{
-            var rectangle = new RectangleF2D(left, bottom, right - left, bottom - top);
+            var rectangle = new RectangleF2D(left, top, right - left, bottom - top);
             return this.DrawImage(target, rectangle, imageData, tag);
             //global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
             //if(image == null)

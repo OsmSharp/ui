@@ -72,12 +72,12 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         private int _latestMillis;
 
         /// <summary>
-        /// Holds the latest succesfully rendered zoom level.
+        /// Holds the latest successfully rendered zoom level.
         /// </summary>
         private double _latestZoom;
 
 		/// <summary>
-		/// Holds the latests timestamp after rendering finished.
+		/// Holds the latests timestamps after rendering finished.
 		/// </summary>
 		private int _latestTimestamp;
 
@@ -87,7 +87,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         private View2D _latestTriggeredView;
 
         /// <summary>
-        /// Holds the latest succesfully rendered zoom level.
+        /// Holds the latest successfully rendered zoom level.
         /// </summary>
         private double _latestTriggeredZoom;
 
@@ -121,7 +121,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
                     _timer.Change(StaticDetectionTriggerMillis, System.Threading.Timeout.Infinite);
                 }
 
-                // no rendering was succesfull up until now, only start invalidating after first successfull render.
+                // no rendering was successful up until now, only start invalidating after first successful render.
                 if (_latestTriggeredView == null)
                 {
                     return;

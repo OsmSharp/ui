@@ -236,11 +236,19 @@ namespace OsmSharp.UI.Renderer
                         case Primitive2DType.ImageTilted2D:
                             ImageTilted2D imageTilted = (ImageTilted2D)primitive;
                             imageTilted.Tag = this.DrawImage(target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
+                            if (imageTilted.Tag != null)
+                            { // remove the image data when there is a tag already.
+                                imageTilted.ImageData = null;
+                            }
                             break;
                         case Primitive2DType.Image2D:
                             Image2D image = (Image2D)primitive;
                             image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData,
                                 image.Tag);
+                            if (image.Tag != null)
+                            { // remove the image data when there is a tag already.
+                                image.ImageData = null;
+                            }
                             break;
                         case Primitive2DType.Text2D:
                             Text2D text = (Text2D)primitive;

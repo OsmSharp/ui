@@ -44,6 +44,17 @@ namespace OsmSharp.Collections.Cache
         private long _lastId;
 
         /// <summary>
+        /// A delegate to use for when an item is pushed out of the cache.
+        /// </summary>
+        /// <param name="item"></param>
+        public delegate void OnRemoveDelegate(TValue item);
+
+        /// <summary>
+        /// Called when an item is pushed out of the cache.
+        /// </summary>
+        public OnRemoveDelegate OnRemove;
+
+        /// <summary>
         /// Initializes this cache.
         /// </summary>
         /// <param name="capacity"></param>
@@ -159,7 +170,7 @@ namespace OsmSharp.Collections.Cache
             lock (_data)
             {
                 while (_data.Count > this.Capacity)
-                { // oeps: too much data.
+                { // oops: too much data.
                     // remove the 'oldest' item.
                     // TODO: remove multiple items at once!
                     TKey minKey = default(TKey);
@@ -171,6 +182,10 @@ namespace OsmSharp.Collections.Cache
                             minId = pair.Value.Id;
                             minKey = pair.Key;
                         }
+                    }
+                    if(this.OnRemove != null)
+                    { // call the OnRemove delegate.
+                        this.OnRemove(_data[minKey].Value);
                     }
                     _data.Remove(minKey);
                     // update the 'last_id'

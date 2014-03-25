@@ -374,7 +374,7 @@ namespace OsmSharp.Android.UI
 				long after = DateTime.Now.Ticks;
 
                 if (complete)
-                { // report a successfull render to listener.
+                { // report a successful render to listener.
                     _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
                 }
 			}
@@ -404,23 +404,45 @@ namespace OsmSharp.Android.UI
             }
         }
 
-		/// <summary>
-		/// Holds the map.
-		/// </summary>
-		private Map _map;
+        /// <summary>
+        /// Holds the map.
+        /// </summary>
+        private Map _map;
 
-		/// <summary>
-		/// Gets or sets the map.
-		/// </summary>
-		/// <value>The map.</value>
-		public Map Map
+        /// <summary>
+        /// Gets or sets the map.
+        /// </summary>
+        /// <value>The map.</value>
+        public Map Map
         {
-			get { return _map; }
-			set { _map = value; }
-		}
+            get { return _map; }
+            set
+            {
+                if (_map != null)
+                {
+                    _map.MapChanged -= MapChanged;
+                }
+                _map = value;
+                if (_map != null)
+                {
+                    _map.MapChanged += MapChanged;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when the map reports it has changed.
+        /// </summary>
+        void MapChanged()
+        {
+            _listener.Invalidate();
+
+            _previouslyRenderedView = null;
+            (this.Context as Activity).RunOnUiThread(NotifyMovement);
+        }
 
 		/// <summary>
-		/// Holds the map tilte angle.
+		/// Holds the map tilt angle.
 		/// </summary>
 		private Degree _mapTilt;
 
@@ -970,7 +992,7 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
-        /// Registers an invalidation listenener.
+        /// Registers an invalidation listener.
         /// </summary>
         /// <param name="listener"></param>
         void IInvalidatableMapSurface.RegisterListener(TriggerBase listener)

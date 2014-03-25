@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Performance
             //// tests the mapcss interpretation.
             //UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
 
-            // test the routing pre-processor.
+            // test the routing preprocessor.
             //Routing.LivePreProcessorTest.Test();
             Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();

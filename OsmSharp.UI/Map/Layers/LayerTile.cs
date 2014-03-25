@@ -152,6 +152,8 @@ namespace OsmSharp.UI.Map.Layers
             request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
             //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
+            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
+
             try
             {
                 this.DoWithResponse(request, ((HttpWebResponse obj) => { this.Response(obj, tile); }));
@@ -189,18 +191,23 @@ namespace OsmSharp.UI.Map.Layers
             byte[] image = null;
             if (stream != null)
             {
-                // there is data: read it.
-                var memoryStream = new MemoryStream();
-                stream.CopyTo(memoryStream);
+                using (stream)
+                {
+                    // there is data: read it.
+                    var memoryStream = new MemoryStream();
+                    stream.CopyTo(memoryStream);
 
-                image = memoryStream.ToArray();
-                var box = tile.ToBox(_projection);
-                var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image);
-                image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
+                    image = memoryStream.ToArray();
+                    memoryStream.Dispose();
 
-                lock (_cache)
-                { // add the result to the cache.
-                    _cache.Add(tile, image2D);
+                    var box = tile.ToBox(_projection);
+                    var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image);
+                    image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
+
+                    lock (_cache)
+                    { // add the result to the cache.
+                        _cache.Add(tile, image2D);
+                    }
                 }
 
                 // raise the layer changed event.

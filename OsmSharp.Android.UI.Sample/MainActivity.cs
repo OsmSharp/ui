@@ -82,25 +82,25 @@ namespace OsmSharp.Android.UI.Sample
 		{
 			base.OnCreate (bundle);
 
-            // enable the logggin.
+            // enable the logging.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(new OsmSharp.Android.UI.Log.LogTraceListener());
 
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            // add an online osm-data->mapCSS translation layer.
+			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 100));
+            // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
-            // add a pre-processed vector data file.
-            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            // add a preprocessed vector data file.
+            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
             var to = new GeoCoordinate(51.267797, 4.801362);
 
-            // deserialize the pre-processed graph.
+            // deserialize the preprocessed graph.
             var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
             TagsCollectionBase metaData = null;
             var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
