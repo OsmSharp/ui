@@ -435,10 +435,17 @@ namespace OsmSharp.Android.UI
         /// </summary>
         void MapChanged()
         {
-            _listener.Invalidate();
+            // notify map layout of changes.
+            if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
+            {
+                // create the current view.
+                View2D view = this.CreateView();
+
+                // notify listener.
+                _listener.NotifyChange(view, this.MapZoom);
+            }
 
             _previouslyRenderedView = null;
-            (this.Context as Activity).RunOnUiThread(NotifyMovement);
         }
 
 		/// <summary>

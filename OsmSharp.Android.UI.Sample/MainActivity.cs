@@ -89,12 +89,12 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 100));
+			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 100));
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
