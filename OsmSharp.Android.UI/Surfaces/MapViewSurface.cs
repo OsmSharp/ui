@@ -176,7 +176,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Holds the extra parameter.
         /// </summary>
-        private float _extra = 1.5f;
+        private float _extra = 1.25f;
 
         /// <summary>
         /// Triggers rendering.

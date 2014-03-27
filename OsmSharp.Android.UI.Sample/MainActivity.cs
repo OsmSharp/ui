@@ -89,7 +89,9 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 100));
+            //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 40));
+            map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png", 40));
+            // 
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
@@ -133,6 +135,7 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
 			_mapView.MapZoom = 18;
+            _mapView.MapAllowTilt = false;
 
 			// add markers.
 			_mapView.AddMarker (from);
@@ -146,7 +149,7 @@ namespace OsmSharp.Android.UI.Sample
 			// add the mapview to the linear layout.
             var layout = new LinearLayout(this);
             layout.Orientation = Orientation.Vertical;
-            layout.AddView(_textView);
+            //layout.AddView(_textView);
             layout.AddView(_mapView);
 
             // create the route tracker animator.

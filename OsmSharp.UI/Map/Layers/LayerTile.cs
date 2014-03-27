@@ -126,6 +126,11 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
+        /// Holds the tiles that are currently loading.
+        /// </summary>
+        private HashSet<Tile> _loading = new HashSet<Tile>();
+
+        /// <summary>
         /// Loads one tile.
         /// </summary>
         private void LoadTile(object state)
@@ -140,6 +145,8 @@ namespace OsmSharp.UI.Map.Layers
                     _cache.Add(tile, image2D); // add again to update status.
                     return;
                 }
+
+                _loading.Add(tile);
             }
 
             // load the tile.
@@ -156,29 +163,36 @@ namespace OsmSharp.UI.Map.Layers
 
             try
             {
-                this.DoWithResponse(request, ((HttpWebResponse obj) => { this.Response(obj, tile); }));
+                Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) => { 
+                    this.Response(obj, tile);
+
+                    _loading.Remove(tile);
+                });
+                Action wrapperAction = () =>
+                {
+                    request.BeginGetResponse(new AsyncCallback((iar) =>
+                    {
+                        try
+                        {
+                            var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
+                            responseAction(response);
+                        }
+                        catch (Exception ex)
+                        { // don't worry about exceptions here.
+                            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+                        }
+                    }), request);
+                };
+                wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
+                {
+                    var action = (Action)iar.AsyncState;
+                    action.EndInvoke(iar);
+                }), wrapperAction);
             }
             catch(Exception ex)
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
-        }
-
-        void DoWithResponse(HttpWebRequest request, Action<HttpWebResponse> responseAction)
-        {
-            Action wrapperAction = () =>
-            {
-                request.BeginGetResponse(new AsyncCallback((iar) =>
-                {
-                    var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
-                    responseAction(response);
-                }), request);
-            };
-            wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
-            {
-                var action = (Action)iar.AsyncState;
-                action.EndInvoke(iar);
-            }), wrapperAction);
         }
 
         /// <summary>
@@ -297,7 +311,7 @@ namespace OsmSharp.UI.Map.Layers
 
             if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
             {
-                // build the boundingbox.
+                // build the bounding box.
                 var viewBox = view.OuterBox;
                 var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
                     map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
@@ -313,8 +327,9 @@ namespace OsmSharp.UI.Map.Layers
                         foreach (var tile in tileRange.EnumerateInCenterFirst())
                         {
                             Image2D temp;
-                            if (!_cache.TryPeek(tile, out temp))
-                            {
+                            if (!_cache.TryPeek(tile, out temp) &&
+                                !_loading.Contains(tile))
+                            { // not cached and not loading.
                                 _queue.Enqueue(tile);
                             }
                         }
@@ -323,7 +338,7 @@ namespace OsmSharp.UI.Map.Layers
                         { // dispose of previous timer.
                             _timer.Dispose();
                         }
-                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 50);
+                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 250);
                     }
                 }
             }
