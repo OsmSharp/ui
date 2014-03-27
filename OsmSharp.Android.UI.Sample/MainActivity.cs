@@ -89,8 +89,8 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-            //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 40));
-            map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png", 40));
+            //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
