@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
             KilometerPerHour speed;
             if (this.IsRelevant(key))
             { // check the value.
-                switch(value)
+                switch(key)
                 {
                     case "oneway":
                         return value == "yes" || value == "reverse";
