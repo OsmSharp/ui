@@ -321,7 +321,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             }
 
             // set the from node as the current node and put it in the correct data structures.
-            // intialize the source's neighbours.
+            // initialize the source's neighbors.
             PathSegment<long> current = heap.Pop();
             while (current != null &&
                 chosenVertices.Contains(current.VertexId))
@@ -433,7 +433,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     toPath = toPath.ConcatenateAfter(current);
 
                     if (stopAtFirst)
-                    { // stop at the first occurance.
+                    { // stop at the first occurrence.
                         segmentsToTarget[0] = toPath;
                         return segmentsToTarget;
                     }
@@ -471,9 +471,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     labels.Remove(current.VertexId);
                 }
 
-                float latitude, longitude;
-                graph.GetVertex(Convert.ToUInt32(current.VertexId), out latitude, out longitude);
-                var currentCoordinates = new GeoCoordinate(latitude, longitude);
+                //float latitude, longitude;
+                //graph.GetVertex(Convert.ToUInt32(current.VertexId), out latitude, out longitude);
+                //var currentCoordinates = new GeoCoordinate(latitude, longitude);
 
                 // update the visited nodes.
                 foreach (KeyValuePair<uint, LiveEdge> neighbour in arcs)
@@ -488,7 +488,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
                             canBeTraversedOneWay &&
                             !chosenVertices.Contains(neighbour.Key))
-                        { // the neigbour is forward and is not settled yet!
+                        { // the neighbor is forward and is not settled yet!
                             // check the labels (if needed).
                             bool constraintsOk = true;
                             if (interpreter.Constraints != null)
@@ -518,8 +518,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                             if (constraintsOk)
                             { // all constraints are validated or there are none.
-                                // calculate neighbours weight.
+                                // calculate neighbors weight.
                                 double totalWeight = current.Weight + vehicle.Weight(tags, neighbour.Value.Distance);
+                                //double totalWeight = current.Weight + neighbour.Value.Distance;
 
                                 // update the visit list;
                                 var neighbourRoute = new PathSegment<long>(neighbour.Key, totalWeight, current);
@@ -562,7 +563,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
                 if (current == null)
                 { // route is not found, there are no vertices left
-                    // or the search whent outside of the max bounds.
+                    // or the search went outside of the max bounds.
                     break;
                 }
 
@@ -577,7 +578,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         toPath = toPath.ConcatenateAfter(current);
 
                         if (stopAtFirst)
-                        { // stop at the first occurance.
+                        { // stop at the first occurrence.
                             segmentsToTarget[0] = toPath;
                             return segmentsToTarget;
                         }
@@ -608,7 +609,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     }
                 }
 
-                // get the neigbours of the current node.
+                // get the neighbors of the current node.
                 arcs = graph.GetArcs(Convert.ToUInt32(current.VertexId));
             }
 
