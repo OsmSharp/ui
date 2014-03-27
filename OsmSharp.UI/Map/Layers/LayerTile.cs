@@ -80,7 +80,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         public LayerTile(string tilesURL)
-            : this(tilesURL, 40)
+            : this(tilesURL, 80)
         {
 
         }
