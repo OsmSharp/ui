@@ -18,10 +18,15 @@
 
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.TSP;
+using OsmSharp.Routing.TSP.Genetic;
+using OsmSharp.UI;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.UI.Renderer.Scene;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -50,10 +55,14 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize mapcss interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"dark_roads.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+                new FileInfo(@"default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
+
+            // initialize router.
+            _router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
+                new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
 
             //Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
             //    16, 14, 12, 10 }));
@@ -70,18 +79,60 @@ namespace OsmSharp.WinForms.UI.Sample
             //scene = merger.BuildMergedScene(scene);
 
             //map.AddLayer(new LayerScene(scene));
-            //var dataSource = MemoryDataSource.CreateFromPBFStream(
-            //    new FileInfo(@"kempen.osm.pbf").OpenRead());
-            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
-            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 200));
+            var dataSource = MemoryDataSource.CreateFromPBFStream(
+                new FileInfo(@"kempen.osm.pbf").OpenRead());
+            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            // map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 200));
             //map.AddLayer(new LayerScene(
             //    Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
             //        true)));
+
+            // initialize route/points layer.
+            _layerRoute = new LayerRoute(new OsmSharp.Math.Geo.Projections.WebMercator());
+            map.AddLayer(_layerRoute);
+            _layerPrimitives = new LayerPrimitives(new OsmSharp.Math.Geo.Projections.WebMercator());
+            map.AddLayer(_layerPrimitives);
 
             // set control properties.
             this.mapControl1.Map = map;
             this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
             this.mapControl1.MapZoom = 16;
+            this.mapControl1.MapMouseClick += mapControl1_MapMouseClick;
+        }
+
+        private Router _router;
+
+        private List<RouterPoint> _points = new List<RouterPoint>();
+
+        private LayerRoute _layerRoute;
+
+        private LayerPrimitives _layerPrimitives;
+
+        void mapControl1_MapMouseClick(MapControlEventArgs e)
+        {
+            if(_router != null)
+            {
+                var routerPoint = _router.Resolve(Vehicle.Car, e.Position);
+                if(routerPoint != null)
+                {
+                    _points.Add(routerPoint);
+                    _layerPrimitives.AddPoint(routerPoint.Location, 15, SimpleColor.FromKnownColor(KnownColor.Black).Value);
+                    _layerPrimitives.AddPoint(routerPoint.Location, 7, SimpleColor.FromKnownColor(KnownColor.White).Value);
+                }
+
+                if(_points.Count > 1)
+                {
+                    var tspRouter = new RouterTSPWrapper<RouterTSPAEXGenetic>(
+                        new RouterTSPAEXGenetic(), _router);
+
+                    var route = tspRouter.CalculateTSP(Vehicle.Car, _points.ToArray());
+                    if(route != null)
+                    {
+                        _layerRoute.Clear();
+                        _layerRoute.AddRoute(route);
+                    }
+                }
+            }
         }
     }
 }

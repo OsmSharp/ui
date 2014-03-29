@@ -109,7 +109,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="view"></param>
 		internal override void ViewChanged (Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
-            // all data is pre-loaded for now.
+            // all data is preloaded for now.
 
             // when displaying huge amounts of GPX-data use another approach.
 		}
