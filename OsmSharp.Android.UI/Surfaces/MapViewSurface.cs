@@ -78,7 +78,7 @@ namespace OsmSharp.Android.UI
         private TapGestureDetector _tagGestureDetector;
 
 		/// <summary>
-		/// Holds the maplayout.
+		/// Holds the map-layout.
 		/// </summary>
 		private MapView _mapView;
 
@@ -561,6 +561,9 @@ namespace OsmSharp.Android.UI
             {
                 _surfaceHeight = canvas.Height;
                 _surfaceWidth = canvas.Width;
+
+                // make sure markers are in the correct position too.
+                _mapView.NotifyMapChange(this.SurfaceWidth, this.SurfaceHeight, this.CreateView(), this.Map.Projection);
 
                 // trigger rendering.
                 this.TriggerRendering();
