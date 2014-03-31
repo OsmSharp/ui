@@ -215,6 +215,31 @@ namespace OsmSharp.Test.Unittests
             source.Close();
         }
 
+        /// <summary>
+        /// Regression test for gpx-file.
+        /// </summary>
+        [Test]
+        public void GpxReadRegression1Test()
+        {
+            // instantiate and load the gpx test document.
+            var source = new XmlStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.regression1.gpx"));
+            var document = new GpxDocument(source);
+            object gpx = document.Gpx;
+
+            if (gpx is OsmSharp.IO.Xml.Gpx.v1_1.gpxType)
+            { // all ok here!
+
+            }
+            else
+            {
+                Assert.Fail("No gpx data was read, or data was of the incorrect type!");
+            }
+
+            document.Close();
+            source.Close();
+        }
+
         #endregion
     }
 }

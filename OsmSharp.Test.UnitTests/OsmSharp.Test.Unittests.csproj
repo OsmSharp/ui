@@ -290,6 +290,7 @@
     <EmbeddedResource Include="tsp_one.csv" />
     <EmbeddedResource Include="tsp_two.csv" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="regression1.gpx" />
     <None Include="test_network.svg" />
     <EmbeddedResource Include="test.v1.0.gpx" />
     <EmbeddedResource Include="test.v1.1.gpx" />
