@@ -41,7 +41,7 @@ namespace OsmSharp.Android.UI.Sample
 	/// <summary>
 	/// The main activity.
 	/// </summary>
-	[Activity]
+    [Activity(ConfigurationChanges = global::Android.Content.PM.ConfigChanges.Orientation | global::Android.Content.PM.ConfigChanges.ScreenLayout)]
     public class MainActivity : Activity
 	{
         /// <summary>
@@ -148,8 +148,8 @@ namespace OsmSharp.Android.UI.Sample
             _textView.SetTextColor(global::Android.Graphics.Color.Black);
 
 			// add the mapview to the linear layout.
-            var layout = new LinearLayout(this);
-            layout.Orientation = Orientation.Vertical;
+            var layout = new RelativeLayout(this);
+            //layout.Orientation = Orientation.Vertical;
             //layout.AddView(_textView);
             layout.AddView(_mapView);
 
@@ -163,6 +163,16 @@ namespace OsmSharp.Android.UI.Sample
 
 			SetContentView (layout);
 		}
+
+        public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)
+        {
+            base.OnConfigurationChanged(newConfig);
+
+            if (_mapView != null)
+            {
+                _mapView.Invalidate();
+            }
+        }
 
         /// <summary>
         /// Handles the timer event from the timer.
