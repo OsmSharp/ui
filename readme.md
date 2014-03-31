@@ -5,7 +5,7 @@ OsmSharp is an open-source mapping tool designed to work with OpenStreetMap. Mos
 
 Build status:
 
-<img src="http://osmsharp.com:8080/app/rest/builds/buildType:(id:bt16)/statusIcon"/>
+<img src="http://build.osmsharp.com:8080/app/rest/builds/buildType:(id:bt16)/statusIcon"/>
 
 Features
 --------
