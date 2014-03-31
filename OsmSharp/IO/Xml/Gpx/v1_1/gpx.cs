@@ -33,7 +33,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private trkType[] trkField;
 
-        private extensionsType extensionsField;
+        // private extensionsType extensionsField;
 
         private string versionField;
 
@@ -100,18 +100,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -167,7 +167,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private boundsType boundsField;
 
-        private extensionsType extensionsField;
+        //private extensionsType extensionsField;
 
         /// <remarks/>
         public string name
@@ -288,18 +288,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
     }
 
     /// <remarks/>
@@ -404,7 +404,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private wptType[] trkptField;
 
-        private extensionsType extensionsField;
+        //private extensionsType extensionsField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("trkpt")]
@@ -420,18 +420,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
     }
 
     /// <remarks/>
@@ -495,7 +495,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private string dgpsidField;
 
-        private extensionsType extensionsField;
+        //private extensionsType extensionsField;
 
         private decimal latField;
 
@@ -864,18 +864,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -984,29 +984,29 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
         pps,
     }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.topografix.com/GPX/1/1")]
-    public partial class extensionsType
-    {
+    ///// <remarks/>
+    //[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    //[System.Diagnostics.DebuggerStepThroughAttribute()]
+    //[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.topografix.com/GPX/1/1")]
+    //public partial class extensionsType
+    //{
 
-        private XElement[] anyField;
+    //    private XElement[] anyField;
 
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
-        public XElement[] Any
-        {
-            get
-            {
-                return this.anyField;
-            }
-            set
-            {
-                this.anyField = value;
-            }
-        }
-    }
+    //    /// <remarks/>
+    //    [System.Xml.Serialization.XmlAnyElementAttribute()]
+    //    public XElement[] Any
+    //    {
+    //        get
+    //        {
+    //            return this.anyField;
+    //        }
+    //        set
+    //        {
+    //            this.anyField = value;
+    //        }
+    //    }
+    //}
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
@@ -1029,7 +1029,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private string typeField;
 
-        private extensionsType extensionsField;
+        //private extensionsType extensionsField;
 
         private trksegType[] trksegField;
 
@@ -1126,18 +1126,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("trkseg")]
@@ -1175,7 +1175,7 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
 
         private string typeField;
 
-        private extensionsType extensionsField;
+        //private extensionsType extensionsField;
 
         private wptType[] rteptField;
 
@@ -1272,18 +1272,18 @@ namespace OsmSharp.IO.Xml.Gpx.v1_1
             }
         }
 
-        /// <remarks/>
-        public extensionsType extensions
-        {
-            get
-            {
-                return this.extensionsField;
-            }
-            set
-            {
-                this.extensionsField = value;
-            }
-        }
+        ///// <remarks/>
+        //public extensionsType extensions
+        //{
+        //    get
+        //    {
+        //        return this.extensionsField;
+        //    }
+        //    set
+        //    {
+        //        this.extensionsField = value;
+        //    }
+        //}
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("rtept")]

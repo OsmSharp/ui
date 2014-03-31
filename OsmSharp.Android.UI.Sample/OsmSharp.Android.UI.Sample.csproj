@@ -65,6 +65,9 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
       <Link>default.map</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharp.Test.UnitTests\regression1.gpx">
+      <Link>regression1.gpx</Link>
+    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

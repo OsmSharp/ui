@@ -315,6 +315,10 @@ namespace OsmSharp.Android.UI
                     image.Width != (int)(size * _extra) ||
                     image.Height != (int)(size * _extra))
                 { // create a bitmap and render there.
+                    if (image != null)
+                    { // make sure to dispose the old image.
+                        image.Dispose();
+                    }
                     image = global::Android.Graphics.Bitmap.CreateBitmap((int)(size * _extra),
                         (int)(size * _extra),
                         global::Android.Graphics.Bitmap.Config.Argb8888);

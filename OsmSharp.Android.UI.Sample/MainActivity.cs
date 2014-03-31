@@ -91,6 +91,7 @@ namespace OsmSharp.Android.UI.Sample
             // add a tile layer.
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png"));
+            map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
