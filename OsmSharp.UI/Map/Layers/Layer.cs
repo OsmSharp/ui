@@ -88,5 +88,10 @@ namespace OsmSharp.UI.Map.Layers
         /// An event raised when the content of this layer has changed.
         /// </summary>
         internal event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+
+        /// <summary>
+        /// Gets or sets the tag.
+        /// </summary>
+        public object Tag { get; set; }
     }
 }
