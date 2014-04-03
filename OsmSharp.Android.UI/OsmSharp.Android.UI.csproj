@@ -39,6 +39,7 @@
     <DocumentationFile>..\OutputAndroid\OsmSharp.Android.UI.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK-1.0" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -54,15 +55,15 @@
     <Compile Include="Log\TextViewTraceListener.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
-    <Compile Include="Renderer\OpenGLRenderer2D.cs" />
-    <Compile Include="Renderer\OpenGLTarget2D.cs" />
+    <Compile Include="Renderer\OpenOpenTKRenderer2D.cs" />
+    <Compile Include="Renderer\OpenOpenTKTarget2D.cs" />
     <Compile Include="MapView.cs" />
     <Compile Include="Gestures\BaseGestureDetector.cs" />
     <Compile Include="Gestures\TwoFingerGestureDetector.cs" />
     <Compile Include="Gestures\MoveGestureDetector.cs" />
     <Compile Include="Gestures\RotateGestureDetector.cs" />
     <Compile Include="Surfaces\MapViewSurface.cs" />
-    <Compile Include="Surfaces\MapViewGLSurface.cs" />
+    <Compile Include="Surfaces\MapViewOpenTKSurface.cs" />
     <Compile Include="Surfaces\IMapViewSurface.cs" />
     <Compile Include="MapViewEvents.cs" />
     <Compile Include="Markers\IMapMarkerHost.cs" />

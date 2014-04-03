@@ -21,6 +21,7 @@ using Android.Content;
 using Android.Opengl;
 using Android.Util;
 using Android.Views;
+using OpenTK.Platform.Android;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -39,7 +40,7 @@ namespace OsmSharp.Android.UI
     /// <summary>
     /// Map view surface.
     /// </summary>
-    public class MapViewGLSurface : GLSurfaceView, IMapViewSurface,
+    public class MapViewOpenTKSurface : AndroidGameView, IMapViewSurface,
             ScaleGestureDetector.IOnScaleGestureListener,
             RotateGestureDetector.IOnRotateGestureListener,
             MoveGestureDetector.IOnMoveGestureListener,
@@ -82,18 +83,18 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Holds the Open GL 2D Target.
         /// </summary>
-        private OpenGLTarget2D _target;
+        private OpenTKTarget2D _target;
 
         /// <summary>
         /// Holds the map renderer.
         /// </summary>
-        private MapRenderer<OpenGLTarget2D> _renderer;
+        private MapRenderer<OpenTKTarget2D> _renderer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
         /// </summary>
         /// <param name="context">Context.</param>
-        public MapViewGLSurface(Context context) :
+        public MapViewOpenTKSurface(Context context) :
             base(context)
         {
             this.MapAllowPan = true;
@@ -106,7 +107,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="context">Context.</param>
         /// <param name="attrs">Attrs.</param>
-        public MapViewGLSurface(Context context, IAttributeSet attrs) :
+        public MapViewOpenTKSurface(Context context, IAttributeSet attrs) :
             base(context, attrs)
         {
             this.MapAllowPan = true;
@@ -119,10 +120,10 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="mapLayout"></param>
         void IMapViewSurface.Initialize(MapView mapLayout)
-        {                        
+        {
             // create the Open GL 2D target.
-            _target = new OpenGLTarget2D();
-            this.SetRenderer(_target);      
+            _target = new OpenTKTarget2D();
+            //this.SetRenderer(_target);      
 
             _mapView = mapLayout;
             this.SetWillNotDraw(false);
@@ -131,8 +132,8 @@ namespace OsmSharp.Android.UI
             this.MapMaxZoomLevel = 20;
 
             // create the renderer.
-            _renderer = new MapRenderer<OpenGLTarget2D>(
-                    new OpenGLRenderer2D());
+            _renderer = new MapRenderer<OpenTKTarget2D>(
+                    new OpenTKRenderer2D());
 
             // initialize the gesture detection.
             this.SetOnTouchListener(this);
@@ -710,7 +711,7 @@ namespace OsmSharp.Android.UI
         /// Registers the animator.
         /// </summary>
         /// <param name="mapViewAnimator">Map view animator.</param>
-		public void RegisterAnimator(MapViewAnimator mapViewAnimator)
+        public void RegisterAnimator(MapViewAnimator mapViewAnimator)
         {
             _mapViewAnimator = mapViewAnimator;
         }
