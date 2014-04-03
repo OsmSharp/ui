@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
 using OsmSharp.Collections.Cache;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -68,7 +69,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the tile to-load queue.
         /// </summary>
-        private readonly Queue<Tile> _queue = new Queue<Tile>();
+        private readonly LimitedStack<Tile> _stack;
 
         /// <summary>
         /// Holds the timer.
@@ -94,6 +95,7 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+            _stack = new LimitedStack<Tile>(tileCacheSize);
             _timer = null;
 
             _projection = new WebMercator();
@@ -110,15 +112,15 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="status">Status.</param>
         private void LoadQueuedTiles(object status)
         {
-            lock (_queue)
+            lock (_stack)
             { // make sure that access to the queue is synchronized.
-                int queue = _queue.Count;
-                while (_queue.Count > queue - _maxThreads && _queue.Count > 0)
+                int queue = _stack.Count;
+                while (_stack.Count > queue - _maxThreads && _stack.Count > 0)
                 { // there are queued items.
-                    LoadTile(_queue.Dequeue());
+                    LoadTile(_stack.Pop());
                 }
 
-                if (_queue.Count == 0)
+                if (_stack.Count == 0)
                 { // dispose of timer.
                     _timer.Dispose();
                 }
@@ -317,9 +319,9 @@ namespace OsmSharp.UI.Map.Layers
                     map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
                 // build the tile range.
-                lock (_queue)
+                lock (_stack)
                 { // make sure the tile range is not in use.
-                    _queue.Clear();
+                    _stack.Clear();
 
                     lock (_cache)
                     {
@@ -332,7 +334,7 @@ namespace OsmSharp.UI.Map.Layers
                                 if (!_cache.TryPeek(tile, out temp) &&
                                     !_loading.Contains(tile))
                                 { // not cached and not loading.
-                                    _queue.Enqueue(tile);
+                                    _stack.Push(tile);
 
                                     OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Queued tile:" + tile.ToString());
                                 }
