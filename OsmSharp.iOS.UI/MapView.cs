@@ -36,6 +36,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
+using System.Collections.ObjectModel;
 
 namespace OsmSharp.iOS.UI
 {
@@ -1123,6 +1124,17 @@ namespace OsmSharp.iOS.UI
 				this.NotifyMapChangeToMarker(rect.Width, rect.Height, view, this.Map.Projection, marker);
 			}
 		}
+
+        /// <summary>
+        /// Returns a read-only collection of markers.
+        /// </summary>
+        public ReadOnlyCollection<MapMarker> Markers
+        {
+            get
+            {
+                return _markers.AsReadOnly();
+            }
+        }
 
 		/// <summary>
 		/// Adds the marker.

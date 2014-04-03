@@ -28,6 +28,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace OsmSharp.Android.UI
 {
@@ -133,6 +134,17 @@ namespace OsmSharp.Android.UI
 			this.AddMarker (marker);
 			return marker;
 		}
+
+        /// <summary>
+        /// Returns a read-only collection of markers.
+        /// </summary>
+        public ReadOnlyCollection<MapMarker> Markers
+        {
+            get
+            {
+                return _markers.AsReadOnly();
+            }
+        }
 
         /// <summary>
         /// Clears all map markers.
