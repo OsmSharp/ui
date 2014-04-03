@@ -326,11 +326,16 @@ namespace OsmSharp.UI.Map.Layers
                         var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
                         foreach (var tile in tileRange.EnumerateInCenterFirst())
                         {
-                            Image2D temp;
-                            if (!_cache.TryPeek(tile, out temp) &&
-                                !_loading.Contains(tile))
-                            { // not cached and not loading.
-                                _queue.Enqueue(tile);
+                            if (tile.IsValid)
+                            { // make sure all tiles are valid.
+                                Image2D temp;
+                                if (!_cache.TryPeek(tile, out temp) &&
+                                    !_loading.Contains(tile))
+                                { // not cached and not loading.
+                                    _queue.Enqueue(tile);
+
+                                    OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Queued tile:" + tile.ToString());
+                                }
                             }
                         }
 

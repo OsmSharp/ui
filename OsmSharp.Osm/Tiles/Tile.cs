@@ -58,7 +58,8 @@ namespace OsmSharp.Osm.Tiles
         public override int GetHashCode()
         {
             return this.X.GetHashCode() ^
-                   this.Y.GetHashCode();
+                   this.Y.GetHashCode() ^
+                   this.Zoom.GetHashCode();
         }
 
         /// <summary>
@@ -220,6 +221,24 @@ namespace OsmSharp.Osm.Tiles
         public ulong Id
         {
             get { return Tile.CalculateTileId(this.Zoom, this.X, this.Y); }
+        }
+
+        /// <summary>
+        /// Returns true if this tile is valid.
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                if(this.X >= 0 &&
+                    this.Y >= 0 &&
+                    this.Zoom >= 0)
+                { // some are negative.
+                    var size = System.Math.Pow(2, this.Zoom);
+                    return this.X < size && this.Y < size;
+                }
+                return false;
+            }
         }
 
         #region Conversion Functions
