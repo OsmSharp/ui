@@ -24,6 +24,9 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.CH.PreProcessing;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -55,7 +58,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
             testOutputFile.Delete();
             Stream writeStream = testOutputFile.OpenWrite();
 
-            CHEdgeGraphFileStreamTarget target = new CHEdgeGraphFileStreamTarget(writeStream,
+            var tagsIndex = new TagsTableCollectionIndex();
+            var interpreter = new OsmRoutingInterpreter();
+            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            CHEdgeGraphFileStreamTarget target = new CHEdgeGraphFileStreamTarget(writeStream, graph, interpreter, tagsIndex,
                 Vehicle.Car);
             target.RegisterSource(source);
 

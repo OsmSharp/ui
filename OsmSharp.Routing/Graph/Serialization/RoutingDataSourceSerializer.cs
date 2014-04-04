@@ -236,6 +236,17 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="graph"></param>
         protected abstract void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
 
+        /// <summary>
+        /// Deserializes the given stream into a routable graph.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="lazy"></param>
+        /// <returns></returns>
+        public IBasicRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
+        {
+            TagsCollectionBase notNeeded;
+            return this.Deserialize(stream, out notNeeded);
+        }
 
         /// <summary>
         /// Deserializes the given stream into a routable graph.

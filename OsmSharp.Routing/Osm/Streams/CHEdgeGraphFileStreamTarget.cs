@@ -28,13 +28,14 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.Osm.Streams
 {
     /// <summary>
     /// Implements a streaming target that converts the given OSM-data into a serialized graph.
     /// </summary>
-    public class CHEdgeGraphFileStreamTarget : OsmStreamTarget
+    public class CHEdgeGraphFileStreamTarget : CHEdgeGraphOsmStreamTarget
     {
         /// <summary>
         /// Holds the graph output stream.
@@ -42,66 +43,25 @@ namespace OsmSharp.Routing.Osm.Streams
         private Stream _graphStream;
 
         /// <summary>
-        /// 
+        /// Creates a new target.
         /// </summary>
         /// <param name="stream"></param>
+        /// <param name="dynamicGraph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphFileStreamTarget(Stream stream, Vehicle vehicle)
+        public CHEdgeGraphFileStreamTarget(Stream stream, DynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
+            :base(dynamicGraph, interpreter, tagsIndex, vehicle)
         {
+            _graph = dynamicGraph;
             _graphStream = stream;
-
-            var tagsIndex = new TagsTableCollectionIndex();
-            var interpreter = new OsmRoutingInterpreter();
-            _graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            _graphTarget = new CHEdgeGraphOsmStreamTarget(
-                _graph, interpreter, tagsIndex, vehicle);
         }
-
-        /// <summary>
-        /// Holds the memory data source.
-        /// </summary>
-        private CHEdgeGraphOsmStreamTarget _graphTarget;
         
         /// <summary>
         /// Holds the graph.
         /// </summary>
         private DynamicGraphRouterDataSource<CHEdgeData> _graph;
-
-        /// <summary>
-        /// Initializes this target.
-        /// </summary>
-        public override void Initialize()
-        {
-            _graphStream.Seek(0, SeekOrigin.Begin);
-            _graphTarget.Initialize();
-        }
-
-        /// <summary>
-        /// Adds a new node.
-        /// </summary>
-        /// <param name="simpleNode"></param>
-        public override void AddNode(Node simpleNode)
-        {
-            _graphTarget.AddNode(simpleNode);
-        }
-
-        /// <summary>
-        /// Adds a new way.
-        /// </summary>
-        /// <param name="simpleWay"></param>
-        public override void AddWay(Way simpleWay)
-        {
-            _graphTarget.AddWay(simpleWay);
-        }
-
-        /// <summary>
-        /// Adds a new relation.
-        /// </summary>
-        /// <param name="simpleRelation"></param>
-        public override void AddRelation(Relation simpleRelation)
-        {
-            _graphTarget.AddRelation(simpleRelation);
-        }
 
         /// <summary>
         /// Flushes all data.
