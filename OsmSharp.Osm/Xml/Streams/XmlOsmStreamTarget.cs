@@ -31,26 +31,27 @@ namespace OsmSharp.Osm.Xml.Streams
     /// </summary>
     public class XmlOsmStreamTarget : OsmStreamTarget, IDisposable
     {
-        private XmlWriter _writer;
+        private Stream _stream;
 
-        private TextWriter _textWriter;
+        private StreamWriter _streamWriter;
 
-        private XmlSerializer _serNode;
-
-        private XmlSerializer _serWay;
-
-        private XmlSerializer _serRelation;
+        private XmlWriterSettings _settings;
 
         private readonly bool _disposeStream = false;
 
         /// <summary>
         /// Creates a new Xml data processor target.
         /// </summary>
-        /// <param name="textWriter"></param>
-        public XmlOsmStreamTarget(TextWriter textWriter)
+        /// <param name="stream"></param>
+        public XmlOsmStreamTarget(Stream stream)
             : base()
         {
-            _textWriter = textWriter;
+            _stream = stream;
+            _streamWriter = new StreamWriter(stream, Encoding.UTF8);
+
+            _settings = new XmlWriterSettings();
+            _settings.OmitXmlDeclaration = true;
+            _settings.Indent = true;
         }
 
         /// <summary>
@@ -58,17 +59,9 @@ namespace OsmSharp.Osm.Xml.Streams
         /// </summary>
         public override void Initialize()
         {
-            _serNode = new XmlSerializer(typeof(Osm.Xml.v0_6.node));
-            _serWay = new XmlSerializer(typeof(Osm.Xml.v0_6.way));
-            _serRelation = new XmlSerializer(typeof(Osm.Xml.v0_6.relation));
-
-            var settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-            settings.Encoding = Encoding.UTF8;
-
-            _textWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            _textWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
+            _streamWriter.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            _streamWriter.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
+            _streamWriter.Flush();
         }
 
         /// <summary>
@@ -147,11 +140,19 @@ namespace OsmSharp.Osm.Xml.Streams
                 nd.version = simpleNode.Version.Value;
                 nd.versionSpecified = true;
             }
+            
+            XmlSerializerNamespaces emptyNamespace = new XmlSerializerNamespaces();
+            emptyNamespace.Add(String.Empty, String.Empty);
 
             // serialize node.
-            _serNode.Serialize(_writer, nd);
-            _writer.Flush();
-            _textWriter.Write(_textWriter.NewLine);
+            var memoryStream = new MemoryStream();
+            var writer = XmlWriter.Create(memoryStream, _settings);
+            var serNode = new XmlSerializer(typeof(Osm.Xml.v0_6.node), string.Empty);
+            serNode.Serialize(writer, nd, emptyNamespace);
+            memoryStream.WriteTo(_stream);
+            _stream.Flush();
+            _streamWriter.WriteLine();
+            _streamWriter.Flush();
         }
 
         /// <summary>
@@ -227,10 +228,18 @@ namespace OsmSharp.Osm.Xml.Streams
                 wa.versionSpecified = true;
             }
 
-            // serialize way.
-            _serWay.Serialize(_writer, wa);
-            _writer.Flush();
-            _textWriter.Write(_textWriter.NewLine);
+            XmlSerializerNamespaces emptyNamespace = new XmlSerializerNamespaces();
+            emptyNamespace.Add(String.Empty, String.Empty);
+
+            // serialize node.
+            var memoryStream = new MemoryStream();
+            XmlWriter writer = XmlWriter.Create(memoryStream, _settings);
+            var serWay = new XmlSerializer(typeof(Osm.Xml.v0_6.way), string.Empty);
+            serWay.Serialize(writer, wa, emptyNamespace);
+            memoryStream.WriteTo(_stream);
+            _stream.Flush();
+            _streamWriter.WriteLine();
+            _streamWriter.Flush();
         }
 
         /// <summary>
@@ -335,10 +344,18 @@ namespace OsmSharp.Osm.Xml.Streams
                 re.versionSpecified = true;
             }
 
-            // serialize relation.
-            _serRelation.Serialize(_writer, re);
-            _writer.Flush();
-            _textWriter.Write(_textWriter.NewLine);
+            XmlSerializerNamespaces emptyNamespace = new XmlSerializerNamespaces();
+            emptyNamespace.Add(String.Empty, String.Empty);
+
+            // serialize node.
+            var memoryStream = new MemoryStream();
+            XmlWriter writer = XmlWriter.Create(memoryStream, _settings);
+            var serRel = new XmlSerializer(typeof(Osm.Xml.v0_6.relation), string.Empty);
+            serRel.Serialize(writer, re, emptyNamespace);
+            memoryStream.WriteTo(_stream);
+            _stream.Flush();
+            _streamWriter.WriteLine();
+            _streamWriter.Flush();
         }
 
         private OsmSharp.Osm.Xml.v0_6.tag[] ConvertToXmlTags(TagsCollectionBase tags)
@@ -368,9 +385,8 @@ namespace OsmSharp.Osm.Xml.Streams
         {
             base.Close();
 
-            _writer.Flush();
-            _textWriter.WriteLine("</osm>");
-            _textWriter.Flush();
+            _streamWriter.WriteLine("</osm>");
+            _streamWriter.Flush();
         }
 
         /// <summary>
@@ -378,9 +394,10 @@ namespace OsmSharp.Osm.Xml.Streams
         /// </summary>
         public void Dispose()
         {
-            if (_disposeStream && _textWriter != null)
+            if (_disposeStream && _streamWriter != null)
             {
-                _textWriter.Dispose();
+                _stream.Dispose();
+                _streamWriter.Dispose();
             }
         }
     }
