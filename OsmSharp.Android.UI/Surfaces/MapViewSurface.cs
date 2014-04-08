@@ -355,8 +355,8 @@ namespace OsmSharp.Android.UI
                     !_previouslyChangedView.Equals(view))
                 { // report change once!
                     var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                             size * _extra, size * _extra, sceneZoomFactor,
-                                             _invertX, _invertY, this.MapTilt);
+                        image.Width, image.Height, sceneZoomFactor,
+                        _invertX, _invertY, this.MapTilt);
                     this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
                                           normalView, view);
                     _previouslyChangedView = view;

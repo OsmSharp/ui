@@ -354,9 +354,10 @@ namespace OsmSharp.WinForms.UI
             if (this.Height == 0 || this.Width == 0) { return; }
 
             // notify the map.
+            var view = _renderer.Create(this.Width, this.Height, this.Map,
+                (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
-                _renderer.Create(this.Width, this.Height, this.Map,
-                (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true));
+                view, view);
 
             long ticksAfter = DateTime.Now.Ticks;
 

@@ -409,9 +409,9 @@ namespace OsmSharp.iOS.UI
 
 						// create the view.
 						float size = System.Math.Max(_rect.Width, _rect.Height);
-						View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-							              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
-							              this.MapCenter, _invertX, _invertY, this.MapTilt);
+						var view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
+							              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                                          this.MapCenter, _invertX, _invertY, this.MapTilt);
 						if (rect.Width == 0)
 						{ // only render if a proper size is known.
 							return;
@@ -449,9 +449,12 @@ namespace OsmSharp.iOS.UI
 							image.FillRect(new RectangleF(
 								0, 0, imageWidth, imageHeight));
 
-							// notify the map that the view has changed.
-							this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
-								view);
+                            // notify the map that the view has changed.
+                            var normalView = _cacheRenderer.Create(_rect.Width, _rect.Height,
+                                              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                                              this.MapCenter, _invertX, _invertY, this.MapTilt);
+							this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
+                                normalView, view);
 							long afterViewChanged = DateTime.Now.Ticks;
 							OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 								"View change took: {0}ms @ zoom level {1}",
