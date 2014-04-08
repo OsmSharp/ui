@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Linq;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -40,6 +41,11 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the tile url.
         /// </summary>
         private readonly string _tilesURL;
+
+        /// <summary>
+        /// Holds the current zoom.
+        /// </summary>
+        private int _currentZoom = -1;
 
         /// <summary>
         /// Holds the LRU cache.
@@ -64,12 +70,17 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the maximum threads.
         /// </summary>
-        private const int _maxThreads = 3;
+        private const int _maxThreads = 2;
         
         /// <summary>
         /// Holds the tile to-load queue.
         /// </summary>
         private readonly LimitedStack<Tile> _stack;
+
+        /// <summary>
+        /// Holds the number of failed attempts at loading one tile.
+        /// </summary>
+        private readonly Dictionary<Tile, int> _attempts;
 
         /// <summary>
         /// Holds the timer.
@@ -95,8 +106,9 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
-            _stack = new LimitedStack<Tile>(tileCacheSize);
-            _timer = null;
+            _stack = new LimitedStack<Tile>(tileCacheSize, tileCacheSize);
+            _timer = new Timer(this.LoadQueuedTiles, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            _attempts = new Dictionary<Tile, int>();
 
             _projection = new WebMercator();
         }
@@ -115,14 +127,14 @@ namespace OsmSharp.UI.Map.Layers
             lock (_stack)
             { // make sure that access to the queue is synchronized.
                 int queue = _stack.Count;
-                while (_stack.Count > queue - _maxThreads && _stack.Count > 0)
+                while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
                 { // there are queued items.
                     LoadTile(_stack.Pop());
                 }
 
                 if (_stack.Count == 0)
                 { // dispose of timer.
-                    _timer.Dispose();
+                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 }
             }
         }
@@ -139,6 +151,13 @@ namespace OsmSharp.UI.Map.Layers
         {
             // a tile was found to load.
             Tile tile = state as Tile;
+
+            // only load tiles from the same zoom-level.
+            if(tile.Zoom != _currentZoom)
+            { // zoom is different, don't bother!
+                return;
+            }
+
             Image2D image2D;
             lock (_cache)
             { // check again for the tile.
@@ -180,8 +199,31 @@ namespace OsmSharp.UI.Map.Layers
                             responseAction(response);
                         }
                         catch (Exception ex)
-                        { // don't worry about exceptions here.
+                        {
                             OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+                            _loading.Remove(tile);
+
+                            lock(_attempts)
+                            {
+                                int count;
+                                if(!_attempts.TryGetValue(tile, out count))
+                                { // first attempt.
+                                    count = 1;
+                                    _attempts.Add(tile, count);
+                                }
+                                else
+                                { // increase attempt count.
+                                    _attempts[tile] = count++;
+                                }
+                                if(count < 3)
+                                { // not yet reached maximum. 
+                                    lock(_stack)
+                                    {
+                                        _stack.Push(tile);
+                                        _timer.Change(0, 150);
+                                    }
+                                }
+                            }
                         }
                     }), request);
                 };
@@ -228,6 +270,10 @@ namespace OsmSharp.UI.Map.Layers
 
                 // raise the layer changed event.
                 this.RaiseLayerChanged();
+            }
+            else
+            {
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, "No response stream!");
             }
         }
 
@@ -306,7 +352,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
@@ -326,7 +372,8 @@ namespace OsmSharp.UI.Map.Layers
                     lock (_cache)
                     {
                         var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
-                        foreach (var tile in tileRange.EnumerateInCenterFirst())
+                        _currentZoom = zoomLevel;
+                        foreach (var tile in tileRange.EnumerateInCenterFirst().Reverse())
                         {
                             if (tile.IsValid)
                             { // make sure all tiles are valid.
@@ -340,12 +387,15 @@ namespace OsmSharp.UI.Map.Layers
                                 }
                             }
                         }
+                        _timer.Change(0, 150);
+                    }
 
-                        if (_timer != null)
-                        { // dispose of previous timer.
-                            _timer.Dispose();
+                    if(_stack.Count > 0)
+                    { // reset the attempts.
+                        lock(_attempts)
+                        {
+                            _attempts.Clear();
                         }
-                        _timer = new Timer(this.LoadQueuedTiles, null, 0, 250);
                     }
                 }
             }

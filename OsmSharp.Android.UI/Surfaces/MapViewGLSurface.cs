@@ -169,13 +169,13 @@ namespace OsmSharp.Android.UI
             if (this.Width > 0 && this.Height > 0)
             {
                 // create the view.
-                View2D view = _renderer.Create(this.Width, this.Height,
+                var view = _renderer.Create(this.Width, this.Height,
                     this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
                                          this.MapCenter, false, true);
 
                 // notify the map that the view has changed.
                 this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
-                             view);
+                             view, view);
 
                 _mapView.NotifyMapChange(this.Width, this.Height, view, this.Map.Projection);
 
@@ -390,7 +390,7 @@ namespace OsmSharp.Android.UI
 
             // notify the map that the view has changed.
             this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
-                         view);
+                         view, view);
 
             // build the layers list.
             var layers = new List<Layer>();

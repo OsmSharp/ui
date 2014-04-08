@@ -107,7 +107,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="zoomFactor"></param>
 		/// <param name="center"></param>
 		/// <param name="view"></param>
-		internal override void ViewChanged (Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // all data is preloaded for now.
 

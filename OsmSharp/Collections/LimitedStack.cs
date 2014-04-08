@@ -71,6 +71,16 @@ namespace OsmSharp.Collections
         }
 
         /// <summary>
+        /// Creates a new limited stack with a limit of 10.
+        /// </summary>
+        public LimitedStack(int capacity, int limit)
+        {
+            _limit = limit;
+            // no use initializing greater than limit.
+            _elements = new List<T>(capacity > _limit ? _limit : capacity);
+        }
+
+        /// <summary>
         /// Returns the number of elements in this stack.
         /// </summary>
         public int Count 

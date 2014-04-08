@@ -138,7 +138,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
                 OsmSharp.Logging.Log.TraceEvent("Scene2DLayeredRendering", OsmSharp.Logging.TraceEventType.Information,
                                             string.Format("Rendering at z{0} l{1}.", 
                                                           zoom, center));
-                map.ViewChanged((float)projection.ToZoomFactor(zoom), center, view);
+                map.ViewChanged((float)projection.ToZoomFactor(zoom), center, view, view);
 
                 mapRenderer.Render(target, map, view, (float)projection.ToZoomFactor(zoom));
 

@@ -89,9 +89,9 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
             // add a tile layer.
-            //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png"));
-            map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            //map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png"));
+            //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
@@ -131,8 +131,8 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView = new MapView(this, new MapViewGLSurface(this));
             //_mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
             _mapView.Map = map;
-            _mapView.MapMaxZoomLevel = 20;
-            _mapView.MapMinZoomLevel = 10;
+            //_mapView.MapMaxZoomLevel = 20;
+            //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
 			_mapView.MapZoom = 15;

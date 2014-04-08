@@ -87,11 +87,12 @@ namespace OsmSharp.UI.Map
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        public void ViewChanged(float zoomFactor, GeoCoordinate center, View2D view)
+        /// <param name="extraView"></param>
+        public void ViewChanged(float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             foreach (var layer in _layers)
             {
-				layer.ViewChanged (this, zoomFactor, center, view);
+				layer.ViewChanged (this, zoomFactor, center, view, extraView);
             }
         }
 

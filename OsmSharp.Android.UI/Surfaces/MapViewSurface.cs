@@ -122,7 +122,7 @@ namespace OsmSharp.Android.UI
             _mapView = mapLayout;
             this.SetWillNotDraw(false);
 
-            this.MapMinZoomLevel = 10;
+            this.MapMinZoomLevel = 0;
             this.MapMaxZoomLevel = 20;
 
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
@@ -247,6 +247,11 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private View2D _previouslyRenderedView;
 
+        /// <summary>
+        /// Holds the perviously triggered view.
+        /// </summary>
+        private View2D _previouslyChangedView;
+
         private float _surfaceWidth = 0;
 
         /// <summary>
@@ -335,22 +340,31 @@ namespace OsmSharp.Android.UI
                 float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
                 // create the view for this control.
-                View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+                var view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
                                          size * _extra, size * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
+
 
 				long before = DateTime.Now.Ticks;
 
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "Rendering Start");
 
-				// notify the map that the view has changed.
-				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
-				                      view);
-				long afterViewChanged = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-				                                "View change took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+                // notify the map that the view has changed.
+                if (_previouslyChangedView == null ||
+                    !_previouslyChangedView.Equals(view))
+                { // report change once!
+                    var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+                                             size * _extra, size * _extra, sceneZoomFactor,
+                                             _invertX, _invertY, this.MapTilt);
+                    this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
+                                          normalView, view);
+                    _previouslyChangedView = view;
+                    long afterViewChanged = DateTime.Now.Ticks;
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
+                                                    "View change took: {0}ms @ zoom level {1}",
+                                                    (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+                }
 
 				// does the rendering.
                 bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
@@ -358,7 +372,7 @@ namespace OsmSharp.Android.UI
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "Rendering took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
+                                                (new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom);
 				if(complete)
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
