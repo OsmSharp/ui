@@ -198,32 +198,44 @@ namespace OsmSharp.UI.Map.Layers
                             var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
                             responseAction(response);
                         }
-                        catch (Exception ex)
-                        {
-                            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
-                            _loading.Remove(tile);
+                        catch (WebException ex)
+                        { // catch webexceptions.
+                            if (ex.Response is HttpWebResponse &&
+                                ((ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.NotFound ||
+                                (ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.Forbidden))
+                            { // do not retry loading tile.
+                                return;
+                            }
+                            else
+                            { // retry loading tile here.
+                                _loading.Remove(tile);
 
-                            lock(_attempts)
-                            {
-                                int count;
-                                if(!_attempts.TryGetValue(tile, out count))
-                                { // first attempt.
-                                    count = 1;
-                                    _attempts.Add(tile, count);
-                                }
-                                else
-                                { // increase attempt count.
-                                    _attempts[tile] = count++;
-                                }
-                                if(count < 3)
-                                { // not yet reached maximum. 
-                                    lock(_stack)
-                                    {
-                                        _stack.Push(tile);
-                                        _timer.Change(0, 150);
+                                lock (_attempts)
+                                {
+                                    int count;
+                                    if (!_attempts.TryGetValue(tile, out count))
+                                    { // first attempt.
+                                        count = 1;
+                                        _attempts.Add(tile, count);
+                                    }
+                                    else
+                                    { // increase attempt count.
+                                        _attempts[tile] = count++;
+                                    }
+                                    if (count < 3)
+                                    { // not yet reached maximum. 
+                                        lock (_stack)
+                                        {
+                                            _stack.Push(tile);
+                                            _timer.Change(0, 150);
+                                        }
                                     }
                                 }
                             }
+                        }
+                        catch(Exception ex)
+                        { // oops, exceptions that are not webexceptions!?
+                            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
                         }
                     }), request);
                 };
