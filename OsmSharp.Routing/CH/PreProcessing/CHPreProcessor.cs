@@ -152,7 +152,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 vertex = this.SelectNext();
 
                 double realProgress = (double)current / (double)total;
-                double progress = (float)System.Math.Round(realProgress * 100);
+                double progress = (float)System.Math.Floor(realProgress * 100);
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
