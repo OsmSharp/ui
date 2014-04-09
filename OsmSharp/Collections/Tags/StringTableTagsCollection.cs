@@ -224,5 +224,14 @@ namespace OsmSharp.Collections.Tags
 
             return _tagsList.RemoveAll(tagEncoded => tagEncoded.Key == keyInt && tagEncoded.Value == valueInt) > 0;
         }
+
+        /// <summary>
+        /// Removes all tags that match the given predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        public override void RemoveAll(System.Predicate<Tag> predicate)
+        {
+            _tagsList.RemoveAll(x => predicate.Invoke(new Tag(_stringTable.Get(x.Key), _stringTable.Get(x.Value))));
+        }
     }
 }

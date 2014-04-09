@@ -251,5 +251,14 @@ namespace OsmSharp.Collections.Tags
             }
             return "empty";
         }
+
+        /// <summary>
+        /// Removes all tags that match the given predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        public override void RemoveAll(System.Predicate<Tag> predicate)
+        {
+            _tags.RemoveAll(x => predicate.Invoke(_tagsTable.Get(x)));
+        }
     }
 }

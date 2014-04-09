@@ -177,6 +177,12 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         public abstract void Clear();
 
+        /// <summary>
+        /// Removes all tags that match the given criteria.
+        /// </summary>
+        /// <param name="predicate"></param>
+        public abstract void RemoveAll(System.Predicate<Tag> predicate);
+
         #region IEnumerable<Tag>
 
         /// <summary>
