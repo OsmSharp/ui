@@ -177,7 +177,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum speed.
         /// </summary>
         /// <returns></returns>
-        public KilometerPerHour MaxSpeedAllowed(TagsCollectionBase tags)
+        public virtual KilometerPerHour MaxSpeedAllowed(TagsCollectionBase tags)
         {
             // THESE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
