@@ -73,18 +73,19 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             { // loop over all incoming neighbours
                 foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
                 { // loop over all outgoing neighbours
-                    if (to.Key != from.Key)
+                    if (to.Key != from.Key &&
+                        to.Value.Forward && from.Value.Backward)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witness_calculator.Exists(_data, from.Key, to.Key, vertex,
-                            (float)from.Value.Weight + (float)to.Value.Weight, int.MaxValue))
+                            (float)from.Value.Weight + (float)to.Value.Weight, 1000))
                         { // no witness exists.
                             new_edges++;
                         }
                     }
                 }
             }
-            return new_edges - removed;
+            return (2 * new_edges) - removed;
         }
 
         /// <summary>

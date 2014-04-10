@@ -409,7 +409,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             { // the first edge does not have a forward flag: edge1 can never overlap edge2.
                 return false;
             }
-            if (edge1.Weight >= edge2.Weight)
+            if (edge1.Weight > edge2.Weight)
             { // the first edge eight is larger than the second edge weight: edge1 can never overlap edge2
                 return false;
             }

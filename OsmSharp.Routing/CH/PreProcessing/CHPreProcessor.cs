@@ -44,38 +44,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private bool _keepDirectNeighbours = true;
 
         /// <summary>
-        /// Holds the pre-processing percentage.
-        /// </summary>
-        private double _preProcessingPercentage = .9;
-
-        /// <summary>
-        /// Creates a new pre-processor.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="calculator"></param>
-        /// <param name="witnessCalculator"></param>
-        /// <param name="keepDirectNeighbours"></param>
-        public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
-                INodeWeightCalculator calculator,
-                INodeWitnessCalculator witnessCalculator,
-                bool keepDirectNeighbours,
-                double preProcessingPercentage)
-        {
-            _comparer = new CHEdgeDataComparer();
-
-            _keepDirectNeighbours = keepDirectNeighbours;
-
-            _target = target;
-
-            _calculator = calculator;
-            _witnessCalculator = witnessCalculator;
-            _preProcessingPercentage = preProcessingPercentage;
-
-            _queue = new CHPriorityQueue();
-            _contracted = new bool[1000];
-        }
-
-        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
@@ -86,7 +54,19 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator,
                 bool keepDirectNeighbours)
-            : this(target, calculator, witnessCalculator, true, 1) { }
+        {
+            _comparer = new CHEdgeDataComparer();
+
+            _keepDirectNeighbours = keepDirectNeighbours;
+
+            _target = target;
+
+            _calculator = calculator;
+            _witnessCalculator = witnessCalculator;
+
+            _queue = new CHPriorityQueue();
+            _contracted = new bool[1000];
+        }
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -110,6 +90,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Holds a witness calculator.
         /// </summary>
         private INodeWitnessCalculator _witnessCalculator;
+
+        /// <summary>
+        /// Holds a witness calculator just for contraction.
+        /// </summary>
+        private INodeWitnessCalculator _contractionWitnessCalculator = new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(100);
+
+        //private HashSet<uint> _contracted = new HashSet<uint>();
 
         /// <summary>
         /// Starts pre-processing all nodes
@@ -152,16 +139,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 vertex = this.SelectNext();
 
                 double realProgress = (double)current / (double)total;
-                double progress = (float)System.Math.Floor(realProgress * 100);
+                double progress = (float)System.Math.Floor(realProgress * 1000) / 10.0;
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                        "Pre-processing... {0}%", progress);
+                        "Pre-processing... {0}% [{1}/{2}]", progress, current, total);
                     latestProgress = progress;
-                }
-                if (realProgress > _preProcessingPercentage)
-                { // stop at a certain percentage.
-                    break;
                 }
                 current++;
             }
@@ -225,11 +208,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     if (((xEdge.Value.Backward && yEdge.Value.Forward) ||
                         (yEdge.Value.Backward && xEdge.Value.Forward)) &&
                         (xEdge.Key != yEdge.Key))
+                    //if ((xEdge.Value.Backward && yEdge.Value.Forward) &&
+                    //    (xEdge.Key != yEdge.Key))
                     { // there is a connection from x to y and there is no witness path.
-                        bool witnessXToY = _witnessCalculator.Exists(_target, xEdge.Key, 
-                            yEdge.Key, vertex, weight, 100);
-                        bool witnessYToX = _witnessCalculator.Exists(_target, yEdge.Key, 
-                            xEdge.Key, vertex, weight, 100);
+                        bool witnessXToY = _contractionWitnessCalculator.Exists(_target, xEdge.Key, 
+                            yEdge.Key, vertex, weight, int.MaxValue);
+                        bool witnessYToX = _contractionWitnessCalculator.Exists(_target, yEdge.Key,
+                            xEdge.Key, vertex, weight, int.MaxValue);
 
                         // create x-to-y data and edge.
                         CHEdgeData dataXToY = new CHEdgeData();
@@ -331,7 +316,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// The amount of queue 'misses' to recalculated.
         /// </summary>
-        private int _k = 40;
+        private int _k = 60;
 
         /// <summary>
         /// Holds a counter of all misses.
@@ -379,19 +364,30 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 // if the misses are _k
                 if (_misses == _k)
                 { // recalculation.
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Recalculating queue...");
+
                     CHPriorityQueue new_queue = new CHPriorityQueue();
 
                     HashSet<KeyValuePair<uint, float>> recalculated_weights =
                         new HashSet<KeyValuePair<uint, float>>();
+                    int totalCadinality = 0;
                     foreach (uint vertex in _queue)
                     {
                         recalculated_weights.Add(
                             new KeyValuePair<uint, float>(vertex, _calculator.Calculate(vertex)));
+                        var arcs = _target.GetArcs(vertex);
+                        if(arcs != null)
+                        {
+                            totalCadinality = arcs.Length + totalCadinality;
+                        }
                     }
                     foreach (KeyValuePair<uint, float> pair in recalculated_weights)
                     {
                         new_queue.Enqueue(pair.Key, pair.Value);
                     }
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Average card: {0}", (double)totalCadinality/(double)recalculated_weights.Count);
                     _queue = new_queue;
                     _misses_queue.Clear();
                     _misses = 0;
@@ -464,18 +460,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         private bool CanBeContractedLocally(uint vertex, float priority)
         {
-            //// compare the priority with that of it's neighbours.
-            //foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetArcs(vertex))
-            //{ // check the priority.
-            //    if (!this.IsContracted(edge.Key))
-            //    {
-            //        float edge_priority = this.CalculatePriority(edge.Key);
-            //        if (edge_priority < priority) // TODO: <= or <
-            //        { // there is a neighbour with lower priority.
-            //            return false;
-            //        }
-            //    }
-            //}
+            // compare the priority with that of it's neighbours.
+            foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetArcs(vertex))
+            { // check the priority.
+                if (!this.IsContracted(edge.Key))
+                {
+                    float edge_priority = this.CalculatePriority(edge.Key);
+                    if (edge_priority < priority) // TODO: <= or <
+                    { // there is a neighbour with lower priority.
+                        return false;
+                    }
+                }
+            }
             return true;
         }
 

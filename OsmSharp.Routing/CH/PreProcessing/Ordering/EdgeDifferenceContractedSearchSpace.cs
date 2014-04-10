@@ -85,13 +85,15 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // loop over all neighbours and check for witnesses.
             foreach (KeyValuePair<uint, CHEdgeData> from in neighbours)
             { // loop over all incoming neighbours
+                if (!from.Value.Backward) { continue; }
                 foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
                 { // loop over all outgoing neighbours
-                    if (to.Key != from.Key)
+                    if (to.Key != from.Key &&
+                        to.Value.Forward)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witness_calculator.Exists(_data, from.Key, to.Key, vertex,
-                            (float)from.Value.Weight + (float)to.Value.Weight, 50))
+                            (float)from.Value.Weight + (float)to.Value.Weight, 1000))
                         { // no witness exists.
                             new_edges++;
                         }
@@ -102,7 +104,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // get the depth.                    
             long depth = 0;
             _depth.TryGetValue(vertex, out depth);
-            return (3 * (new_edges - removed)) + (2 * contracted);// +depth;
+            return (((new_edges) - removed)) + (2 * contracted);
             //return (new_edges - removed) + depth;
         }
 
@@ -119,14 +121,17 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                short count;
-                if (!_contraction_count.TryGetValue(neighbour.Key, out count))
+                if (!neighbour.Value.HasContractedVertex)
                 {
-                    _contraction_count[neighbour.Key] = 1;
-                }
-                else
-                {
-                    _contraction_count[neighbour.Key] = count++;
+                    short count;
+                    if (!_contraction_count.TryGetValue(neighbour.Key, out count))
+                    {
+                        _contraction_count[neighbour.Key] = 1;
+                    }
+                    else
+                    {
+                        _contraction_count[neighbour.Key] = count++;
+                    }
                 }
             }
 
@@ -138,18 +143,15 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // store the depth.
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                if (!_contraction_count.ContainsKey(neighbour.Key))
+                long depth = 0;
+                _depth.TryGetValue(neighbour.Key, out depth);
+                if (vertex_depth < depth)
                 {
-                    long depth = 0;
-                    _depth.TryGetValue(neighbour.Key, out depth);
-                    if (vertex_depth > depth)
-                    {
-                        _depth[neighbour.Key] = depth;
-                    }
-                    else
-                    {
-                        _depth[neighbour.Key] = vertex_depth;
-                    }
+                    _depth[neighbour.Key] = depth;
+                }
+                else
+                {
+                    _depth[neighbour.Key] = vertex_depth;
                 }
             }
         }

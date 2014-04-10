@@ -33,11 +33,24 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
     public class DykstraWitnessCalculator : INodeWitnessCalculator
     {
         /// <summary>
+        /// Holds the current hop limit.
+        /// </summary>
+        private int _hopLimit;
+
+        /// <summary>
         /// Creates a new witness calculator.
         /// </summary>
         public DykstraWitnessCalculator()
         {
+            _hopLimit = 20;
+        }
 
+        /// <summary>
+        /// Creates a new witness calculator.
+        /// </summary>
+        public DykstraWitnessCalculator(int hopLimit)
+        {
+            _hopLimit = hopLimit;
         }
 
         /// <summary>
@@ -54,11 +67,6 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         {
             if (this.CalculateWeight(graph, from, to, via, weight, max_settles) <= weight)
             { // do verification.
-                //CHRouter router = new CHRouter(_data);
-                //if (!(router.CalculateWeight(from, to, via, weight, max_settles) <= weight))
-                //{
-                //    //throw new Exception();
-                //}
                 return true;
             }
             return false;
@@ -76,7 +84,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <returns></returns>
         private float CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float max_weight, int max_settles)
         {
-            int max_hops = 5;
+            int max_hops = _hopLimit;
             float weight = float.MaxValue;
 
             // creates the settled list.
@@ -114,9 +122,10 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(current.VertexId);
                         for (int idx = 0; idx < neighbours.Length; idx++)
                         {
-                            if (neighbours[idx].Value.Forward && (neighbours[idx].Key == to || !settled.Contains(neighbours[idx].Key)))
+                            var neighbourPair = neighbours[idx];
+                            if (neighbourPair.Value.Forward && (neighbourPair.Key == to || !settled.Contains(neighbourPair.Key)))
                             {
-                                SettledVertex neighbour = new SettledVertex(neighbours[idx].Key,
+                                var neighbour = new SettledVertex(neighbours[idx].Key,
                                     neighbours[idx].Value.Weight + current.Weight, current.Hops + 1);
                                 if (neighbour.Weight < max_weight)
                                 {
