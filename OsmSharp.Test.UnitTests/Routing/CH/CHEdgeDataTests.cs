@@ -96,7 +96,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             {
                 for (float weight2 = 0; weight2 < 3; weight2++)
                 {
-                    bool overlapsWeight = weight1 < weight2;
+                    bool overlapsWeight = weight1 <= weight2;
 
                     // tests all the weight differences.
                     this.DoTestCompare(new CHEdgeData(weight1, true, true),
