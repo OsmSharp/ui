@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             Assert.AreEqual(-1, sparse_ordering.Calculate(2));
             EdgeDifference edge_difference_ordering = new EdgeDifference(
                 data, witness_calculator);
-            Assert.AreEqual(0, edge_difference_ordering.Calculate(2));
+            Assert.AreEqual(2, edge_difference_ordering.Calculate(2));
 
             // do the actual contraction.
             CHPreProcessor pre_processor = new CHPreProcessor(

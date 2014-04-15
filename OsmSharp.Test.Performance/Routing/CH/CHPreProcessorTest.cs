@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "kempen.osm.pbf");
+            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "belgium-latest.osm.pbf");
         }
 
         /// <summary>
@@ -44,7 +44,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            OsmSharp.Osm.Streams.OsmStreamSource source = new PBFOsmStreamSource(stream);
+            source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress(source);
 
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHPreProcessor.Pre");
             performanceInfo.Start();

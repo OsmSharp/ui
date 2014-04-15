@@ -90,7 +90,7 @@ namespace OsmSharp.Android.UI.Sample
 			var map = new Map();
             // add a tile layer.
             map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            //map.AddLayer(new LayerTile(@"http://a.tile.thunderforest.com/transport/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerTile(@"http://tiles.openseamap.org/seamark/{0}/{1}/{2}.png"));
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
@@ -134,7 +134,7 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView.MapMaxZoomLevel = 20;
             //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
-            _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
+            _mapView.MapCenter = new GeoCoordinate(54.18253, 12.09187);
 			_mapView.MapZoom = 15;
             _mapView.MapAllowTilt = false;
 
