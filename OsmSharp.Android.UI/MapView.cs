@@ -108,15 +108,17 @@ namespace OsmSharp.Android.UI
         {
             if (marker == null) { throw new ArgumentNullException("marker"); };
 
-			_markers.Add (marker); // add to marker list.
-			marker.AttachTo (this); // attach to this view.
+            lock (_markers)
+            {
+                _markers.Add(marker); // add to marker list.
+                marker.AttachTo(this); // attach to this view.
 
-			var layoutParams = new FrameLayout.LayoutParams (marker.Image.Width, marker.Image.Height + 5);
-			layoutParams.LeftMargin = -1;
-			layoutParams.TopMargin = -1;
-			layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-			this.AddView (marker, layoutParams);
-
+                var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
+                layoutParams.LeftMargin = -1;
+                layoutParams.TopMargin = -1;
+                layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
+                this.AddView(marker, layoutParams);
+            }
             this.NotifyMarkerChange(marker);
 			_mapView.TriggerRendering ();
 		}
@@ -130,7 +132,7 @@ namespace OsmSharp.Android.UI
         {
             if (location == null) { throw new ArgumentNullException("location"); };
 
-            MapMarker marker = new MapMarker(this.Context, location);
+            var marker = new MapMarker(this.Context, location);
 			this.AddMarker (marker);
 			return marker;
 		}
@@ -142,7 +144,10 @@ namespace OsmSharp.Android.UI
         {
             get
             {
-                return _markers.AsReadOnly();
+                lock (_markers)
+                {
+                    return _markers.AsReadOnly();
+                }
             }
         }
 
@@ -151,13 +156,16 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public void ClearMarkers()
         {
-            if (_markers != null)
+            lock (_markers)
             {
-                foreach (MapMarker marker in _markers)
+                if (_markers != null)
                 {
-                    this.RemoveView(marker);
+                    foreach (MapMarker marker in _markers)
+                    {
+                        this.RemoveView(marker);
+                    }
+                    _markers.Clear();
                 }
-                _markers.Clear();
             }
         }
 
@@ -168,12 +176,15 @@ namespace OsmSharp.Android.UI
         /// <returns></returns>
         public bool RemoveMarker(MapMarker marker)
         {
-            if (marker != null)
+            lock (_markers)
             {
-                this.RemoveView(marker);
-                return _markers.Remove(marker);
+                if (marker != null)
+                {
+                    this.RemoveView(marker);
+                    return _markers.Remove(marker);
+                }
+                return false;
             }
-            return false;
         }
 
         /// <summary>
@@ -189,7 +200,10 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public void ZoomToMarkers(double percentage)
         {
-            this.ZoomToMarkers(_markers, 15);
+            lock (_markers)
+            {
+                this.ZoomToMarkers(_markers, 15);
+            }
         }
 
         /// <summary>
@@ -351,11 +365,16 @@ namespace OsmSharp.Android.UI
 		/// <param name="projection">Projection.</param>
 		public void NotifyMapChange (double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
 		{
-			if (_markers != null) {
-				foreach (var marker in _markers){
-					this.NotifyMapChangeToMarker (pixelsWidth, pixelsHeight, view, projection, marker);
-				}
-			}
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        this.NotifyMapChangeToMarker(pixelsWidth, pixelsHeight, view, projection, marker);
+                    }
+                }
+            }
 		}
 
 		/// <summary>
@@ -368,7 +387,9 @@ namespace OsmSharp.Android.UI
 		/// <param name="mapMarker"></param>
 		internal void NotifyMapChangeToMarker (double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapMarker mapMarker)
 		{
-			if (mapMarker != null) {
+			if (mapMarker != null && 
+                mapMarker.Handle != IntPtr.Zero)
+            {
 				this.RemoveView (mapMarker);
 				if (mapMarker.SetLayout (pixelsWidth, pixelsHeight, view, projection)) {
 					this.AddView (mapMarker, mapMarker.LayoutParameters);
