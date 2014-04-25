@@ -1,0 +1,32 @@
+Enhancements:
+
+- Finished stream sorting problem to avoid sorting a sorted stream or sorting a stream twice. Fixes #64.
+- Added option to ignore nodes/ways/relations in OsmStreamSource. Closes #72.
+- Added DistanceToEnd while tracking route in RouteTracker. Closes #70.
+- Added a read-only list of markers on MapViews on iOS/Android. Issue #78.
+- Added a tag property on layers. Also issue #78.
+- Added a RemoveAll(Predicate<Tag> predicate) method to all TagCollections.
+
+Bugfixes:
+
+- Fixed #67.
+- Allow registration of a TraceListener even when listener is disabled. Fixes #69.
+- Fixed culture-dependant ToString after move to PCL.
+- Fixed progress-reporting during live-edge preprocessing.
+- Removed obsolete vertex location request during routing.
+- Fixed IsRelevant in OsmRoutingInterpreter not checking value but key.
+- Fixed marker positions on first draw. Fixes #73.
+- Fixed GPX XML-parsing when it contains GARMIN extensions on Android. Fixes #74.
+- Fixed broken XmlOsmStreamTarget after move to PCL.
+- Fixed views not responding or rendering on bottom-up MapChanged-events.
+- Fixed MaxSpeedAllowed not virtual.
+
+API Changes:
+
+- Added RemoveAll() on TagsCollectionBase.
+- Added DistanceToEnd on RouteTracker.
+- Changed default abstract MoveNext() to MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations) in OsmStreamSource. Breaking for custom implementations of OsmStreamSource.
+- Added OnRemoved delegate on LRUCache to catch objects being removed from cache.
+- Added Tag property on Layer.
+- Added Markers property on MapView (iOS and Android).
+- Changed ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view) in Layer to ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView). Breaking for custom layer implementations.
