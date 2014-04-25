@@ -358,124 +358,124 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             processor.Contract(5);
 
-            Assert.AreEqual(1, edgeDifference.Calculate(2)); // witness paths from 11<->5.
+            Assert.AreEqual(1, edgeDifference.Calculate(2));
             Assert.AreEqual(-2, edgeDifference.Calculate(6));
-            Assert.AreEqual(0, edgeDifference.Calculate(7));
-            Assert.AreEqual(3, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(3, edgeDifference.Calculate(10));
-            Assert.AreEqual(3, edgeDifference.Calculate(11));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(18));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(2, edgeDifference.Calculate(7));
+            Assert.AreEqual(9, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(9, edgeDifference.Calculate(10));
+            Assert.AreEqual(9, edgeDifference.Calculate(11));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(18));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(6);
 
-            Assert.AreEqual(0, edgeDifference.Calculate(2)); // witness paths from 11<->5.
+            Assert.AreEqual(2, edgeDifference.Calculate(2));
             Assert.AreEqual(-1, edgeDifference.Calculate(7));
-            Assert.AreEqual(3, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(3, edgeDifference.Calculate(10));
-            Assert.AreEqual(3, edgeDifference.Calculate(11));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(18));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(9, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(9, edgeDifference.Calculate(10));
+            Assert.AreEqual(9, edgeDifference.Calculate(11));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(18));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(7);
 
-            Assert.AreEqual(0, edgeDifference.Calculate(2)); // witness paths from 11<->5.
-            Assert.AreEqual(3, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(3, edgeDifference.Calculate(10));
-            Assert.AreEqual(0, edgeDifference.Calculate(11));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(18));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(2, edgeDifference.Calculate(2));
+            Assert.AreEqual(9, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(9, edgeDifference.Calculate(10));
+            Assert.AreEqual(2, edgeDifference.Calculate(11));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(18));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(2);
 
-            Assert.AreEqual(3, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(3, edgeDifference.Calculate(10));
-            Assert.AreEqual(-2, edgeDifference.Calculate(11)); // witness paths from 18<->10.
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(18));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(9, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(9, edgeDifference.Calculate(10));
+            Assert.AreEqual(-2, edgeDifference.Calculate(11));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(18));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(11);
 
-            Assert.AreEqual(3, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
+            Assert.AreEqual(9, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
             Assert.AreEqual(1, edgeDifference.Calculate(10));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(-2, edgeDifference.Calculate(18)); // witness paths from 10<->8.
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(-2, edgeDifference.Calculate(18));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(18);
 
-            Assert.AreEqual(0, edgeDifference.Calculate(8));
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(0, edgeDifference.Calculate(10));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(2, edgeDifference.Calculate(8));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(2, edgeDifference.Calculate(10));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(8);
 
-            Assert.AreEqual(0, edgeDifference.Calculate(9));
-            Assert.AreEqual(0, edgeDifference.Calculate(10));
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(0, edgeDifference.Calculate(19));
+            Assert.AreEqual(2, edgeDifference.Calculate(9));
+            Assert.AreEqual(2, edgeDifference.Calculate(10));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(9);
 
-            Assert.AreEqual(-2, edgeDifference.Calculate(10)); // witness paths from 19<->12.
-            Assert.AreEqual(0, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(-2, edgeDifference.Calculate(19)); // witness paths from 15<->10.
+            Assert.AreEqual(-2, edgeDifference.Calculate(10));
+            Assert.AreEqual(2, edgeDifference.Calculate(12));
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(-2, edgeDifference.Calculate(19));
 
             processor.Contract(10);
 
             Assert.AreEqual(-2, edgeDifference.Calculate(12));
-            Assert.AreEqual(0, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(-2, edgeDifference.Calculate(19)); // witness paths from 15<->10.
+            Assert.AreEqual(2, edgeDifference.Calculate(13));
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(-2, edgeDifference.Calculate(19));
 
             processor.Contract(12);
 
             Assert.AreEqual(-1, edgeDifference.Calculate(13));
-            Assert.AreEqual(0, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(-1, edgeDifference.Calculate(19)); // witness paths from 15<->10.
+            Assert.AreEqual(2, edgeDifference.Calculate(14));
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(-1, edgeDifference.Calculate(19));
 
             processor.Contract(13);
 
             Assert.AreEqual(-1, edgeDifference.Calculate(14));
-            Assert.AreEqual(0, edgeDifference.Calculate(15));
-            Assert.AreEqual(-1, edgeDifference.Calculate(19)); // witness paths from 15<->10.
+            Assert.AreEqual(2, edgeDifference.Calculate(15));
+            Assert.AreEqual(-1, edgeDifference.Calculate(19));
 
             processor.Contract(14);
 
