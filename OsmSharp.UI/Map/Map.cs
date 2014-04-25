@@ -117,6 +117,9 @@ namespace OsmSharp.UI.Map
         {
             layer.LayerChanged += new LayerChanged(layer_LayerChanged);
             _layers.Add(layer);
+
+            // map has obviously changed here!
+            if (this.MapChanged != null) { this.MapChanged(); }
         }
 
         /// <summary>
@@ -128,6 +131,9 @@ namespace OsmSharp.UI.Map
         {
             layer.LayerChanged += new LayerChanged(layer_LayerChanged);
             _layers.Insert(idx, layer);
+
+            // map has obviously changed here!
+            if (this.MapChanged != null) { this.MapChanged(); }
         }
 
         /// <summary>
@@ -139,6 +145,10 @@ namespace OsmSharp.UI.Map
             if (_layers.Remove(layer))
             {
                 layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
+
+                // map has obviously changed here!
+                if (this.MapChanged != null) { this.MapChanged(); }
+
                 return true;
             }
             return false;
@@ -150,9 +160,12 @@ namespace OsmSharp.UI.Map
         /// <param name="idx"></param>
         public void RemoveLayerAt(int idx)
         {
-            Layer layer = _layers[idx];
+            var layer = _layers[idx];
             layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
             _layers.RemoveAt(idx);
+
+            // map has obviously changed here!
+            if (this.MapChanged != null) { this.MapChanged(); }
         }
 
         /// <summary>
@@ -179,10 +192,7 @@ namespace OsmSharp.UI.Map
         /// <param name="sender"></param>
         void layer_LayerChanged(Layer sender)
         {
-            if (MapChanged != null)
-            {
-                this.MapChanged();
-            }
+            if (this.MapChanged != null) { this.MapChanged(); }
         }
 
         #region Layer Helpers
