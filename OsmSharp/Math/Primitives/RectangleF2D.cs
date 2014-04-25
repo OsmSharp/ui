@@ -315,7 +315,7 @@ namespace OsmSharp.Math.Primitives
             RectangleF2D fitted = this;
             if (points.Length > 1)
             { // multiple points can be fitted and zoomed to.
-                this.Fit(points, percentage);
+                fitted = this.Fit(points, percentage);
             }
             else if(points.Length == 1)
             { // a single point can only be moved to.
