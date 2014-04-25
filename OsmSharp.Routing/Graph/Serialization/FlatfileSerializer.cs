@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
@@ -193,16 +194,43 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="tagsCollectionIndex"></param>
         protected virtual void SerializeTags(LimitedStream stream, ITagsCollectionIndexReadonly tagsCollectionIndex)
         {
+            RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
+            typeModel.Add(typeof(SerializableTag), true);
+
             // write tags collection-count.
             var countBytes = BitConverter.GetBytes(tagsCollectionIndex.Max);
             stream.Write(countBytes, 0, 4);
 
+            int blockSize = 1000;
+            var tagsQueue = new List<SerializableTag>();
+
             // serialize tags collections one-by-one.
-            var serializer = new TagsCollectionSerializer();
             for (uint idx = 0; idx < tagsCollectionIndex.Max; idx++)
             { // serialize objects one-by-one.
-                serializer.SerializeWithSize(tagsCollectionIndex.Get(idx), stream);
+                var tagsCollection = tagsCollectionIndex.Get(idx);
+                foreach (var tag in tagsCollection)
+                {
+                    tagsQueue.Add(new SerializableTag()
+                        {
+                            CollectionId = idx,
+                            Key = tag.Key,
+                            Value = tag.Value
+                        });
+                    if (tagsQueue.Count == blockSize)
+                    { // time to serialize.
+                        typeModel.SerializeWithSize(stream, tagsQueue.ToArray());
+                        tagsQueue.Clear();
+                    }
+                }
             }
+
+            tagsQueue.Add(new SerializableTag()
+                {
+                    CollectionId = int.MaxValue,
+                    Key = string.Empty,
+                    Value = string.Empty
+                });
+            typeModel.SerializeWithSize(stream, tagsQueue.ToArray());
         }
 
         /// <summary>
@@ -251,16 +279,66 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="size"></param>
         protected virtual void DeserializeTags(LimitedStream stream, long size, ITagsCollectionIndex tagsCollectionIndex)
         {           
+            RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
+            typeModel.Add(typeof(SerializableTag), true);
+
             // read tags collection-count.
             var countBytes = new byte[4];
             stream.Read(countBytes, 0, 4);
             int max = BitConverter.ToInt32(countBytes, 0);
 
             // serialize tags collections one-by-one.
-            var serializer = new TagsCollectionSerializer();
-            for (uint idx = 0; idx < max; idx++)
-            { // serialize objects one-by-one.
-                tagsCollectionIndex.Add(serializer.DeserializeWithSize(stream));
+            var currentTags = new List<SerializableTag>();
+            if(max > 0)
+            { // keep reading until max.
+                currentTags.AddRange(typeModel.DeserializeWithSize(stream, null, typeof(SerializableTag[])) as SerializableTag[]);
+
+                // detect an empty collection at zero.
+                if(currentTags[0].CollectionId == 1)
+                { // no zero, there is an empty collection.
+                    tagsCollectionIndex.Add(new TagsCollection());
+                }
+                while (tagsCollectionIndex.Max < max)
+                {
+                    // try and detect an id change.
+                    bool idChanged = true;
+                    while(currentTags.Count > 0 &&
+                        idChanged)
+                    { // there are tags.
+                        idChanged = false;
+                        var tagsCollection = new TagsCollection();
+                        int index = 0;
+                        uint currentId = currentTags[index].CollectionId;
+
+                        // detect an empty collection in between.
+                        if(currentId > tagsCollectionIndex.Max + 1)
+                        { // it's possible there was an empty tag collection in there somewhere.
+                            tagsCollectionIndex.Add(new TagsCollection());
+                        }
+
+                        tagsCollection.Add(new Tag(currentTags[index].Key, currentTags[index].Value));
+                        index++;
+                        while(currentTags.Count > index)
+                        { // test for a different id.
+                            if(currentTags[index].CollectionId != currentId ||
+                                currentTags[index].CollectionId == uint.MaxValue)
+                            { // yes! an id change was detected.
+                                idChanged = true;
+                                currentTags.RemoveRange(0, index);
+                                if (tagsCollection.Count > 0)
+                                { // there are tags.
+                                    tagsCollectionIndex.Add(tagsCollection);
+                                }
+                                break;
+                            }
+                            tagsCollection.Add(new Tag(currentTags[index].Key, currentTags[index].Value));
+                            index++;
+                        }
+                    }
+
+                    // read next block.
+                    currentTags.AddRange(typeModel.DeserializeWithSize(stream, null, typeof(SerializableTag[])) as SerializableTag[]);
+                }
             }
         }
 
@@ -283,6 +361,40 @@ namespace OsmSharp.Routing.Graph.Serialization
             /// </summary>
             [ProtoMember(2)]
             public float Longitude { get; set; }
+        }
+
+        /// <summary>
+        /// Serializable tag.
+        /// </summary>
+        [ProtoContract]
+        internal class SerializableTag
+        {
+            /// <summary>
+            /// Gets or sets the collection id.
+            /// </summary>
+            [ProtoMember(1)]
+            public uint CollectionId { get; set; }
+
+            /// <summary>
+            /// Gets or sets the key.
+            /// </summary>
+            [ProtoMember(2)]
+            public string Key { get; set; }
+
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
+            [ProtoMember(3)]
+            public string Value { get; set; }
+
+            /// <summary>
+            /// Returns a string representation of this object.
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return string.Format("{0}={1}@{2}", this.Key, this.Value, this.CollectionId);
+            }
         }
 
         #endregion

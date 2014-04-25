@@ -28,3 +28,4 @@ OutputWindowsPhone*/
 test-results*/
 *.vsp
 .DotSettings
+*.vspx

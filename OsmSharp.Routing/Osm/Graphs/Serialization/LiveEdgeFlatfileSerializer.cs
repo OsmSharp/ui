@@ -57,29 +57,42 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             typeModel.Add(typeof(SerializableEdge), true);
             typeModel.Add(typeof(GeoCoordinateSimple), true);
 
+            int blockSize = 1000;
+            var arcsQueue = new List<SerializableEdge>(blockSize);
+
             uint vertex = 0;
-            while(vertex < graph.VertexCount)
+            while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
                 var arcs = graph.GetArcs(vertex);
-                if(arcs != null)
+                if (arcs != null)
                 { // serialize the arcs.
-                    var serializableArcs = new SerializableEdge[arcs.Length];
-                    for(int idx = 0; idx < arcs.Length; idx++)
+                    for (int idx = 0; idx < arcs.Length; idx++)
                     {
-                        serializableArcs[idx] = new SerializableEdge()
+                        arcsQueue.Add(new SerializableEdge()
                         {
                             Distance = arcs[idx].Value.Distance,
                             FromId = vertex,
                             ToId = arcs[idx].Key,
                             Value = arcs[idx].Value.Value,
                             Coordinates = arcs[idx].Value.Coordinates
-                        };
+                        });
+
+                        if (arcsQueue.Count == blockSize)
+                        { // execute serialization.
+                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                            arcsQueue.Clear();
+                        }
                     }
 
                     // serialize.
-                    typeModel.SerializeWithSize(stream, serializableArcs);
                     vertex++;
                 }
+            }
+
+            if (arcsQueue.Count > 0)
+            { // execute serialization.
+                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                arcsQueue.Clear();
             }
         }
 

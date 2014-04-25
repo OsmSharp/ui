@@ -56,16 +56,18 @@ namespace OsmSharp.Routing.CH.Serialization
             var typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableEdge), true);
 
+            int blockSize = 1000;
+            var arcsQueue = new List<SerializableEdge>(blockSize);
+
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
                 var arcs = graph.GetArcs(vertex);
                 if (arcs != null)
                 { // serialize the arcs.
-                    var serializableArcs = new SerializableEdge[arcs.Length];
                     for (int idx = 0; idx < arcs.Length; idx++)
                     {
-                        serializableArcs[idx] = new SerializableEdge()
+                        arcsQueue.Add(new SerializableEdge()
                         {
                             FromId = vertex,
                             ToId = arcs[idx].Key,
@@ -73,13 +75,24 @@ namespace OsmSharp.Routing.CH.Serialization
                             Direction = arcs[idx].Value.Direction,
                             Tags = arcs[idx].Value.Tags,
                             Weight = arcs[idx].Value.Weight
-                        };
+                        });
+
+                        if(arcsQueue.Count == blockSize)
+                        { // execute serialization.
+                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                            arcsQueue.Clear();
+                        }
                     }
 
                     // serialize.
-                    typeModel.SerializeWithSize(stream, serializableArcs);
                     vertex++;
                 }
+            }
+
+            if (arcsQueue.Count > 0)
+            { // execute serialization.
+                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                arcsQueue.Clear();
             }
         }
 
