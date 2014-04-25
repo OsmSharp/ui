@@ -312,10 +312,18 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public RectangleF2D FitAndKeepAspectRatio(PointF2D[] points, double percentage)
         {
-            RectangleF2D fitted = this.Fit(points, percentage);
+            RectangleF2D fitted = this;
+            if (points.Length > 1)
+            { // multiple points can be fitted and zoomed to.
+                this.Fit(points, percentage);
+            }
+            else if(points.Length == 1)
+            { // a single point can only be moved to.
+                fitted = new RectangleF2D(points[0][0], points[0][1], this.Width, this.Height, this.Angle);
+            }
 
             // although this may seem a strange approach, think about
-            // numerical stability before change this!            
+            // numerical stability before changing this!            
 
             double width = fitted.Width;
             double height = fitted.Height;
