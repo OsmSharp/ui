@@ -38,9 +38,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
-        public static void Test()
+        /// <returns>A stream to the file that was serialized.</returns>
+        public static Stream Test()
         {
-            CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen.osm.pbf");
+            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen.osm.pbf");
         }
 
         /// <summary>
@@ -48,12 +49,12 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
-        public static void TestSerialization(string name, string pbfFile)
+        public static Stream TestSerialization(string name, string pbfFile)
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             Stream stream = testFile.OpenRead();
             PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
-            
+
             FileInfo testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();
             Stream writeStream = testOutputFile.OpenWrite();
@@ -84,6 +85,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
 
             performanceInfo.Stop();
+
+            return testOutputFile.OpenRead();
         }
     }
 }

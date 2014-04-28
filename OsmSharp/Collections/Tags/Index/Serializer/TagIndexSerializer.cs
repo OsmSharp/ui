@@ -33,18 +33,25 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
     public class TagIndexSerializer
     {
         /// <summary>
+        /// Holds the tags index type model.
+        /// </summary>
+        private static RuntimeTypeModel _typeModel;
+
+        /// <summary>
         /// Creates the type model.
         /// </summary>
         /// <returns></returns>
         private static RuntimeTypeModel CreateTypeModel()
         {
-            RuntimeTypeModel typeModel = TypeModel.Create();
-            typeModel.Add(typeof(List<string>), true);
-            typeModel.Add(typeof(KeyValuePair<uint, uint>), true);
-            typeModel.Add(typeof(List<KeyValuePair<uint, uint>>), true);
-            typeModel.Add(typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>), true);
-
-            return typeModel;
+            if (_typeModel == null)
+            {
+                _typeModel = TypeModel.Create();
+                _typeModel.Add(typeof(List<string>), true);
+                _typeModel.Add(typeof(KeyValuePair<uint, uint>), true);
+                _typeModel.Add(typeof(List<KeyValuePair<uint, uint>>), true);
+                _typeModel.Add(typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>), true);
+            }
+            return _typeModel;
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
 
             // calculate the amount of blocks.
             uint blocks = (uint)System.Math.Ceiling((float)tagsIndex.Max / (float)blockSize);
-            
+
             // store block count.
             stream.Write(BitConverter.GetBytes((int)blocks), 0, 4);
 
@@ -89,7 +96,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
 
             // write the block positions.
             stream.Seek(begin + 8, SeekOrigin.Begin);
-            for(int blockIdx = 0; blockIdx < blocks; blockIdx++)
+            for (int blockIdx = 0; blockIdx < blocks; blockIdx++)
             {
                 stream.Write(BitConverter.GetBytes(blockPositions[blockIdx]), 0, 4);
             }
@@ -186,7 +193,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
 
             // convert tag collections to simpler objects.
             List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
-            foreach(uint tagId in toSerialize)
+            foreach (uint tagId in toSerialize)
             {
                 TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
                 if (tagsCollection != null)
@@ -224,7 +231,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             ObjectTable<string> stringTable = new ObjectTable<string>(false);
 
             // convert tag collections to simpler objects.
-            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint,List<KeyValuePair<uint,uint>>>>();
+            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
             for (uint tagId = 0; tagId < tagsIndex.Max; tagId++)
             {
                 TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
@@ -245,7 +252,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
 
             // do the serialization.
             TagIndexSerializer.Serialize(begin, stream, tagsIndexList, stringTable);
-            
+
             // clear everything.
             tagsIndexList.Clear();
         }
@@ -312,9 +319,9 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             memoryStream.Dispose();
 
             Dictionary<uint, TagsCollection> tagsIndexList = new Dictionary<uint, TagsCollection>();
-            for(int idx = 0; idx < tagsIndexTableList.Count; idx++)
+            for (int idx = 0; idx < tagsIndexTableList.Count; idx++)
             {
-                KeyValuePair<uint, List<KeyValuePair<uint, uint>>> serializedTagsCollection = 
+                KeyValuePair<uint, List<KeyValuePair<uint, uint>>> serializedTagsCollection =
                     tagsIndexTableList[idx];
                 TagsCollection tagsCollection = new TagsCollection();
                 if (serializedTagsCollection.Value != null)
@@ -453,7 +460,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             {
                 // calculate current bounds.
                 _currentBlockMin = (uint)(blockIdx * _blockSize);
-               
+
                 // move stream to correct position.
                 int blockOffset = 0;
                 if (blockIdx > 0)
@@ -474,12 +481,13 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             /// </summary>
             public uint Max
             {
-                get {
+                get
+                {
                     if (_currentBlockIdx != _blockPositions.Length - 1)
                     { // load the last block.
                         this.DeserializeBlock(_blockPositions.Length - 1);
                     }
-                    return _currentBlock.Max; 
+                    return _currentBlock.Max;
                 }
             }
 

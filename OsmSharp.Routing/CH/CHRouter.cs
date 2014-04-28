@@ -56,7 +56,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+        public PathSegment<long> Calculate(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList target, double max)
         {
             // do the basic CH calculations.
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="maxSearch"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle, 
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch)
         {
             var results = new PathSegment<long>[sources.Length][];
@@ -264,7 +264,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="buckets"></param>
         /// <param name="toVisitList"></param>
         /// <returns></returns>
-        private long SearchBackwardIntoBucket(IBasicRouterDataSource<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets, 
+        private long SearchBackwardIntoBucket(IBasicRouterDataSource<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList toVisitList)
         {
             long? to = null;
@@ -482,7 +482,7 @@ namespace OsmSharp.Routing.CH
                                     results[bucketEntry.Key] = tentativeDistance;
                                 }
                             }
-                            else if(!results.ContainsKey(bucketEntry.Key))
+                            else if (!results.ContainsKey(bucketEntry.Key))
                             { // there was no result yet!
                                 tentativeResults[bucketEntry.Key] = foundDistance;
                             }
@@ -566,7 +566,7 @@ namespace OsmSharp.Routing.CH
             }
 
             // add the sources to the settled vertices.
-            foreach (KeyValuePair<long, PathSegment<long>> resolvedSettled 
+            foreach (KeyValuePair<long, PathSegment<long>> resolvedSettled
                 in resolvedSettles)
             {
                 settledVertices.AddForward(resolvedSettled.Value);
@@ -684,7 +684,7 @@ namespace OsmSharp.Routing.CH
             var targetIds = new long[sources.Length];
             for (int idx = 0; idx < sources.Length; idx++)
             {
-                targetIds[idx] = 
+                targetIds[idx] =
                     this.SearchBackwardIntoBucket(graph, buckets, sources[idx]);
 
                 OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating backward... {0}%",
@@ -710,7 +710,7 @@ namespace OsmSharp.Routing.CH
 
                 weights[idx] = toWeights;
                 result.Clear();
-                
+
                 OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating forward... {0}%",
                     (int)(((float)idx / (float)sources.Length) * 100));
             }
@@ -930,15 +930,15 @@ namespace OsmSharp.Routing.CH
             double queueForwardWeight = queueForward.PeekWeight();
             while (true) // when the queue is empty the connectivity test fails!
             { // keep looping until stopping conditions.
-                if(queueBackward.Count == 0 && queueForward.Count == 0)
+                if (queueBackward.Count == 0 && queueForward.Count == 0)
                 { // stop the search; both queues are empty.
                     break;
                 }
-                if(max < queueBackwardWeight && max < queueForwardWeight)
+                if (max < queueBackwardWeight && max < queueForwardWeight)
                 { // stop the search: the max search weight has been reached.
                     break;
                 }
-                if(maxSettles < (settledVertices.Forward.Count + settledVertices.Backward.Count))
+                if (maxSettles < (settledVertices.Forward.Count + settledVertices.Backward.Count))
                 { // stop the search: the max settles cound has been reached.
                     break;
                 }
@@ -1255,7 +1255,7 @@ namespace OsmSharp.Routing.CH
             {
                 if (arc.Value == null)
                 {
-                    arc = new KeyValuePair<uint,CHEdgeData?>(forwardArc.Key, forwardArc.Value);
+                    arc = new KeyValuePair<uint, CHEdgeData?>(forwardArc.Key, forwardArc.Value);
                 }
                 else if (arc.Value.Value.Weight > forwardArc.Value.Weight)
                 {
@@ -1431,7 +1431,7 @@ namespace OsmSharp.Routing.CH
                         graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                        distance = coordinate.DistanceReal(fromCoordinates).Value;
+                        distance = coordinate.DistanceEstimate(fromCoordinates).Value;
 
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
@@ -1457,7 +1457,7 @@ namespace OsmSharp.Routing.CH
                             //if(matcher.Match(_
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.DistanceReal(toCoordinates).Value;
+                        distance = coordinate.DistanceEstimate(toCoordinates).Value;
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
@@ -1517,7 +1517,7 @@ namespace OsmSharp.Routing.CH
 
                         // by now the arc is uncontracted.
                         // create a line.
-                        double distanceTotal = fromCoordinates.DistanceReal(toCoordinates).Value;
+                        double distanceTotal = fromCoordinates.DistanceEstimate(toCoordinates).Value;
                         if (distanceTotal > 0)
                         { // the from/to are not the same location.
                             var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
@@ -1531,7 +1531,7 @@ namespace OsmSharp.Routing.CH
                                 // calculate the position.
                                 if (projectedPoint != null)
                                 { // calculate the distance
-                                    double distancePoint = fromCoordinates.DistanceReal(new GeoCoordinate(projectedPoint)).Value;
+                                    double distancePoint = fromCoordinates.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value;
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(

@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             GeoCoordinateBox box = new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
-            CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting", 
+            CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
                 "kempen-big.osm.pbf.routing", box, 1000);
 
             // test instructions.
@@ -50,11 +50,20 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
         /// <summary>
+        /// Tests the CH pre-processor.
+        /// </summary>
+        public static void Test(Stream stream)
+        {
+            CHSerializedRoutingTest.Test(
+                stream, 1000);
+        }
+
+        /// <summary>
         /// Tests the instructions.
         /// </summary>
         public static void TestInstructions(string name)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", 
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}",
                 "kempen-big.osm.pbf.routing"));
             Stream stream = testFile.OpenRead();
 
@@ -130,7 +139,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests routing from a serialized routing file.
         /// </summary>
-        public static void TestSerializedRouting(string name, string routeFile, 
+        public static void TestSerializedRouting(string name, string routeFile,
             GeoCoordinateBox box, int testCount)
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", routeFile));

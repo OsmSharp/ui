@@ -20,6 +20,7 @@ using OsmSharp.WinForms.UI.Renderer;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace OsmSharp.Test.Performance
 {
@@ -63,9 +64,12 @@ namespace OsmSharp.Test.Performance
             //Routing.LivePreProcessorTest.Test();
             //Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();
-            //Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
-            Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
+            //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
             //Routing.CH.CHSerializedRoutingTest.Test();
+
+            // test serializer/deseriazation routing performance.
+            Stream serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+            Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
             //// test some rendering implementations.
             //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(

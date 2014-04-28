@@ -238,7 +238,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
 
             // write tags after blocks.
             int tagsPosition = (int)stream.Position;
-            TagIndexSerializer.SerializeBlocks(stream, graph.TagsIndex, 100);
+            TagIndexSerializer.SerializeBlocks(stream, graph.TagsIndex, 1000);
 
             stream.Seek(startOfBlocks, SeekOrigin.Begin); // move to [SIZE_OF_BLOCK_INDEX]
             stream.Write(BitConverter.GetBytes(sizeBlockIndex), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
