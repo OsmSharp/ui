@@ -140,9 +140,9 @@ namespace OsmSharp.Osm.PBF.Streams
                 + ((double)block.granularity * (double)node.lat));
             simpleNode.Longitude = .000000001 * ((double)block.lon_offset
                 + ((double)block.granularity * (double)node.lon));
+            simpleNode.Tags = new TagsCollection(node.keys.Count);
             if (node.keys.Count > 0)
             {
-                simpleNode.Tags = new TagsCollection(node.keys.Count);
                 for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
@@ -180,9 +180,9 @@ namespace OsmSharp.Osm.PBF.Streams
                 node_id = node_id + way.refs[node_idx];
                 simpleWay.Nodes.Add(node_id);
             }
+            simpleWay.Tags = new TagsCollection(way.keys.Count);
             if (way.keys.Count > 0)
             {
-                simpleWay.Tags = new TagsCollection(way.keys.Count);
                 for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
@@ -243,9 +243,9 @@ namespace OsmSharp.Osm.PBF.Streams
                     simpleRelation.Members.Add(member);
                 }
             }
+            simpleRelation.Tags = new TagsCollection(relation.keys.Count);
             if (relation.keys.Count > 0)
             {
-                simpleRelation.Tags = new TagsCollection(relation.keys.Count);
                 for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
