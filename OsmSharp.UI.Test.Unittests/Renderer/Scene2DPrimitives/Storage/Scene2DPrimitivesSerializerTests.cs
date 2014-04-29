@@ -73,6 +73,10 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
                 {
                     case OsmGeoType.Node:
                         completeOsmGeo = osmGeo as Node;
+                        if(completeOsmGeo.Tags == null)
+                        { // make sure every node has a tags collection.
+                            completeOsmGeo.Tags = new TagsCollection();
+                        }
                         break;
                     case OsmGeoType.Way:
                         completeOsmGeo = CompleteWay.CreateFrom(osmGeo as Way,
