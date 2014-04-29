@@ -63,7 +63,7 @@ namespace OsmSharp.Osm.PBF.Streams
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            var nextPBFPrimitive = this.MoveToNextPrimitive();
+            var nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             while(nextPBFPrimitive.Value != null)
             {
                 OsmSharp.Osm.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Node);
@@ -84,6 +84,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     _current = this.ConvertRelation(nextPBFPrimitive.Key, relation);
                     return true;
                 }
+                nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             }
             return false;
         }
@@ -305,7 +306,7 @@ namespace OsmSharp.Osm.PBF.Streams
         /// Moves the PBF reader to the next primitive or returns one of the cached ones.
         /// </summary>
         /// <returns></returns>
-        private KeyValuePair<PrimitiveBlock, object> MoveToNextPrimitive()
+        private KeyValuePair<PrimitiveBlock, object> MoveToNextPrimitive(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             KeyValuePair<PrimitiveBlock, object> next = this.DeQueuePrimitive();
             if (next.Value == null)
@@ -313,7 +314,10 @@ namespace OsmSharp.Osm.PBF.Streams
                 PrimitiveBlock block = _reader.MoveNext();
                 if (block != null)
                 {
-                    _decompressor.ProcessPrimitiveBlock(block);
+                    while (!_decompressor.ProcessPrimitiveBlock(block, ignoreNodes, ignoreWays, ignoreRelations))
+                    {
+                        block = _reader.MoveNext();
+                    }
                     next = this.DeQueuePrimitive();
                 }
             }
