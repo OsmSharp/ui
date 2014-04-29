@@ -142,16 +142,13 @@ namespace OsmSharp.Osm.PBF.Streams
                 + ((double)block.granularity * (double)node.lon));
             if (node.keys.Count > 0)
             {
-                simpleNode.Tags = new TagsCollection();
+                simpleNode.Tags = new TagsCollection(node.keys.Count);
                 for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
 
-                    if (!simpleNode.Tags.ContainsKey(key))
-                    {
-                        simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
-                    }
+                    simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
                 }
             }
             simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp *
@@ -185,16 +182,13 @@ namespace OsmSharp.Osm.PBF.Streams
             }
             if (way.keys.Count > 0)
             {
-                simpleWay.Tags = new TagsCollection();
+                simpleWay.Tags = new TagsCollection(way.keys.Count);
                 for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
 
-                    if (!simpleWay.Tags.ContainsKey(key))
-                    {
-                        simpleWay.Tags.Add(new Tag(key, value));
-                    }
+                    simpleWay.Tags.Add(new Tag(key, value));
                 }
             }
             if (way.info != null)
@@ -251,16 +245,13 @@ namespace OsmSharp.Osm.PBF.Streams
             }
             if (relation.keys.Count > 0)
             {
-                simpleRelation.Tags = new TagsCollection();
+                simpleRelation.Tags = new TagsCollection(relation.keys.Count);
                 for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
 
-                    if (!simpleRelation.Tags.ContainsKey(key))
-                    {
-                        simpleRelation.Tags.Add(new Tag(key, value));
-                    }
+                    simpleRelation.Tags.Add(new Tag(key, value));
                 }
             }
             if (relation.info != null)
