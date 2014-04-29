@@ -128,6 +128,11 @@ namespace OsmSharp.Osm.Streams.Complete
                     case OsmGeoType.Node:
                         // create complete version.
                         _current = currentSimple as Node;
+
+                        if(_current != null && _current.Tags == null)
+                        { // make sure nodes have a default tag collection that is empty not null.
+                            _current.Tags = new OsmSharp.Collections.Tags.TagsCollection();
+                        }
                         if (_nodesToInclude.Contains(currentSimple.Id.Value))
                         { // node needs to be cached.
                             _dataCache.AddNode(currentSimple as Node);
@@ -263,7 +268,6 @@ namespace OsmSharp.Osm.Streams.Complete
                 { // yep, cache relation!
                     _dataCache.AddRelation(relation);
                 }
-                break;
             }
             _simpleSource.Reset();
         }

@@ -70,6 +70,6 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the tags dictionary.
         /// </summary>
-        TagsCollectionBase Tags { get; }
+        TagsCollectionBase Tags { get; set; }
     }
 }

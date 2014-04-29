@@ -133,7 +133,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the tags dictionary.
         /// </summary>
-        public TagsCollectionBase Tags { get; protected set; }
+        public TagsCollectionBase Tags { get; set; }
 
         /// <summary>
         /// Returns true if a and b represent the same object.
