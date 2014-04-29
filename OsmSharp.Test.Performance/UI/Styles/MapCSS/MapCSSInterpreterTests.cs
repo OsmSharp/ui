@@ -40,20 +40,21 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         /// <summary>
         /// Executes the tests.
         /// </summary>
-        public static void Test()
+        /// <returns>Serialized scene.</returns>
+        public static Stream Test()
         {
             // create a layered scene.
             Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
                 16, 13, 10 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\default.mapcss", scene, "kempen.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\default.mapcss", scene, "kempen-big.osm.pbf");
 
             var merger = new Scene2DObjectMerger();
             scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
-            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\default.map", scene, true);
+            return Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\default.map", scene, true);
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         /// <param name="scene"></param>
         /// <param name="interpreter"></param>
         /// <param name="pbfSource"></param>
-        public static void TestInterpret(string name, MapCSSInterpreter interpreter, Scene2D scene, string pbfSource)
+        public static Stream TestInterpret(string name, MapCSSInterpreter interpreter, Scene2D scene, string pbfSource)
         {
             StyleOsmStreamSceneTarget target = new StyleOsmStreamSceneTarget(
                 interpreter, scene, new WebMercator());
@@ -101,6 +102,8 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 
             Console.Write("", scene.BackColor);
             stream.Dispose();
+
+            return testFile.OpenRead();
         }
     }
 }
