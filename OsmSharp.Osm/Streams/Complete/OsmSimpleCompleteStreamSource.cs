@@ -224,8 +224,11 @@ namespace OsmSharp.Osm.Streams.Complete
         private void Seek()
         {
             var relations = new List<Relation>();
-            foreach (OsmGeo osmGeo in _simpleSource)
+            _simpleSource.Initialize();
+            while(_simpleSource.MoveNext(true, false, false))
             {
+                var osmGeo = _simpleSource.Current();
+
                 switch (osmGeo.Type)
                 {
                     case OsmGeoType.Way:
