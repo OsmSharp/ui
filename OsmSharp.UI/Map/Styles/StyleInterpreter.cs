@@ -26,6 +26,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UI.Map.Styles
 {
@@ -52,7 +53,12 @@ namespace OsmSharp.UI.Map.Styles
             switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    this.Translate(scene, projection, osmGeo as Node);
+                    var node = osmGeo as Node;
+                    if(node.Tags == null)
+                    { // make sure that a node has a tag collection by default.
+                        node.Tags= new TagsCollection();
+                    }
+                    this.Translate(scene, projection, node);
                     break;
                 case OsmGeoType.Way:
                     this.Translate(scene, projection, CompleteWay.CreateFrom(osmGeo as Way, source));

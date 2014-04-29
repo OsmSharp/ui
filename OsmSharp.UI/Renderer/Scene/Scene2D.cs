@@ -595,17 +595,17 @@ namespace OsmSharp.UI.Renderer.Scene
             switch (sceneObject.Enum)
             {
                 case SceneObjectType.IconObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject, _imageIndex[(int)sceneObject.StyleId]);
                 case SceneObjectType.LineObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneLineObject);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneLineObject, _lineStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.LineTextObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneLineTextObject);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneLineTextObject, _textStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.PointObject:
-                    return this.ConvertToPrimitive(id, sceneObject as ScenePointObject);
+                    return this.ConvertToPrimitive(id, sceneObject as ScenePointObject, _pointStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.PolygonObject:
-                    return this.ConvertToPrimitive(id, sceneObject as ScenePolygonObject);
+                    return this.ConvertToPrimitive(id, sceneObject as ScenePolygonObject, _polygonStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.TextObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneTextObject);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneTextObject, _textStyles.Get(sceneObject.StyleId));
             }
             throw new InvalidOperationException();
         }
