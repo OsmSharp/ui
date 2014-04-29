@@ -41,15 +41,22 @@ namespace OsmSharp.Test.Unittests.Osm
             }
             else
             {
-                Assert.IsNotNull(actual);
-                Assert.AreEqual(expected.Count, actual.Count);
-                foreach (Tag tag in expected)
+                if (expected.Count == 0)
                 {
-					Assert.IsTrue(actual.ContainsKeyValue(tag.Key, tag.Value));
+                    Assert.IsTrue(actual == null || actual.Count == 0);
                 }
-                foreach (Tag tag in actual)
+                else
                 {
-					Assert.IsTrue(expected.ContainsKeyValue(tag.Key, tag.Value));
+                    Assert.IsNotNull(actual);
+                    Assert.AreEqual(expected.Count, actual.Count);
+                    foreach (Tag tag in expected)
+                    {
+                        Assert.IsTrue(actual.ContainsKeyValue(tag.Key, tag.Value));
+                    }
+                    foreach (Tag tag in actual)
+                    {
+                        Assert.IsTrue(expected.ContainsKeyValue(tag.Key, tag.Value));
+                    }
                 }
             }
         }
