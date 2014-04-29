@@ -102,6 +102,17 @@ namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
             }
         }
 
+        /// <summary>
+        /// Removes the given item.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="item"></param>
+        public void Remove(BoxF2D box, T item)
+        {
+            this.Remove(item);
+        }
+
+
         public IEnumerator<T> GetEnumerator()
         {
             return _list.Select(x => x.Value).GetEnumerator();

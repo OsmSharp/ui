@@ -61,7 +61,7 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        public abstract GeometryCollection Interpret(CompleteOsmGeo osmObject);
+        public abstract GeometryCollection Interpret(ICompleteOsmGeo osmObject);
 
         /// <summary>
         /// Returns true if the given tags collection contains potential area tags.
@@ -81,7 +81,7 @@ namespace OsmSharp.Osm.Interpreter
             switch (simpleOsmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    return this.Interpret(CompleteNode.CreateFrom(simpleOsmGeo as Node));
+                    return this.Interpret(simpleOsmGeo as Node);
                 case OsmGeoType.Way:
                     return this.Interpret(CompleteWay.CreateFrom(simpleOsmGeo as Way, data));
                 case OsmGeoType.Relation:

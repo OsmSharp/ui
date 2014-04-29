@@ -77,7 +77,7 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// Adds a new node.
         /// </summary>
         /// <param name="node"></param>
-        public override void AddNode(CompleteNode node)
+        public override void AddNode(Node node)
         {
             _styleInterpreter.Translate(_scene, _projection, node);
         }

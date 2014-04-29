@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteNode()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1) });
@@ -51,14 +51,14 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             Assert.IsNotNull(completeList);
             Assert.AreEqual(3, completeList.Count);
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && 
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 2 &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 3 &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteWay()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -77,15 +77,15 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(4, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
                 (x as CompleteWay).Nodes[0].Id == 1 &&
@@ -106,7 +106,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteRelation()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -117,15 +117,15 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(5, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
                 (x as CompleteWay).Nodes[0].Id == 1 &&
@@ -148,7 +148,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteNestedRelations()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -162,15 +162,15 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(6, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
                 (x as CompleteWay).Nodes[0].Id == 1 &&
@@ -195,7 +195,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteNestedRelationsReverseOrder()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -209,15 +209,15 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(6, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
                 (x as CompleteWay).Nodes[0].Id == 1 &&
@@ -242,7 +242,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteMultipleUsagesNodesInWays()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -254,21 +254,21 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(7, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 4 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 5 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 2 &&
-                (x as CompleteNode).Coordinate.Longitude == 2)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 4 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 5 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 2 &&
+                (x as Node).Coordinate.Longitude == 2)));
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
                 (x as CompleteWay).Nodes[0].Id == 1 &&
@@ -297,7 +297,7 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         public void TestSimpleToCompleteMultipleUsages()
         {
             // execute
-            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+            List<ICompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -324,21 +324,21 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             // verify.
             Assert.IsNotNull(completeList);
             Assert.AreEqual(11, completeList.Count);
-            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 1 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 1)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 4 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 2 &&
-                (x as CompleteNode).Coordinate.Longitude == 0)));
-            Assert.IsTrue(completeList.Any(x => (x.Id == 5 && (x is CompleteNode) &&
-                (x as CompleteNode).Coordinate.Latitude == 0 &&
-                (x as CompleteNode).Coordinate.Longitude == 2)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 1 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 4 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 2 &&
+                (x as Node).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 5 && (x is Node) &&
+                (x as Node).Coordinate.Latitude == 0 &&
+                (x as Node).Coordinate.Longitude == 2)));
 
             Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
                 (x as CompleteWay).Nodes.Count == 3 &&
@@ -415,9 +415,9 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         /// </summary>
         /// <param name="osmGeoList"></param>
         /// <returns></returns>
-        private List<CompleteOsmGeo> PullToCompleteList(IEnumerable<OsmGeo> osmGeoList)
+        private List<ICompleteOsmGeo> PullToCompleteList(IEnumerable<OsmGeo> osmGeoList)
         {
-            return new List<CompleteOsmGeo>( // pull into collection.
+            return new List<ICompleteOsmGeo>( // pull into collection.
                 new OsmSimpleCompleteStreamSource( // create complete source.
                     osmGeoList.ToOsmStreamSource())); // create the basic stream.
         }
@@ -447,12 +447,12 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         /// </summary>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        private void Compare(MemoryDataSource expected, List<CompleteOsmGeo> actual)
+        private void Compare(MemoryDataSource expected, List<ICompleteOsmGeo> actual)
         {
-            List<CompleteOsmGeo> exectedList = new List<CompleteOsmGeo>();
+            List<ICompleteOsmGeo> exectedList = new List<ICompleteOsmGeo>();
             foreach (Node node in expected.GetNodes())
             {
-                CompleteNode completeNode = CompleteNode.CreateFrom(node);
+                Node completeNode = node;
                 if (completeNode != null)
                 {
                     exectedList.Add(completeNode);

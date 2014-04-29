@@ -48,7 +48,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// Adds a node to the target.
         /// </summary>
         /// <param name="node"></param>
-        public abstract void AddNode(CompleteNode node);
+        public abstract void AddNode(Node node);
 
         /// <summary>
         /// Adds a way to the target.
@@ -110,17 +110,13 @@ namespace OsmSharp.Osm.Streams.Complete
             this.Initialize();
             while (_source.MoveNext())
             {
-                CompleteOsmGeo sourceObject = _source.Current();
-                if (sourceObject is CompleteNode)
+                ICompleteOsmGeo sourceObject = _source.Current();
+                if (sourceObject is Node)
                 {
-                    this.AddNode(sourceObject as CompleteNode);
+                    this.AddNode(sourceObject as Node);
                 }
                 else if (sourceObject is CompleteWay)
                 {
-                    if (sourceObject.Id == 198214128)
-                    {
-                        System.Diagnostics.Debug.WriteLine("");
-                    }
                     this.AddWay(sourceObject as CompleteWay);
                 }
                 else if (sourceObject is CompleteRelation)
@@ -141,9 +137,9 @@ namespace OsmSharp.Osm.Streams.Complete
             if (_source.MoveNext())
             {
                 object sourceObject = _source.Current();
-                if (sourceObject is CompleteNode)
+                if (sourceObject is Node)
                 {
-                    this.AddNode(sourceObject as CompleteNode);
+                    this.AddNode(sourceObject as Node);
                 }
                 else if (sourceObject is CompleteWay)
                 {

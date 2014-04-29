@@ -40,5 +40,11 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="item"></param>
         void Remove(T item);
+
+        /// <summary>
+        /// Removes the given item.
+        /// </summary>
+        /// <param name="item"></param>
+        void Remove(BoxF2D box, T item);
     }
 }

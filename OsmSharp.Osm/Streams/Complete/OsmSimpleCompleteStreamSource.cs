@@ -105,7 +105,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Holds the current complete object.
         /// </summary>
-        private CompleteOsmGeo _current;
+        private ICompleteOsmGeo _current;
 
         /// <summary>
         /// Moves to the next object.
@@ -116,7 +116,6 @@ namespace OsmSharp.Osm.Streams.Complete
             if (!_cachingDone)
             { // first seek & cache.
                 this.Seek();
-                this.CacheRelations();
                 _cachingDone = true;
             }
 
@@ -124,16 +123,11 @@ namespace OsmSharp.Osm.Streams.Complete
             { // there is data.
                 OsmGeo currentSimple = _simpleSource.Current();
 
-                if (currentSimple.Id == 198214128 || currentSimple.Id == 1014892489)
-                {
-                    System.Diagnostics.Debug.WriteLine("");
-                }
-
                 switch (currentSimple.Type)
                 {
                     case OsmGeoType.Node:
                         // create complete version.
-                        _current = CompleteNode.CreateFrom(currentSimple as Node);
+                        _current = currentSimple as Node;
                         if (_nodesToInclude.Contains(currentSimple.Id.Value))
                         { // node needs to be cached.
                             _dataCache.AddNode(currentSimple as Node);
@@ -229,6 +223,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// </summary>
         private void Seek()
         {
+            var relations = new List<Relation>();
             foreach (OsmGeo osmGeo in _simpleSource)
             {
                 switch (osmGeo.Type)
@@ -236,10 +231,6 @@ namespace OsmSharp.Osm.Streams.Complete
                     case OsmGeoType.Way:
                         foreach (long nodeId in (osmGeo as Way).Nodes)
                         {
-                            if (nodeId == 1014892489)
-                            {
-                                System.Diagnostics.Debug.WriteLine("");
-                            }
                             this.MarkNodeAsChild(nodeId);
                         }
                         break;
@@ -259,29 +250,17 @@ namespace OsmSharp.Osm.Streams.Complete
                                     break;
                             }
                         }
+                        relations.Add(osmGeo as Relation);
                         break;
                 }
             }
-            _simpleSource.Reset();
-        }
-
-        /// <summary>
-        /// Cache all needed relations.
-        /// </summary>
-        private void CacheRelations()
-        {
-            // TODO: enhance this to only cache relations that are not in the correct 'order' in the stream.
-            foreach (OsmGeo osmGeo in _simpleSource)
+            foreach (var relation in relations)
             {
-                switch (osmGeo.Type)
-                {
-                    case OsmGeoType.Relation:
-                        if (_relationsToInclude.Contains(osmGeo.Id.Value))
-                        { // yep, cache relation!
-                            _dataCache.AddRelation(osmGeo as Relation);
-                        }
-                        break;
+                if (_relationsToInclude.Contains(relation.Id.Value))
+                { // yep, cache relation!
+                    _dataCache.AddRelation(relation);
                 }
+                break;
             }
             _simpleSource.Reset();
         }
@@ -473,7 +452,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>
-        public override CompleteOsmGeo Current()
+        public override ICompleteOsmGeo Current()
         {
             return _current;
         }

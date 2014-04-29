@@ -33,18 +33,25 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
     public class TagIndexSerializer
     {
         /// <summary>
+        /// Holds the tags index type model.
+        /// </summary>
+        private static RuntimeTypeModel _typeModel;
+
+        /// <summary>
         /// Creates the type model.
         /// </summary>
         /// <returns></returns>
         private static RuntimeTypeModel CreateTypeModel()
         {
-            RuntimeTypeModel typeModel = TypeModel.Create();
-            typeModel.Add(typeof(List<string>), true);
-            typeModel.Add(typeof(KeyValuePair<uint, uint>), true);
-            typeModel.Add(typeof(List<KeyValuePair<uint, uint>>), true);
-            typeModel.Add(typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>), true);
-
-            return typeModel;
+            if (_typeModel == null)
+            {
+                _typeModel = TypeModel.Create();
+                _typeModel.Add(typeof(List<string>), true);
+                _typeModel.Add(typeof(KeyValuePair<uint, uint>), true);
+                _typeModel.Add(typeof(List<KeyValuePair<uint, uint>>), true);
+                _typeModel.Add(typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>), true);
+            }
+            return _typeModel;
         }
 
         /// <summary>

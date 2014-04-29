@@ -1431,7 +1431,7 @@ namespace OsmSharp.Routing.CH
                         graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                        distance = coordinate.DistanceReal(fromCoordinates).Value;
+                        distance = coordinate.DistanceEstimate(fromCoordinates).Value;
 
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
@@ -1457,7 +1457,7 @@ namespace OsmSharp.Routing.CH
                             //if(matcher.Match(_
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.DistanceReal(toCoordinates).Value;
+                        distance = coordinate.DistanceEstimate(toCoordinates).Value;
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
@@ -1517,7 +1517,7 @@ namespace OsmSharp.Routing.CH
 
                         // by now the arc is uncontracted.
                         // create a line.
-                        double distanceTotal = fromCoordinates.DistanceReal(toCoordinates).Value;
+                        double distanceTotal = fromCoordinates.DistanceEstimate(toCoordinates).Value;
                         if (distanceTotal > 0)
                         { // the from/to are not the same location.
                             var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
@@ -1531,7 +1531,7 @@ namespace OsmSharp.Routing.CH
                                 // calculate the position.
                                 if (projectedPoint != null)
                                 { // calculate the distance
-                                    double distancePoint = fromCoordinates.DistanceReal(new GeoCoordinate(projectedPoint)).Value;
+                                    double distancePoint = fromCoordinates.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value;
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(

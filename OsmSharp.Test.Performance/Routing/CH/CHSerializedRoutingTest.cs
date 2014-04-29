@@ -50,6 +50,15 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
         /// <summary>
+        /// Tests the CH pre-processor.
+        /// </summary>
+        public static void Test(Stream stream)
+        {
+            CHSerializedRoutingTest.Test(
+                stream, 1000);
+        }
+
+        /// <summary>
         /// Tests the instructions.
         /// </summary>
         public static void TestInstructions(string name)

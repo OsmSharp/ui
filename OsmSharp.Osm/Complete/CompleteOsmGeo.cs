@@ -28,7 +28,7 @@ namespace OsmSharp.Osm
     /// 
     /// Nodes, Ways and Relations
     /// </summary>
-    public abstract class CompleteOsmGeo : CompleteOsmBase
+    public abstract class CompleteOsmGeo : CompleteOsmBase, ICompleteOsmGeo
     {
         /// <summary>
         /// Creates a new OsmGeo object.

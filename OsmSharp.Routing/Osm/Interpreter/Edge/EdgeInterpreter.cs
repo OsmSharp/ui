@@ -72,17 +72,17 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         public Dictionary<string, string> GetNamesInAllLanguages(TagsCollectionBase tags)
         {
             var names = new Dictionary<string, string>();
-            if (tags != null)
-            {
-                foreach (var pair in tags)
-                {
-                    var m = Regex.Match(pair.Key, "name:[a-zA-Z]");
-                    if (m.Success)
-                    {
-                        //throw new NotImplementedException();
-                    }
-                }
-            }
+            //if (tags != null)
+            //{
+            //    foreach (var pair in tags)
+            //    {
+            //        var m = Regex.Match(pair.Key, "name:[a-zA-Z]");
+            //        if (m.Success)
+            //        {
+            //            //throw new NotImplementedException();
+            //        }
+            //    }
+            //}
             return names;
         }
 

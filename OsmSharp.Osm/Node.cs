@@ -24,13 +24,14 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Interpreter;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple node.
     /// </summary>
-    public class Node : OsmGeo
+    public class Node : OsmGeo, ICompleteOsmGeo
     {
         /// <summary>
         /// Creates a new simple node.
@@ -105,5 +106,110 @@ namespace OsmSharp.Osm
         }
 
         #endregion
+
+        /// <summary>
+        /// The bounding box of object.
+        /// </summary>
+        public GeoCoordinateBox BoundingBox
+        {
+            get
+            {
+                return this.Geometries.Box;
+            }
+        }
+
+        /// <summary>
+        /// The coordinates of this node.
+        /// </summary>
+        public GeoCoordinate Coordinate
+        {
+            get
+            {
+                return new GeoCoordinate(this.Latitude.Value, this.Longitude.Value);
+            }
+        }
+
+        #region Geometry - Interpreter
+
+        /// <summary>
+        /// The interpreter for these objects.
+        /// </summary>
+        public static GeometryInterpreter GeometryInterperter = new SimpleGeometryInterpreter(); // set a default geometry interpreter.
+
+        /// <summary>
+        /// The geometries this OSM-object represents.
+        /// </summary>
+        private GeometryCollection _geometries;
+
+        /// <summary>
+        /// Returns the geometries this OSM-object represents.
+        /// </summary>
+        public GeometryCollection Geometries
+        {
+            get
+            {
+                if (_geometries == null)
+                {
+                    _geometries = CompleteOsmGeo.GeometryInterperter.Interpret(this);
+                }
+                return _geometries;
+            }
+        }
+
+        /// <summary>
+        /// Make sure the geometries of this objects will be recalculated.
+        /// </summary>
+        public void ResetGeometries()
+        {
+            _geometries = null;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Returns a simple version of this object.
+        /// </summary>
+        /// <returns></returns>
+        public OsmGeo ToSimple()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// Gets or sets the visible flag.
+        /// </summary>
+        bool ICompleteOsmGeo.Visible
+        {
+            get
+            {
+                return this.Visible.HasValue && this.Visible.Value;
+            }
+            set
+            {
+                this.Visible = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
+        long ICompleteOsmGeo.Id
+        {
+            get
+            {
+                return this.Id.Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        CompleteOsmType ICompleteOsmGeo.Type
+        {
+            get
+            {
+                return CompleteOsmType.Node;
+            }
+        }
     }
 }

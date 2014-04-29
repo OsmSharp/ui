@@ -58,7 +58,7 @@ namespace OsmSharp.Test.Unittests.Osm
         /// </summary>
         /// <param name="expected"></param>
         /// <param name="actual"></param>
-        public static void CompareComplete(CompleteNode expected, CompleteNode actual)
+        public static void CompareComplete(Node expected, Node actual)
         {
             if (expected == null)
             { // ok, if the value is also null.
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Unittests.Osm
                 Assert.AreEqual(expected.ChangeSetId, actual.ChangeSetId);
                 Assert.AreEqual(expected.Coordinate, actual.Coordinate);
                 Assert.AreEqual(expected.TimeStamp, actual.TimeStamp);
-                Assert.AreEqual(expected.User, actual.User);
+                Assert.AreEqual(expected.UserName, actual.UserName);
                 Assert.AreEqual(expected.UserId, actual.UserId);
                 Assert.AreEqual(expected.Version, actual.Version);
                 Assert.AreEqual(expected.Visible, actual.Visible);
@@ -159,8 +159,8 @@ namespace OsmSharp.Test.Unittests.Osm
                         {
                             case CompleteOsmType.Node:
                                 ComparisonHelpers.CompareComplete(
-                                    expectedMember.Member as CompleteNode, 
-                                    actualMember.Member as CompleteNode);
+                                    expectedMember.Member as Node, 
+                                    actualMember.Member as Node);
                                 break;
                             case CompleteOsmType.Way:
                                 ComparisonHelpers.CompareComplete(
@@ -288,19 +288,19 @@ namespace OsmSharp.Test.Unittests.Osm
         /// </summary>
         /// <param name="expectedList"></param>
         /// <param name="actualList"></param>
-        public static void CompareComplete(System.Collections.Generic.List<CompleteOsmGeo> expectedList, 
-			System.Collections.Generic.List<CompleteOsmGeo> actualList)
+        public static void CompareComplete(System.Collections.Generic.List<ICompleteOsmGeo> expectedList, 
+			System.Collections.Generic.List<ICompleteOsmGeo> actualList)
         {
-            foreach (CompleteOsmGeo actual in actualList)
+            foreach (ICompleteOsmGeo actual in actualList)
             {
-                foreach (CompleteOsmGeo expected in 
+                foreach (ICompleteOsmGeo expected in 
                     expectedList.Where((expected) => { return expected.Id == actual.Id && expected.Type == actual.Type; }))
                 {
                     switch (expected.Type)
                     {
                         case CompleteOsmType.Node:
                             ComparisonHelpers.CompareComplete(
-                                expected as CompleteNode, actual as CompleteNode);
+                                expected as Node, actual as Node);
                             break;
                         case CompleteOsmType.Way:
                             ComparisonHelpers.CompareComplete(
@@ -313,16 +313,16 @@ namespace OsmSharp.Test.Unittests.Osm
                     }
                 }
             }
-            foreach (CompleteOsmGeo expected in expectedList)
+            foreach (ICompleteOsmGeo expected in expectedList)
             {
-                foreach (CompleteOsmGeo actual in
+                foreach (ICompleteOsmGeo actual in
                     actualList.Where((actual) => { return expected.Id == actual.Id && expected.Type == actual.Type; }))
                 {
                     switch (expected.Type)
                     {
                         case CompleteOsmType.Node:
                             ComparisonHelpers.CompareComplete(
-                                expected as CompleteNode, actual as CompleteNode);
+                                expected as Node, actual as Node);
                             break;
                         case CompleteOsmType.Way:
                             ComparisonHelpers.CompareComplete(

@@ -105,7 +105,20 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="item"></param>
         public void Remove(T item)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Removes the given item when it is contained in the given box.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="item"></param>
+        public void Remove(BoxF2D box, T item)
+        {
+            if(RTreeMemoryIndex<T>.RemoveSimple(_root, box, item))
+            {
+                _count--;
+            }
         }
 
         /// <summary>
@@ -324,6 +337,39 @@ namespace OsmSharp.Collections.SpatialIndexes
                 return root;
             }
             return null; // no new root node needed.
+        }
+
+        /// <summary>
+        /// Removes the given item but does not re-balance the tree.
+        /// </summary>
+        /// <param name="node">The node to begin the search for the item.</param>
+        /// <param name="box">The box of the item.</param>
+        /// <param name="item">The item to remove.</param>
+        private static bool RemoveSimple(Node node, BoxF2D box, T item)
+        {
+            if (node.Children is List<Node>)
+            {
+                var children = (node.Children as List<Node>);
+                for (int idx = 0; idx < children.Count; idx++)
+                {
+                    if (box.Overlaps(node.Boxes[idx]))
+                    {
+                        if(RTreeMemoryIndex<T>.RemoveSimple(node.Children[idx] as Node, box, item))
+                        { // if sucessfull stop the search.
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var children = (node.Children as List<T>);
+                if (children != null)
+                { // the children are of the data type.
+                    return children.Remove(item);
+                }
+            }
+            return false;
         }
 
         /// <summary>

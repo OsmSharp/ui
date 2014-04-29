@@ -20,6 +20,7 @@ using OsmSharp.WinForms.UI.Renderer;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace OsmSharp.Test.Performance
 {
@@ -51,24 +52,28 @@ namespace OsmSharp.Test.Performance
 
             //// test streams.
             //Osm.PBF.PBFStreamSourceTest.Test();
+            OsmSharp.Test.Performance.Osm.Streams.Complete.OsmSimpleCompleteStreamSourceTests.Test();
 
             //// test the tags collection.
             //Tags.Collections.TagsTableCollectionIndexTests.Test();
             //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-            //// tests the mapcss interpretation.
-            //UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
-
             // test the routing preprocessor.
             //Routing.LivePreProcessorTest.Test();
             //Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();
-            //Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
-            Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
+            //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
             //Routing.CH.CHSerializedRoutingTest.Test();
 
+            //// test serializer/deseriazation routing performance.
+            //Stream serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+            //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
+
+
+            // tests the mapcss interpretation.
+            //Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
             //// test some rendering implementations.
-            //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(
+            //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(serializedScene,
             //    (width, height) =>
             //    {
             //        // build the target to render to.

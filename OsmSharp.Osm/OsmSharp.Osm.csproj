@@ -65,6 +65,7 @@
     <Compile Include="Complete\CompleteRelationMember.cs" />
     <Compile Include="Complete\CompleteUser.cs" />
     <Compile Include="Complete\CompleteWay.cs" />
+    <Compile Include="Complete\ICompleteOsmGeo.cs" />
     <Compile Include="Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />

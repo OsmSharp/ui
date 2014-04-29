@@ -68,11 +68,11 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
             GeoCoordinateBox box = null;
             foreach (var osmGeo in dataSource)
             {
-                CompleteOsmGeo completeOsmGeo = null;
+                ICompleteOsmGeo completeOsmGeo = null;
                 switch (osmGeo.Type)
                 {
                     case OsmGeoType.Node:
-                        completeOsmGeo = CompleteNode.CreateFrom(osmGeo as Node);
+                        completeOsmGeo = osmGeo as Node;
                         break;
                     case OsmGeoType.Way:
                         completeOsmGeo = CompleteWay.CreateFrom(osmGeo as Way,
