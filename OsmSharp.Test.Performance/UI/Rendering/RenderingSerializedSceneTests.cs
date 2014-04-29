@@ -90,10 +90,18 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820)), 5, 2, 12);
-            //// do some of the testing.
-            //RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-            //    new GeoCoordinate(51.20190, 4.66540),
-            //    new GeoCoordinate(51.30720, 4.89820)), 5, 2, 10);
+            // do some of the testing.
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 10);
+            // do some of the testing.
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 8);
+            // do some of the testing.
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 6);
         }
 
         /// <summary>

@@ -188,7 +188,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="projection">The projection used to convert the objects.</param>
         /// <param name="osmGeo">The osm object.</param>
         /// <returns></returns>
-        public override void Translate(Scene2D scene, IProjection projection, CompleteOsmGeo osmGeo)
+        public override void Translate(Scene2D scene, IProjection projection, ICompleteOsmGeo osmGeo)
         {
             // set the scene backcolor.
             scene.BackColor = this.GetCanvasColor().Value;
@@ -202,7 +202,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             switch (osmGeo.Type)
             {
                 case CompleteOsmType.Node:
-                    this.TranslateNode(scene, projection, osmGeo as CompleteNode);
+                    this.TranslateNode(scene, projection, osmGeo as Node);
                     break;
                 case CompleteOsmType.Way:
                     this.TranslateWay(scene, projection, osmGeo as CompleteWay);
@@ -241,7 +241,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     _mapCSSFile != null &&
                     _mapCSSFile.DefaultPoints)
                 { // apply default points style.
-                    CompleteNode node = (osmGeo as CompleteNode);
+                    Node node = (osmGeo as Node);
                     uint pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude), projection.LatitudeToY(node.Coordinate.Latitude));
                     scene.AddStylePoint(pointId, this.CalculateSceneLayer(OffsetPoint, 0), float.MinValue, float.MaxValue, 
                         SimpleColor.FromKnownColor(KnownColor.Black).Value, 2);
@@ -289,7 +289,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene">The scene to add primitives to.</param>
         /// <param name="projection">The projection used to convert the objects.</param>
         /// <param name="node"></param>
-        private void TranslateNode(Scene2D scene, IProjection projection, CompleteNode node)
+        private void TranslateNode(Scene2D scene, IProjection projection, Node node)
         {
             // build the rules.
             IEnumerable<MapCSSRuleProperties> rules =

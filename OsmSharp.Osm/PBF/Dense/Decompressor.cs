@@ -41,13 +41,15 @@ namespace OsmSharp.Osm.PBF.Dense
         /// Consumes a primitive block.
         /// </summary>
         /// <param name="block"></param>
-        public void ProcessPrimitiveBlock(PrimitiveBlock block)
+        public bool ProcessPrimitiveBlock(PrimitiveBlock block, bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
+            bool success = false;
+
             if (block.primitivegroup != null)
             {
                 foreach (PrimitiveGroup primitivegroup in block.primitivegroup)
                 {
-                    if (primitivegroup.dense != null)
+                    if (!ignoreNodes && primitivegroup.dense != null)
                     {
                         int key_vals_idx = 0;
                         long current_id = 0;
@@ -107,35 +109,40 @@ namespace OsmSharp.Osm.PBF.Dense
                             }
                             key_vals_idx++;
 
+                            success = true;
                             _primitives_consumer.ProcessNode(block, node);
                         }
                     }
                     else
                     {
-                        if (primitivegroup.nodes != null)
+                        if (!ignoreNodes && primitivegroup.nodes != null)
                         {
                             foreach (Node node in primitivegroup.nodes)
                             {
+                                success = true;
                                 _primitives_consumer.ProcessNode(block, node);
                             }
                         }
-                        if (primitivegroup.ways != null)
+                        if (!ignoreWays && primitivegroup.ways != null)
                         {
                             foreach (Way way in primitivegroup.ways)
                             {
+                                success = true;
                                 _primitives_consumer.ProcessWay(block, way);
                             }
                         }
-                        if (primitivegroup.relations != null)
+                        if (!ignoreRelations && primitivegroup.relations != null)
                         {
                             foreach (Relation relation in primitivegroup.relations)
                             {
+                                success = true;
                                 _primitives_consumer.ProcessRelation(block, relation);
                             }
                         }
                     }
                 }
             }
+            return success;
         }
     }
 }

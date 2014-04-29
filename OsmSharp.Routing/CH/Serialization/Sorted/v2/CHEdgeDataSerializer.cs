@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// <summary>
         /// Holds the maximum number of vertices in a block.
         /// </summary>
-        private int _blockVertexSize = 100;
+        private int _blockVertexSize = 1000;
 
         /// <summary>
         /// Holds the runtime type model.

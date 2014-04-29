@@ -135,11 +135,15 @@ namespace OsmSharp.UI.Map.Layers
 					// create nodes.
 					float latitude, longitude;
 					_dataSource.GetVertex (arcId.Vertex1, out latitude, out longitude);
-					var node1 = CompleteNode.Create (arcId.Vertex1);
-					node1.Coordinate = new GeoCoordinate (latitude, longitude);
-					_dataSource.GetVertex (arcId.Vertex2, out latitude, out longitude);
-					var node2 = CompleteNode.Create (arcId.Vertex2);
-					node2.Coordinate = new GeoCoordinate (latitude, longitude);
+                    var node1 = new Node();
+                    node1.Id = arcId.Vertex1;
+                    node1.Latitude = latitude;
+                    node1.Longitude = longitude;
+                    _dataSource.GetVertex(arcId.Vertex2, out latitude, out longitude);
+                    var node2 = new Node();
+                    node2.Id = arcId.Vertex2;
+                    node2.Latitude = latitude;
+                    node2.Longitude = longitude;
 
 					// create way.
 					var way = CompleteWay.Create (-1);

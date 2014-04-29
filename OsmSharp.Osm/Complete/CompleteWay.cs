@@ -37,7 +37,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Holds the nodes of this way.
         /// </summary>
-        private readonly List<CompleteNode> _nodes;
+        private readonly List<Node> _nodes;
 
         /// <summary>
         /// Creates a new way.
@@ -46,7 +46,7 @@ namespace OsmSharp.Osm
         internal protected CompleteWay(long id)
             : base(id)
         {
-            _nodes = new List<CompleteNode>();
+            _nodes = new List<Node>();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace OsmSharp.Osm
         internal protected CompleteWay(ObjectTable<string> stringTable, long id)
             : base(stringTable, id)
         {
-            _nodes = new List<CompleteNode>();
+            _nodes = new List<Node>();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Gets the ordered list of nodes.
         /// </summary>
-        public List<CompleteNode> Nodes
+        public List<Node> Nodes
         {
             get
             {
@@ -131,7 +131,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public bool HasNode(CompleteNode node)
+        public bool HasNode(Node node)
         {
             return this.Nodes.Contains(node);
         }
@@ -164,9 +164,9 @@ namespace OsmSharp.Osm
             way.Visible = this.Visible;
 
             way.Nodes = new List<long>();
-            foreach (CompleteNode node in this.Nodes)
+            foreach (Node node in this.Nodes)
             {
-                way.Nodes.Add(node.Id);
+                way.Nodes.Add(node.Id.Value);
             }
             return way;
         }
@@ -199,7 +199,7 @@ namespace OsmSharp.Osm
         /// <param name="simpleWay"></param>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static CompleteWay CreateFrom(Way simpleWay, IDictionary<long, CompleteNode> nodes)
+        public static CompleteWay CreateFrom(Way simpleWay, IDictionary<long, Node> nodes)
         {
             if (simpleWay == null) throw new ArgumentNullException("simpleWay");
             if (nodes == null) throw new ArgumentNullException("nodes");
@@ -215,7 +215,7 @@ namespace OsmSharp.Osm
             for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
             {
                 long nodeId = simpleWay.Nodes[idx];
-                CompleteNode node = null;
+                Node node = null;
                 if (nodes.TryGetValue(nodeId, out node))
                 {
                     way.Nodes.Add(node);
@@ -264,7 +264,7 @@ namespace OsmSharp.Osm
                 {
                     return null;
                 }
-                CompleteNode completeNode = CompleteNode.CreateFrom(node);
+                Node completeNode = node;
                 if (completeNode != null)
                 {
                     way.Nodes.Add(completeNode);
@@ -302,7 +302,7 @@ namespace OsmSharp.Osm
         /// <param name="nodes"></param>
         /// <returns></returns>
         public static CompleteWay CreateFrom(ObjectTable<string> table, Way simpleWay,
-                                        IDictionary<long, CompleteNode> nodes)
+                                        IDictionary<long, Node> nodes)
         {
             if (table == null) throw new ArgumentNullException("table");
             if (simpleWay == null) throw new ArgumentNullException("simpleWay");
@@ -319,7 +319,7 @@ namespace OsmSharp.Osm
             for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
             {
                 long nodeId = simpleWay.Nodes[idx];
-                CompleteNode node = null;
+                Node node = null;
                 if (nodes.TryGetValue(nodeId, out node))
                 {
                     way.Nodes.Add(node);

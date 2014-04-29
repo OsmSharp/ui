@@ -80,7 +80,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public CompleteOsmBase FindMember(string role)
+        public ICompleteOsmGeo FindMember(string role)
         {
             if (this.Members != null)
             {
@@ -144,9 +144,9 @@ namespace OsmSharp.Osm
 
             for (int idx = 0; idx < this.Members.Count; idx++)
             {
-                if (this.Members[idx].Member is CompleteNode)
+                if (this.Members[idx].Member is Node)
                 {
-                    var node = this.Members[idx].Member as CompleteNode;
+                    var node = this.Members[idx].Member as Node;
                     coordinates.Add(node.Coordinate);
                 }
                 else if (this.Members[idx].Member is CompleteWay)
@@ -185,7 +185,7 @@ namespace OsmSharp.Osm
         /// <param name="relations"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(Relation simpleRelation,
-            IDictionary<long, CompleteNode> nodes,
+            IDictionary<long, Node> nodes,
             IDictionary<long, CompleteWay> ways,
             IDictionary<long, CompleteRelation> relations)
         {
@@ -212,7 +212,7 @@ namespace OsmSharp.Osm
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case OsmGeoType.Node:
-                        CompleteNode node = null;
+                        Node node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
                             member.Member = node;
@@ -293,7 +293,7 @@ namespace OsmSharp.Osm
                         {
                             return null;
                         }
-                        CompleteNode completeNode = CompleteNode.CreateFrom(simpleNode);
+                        Node completeNode = simpleNode;
                         if (completeNode != null)
                         {
                             member.Member = completeNode;
@@ -383,7 +383,7 @@ namespace OsmSharp.Osm
                         Node simpleNode = osmGeoSource.GetNode(memberId);
                         if (simpleNode != null)
                         {
-                            member.Member = CompleteNode.CreateFrom(simpleNode);
+                            member.Member = simpleNode;
                         }
                         else
                         {
@@ -461,7 +461,7 @@ namespace OsmSharp.Osm
         /// <param name="relations"></param>
         /// <returns></returns>
         public static CompleteRelation CreateFrom(ObjectTable<string> table, Relation simpleRelation,
-            IDictionary<long, CompleteNode> nodes,
+            IDictionary<long, Node> nodes,
             IDictionary<long, CompleteWay> ways,
             IDictionary<long, CompleteRelation> relations)
         {
@@ -488,7 +488,7 @@ namespace OsmSharp.Osm
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case OsmGeoType.Node:
-                        CompleteNode node = null;
+                        Node node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
                             member.Member = node;

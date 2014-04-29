@@ -63,7 +63,7 @@ namespace OsmSharp.Osm.PBF.Streams
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            var nextPBFPrimitive = this.MoveToNextPrimitive();
+            var nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             while(nextPBFPrimitive.Value != null)
             {
                 OsmSharp.Osm.PBF.Node node = (nextPBFPrimitive.Value as OsmSharp.Osm.PBF.Node);
@@ -84,6 +84,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     _current = this.ConvertRelation(nextPBFPrimitive.Key, relation);
                     return true;
                 }
+                nextPBFPrimitive = this.MoveToNextPrimitive(ignoreNodes, ignoreWays, ignoreRelations);
             }
             return false;
         }
@@ -139,18 +140,15 @@ namespace OsmSharp.Osm.PBF.Streams
                 + ((double)block.granularity * (double)node.lat));
             simpleNode.Longitude = .000000001 * ((double)block.lon_offset
                 + ((double)block.granularity * (double)node.lon));
+            simpleNode.Tags = new TagsCollection(node.keys.Count);
             if (node.keys.Count > 0)
             {
-                simpleNode.Tags = new TagsCollection();
                 for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
 
-                    if (!simpleNode.Tags.ContainsKey(key))
-                    {
-                        simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
-                    }
+                    simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
                 }
             }
             simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp *
@@ -182,18 +180,15 @@ namespace OsmSharp.Osm.PBF.Streams
                 node_id = node_id + way.refs[node_idx];
                 simpleWay.Nodes.Add(node_id);
             }
+            simpleWay.Tags = new TagsCollection(way.keys.Count);
             if (way.keys.Count > 0)
             {
-                simpleWay.Tags = new TagsCollection();
                 for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
 
-                    if (!simpleWay.Tags.ContainsKey(key))
-                    {
-                        simpleWay.Tags.Add(new Tag(key, value));
-                    }
+                    simpleWay.Tags.Add(new Tag(key, value));
                 }
             }
             if (way.info != null)
@@ -248,18 +243,15 @@ namespace OsmSharp.Osm.PBF.Streams
                     simpleRelation.Members.Add(member);
                 }
             }
+            simpleRelation.Tags = new TagsCollection(relation.keys.Count);
             if (relation.keys.Count > 0)
             {
-                simpleRelation.Tags = new TagsCollection();
                 for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
                     string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
                     string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
 
-                    if (!simpleRelation.Tags.ContainsKey(key))
-                    {
-                        simpleRelation.Tags.Add(new Tag(key, value));
-                    }
+                    simpleRelation.Tags.Add(new Tag(key, value));
                 }
             }
             if (relation.info != null)
@@ -305,7 +297,7 @@ namespace OsmSharp.Osm.PBF.Streams
         /// Moves the PBF reader to the next primitive or returns one of the cached ones.
         /// </summary>
         /// <returns></returns>
-        private KeyValuePair<PrimitiveBlock, object> MoveToNextPrimitive()
+        private KeyValuePair<PrimitiveBlock, object> MoveToNextPrimitive(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             KeyValuePair<PrimitiveBlock, object> next = this.DeQueuePrimitive();
             if (next.Value == null)
@@ -313,7 +305,10 @@ namespace OsmSharp.Osm.PBF.Streams
                 PrimitiveBlock block = _reader.MoveNext();
                 if (block != null)
                 {
-                    _decompressor.ProcessPrimitiveBlock(block);
+                    while (!_decompressor.ProcessPrimitiveBlock(block, ignoreNodes, ignoreWays, ignoreRelations))
+                    {
+                        block = _reader.MoveNext();
+                    }
                     next = this.DeQueuePrimitive();
                 }
             }

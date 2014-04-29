@@ -31,7 +31,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The member.
         /// </summary>
-        public CompleteOsmGeo Member { get; set; }
+        public ICompleteOsmGeo Member { get; set; }
 
         /// <summary>
         /// The role.

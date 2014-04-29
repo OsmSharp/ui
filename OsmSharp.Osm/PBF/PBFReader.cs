@@ -67,7 +67,7 @@ namespace OsmSharp.Osm.PBF
             while (block != null)
             {
                 // report the next block to the consumer.
-                consumer.ProcessPrimitiveBlock(block);
+                consumer.ProcessPrimitiveBlock(block, false, false, false);
 
                 // move to the next block.
                 block = this.MoveNext();

@@ -27,7 +27,7 @@ namespace OsmSharp.Osm.Streams.Complete
     /// <summary>
     /// Represents a stream source that converts a stream of simple osm objects into a stream of complete osm objects.
     /// </summary>
-    public abstract class OsmCompleteStreamSource : IEnumerable<CompleteOsmGeo>, IEnumerator<CompleteOsmGeo>
+    public abstract class OsmCompleteStreamSource : IEnumerable<ICompleteOsmGeo>, IEnumerator<ICompleteOsmGeo>
     {
         /// <summary>
         /// Creates a new source.
@@ -52,7 +52,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// Returns the current item in the stream.
         /// </summary>
         /// <returns></returns>
-        public abstract CompleteOsmGeo Current();
+        public abstract ICompleteOsmGeo Current();
 
         /// <summary>
         /// Resets the source to the beginning.
@@ -74,7 +74,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// Returns the enumerator for this enumerable.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<CompleteOsmGeo> GetEnumerator()
+        public IEnumerator<ICompleteOsmGeo> GetEnumerator()
         {
             this.Initialize();
 
@@ -95,7 +95,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Returns the current object.
         /// </summary>
-        CompleteOsmGeo IEnumerator<CompleteOsmGeo>.Current
+        ICompleteOsmGeo IEnumerator<ICompleteOsmGeo>.Current
         {
             get { return this.Current(); }
         }

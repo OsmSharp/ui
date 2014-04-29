@@ -674,16 +674,41 @@ namespace OsmSharp.Math.Primitives
 			return new BoxF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
 		}
 
+        /// Returns a scaled version of this bounding box.
+        /// </summary>
+        /// <param name="factor"></param>
+        /// <returns></returns>
+        public BoxF2D ScaleWith(double factor)
+        {
+            if (factor <= 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            PointF2D center = this.Middle;
+
+            double diffX = (this.Delta[0] * factor) / 2.0;
+            double diffY = (this.Delta[1] * factor) / 2.0;
+
+            return new BoxF2D(
+                new PointF2D(
+                center[0] - diffX,
+                center[1] - diffY),
+                new PointF2D(
+                center[0] + diffX,
+                center[1] + diffY));
+        }
+
         /// <summary>
-        /// Returns a resized box.
+        /// Resizes this bounding box with the given delta.
         /// </summary>
         /// <param name="delta"></param>
         /// <returns></returns>
-        public virtual BoxF2D ResizeWith(double delta)
+        public BoxF2D ResizeWith(double delta)
         {
             return new BoxF2D(
-                new PointF2D(this.Min[0] - delta, this.Min[1] - delta),
-                new PointF2D(this.Max[0] + delta, this.Max[1] + delta));
+                new PointF2D(this.Max[0] + delta, this.Max[1] + delta),
+                new PointF2D(this.Min[0] - delta, this.Min[1] - delta));
         }
 
         /// <summary>

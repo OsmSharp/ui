@@ -52,7 +52,7 @@ namespace OsmSharp.UI.Map.Styles
             switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    this.Translate(scene, projection, CompleteNode.CreateFrom(osmGeo as Node));
+                    this.Translate(scene, projection, osmGeo as Node);
                     break;
                 case OsmGeoType.Way:
                     this.Translate(scene, projection, CompleteWay.CreateFrom(osmGeo as Way, source));
@@ -70,7 +70,7 @@ namespace OsmSharp.UI.Map.Styles
         /// <param name="osmGeo">The osm object.</param>
         /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
-        public abstract void Translate(Scene2D scene, IProjection projection, CompleteOsmGeo osmGeo);
+        public abstract void Translate(Scene2D scene, IProjection projection, ICompleteOsmGeo osmGeo);
 
         /// <summary>
         /// Returns true if this style applies to the given object.

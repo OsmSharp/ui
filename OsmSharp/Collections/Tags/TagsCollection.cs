@@ -43,6 +43,15 @@ namespace OsmSharp.Collections.Tags
         /// <summary>
         /// Creates a new tags collection.
         /// </summary>
+        /// <param name="capacity">The number of tags the collection can initially store.</param>
+        public TagsCollection(int capacity)
+        {
+            _tags = new List<Tag>(capacity);
+        }
+
+        /// <summary>
+        /// Creates a new tags collection.
+        /// </summary>
         public TagsCollection(params Tag[] tags)
         {
             _tags = new List<Tag>(tags);

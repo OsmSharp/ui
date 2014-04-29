@@ -36,7 +36,7 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        public override GeometryCollection Interpret(CompleteOsmGeo osmObject)
+        public override GeometryCollection Interpret(ICompleteOsmGeo osmObject)
         {
             // DISCLAIMER: this is a very very very simple geometry interpreter and
             // contains hardcoded all relevant tags.
@@ -56,7 +56,7 @@ namespace OsmSharp.Osm.Interpreter
 
                         if (newCollection.Count > 0)
                         { // there is still some relevant information left.
-                            collection.Add(new Point((osmObject as CompleteNode).Coordinate));
+                            collection.Add(new Point((osmObject as Node).Coordinate));
                         }
                         break;
                     case CompleteOsmType.Way:
@@ -423,11 +423,11 @@ namespace OsmSharp.Osm.Interpreter
                 bool roleFlag = ways[way].Key;
 
                 // complete the ring.
-                List<CompleteNode> nodes = new List<CompleteNode>(ways[way].Value.Nodes);
+                List<Node> nodes = new List<Node>(ways[way].Value.Nodes);
                 if (this.CompleteRing(ways, assignedFlags, nodes, roleFlag))
                 { // the ring was completed!
                     coordinates = new List<GeoCoordinate>(nodes.Count);
-                    foreach (CompleteNode node in nodes)
+                    foreach (Node node in nodes)
                     {
                         coordinates.Add(node.Coordinate);
                     }
@@ -452,7 +452,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="role"></param>
         /// <returns></returns>
         private bool CompleteRing(List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, 
-            List<CompleteNode> nodes, bool? role)
+            List<Node> nodes, bool? role)
         {
             for (int idx = 0; idx < ways.Count; idx++)
             {
@@ -462,7 +462,7 @@ namespace OsmSharp.Osm.Interpreter
                     CompleteWay nextWay = wayEntry.Value;
                     if (!role.HasValue || wayEntry.Key == role.Value)
                     { // only try matching roles if the role has been set.
-                        List<CompleteNode> nextNodes = null;
+                        List<Node> nextNodes = null;
                         if (nodes[nodes.Count - 1].Id == nextWay.Nodes[0].Id)
                         { // last node of the previous way is the first node of the next way.
                             nextNodes = nextWay.Nodes.GetRange(1, nextWay.Nodes.Count - 1);

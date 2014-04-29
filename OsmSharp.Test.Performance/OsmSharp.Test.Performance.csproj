@@ -128,6 +128,7 @@
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Osm\PBF\PBFStreamSourceTest.cs" />
+    <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
     <Compile Include="PerformanceInfoConsumer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
