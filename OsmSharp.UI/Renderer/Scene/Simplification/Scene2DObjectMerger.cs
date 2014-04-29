@@ -23,6 +23,9 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
+using OsmSharp.Collections.SpatialIndexes;
+using OsmSharp.Math.Structures.QTree;
+using OsmSharp.Math.Structures;
 
 namespace OsmSharp.UI.Renderer.Scene.Simplification
 {
@@ -67,8 +70,8 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <param name="idx"></param>
         private void MergeObjects(Scene2D target, Scene2D source, int idx)
         {
-            Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
-            Dictionary<PointF2D, HashSet<Scene2D.ScenePoints>> endpoints = new Dictionary<PointF2D, HashSet<Scene2D.ScenePoints>>();
+            var lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
+            var linesIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
             Dictionary<uint, SceneObject> sceneObjects = source.GetSceneObjectsAt(idx);
             foreach (var sceneObject in sceneObjects)
             {
@@ -81,19 +84,12 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     { // create styles set.
                         stylesSet = new Scene2DStylesSet();
                         lines.Add(scenePoints, stylesSet);
+
+                        // add scenePoints to the index.
+                        linesIndex.Add(new PointF2D(scenePoints.X[0], scenePoints.Y[0]), scenePoints);
+                        linesIndex.Add(new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]), scenePoints);
                     }
                     stylesSet.AddStyleLine(sceneLineObject.StyleId);
-
-                    //var sceneLineObject = (sceneObject.Value as SceneLineObject);
-                    //Scene2D.ScenePoints scenePoints = source.GetPoints(sceneLineObject.GeoId);
-                    //StyleLine styleLine = source.GetStyleLine(sceneLineObject.StyleId);
-
-                    //uint? pointsId = target.AddPoints(scenePoints.X, scenePoints.Y);
-                    //if (pointsId.HasValue)
-                    //{
-                    //    target.AddStyleLine(pointsId.Value, styleLine.Layer, styleLine.MinZoom, styleLine.MaxZoom,
-                    //        styleLine.Color, styleLine.Width, styleLine.LineJoin, styleLine.Dashes);
-                    //}
                 }
                 else if (sceneObject.Value.Enum == SceneObjectType.LineTextObject)
                 {
@@ -104,20 +100,12 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     { // create styles set.
                         stylesSet = new Scene2DStylesSet();
                         lines.Add(scenePoints, stylesSet);
+
+                        // add scenePoints to the index.
+                        linesIndex.Add(new PointF2D(scenePoints.X[0], scenePoints.Y[0]), scenePoints);
+                        linesIndex.Add(new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]), scenePoints);
                     }
                     stylesSet.AddStyleLineText(sceneLineTextObject.StyleId, sceneLineTextObject.TextId);
-
-                    //var sceneLineTextObject = (sceneObject.Value as SceneLineTextObject);
-                    //Scene2D.ScenePoints scenePoints = source.GetPoints(sceneLineTextObject.GeoId);
-                    //StyleText styleText = source.GetStyleText(sceneLineTextObject.StyleId);
-                    //string text = source.GetText(sceneLineTextObject.TextId);
-
-                    //uint? pointsId = target.AddPoints(scenePoints.X, scenePoints.Y);
-                    //if (pointsId.HasValue)
-                    //{
-                    //    target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
-                    //        styleText.Color, styleText.Size, text, styleText.Font, styleText.HaloColor, styleText.HaloRadius);
-                    //}
                 }
                 else if (sceneObject.Value.Enum == SceneObjectType.IconObject)
                 {
@@ -185,7 +173,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 // find a matching line.
                 int mergeCount = 1;
                 Scene2D.ScenePoints found;
-                MatchPosition foundPosition = this.FindMatch(lines, x, y, line.Value, out found);
+                MatchPosition foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, out found);
                 while (found != null)
                 { // TODO: keep expanding and duplicating until not possible anymore.
                     // remove the found line.
@@ -217,7 +205,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     }
 
                     // select a new line.
-                    foundPosition = this.FindMatch(lines, x, y, line.Value, out found);
+                    foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, out found);
                     mergeCount++;
                 }
 
@@ -266,45 +254,56 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <param name="lines"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        private MatchPosition FindMatch(Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, double[] x, double[] y, Scene2DStylesSet style, out Scene2D.ScenePoints found)
+        private MatchPosition FindMatch(ILocatedObjectIndex<PointF2D, Scene2D.ScenePoints> linesIndex, Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, double[] x, double[] y, Scene2DStylesSet style, out Scene2D.ScenePoints found)
         {
+            // build box.
+            var box = new BoxF2D(x, y);
+            box = box.ResizeWith(_epsilon * 1.1);
+
+            // get all geometries in this box.
+            var potentialMatches = linesIndex.GetInside(box);
+
+            // find a match in the potential matches list.
             PointF2D first = new PointF2D(x[0], y[0]);
             PointF2D last = new PointF2D(x[x.Length - 1], y[y.Length - 1]);
 
             MatchPosition position = MatchPosition.None;
             found = null;
-            foreach (var line in lines)
+            foreach (var line in potentialMatches)
             {
-                if (line.Value.Equals(style))
+                // check first.
+                PointF2D potentialFirst = new PointF2D(line.X[0], line.Y[0]);
+                PointF2D potentialLast = new PointF2D(line.X[line.X.Length - 1], line.Y[line.Y.Length - 1]);
+                if (first.Distance(potentialFirst) < _epsilon)
                 {
-                    // check first.
-                    PointF2D potentialFirst = new PointF2D(line.Key.X[0], line.Key.Y[0]);
-                    if (first.Distance(potentialFirst) < _epsilon)
-                    {
-                        found = line.Key;
-                        position = MatchPosition.FirstFirst;
-                        break;
-                    }
-                    if (last.Distance(potentialFirst) < _epsilon)
-                    {
-                        found = line.Key;
-                        position = MatchPosition.LastFirst;
-                        break;
-                    }
+                    found = line;
+                    position = MatchPosition.FirstFirst;
+                }
+                else if (last.Distance(potentialFirst) < _epsilon)
+                {
+                    found = line;
+                    position = MatchPosition.LastFirst;
+                }
+                else if (first.Distance(potentialLast) < _epsilon)
+                {
+                    found = line;
+                    position = MatchPosition.FirstLast;
+                }
+                else if (last.Distance(potentialLast) < _epsilon)
+                {
+                    found = line;
+                    position = MatchPosition.LastLast;
+                }
 
-                    PointF2D potentialLast = new PointF2D(line.Key.X[line.Key.X.Length - 1], line.Key.Y[line.Key.Y.Length - 1]);
-                    if (first.Distance(potentialLast) < _epsilon)
-                    {
-                        found = line.Key;
-                        position = MatchPosition.FirstLast;
-                        break;
-                    }
-                    if (last.Distance(potentialLast) < _epsilon)
-                    {
-                        found = line.Key;
-                        position = MatchPosition.LastLast;
-                        break;
-                    }
+                Scene2DStylesSet styleValue;
+                if (position != MatchPosition.None && lines.TryGetValue(line, out styleValue) && styleValue.Equals(style))
+                {
+                    break;
+                }
+                else
+                {
+                    position = MatchPosition.None;
+                    found = null;
                 }
             }
             return position;

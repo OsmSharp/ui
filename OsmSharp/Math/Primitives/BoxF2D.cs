@@ -675,6 +675,18 @@ namespace OsmSharp.Math.Primitives
 		}
 
         /// <summary>
+        /// Returns a resized box.
+        /// </summary>
+        /// <param name="delta"></param>
+        /// <returns></returns>
+        public virtual BoxF2D ResizeWith(double delta)
+        {
+            return new BoxF2D(
+                new PointF2D(this.Min[0] - delta, this.Min[1] - delta),
+                new PointF2D(this.Max[0] + delta, this.Max[1] + delta));
+        }
+
+        /// <summary>
         /// Returns a description of this object.
         /// </summary>
         /// <returns></returns>
