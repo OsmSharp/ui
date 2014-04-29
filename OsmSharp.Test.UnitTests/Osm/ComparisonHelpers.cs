@@ -41,6 +41,7 @@ namespace OsmSharp.Test.Unittests.Osm
             }
             else
             {
+                Assert.IsNotNull(actual);
                 Assert.AreEqual(expected.Count, actual.Count);
                 foreach (Tag tag in expected)
                 {
