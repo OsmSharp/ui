@@ -34,6 +34,16 @@
         <file src="Output\Release\Any CPU\OsmSharp.Data.Redis.dll" target="lib\net40\OsmSharp.Data.Redis.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.Data.SQLite.dll" target="lib\net40\OsmSharp.Data.SQLite.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.Data.SQLServer.dll" target="lib\net40\OsmSharp.Data.SQLServer.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net45\OsmSharp.Osm.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\net45\OsmSharp.Routing.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net45\OsmSharp.UI.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net45\OsmSharp.WinForms.UI.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.Oracle.dll" target="lib\net45\OsmSharp.Data.Oracle.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.PostgreSQL.dll" target="lib\net45\OsmSharp.Data.PostgreSQL.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.Redis.dll" target="lib\net45\OsmSharp.Data.Redis.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.SQLite.dll" target="lib\net45\OsmSharp.Data.SQLite.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.SQLServer.dll" target="lib\net45\OsmSharp.Data.SQLServer.dll" />
 	      <file src="OutputAndroid\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
 	      <file src="OutputAndroid\OsmSharp.Osm.dll" target="lib\MonoAndroid\OsmSharp.Osm.dll" />
 	      <file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid\OsmSharp.Routing.dll" />
