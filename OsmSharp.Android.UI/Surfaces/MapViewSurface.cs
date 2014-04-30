@@ -630,9 +630,11 @@ namespace OsmSharp.Android.UI
 			// execute suspended events.
 			if (_latestZoomCall != null)
 			{ // there was a suspended call.
+                		var latestZoomCall = _latestZoomCall;
+                		_latestZoomCall = null;
 				this.ZoomToMarkers(
-					_latestZoomCall.Markers,
-					_latestZoomCall.Percentage);
+                    			latestZoomCall.Markers,
+                    			latestZoomCall.Percentage);
 			}
 
 			if (_onScreenBuffer == null) {
