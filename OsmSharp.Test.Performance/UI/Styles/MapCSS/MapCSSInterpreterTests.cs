@@ -50,11 +50,12 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
             // tests map css interpreter.
             MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\default.mapcss", scene, "kempen-big.osm.pbf");
 
-            var merger = new Scene2DObjectMerger();
-            scene = merger.BuildMergedScene(scene);
+            //var merger = new Scene2DObjectMerger();
+            //scene = merger.BuildMergedScene(scene);
 
             // tests serialization of the scene.
-            return Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\default.map", scene, true);
+            return null;
+            //return Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\default.map", scene, true);
         }
 
         /// <summary>

@@ -77,6 +77,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
         private HashSet<string> _keysForLines;
 
+        private HashSet<TagsCollectionBase> _unsuccesfullWays;
+
+        private Dictionary<TagsCollectionBase, List<MapCSSRuleProperties>> _succesfullWays;
+
         /// <summary>
         /// Creates a new MapCSS interpreter.
         /// </summary>
@@ -90,7 +94,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
 
-            this.BuildKeysFor();
+            this.PrepareForProcessing();
         }
 
         /// <summary>
@@ -106,13 +110,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
 
-            this.BuildKeysFor();
+            this.PrepareForProcessing();
         }
 
         /// <summary>
         /// Builds the keys-for collections.
         /// </summary>
-        private void BuildKeysFor()
+        private void PrepareForProcessing()
         {
             _keysForNodes = new HashSet<string>();
             _keysForWays = new HashSet<string>();
@@ -156,6 +160,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
                 }
             }
+
+            _unsuccesfullWays = new HashSet<TagsCollectionBase>();
+            _succesfullWays = new Dictionary<TagsCollectionBase, List<MapCSSRuleProperties>>();
          }
 
         /// <summary>
@@ -177,6 +184,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = MapCSSFile.FromString(css);
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+
+            this.PrepareForProcessing();
         }
 
         /// <summary>
@@ -193,6 +202,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = mapCSSFile;
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = geometryInterpreter;
+
+            this.PrepareForProcessing();
         }
 
         /// <summary>
@@ -209,6 +220,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = MapCSSFile.FromStream(stream);
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = geometryInterpreter;
+
+            this.PrepareForProcessing();
         }
 
         /// <summary>
@@ -225,6 +238,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = MapCSSFile.FromString(css);
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = geometryInterpreter;
+
+            this.PrepareForProcessing();
         }
 
         /// <summary>
@@ -278,12 +293,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                      this.TranslateNode(scene, projection, osmGeo as Node);
                      break;
                  case CompleteOsmType.Way:
+                    var relevantWayTags = osmGeo.Tags.KeepKeysOf(_keysForWays);
                     if (!_mapCSSFile.HasWayIdSelector &&
-                        !osmGeo.Tags.ContainsOneOfKeys(_keysForWays))
+                        relevantWayTags.Count == 0)
                     { // no good keys present.
                         break;
                     }
-                     this.TranslateWay(scene, projection, osmGeo as CompleteWay);
+                    if (!_unsuccesfullWays.Contains(relevantWayTags))
+                    { // way has some potential.
+                        if (!this.TranslateWay(scene, projection, osmGeo as CompleteWay, relevantWayTags))
+                        { // ... but translate was unsuccesfull.
+                            _unsuccesfullWays.Add(relevantWayTags);
+                        }
+                    }
                      break;
                  case CompleteOsmType.Relation:
                     if (!_mapCSSFile.HasRelationIdSelector &&
@@ -476,17 +498,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene">The scene to add primitives to.</param>
         /// <param name="projection">The projection used to convert the objects.</param>
         /// <param name="way"></param>
-        private void TranslateWay(Scene2D scene, IProjection projection, CompleteWay way)
+        /// <param name="relevantTags"></param>
+        private bool TranslateWay(Scene2D scene, IProjection projection, CompleteWay way, TagsCollectionBase relevantTags)
         {
             // build the rules.
-            List<MapCSSRuleProperties> rules =
-                this.BuildRules(new MapCSSObject(way));
+            List<MapCSSRuleProperties> rules = null;
+            if (!_succesfullWays.TryGetValue(relevantTags, out rules))
+            {
+                rules = this.BuildRules(new MapCSSObject(way));
+                _succesfullWays.Add(relevantTags, rules);
+            }
 
             // validate what's there.
             if (rules.Count == 0)
             {
-                return;
+                return false;
             }
+
+            bool success = false;
 
             // get x/y.
 			double[] x = null, y = null;
@@ -537,9 +566,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             if (pointsId.HasValue)
                             {
                                 scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                                success = true;
                                 if (rule.TryGetProperty("color", out color))
                                 {
                                     scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                    success = true;
                                 }
                             }
                             renderAsLine = false; // was validly rendered als a line.
@@ -583,16 +614,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 { // adds the casing
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
                                         minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                                    success = true;
                                 }
                                 if (dashes == null)
                                 { // dashes not set, use line offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
+                                    success = true;
                                 }
                                 else
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
+                                    success = true;
                                 }
 
                                 int textColor;
@@ -627,6 +661,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     {
                                         scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
                                             minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                        success = true;
                                     }
                                 }
                             }
@@ -634,6 +669,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
                 }
             }
+
+            if(!success)
+            { // make sure this sucess is stored.
+                _succesfullWays[relevantTags] = null;
+            }
+
+            return success;
         }
 
         /// <summary>

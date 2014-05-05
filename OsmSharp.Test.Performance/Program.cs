@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Performance
 
             //// test streams.
             //Osm.PBF.PBFStreamSourceTest.Test();
-            OsmSharp.Test.Performance.Osm.Streams.Complete.OsmSimpleCompleteStreamSourceTests.Test();
+            //OsmSharp.Test.Performance.Osm.Streams.Complete.OsmSimpleCompleteStreamSourceTests.Test();
 
             //// test the tags collection.
             //Tags.Collections.TagsTableCollectionIndexTests.Test();

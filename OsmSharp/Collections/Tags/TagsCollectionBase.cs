@@ -116,12 +116,22 @@ namespace OsmSharp.Collections.Tags
         public abstract bool TryGetValue(string key, out string value);
 
         /// <summary>
-        /// Returns true if the given tags exists with the given value.
+        /// Returns true if the given tag exists with the given value.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         public abstract bool ContainsKeyValue(string key, string value);
+
+        /// <summary>
+        /// Returns true if the given tags exists.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        public bool Contains(Tag tag)
+        {
+            return this.ContainsKeyValue(tag.Key, tag.Value);
+        }
 
         /// <summary>
         /// Returns the value associated with the given key.
@@ -201,6 +211,24 @@ namespace OsmSharp.Collections.Tags
         /// <param name="predicate"></param>
         public abstract void RemoveAll(System.Predicate<Tag> predicate);
 
+        /// <summary>
+        /// Creates a new tags collection with only the given keys.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public virtual TagsCollectionBase KeepKeysOf(ICollection<string> keys)
+        {
+            TagsCollection collection = new TagsCollection(this.Count);
+            foreach(var tag in this)
+            {
+                if(keys.Contains(tag.Key))
+                {
+                    collection.Add(tag);
+                }
+            }
+            return collection;
+        }
+
         #region IEnumerable<Tag>
 
         /// <summary>
@@ -267,6 +295,62 @@ namespace OsmSharp.Collections.Tags
             {
                 _tagEnumerator.Reset();
             }
+        }
+
+        #endregion
+
+        
+        #region Equals
+
+        /// <summary>
+        /// Returns true if the objects represent the same information.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (!object.ReferenceEquals(this, obj))
+            {
+                if (obj is TagsCollectionBase)
+                {
+                    TagsCollectionBase other = (obj as TagsCollectionBase);
+                    if (other.Count == this.Count)
+                    {
+                        // make sure all object in the first are in the second and vice-versa.
+                        foreach(var tag in this)
+                        {
+                            if (!other.Contains(tag))
+                            {
+                                return false;
+                            }
+                        }
+                        foreach (var tag in other)
+                        {
+                            if (!this.Contains(tag))
+                            {
+                                return false;
+                            }
+                        }
+                        return true; // no loop was done without finding the same key-value pair.
+                    }
+                }
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Serves as a hash function.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            int hashCode = this.Count.GetHashCode();
+            foreach(var tag in this)
+            {
+                hashCode = hashCode ^ tag.GetHashCode();
+            }
+            return hashCode;
         }
 
         #endregion
