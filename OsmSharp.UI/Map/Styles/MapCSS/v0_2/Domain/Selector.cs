@@ -34,19 +34,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="zooms">The zooms selected.</param>
         /// <param name="mapCSSObject">The object to 'select'.</param>
         /// <returns></returns>
-        public virtual bool Selects(MapCSSObject mapCSSObject, out KeyValuePair<int?, int?> zooms)
+        public virtual bool Selects(MapCSSObject mapCSSObject, out SelectorZoom zooms)
         {
             // store the zooms.
-            if (this.Zoom == null)
-            { // there are no zooms.
-                zooms = new KeyValuePair<int?, int?>(
-                    null, null);
-            }
-            else
-            { // there are zooms.
-                zooms = new KeyValuePair<int?, int?>(
-                    this.Zoom.ZoomMin, this.Zoom.ZoomMax);
-            }
+            zooms = this.Zoom;
 
             // check the type.
             switch (this.Type)

@@ -87,7 +87,25 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public abstract bool ContainsKey(string key);
+        public abstract bool ContainsKey(string key); 
+
+         /// <summary>
+        /// Returns true if one of the given keys exists in this tag collection.
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        public virtual bool ContainsOneOfKeys(ICollection<string> keys)
+        {
+            foreach(var tag in this)
+            {
+                if(keys.Contains(tag.Key))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Returns true if the given tag exists.

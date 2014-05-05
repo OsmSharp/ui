@@ -67,6 +67,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private const float OffsetLineText = 4.9f;
         private const float OffsetPointText = 5f;
 
+        private HashSet<string> _keysForNodes;
+
+        private HashSet<string> _keysForWays;
+
+        private HashSet<string> _keysForRelations;
+
+        private HashSet<string> _keysForAreas;
+
+        private HashSet<string> _keysForLines;
+
         /// <summary>
         /// Creates a new MapCSS interpreter.
         /// </summary>
@@ -79,6 +89,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = mapCSSFile;
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+
+            this.BuildKeysFor();
         }
 
         /// <summary>
@@ -93,7 +105,58 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSFile = MapCSSFile.FromStream(stream);
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+
+            this.BuildKeysFor();
         }
+
+        /// <summary>
+        /// Builds the keys-for collections.
+        /// </summary>
+        private void BuildKeysFor()
+        {
+            _keysForNodes = new HashSet<string>();
+            _keysForWays = new HashSet<string>();
+            _keysForRelations = new HashSet<string>();
+            _keysForLines = new HashSet<string>();
+            _keysForAreas = new HashSet<string>();
+
+            foreach(var rule in _mapCSSFile.Rules)
+            {
+                foreach (var selector in rule.Selectors)
+                {
+                    string key = string.Empty;
+                    if(selector.SelectorRule is SelectorRuleTagValueComparison)
+                    {
+                        key = (selector.SelectorRule as SelectorRuleTagValueComparison).Tag;
+                    }
+                    else if(selector.SelectorRule is SelectorRuleTag)
+                    {
+                        key = (selector.SelectorRule as SelectorRuleTag).Tag;
+                    }
+                    if(key.Length > 0)
+                    {
+                        switch(selector.Type)
+                        {
+                            case SelectorTypeEnum.Node:
+                                _keysForNodes.Add(key);
+                                break;
+                            case SelectorTypeEnum.Way:
+                                _keysForWays.Add(key);
+                                break;
+                            case SelectorTypeEnum.Relation:
+                                _keysForRelations.Add(key);
+                                break;
+                            case SelectorTypeEnum.Line:
+                                _keysForLines.Add(key);
+                                break;
+                            case SelectorTypeEnum.Area:
+                                _keysForAreas.Add(key);
+                                break;
+                        }
+                    }
+                }
+            }
+         }
 
         /// <summary>
         /// Creates a new MapCSS interpreter from a string.
@@ -199,40 +262,63 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             int countBefore = scene.Count;
 
             // interpret the osm-objects.
-            switch (osmGeo.Type)
-            {
-                case CompleteOsmType.Node:
-                    this.TranslateNode(scene, projection, osmGeo as Node);
-                    break;
-                case CompleteOsmType.Way:
-                    this.TranslateWay(scene, projection, osmGeo as CompleteWay);
-                    break;
-                case CompleteOsmType.Relation:
-                    this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
-                    break;
-                case CompleteOsmType.ChangeSet:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+             switch (osmGeo.Type)
+             {
+                 case CompleteOsmType.Node:
+                    if(!_mapCSSFile.HasNodeIdSelector &&
+                        osmGeo.Tags.Count == 0)
+                    { // this node can never be selected, no tags and no id selectors.
+                        break;
+                    }
+                    if (!_mapCSSFile.HasNodeIdSelector && 
+                        !osmGeo.Tags.ContainsOneOfKeys(_keysForNodes))
+                    { // no good keys present.
+                        break;
+                    }
+                     this.TranslateNode(scene, projection, osmGeo as Node);
+                     break;
+                 case CompleteOsmType.Way:
+                    if (!_mapCSSFile.HasWayIdSelector &&
+                        !osmGeo.Tags.ContainsOneOfKeys(_keysForWays))
+                    { // no good keys present.
+                        break;
+                    }
+                     this.TranslateWay(scene, projection, osmGeo as CompleteWay);
+                     break;
+                 case CompleteOsmType.Relation:
+                    if (!_mapCSSFile.HasRelationIdSelector &&
+                        !osmGeo.Tags.ContainsOneOfKeys(_keysForRelations))
+                    { // no good keys present.
+                        break;
+                    }
+                     this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
+                     break;
+             }
 
             // interpret the osmGeo object and check if it makes up an area.
-            GeometryCollection collection = _geometryInterpreter.Interpret(osmGeo);
-            foreach (Geometry geometry in collection)
-            {
-                if (geometry is LineairRing)
-                { // a simple lineair ring.
-                    this.TranslateLineairRing(scene, projection, geometry as LineairRing);
-                }
-                else if (geometry is Polygon)
-                { // a simple polygon.
-                    this.TranslatePolygon(scene, projection, geometry as Polygon);
-                }
-                else if (geometry is MultiPolygon)
-                { // a multipolygon.
-                    this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
-                }
-            }
+             if (osmGeo.Type != CompleteOsmType.Node)
+             { // nodes cannot lead to a geometry for MapCSS.
+                 if (osmGeo.Tags.ContainsOneOfKeys(_keysForLines) ||
+                     osmGeo.Tags.ContainsOneOfKeys(_keysForAreas))
+                 { // good keys present.
+                     var collection = _geometryInterpreter.Interpret(osmGeo);
+                     foreach (Geometry geometry in collection)
+                     {
+                         if (geometry is LineairRing)
+                         { // a simple lineair ring.
+                             this.TranslateLineairRing(scene, projection, geometry as LineairRing);
+                         }
+                         else if (geometry is Polygon)
+                         { // a simple polygon.
+                             this.TranslatePolygon(scene, projection, geometry as Polygon);
+                         }
+                         else if (geometry is MultiPolygon)
+                         { // a multipolygon.
+                             this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
+                         }
+                     }
+                 }
+             }
 
             // check if any objects have been added to the scene.
             if (scene.Count <= countBefore)
@@ -710,7 +796,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // interpret all rules on-by-one.
             foreach (var rule in _mapCSSFile.Rules)
             {
-                List<KeyValuePair<int?, int?>> zooms;
+                List<SelectorZoom> zooms;
                 if (rule.HasToBeAppliedTo(mapCSSObject, out zooms))
                 { // the selector was ok.
                     // loop over all declarations.
@@ -874,17 +960,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
 
                     // loop over all zoom levels.
-                    foreach (var keyValuePair in zooms)
+                    foreach (var zoom in zooms)
                     {
                         int minZoom = 0;
-                        if (keyValuePair.Key.HasValue)
-                        {
-                            minZoom = keyValuePair.Key.Value;
-                        }
                         int maxZoom = 25;
-                        if (keyValuePair.Value.HasValue)
-                        {
-                            maxZoom = keyValuePair.Value.Value;
+                        if (zoom != null)
+                        { // there is a zoom object.
+                            if (zoom.ZoomMin.HasValue)
+                            {
+                                minZoom = zoom.ZoomMin.Value;
+                            }
+                            if (zoom.ZoomMax.HasValue)
+                            {
+                                maxZoom = zoom.ZoomMax.Value;
+                            }
                         }
 
                         // zoom properties;

@@ -56,12 +56,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="zooms"></param>
         /// <param name="mapCSSObject"></param>
         /// <returns></returns>
-        public bool HasToBeAppliedTo(MapCSSObject mapCSSObject, out List<KeyValuePair<int?, int?>> zooms)
+        public bool HasToBeAppliedTo(MapCSSObject mapCSSObject, out List<SelectorZoom> zooms)
         {
-            zooms = new List<KeyValuePair<int?, int?>>();
+            zooms = new List<SelectorZoom>();
             foreach (var selector in this.Selectors)
             {
-                KeyValuePair<int?, int?> zoom;
+                SelectorZoom zoom;
                 if (selector.Selects(mapCSSObject, out zoom))
                 {
                     zooms.Add(zoom);

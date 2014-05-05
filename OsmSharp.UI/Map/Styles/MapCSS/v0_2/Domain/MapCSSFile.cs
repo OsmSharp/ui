@@ -36,6 +36,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 
             this.DefaultPoints = false;
             this.DefaultLines = false;
+
+            this.HasNodeIdSelector = false;
+            this.HasWayIdSelector = false;
+            this.HasRelationIdSelector = false;
         }
 
         /// <summary>
@@ -84,6 +88,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// Gets/sets the default lines.
         /// </summary>
         public bool DefaultLines { get; set; }
+                 
+        /// <summary>
+        /// Gets or sets the node id selector flag.
+        /// </summary>
+        public bool HasNodeIdSelector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relation id selector flag.
+        /// </summary>
+        public bool HasRelationIdSelector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the way id selector flag.
+        /// </summary>
+        public bool HasWayIdSelector { get; set; }
 
         /// <summary>
         /// Gets/sets the title.
