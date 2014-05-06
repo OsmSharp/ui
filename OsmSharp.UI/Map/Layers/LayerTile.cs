@@ -26,9 +26,9 @@ using OsmSharp.UI.Renderer.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Linq;
 
 namespace OsmSharp.UI.Map.Layers
 {

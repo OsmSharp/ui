@@ -16,16 +16,28 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
 namespace OsmSharp.Data.SQLite
 {
     /// <summary>
     /// A wrapper-class for all platform-specific SQLite connections.
     /// </summary>
-    public abstract class SQLiteConnectionBase
+    public abstract class SQLiteConnectionBase : IDisposable
     {
         /// <summary>
         /// Creates an SQLLite command.
         /// </summary>
-        public abstract SQLiteCommandBase CreateCommand(string sql);
+        public abstract List<T> Query<T>(string query, params object[] args) where T : new();
+
+        /// <summary>
+        /// Disposes of all resources associated with this connection.
+        /// </summary>
+        public abstract void Dispose();
+
+        /// <summary>
+        /// Closes this SQLite command.
+        /// </summary>
+        public abstract void Close();
     }
 }

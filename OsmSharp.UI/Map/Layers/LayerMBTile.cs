@@ -90,15 +90,7 @@ namespace OsmSharp.UI.Map.Layers
             return primitives;
         }
 
-        /// <summary>
-        /// Called when the mapview has changed.
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="view"></param>
-        public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, 
-            View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
@@ -107,11 +99,10 @@ namespace OsmSharp.UI.Map.Layers
             {
                 // build the bounding box.
                 var viewBox = view.OuterBox;
-                var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
-                    map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
                 // build the tile range.
-                TileRange range = TileRange.CreateAroundBoundingBox(box, zoomLevel);
+                TileRange range = TileRange.CreateAroundBoundingBox(new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                    map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1])), zoomLevel);
                 DateTime now = DateTime.Now;
                 
                 // request all missing tiles.
@@ -124,21 +115,15 @@ namespace OsmSharp.UI.Map.Layers
                     {
                         Tile invertTile = tile.InvertY();
 
-                        SQLiteCommandBase command = _connection.CreateCommand("SELECT * FROM tiles WHERE zoom_level = :zoom_level AND tile_column = :tile_column AND tile_row = :tile_row;");
-                        command.AddParameterWithValue("zoom_level", invertTile.Zoom);
-                        command.AddParameterWithValue("tile_column", invertTile.X);
-                        command.AddParameterWithValue("tile_row", invertTile.Y);
-                        foreach(var mbTile in command.ExecuteQuery<MBTile>())
+                        var tiles = _connection.Query<tiles>("SELECT * FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?",
+                            invertTile.Zoom, invertTile.X, invertTile.Y);
+                        //command.AddParameterWithValue("zoom_level", );
+                        //command.AddParameterWithValue("tile_column", invertTile.X);
+                        //command.AddParameterWithValue("tile_row", invertTile.Y);
+                        foreach (var mbTile in tiles)
                         {
-                            float minZoom = (float)map.Projection.ToZoomFactor(tile.Zoom - 0.5f);
-                            float maxZoom = (float)map.Projection.ToZoomFactor(tile.Zoom + 0.5f);
-                            float left = (float)map.Projection.LongitudeToX(tile.TopLeft.Longitude);
-                            float right = (float)map.Projection.LongitudeToX(tile.BottomRight.Longitude);
-                            float bottom = (float)map.Projection.LatitudeToY(tile.BottomRight.Latitude);
-                            float top = (float)map.Projection.LatitudeToY(tile.TopLeft.Latitude);
-
-
-                            var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], mbTile.Data);
+                            var box = tile.ToBox(_projection);
+                            var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], mbTile.tile_data);
                             image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
 
                             lock (_cache)
@@ -151,13 +136,15 @@ namespace OsmSharp.UI.Map.Layers
             }
         }
 
-        private class MBTile
+        private class tiles
         {
-            public int X { get; set; }
+            public int tile_row { get; set; }
 
-            public int Y { get; set; }
+            public int tile_column { get; set; }
 
-            public byte[] Data { get; set; }
+            public int zoom_level { get; set; }
+
+            public byte[] tile_data { get; set; }
         }
 
         #region IComparer implementation

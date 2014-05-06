@@ -17,6 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Data.SQLite;
+using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Android.UI.Data.SQLite
 {
@@ -40,13 +42,55 @@ namespace OsmSharp.Android.UI.Data.SQLite
         }
 
         /// <summary>
-        /// Creates an SQLite command.
+        /// Creates a SQLiteCommand given the command text (SQL) with arguments. Place a '?'
+        /// in the command text for each of the arguments and then executes that command.
+        /// It returns each row of the result using the mapping automatically generated for
+        /// the given type.
         /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        public override SQLiteCommandBase CreateCommand(string sql)
+        /// <param name="query">
+        /// The fully escaped SQL.
+        /// </param>
+        /// <param name="args">
+        /// Arguments to substitute for the occurences of '?' in the query.
+        /// </param>
+        /// <returns>
+        /// An enumerable with one result for each row returned by the query.
+        /// </returns>
+        public override System.Collections.Generic.List<T> Query<T>(string query, params object[] args)
         {
-            return new SQLiteCommand(_nativeConnection.CreateCommand(sql));
+            return _nativeConnection.Query<T>(query, args);
+        }
+
+        /// <summary>
+        /// Creates a new SQLite connection from a Stream by copying the data in the stream to a local path and open that file.
+        /// </summary>
+        /// <param name="stream">The stream containing the database data.</param>
+        /// <param name="dbName">A name for the temporary file to use.</param>
+        /// <returns></returns>
+        public static SQLiteConnection CreateFrom(Stream stream, string dbName)
+        {
+            var destinationPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), dbName + ".db3");
+            using (var destination = System.IO.File.Create(destinationPath))
+            {
+                stream.CopyTo(destination);
+            }
+            return new SQLiteConnection(destinationPath);
+        }
+
+        /// <summary>
+        /// Diposes of all resources associated with this connection.
+        /// </summary>
+        public override void Dispose()
+        {
+            _nativeConnection.Dispose();
+        }
+
+        /// <summary>
+        /// Closes this connection.
+        /// </summary>
+        public override void Close()
+        {
+            _nativeConnection.Close();
         }
     }
 }
