@@ -55,6 +55,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="mapCSSObject"></param>
         /// <returns></returns>
         internal abstract bool Selects(MapCSSObject mapCSSObject);
+
+        /// <summary>
+        /// Adds all relevant keys to the given collection.
+        /// </summary>
+        /// <param name="relevantKeys"></param>
+        internal abstract void AddRelevantKeysTo(ICollection<string> relevantKeys);
     }
 
     /// <summary>
@@ -111,6 +117,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         }
 
         /// <summary>
+        /// Adds all relevant keys to the given collections.
+        /// </summary>
+        /// <param name="relevantKeys"></param>
+        internal override void AddRelevantKeysTo(ICollection<string> relevantKeys)
+        {
+            this.Right.AddRelevantKeysTo(relevantKeys);
+            this.Left.AddRelevantKeysTo(relevantKeys);
+        }
+
+        /// <summary>
         /// Returns a description of the selector rule.
         /// </summary>
         /// <returns></returns>
@@ -141,6 +157,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         internal override bool Selects(MapCSSObject mapCSSObject)
         {
             return mapCSSObject.ContainsKey(this.Tag);
+        }
+
+        /// <summary>
+        /// Adds all relevant keys to the given collections.
+        /// </summary>
+        /// <param name="relevantKeys"></param>
+        internal override void AddRelevantKeysTo(ICollection<string> relevantKeys)
+        {
+            relevantKeys.Add(this.Tag);
         }
 
         /// <summary>
@@ -222,6 +247,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                 return mapCSSObject.ContainsKey(this.Tag);
             }
             return false;
+        }
+
+        /// <summary>
+        /// Adds all relevant keys to the given collections.
+        /// </summary>
+        /// <param name="relevantKeys"></param>
+        internal override void AddRelevantKeysTo(ICollection<string> relevantKeys)
+        {
+            relevantKeys.Add(this.Tag);
         }
 
         /// <summary>

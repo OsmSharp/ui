@@ -25,6 +25,7 @@ using OsmSharp.Routing.TSP.Genetic;
 using OsmSharp.UI;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
+using OsmSharp.UI.Renderer.Scene;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,7 +85,7 @@ namespace OsmSharp.WinForms.UI.Sample
             map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             // map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 200));
             //map.AddLayer(new LayerScene(
-            //    Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
+            //    Scene2D.Deserialize(new FileInfo(@"default.map").OpenRead(),
             //        true)));
 
             // initialize route/points layer.

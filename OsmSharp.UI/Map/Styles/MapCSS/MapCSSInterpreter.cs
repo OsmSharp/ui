@@ -124,38 +124,53 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _keysForLines = new HashSet<string>();
             _keysForAreas = new HashSet<string>();
 
-            foreach(var rule in _mapCSSFile.Rules)
+            if (_mapCSSFile != null && _mapCSSFile.Rules != null)
             {
-                foreach (var selector in rule.Selectors)
+                foreach (var rule in _mapCSSFile.Rules)
                 {
-                    string key = string.Empty;
-                    if(selector.SelectorRule is SelectorRuleTagValueComparison)
+                    foreach (var selector in rule.Selectors)
                     {
-                        key = (selector.SelectorRule as SelectorRuleTagValueComparison).Tag;
-                    }
-                    else if(selector.SelectorRule is SelectorRuleTag)
-                    {
-                        key = (selector.SelectorRule as SelectorRuleTag).Tag;
-                    }
-                    if(key.Length > 0)
-                    {
-                        switch(selector.Type)
-                        {
-                            case SelectorTypeEnum.Node:
-                                _keysForNodes.Add(key);
-                                break;
-                            case SelectorTypeEnum.Way:
-                                _keysForWays.Add(key);
-                                break;
-                            case SelectorTypeEnum.Relation:
-                                _keysForRelations.Add(key);
-                                break;
-                            case SelectorTypeEnum.Line:
-                                _keysForLines.Add(key);
-                                break;
-                            case SelectorTypeEnum.Area:
-                                _keysForAreas.Add(key);
-                                break;
+                        if(selector.SelectorRule == null)
+                        { // there is no selector rule, not irrelevant tags, no short-list of relevant tags possible.
+                            switch (selector.Type)
+                            {
+                                case SelectorTypeEnum.Node:
+                                    _keysForNodes = null;
+                                    break;
+                                case SelectorTypeEnum.Way:
+                                    _keysForWays = null;
+                                    break;
+                                case SelectorTypeEnum.Relation:
+                                    _keysForRelations = null;
+                                    break;
+                                case SelectorTypeEnum.Line:
+                                    _keysForLines = null;
+                                    break;
+                                case SelectorTypeEnum.Area:
+                                    _keysForAreas = null;
+                                    break;
+                            }
+                        }
+                        else
+                        { // there might be relevant tags in this selector rule.
+                            switch (selector.Type)
+                            {
+                                case SelectorTypeEnum.Node:
+                                    selector.SelectorRule.AddRelevantKeysTo(_keysForNodes);
+                                    break;
+                                case SelectorTypeEnum.Way:
+                                    selector.SelectorRule.AddRelevantKeysTo(_keysForWays);
+                                    break;
+                                case SelectorTypeEnum.Relation:
+                                    selector.SelectorRule.AddRelevantKeysTo(_keysForRelations);
+                                    break;
+                                case SelectorTypeEnum.Line:
+                                    selector.SelectorRule.AddRelevantKeysTo(_keysForLines);
+                                    break;
+                                case SelectorTypeEnum.Area:
+                                    selector.SelectorRule.AddRelevantKeysTo(_keysForAreas);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -273,28 +288,36 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
             if (osmGeo == null) { return; }
 
+            if (_mapCSSFile == null) { return; }
+
             // store the object count.
             int countBefore = scene.Count;
 
             // interpret the osm-objects.
-             switch (osmGeo.Type)
-             {
-                 case CompleteOsmType.Node:
-                    if(!_mapCSSFile.HasNodeIdSelector &&
+            switch (osmGeo.Type)
+            {
+                case CompleteOsmType.Node:
+                    if (!_mapCSSFile.HasNodeIdSelector &&
                         osmGeo.Tags.Count == 0)
                     { // this node can never be selected, no tags and no id selectors.
                         break;
                     }
-                    if (!_mapCSSFile.HasNodeIdSelector && 
+                    if (!_mapCSSFile.HasNodeIdSelector &&
+                        _keysForNodes != null &&
                         !osmGeo.Tags.ContainsOneOfKeys(_keysForNodes))
                     { // no good keys present.
                         break;
                     }
-                     this.TranslateNode(scene, projection, osmGeo as Node);
-                     break;
-                 case CompleteOsmType.Way:
-                    var relevantWayTags = osmGeo.Tags.KeepKeysOf(_keysForWays);
+                    this.TranslateNode(scene, projection, osmGeo as Node);
+                    break;
+                case CompleteOsmType.Way:
+                    var relevantWayTags = osmGeo.Tags;
+                    if (_keysForWays != null)
+                    { // filter the collection.
+                        relevantWayTags = relevantWayTags.KeepKeysOf(_keysForWays);
+                    }
                     if (!_mapCSSFile.HasWayIdSelector &&
+                        _keysForWays != null &&
                         relevantWayTags.Count == 0)
                     { // no good keys present.
                         break;
@@ -306,52 +329,53 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             _unsuccesfullWays.Add(relevantWayTags);
                         }
                     }
-                     break;
-                 case CompleteOsmType.Relation:
+                    break;
+                case CompleteOsmType.Relation:
                     if (!_mapCSSFile.HasRelationIdSelector &&
+                        _keysForRelations != null &&
                         !osmGeo.Tags.ContainsOneOfKeys(_keysForRelations))
                     { // no good keys present.
                         break;
                     }
-                     this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
-                     break;
-             }
+                    this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
+                    break;
+            }
 
             // interpret the osmGeo object and check if it makes up an area.
-             if (osmGeo.Type != CompleteOsmType.Node)
-             { // nodes cannot lead to a geometry for MapCSS.
-                 if (osmGeo.Tags.ContainsOneOfKeys(_keysForLines) ||
-                     osmGeo.Tags.ContainsOneOfKeys(_keysForAreas))
-                 { // good keys present.
-                     var collection = _geometryInterpreter.Interpret(osmGeo);
-                     foreach (Geometry geometry in collection)
-                     {
-                         if (geometry is LineairRing)
-                         { // a simple lineair ring.
-                             this.TranslateLineairRing(scene, projection, geometry as LineairRing);
-                         }
-                         else if (geometry is Polygon)
-                         { // a simple polygon.
-                             this.TranslatePolygon(scene, projection, geometry as Polygon);
-                         }
-                         else if (geometry is MultiPolygon)
-                         { // a multipolygon.
-                             this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
-                         }
-                     }
-                 }
-             }
+            if (osmGeo.Type != CompleteOsmType.Node)
+            { // nodes cannot lead to a geometry for MapCSS.
+                if (_keysForLines == null || osmGeo.Tags.ContainsOneOfKeys(_keysForLines) ||
+                    _keysForAreas == null || osmGeo.Tags.ContainsOneOfKeys(_keysForAreas))
+                { // good keys present.
+                    var collection = _geometryInterpreter.Interpret(osmGeo);
+                    foreach (Geometry geometry in collection)
+                    {
+                        if (geometry is LineairRing)
+                        { // a simple lineair ring.
+                            this.TranslateLineairRing(scene, projection, geometry as LineairRing);
+                        }
+                        else if (geometry is Polygon)
+                        { // a simple polygon.
+                            this.TranslatePolygon(scene, projection, geometry as Polygon);
+                        }
+                        else if (geometry is MultiPolygon)
+                        { // a multipolygon.
+                            this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
+                        }
+                    }
+                }
+            }
 
             // check if any objects have been added to the scene.
             if (scene.Count <= countBefore)
             { // no objects have been added. Apply default styles if needed.
-                if (osmGeo.Type == CompleteOsmType.Node && 
+                if (osmGeo.Type == CompleteOsmType.Node &&
                     _mapCSSFile != null &&
                     _mapCSSFile.DefaultPoints)
                 { // apply default points style.
                     Node node = (osmGeo as Node);
                     uint pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude), projection.LatitudeToY(node.Coordinate.Latitude));
-                    scene.AddStylePoint(pointId, this.CalculateSceneLayer(OffsetPoint, 0), float.MinValue, float.MaxValue, 
+                    scene.AddStylePoint(pointId, this.CalculateSceneLayer(OffsetPoint, 0), float.MinValue, float.MaxValue,
                         SimpleColor.FromKnownColor(KnownColor.Black).Value, 2);
                 }
                 else if (osmGeo.Type == CompleteOsmType.Way &&
