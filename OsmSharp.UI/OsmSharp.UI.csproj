@@ -52,6 +52,7 @@
     <Compile Include="Map\Layers\Layer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerGpx.cs" />
+    <Compile Include="Map\Layers\LayerMBTile.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerRoute.cs" />
