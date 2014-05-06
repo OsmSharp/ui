@@ -34,17 +34,37 @@ namespace OsmSharp.UI.Renderer
 		/// <summary>
 		/// Holds the rectangle in scene-coordinates of what the zoom represents.
 		/// </summary>
-		private RectangleF2D _rectangle;
+		private readonly RectangleF2D _rectangle;
 
 		/// <summary>
 		/// Holds the invert X flag.
 		/// </summary>
-		private bool _invertX;
+		private readonly bool _invertX;
 
 		/// <summary>
 		/// Holds the invert Y flag.
 		/// </summary>
-		private bool _invertY;
+		private readonly bool _invertY;
+
+        /// <summary>
+        /// Holds the minimun x-value visible in this view.
+        /// </summary>
+        private readonly double _minX;
+
+        /// <summary>
+        /// Holds the maximum x-value visible in this view.
+        /// </summary>
+        private readonly double _maxX;
+
+        /// <summary>
+        /// Holds the minimum y-value visible in this view.
+        /// </summary>
+        private readonly double _minY;
+
+        /// <summary>
+        /// Holds the maximum y-value visible in this view.
+        /// </summary>
+        private readonly double _maxY;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.View2D"/> class.
@@ -55,6 +75,12 @@ namespace OsmSharp.UI.Renderer
 			_invertY = invertY;
 
 			_rectangle = rectangle;
+
+            var box = _rectangle.BoundingBox;
+            _minX = box.Min[0];
+            _minY = box.Min[1];
+            _maxX = box.Max[0];
+            _maxY = box.Max[1];
 		}
 
         /// <summary>
@@ -362,11 +388,23 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="bottom">Bottom.</param>
 		public bool OverlapsWithBox(double left, double top, double right, double bottom)
 		{
-			BoxF2D box = new BoxF2D (left, top, right, bottom);
-			if (box.Overlaps (_rectangle.BoundingBox)) {
-				return _rectangle.Overlaps (box);
-			}
-			return false;
+            if (right < _minX)
+            { // completely to the left of this view.
+                return false;
+            }
+            //if (top < _maxY)
+            //{ // completely below this view.
+            //    return false;
+            //}
+            //if (bottom > _minY)
+            //{ // completely above this view.
+            //    return false;
+            //}
+            if (left > _maxX)
+            { // completely to the right of this view.
+                return false;
+            }
+            return true;
 		}
 
         /// <summary>

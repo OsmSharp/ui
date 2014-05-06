@@ -37,14 +37,14 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <summary>
         /// Holds the epsilon.
         /// </summary>
-        private float _epsilon;
+        private float epsilon;
 
         /// <summary>
         /// Creates a new scene object merger.
         /// </summary>
         public Scene2DObjectMerger()
         {
-            _epsilon = 0.00001f;
+            epsilon = 0.00001f;
         }
 
         /// <summary>
@@ -73,6 +73,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
             var lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
             var linesIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
             Dictionary<uint, SceneObject> sceneObjects = source.GetSceneObjectsAt(idx);
+            float epsilon = source.CalculateSimplificationEpsilon(source.GetMaximumZoomFactorAt(idx));
             foreach (var sceneObject in sceneObjects)
             {
                 if (sceneObject.Value.Enum == SceneObjectType.LineObject)
@@ -173,7 +174,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 // find a matching line.
                 int mergeCount = 1;
                 Scene2D.ScenePoints found;
-                MatchPosition foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, out found);
+                MatchPosition foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, epsilon, out found);
                 while (found != null)
                 { // TODO: keep expanding and duplicating until not possible anymore.
                     // remove the found line.
@@ -205,7 +206,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     }
 
                     // select a new line.
-                    foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, out found);
+                    foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, epsilon, out found);
                     mergeCount++;
                 }
 
@@ -254,11 +255,12 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <param name="lines"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        private MatchPosition FindMatch(ILocatedObjectIndex<PointF2D, Scene2D.ScenePoints> linesIndex, Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, double[] x, double[] y, Scene2DStylesSet style, out Scene2D.ScenePoints found)
+        private MatchPosition FindMatch(ILocatedObjectIndex<PointF2D, Scene2D.ScenePoints> linesIndex, Dictionary<Scene2D.ScenePoints, Scene2DStylesSet> lines, 
+            double[] x, double[] y, Scene2DStylesSet style, float epsilon, out Scene2D.ScenePoints found)
         {
             // build box.
             var box = new BoxF2D(x, y);
-            box = box.ResizeWith(_epsilon * 1.1);
+            box = box.ResizeWith(epsilon * 1.1);
 
             // get all geometries in this box.
             var potentialMatches = linesIndex.GetInside(box);
@@ -274,22 +276,22 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 // check first.
                 PointF2D potentialFirst = new PointF2D(line.X[0], line.Y[0]);
                 PointF2D potentialLast = new PointF2D(line.X[line.X.Length - 1], line.Y[line.Y.Length - 1]);
-                if (first.Distance(potentialFirst) < _epsilon)
+                if (first.Distance(potentialFirst) < epsilon)
                 {
                     found = line;
                     position = MatchPosition.FirstFirst;
                 }
-                else if (last.Distance(potentialFirst) < _epsilon)
+                else if (last.Distance(potentialFirst) < epsilon)
                 {
                     found = line;
                     position = MatchPosition.LastFirst;
                 }
-                else if (first.Distance(potentialLast) < _epsilon)
+                else if (first.Distance(potentialLast) < epsilon)
                 {
                     found = line;
                     position = MatchPosition.FirstLast;
                 }
-                else if (last.Distance(potentialLast) < _epsilon)
+                else if (last.Distance(potentialLast) < epsilon)
                 {
                     found = line;
                     position = MatchPosition.LastLast;

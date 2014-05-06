@@ -220,7 +220,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <returns>The simplification epsilon.</returns>
         /// <param name="zoomFactor">Zoom factor.</param>
-        private float CalculateSimplificationEpsilon(float zoomFactor)
+        public float CalculateSimplificationEpsilon(float zoomFactor)
         {
             return Scene2D.CalculateSimplificationEpsilon(_projection, zoomFactor);
         }
@@ -256,6 +256,16 @@ namespace OsmSharp.UI.Renderer.Scene
         internal Dictionary<uint, SceneObject> GetSceneObjectsAt(int idx)
         {
             return _sceneObjects[idx];
+        }
+
+        /// <summary>
+        /// Returns the maximum zoom factor for the given index.
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        internal float GetMaximumZoomFactorAt(int idx)
+        {
+            return _zoomFactors[idx];
         }
 
         /// <summary>

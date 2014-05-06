@@ -180,15 +180,15 @@ namespace OsmSharp.UI.Renderer
                     {
                         continue;
                     }
-
+                    double[] x, y;
                     switch (primitive.Primitive2DType)
                     {
                         case Primitive2DType.Line2D:
                             Line2D line = (Line2D)primitive;
 
-                            double[] x = line.X;
-                            double[] y = line.Y;
-                            if (x.Length > 4)
+                            x = line.X;
+                            y = line.Y;
+                            if (x.Length > 4 && line.MaxZoom > zoomFactor * 2 && line.MaxZoom < 512)
                             { // try and simplify.
                                 double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
                                     epsilon);
@@ -216,7 +216,33 @@ namespace OsmSharp.UI.Renderer
                             break;
                         case Primitive2DType.Polygon2D:
                             Polygon2D polygon = (Polygon2D)primitive;
-                            this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color,
+
+                            x = polygon.X;
+                            y = polygon.Y;
+                            //if (x.Length > 4 && polygon.MaxZoom > zoomFactor * 2 && polygon.MaxZoom < 512)
+                            //{ // try and simplify.
+                            //    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                            //        epsilon);
+                            //    if (simplified[0].Length < polygon.X.Length)
+                            //    {
+                            //        simplifiedLines++;
+                            //        x = simplified[0];
+                            //        y = simplified[1];
+                            //    }
+                            //    double distance = epsilon * 2;
+                            //    if (simplified[0].Length == 2)
+                            //    { // check if the simplified version is smaller than epsilon.
+                            //        distance = System.Math.Sqrt(
+                            //            System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
+                            //            System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
+                            //    }
+                            //    //if (distance < epsilon)
+                            //    //{
+                            //    //    droppedLines++;
+                            //    //    continue;
+                            //    //}
+                            //}
+                            this.DrawPolygon(target, x, y, polygon.Color,
                                 this.FromPixels(target, view, polygon.Width), polygon.Fill);
                             break;
                         case Primitive2DType.LineText2D:

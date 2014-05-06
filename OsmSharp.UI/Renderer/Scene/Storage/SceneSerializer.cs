@@ -122,7 +122,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 long position = stream.Position;
 
                 Dictionary<uint, SceneObject> sceneAtZoom = scene.GetObjectsAt(idx);
-                RTreeMemoryIndex<SceneObject> memoryIndex = new RTreeMemoryIndex<SceneObject>();
+                RTreeMemoryIndex<SceneObject> memoryIndex = new RTreeMemoryIndex<SceneObject>(50, 100);
 
                 float latestProgress = 0;
                 int sceneObjectIdx = 0;
