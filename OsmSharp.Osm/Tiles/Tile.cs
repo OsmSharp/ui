@@ -69,10 +69,12 @@ namespace OsmSharp.Osm.Tiles
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is Tile)
+            var other = (obj as Tile);
+            if (other != null)
             {
-                return (obj as Tile).X == this.X &&
-                    (obj as Tile).Y == this.Y;
+                return other.X == this.X &&
+                    other.Y == this.Y &&
+                    other.Zoom == this.Zoom;
             }
             return false;
         }
