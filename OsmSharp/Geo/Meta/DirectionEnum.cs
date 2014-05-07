@@ -30,34 +30,34 @@ namespace OsmSharp.Math.Geo.Meta
         /// <summary>
         /// North.
         /// </summary>
-        North,
+        North = 0,
         /// <summary>
         /// Northeast.
         /// </summary>
-        NorthEast,
+        NorthEast = 45,
         /// <summary>
         /// East.
         /// </summary>
-        East,
+        East = 90,
         /// <summary>
         /// Southeast.
         /// </summary>
-        SouthEast,
+        SouthEast = 135,
         /// <summary>
         /// South.
         /// </summary>
-        South,
+        South = 180,
         /// <summary>
         /// Southwest.
         /// </summary>
-        SouthWest,
+        SouthWest = 225,
         /// <summary>
         /// West.
         /// </summary>
-        West,
+        West = 270,
         /// <summary>
         /// Northwest.
         /// </summary>
-        NorhtWest,
+        NorhtWest = 315,
     }
 }

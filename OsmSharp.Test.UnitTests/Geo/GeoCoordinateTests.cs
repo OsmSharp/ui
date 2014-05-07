@@ -19,6 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
+using OsmSharp.Math.Geo.Meta;
 
 namespace OsmSharp.Test.Unittests.Geo
 {
@@ -57,7 +58,7 @@ namespace OsmSharp.Test.Unittests.Geo
         {
             var generator = new OsmSharp.Math.Random.RandomGenerator(10124613);
 
-            for(int idx = 0; idx < 1000; idx++)
+            for (int idx = 0; idx < 1000; idx++)
             {
                 GeoCoordinate start = new GeoCoordinate(51, 4.8);
                 GeoCoordinate offset = start.OffsetRandom(generator, 20);
@@ -65,6 +66,36 @@ namespace OsmSharp.Test.Unittests.Geo
                 double distance = offset.DistanceReal(start).Value;
                 Assert.IsTrue(distance <= 20.001);
             }
+        }
+
+        /// <summary>
+        /// Tests the random offset 
+        /// </summary>
+        [Test]
+        public void TestGeoCoordinateOffsetWithDirection()
+        {
+            const double startLatitude = 53.32056; // 53°19′14″N
+            const double startLongitude = 1.72972; // 001°43′47″E
+            const double distance = 1000; // 1km
+            GeoCoordinate start = new GeoCoordinate(startLatitude, startLongitude);
+
+            // North
+            const double endLatitudeNorth = 53.32950; // 53.3295°N
+            const double endLongitudeNorth = 1.72970; // 001.7297°E
+
+            GeoCoordinate endNorth = start.OffsetWithDirection(distance, DirectionEnum.North);
+            Assert.AreEqual(endLatitudeNorth, endNorth.Latitude, 0.0001);
+            Assert.AreEqual(endLongitudeNorth, endNorth.Longitude, 0.0001);
+
+            // North East
+            const double endLatitudeNorthEast = 53.32690; // 53.3269°N
+            const double endLongitudeNorthEast = 1.74040; // 001.7404°E
+
+            GeoCoordinate endNorthEast = start.OffsetWithDirection(distance, DirectionEnum.NorthEast);
+            Assert.AreEqual(endLatitudeNorthEast, endNorthEast.Latitude, 0.0001);
+            Assert.AreEqual(endLongitudeNorthEast, endNorthEast.Longitude, 0.0001);
+
+            // TODO: test other directions
         }
     }
 }
