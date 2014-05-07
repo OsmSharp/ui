@@ -78,7 +78,8 @@ namespace OsmSharp.UI.Renderer
 
 				return complete;
 			}
-			catch(Exception ex) {
+			catch(Exception ex)
+            {
 				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, 
 				                                 ex.Message);
 				this.SetRunning (false);
@@ -261,17 +262,17 @@ namespace OsmSharp.UI.Renderer
                             break;
                         case Primitive2DType.ImageTilted2D:
                             ImageTilted2D imageTilted = (ImageTilted2D)primitive;
-                            imageTilted.Tag = this.DrawImage(target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
-                            if (imageTilted.Tag != null)
+                            imageTilted.NativeImage = this.DrawImage(target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.NativeImage);
+                            if (imageTilted.NativeImage != null)
                             { // remove the image data when there is a tag already.
                                 imageTilted.ImageData = null;
                             }
                             break;
                         case Primitive2DType.Image2D:
                             Image2D image = (Image2D)primitive;
-                            image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData,
-                                image.Tag);
-                            if (image.Tag != null)
+                            image.NativeImage = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData,
+                                image.NativeImage);
+                            if (image.NativeImage != null)
                             { // remove the image data when there is a tag already.
                                 image.ImageData = null;
                             }
@@ -394,7 +395,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="right"></param>
 	    /// <param name="bottom"></param>
 	    /// <param name="imageData"></param>
-		protected abstract object DrawImage(Target2DWrapper<TTarget> target, double left, double top, double right, double bottom, byte[] imageData, object tag);
+        protected abstract INativeImage DrawImage(Target2DWrapper<TTarget> target, double left, double top, double right, double bottom, byte[] imageData, INativeImage tag);
 
 		/// <summary>
 		/// Draws the image.
@@ -404,7 +405,7 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="bounds">Bounds.</param>
 		/// <param name="imageData">Image data.</param>
 		/// <param name="tag">Tag.</param>
-		protected abstract object DrawImage (Target2DWrapper<TTarget> target, RectangleF2D bounds, byte[] imageData, object tag);
+        protected abstract INativeImage DrawImage(Target2DWrapper<TTarget> target, RectangleF2D bounds, byte[] imageData, INativeImage tag);
 
         /// <summary>
         /// Draws text.

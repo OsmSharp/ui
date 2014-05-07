@@ -94,6 +94,17 @@ namespace OsmSharp.Collections.Cache
         }
 
         /// <summary>
+        /// Returns the amount of entries in this cache.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return _data.Count;
+            }
+        }
+
+        /// <summary>
         /// Returns the value for this given key.
         /// </summary>
         /// <param name="key"></param>

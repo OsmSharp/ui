@@ -105,6 +105,7 @@
     <Compile Include="Renderer\Primitives\Icon2D.cs" />
     <Compile Include="Renderer\Primitives\Image2D.cs" />
     <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
+    <Compile Include="Renderer\Primitives\INativeImage.cs" />
     <Compile Include="Renderer\Primitives\Line2D.cs" />
     <Compile Include="Renderer\Primitives\LineText2D.cs" />
     <Compile Include="Renderer\Primitives\Point2D.cs" />

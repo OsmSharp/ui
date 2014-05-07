@@ -106,11 +106,21 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+            _cache.OnRemove += OnRemove;
             _stack = new LimitedStack<Tile>(tileCacheSize, tileCacheSize);
             _timer = new Timer(this.LoadQueuedTiles, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             _attempts = new Dictionary<Tile, int>();
 
             _projection = new WebMercator();
+        }
+
+        /// <summary>
+        /// Handes the OnRemove-event from the cache.
+        /// </summary>
+        /// <param name="image"></param>
+        private void OnRemove(Image2D image)
+        { // dispose of the image after it is removed from the cache.
+            image.Dispose();
         }
 
         /// <summary>

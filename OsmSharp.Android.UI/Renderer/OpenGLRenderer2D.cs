@@ -181,12 +181,12 @@ namespace OsmSharp.Android.UI
 
 		}
 
-		protected override object DrawImage (Target2DWrapper<OpenGLTarget2D> target, double left, double top, double right, double bottom, byte[] imageData, object tag)
+        protected override INativeImage DrawImage(Target2DWrapper<OpenGLTarget2D> target, double left, double top, double right, double bottom, byte[] imageData, INativeImage tag)
 		{
 			return null;
 		}
 
-		protected override object DrawImage (Target2DWrapper<OpenGLTarget2D> target, OsmSharp.Math.Primitives.RectangleF2D bounds, byte[] imageData, object tag)
+        protected override INativeImage DrawImage(Target2DWrapper<OpenGLTarget2D> target, OsmSharp.Math.Primitives.RectangleF2D bounds, byte[] imageData, INativeImage tag)
 		{
 			return tag;
 		}

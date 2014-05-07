@@ -31,6 +31,10 @@
     <DocumentationFile>..\OutputAndroid\OsmSharp.Android.UI.Sample.XML</DocumentationFile>
     <JavaMaximumHeapSize>512m</JavaMaximumHeapSize>
     <AndroidSupportedAbis>armeabi;armeabi-v7a;x86</AndroidSupportedAbis>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+    <AndroidLinkSkip />
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <BundleAssemblies>False</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -68,6 +72,7 @@
     <EmbeddedResource Include="..\OsmSharp.Test.UnitTests\regression1.gpx">
       <Link>regression1.gpx</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="map.mbtiles" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

@@ -55,6 +55,7 @@
     <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Log\LogTraceListener.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
+    <Compile Include="Renderer\NativeImage.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />

@@ -17,13 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Primitives;
+using System;
 
 namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
     /// Represents a simple 2D image.
     /// </summary>
-    public class Image2D : Primitive2D
+    public class Image2D : Primitive2D, IDisposable
     {
         /// <summary>
         /// Creates a new Image2D.
@@ -99,6 +100,26 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
+        /// Holds the native image.
+        /// </summary>
+        private INativeImage _nativeImage;
+
+        /// <summary>
+        /// Gets or sets the native image.
+        /// </summary>
+        public INativeImage NativeImage
+        {
+            get
+            {
+                return _nativeImage;
+            }
+            set
+            {
+                _nativeImage = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the image data.
         /// </summary>
         public byte[] ImageData { get; set; }
@@ -159,6 +180,58 @@ namespace OsmSharp.UI.Renderer.Primitives
         public override BoxF2D GetBox()
         {
             return new BoxF2D(this.Left, this.Top, this.Right, this.Bottom);
+        }
+
+        #endregion
+
+        #region Disposing-pattern
+
+        /// <summary>
+        /// Diposes of all resources associated with this object.
+        /// </summary>
+        public void Dispose()
+        {
+            // If this function is being called the user wants to release the
+            // resources. lets call the Dispose which will do this for us.
+            Dispose(true);
+
+            // Now since we have done the cleanup already there is nothing left
+            // for the Finalizer to do. So lets tell the GC not to call it later.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {            
+            if (disposing == true)
+            {
+                //someone want the deterministic release of all resources
+                //Let us release all the managed resources
+            }
+            else
+            {
+                // Do nothing, no one asked a dispose, the object went out of
+                // scope and finalized is called so lets next round of GC 
+                // release these resources
+            }
+
+            // Release the unmanaged resource in any case as they will not be 
+            // released by GC
+            if(this._nativeImage != null)
+            { // dispose of the native image.
+                this._nativeImage.Dispose();
+            }
+        }        
+
+        /// <summary>
+        /// Finalizer.
+        /// </summary>
+        ~Image2D()
+        {
+            // The object went out of scope and finalized is called
+            // Lets call dispose in to release unmanaged resources 
+            // the managed resources will anyways be released when GC 
+            // runs the next time.
+            Dispose(false);
         }
 
         #endregion

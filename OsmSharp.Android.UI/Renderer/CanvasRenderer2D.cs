@@ -36,6 +36,7 @@ using Android.Graphics;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.Android.UI.Renderer;
 
 namespace OsmSharp.Android.UI
 {
@@ -102,7 +103,7 @@ namespace OsmSharp.Android.UI
 		{
 			_path.Dispose ();
 
-            GC.Collect();
+            // GC.Collect();
 		}
 		
 		#endregion
@@ -365,30 +366,12 @@ namespace OsmSharp.Android.UI
 		/// <param name="bottom"></param>
 		/// <param name="imageData"></param>
 		/// <param name="tag"></param>
-		protected override object DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
+		protected override INativeImage DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
 		                                     double left, double top, double right, double bottom, byte[] imageData,
-		                                   object tag)
+		                                   INativeImage tag)
 		{
             var rectangle = new RectangleF2D(left, top, right - left, bottom - top);
             return this.DrawImage(target, rectangle, imageData, tag);
-            //global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
-            //if(image == null)
-            //{
-            //    image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
-            //        imageData, 0, imageData.Length);
-            //}
-
-            //double[] topleft = this.Transform(left, top);
-            //double[] bottomright = this.Transform(right, bottom);
-            //float leftPixels = (float)topleft[0];
-            //float topPixels = (float)topleft[1];
-            //float rightPixels = (float)bottomright[0];
-            //float bottomPixels = (float)bottomright[1];
-
-            //target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
-            //                         new global::Android.Graphics.RectF(leftPixels, topPixels, rightPixels, bottomPixels),
-            //                         null);
-            //return image;
 		}
 
 		/// <summary>
@@ -399,14 +382,15 @@ namespace OsmSharp.Android.UI
 		/// <param name="bounds">Bounds.</param>
 		/// <param name="imageData">Image data.</param>
 		/// <param name="tag">Tag.</param>
-		protected override object DrawImage (Target2DWrapper<Canvas> target, RectangleF2D bounds, byte[] imageData, object tag)
+        protected override INativeImage DrawImage(Target2DWrapper<Canvas> target, RectangleF2D bounds, byte[] imageData, INativeImage tag)
 		{
-			global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
-			if(image == null)
-			{
-				image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
-					imageData, 0, imageData.Length);
+			var nativeImage = (tag as NativeImage);
+            if (nativeImage == null)
+			{ // create the native image wrapper.
+                nativeImage = new NativeImage(global::Android.Graphics.BitmapFactory.DecodeByteArray(
+					imageData, 0, imageData.Length));
 			}
+            global::Android.Graphics.Bitmap image = nativeImage.Image;
 			this.Transform (bounds.BottomLeft [0], bounds.BottomLeft [1], _transformed1);
 			PointF2D bottomLeft = new PointF2D(_transformed1[0], _transformed1[1]);
 			this.Transform (bounds.BottomRight [0], bounds.BottomRight [1], _transformed1);
@@ -429,7 +413,7 @@ namespace OsmSharp.Android.UI
 			    _paint);
 			target.Target.Restore ();
 
-			return tag;
+            return nativeImage;
 		}
 
 		/// <summary>

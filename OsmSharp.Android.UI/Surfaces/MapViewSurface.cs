@@ -20,6 +20,7 @@ using Android.App;
 using Android.Content;
 using Android.Util;
 using Android.Views;
+using OsmSharp.Android.UI.Renderer;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -121,6 +122,7 @@ namespace OsmSharp.Android.UI
         {
             _mapView = mapLayout;
             this.SetWillNotDraw(false);
+            this.SetWillNotCacheDrawing(true);
 
             this.MapMinZoomLevel = 0;
             this.MapMaxZoomLevel = 20;
@@ -302,35 +304,35 @@ namespace OsmSharp.Android.UI
 				// add the internal layers.
 				layers.Add (_makerLayer);
 
-				// get old image if available.
-                global::Android.Graphics.Bitmap image = null;
-				if (_offScreenBuffer != null)
-                {
-                    image = _offScreenBuffer.Tag as global::Android.Graphics.Bitmap;
-				}
-
                 if (this.SurfaceHeight == 0)
-                {
+                { // the surface has no height yet. Impossible to render like this.
                     return;
                 }
+
+				// get old image if available.
+                NativeImage image = null;
+				if (_offScreenBuffer != null)
+                { // get the native image from the off-screen buffer.
+                    image = _offScreenBuffer.NativeImage as NativeImage;
+				}
 
                 // resize image if needed.
                 float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
                 if (image == null ||
-                    image.Width != (int)(size * _extra) ||
-                    image.Height != (int)(size * _extra))
+                    image.Image.Width != (int)(size * _extra) ||
+                    image.Image.Height != (int)(size * _extra))
                 { // create a bitmap and render there.
                     if (image != null)
                     { // make sure to dispose the old image.
                         image.Dispose();
                     }
-                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(size * _extra),
+                    image = new NativeImage(global::Android.Graphics.Bitmap.CreateBitmap((int)(size * _extra),
                         (int)(size * _extra),
-                        global::Android.Graphics.Bitmap.Config.Argb8888);
+                        global::Android.Graphics.Bitmap.Config.Argb8888));
                 }
 
 				// create and reset the canvas.
-				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (image);
+				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (image.Image);
 				canvas.DrawColor (new global::Android.Graphics.Color(
 					SimpleColor.FromKnownColor(KnownColor.White).Value));
 
@@ -344,7 +346,6 @@ namespace OsmSharp.Android.UI
                                          size * _extra, size * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
 
-
 				long before = DateTime.Now.Ticks;
 
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
@@ -355,7 +356,7 @@ namespace OsmSharp.Android.UI
                     !_previouslyChangedView.Equals(view))
                 { // report change once!
                     var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                        image.Width, image.Height, sceneZoomFactor,
+                        image.Image.Width, image.Image.Height, sceneZoomFactor,
                         _invertX, _invertY, this.MapTilt);
                     this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
                                           normalView, view);
@@ -369,17 +370,27 @@ namespace OsmSharp.Android.UI
 				// does the rendering.
                 bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
+                // get rid of the canvas.
+                canvas.Dispose();
+
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-				                                "Rendering took: {0}ms @ zoom level {1}",
-                                                (new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom);
+				                                "Rendering took: {0}ms @ zoom level {1} and {2}",
+                                                (new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom, this.MapCenter);
 				if(complete)
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
                     
-                    // add the newly rendered image again.            
-                    _offScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
-                    _offScreenBuffer.Tag = image;
+                    // add the newly rendered image again.           
+                    if(_offScreenBuffer == null)
+                    { // create the offscreen buffer first.
+                        _offScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                    }
+                    else
+                    { // augment the previous buffer.
+                        _offScreenBuffer.Bounds = view.Rectangle;
+                    }
+                    _offScreenBuffer.NativeImage = image;
 
                     var temp = _onScreenBuffer;
                     _onScreenBuffer = _offScreenBuffer;
@@ -387,13 +398,16 @@ namespace OsmSharp.Android.UI
 				}
 
                 // notify the the current surface of the new rendering.
-                this.PostInvalidate();
+                //this.PostInvalidate();
+                (this.Context as Activity).RunOnUiThread(Invalidate);
 				
 				long after = DateTime.Now.Ticks;
 
                 if (complete)
                 { // report a successful render to listener.
                     _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
+
+                    GC.Collect();
                 }
 			}
 		}

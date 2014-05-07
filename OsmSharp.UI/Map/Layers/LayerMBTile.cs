@@ -54,8 +54,18 @@ namespace OsmSharp.UI.Map.Layers
         {
             _connection = connection;
 
-            _cache = new LRUCache<Tile, Image2D>(80);
+            _cache = new LRUCache<Tile, Image2D>(160);
+            _cache.OnRemove += OnRemove;
             _projection = new WebMercator();
+        }
+
+        /// <summary>
+        /// Handes the OnRemove-event from the cache.
+        /// </summary>
+        /// <param name="image"></param>
+        private void OnRemove(Image2D image)
+        { // dispose of the image after it is removed from the cache.
+            image.Dispose();
         }
 
         /// <summary>
@@ -101,9 +111,8 @@ namespace OsmSharp.UI.Map.Layers
                 var viewBox = view.OuterBox;
 
                 // build the tile range.
-                TileRange range = TileRange.CreateAroundBoundingBox(new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                var range = TileRange.CreateAroundBoundingBox(new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
                     map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1])), zoomLevel);
-                DateTime now = DateTime.Now;
                 
                 // request all missing tiles.
                 lock (_connection)
@@ -111,8 +120,13 @@ namespace OsmSharp.UI.Map.Layers
                     // TODO: Investigate the SQLite multithreaded behaviour..
                     // TODO: this a very naive way of loading these tiles. Find a way to query SQLite more efficiently
                     // TODO: find a way to have some cached tiles.
-                    foreach (var tile in range)
+                    foreach (var tile in range.EnumerateInCenterFirst())
                     {
+                        Image2D value;
+                        if(_cache.TryPeek(tile, out value))
+                        { // tile is already in cache.
+                            continue;
+                        }
                         Tile invertTile = tile.InvertY();
 
                         var tiles = _connection.Query<tiles>("SELECT * FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?",
@@ -133,6 +147,8 @@ namespace OsmSharp.UI.Map.Layers
                         }
                     }
                 }
+
+                OsmSharp.Logging.Log.TraceEvent("LayerMBTile", Logging.TraceEventType.Information, "Cached tiles: {0}", _cache.Count);
             }
         }
 
