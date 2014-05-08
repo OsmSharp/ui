@@ -51,7 +51,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal abstract IEnumerable<Primitive2D> Get(float zoomFactor, View2D view);
+        protected internal abstract IEnumerable<Primitive2D> Get(float zoomFactor, View2D view);
 
         /// <summary>
         /// Called when the view on the map has changed.
@@ -60,7 +60,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal virtual void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal virtual void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // override in layer implementation if needed.
         }
@@ -68,7 +68,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Called when the last map view change has to be cancelled.
         /// </summary>
-        internal virtual void ViewChangedCancel()
+        protected internal virtual void ViewChangedCancel()
         {
             // override in layer implementation to cancel large map requests.
         }
@@ -87,7 +87,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// An event raised when the content of this layer has changed.
         /// </summary>
-        internal event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+        protected internal event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
 
         /// <summary>
         /// Gets or sets the tag.

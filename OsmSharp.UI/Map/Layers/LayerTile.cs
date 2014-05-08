@@ -41,47 +41,38 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the tile url.
         /// </summary>
         private readonly string _tilesURL;
-
         /// <summary>
         /// Holds the current zoom.
         /// </summary>
         private int _currentZoom = -1;
-
         /// <summary>
         /// Holds the LRU cache.
         /// </summary>
         private readonly LRUCache<Tile, Image2D> _cache;
-
         /// <summary>
         /// Holds the minimum zoom level.
         /// </summary>
         private readonly int _minZoomLevel = 0;
-
         /// <summary>
         /// Holds the maximum zoom level.
         /// </summary>
         private readonly int _maxZoomLevel = 18;
-
         /// <summary>
         /// Holds the offset to calculate the minimum zoom.
         /// </summary>
         private const float _zoomMinOffset = 0.5f;
-
         /// <summary>
         /// Holds the maximum threads.
         /// </summary>
         private const int _maxThreads = 4;
-        
         /// <summary>
         /// Holds the tile to-load queue.
         /// </summary>
         private readonly LimitedStack<Tile> _stack;
-
         /// <summary>
         /// Holds the number of failed attempts at loading one tile.
         /// </summary>
         private readonly Dictionary<Tile, int> _attempts;
-
         /// <summary>
         /// Holds the timer.
         /// </summary>
@@ -153,7 +144,7 @@ namespace OsmSharp.UI.Map.Layers
             Tile tile = state as Tile;
 
             // only load tiles from the same zoom-level.
-            if(tile.Zoom != _currentZoom)
+            if (tile.Zoom != _currentZoom)
             { // zoom is different, don't bother!
                 return;
             }
@@ -172,11 +163,11 @@ namespace OsmSharp.UI.Map.Layers
 
             // load the tile.
             string url = string.Format(_tilesURL,
-                                       tile.Zoom,
-                                       tile.X,
-                                       tile.Y);
+                             tile.Zoom,
+                             tile.X,
+                             tile.Y);
             var request = (HttpWebRequest)HttpWebRequest.Create(
-                url);
+                              url);
             request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
             //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
@@ -184,7 +175,8 @@ namespace OsmSharp.UI.Map.Layers
 
             try
             {
-                Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) => { 
+                Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) =>
+                { 
                     this.Response(obj, tile);
 
                     _loading.Remove(tile);
@@ -233,7 +225,7 @@ namespace OsmSharp.UI.Map.Layers
                                 }
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         { // oops, exceptions that are not webexceptions!?
                             OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
                         }
@@ -245,7 +237,7 @@ namespace OsmSharp.UI.Map.Layers
                     action.EndInvoke(iar);
                 }), wrapperAction);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
@@ -256,7 +248,8 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="myResp">My resp.</param>
         /// <param name="tile">Tile.</param>
-        private void Response(WebResponse myResp, Tile tile) {
+        private void Response(WebResponse myResp, Tile tile)
+        {
             Stream stream = myResp.GetResponseStream();
             byte[] image = null;
             if (stream != null)
@@ -293,7 +286,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the previous zoom factor.
         /// </summary>
         private float _previousZoomFactor = 1;
-
         /// <summary>
         /// Holds the ascending boolean.
         /// </summary>
@@ -306,7 +298,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
             lock (_cache)
@@ -356,7 +348,6 @@ namespace OsmSharp.UI.Map.Layers
 
         #endregion
 
-
         /// <summary>
         /// Notifies this layer the mapview has changed.
         /// </summary>
@@ -364,7 +355,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
@@ -374,7 +365,7 @@ namespace OsmSharp.UI.Map.Layers
                 // build the bounding box.
                 var viewBox = view.OuterBox;
                 var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
-                    map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+                              map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
                 // build the tile range.
                 lock (_stack)
@@ -402,9 +393,9 @@ namespace OsmSharp.UI.Map.Layers
                         _timer.Change(0, 250);
                     }
 
-                    if(_stack.Count > 0)
+                    if (_stack.Count > 0)
                     { // reset the attempts.
-                        lock(_attempts)
+                        lock (_attempts)
                         {
                             _attempts.Clear();
                         }

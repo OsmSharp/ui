@@ -34,7 +34,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the scene primitives source.
         /// </summary>
         private IPrimitives2DSource _index;
-
         /// <summary>
         /// Holds the primitives.
         /// </summary>
@@ -57,7 +56,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             this.BuildScene(map, zoomFactor, center, extraView);
         }
@@ -65,7 +64,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Called when the last map view change has to be cancelled.
         /// </summary>
-        internal override void ViewChangedCancel()
+        protected internal override void ViewChangedCancel()
         { // cancel the current get if there is one going on.
             _index.GetCancel();
         }
@@ -76,7 +75,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the last box.
         /// </summary>
         private GeoCoordinateBox _lastBox;
-
         /// <summary>
         /// Holds the last zoom level.
         /// </summary>
@@ -94,7 +92,7 @@ namespace OsmSharp.UI.Map.Layers
             // build the boundingbox.
             var viewBox = view.OuterBox;
             var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
-                                            map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+                          map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
             var zoomLevel = (int)map.Projection.ToZoomLevel(zoomFactor);
             if (_lastBox != null && _lastBox.Contains(box) &&
                 zoomLevel == _lastZoom)
@@ -116,12 +114,12 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             return _primitives.Where((primitive) =>
-                {
-                    return primitive.IsVisibleIn(view, zoomFactor);
-                });
+            {
+                return primitive.IsVisibleIn(view, zoomFactor);
+            });
         }
 
         #endregion
