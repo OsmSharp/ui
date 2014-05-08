@@ -36,12 +36,10 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the source of the OSM raw data.
         /// </summary>
         private readonly IBasicRouterDataSource<LiveEdge> _dataSource;
-
         /// <summary>
         /// Holds the style interpreter.
         /// </summary>
         private readonly StyleInterpreter _styleInterpreter;
-
         /// <summary>
         /// Holds the scene.
         /// </summary>
@@ -53,7 +51,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         public LayerDynamicGraphLiveEdge(IBasicRouterDataSource<LiveEdge> dataSource, 
-            StyleInterpreter styleInterpreter)
+                                         StyleInterpreter styleInterpreter)
         {
             _dataSource = dataSource;
             _styleInterpreter = styleInterpreter;
@@ -69,7 +67,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             _interpretedObjects.Clear();
             _requestedBoxes.Clear();
@@ -83,7 +81,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds al id's of all already interpreted objects.
         /// </summary>
         private readonly Dictionary<int, HashSet<ArcId>> _interpretedObjects;
-
         /// <summary>
         /// Holds all previously requested boxes.
         /// </summary>
@@ -97,24 +94,27 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
-		{
-			// get the indexed object at this zoom.
-			HashSet<ArcId> interpretedObjects;
-			if (!_interpretedObjects.TryGetValue ((int)zoomFactor, out interpretedObjects)) {
-				interpretedObjects = new HashSet<ArcId> ();
-				_interpretedObjects.Add ((int)zoomFactor, interpretedObjects);
-			}
+        {
+            // get the indexed object at this zoom.
+            HashSet<ArcId> interpretedObjects;
+            if (!_interpretedObjects.TryGetValue((int)zoomFactor, out interpretedObjects))
+            {
+                interpretedObjects = new HashSet<ArcId>();
+                _interpretedObjects.Add((int)zoomFactor, interpretedObjects);
+            }
 
-			// build the boundingbox.
-			var viewBox = view.OuterBox;
-			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
-			                                            map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
-			foreach (var requestedBox in _requestedBoxes) {
-				if (requestedBox.Contains (box)) {
-					return;
-				}
-			}
-			_requestedBoxes.Add (box);
+            // build the boundingbox.
+            var viewBox = view.OuterBox;
+            var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                 map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+            foreach (var requestedBox in _requestedBoxes)
+            {
+                if (requestedBox.Contains(box))
+                {
+                    return;
+                }
+            }
+            _requestedBoxes.Add(box);
 
             //// set the scene backcolor.
             //SimpleColor? color = _styleInterpreter.GetCanvasColor ();
@@ -122,19 +122,22 @@ namespace OsmSharp.UI.Map.Layers
             //                               ? color.Value.Value
             //                               : SimpleColor.FromArgb (0, 255, 255, 255).Value;
 
-			// get data.
-			foreach (var arc in _dataSource.GetArcs(box)) {
-				// translate each object into scene object.
-				var arcId = new ArcId () {
-					Vertex1 = arc.Key,
-					Vertex2 = arc.Value.Key
-				};
-				if (!interpretedObjects.Contains (arcId)) {
-					interpretedObjects.Add (arcId);
+            // get data.
+            foreach (var arc in _dataSource.GetArcs(box))
+            {
+                // translate each object into scene object.
+                var arcId = new ArcId()
+                {
+                    Vertex1 = arc.Key,
+                    Vertex2 = arc.Value.Key
+                };
+                if (!interpretedObjects.Contains(arcId))
+                {
+                    interpretedObjects.Add(arcId);
 
-					// create nodes.
-					float latitude, longitude;
-					_dataSource.GetVertex (arcId.Vertex1, out latitude, out longitude);
+                    // create nodes.
+                    float latitude, longitude;
+                    _dataSource.GetVertex(arcId.Vertex1, out latitude, out longitude);
                     var node1 = new Node();
                     node1.Id = arcId.Vertex1;
                     node1.Latitude = latitude;
@@ -145,22 +148,25 @@ namespace OsmSharp.UI.Map.Layers
                     node2.Latitude = latitude;
                     node2.Longitude = longitude;
 
-					// create way.
-					var way = CompleteWay.Create (-1);
-					if (arc.Value.Value.Forward) {
-						way.Nodes.Add (node1);
-						way.Nodes.Add (node2);
-					} else {
-						way.Nodes.Add (node2);
-						way.Nodes.Add (node1);
-					}
-					way.Tags.AddOrReplace (_dataSource.TagsIndex.Get (arc.Value.Value.Tags));
+                    // create way.
+                    var way = CompleteWay.Create(-1);
+                    if (arc.Value.Value.Forward)
+                    {
+                        way.Nodes.Add(node1);
+                        way.Nodes.Add(node2);
+                    }
+                    else
+                    {
+                        way.Nodes.Add(node2);
+                        way.Nodes.Add(node1);
+                    }
+                    way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.Value.Value.Tags));
 
-					_styleInterpreter.Translate (_scene, map.Projection, way);
-					interpretedObjects.Add (arcId);
-				}
-			}
-		}
+                    _styleInterpreter.Translate(_scene, map.Projection, way);
+                    interpretedObjects.Add(arcId);
+                }
+            }
+        }
 
         private struct ArcId
         {
@@ -179,9 +185,9 @@ namespace OsmSharp.UI.Map.Layers
                 {
                     var other = (ArcId)(obj);
                     return (other.Vertex1 == this.Vertex2 &&
-                            other.Vertex2 == this.Vertex1) ||
-                           (other.Vertex1 == this.Vertex1 &&
-                            other.Vertex2 == this.Vertex2);
+                    other.Vertex2 == this.Vertex1) ||
+                    (other.Vertex1 == this.Vertex1 &&
+                    other.Vertex2 == this.Vertex2);
                 }
                 return false;
             }
@@ -189,7 +195,7 @@ namespace OsmSharp.UI.Map.Layers
 
         #endregion
 
-        internal override IEnumerable<Renderer.Primitives.Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Renderer.Primitives.Primitive2D> Get(float zoomFactor, View2D view)
         {
             throw new System.NotImplementedException();
         }

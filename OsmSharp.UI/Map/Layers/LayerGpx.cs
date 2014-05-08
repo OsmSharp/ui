@@ -28,40 +28,40 @@ using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Layers
 {
-	/// <summary>
-	/// A layer drawing GPX data.
-	/// </summary>
-	public class LayerGpx : Layer
-	{		
-		/// <summary>
-		/// Holds the projection.
-		/// </summary>
-		private readonly IProjection _projection;
+    /// <summary>
+    /// A layer drawing GPX data.
+    /// </summary>
+    public class LayerGpx : Layer
+    {
+        /// <summary>
+        /// Holds the projection.
+        /// </summary>
+        private readonly IProjection _projection;
 
-		/// <summary>
-		/// Creates a new OSM data layer.
-		/// </summary>
+        /// <summary>
+        /// Creates a new OSM data layer.
+        /// </summary>
         /// <param name="projection"></param>
-		public LayerGpx(IProjection projection)
-		{			
-			_projection = projection;
+        public LayerGpx(IProjection projection)
+        {			
+            _projection = projection;
 
             _scene = new Scene2D(projection, 16);
-		}
+        }
 
-		/// <summary>
-		/// Called when the view on the map containing this layer has changed.
-		/// </summary>
-		/// <param name="map"></param>
-		/// <param name="zoomFactor"></param>
-		/// <param name="center"></param>
-		/// <param name="view"></param>
-		internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
-		{
-			// all data is pre-loaded for now.
+        /// <summary>
+        /// Called when the view on the map containing this layer has changed.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="center"></param>
+        /// <param name="view"></param>
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        {
+            // all data is pre-loaded for now.
 
-			// when displaying huge amounts of GPX-data use another approach.
-		}
+            // when displaying huge amounts of GPX-data use another approach.
+        }
 
         /// <summary>
         /// Returns all object in this layer that are visible for the given parameters.
@@ -69,7 +69,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             return _scene.Get(view, zoomFactor);
         }
@@ -81,12 +81,12 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         private Scene2D _scene;
 
-		/// <summary>
-		/// Adds a new GPX.
-		/// </summary>
-		/// <param name="stream">Stream.</param>
-		public GeoCoordinateBox AddGpx(Stream stream)
-		{
+        /// <summary>
+        /// Adds a new GPX.
+        /// </summary>
+        /// <param name="stream">Stream.</param>
+        public GeoCoordinateBox AddGpx(Stream stream)
+        {
             GeoCoordinateBox bounds = null;
             var gpxStream = new GpxGeoStreamSource(stream);
             foreach (var geometry in gpxStream)
@@ -102,7 +102,7 @@ namespace OsmSharp.UI.Map.Layers
                     // set the default color if none is given.
                     SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
                     SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-                                                                       blue.R, blue.G, blue.B);
+                                                      blue.R, blue.G, blue.B);
 
                     uint pointId = _scene.AddPoint(x, y);
                     _scene.AddStylePoint(pointId, 0, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
@@ -134,7 +134,7 @@ namespace OsmSharp.UI.Map.Layers
                     // set the default color if none is given.
                     SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
                     SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-                                                                       blue.R, blue.G, blue.B);
+                                                      blue.R, blue.G, blue.B);
 
                     uint? pointsId = _scene.AddPoints(x, y);
                     if (pointsId.HasValue)
@@ -154,8 +154,8 @@ namespace OsmSharp.UI.Map.Layers
                 }
             }
             return bounds;
-		}
-		
-		#endregion
+        }
+
+        #endregion
     }
 }

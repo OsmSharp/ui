@@ -58,54 +58,55 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="route">Stream.</param>
         public void AddRoute(Route route)
-		{
-			// set the default color if none is given.
-			SimpleColor blue = SimpleColor.FromKnownColor (KnownColor.Blue);
-			SimpleColor transparantBlue = SimpleColor.FromArgb (128, blue.R, blue.G, blue.B);
-			this.AddRoute (route, transparantBlue.Value);
-		}
+        {
+            // set the default color if none is given.
+            SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+            SimpleColor transparantBlue = SimpleColor.FromArgb(128, blue.R, blue.G, blue.B);
+            this.AddRoute(route, transparantBlue.Value);
+        }
 
-		/// <summary>
-		/// Adds a new OsmSharpRoute.
-		/// </summary>
-		/// <param name="route">Route.</param>
-		/// <param name="argb">ARGB.</param>
-		public void AddRoute(Route route, int argb){
-			this.AddRoute (route, argb, 8);
-		}
+        /// <summary>
+        /// Adds a new OsmSharpRoute.
+        /// </summary>
+        /// <param name="route">Route.</param>
+        /// <param name="argb">ARGB.</param>
+        public void AddRoute(Route route, int argb)
+        {
+            this.AddRoute(route, argb, 8);
+        }
 
-		/// <summary>
-		/// Adds a new OsmSharpRoute.
-		/// </summary>
-		/// <param name="route">Stream.</param>
-		/// <param name="argb">Stream.</param>
-		public void AddRoute(Route route, int argb, double width)
-		{
-			if (route != null && 
-                route.Entries != null && 
-                route.Entries.Length > 0)
-			{ // there are entries.
-				// get x/y.
-				var x = new double[route.Entries.Length];
-				var y = new double[route.Entries.Length];
-				for (int idx = 0; idx < route.Entries.Length; idx++)
-				{
-					x[idx] = _projection.LongitudeToX(
-						route.Entries[idx].Longitude);
-					y[idx] = _projection.LatitudeToY(
-						route.Entries[idx].Latitude);
-				}
+        /// <summary>
+        /// Adds a new OsmSharpRoute.
+        /// </summary>
+        /// <param name="route">Stream.</param>
+        /// <param name="argb">Stream.</param>
+        public void AddRoute(Route route, int argb, double width)
+        {
+            if (route != null &&
+            route.Entries != null &&
+            route.Entries.Length > 0)
+            { // there are entries.
+                // get x/y.
+                var x = new double[route.Entries.Length];
+                var y = new double[route.Entries.Length];
+                for (int idx = 0; idx < route.Entries.Length; idx++)
+                {
+                    x[idx] = _projection.LongitudeToX(
+                        route.Entries[idx].Longitude);
+                    y[idx] = _projection.LatitudeToY(
+                        route.Entries[idx].Latitude);
+                }
 
-				// set the default color if none is given.
-				SimpleColor color = SimpleColor.FromArgb (argb);
+                // set the default color if none is given.
+                SimpleColor color = SimpleColor.FromArgb(argb);
                 uint? pointsId = _scene.AddPoints(x, y);
                 if (pointsId.HasValue)
                 {
                     _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, 
                         color.Value, (float)width, Renderer.Primitives.LineJoin.Round, null);
                 }
-			}
-		}
+            }
+        }
 
         #endregion
 
@@ -115,7 +116,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             return _scene.Get(view, zoomFactor);
         }
@@ -125,7 +126,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public void Clear()
         {
-			_scene.Clear();
+            _scene.Clear();
         }
     }
 }
