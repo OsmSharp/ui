@@ -91,7 +91,11 @@ namespace OsmSharp.Android.UI
 		/// <param name="view"></param>
 		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
-			_path = new global::Android.Graphics.Path ();
+            if(_path == null)
+            { // a path to work with does not exist yet.
+                _path = new global::Android.Graphics.Path();
+            }
+            _path.Reset();
 		}
 		
 		/// <summary>
@@ -101,14 +105,23 @@ namespace OsmSharp.Android.UI
 		/// <param name="view"></param>
 		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
-			_path.Dispose ();
+            _wrapper = null;
+            _target = null;
+            _view = null;
 
-            // GC.Collect();
+            // TODO: figure out why this request to the GC has to keep being here.
+            // when this is removed things are obviously faster but there is a memory leak.
+            GC.Collect();
 		}
 		
 		#endregion
 
 		#region implemented abstract members of Renderer2D
+
+        /// <summary>
+        /// Holds the wrapper.
+        /// </summary>
+        private Target2DWrapper<global::Android.Graphics.Canvas> _wrapper;
 
 		/// <summary>
 		/// Returns the target wrapper.
@@ -117,8 +130,18 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public override Target2DWrapper<global::Android.Graphics.Canvas> CreateTarget2DWrapper (global::Android.Graphics.Canvas target)
 		{
-			return new Target2DWrapper<global::Android.Graphics.Canvas>(
-				target, target.Width, target.Height);
+            if(_wrapper == null)
+            { // create the wrapper.
+                _wrapper = new Target2DWrapper<global::Android.Graphics.Canvas>(
+				    target, target.Width, target.Height);
+            }
+            else
+            { // updated the exist wrapper.
+                _wrapper.Width = target.Width;
+                _wrapper.Height = target.Height;
+                _wrapper.Target = target;
+            }
+            return _wrapper;
 		}
 
 		/// <summary>
@@ -347,13 +370,13 @@ namespace OsmSharp.Android.UI
 		protected override void DrawIcon (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
 		                                  byte[] imageData)
 		{
-			global::Android.Graphics.Bitmap image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
-				imageData, 0, imageData.Length);
+            //global::Android.Graphics.Bitmap image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
+            //    imageData, 0, imageData.Length);
 			
-			double[] transformed = this.Transform (x, y);
+            //double[] transformed = this.Transform (x, y);
 
-			target.Target.DrawBitmap(image, (float)transformed [0], (float)transformed [1], null);
-			image.Dispose();
+            //target.Target.DrawBitmap(image, (float)transformed [0], (float)transformed [1], null);
+            //image.Dispose();
 		}
 
 		/// <summary>

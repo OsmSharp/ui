@@ -60,11 +60,11 @@ namespace OsmSharp.UI.Renderer
         /// <summary>
         /// Gets the orginal width in pixels.
         /// </summary>
-        public float Width { get; private set; }
+        public float Width { get; set; }
 
         /// <summary>
         /// Gets the orignal height in pixels.
         /// </summary>
-        public float Height { get; private set; }
+        public float Height { get; set; }
     }
 }
