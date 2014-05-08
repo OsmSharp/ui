@@ -75,7 +75,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
             lock (_cache)
@@ -100,7 +100,7 @@ namespace OsmSharp.UI.Map.Layers
             return primitives;
         }
 
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
