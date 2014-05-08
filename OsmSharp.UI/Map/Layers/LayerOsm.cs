@@ -35,7 +35,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the source of the OSM raw data.
         /// </summary>
         private readonly IDataSourceReadOnly _dataSource;
-
         /// <summary>
         /// Holds the style scene manager.
         /// </summary>
@@ -67,7 +66,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             this.BuildScene(map, zoomFactor, center, extraView);
         }
@@ -78,7 +77,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             return _styleSceneManager.Scene.Get(view, zoomFactor);
         }
@@ -93,11 +92,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
-		{
-			// build the boundingbox.
-			var viewBox = view.OuterBox;
-			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
-			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
+        {
+            // build the boundingbox.
+            var viewBox = view.OuterBox;
+            var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                 map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
             _styleSceneManager.FillScene(_dataSource, box, map.Projection);
         }
