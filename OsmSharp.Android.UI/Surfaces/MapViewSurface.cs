@@ -463,7 +463,9 @@ namespace OsmSharp.Android.UI
                 _listener.NotifyChange(view, this.MapZoom);
             }
 
+            OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Information, "MapChanged");
             _previouslyRenderedView = null;
+            _previouslyChangedView = null;
         }
 
 		/// <summary>
