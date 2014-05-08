@@ -64,7 +64,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the maximum threads.
         /// </summary>
-        private const int _maxThreads = 2;
+        private const int _maxThreads = 4;
         /// <summary>
         /// Holds the tile to-load queue.
         /// </summary>
@@ -390,7 +390,7 @@ namespace OsmSharp.UI.Map.Layers
                                 }
                             }
                         }
-                        _timer.Change(0, 150);
+                        _timer.Change(0, 250);
                     }
 
                     if (_stack.Count > 0)
