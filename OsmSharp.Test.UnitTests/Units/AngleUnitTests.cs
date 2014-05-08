@@ -22,24 +22,39 @@ using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Test.Unittests
 {
-	/// <summary>
-	/// Tests for the angle unit classes.
-	/// </summary>
-	[TestFixture]
-	public class AngleUnitTests
-	{
-		/// <summary>
-		/// Tests the angle normalization.
-		/// </summary>
-		[Test]
-		public void TestDegreeNormalization()
-		{
-			double angle = 30;
-			Assert.AreEqual (angle, ((Degree)(angle + 360)).Value);
-			Assert.AreEqual (angle, ((Degree)(angle - 360)).Value);
-			Assert.AreEqual (angle, ((Degree)(angle + 360 + 360)).Value);
-			Assert.AreEqual (angle, ((Degree)(angle - 360 - 360)).Value);
-		}
+    /// <summary>
+    /// Tests for the angle unit classes.
+    /// </summary>
+    [TestFixture]
+    public class AngleUnitTests
+    {
+        /// <summary>
+        /// Tests the angle normalization (in degrees).
+        /// </summary>
+        [Test]
+        public void TestDegreeNormalization()
+        {
+            const double angle = 30;
+
+            Assert.AreEqual(angle, ((Degree)(angle + 360)).Value);
+            Assert.AreEqual(angle, ((Degree)(angle - 360)).Value);
+            Assert.AreEqual(angle, ((Degree)(angle + 360 + 360)).Value);
+            Assert.AreEqual(angle, ((Degree)(angle - 360 - 360)).Value);
+        }
+
+        /// <summary>
+        /// Tests the angle normalization (in radians).
+        /// </summary>
+        [Test]
+        public void TestRadianNormalization()
+        {
+            const double angle = 1.5;
+
+            Assert.AreEqual(angle, ((Radian)(angle + Constants.TwoPi)).Value);
+            Assert.AreEqual(angle, ((Radian)(angle - Constants.TwoPi)).Value);
+            Assert.AreEqual(angle, ((Radian)(angle + Constants.TwoPi + Constants.TwoPi)).Value);
+            Assert.AreEqual(angle, ((Radian)(angle - Constants.TwoPi - Constants.TwoPi)).Value);
+        }
 
         /// <summary>
         /// Tests angle range.
@@ -51,7 +66,6 @@ namespace OsmSharp.Test.Unittests
             Assert.AreEqual(30, ((Degree)30).Range180());
             Assert.AreEqual(-90, ((Degree)270).Range180());
         }
-
 
         /// <summary>
         /// Tests angle subtraction.
@@ -71,6 +85,6 @@ namespace OsmSharp.Test.Unittests
             Assert.AreEqual(-2, ((Degree)179).SmallestDifference((Degree)181));
             Assert.AreEqual(2, ((Degree)181).SmallestDifference((Degree)179));
         }
-	}
+    }
 }
 
