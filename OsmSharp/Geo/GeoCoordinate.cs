@@ -24,6 +24,8 @@ using OsmSharp.Units.Distance;
 using OsmSharp.Units.Angle;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
+using OsmSharp.Math.Geo.Meta;
+using System.Diagnostics;
 
 namespace OsmSharp.Math.Geo
 {
@@ -39,7 +41,7 @@ namespace OsmSharp.Math.Geo
         /// Creates a geo coordinate.
         /// </summary>
         public GeoCoordinate(double[] values)
-            :base(values)
+            : base(values)
         {
 
         }
@@ -58,8 +60,8 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         /// <param name="longitude"></param>
         /// <param name="latitude"></param>
-        public GeoCoordinate(double latitude,double longitude)
-            :base(new double[]{longitude,latitude})
+        public GeoCoordinate(double latitude, double longitude)
+            : base(new double[]{ longitude, latitude })
         {
 
         }
@@ -171,14 +173,50 @@ namespace OsmSharp.Math.Geo
         public GeoCoordinate OffsetWithDistances(Meter meter)
         {
             GeoCoordinate offsetLat = new GeoCoordinate(this.Latitude + 0.1,
-                this.Longitude);
+                                          this.Longitude);
             GeoCoordinate offsetLon = new GeoCoordinate(this.Latitude,
-                this.Longitude + 0.1);
+                                          this.Longitude + 0.1);
             Meter latDistance = offsetLat.DistanceReal(this);
             Meter lonDistance = offsetLon.DistanceReal(this);
 
             return new GeoCoordinate(this.Latitude + (meter.Value / latDistance.Value) * 0.1,
                 this.Longitude + (meter.Value / lonDistance.Value) * 0.1);
+        }
+
+        /// <summary>
+        /// Offset this coordinate with the given distance in meter along the provided direction.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public GeoCoordinate OffsetWithDirection(Meter distance, DirectionEnum direction)
+        {
+            double radius_earth = Constants.RadiusOfEarth;
+            Radian ratio = distance.Value / radius_earth;
+
+            Radian oldLat = (Degree)(this.Latitude);
+            Radian oldLon = (Degree)(this.Longitude);
+            Radian bearing = (Degree)(int)direction;
+
+            Radian newLatitude = System.Math.Asin(
+                                     System.Math.Sin(oldLat.Value) *
+                                     System.Math.Cos(ratio.Value) +
+                                     System.Math.Cos(oldLat.Value) *
+                                     System.Math.Sin(ratio.Value) *
+                                     System.Math.Cos(bearing.Value));
+
+            Radian newLongitude = oldLon.Value + System.Math.Atan2(
+                                      System.Math.Sin(bearing.Value) *
+                                      System.Math.Sin(ratio.Value) *
+                                      System.Math.Cos(oldLat.Value), 
+                                      System.Math.Cos(ratio.Value) -
+                                      System.Math.Sin(oldLat.Value) *
+                                      System.Math.Sin(newLatitude.Value));
+                
+            // TODO: make this work in other hemispheres
+            Degree newLat = newLatitude;
+            Degree newLon = newLongitude;
+            return new GeoCoordinate(newLat.Value, newLon.Value);
         }
 
         /// <summary>
@@ -200,7 +238,7 @@ namespace OsmSharp.Math.Geo
         public GeoCoordinate OffsetRandom(IRandomGenerator randomGenerator, Meter meter)
         {
             GeoCoordinate offsetCoordinate = this.OffsetWithDistances(meter.Value /
-                System.Math.Sqrt(2));
+                                             System.Math.Sqrt(2));
             double offsetLat = offsetCoordinate.Latitude - this.Latitude;
             double offsetLon = offsetCoordinate.Longitude - this.Longitude;
 
@@ -270,7 +308,7 @@ namespace OsmSharp.Math.Geo
         public override int GetHashCode()
         {
             return this.Latitude.GetHashCode() ^
-                   this.Longitude.GetHashCode();
+            this.Longitude.GetHashCode();
         }
 
         /// <summary>
@@ -283,7 +321,7 @@ namespace OsmSharp.Math.Geo
             if (obj is GeoCoordinate)
             {
                 return (obj as GeoCoordinate).Latitude.Equals(this.Latitude) &&
-                       (obj as GeoCoordinate).Longitude.Equals(this.Longitude);
+                (obj as GeoCoordinate).Longitude.Equals(this.Longitude);
             }
             return false;
         }
