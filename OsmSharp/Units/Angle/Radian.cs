@@ -36,11 +36,21 @@ namespace OsmSharp.Units.Angle
         /// <summary>
         /// Creates a new angle in radians.
         /// </summary>
-        /// <param name="radians"></param>
-        public Radian(double radians)
-            : base(radians)
+        /// <param name="value"></param>
+        public Radian(double value)
+            : base(Radian.Normalize(value))
         {
 
+        }
+
+        /// <summary>
+        /// Normalize the specified value.
+        /// </summary>
+        /// <param name="value">Value.</param>
+        private static double Normalize(double value)
+        {
+            int count2Pi = (int)System.Math.Floor(value / Constants.TwoPi);
+            return value - (count2Pi * Constants.TwoPi);
         }
 
         #region Conversion
@@ -66,14 +76,14 @@ namespace OsmSharp.Units.Angle
             return new Radian(value);
         }
 
-		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.
-		/// </summary>
-		/// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.</returns>
-		public override string ToString ()
-		{
-			return string.Format ("{0} rad", this.Value);
-		}
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.</returns>
+        public override string ToString()
+        {
+            return string.Format("{0} rad", this.Value);
+        }
 
         #endregion
 

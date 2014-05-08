@@ -16,8 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
@@ -27,6 +25,8 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.UI.Map
 {
@@ -90,9 +90,12 @@ namespace OsmSharp.UI.Map
         /// <param name="extraView"></param>
         public void ViewChanged(float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
-            foreach (var layer in _layers)
+            lock (_layers)
             {
-				layer.ViewChanged (this, zoomFactor, center, view, extraView);
+                foreach (var layer in _layers)
+                {
+                    layer.ViewChanged(this, zoomFactor, center, view, extraView);
+                }
             }
         }
 
@@ -101,9 +104,12 @@ namespace OsmSharp.UI.Map
         /// </summary>
         public void ViewChangedCancel()
         {
-            foreach (var layer in _layers)
+            lock (_layers)
             {
-                layer.ViewChangedCancel();
+                foreach (var layer in _layers)
+                {
+                    layer.ViewChangedCancel();
+                }
             }
         }
 
@@ -115,8 +121,11 @@ namespace OsmSharp.UI.Map
         /// <param name="layer"></param>
         public void AddLayer(Layer layer)
         {
-            layer.LayerChanged += new LayerChanged(layer_LayerChanged);
-            _layers.Add(layer);
+            lock (_layers)
+            {
+                layer.LayerChanged += new LayerChanged(layer_LayerChanged);
+                _layers.Add(layer);
+            }
 
             // map has obviously changed here!
             if (this.MapChanged != null) { this.MapChanged(); }
@@ -129,8 +138,11 @@ namespace OsmSharp.UI.Map
         /// <param name="layer"></param>
         public void InsertLayer(int idx, Layer layer)
         {
-            layer.LayerChanged += new LayerChanged(layer_LayerChanged);
-            _layers.Insert(idx, layer);
+            lock (_layers)
+            {
+                layer.LayerChanged += new LayerChanged(layer_LayerChanged);
+                _layers.Insert(idx, layer);
+            }
 
             // map has obviously changed here!
             if (this.MapChanged != null) { this.MapChanged(); }
@@ -142,16 +154,19 @@ namespace OsmSharp.UI.Map
         /// <param name="layer"></param>
         public bool RemoveLayer(Layer layer)
         {
-            if (_layers.Remove(layer))
+            lock (_layers)
             {
-                layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
-
-                // map has obviously changed here!
-                if (this.MapChanged != null) { this.MapChanged(); }
-
-                return true;
+                if (!_layers.Remove(layer))
+                {
+                    return false;
+                }
             }
-            return false;
+            layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
+
+            // map has obviously changed here!
+            if (this.MapChanged != null) { this.MapChanged(); }
+
+            return true;
         }
 
         /// <summary>
@@ -160,9 +175,12 @@ namespace OsmSharp.UI.Map
         /// <param name="idx"></param>
         public void RemoveLayerAt(int idx)
         {
-            var layer = _layers[idx];
-            layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
-            _layers.RemoveAt(idx);
+            lock (_layers)
+            {
+                var layer = _layers[idx];
+                layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
+                _layers.RemoveAt(idx);
+            }
 
             // map has obviously changed here!
             if (this.MapChanged != null) { this.MapChanged(); }
@@ -175,7 +193,13 @@ namespace OsmSharp.UI.Map
         /// <returns></returns>
         public Layer this[int layerIdx]
         {
-            get { return _layers[layerIdx]; }
+            get
+            {
+                lock (_layers)
+                {
+                    return _layers[layerIdx];
+                }
+            }
         }
 
         /// <summary>
@@ -183,7 +207,13 @@ namespace OsmSharp.UI.Map
         /// </summary>
         public int LayerCount
         {
-            get { return _layers.Count; }
+            get
+            {
+                lock (_layers)
+                { 
+                    return _layers.Count;
+                }
+            }
         }
 
         /// <summary>
