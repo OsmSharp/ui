@@ -101,11 +101,12 @@
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\Styles\StyleSceneManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
     <Compile Include="Renderer\IPrimitives2DSource.cs" />
     <Compile Include="Renderer\Primitives\Icon2D.cs" />
     <Compile Include="Renderer\Primitives\Image2D.cs" />
     <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
-    <Compile Include="Renderer\Primitives\INativeImage.cs" />
+    <Compile Include="Renderer\Images\INativeImage.cs" />
     <Compile Include="Renderer\Primitives\Line2D.cs" />
     <Compile Include="Renderer\Primitives\LineText2D.cs" />
     <Compile Include="Renderer\Primitives\Point2D.cs" />

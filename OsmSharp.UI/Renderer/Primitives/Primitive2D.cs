@@ -48,15 +48,5 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// Gets or sets the layer.
         /// </summary>
         public uint Layer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tag.
-        /// </summary>
-        /// <value>The tag.</value>
-        object Tag
-        {
-            get;
-            set;
-        }
     }
 }

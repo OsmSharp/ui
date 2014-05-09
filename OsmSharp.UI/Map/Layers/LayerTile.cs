@@ -22,6 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Images;
 using OsmSharp.UI.Renderer.Primitives;
 using System;
 using System.Collections.Generic;
@@ -77,13 +78,18 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the timer.
         /// </summary>
         private Timer _timer;
+        /// <summary>
+        /// Holds the native image cache.
+        /// </summary>
+        private NativeImageCacheBase _nativeImageCache;
 
         /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
-        public LayerTile(string tilesURL)
-            : this(tilesURL, 80)
+        /// <param name="nativeImageCache">The native image cache.</param>
+        public LayerTile(NativeImageCacheBase nativeImageCache, string tilesURL)
+            : this(nativeImageCache, tilesURL, 80)
         {
 
         }
@@ -93,8 +99,10 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         /// <param name="tileCacheSize">The tile cache size.</param>
-        public LayerTile(string tilesURL, int tileCacheSize)
+        /// <param name="nativeImageCache">The native image cache.</param>
+        public LayerTile(NativeImageCacheBase nativeImageCache, string tilesURL, int tileCacheSize)
         {
+            _nativeImageCache = nativeImageCache;
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
             _cache.OnRemove += OnRemove;
@@ -111,7 +119,8 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="image"></param>
         private void OnRemove(Image2D image)
         { // dispose of the image after it is removed from the cache.
-            image.Dispose();
+            _nativeImageCache.Release(image.NativeImage);
+            image.NativeImage = null;
         }
 
         /// <summary>
@@ -274,7 +283,8 @@ namespace OsmSharp.UI.Map.Layers
                     memoryStream.Dispose();
 
                     var box = tile.ToBox(_projection);
-                    var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], image);
+                    var nativeImage = _nativeImageCache.Obtain(image);
+                    var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
                     image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
 
                     lock (_cache)

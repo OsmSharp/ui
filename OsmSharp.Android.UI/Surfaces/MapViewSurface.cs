@@ -21,6 +21,7 @@ using Android.Content;
 using Android.Util;
 using Android.Views;
 using OsmSharp.Android.UI.Renderer;
+using OsmSharp.Android.UI.Renderer.Images;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -122,7 +123,7 @@ namespace OsmSharp.Android.UI
         {
             _mapView = mapLayout;
             this.SetWillNotDraw(false);
-            this.SetWillNotCacheDrawing(true);
+            // this.SetWillNotCacheDrawing(true);
 
             this.MapMinZoomLevel = 0;
             this.MapMaxZoomLevel = 20;
@@ -296,8 +297,8 @@ namespace OsmSharp.Android.UI
 
 				// build the layers list.
 				var layers = new List<Layer> ();
-				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
-					// get the layer.
+				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
+                { // get the layer.
 					layers.Add (this.Map[layerIdx]);
 				}
 
@@ -332,9 +333,9 @@ namespace OsmSharp.Android.UI
                 }
 
 				// create and reset the canvas.
-				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (image.Image);
-				canvas.DrawColor (new global::Android.Graphics.Color(
-					SimpleColor.FromKnownColor(KnownColor.White).Value));
+				var canvas = new global::Android.Graphics.Canvas (image.Image);
+				    canvas.DrawColor (new global::Android.Graphics.Color(
+					    SimpleColor.FromKnownColor(KnownColor.White).Value));
 
 				// create the view.
                 double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
@@ -370,46 +371,45 @@ namespace OsmSharp.Android.UI
 				// does the rendering.
                 bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
-                // get rid of the canvas.
-                canvas.Dispose();
-
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 				                                "Rendering took: {0}ms @ zoom level {1} and {2}",
                                                 (new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom, this.MapCenter);
-				if(complete)
-				{ // there was no cancellation, the rendering completely finished.
-					// add the result to the scene cache.
-                    
+                if (complete)
+                { // there was no cancellation, the rendering completely finished.
+                    // add the result to the scene cache.
                     // add the newly rendered image again.           
-                    if(_offScreenBuffer == null)
+                    if (_offScreenBuffer == null)
                     { // create the offscreen buffer first.
-                        _offScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                        _offScreenBuffer = new ImageTilted2D(view.Rectangle, image, float.MinValue, float.MaxValue);
                     }
                     else
                     { // augment the previous buffer.
                         _offScreenBuffer.Bounds = view.Rectangle;
+                        _offScreenBuffer.NativeImage = image;
                     }
-                    _offScreenBuffer.NativeImage = image;
 
                     var temp = _onScreenBuffer;
                     _onScreenBuffer = _offScreenBuffer;
                     _offScreenBuffer = temp;
-				}
-
-                // notify the the current surface of the new rendering.
-                //this.PostInvalidate();
-                (this.Context as Activity).RunOnUiThread(Invalidate);
+                }
 				
 				long after = DateTime.Now.Ticks;
+
+                // get rid of the canvas.
+                canvas.Dispose();
 
                 if (complete)
                 { // report a successful render to listener.
                     _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
 
-                    GC.Collect();
+                    // GC.Collect();
                 }
-			}
+            }
+
+            // notify the the current surface of the new rendering.
+            this.PostInvalidate();
+            //(this.Context as Activity).RunOnUiThread(Invalidate);
 		}
 
         /// <summary>
@@ -587,6 +587,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="canvas">Canvas.</param>
         protected override void OnDraw(global::Android.Graphics.Canvas canvas)
         {
+            OsmSharp.Logging.Log.TraceEvent("OnDraw", TraceEventType.Information, "OnDraw Start.");
             base.OnDraw(canvas);
 
             // set the height/width.
@@ -603,15 +604,20 @@ namespace OsmSharp.Android.UI
                 this.TriggerRendering();
             }
 
-            // render only the cached scene.
-            canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
-            View2D view = this.CreateView();
-            float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
-            _renderer.SceneRenderer.Render(
-                canvas,
-                view,
-                zoomFactor,
-                new Primitive2D[] { _onScreenBuffer });
+            if (_onScreenBuffer != null)
+            { // there is a buffer.
+                // render only the cached scene.
+                canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
+                View2D view = this.CreateView();
+                float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+                _renderer.SceneRenderer.Render(
+                    canvas,
+                    view,
+                    zoomFactor,
+                    new Primitive2D[] { _onScreenBuffer });
+            }
+
+            OsmSharp.Logging.Log.TraceEvent("OnDraw", TraceEventType.Information, "OnDraw End.");
         }
 		
 		/// <summary>

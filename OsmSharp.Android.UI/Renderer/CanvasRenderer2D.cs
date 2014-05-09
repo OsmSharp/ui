@@ -37,6 +37,8 @@ using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Android.UI.Renderer;
+using OsmSharp.Android.UI.Renderer.Images;
+using System.Threading;
 
 namespace OsmSharp.Android.UI
 {
@@ -111,7 +113,8 @@ namespace OsmSharp.Android.UI
 
             // TODO: figure out why this request to the GC has to keep being here.
             // when this is removed things are obviously faster but there is a memory leak.
-            GC.Collect();
+            // GC.Collect();
+            // Thread.Sleep(150);
 		}
 		
 		#endregion
@@ -387,14 +390,12 @@ namespace OsmSharp.Android.UI
 		/// <param name="top"></param>
 		/// <param name="right"></param>
 		/// <param name="bottom"></param>
-		/// <param name="imageData"></param>
-		/// <param name="tag"></param>
-		protected override INativeImage DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
-		                                     double left, double top, double right, double bottom, byte[] imageData,
-		                                   INativeImage tag)
+        /// <param name="nativeImage"></param>
+		protected override void DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
+		    double left, double top, double right, double bottom, INativeImage nativeImage)
 		{
             var rectangle = new RectangleF2D(left, top, right - left, bottom - top);
-            return this.DrawImage(target, rectangle, imageData, tag);
+            this.DrawImage(target, rectangle, nativeImage);
 		}
 
 		/// <summary>
@@ -403,17 +404,11 @@ namespace OsmSharp.Android.UI
 		/// <returns>The image.</returns>
 		/// <param name="target">Target.</param>
 		/// <param name="bounds">Bounds.</param>
-		/// <param name="imageData">Image data.</param>
-		/// <param name="tag">Tag.</param>
-        protected override INativeImage DrawImage(Target2DWrapper<Canvas> target, RectangleF2D bounds, byte[] imageData, INativeImage tag)
+        /// <param name="nativeImage">Image data.</param>
+        protected override void DrawImage(Target2DWrapper<Canvas> target, RectangleF2D bounds, INativeImage nativeImage)
 		{
-			var nativeImage = (tag as NativeImage);
-            if (nativeImage == null)
-			{ // create the native image wrapper.
-                nativeImage = new NativeImage(global::Android.Graphics.BitmapFactory.DecodeByteArray(
-					imageData, 0, imageData.Length));
-			}
-            global::Android.Graphics.Bitmap image = nativeImage.Image;
+            var nativeAndroidImage = (nativeImage as NativeImage);
+            global::Android.Graphics.Bitmap image = nativeAndroidImage.Image;
 			this.Transform (bounds.BottomLeft [0], bounds.BottomLeft [1], _transformed1);
 			PointF2D bottomLeft = new PointF2D(_transformed1[0], _transformed1[1]);
 			this.Transform (bounds.BottomRight [0], bounds.BottomRight [1], _transformed1);
@@ -422,9 +417,8 @@ namespace OsmSharp.Android.UI
 			PointF2D topLeft = new PointF2D(_transformed1[0], _transformed1[1]);
 			//PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
-			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+			var transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
 			                                            topLeft - bottomLeft);
-
             _paint.AntiAlias = true;
             _paint.FilterBitmap = true;
 			target.Target.Save ();
@@ -438,8 +432,6 @@ namespace OsmSharp.Android.UI
                     _paint);
             }
 			target.Target.Restore ();
-
-            return nativeImage;
 		}
 
 		/// <summary>

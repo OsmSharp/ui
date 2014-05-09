@@ -1,4 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +27,7 @@ using OsmSharp.Data.SQLite;
 using OsmSharp.Collections.Cache;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer.Images;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -43,6 +62,11 @@ namespace OsmSharp.UI.Map.Layers
         private readonly LRUCache<Tile, Image2D> _cache;
 
         /// <summary>
+        /// Holds the native image cache.
+        /// </summary>
+        private NativeImageCacheBase _nativeImageCache;
+
+        /// <summary>
         /// Holds the map projection.
         /// </summary>
         private readonly IProjection _projection;
@@ -50,8 +74,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
-        public LayerMBTile(SQLiteConnectionBase connection)
+        /// <param name="connection">The SQLite connection to the MBTiles.</param>
+        /// <param name="nativeImageCache">The native image cache.</param>
+        public LayerMBTile(NativeImageCacheBase nativeImageCache, SQLiteConnectionBase connection)
         {
+            _nativeImageCache = nativeImageCache;
             _connection = connection;
 
             _cache = new LRUCache<Tile, Image2D>(160);
@@ -65,7 +92,10 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="image"></param>
         private void OnRemove(Image2D image)
         { // dispose of the image after it is removed from the cache.
-            image.Dispose();
+            _nativeImageCache.Release(image.NativeImage);
+            image.NativeImage = null;
+
+            OsmSharp.Logging.Log.TraceEvent("LayerMBTile", Logging.TraceEventType.Information, "OnRemove: {0}", _cache.Count);
         }
 
         /// <summary>
@@ -131,13 +161,11 @@ namespace OsmSharp.UI.Map.Layers
 
                         var tiles = _connection.Query<tiles>("SELECT * FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?",
                             invertTile.Zoom, invertTile.X, invertTile.Y);
-                        //command.AddParameterWithValue("zoom_level", );
-                        //command.AddParameterWithValue("tile_column", invertTile.X);
-                        //command.AddParameterWithValue("tile_row", invertTile.Y);
                         foreach (var mbTile in tiles)
                         {
                             var box = tile.ToBox(_projection);
-                            var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], mbTile.tile_data);
+                            var nativeImage = _nativeImageCache.Obtain(mbTile.tile_data);
+                            var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
                             image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
 
                             lock (_cache)

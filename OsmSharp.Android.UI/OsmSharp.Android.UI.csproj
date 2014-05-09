@@ -14,6 +14,8 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AssemblyName>OsmSharp.Android.UI</AssemblyName>
+    <AndroidUseLatestPlatformSdk />
+    <TargetFrameworkVersion>v3.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +57,8 @@
     <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Log\LogTraceListener.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
-    <Compile Include="Renderer\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />

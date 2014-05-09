@@ -19,7 +19,7 @@ using Android.Graphics;
 using OsmSharp.UI.Renderer.Primitives;
 using System;
 
-namespace OsmSharp.Android.UI.Renderer
+namespace OsmSharp.Android.UI.Renderer.Images
 {
     /// <summary>
     /// Represents a native image.
@@ -37,6 +37,8 @@ namespace OsmSharp.Android.UI.Renderer
         /// <param name="image"></param>
         public NativeImage(Bitmap image)
         {
+            if (image == null) { throw new ArgumentNullException("Cannot create a native image wrapper around null"); }
+
             _image = image;
         }
 
@@ -48,6 +50,10 @@ namespace OsmSharp.Android.UI.Renderer
             get
             {
                 return _image;
+            }
+            set
+            {
+                _image = value;
             }
         }
 
@@ -105,5 +111,30 @@ namespace OsmSharp.Android.UI.Renderer
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns true when the given object equals this object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            var other = (obj as NativeImage);
+            if(other != null)
+            {
+                return other._image.Equals(this._image);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the hashcode of this image.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return 1332480824 ^
+                this._image.GetHashCode();
+        }
     }
 }

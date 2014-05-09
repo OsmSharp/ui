@@ -35,11 +35,11 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.TiltedImage2D"/> class.
         /// </summary>
         /// <param name="bounds">Bounds.</param>
-        /// <param name="imageData">Image data.</param>
-        public ImageTilted2D(RectangleF2D bounds, byte[] imageData, float minZoom, float maxZoom)
+        /// <param name="nativeImage">Image data.</param>
+        public ImageTilted2D(RectangleF2D bounds, INativeImage nativeImage, float minZoom, float maxZoom)
         {
             _bounds = bounds;
-            this.ImageData = imageData;
+            this.NativeImage = nativeImage;
 
             this.MinZoom = minZoom;
             this.MaxZoom = maxZoom;
@@ -64,16 +64,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
-        /// Gets or sets the tag.
-        /// </summary>
-        /// <value>The tag.</value>
-        public object Tag
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Holds the native image.
         /// </summary>
         private INativeImage _nativeImage;
@@ -92,11 +82,6 @@ namespace OsmSharp.UI.Renderer.Primitives
                 _nativeImage = value;
             }
         }
-
-        /// <summary>
-        /// Gets the image data.
-        /// </summary>
-        public byte[] ImageData { get; set; }
 
         /// <summary>
         /// Gets or sets the bounds.

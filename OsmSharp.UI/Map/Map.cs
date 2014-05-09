@@ -25,6 +25,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Images;
 using System.Collections.Generic;
 using System.IO;
 
@@ -230,10 +231,11 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Adds a new tile layer.
         /// </summary>
-        /// <param name="tileUrl"></param>
-        public LayerTile AddLayerTile(string tileUrl)
+        /// <param name="tileUrl">The tile URL.</param>
+        /// <param name="nativeImageCache">The native image cache.</param>
+        public LayerTile AddLayerTile(NativeImageCacheBase nativeImageCache, string tileUrl)
         {
-            LayerTile layerTile = new LayerTile(tileUrl);
+            var layerTile = new LayerTile(nativeImageCache, tileUrl);
             this.AddLayer(layerTile);
             return layerTile;
         }
@@ -244,7 +246,7 @@ namespace OsmSharp.UI.Map
         /// <param name="gpxStream"></param>
         public LayerGpx AddLayerGpx(Stream gpxStream)
         {
-            LayerGpx layerGpx = new LayerGpx(this.Projection);
+            var layerGpx = new LayerGpx(this.Projection);
             layerGpx.AddGpx(gpxStream);
             this.AddLayer(layerGpx);
             return layerGpx;
@@ -257,7 +259,7 @@ namespace OsmSharp.UI.Map
         /// <returns></returns>
         public LayerRoute AddLayerRoute(Route route)
         {
-            LayerRoute layerRoute = new LayerRoute(this.Projection);
+            var layerRoute = new LayerRoute(this.Projection);
             layerRoute.AddRoute(route);
             this.AddLayer(layerRoute);
             return layerRoute;

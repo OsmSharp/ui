@@ -41,10 +41,10 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="top"></param>
         /// <param name="bottom"></param>
         /// <param name="right"></param>
-        /// <param name="imageData"></param>
-        public Image2D(double left, double top, double bottom, double right, byte[] imageData)
+        /// <param name="nativeImage"></param>
+        public Image2D(double left, double top, double bottom, double right, INativeImage nativeImage)
         {
-            this.ImageData = imageData;
+            this.NativeImage = nativeImage;
             this.Left = left;
             this.Right = right;
             this.Top = top;
@@ -64,9 +64,9 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="imageData"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Image2D(double left, double top, double bottom, double right, byte[] imageData, float minZoom, float maxZoom)
+        public Image2D(double left, double top, double bottom, double right, INativeImage nativeImage, float minZoom, float maxZoom)
         {
-            this.ImageData = imageData;
+            this.NativeImage = nativeImage;
             this.Left = left;
             this.Right = right;
             this.Top = top;
@@ -90,16 +90,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
-        /// Gets or sets the tag.
-        /// </summary>
-        /// <value>The tag.</value>
-        public object Tag
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Holds the native image.
         /// </summary>
         private INativeImage _nativeImage;
@@ -118,11 +108,6 @@ namespace OsmSharp.UI.Renderer.Primitives
                 _nativeImage = value;
             }
         }
-
-        /// <summary>
-        /// Gets the image data.
-        /// </summary>
-        public byte[] ImageData { get; set; }
 
         /// <summary>
         /// Gets the left.
