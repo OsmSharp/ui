@@ -33,7 +33,7 @@ namespace OsmSharp.iOS.UI
         /// <summary>
         /// Creates a new native image cache.
         /// </summary>
-        public NativeImageCache()
+        internal NativeImageCache()
         {
 
         }

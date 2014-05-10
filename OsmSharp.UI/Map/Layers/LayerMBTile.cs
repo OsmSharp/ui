@@ -76,9 +76,9 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="connection">The SQLite connection to the MBTiles.</param>
         /// <param name="nativeImageCache">The native image cache.</param>
-        public LayerMBTile(NativeImageCacheBase nativeImageCache, SQLiteConnectionBase connection)
+        public LayerMBTile(SQLiteConnectionBase connection)
         {
-            _nativeImageCache = nativeImageCache;
+            _nativeImageCache = NativeImageCacheFactory.Create();
             _connection = connection;
 
             _cache = new LRUCache<Tile, Image2D>(160);

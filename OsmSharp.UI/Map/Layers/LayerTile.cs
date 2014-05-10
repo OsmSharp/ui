@@ -87,9 +87,8 @@ namespace OsmSharp.UI.Map.Layers
         /// Creates a new tiles layer.
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
-        /// <param name="nativeImageCache">The native image cache.</param>
-        public LayerTile(NativeImageCacheBase nativeImageCache, string tilesURL)
-            : this(nativeImageCache, tilesURL, 80)
+        public LayerTile(string tilesURL)
+            : this(tilesURL, 80)
         {
 
         }
@@ -99,10 +98,9 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         /// <param name="tileCacheSize">The tile cache size.</param>
-        /// <param name="nativeImageCache">The native image cache.</param>
-        public LayerTile(NativeImageCacheBase nativeImageCache, string tilesURL, int tileCacheSize)
+        public LayerTile(string tilesURL, int tileCacheSize)
         {
-            _nativeImageCache = nativeImageCache;
+            _nativeImageCache = NativeImageCacheFactory.Create();
             _tilesURL = tilesURL;
             _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
             _cache.OnRemove += OnRemove;

@@ -101,7 +101,6 @@
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\Styles\StyleSceneManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer\Images\NativeImageCache.cs" />
     <Compile Include="Renderer\IPrimitives2DSource.cs" />
     <Compile Include="Renderer\Primitives\Icon2D.cs" />
     <Compile Include="Renderer\Primitives\Image2D.cs" />
@@ -143,6 +142,8 @@
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="SimpleColor.cs" />
+    <Compile Include="Renderer\Images\NativeImageCacheFactory.cs" />
+    <Compile Include="Renderer\Images\NativeImageCacheBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">

@@ -233,9 +233,9 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="tileUrl">The tile URL.</param>
         /// <param name="nativeImageCache">The native image cache.</param>
-        public LayerTile AddLayerTile(NativeImageCacheBase nativeImageCache, string tileUrl)
+        public LayerTile AddLayerTile(string tileUrl)
         {
-            var layerTile = new LayerTile(nativeImageCache, tileUrl);
+            var layerTile = new LayerTile(tileUrl);
             this.AddLayer(layerTile);
             return layerTile;
         }
