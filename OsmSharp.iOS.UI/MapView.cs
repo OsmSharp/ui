@@ -475,14 +475,14 @@ namespace OsmSharp.iOS.UI
 								lock (_bufferSynchronisation)
 								{
 									if (_onScreenBuffer != null &&
-									    _onScreenBuffer.Tag != null)
+                                        _onScreenBuffer.NativeImage != null)
 									{ // on screen buffer.
-										(_onScreenBuffer.Tag as CGImage).Dispose();
+                                        _onScreenBuffer.NativeImage.Dispose();
 									}
 
 									// add the newly rendered image again.           
-									_onScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
-									_onScreenBuffer.Tag = image.ToImage();
+                                    _onScreenBuffer = new ImageTilted2D(view.Rectangle, 
+                                        new NativeImage(image.ToImage()), float.MinValue, float.MaxValue);
 
 									// store the previous view.
 									_previouslyRenderedView = view;
@@ -1339,9 +1339,9 @@ namespace OsmSharp.iOS.UI
 			base.Dispose(disposing);
 
 			if (_onScreenBuffer != null &&
-			    _onScreenBuffer.Tag != null)
+                _onScreenBuffer.NativeImage != null)
 			{
-				(_onScreenBuffer.Tag as UIImage).Dispose();
+                _onScreenBuffer.NativeImage.Dispose();
 			}
 
 			if (_renderingThread != null)

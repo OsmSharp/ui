@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Renderer\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -48,6 +49,8 @@
     <Compile Include="MapMarkerAlignmentType.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
+    <Compile Include="Renderer\Images\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Images\layers.png" />
@@ -64,13 +67,13 @@
       <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
-      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
-      <Name>OsmSharp.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
+      <Name>OsmSharp.UI</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

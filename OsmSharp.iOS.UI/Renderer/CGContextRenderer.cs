@@ -316,79 +316,44 @@ namespace OsmSharp.iOS.UI
 		/// <param name="top"></param>
 		/// <param name="right"></param>
 		/// <param name="bottom"></param>
-		/// <param name="imageData"></param>
+        /// <param name="nativeImage"></param>
 		/// <returns>The image.</returns>
-		/// <param name="tag">Tag.</param>
-		protected override object DrawImage(Target2DWrapper<CGContextWrapper> target, double left, double top, double right, 
-		                                     double bottom, byte[] imageData, object tag)
-		{
-			CGImage image = null;
-			CGLayer layer = null;
-			if (tag != null && tag is CGImage)
-			{
-				image = (tag as CGImage);
-			}
-			else if (tag != null && tag is CGLayer)
-			{
-				layer = (tag as CGLayer);
-			}
-			else
-			{
-                image = UIImage.LoadFromData(NSData.FromArray(imageData)).CGImage;
-			}
+        protected override void DrawImage(Target2DWrapper<CGContextWrapper> target, double left, double top, double right, 
+            double bottom, INativeImage nativeImage)
+        {
+            // get the native image.
+            var iosNativeImage = (nativeImage as NativeImage);
 
-            if (image != null)
-            { // there is an image. draw it!
-//				double[] topleft = this.Tranform(left, top);
-//				double[] bottomright = this.Tranform(right, bottom);
-//				float leftPixels = (float)topleft[0];
-//				float topPixels = (float)topleft[1];
-//				float rightPixels = (float)bottomright[0];
-//				float bottomPixels = (float)bottomright[1];
-//
-                var bounds = new RectangleF2D(left, bottom, (left - right),
+            // get CGImage.
+            CGImage image = iosNativeImage.Image;
+
+            var bounds = new RectangleF2D(left, bottom, (left - right),
                                  (top - bottom));
 
-                target.Target.CGContext.SetAllowsFontSubpixelQuantization(true);
-                target.Target.CGContext.SetAllowsFontSmoothing(true);
-                target.Target.CGContext.SetAllowsAntialiasing(true);
-                target.Target.CGContext.SetAllowsSubpixelPositioning(true);
-                target.Target.CGContext.SetShouldAntialias(true);
+            target.Target.CGContext.SetAllowsFontSubpixelQuantization(true);
+            target.Target.CGContext.SetAllowsFontSmoothing(true);
+            target.Target.CGContext.SetAllowsAntialiasing(true);
+            target.Target.CGContext.SetAllowsSubpixelPositioning(true);
+            target.Target.CGContext.SetShouldAntialias(true);
 
-                PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
-                PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
-                PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
-                //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+            PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
+            PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
+            PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
+            //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
-                RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+            RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
                                                topLeft - bottomLeft);
 
-                target.Target.CGContext.SaveState();
-                target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
-                target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
-                target.Target.CGContext.ScaleCTM(-1, 1);
+            target.Target.CGContext.SaveState();
+            target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
+            target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
+            target.Target.CGContext.ScaleCTM(-1, 1);
 
-                target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
-                    (float)transformed.Width, (float)transformed.Height), image);
+            target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
+                (float)transformed.Width, (float)transformed.Height), image);
 
-                target.Target.CGContext.RestoreState();
-
-                return tag;
-            }
-			else if (layer != null)
-			{
-				double[] topleft = this.Tranform(left, top);
-				double[] bottomright = this.Tranform(right, bottom);
-				float leftPixels = (float)topleft[0];
-				float topPixels = (float)topleft[1];
-				float rightPixels = (float)bottomright[0];
-				float bottomPixels = (float)bottomright[1];
-
-				target.Target.CGContext.DrawLayer(layer, new RectangleF(leftPixels, topPixels, (rightPixels - leftPixels),
-					(bottomPixels - topPixels)));
-			}
-			return image;
-		}
+            target.Target.CGContext.RestoreState();
+        }
 
 		/// <summary>
 		/// Draws the image.
@@ -398,39 +363,38 @@ namespace OsmSharp.iOS.UI
 		/// <param name="bounds">Bounds.</param>
 		/// <param name="imageData">Image data.</param>
 		/// <param name="tag">Tag.</param>
-		protected override object DrawImage(Target2DWrapper<CGContextWrapper> target, RectangleF2D bounds, byte[] imageData, object tag)
-		{
-			target.Target.CGContext.SetAllowsFontSubpixelQuantization(true);
-			target.Target.CGContext.SetAllowsFontSmoothing(true);
-			target.Target.CGContext.SetAllowsAntialiasing(true);
-			target.Target.CGContext.SetAllowsSubpixelPositioning(true);
-			target.Target.CGContext.SetShouldAntialias(true);
+        protected override void DrawImage(Target2DWrapper<CGContextWrapper> target, RectangleF2D bounds, 
+            INativeImage nativeImage)
+        {            
+            // get the native image.
+            var iosNativeImage = (nativeImage as NativeImage);
 
-			PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
-			PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
-			PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
-			//PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+            // get CGImage.
+            CGImage image = iosNativeImage.Image;
 
-			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
-				                           topLeft - bottomLeft);
+            target.Target.CGContext.SetAllowsFontSubpixelQuantization(true);
+            target.Target.CGContext.SetAllowsFontSmoothing(true);
+            target.Target.CGContext.SetAllowsAntialiasing(true);
+            target.Target.CGContext.SetAllowsSubpixelPositioning(true);
+            target.Target.CGContext.SetShouldAntialias(true);
 
+            PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
+            PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
+            PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
+            //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
-			target.Target.CGContext.SaveState();
-			target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
-			target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
+            RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+                                  topLeft - bottomLeft);
 
-			if (tag is CGImage)
-			{
-				CGImage image = tag as CGImage;
+            target.Target.CGContext.SaveState();
+            target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
+            target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
 
-				target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
-					(float)transformed.Width, (float)transformed.Height), image);
-			}
+            target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
+                (float)transformed.Width, (float)transformed.Height), image);
 
-			target.Target.CGContext.RestoreState();
-
-			return tag;
-		}
+            target.Target.CGContext.RestoreState();
+        }
 
 		/// <summary>
 		/// Draws text.
