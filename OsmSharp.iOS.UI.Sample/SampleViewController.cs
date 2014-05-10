@@ -95,7 +95,7 @@ namespace OsmSharp.iOS.UI.Sample
 			// add a tile layer.
             // map.AddLayer(new LayerTile(new NativeImageCache(), @"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.map.mbtiles"), "map")));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
 
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
