@@ -46,7 +46,7 @@ namespace OsmSharp.Android.UI.Renderer.Images
         /// <summary>
         /// Creates a new native image cache.
         /// </summary>
-        public NativeImageCache()
+        internal NativeImageCache()
             : this(1000)
         {
 

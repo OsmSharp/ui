@@ -14,7 +14,6 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AssemblyName>OsmSharp.Android.UI</AssemblyName>
-    <AndroidUseLatestPlatformSdk />
     <TargetFrameworkVersion>v3.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -75,6 +74,7 @@
     <Compile Include="Markers\IMapMarkerHost.cs" />
     <Compile Include="Markers\MapMarker.cs" />
     <Compile Include="Markers\MapMarkerAlignment.cs" />
+    <Compile Include="Native.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
