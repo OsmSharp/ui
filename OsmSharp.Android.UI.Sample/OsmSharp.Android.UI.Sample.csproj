@@ -78,7 +78,9 @@
     <EmbeddedResource Include="..\OsmSharp.Test.UnitTests\regression1.gpx">
       <Link>regression1.gpx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="map.mbtiles" />
+    <EmbeddedResource Include="..\OsmSharpTestFiles\mbtiles\kempen.mbtiles">
+      <Link>kempen.mbtiles</Link>
+    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
