@@ -19,6 +19,7 @@
 using Android.App;
 using Android.OS;
 using Android.Widget;
+using ModernHttpClient;
 using OsmSharp.Android.UI.Data.SQLite;
 using OsmSharp.Android.UI.Renderer.Images;
 using OsmSharp.Collections.Tags;
@@ -35,6 +36,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer.Scene;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Reflection;
 using System.Timers;
 
@@ -87,6 +89,8 @@ namespace OsmSharp.Android.UI.Sample
             // enable the logging.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(new OsmSharp.Android.UI.Log.LogTraceListener());
+
+            var httpClient = new HttpClient(new OkHttpNetworkHandler());
 
 			// initialize map.
 			var map = new Map();

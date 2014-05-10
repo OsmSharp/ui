@@ -28,6 +28,8 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.WinForms.UI.Renderer.Images;
 
 namespace OsmSharp.WinForms.UI.Renderer
 {
@@ -295,17 +297,12 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="top"></param>
 	    /// <param name="right"></param>
 	    /// <param name="bottom"></param>
-	    /// <param name="imageData"></param>
-	    /// <param name="tag"></param>
-	    protected override object DrawImage(Target2DWrapper<Graphics> target, double left, double top, double right, 
-            double bottom, byte[] imageData, object tag)
+        /// <param name="nativeImage"></param>
+	    protected override void DrawImage(Target2DWrapper<Graphics> target, double left, double top, double right, 
+            double bottom, INativeImage nativeImage)
         {
             // get the image.
-            var image = (tag as Image);
-            if (image == null)
-            {
-                image = Image.FromStream(new MemoryStream(imageData));
-            }
+            var image = (nativeImage as NativeImage).Image;
 
             // set interpolation mode to default. Only used when displaying tiles.
             var previousInterpolationMode = target.Target.InterpolationMode;
@@ -323,8 +320,6 @@ namespace OsmSharp.WinForms.UI.Renderer
 
             // reset interpolation mode to default.
             target.Target.InterpolationMode = previousInterpolationMode;
-
-            return image;
         }
 
 		/// <summary>
@@ -333,11 +328,10 @@ namespace OsmSharp.WinForms.UI.Renderer
 		/// <returns>The image.</returns>
 		/// <param name="target">Target.</param>
 		/// <param name="bounds">Bounds.</param>
-		/// <param name="imageData">Image data.</param>
-		/// <param name="tag">Tag.</param>
-		protected override object DrawImage (Target2DWrapper<Graphics> target, RectangleF2D bounds, byte[] imageData, object tag)
+        /// <param name="nativeImage">Image data.</param>
+        protected override void DrawImage(Target2DWrapper<Graphics> target, RectangleF2D bounds, INativeImage nativeImage)
 		{
-			return tag;
+
 		}
 
         /// <summary>
