@@ -94,6 +94,9 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
       <Link>default.map</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\mbtiles\kempen.mbtiles">
+      <Link>kempen.mbtiles</Link>
+    </EmbeddedResource>
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleViewController.cs" />

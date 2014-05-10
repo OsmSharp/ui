@@ -14,6 +14,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AssemblyName>OsmSharp.Android.UI</AssemblyName>
+    <TargetFrameworkVersion>v3.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
@@ -48,10 +50,14 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Data\SQLite\SQLite.cs" />
+    <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Log\LogTraceListener.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
+    <Compile Include="Renderer\Images\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
@@ -68,6 +74,7 @@
     <Compile Include="Markers\IMapMarkerHost.cs" />
     <Compile Include="Markers\MapMarker.cs" />
     <Compile Include="Markers\MapMarkerAlignment.cs" />
+    <Compile Include="Native.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

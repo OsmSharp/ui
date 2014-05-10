@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap (OSM) SDK
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -16,37 +16,28 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.UI.Renderer.Primitives
+using System;
+using System.Collections.Generic;
+namespace OsmSharp.Data.SQLite
 {
     /// <summary>
-    /// A common interface for all scene primitives.
+    /// A wrapper-class for all platform-specific SQLite connections.
     /// </summary>
-    public abstract class Primitive2D
+    public abstract class SQLiteConnectionBase : IDisposable
     {
         /// <summary>
-        /// Returns true if the object is visible on the view.
+        /// Creates an SQLLite command.
         /// </summary>
-        /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
-        /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
-        public abstract bool IsVisibleIn(View2D view, float zoom);
+        public abstract List<T> Query<T>(string query, params object[] args) where T : new();
 
         /// <summary>
-        /// Returns the bounding box for this primitive.
+        /// Disposes of all resources associated with this connection.
         /// </summary>
-        /// <returns></returns>
-        public abstract BoxF2D GetBox();
+        public abstract void Dispose();
 
         /// <summary>
-        /// Returns the type of this primitive.
+        /// Closes this SQLite command.
         /// </summary>
-        public abstract Primitive2DType Primitive2DType { get; }
-
-        /// <summary>
-        /// Gets or sets the layer.
-        /// </summary>
-        public uint Layer { get; set; }
+        public abstract void Close();
     }
 }

@@ -83,14 +83,20 @@ namespace OsmSharp.iOS.UI.Sample
 		{
 			base.LoadView ();
 
-			// enable the logggin.
+            // initialize OsmSharp native hooks.
+            Native.Initialize();
+
+            // enable the loggging.
 			OsmSharp.Logging.Log.Enable();
 			OsmSharp.Logging.Log.RegisterListener(new OsmSharp.iOS.UI.Log.ConsoleTraceListener());
 
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-			map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            // map.AddLayer(new LayerTile(new NativeImageCache(), @"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
+
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			// add a pre-processed vector data file.

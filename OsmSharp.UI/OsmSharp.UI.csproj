@@ -52,6 +52,7 @@
     <Compile Include="Map\Layers\Layer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerGpx.cs" />
+    <Compile Include="Map\Layers\LayerMBTile.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerRoute.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Renderer\Primitives\Icon2D.cs" />
     <Compile Include="Renderer\Primitives\Image2D.cs" />
     <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
+    <Compile Include="Renderer\Images\INativeImage.cs" />
     <Compile Include="Renderer\Primitives\Line2D.cs" />
     <Compile Include="Renderer\Primitives\LineText2D.cs" />
     <Compile Include="Renderer\Primitives\Point2D.cs" />
@@ -140,6 +142,8 @@
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="SimpleColor.cs" />
+    <Compile Include="Renderer\Images\NativeImageCacheFactory.cs" />
+    <Compile Include="Renderer\Images\NativeImageCacheBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
