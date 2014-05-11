@@ -128,6 +128,7 @@
     <Compile Include="Renderer\Scene\Simplification\Scene2DStyle.cs" />
     <Compile Include="Renderer\Scene\Simplification\Scene2DStyleLine.cs" />
     <Compile Include="Renderer\Scene\Simplification\Scene2DStyleLineText.cs" />
+    <Compile Include="Renderer\Scene\Simplification\Scene2DStylePolygon.cs" />
     <Compile Include="Renderer\Scene\Simplification\Scene2DStylesSet.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DRTreeDeserializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Primitive2DSource.cs" />

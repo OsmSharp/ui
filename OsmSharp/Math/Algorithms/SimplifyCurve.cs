@@ -200,5 +200,20 @@ namespace OsmSharp.Math.Algorithms
             result[1] = new double[] { points[1][first], points[1][last] };
             return result;
         }
+
+        /// <summary>
+        /// Simplify the specified points using epsilon value.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="epsilon"></param>
+        /// <returns></returns>
+        public static double[][] SimplifyPolygon(double[][] points, double epsilon)
+        {
+            if(points[0].Length <= 2)
+            {
+                return points;
+            }
+            return SimplifyCurve.SimplifyBetween(points, epsilon, 0, points[0].Length - 1);
+        }
 	}
 }

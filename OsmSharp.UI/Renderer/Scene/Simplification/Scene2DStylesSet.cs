@@ -52,6 +52,18 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         }
 
         /// <summary>
+        /// Adds a style polygon.
+        /// </summary>
+        /// <param name="stylePolygonId"></param>
+        public void AddStylePolygon(uint stylePolygonId)
+        {
+            this.Add(new Scene2DStylePolygon()
+            {
+                StylePolygonId = stylePolygonId
+            });
+        }
+
+        /// <summary>
         /// Determines whether the specified System.Object is equal to the current System.Object.
         /// </summary>
         /// <param name="obj"></param>

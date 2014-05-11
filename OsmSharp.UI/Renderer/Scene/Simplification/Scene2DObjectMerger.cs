@@ -72,6 +72,10 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         {
             var lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
             var linesIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
+
+            var polygons = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
+            //var polygonsIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
+
             Dictionary<uint, SceneObject> sceneObjects = source.GetSceneObjectsAt(idx);
             float zoomFactor = source.GetMaximumZoomFactorAt(idx);
             float epsilon = source.CalculateSimplificationEpsilon(zoomFactor);
@@ -127,17 +131,31 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                         stylePoint.Color, stylePoint.Size);
                 }
                 else if (sceneObject.Value.Enum == SceneObjectType.PolygonObject)
-                {
+                { // the scene object is a polygon.
                     var scenePolygonObject = (sceneObject.Value as ScenePolygonObject);
                     Scene2D.ScenePoints scenePoints = source.GetPoints(sceneObject.Value.GeoId);
-                    StylePolygon stylePolygon = source.GetStylePolygon(sceneObject.Value.StyleId);
+                    Scene2DStylesSet stylesSet = null;
+                    if (!polygons.TryGetValue(scenePoints, out stylesSet))
+                    { // create styles set.
+                        stylesSet = new Scene2DStylesSet();
+                        polygons.Add(scenePoints, stylesSet);
 
-                    uint? pointsId = target.AddPoints(scenePoints.X, scenePoints.Y);
-                    if (pointsId.HasValue)
-                    {
-                        target.AddStylePolygon(pointsId.Value, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
-                            stylePolygon.Color, stylePolygon.Width, stylePolygon.Fill);
+                        //// add scenePoints to the index.
+                        //polygonsIndex.Add(new PointF2D(scenePoints.X[0], scenePoints.Y[0]), scenePoints);
+                        //polygonsIndex.Add(new PointF2D(scenePoints.X[scenePoints.X.Length - 1], scenePoints.Y[scenePoints.Y.Length - 1]), scenePoints);
                     }
+                    stylesSet.AddStylePolygon(scenePolygonObject.StyleId);
+
+                    //var scenePolygonObject = (sceneObject.Value as ScenePolygonObject);
+                    //Scene2D.ScenePoints scenePoints = source.GetPoints(sceneObject.Value.GeoId);
+                    //StylePolygon stylePolygon = source.GetStylePolygon(sceneObject.Value.StyleId);
+
+                    //uint? pointsId = target.AddPoints(scenePoints.X, scenePoints.Y);
+                    //if (pointsId.HasValue)
+                    //{
+                    //    target.AddStylePolygon(pointsId.Value, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
+                    //        stylePolygon.Color, stylePolygon.Width, stylePolygon.Fill);
+                    //}
                 }
                 else if (sceneObject.Value.Enum == SceneObjectType.TextObject)
                 {
@@ -247,6 +265,99 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                             string text = source.GetText(scene2DStyleLineText.TextId);
                             target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
                                 styleText.Color, styleText.Size, text, styleText.Font, styleText.HaloColor, styleText.HaloRadius);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            // loop until there are no more candidates.
+            totalLines = polygons.Count;
+            latestProgress = 0;
+            while (polygons.Count > 0)
+            {
+                var polygon = polygons.First();
+                polygons.Remove(polygon.Key);
+
+                // report progress.
+                float progress = (float)System.Math.Round((((double)(totalLines - polygons.Count) / (double)totalLines) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
+                        "Merging polygons @z{3}e{4} ({1}/{2})... {0}%", progress, totalLines - polygons.Count, totalLines, zoomFactor, epsilon);
+                    latestProgress = progress;
+                }
+
+                // copy the coordinates to lists.
+                double[] x = polygon.Key.X.Clone() as double[];
+                double[] y = polygon.Key.Y.Clone() as double[];
+
+                //// find a matching line.
+                //int mergeCount = 1;
+                //Scene2D.ScenePoints found;
+                //MatchPosition foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, epsilon, out found);
+                //while (found != null)
+                //{ // TODO: keep expanding and duplicating until not possible anymore.
+                //    // remove the found line.
+                //    lines.Remove(found);
+
+                //    // report progress.
+                //    progress = (float)System.Math.Round((((double)(totalLines - lines.Count) / (double)totalLines) * 100));
+                //    if (progress != latestProgress)
+                //    {
+                //        OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
+                //            "Merging lines @z{3}e{4} ({1}/{2})... {0}%", progress, totalLines - lines.Count, totalLines, zoomFactor, epsilon);
+                //        latestProgress = progress;
+                //    }
+
+                //    // add the line.
+                //    int lengthBefore = x.Length;
+                //    Array.Resize(ref x, x.Length + found.X.Length - 1);
+                //    Array.Resize(ref y, y.Length + found.Y.Length - 1);
+
+                //    switch (foundPosition)
+                //    {
+                //        case MatchPosition.FirstFirst:
+                //            found.X.InsertToReverse(1, x, 0, found.X.Length - 1);
+                //            found.Y.InsertToReverse(1, y, 0, found.Y.Length - 1);
+                //            break;
+                //        case MatchPosition.FirstLast:
+                //            found.X.InsertTo(0, x, 0, found.X.Length - 1);
+                //            found.Y.InsertTo(0, y, 0, found.Y.Length - 1);
+                //            break;
+                //        case MatchPosition.LastFirst:
+                //            found.X.CopyTo(x, lengthBefore - 1);
+                //            found.Y.CopyTo(y, lengthBefore - 1);
+                //            break;
+                //        case MatchPosition.LastLast:
+                //            found.X.CopyToReverse(x, lengthBefore - 1);
+                //            found.Y.CopyToReverse(y, lengthBefore - 1);
+                //            break;
+                //    }
+
+                //    // select a new line.
+                //    foundPosition = this.FindMatch(linesIndex, lines, x, y, line.Value, epsilon, out found);
+                //    mergeCount++;
+                //}
+
+                // simplify first.
+                double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                                                            epsilon);
+
+                // add the new points.
+                uint? pointsId = target.AddPoints(simplified[0], simplified[1]);
+
+                // add points again with appropriate styles.
+                if (pointsId.HasValue)
+                {
+                    foreach (var style in polygon.Value)
+                    {
+                        var scene2DStylePolygon = (style as Scene2DStylePolygon);
+                        if (scene2DStylePolygon != null)
+                        {
+                            StylePolygon stylePolygon = source.GetStylePolygon(scene2DStylePolygon.StylePolygonId);
+                            target.AddStylePolygon(pointsId.Value, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
+                                stylePolygon.Color, stylePolygon.Width, stylePolygon.Fill);
                             continue;
                         }
                     }
