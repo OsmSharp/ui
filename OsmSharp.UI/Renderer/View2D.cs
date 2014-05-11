@@ -388,23 +388,35 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="bottom">Bottom.</param>
 		public bool OverlapsWithBox(double left, double top, double right, double bottom)
 		{
-            if (right < _minX)
-            { // completely to the left of this view.
-                return false;
+            double minX = System.Math.Max(_minX, System.Math.Min(left, right));
+            double minY = System.Math.Max(_minY, System.Math.Min(top, bottom));
+            double maxX = System.Math.Min(_maxX, System.Math.Max(left, right));
+            double maxY = System.Math.Min(_maxY, System.Math.Max(top, bottom));
+
+            if (minX <= maxX && minY <= maxY)
+            {
+                return true;
             }
-            //if (top < _maxY)
-            //{ // completely below this view.
+            return false;
+
+            //double minX;
+            //if (right < _minX)
+            //{ // completely to the left of this view.
             //    return false;
             //}
-            //if (bottom > _minY)
-            //{ // completely above this view.
+            ////if (top < _maxY)
+            ////{ // completely below this view.
+            ////    return false;
+            ////}
+            ////if (bottom > _minY)
+            ////{ // completely above this view.
+            ////    return false;
+            ////}
+            //if (left > _maxX)
+            //{ // completely to the right of this view.
             //    return false;
             //}
-            if (left > _maxX)
-            { // completely to the right of this view.
-                return false;
-            }
-            return true;
+            //return true;
 		}
 
         /// <summary>

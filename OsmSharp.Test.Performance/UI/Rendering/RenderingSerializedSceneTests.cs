@@ -77,31 +77,13 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// </summary>
         public static void Test(Stream stream, CreateTarget createTarget, CreateRenderer createRenderer)
         {
-
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 16);
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 14);
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 12);
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 10);
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 8);
-            // do some of the testing.
-            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 6);
+            for (int zoom = 6; zoom < 17; zoom++)
+            {
+                // do some of the testing.
+                RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                    new GeoCoordinate(51.20190, 4.66540),
+                    new GeoCoordinate(51.30720, 4.89820)), 3, 1, zoom);
+            }
         }
 
         /// <summary>
@@ -138,7 +120,11 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             while (testCount > 0)
             {
                 // randomize view.
-                int zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(range) + minZoom;
+                int zoom = minZoom;
+                if (range > 1)
+                { // only randomize when range is > 1
+                    zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(range) + minZoom;
+                }
                 GeoCoordinate center = box.GenerateRandomIn();
                 View2D view = mapRenderer.Create(TargetWidth, TargetHeight, map,
                     (float)projection.ToZoomFactor(zoom), center, false, true);
