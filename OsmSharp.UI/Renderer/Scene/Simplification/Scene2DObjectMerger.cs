@@ -73,7 +73,8 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
             var lines = new Dictionary<Scene2D.ScenePoints, Scene2DStylesSet>();
             var linesIndex = new QuadTree<PointF2D, Scene2D.ScenePoints>();
             Dictionary<uint, SceneObject> sceneObjects = source.GetSceneObjectsAt(idx);
-            float epsilon = source.CalculateSimplificationEpsilon(source.GetMaximumZoomFactorAt(idx));
+            float zoomFactor = source.GetMaximumZoomFactorAt(idx);
+            float epsilon = source.CalculateSimplificationEpsilon(zoomFactor);
             foreach (var sceneObject in sceneObjects)
             {
                 if (sceneObject.Value.Enum == SceneObjectType.LineObject)
@@ -163,7 +164,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
-                        "Merging lines ({1}/{2})... {0}%", progress, totalLines - lines.Count, totalLines);
+                        "Merging lines @z{3}e{4} ({1}/{2})... {0}%", progress, totalLines - lines.Count, totalLines, zoomFactor, epsilon);
                     latestProgress = progress;
                 }
 
@@ -179,6 +180,15 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                 { // TODO: keep expanding and duplicating until not possible anymore.
                     // remove the found line.
                     lines.Remove(found);
+
+                    // report progress.
+                    progress = (float)System.Math.Round((((double)(totalLines - lines.Count) / (double)totalLines) * 100));
+                    if (progress != latestProgress)
+                    {
+                        OsmSharp.Logging.Log.TraceEvent("SceneSerializer", OsmSharp.Logging.TraceEventType.Information,
+                            "Merging lines @z{3}e{4} ({1}/{2})... {0}%", progress, totalLines - lines.Count, totalLines, zoomFactor, epsilon);
+                        latestProgress = progress;
+                    }
 
                     // add the line.
                     int lengthBefore = x.Length;
@@ -210,8 +220,12 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     mergeCount++;
                 }
 
+                // simplify first.
+                double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                                                            epsilon);
+
                 // add the new points.
-                uint? pointsId = target.AddPoints(x, y);
+                uint? pointsId = target.AddPoints(simplified[0], simplified[1]);
 
                 // add points again with appropriate styles.
                 if (pointsId.HasValue)

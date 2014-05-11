@@ -45,7 +45,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         {
             // create a layered scene.
             Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-                16, 14, 12, 10, 8, 6, 4 }));
+                16, 14, 12, 10, 8, 6 }));
 
             // tests map css interpreter.
             MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\default.mapcss", scene, "kempen-big.osm.pbf");
