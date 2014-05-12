@@ -47,11 +47,6 @@ namespace OsmSharp.UI.Map.Styles.Streams
         private IProjection _projection;
 
         /// <summary>
-        /// Holds the stream.
-        /// </summary>
-        private Stream _stream;
-
-        /// <summary>
         /// Creates a new MapCSS scene target.
         /// </summary>
         /// <param name="styleInterpreter"></param>
