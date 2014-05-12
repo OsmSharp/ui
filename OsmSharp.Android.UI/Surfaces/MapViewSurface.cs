@@ -84,6 +84,11 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private MapView _mapView;
 
+        /// <summary>
+        /// Holds the scalefactor.
+        /// </summary>
+        private float _scaleFactor;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
 		/// </summary>
@@ -128,8 +133,11 @@ namespace OsmSharp.Android.UI
             this.MapMinZoomLevel = 0;
             this.MapMaxZoomLevel = 20;
 
+            // calculate scale factor.
+            _scaleFactor = (float)System.Math.Floor(Resources.DisplayMetrics.Xdpi / 160);
+
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
-                new CanvasRenderer2D());
+                new CanvasRenderer2D(1));
 
             // initialize the gesture detection.
             this.SetOnTouchListener(this);
@@ -148,7 +156,7 @@ namespace OsmSharp.Android.UI
             // initialize all the caching stuff.
             _backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
             _cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
-                new CanvasRenderer2D());
+                new CanvasRenderer2D(_scaleFactor));
         }
 
 		/// <summary>
@@ -318,17 +326,24 @@ namespace OsmSharp.Android.UI
 				}
 
                 // resize image if needed.
-                float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
+                float sizeX = this.SurfaceWidth;
+                float sizeY = this.SurfaceHeight;
+                //if(this.MapAllowTilt)
+                //{ // when rotation is allowed make sure a square is rendered.
+                //    sizeX = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
+                //    sizeY = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
+                //}
+                // float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
                 if (image == null ||
-                    image.Image.Width != (int)(size * _extra) ||
-                    image.Image.Height != (int)(size * _extra))
+                    image.Image.Width != (int)(sizeX * _extra) ||
+                    image.Image.Height != (int)(sizeY * _extra))
                 { // create a bitmap and render there.
                     if (image != null)
                     { // make sure to dispose the old image.
                         image.Dispose();
                     }
-                    image = new NativeImage(global::Android.Graphics.Bitmap.CreateBitmap((int)(size * _extra),
-                        (int)(size * _extra),
+                    image = new NativeImage(global::Android.Graphics.Bitmap.CreateBitmap((int)(sizeX * _extra),
+                        (int)(sizeY * _extra),
                         global::Android.Graphics.Bitmap.Config.Argb8888));
                 }
 
@@ -343,8 +358,10 @@ namespace OsmSharp.Android.UI
                 float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
                 // create the view for this control.
+                float scaledNormalWidth = image.Image.Width / 2.0f;
+                float scaledNormalHeight = image.Image.Height / 2.0f;
                 var view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                         size * _extra, size * _extra, sceneZoomFactor,
+                                         scaledNormalWidth * _extra, scaledNormalHeight * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
@@ -357,7 +374,7 @@ namespace OsmSharp.Android.UI
                     !_previouslyChangedView.Equals(view))
                 { // report change once!
                     var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                        image.Image.Width, image.Image.Height, sceneZoomFactor,
+                        scaledNormalWidth, scaledNormalHeight, sceneZoomFactor,
                         _invertX, _invertY, this.MapTilt);
                     this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
                                           normalView, view);
@@ -617,6 +634,8 @@ namespace OsmSharp.Android.UI
                     new Primitive2D[] { _onScreenBuffer });
             }
 
+            Thread.Sleep(1);
+
             OsmSharp.Logging.Log.TraceEvent("OnDraw", TraceEventType.Information, "OnDraw End.");
         }
 		
@@ -626,8 +645,8 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public View2D CreateView()
 		{
-            float height = this.SurfaceHeight;
-            float width = this.SurfaceWidth;
+            float height = this.SurfaceHeight / 2.0f;
+            float width = this.SurfaceWidth / 2.0f;
 
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
