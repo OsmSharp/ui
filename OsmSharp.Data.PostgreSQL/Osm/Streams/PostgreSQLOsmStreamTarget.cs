@@ -61,6 +61,8 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// </summary>
         private bool _createAndDetectSchema;
 
+        private Encoding _encoding;
+
         int _batch_nodes = 100000;
         int _batch_ways = 100000;
         int _batch_relations = 5000;
@@ -70,23 +72,19 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <summary>
         /// Creates a new target.
         /// </summary>
+        /// <param name="encoding"></param>
         /// <param name="connectionString"></param>
         public PostgreSQLOsmStreamTarget(string connectionString)
-        {
-            _connectionString = connectionString;
-            _createAndDetectSchema = false;
-        }
+            : this(Encoding.UTF8, connectionString) { }
 
         /// <summary>
         /// Creates a new target.
         /// </summary>
+        /// <param name="encoding"></param>
         /// <param name="connectionString"></param>
         /// <param name="createSchema"></param>
         public PostgreSQLOsmStreamTarget(string connectionString, bool createSchema)
-        {
-            _connectionString = connectionString;
-            _createAndDetectSchema = createSchema;
-        }
+            : this(Encoding.UTF8, connectionString, createSchema) { }
 
         /// <summary>
         /// Creates a new target.
@@ -94,7 +92,49 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="connection"></param>
         /// <param name="createSchema"></param>
         public PostgreSQLOsmStreamTarget(NpgsqlConnection connection, bool createSchema)
+            : this(Encoding.UTF8, connection, createSchema) { }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="encoding"></param>
+        public PostgreSQLOsmStreamTarget(NpgsqlConnection connection)
+            : this(Encoding.UTF8, connection) { }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="encoding"></param>
+        /// <param name="connectionString"></param>
+        public PostgreSQLOsmStreamTarget(Encoding encoding, string connectionString)
         {
+            _encoding = encoding;
+            _connectionString = connectionString;
+            _createAndDetectSchema = false;
+        }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="encoding"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="createSchema"></param>
+        public PostgreSQLOsmStreamTarget(Encoding encoding, string connectionString, bool createSchema)
+        {
+            _encoding = encoding;
+            _connectionString = connectionString;
+            _createAndDetectSchema = createSchema;
+        }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="encoding"></param>
+        /// <param name="connection"></param>
+        /// <param name="createSchema"></param>
+        public PostgreSQLOsmStreamTarget(Encoding encoding, NpgsqlConnection connection, bool createSchema)
+        {
+            _encoding = encoding;
             _connection = connection;
             _createAndDetectSchema = createSchema;
         }
@@ -102,8 +142,9 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <summary>
         /// Creates a new target.
         /// </summary>
+        /// <param name="encoding"></param>
         /// <param name="connection"></param>
-        public PostgreSQLOsmStreamTarget(NpgsqlConnection connection) : this(connection, true) { }
+        public PostgreSQLOsmStreamTarget(Encoding encoding, NpgsqlConnection connection) : this(encoding, connection, true) { }
 
         /// <summary>
         /// Initializes this target.
@@ -310,7 +351,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                             }
                             else if (value is string)
                             { // convert the string data into bytes postgres can understand.
-                                field_data = System.Text.Encoding.ASCII.GetBytes(value as string);
+                                field_data = _encoding.GetBytes(value as string);
                             }
                             else if (value is bool)
                             { // convert the bool data into bytes postgres can understand.
