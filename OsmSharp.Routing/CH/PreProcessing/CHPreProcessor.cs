@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Logging;
+using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
     /// <summary>
     /// Pre-processor to construct a Contraction Hierarchy (CH).
     /// </summary>
-    public class CHPreProcessor
+    public class CHPreProcessor : IPreProcessor
     {
         /// <summary>
         /// Holds the data target.

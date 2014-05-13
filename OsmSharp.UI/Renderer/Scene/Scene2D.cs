@@ -128,10 +128,17 @@ namespace OsmSharp.UI.Renderer.Scene
             _zoomFactors = new List<float>(zooms);
             if (!zoomsAreProjected)
             { // the zooms are not projected yet.
-                _zoomFactors = new List<float>(zooms.Select((zoomLevel) =>
+                float previous = float.MaxValue;
+                for (int idx = 0; idx < _zoomFactors.Count; idx++)
                 {
-                    return (float)projection.ToZoomFactor(zoomLevel);
-                }));
+                    float current = _zoomFactors[idx];
+                    if(previous < current)
+                    { // oeps, the previous zoom level is smaller.
+                        throw new ArgumentException("The list of zoom levels is not sorted. It should be sorted from big to small.");
+                    }
+                    _zoomFactors[idx] =  (float)projection.ToZoomFactor(current);
+                    previous = current;
+                }
             }
 
             // string table.
