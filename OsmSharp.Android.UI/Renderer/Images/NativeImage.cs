@@ -97,6 +97,10 @@ namespace OsmSharp.Android.UI.Renderer.Images
                     this._image.Recycle();
                     this._image.Dispose();
                 }
+                catch(Exception)
+                { // TODO: figure out whyt this happens, ask someone at Xamarin if needed.
+                    // whatever happens, don't crash!
+                }
                 finally
                 {
                     this._image = null;

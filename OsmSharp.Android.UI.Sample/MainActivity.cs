@@ -44,7 +44,8 @@ namespace OsmSharp.Android.UI.Sample
 	/// <summary>
 	/// The main activity.
 	/// </summary>
-    [Activity(ConfigurationChanges = global::Android.Content.PM.ConfigChanges.Orientation | global::Android.Content.PM.ConfigChanges.ScreenLayout)]
+    // [Activity(ConfigurationChanges = global::Android.Content.PM.ConfigChanges.Orientation | global::Android.Content.PM.ConfigChanges.ScreenLayout)]
+    [Activity]
     public class MainActivity : Activity
 	{
         /// <summary>
@@ -147,7 +148,7 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26361, 4.78620);
 			_mapView.MapZoom = 15;
-            _mapView.MapAllowTilt = false;
+            _mapView.MapAllowTilt = true;
 
 			// add markers.
 			_mapView.AddMarker (from);

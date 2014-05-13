@@ -189,6 +189,8 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private float _extra = 1.25f;
 
+        private float _bufferFactor = 4.0f;
+
         /// <summary>
         /// Triggers rendering.
         /// </summary>
@@ -358,8 +360,8 @@ namespace OsmSharp.Android.UI
                 float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
                 // create the view for this control.
-                float scaledNormalWidth = image.Image.Width / 2.0f;
-                float scaledNormalHeight = image.Image.Height / 2.0f;
+                float scaledNormalWidth = image.Image.Width / _bufferFactor;
+                float scaledNormalHeight = image.Image.Height / _bufferFactor;
                 var view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
                                          scaledNormalWidth * _extra, scaledNormalHeight * _extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
@@ -645,8 +647,8 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public View2D CreateView()
 		{
-            float height = this.SurfaceHeight / 2.0f;
-            float width = this.SurfaceWidth / 2.0f;
+            float height = this.SurfaceHeight / _bufferFactor;
+            float width = this.SurfaceWidth / _bufferFactor;
 
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
