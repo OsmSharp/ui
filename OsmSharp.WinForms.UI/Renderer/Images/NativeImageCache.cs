@@ -61,5 +61,13 @@ namespace OsmSharp.WinForms.UI.Renderer.Images
         {
             image.Dispose();
         }
+
+        /// <summary>
+        /// Flushes all images from the cache.
+        /// </summary>
+        public override void Flush()
+        {
+            // nothing to do.
+        }
     }
 }
