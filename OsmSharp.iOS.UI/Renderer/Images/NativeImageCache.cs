@@ -56,5 +56,13 @@ namespace OsmSharp.iOS.UI
         {
             image.Dispose();
         }
+
+        /// <summary>
+        /// Flushes all images.
+        /// </summary>
+        public override void Flush()
+        {
+            // nothing to do here.
+        }
     }
 }
