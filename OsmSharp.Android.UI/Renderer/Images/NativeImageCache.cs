@@ -136,5 +136,22 @@ namespace OsmSharp.Android.UI.Renderer.Images
             OsmSharp.Logging.Log.TraceEvent("NativeImageCache",
                 Logging.TraceEventType.Information, "After bitmap release: {0} {1}", _unusedImages.Count, _usedImages.Count);
         }
+
+        /// <summary>
+        /// Flushes all images used.
+        /// </summary>
+        public override void Flush()
+        {
+            foreach (var images in _unusedImages)
+            {
+                images.Dispose();
+            }
+            _unusedImages.Clear();
+            foreach (var images in _usedImages)
+            {
+                images.Dispose();
+            }
+            _usedImages.Clear();
+        }
     }
 }

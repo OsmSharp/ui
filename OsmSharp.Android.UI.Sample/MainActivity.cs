@@ -89,17 +89,10 @@ namespace OsmSharp.Android.UI.Sample
             // hide title bar.
             this.RequestWindowFeature(global::Android.Views.WindowFeatures.NoTitle);
 
-            // initialize OsmSharp native hooks.
-            Native.Initialize();
-
-            // enable the logging.
-            OsmSharp.Logging.Log.Enable();
-            OsmSharp.Logging.Log.RegisterListener(new OsmSharp.Android.UI.Log.LogTraceListener());
-
 			// initialize map.
 			var map = new Map();
-            //map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
-            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
+            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
             //map.AddLayer(new LayerTile(@"http://tiles.openseamap.org/seamark/{0}/{1}/{2}.png"));
@@ -108,8 +101,8 @@ namespace OsmSharp.Android.UI.Sample
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
@@ -121,22 +114,22 @@ namespace OsmSharp.Android.UI.Sample
             var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
             var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
 
-            // initialize router.
-            _router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
+            //// initialize router.
+            //_router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
 
-            // resolve points.
-            var routerPoint1 = _router.Resolve(Vehicle.Car, from);
-            var routerPoint2 = _router.Resolve(Vehicle.Car, to);
+            //// resolve points.
+            //var routerPoint1 = _router.Resolve(Vehicle.Car, from);
+            //var routerPoint2 = _router.Resolve(Vehicle.Car, to);
             
-            // calculate route.
-            var route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-            var routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
-            _enumerator = route.GetRouteEnumerable(10).GetEnumerator();
+            //// calculate route.
+            //var route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+            //var routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
+            //_enumerator = route.GetRouteEnumerable(10).GetEnumerator();
 
-            // add a router layer.
-            _routeLayer = new LayerRoute(map.Projection);
-            _routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
-            map.AddLayer(_routeLayer);
+            //// add a router layer.
+            //_routeLayer = new LayerRoute(map.Projection);
+            //_routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
+            //map.AddLayer(_routeLayer);
 
             // define the mapview.
             _mapView = new MapView(this, new MapViewSurface(this));
@@ -166,7 +159,7 @@ namespace OsmSharp.Android.UI.Sample
             layout.AddView(_mapView);
 
             // create the route tracker animator.
-			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
+			//_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
             //// simulate a number of gps-location update along the calculated route.
             //Timer timer = new Timer(250);
@@ -184,6 +177,15 @@ namespace OsmSharp.Android.UI.Sample
             {
                 _mapView.Invalidate();
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _mapView.Dispose();
+
+            GC.Collect();
         }
 
         /// <summary>

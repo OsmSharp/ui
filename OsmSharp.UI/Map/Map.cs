@@ -26,6 +26,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Images;
+using System;
 using System.Collections.Generic;
 using System.IO;
 

@@ -37,5 +37,10 @@ namespace OsmSharp.UI.Renderer.Images
         /// </summary>
         /// <param name="image"></param>
         public abstract void Release(INativeImage image);
+
+        /// <summary>
+        /// Flushes all images from this cache.
+        /// </summary>
+        public abstract void Flush();
     }
 }

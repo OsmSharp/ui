@@ -15,7 +15,14 @@ namespace OsmSharp.Android.UI.Sample
 	public class SplashActivity : Activity
 	{
 		protected override void OnCreate(Bundle bundle)
-		{
+        {
+            // initialize OsmSharp native hooks.
+            Native.Initialize();
+
+            // enable the logging.
+            OsmSharp.Logging.Log.Enable();
+            OsmSharp.Logging.Log.RegisterListener(new OsmSharp.Android.UI.Log.LogTraceListener());
+
 			base.OnCreate(bundle);
 			StartActivity(typeof(MainActivity));
 		}

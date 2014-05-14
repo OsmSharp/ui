@@ -398,6 +398,33 @@ namespace OsmSharp.Android.UI
 		}
 
         /// <summary>
+        /// Diposes of all resources associated with this object.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing == true)
+            {
+                //someone want the deterministic release of all resources
+                //Let us release all the managed resources
+            }
+            else
+            {
+                // Do nothing, no one asked a dispose, the object went out of
+                // scope and finalized is called so lets next round of GC 
+                // release these resources
+            }
+
+            // Release the unmanaged resource in any case as they will not be 
+            // released by GC
+            if (this._mapView != null)
+            { // dispose of the map view surface.
+                this._mapView.Dispose();
+                this._mapView = null;
+            }
+        }
+
+        /// <summary>
         /// Invalidates.
         /// </summary>
         void IMapView.Invalidate()
