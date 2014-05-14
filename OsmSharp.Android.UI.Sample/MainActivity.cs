@@ -140,8 +140,8 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26361, 4.78620);
-			_mapView.MapZoom = 15;
-            _mapView.MapAllowTilt = true;
+			_mapView.MapZoom = 18;
+            _mapView.MapAllowTilt = false;
 
 			// add markers.
 			_mapView.AddMarker (from);
@@ -161,8 +161,8 @@ namespace OsmSharp.Android.UI.Sample
             // create the route tracker animator.
 			//_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            //// simulate a number of gps-location update along the calculated route.
-            //Timer timer = new Timer(250);
+            //// simulate a mapzoom change every 5 seconds.
+            //Timer timer = new Timer(200);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
@@ -195,21 +195,7 @@ namespace OsmSharp.Android.UI.Sample
         /// <param name="e"></param>
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
-            if (_enumerator.MoveNext())
-            { // move to the next dummy gps location.
-                // randomize the route to simulate actual gps location data.
-                GeoCoordinate other = _enumerator.Current.OffsetRandom(10);
-
-                // git the location to the route tracker.
-                _routeTrackerAnimator.Track(other);
-                if (_routeTrackerAnimator.NextInstruction != null)
-                { // 
-                    this.RunOnUiThread(() =>
-                    {
-                        _textView.Text = _routeTrackerAnimator.NextInstruction.Text;
-                    });
-                }
-            }
+            _mapView.MapZoom = _mapView.MapZoom - 0.05f;
         }
 	}
 }

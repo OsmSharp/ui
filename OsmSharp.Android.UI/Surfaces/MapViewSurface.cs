@@ -421,14 +421,11 @@ namespace OsmSharp.Android.UI
                 if (complete)
                 { // report a successful render to listener.
                     _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
-
-                    // GC.Collect();
                 }
             }
 
             // notify the the current surface of the new rendering.
             this.PostInvalidate();
-            //(this.Context as Activity).RunOnUiThread(Invalidate);
 		}
 
         /// <summary>
@@ -450,7 +447,8 @@ namespace OsmSharp.Android.UI
             {
                 _mapCenter = value;
 
-                // report 
+                _previouslyRenderedView = null;
+                _previouslyChangedView = null;
                 (this.Context as Activity).RunOnUiThread(NotifyMovement);
             }
         }
@@ -478,6 +476,9 @@ namespace OsmSharp.Android.UI
                 {
                     _map.MapChanged += MapChanged;
                 }
+
+                _previouslyRenderedView = null;
+                _previouslyChangedView = null;
             }
         }
 
@@ -495,8 +496,6 @@ namespace OsmSharp.Android.UI
                 // notify listener.
                 _listener.NotifyChange(view, this.MapZoom);
             }
-
-            OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Information, "MapChanged");
             _previouslyRenderedView = null;
             _previouslyChangedView = null;
         }
@@ -517,6 +516,8 @@ namespace OsmSharp.Android.UI
             {
                 _mapTilt = value;
 
+                _previouslyRenderedView = null;
+                _previouslyChangedView = null;
                 (this.Context as Activity).RunOnUiThread(NotifyMovement);
             }
 		}
@@ -543,7 +544,9 @@ namespace OsmSharp.Android.UI
 				} else {
 					_mapZoomLevel = value;
                 }
-				
+
+                _previouslyRenderedView = null;
+                _previouslyChangedView = null;
                 (this.Context as Activity).RunOnUiThread (NotifyMovement);
 			}
 		}
