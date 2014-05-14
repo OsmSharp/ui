@@ -682,17 +682,24 @@ namespace OsmSharp.Routing.CH
             // keep a list of distances to the given vertices while doing backward search.
             var buckets = new Dictionary<long, Dictionary<long, double>>();
             var targetIds = new long[sources.Length];
+            double latestProgress = 0;
             for (int idx = 0; idx < sources.Length; idx++)
             {
                 targetIds[idx] =
                     this.SearchBackwardIntoBucket(graph, buckets, sources[idx]);
 
-                OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating backward... {0}%",
-                    (int)(((float)idx / (float)targets.Length) * 100));
+                float progress = (float)System.Math.Round((((double)idx / (double)targets.Length) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Calculating backward... {0}%", progress);
+                    latestProgress = progress;
+                }
             }
 
             // conduct a forward search from each source.
             var weights = new double[sources.Length][];
+            latestProgress = 0;
             for (int idx = 0; idx < sources.Length; idx++)
             {
                 // calculate all from's.
@@ -711,8 +718,14 @@ namespace OsmSharp.Routing.CH
                 weights[idx] = toWeights;
                 result.Clear();
 
-                OsmSharp.Logging.Log.TraceEvent("CHRouter", TraceEventType.Information, "Calculating forward... {0}%",
-                    (int)(((float)idx / (float)sources.Length) * 100));
+
+                float progress = (float)System.Math.Round((((double)idx / (double)sources.Length) * 100));
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Calculating forward... {0}%", progress);
+                    latestProgress = progress;
+                }
             }
             return weights;
         }
@@ -1475,6 +1488,7 @@ namespace OsmSharp.Routing.CH
                             KeyValuePair<uint, CHEdgeData>[] contractedArcs =
                                 graph.GetArcs(uncontracted.Value.Value.ContractedVertexId);
 
+                            bool found = false;
                             foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)
                             { // loop over all contracted arcs.
                                 if (contractedArc.Key == uncontracted.Key)
@@ -1488,9 +1502,20 @@ namespace OsmSharp.Routing.CH
                                     uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
                                         uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
                                             contractedArc.Key, data));
+                                    found = true;
                                     break;
                                 }
                             }
+                            if (!found)
+                            { // uncontracted not found??
+                                // TODO: figure out how this is possible.
+                                break;
+                            }
+                        }
+                        if (uncontracted.Value.Value.HasContractedVertex)
+                        { // uncontracted not found??
+                            // TODO: figure out how this is possible.
+                            continue;
                         }
                         // try the to-vertex of the non-contracted arc.
                         if (arc.Value.Key != uncontracted.Value.Key)
