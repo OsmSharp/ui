@@ -1,0 +1,5 @@
+Enhancements:
+
+- Performance improvements for mobile routing.
+- Performance improvements when building serialized vector files.
+- Performance improvements in PBF-reader when ignoring nodes/ways or relations.

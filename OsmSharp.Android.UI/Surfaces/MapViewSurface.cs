@@ -189,7 +189,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private float _extra = 1.25f;
 
-        private float _bufferFactor = 4.0f;
+        private float _bufferFactor = 3.0f;
 
         /// <summary>
         /// Triggers rendering.

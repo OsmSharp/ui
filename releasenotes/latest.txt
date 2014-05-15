@@ -1,5 +1,28 @@
 Enhancements:
 
-- Performance improvements for mobile routing.
-- Performance improvements when building serialized vector files.
-- Performance improvements in PBF-reader when ignoring nodes/ways or relations.
+- Improved MapCSS performance: Only check objects with at least on relevant tag. 11956d6e20d47f82833492112bf180de4f931416
+- Improved MapCSS performance: Keep rules for similar objects around. cc4aa3f23654b0a731855b3811131ddcd83abab3
+- Added a cross-plaform SQLite connection. f7d9e49156887417f94285b3da1b106729d5fdfd ba1231c3c07b5e04274a2bffa00da8d79997ce03
+- Added an MBTiles layer. 02603f9908cd7ec440d9f285f69a729edc5fc1d7 
+- Added platform initialization code to inject platform specific code. 3e7b9d0caa4a08483ad2a2840db4c941b7e0178b 8036fa8eef56a05853cd3c7ddc365ea6399cde42 
+- Added radian normalization. a5fbe938408e45f26aa0b0818a7dbf87cad4113d
+- Added OffsetWithDirection to GeoCoordinate. f7eed75892a825fa776d379ccb71b54fdf0fc44d
+- Improved Layer implementation to allow for external development of custom layers. 6419595e0aa9c77e090386b7a8715538ed47b21f
+- Improved rendering performance and memory usage by injecting native images. 1958f80c2efacb97fbcf9d9e70fb8be5473efdb1 35f2ab47279970ae86ac9f4ea379b2e38ae77acd 7f0b9642a5666d3e983ddcbfda0ccda46c4297eb
+- Improved memory usage on Android by recovering not destroying native images. 936be7185bfceb12042eaadc0bde6905bd541b28
+- Improved maintenance of changes. Fixes #115. 09e88682454aea3ab65276037f59a43a0a3cbfe2
+- Do not destroy and recreate Path-objects on every rendering cycle on Android. 50ed31f8d3eeaf118637636b0d822c61c814527b
+- Removed OsmSharp.Data.* assemblies from default Nuget packages and moved them to seperate packages. 
+
+Bugfixes:
+
+- Fixed ZoomToMarkers that keeps getting called on each refresh. cb5d42df2999b6869ab64c16d72319885b47dbc5
+- Fixed bug in Equals() in Tile. Thanks @langsweirdt 8e216f27778dad5c09d17f5b3c9588ee521cabb0
+- Fixed access to map layers and MapChanged even handling on Android. Fixes #105, #65 and #87. 178a45f4032cad2216e2cfa95296fdc4138ec306
+- Fixed PostgreSQL provider string encoding. Fixed #113. b90336e5bca4cb84724f0f29c25e3feda8039162
+- Implemented IPreProcessor on CHPreProcessor. Fixed #112. 92efa5ad9396daeac4b4948517e76f7a32177bdb
+- Checked sorting of zoom levels. Fixed #81. b7eb7b9be6ebceeb742e2e241139b157dc0da6b8
+- Fixed memory leak. Fixed #90. aa6f164d0879cccba7bd87387c65f4164bfcf196
+- Fixed blocking issue on CHRouter. 9d56bfa9e75d970cdf82c04e2dbcbd75f500e4d5
+- Fixed dependeny definition in Nuget packages.
+
