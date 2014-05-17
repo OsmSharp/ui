@@ -242,5 +242,74 @@ namespace OsmSharp.Test.Unittests.Osm.Tiles
             tiles = new HashSet<Tile>(range.EnumerateInCenterFirst());
             Assert.AreEqual(range.Count, tiles.Count);
         }
+
+        /// <summary>
+        /// Tests the subtile calculation.
+        /// </summary>
+        [Test]
+        public void TestTileSubtiles()
+        {
+            var tile = new Tile(0, 0, 0);
+
+            var subtiles = tile.SubTiles;
+            Assert.AreEqual(0, subtiles.XMin);
+            Assert.AreEqual(0, subtiles.YMin);
+            Assert.AreEqual(1, subtiles.XMax);
+            Assert.AreEqual(1, subtiles.YMax);
+            Assert.AreEqual(1, subtiles.Zoom);
+
+            subtiles = tile.GetSubTiles(1);
+            Assert.AreEqual(0, subtiles.XMin);
+            Assert.AreEqual(0, subtiles.YMin);
+            Assert.AreEqual(1, subtiles.XMax);
+            Assert.AreEqual(1, subtiles.YMax);
+            Assert.AreEqual(1, subtiles.Zoom);
+
+            subtiles = tile.GetSubTiles(2);
+            Assert.AreEqual(0, subtiles.XMin);
+            Assert.AreEqual(0, subtiles.YMin);
+            Assert.AreEqual(3, subtiles.XMax);
+            Assert.AreEqual(3, subtiles.YMax);
+            Assert.AreEqual(2, subtiles.Zoom);
+
+            tile = new Tile(1, 1, 1);
+
+            subtiles = tile.SubTiles;
+            Assert.AreEqual(2, subtiles.XMin);
+            Assert.AreEqual(2, subtiles.YMin);
+            Assert.AreEqual(3, subtiles.XMax);
+            Assert.AreEqual(3, subtiles.YMax);
+            Assert.AreEqual(2, subtiles.Zoom);
+
+            subtiles = tile.GetSubTiles(2);
+            Assert.AreEqual(2, subtiles.XMin);
+            Assert.AreEqual(2, subtiles.YMin);
+            Assert.AreEqual(3, subtiles.XMax);
+            Assert.AreEqual(3, subtiles.YMax);
+            Assert.AreEqual(2, subtiles.Zoom);
+
+            subtiles = tile.GetSubTiles(3);
+            Assert.AreEqual(4, subtiles.XMin);
+            Assert.AreEqual(4, subtiles.YMin);
+            Assert.AreEqual(7, subtiles.XMax);
+            Assert.AreEqual(7, subtiles.YMax);
+            Assert.AreEqual(3, subtiles.Zoom);
+        }
+
+        /// <summary>
+        /// Tests the overlaps function.
+        /// </summary>
+        [Test]
+        public void TestTileOverlaps()
+        {
+            var tile = new Tile(1, 1, 1);
+
+            Assert.IsTrue(tile.Overlaps(new Tile(1, 1, 1)));
+            Assert.IsTrue(tile.Overlaps(new Tile(3, 3, 2)));
+            Assert.IsTrue(tile.Overlaps(new Tile(8, 8, 4)));
+
+            Assert.IsFalse(tile.Overlaps(new Tile(0, 0, 3)));
+            Assert.IsFalse(tile.Overlaps(new Tile(0, 0, 4)));
+        }
     }
 }

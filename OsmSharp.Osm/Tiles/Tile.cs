@@ -2,6 +2,8 @@
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Tiles
 {
@@ -149,6 +151,51 @@ namespace OsmSharp.Osm.Tiles
                     2*this.Y + 1, 
                     this.Zoom + 1);
             }
+        }
+
+        /// <summary>
+        /// Returns the subtiles of this tile at the given zoom.
+        /// </summary>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        public TileRange GetSubTiles(int zoom)
+        {
+            if (this.Zoom > zoom) { throw new ArgumentOutOfRangeException("zoom", "Subtiles can only be calculated for higher zooms.");  }
+
+            if(this.Zoom == zoom)
+            { // just return a range of one tile.
+                return new TileRange(this.X, this.Y, this.X, this.Y, this.Zoom);
+            }
+
+            var factor = 1 << (zoom - this.Zoom);
+
+            return new TileRange(
+                this.X * factor,
+                this.Y * factor,
+                this.X * factor + factor - 1,
+                this.Y * factor + factor - 1,
+                zoom);
+        }
+
+        /// <summary>
+        /// Returns true if this tile overlaps the given tile.
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        public bool Overlaps(Tile tile)
+        {
+            if (tile == null) { throw new ArgumentNullException("tile"); }
+
+            if(tile.Zoom == this.Zoom)
+            { // only overlaps when identical.
+                return tile.Equals(this);
+            }
+            else if(tile.Zoom > this.Zoom)
+            { // the zoom is bigger.
+                var range = this.GetSubTiles(tile.Zoom);
+                return range.Contains(tile);
+            }
+            return false;
         }
 
         /// <summary>
