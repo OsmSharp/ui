@@ -32,7 +32,7 @@ namespace OsmSharp.UI.Renderer
 	public abstract class Renderer2D<TTarget>
 	{
 	    /// <summary>
-	    /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Renderer2D`1"/> class.
+		/// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Renderer2D"/> class.
 	    /// </summary>
 	    protected Renderer2D()
 		{
