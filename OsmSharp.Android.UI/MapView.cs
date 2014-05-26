@@ -332,6 +332,14 @@ namespace OsmSharp.Android.UI
 			set { _mapView.MapTilt = value; }
         }
 
+        /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        public View2D CurrentView
+        {
+            get { return _mapView.CurrentView; }
+        }
+
 		#region IMapView implementation
 
 		/// <summary>

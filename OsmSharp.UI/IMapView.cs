@@ -90,6 +90,11 @@ namespace OsmSharp.UI
         Map.Map Map { get; set; }
 
         /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        View2D CurrentView { get; }
+
+        /// <summary>
         /// Notifies a map change.
         /// </summary>
         /// <param name="pixelsWidth"></param>

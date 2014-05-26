@@ -139,6 +139,11 @@ namespace OsmSharp.Android.UI
         /// </summary>
 		bool MapAllowZoom { get; set; }
 
+        /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        View2D CurrentView { get; }
+
 		/// <summary>
 		/// Registers the animator.
 		/// </summary>

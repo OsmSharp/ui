@@ -117,8 +117,15 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="image"></param>
         private void OnRemove(Image2D image)
         { // dispose of the image after it is removed from the cache.
-            _nativeImageCache.Release(image.NativeImage);
-            image.NativeImage = null;
+            try
+            {
+                _nativeImageCache.Release(image.NativeImage);
+                image.NativeImage = null;
+            }
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+            }
         }
 
         /// <summary>
@@ -132,18 +139,25 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="status">Status.</param>
         private void LoadQueuedTiles(object status)
         {
-            lock (_stack)
-            { // make sure that access to the queue is synchronized.
-                int queue = _stack.Count;
-                while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
-                { // there are queued items.
-                    LoadTile(_stack.Pop());
-                }
+            try
+            {
+                lock (_stack)
+                { // make sure that access to the queue is synchronized.
+                    int queue = _stack.Count;
+                    while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
+                    { // there are queued items.
+                        LoadTile(_stack.Pop());
+                    }
 
-                if (_stack.Count == 0)
-                { // dispose of timer.
-                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    if (_stack.Count == 0)
+                    { // dispose of timer.
+                        _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    }
                 }
+            }
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
         }
 
@@ -157,43 +171,47 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         private void LoadTile(object state)
         {
-            // a tile was found to load.
-            Tile tile = state as Tile;
+            try
+            {
+                // a tile was found to load.
+                Tile tile = state as Tile;
 
-            // only load tiles from the same zoom-level.
-            if (tile.Zoom != _currentZoom)
-            { // zoom is different, don't bother!
-                return;
-            }
-
-            Image2D image2D;
-            lock (_cache)
-            { // check again for the tile.
-                if (_cache.TryGet(tile, out image2D))
-                { // tile is already there!
-                    _cache.Add(tile, image2D); // add again to update status.
+                // only load tiles from the same zoom-level.
+                if (tile.Zoom != _currentZoom)
+                { // zoom is different, don't bother!
                     return;
                 }
 
-                _loading.Add(tile);
-            }
+                Image2D image2D;
+                if (_cache == null)
+                {
+                    return;
+                }
+                lock (_cache)
+                { // check again for the tile.
+                    if (_cache.TryGet(tile, out image2D))
+                    { // tile is already there!
+                        _cache.Add(tile, image2D); // add again to update status.
+                        return;
+                    }
 
-            // load the tile.
-            string url = string.Format(_tilesURL,
-                             tile.Zoom,
-                             tile.X,
-                             tile.Y);
-            var request = (HttpWebRequest)HttpWebRequest.Create(
-                              url);
-            request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-            //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
+                    _loading.Add(tile);
+                }
 
-            OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
+                // load the tile.
+                string url = string.Format(_tilesURL,
+                                 tile.Zoom,
+                                 tile.X,
+                                 tile.Y);
+                var request = (HttpWebRequest)HttpWebRequest.Create(
+                                  url);
+                request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
+                //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
 
-            try
-            {
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
+
                 Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) =>
-                { 
+                {
                     this.Response(obj, tile);
 
                     _loading.Remove(tile);
@@ -268,37 +286,43 @@ namespace OsmSharp.UI.Map.Layers
         private void Response(WebResponse myResp, Tile tile)
         {
             if (_cache == null) { return; }
-      
-            Stream stream = myResp.GetResponseStream();
-            byte[] image = null;
-            if (stream != null)
+            try
             {
-                using (stream)
+                Stream stream = myResp.GetResponseStream();
+                byte[] image = null;
+                if (stream != null)
                 {
-                    // there is data: read it.
-                    var memoryStream = new MemoryStream();
-                    stream.CopyTo(memoryStream);
+                    using (stream)
+                    {
+                        // there is data: read it.
+                        var memoryStream = new MemoryStream();
+                        stream.CopyTo(memoryStream);
 
-                    image = memoryStream.ToArray();
-                    memoryStream.Dispose();
+                        image = memoryStream.ToArray();
+                        memoryStream.Dispose();
 
-                    var box = tile.ToBox(_projection);
-                    var nativeImage = _nativeImageCache.Obtain(image);
-                    var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
-                    image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
+                        var box = tile.ToBox(_projection);
+                        var nativeImage = _nativeImageCache.Obtain(image);
+                        var image2D = new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
+                        image2D.Layer = (uint)(_maxZoomLevel - tile.Zoom);
 
-                    lock (_cache)
-                    { // add the result to the cache.
-                        _cache.Add(tile, image2D);
+                        lock (_cache)
+                        { // add the result to the cache.
+                            _cache.Add(tile, image2D);
+                        }
                     }
-                }
 
-                // raise the layer changed event.
-                this.RaiseLayerChanged();
+                    // raise the layer changed event.
+                    this.RaiseLayerChanged();
+                }
+                else
+                {
+                    OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, "No response stream!");
+                }
             }
-            else
-            {
-                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, "No response stream!");
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
         }
 
@@ -321,32 +345,39 @@ namespace OsmSharp.UI.Map.Layers
         protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
-            lock (_cache)
+            try
             {
-                foreach (var tile in _cache)
+                lock (_cache)
                 {
-                    if (tile.Value.IsVisibleIn(view, zoomFactor))
+                    foreach (var tile in _cache)
                     {
-                        Image2D temp;
-                        var minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
-                        var maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
-                        if (zoomFactor < maxZoom && zoomFactor > minZoom)
+                        if (tile.Value.IsVisibleIn(view, zoomFactor))
                         {
-                            _cache.TryGet(tile.Key, out temp);
-                            primitives.Add(tile.Value);
+                            Image2D temp;
+                            var minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
+                            var maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
+                            if (zoomFactor < maxZoom && zoomFactor > minZoom)
+                            {
+                                _cache.TryGet(tile.Key, out temp);
+                                primitives.Add(tile.Value);
+                            }
                         }
                     }
                 }
-            }
 
-            // set the ascending flag.
-            if (_previousZoomFactor != zoomFactor)
-            { // only change flag when difference.
-                _ascending = (_previousZoomFactor < zoomFactor);
-                _previousZoomFactor = zoomFactor;
-            }
+                // set the ascending flag.
+                if (_previousZoomFactor != zoomFactor)
+                { // only change flag when difference.
+                    _ascending = (_previousZoomFactor < zoomFactor);
+                    _previousZoomFactor = zoomFactor;
+                }
 
-            primitives.Sort(this);
+                primitives.Sort(this);
+            }
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+            }
             return primitives;
         }
 
@@ -377,50 +408,57 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="view"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
-            // calculate the current zoom level.
-            var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
-
-            if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
+            try
             {
-                // build the bounding box.
-                var viewBox = view.OuterBox;
-                var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
-                              map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+                // calculate the current zoom level.
+                var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
 
-                // build the tile range.
-                lock (_stack)
-                { // make sure the tile range is not in use.
-                    _stack.Clear();
+                if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
+                {
+                    // build the bounding box.
+                    var viewBox = view.OuterBox;
+                    var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                                  map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
 
-                    lock (_cache)
-                    {
-                        var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
-                        _currentZoom = zoomLevel;
-                        foreach (var tile in tileRange.EnumerateInCenterFirst().Reverse())
+                    // build the tile range.
+                    lock (_stack)
+                    { // make sure the tile range is not in use.
+                        _stack.Clear();
+
+                        lock (_cache)
                         {
-                            if (tile.IsValid)
-                            { // make sure all tiles are valid.
-                                Image2D temp;
-                                if (!_cache.TryPeek(tile, out temp) &&
-                                    !_loading.Contains(tile))
-                                { // not cached and not loading.
-                                    _stack.Push(tile);
+                            var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
+                            _currentZoom = zoomLevel;
+                            foreach (var tile in tileRange.EnumerateInCenterFirst().Reverse())
+                            {
+                                if (tile.IsValid)
+                                { // make sure all tiles are valid.
+                                    Image2D temp;
+                                    if (!_cache.TryPeek(tile, out temp) &&
+                                        !_loading.Contains(tile))
+                                    { // not cached and not loading.
+                                        _stack.Push(tile);
 
-                                    OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Queued tile:" + tile.ToString());
+                                        OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Queued tile:" + tile.ToString());
+                                    }
                                 }
                             }
+                            _timer.Change(0, 250);
                         }
-                        _timer.Change(0, 250);
-                    }
 
-                    if (_stack.Count > 0)
-                    { // reset the attempts.
-                        lock (_attempts)
-                        {
-                            _attempts.Clear();
+                        if (_stack.Count > 0)
+                        { // reset the attempts.
+                            lock (_attempts)
+                            {
+                                _attempts.Clear();
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
         }
 
@@ -484,28 +522,35 @@ namespace OsmSharp.UI.Map.Layers
         {
             base.Close();
 
-            if(_timer != null)
+            try
             {
-                _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                _timer.Dispose();
-                _timer = null;
-            }
+                if (_timer != null)
+                {
+                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    _timer.Dispose();
+                    _timer = null;
+                }
 
-            lock (_cache)
-            {
-                _cache.OnRemove = null;
-                _cache.Clear();
-            }
-            _cache = null;
+                lock (_cache)
+                {
+                    _cache.OnRemove = null;
+                    _cache.Clear();
+                }
+                _cache = null;
 
-            lock (_stack)
-            { // make sure the tile range is not in use.
-                _stack.Clear();
-            }
-            _stack = null;
+                lock (_stack)
+                { // make sure the tile range is not in use.
+                    _stack.Clear();
+                }
+                _stack = null;
 
-            // flushes all images from the cache.
-            _nativeImageCache.Flush();
+                // flushes all images from the cache.
+                _nativeImageCache.Flush();
+            }
+            catch (Exception ex)
+            { // don't worry about exceptions here.
+                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
+            }
         }
     }
 }

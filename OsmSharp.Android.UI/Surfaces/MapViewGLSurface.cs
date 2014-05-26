@@ -369,6 +369,14 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        public View2D CurrentView
+        {
+            get { return this.CreateView(); }
+        }
+
+        /// <summary>
         /// Raises the layout event.
         /// </summary>
         /// <param name="changed">If set to <c>true</c> changed.</param>
