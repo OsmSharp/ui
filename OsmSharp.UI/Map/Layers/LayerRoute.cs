@@ -128,5 +128,15 @@ namespace OsmSharp.UI.Map.Layers
         {
             _scene.Clear();
         }
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            // nothing to stop, even better!
+        }
     }
 }

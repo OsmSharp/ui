@@ -49,7 +49,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the LRU cache.
         /// </summary>
-        private readonly LRUCache<Tile, Image2D> _cache;
+        private LRUCache<Tile, Image2D> _cache;
         /// <summary>
         /// Holds the minimum zoom level.
         /// </summary>
@@ -69,7 +69,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the tile to-load queue.
         /// </summary>
-        private readonly LimitedStack<Tile> _stack;
+        private LimitedStack<Tile> _stack;
         /// <summary>
         /// Holds the number of failed attempts at loading one tile.
         /// </summary>
@@ -267,6 +267,8 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="tile">Tile.</param>
         private void Response(WebResponse myResp, Tile tile)
         {
+            if (_cache == null) { return; }
+      
             Stream stream = myResp.GetResponseStream();
             byte[] image = null;
             if (stream != null)
@@ -421,7 +423,6 @@ namespace OsmSharp.UI.Map.Layers
                 }
             }
         }
-        
 
         #region Disposing-pattern
 
@@ -475,5 +476,36 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            if(_timer != null)
+            {
+                _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                _timer.Dispose();
+                _timer = null;
+            }
+
+            lock (_cache)
+            {
+                _cache.OnRemove = null;
+                _cache.Clear();
+            }
+            _cache = null;
+
+            lock (_stack)
+            { // make sure the tile range is not in use.
+                _stack.Clear();
+            }
+            _stack = null;
+
+            // flushes all images from the cache.
+            _nativeImageCache.Flush();
+        }
     }
 }

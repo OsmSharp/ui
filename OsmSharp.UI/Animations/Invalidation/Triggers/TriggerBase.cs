@@ -98,5 +98,10 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         /// <param name="zoom">The zoom that was used for the latest rendering.</param>
         /// <param name="millis">The milliseconds that the previous rendering took.</param>
         public abstract void NotifyRenderSuccess(View2D view, double zoom, int millis);
+
+        /// <summary>
+        /// Stops this invalidation trigger.
+        /// </summary>
+        public abstract void Stop();
     }
 }

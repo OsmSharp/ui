@@ -93,5 +93,14 @@ namespace OsmSharp.UI.Map.Layers
         /// Gets or sets the tag.
         /// </summary>
         public object Tag { get; set; }
+
+        /// <summary>
+        /// Closes the layer.
+        /// </summary>
+        /// <remarks>Stop with whatever the layer might be doing.</remarks>
+        public virtual void Close()
+        { // make sure no changes from this layer can still trigger rendering!
+            this.LayerChanged = null;
+        }
     }
 }

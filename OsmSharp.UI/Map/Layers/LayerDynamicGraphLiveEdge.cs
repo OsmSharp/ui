@@ -195,9 +195,25 @@ namespace OsmSharp.UI.Map.Layers
 
         #endregion
 
+        /// <summary>
+        /// Returns all primitives in the given mapview.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
         protected internal override IEnumerable<Renderer.Primitives.Primitive2D> Get(float zoomFactor, View2D view)
         {
             throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            // nothing to stop, even better!
         }
     }
 }

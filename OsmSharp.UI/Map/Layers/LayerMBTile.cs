@@ -59,7 +59,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds the LRU cache.
         /// </summary>
-        private readonly LRUCache<Tile, Image2D> _cache;
+        private LRUCache<Tile, Image2D> _cache;
 
         /// <summary>
         /// Holds the native image cache.
@@ -204,5 +204,26 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            lock (_cache)
+            {
+                _cache.OnRemove = null;
+                _cache.Clear();
+            }
+            _cache = null;
+
+            // flushes all images from the cache.
+            _nativeImageCache.Flush();
+
+            // closes the connection.
+            _connection.Close();
+        }
     }
 }

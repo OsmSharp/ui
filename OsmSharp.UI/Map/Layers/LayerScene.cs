@@ -123,5 +123,15 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            // nothing to stop, even better!
+        }
     }
 }

@@ -91,7 +91,6 @@ namespace OsmSharp.Android.UI.Renderer.Images
             // released by GC
             if(this._image != null)
             { // dispose of the native image.
-                OsmSharp.Logging.Log.TraceEvent("NativeImage", Logging.TraceEventType.Information, "NativeImage");
                 try
                 {
                     this._image.Recycle();

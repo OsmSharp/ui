@@ -123,5 +123,15 @@ namespace OsmSharp.UI.Map.Layers
         {
             return _scene.Get(view, zoomFactor);
         }
+
+        /// <summary>
+        /// Closes this layer.
+        /// </summary>
+        public override void Close()
+        {
+            base.Close();
+
+            // nothing to stop, even better!
+        }
     }
 }

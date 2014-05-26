@@ -246,5 +246,21 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
             // trigger the renderer.
             base.Render();
         }
+
+        /// <summary>
+        /// Stops this invalidation trigger.
+        /// </summary>
+        public override void Stop()
+        {
+            lock (this)
+            {
+                if (_timer != null)
+                {
+                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    _timer.Dispose();
+                    _timer = null;
+                }
+            }
+        }
     }
 }

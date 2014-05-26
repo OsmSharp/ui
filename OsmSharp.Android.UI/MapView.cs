@@ -454,5 +454,20 @@ namespace OsmSharp.Android.UI
 				set;
 			}
 		}
+
+        /// <summary>
+        /// Closes this mapview.
+        /// </summary>
+        public void Close()
+        {
+            // clears all markers.
+            lock (_markers)
+            {
+                _markers.Clear();
+            }
+
+            // closes the mapview.
+            _mapView.Close();
+        }
     }
 }

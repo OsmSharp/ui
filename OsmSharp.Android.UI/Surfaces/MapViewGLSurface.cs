@@ -772,5 +772,13 @@ namespace OsmSharp.Android.UI
                 (this as IMapView).SetMapView(center, this.MapTilt, zoom);
             }
         }
+
+        /// <summary>
+        /// Closes this surface.
+        /// </summary>
+        public void Close()
+        {
+            // no closing the OpenGL-stuff just yet!
+        }
     }
 }
