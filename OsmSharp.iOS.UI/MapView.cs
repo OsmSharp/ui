@@ -958,7 +958,15 @@ namespace OsmSharp.iOS.UI
 		{
 			get;
 			set;
-		}
+		} 
+        
+        /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        public View2D CurrentView
+        {
+            get { return this.CreateView(this.Frame); }
+        }
 
 		#region IMapView implementation
 

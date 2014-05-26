@@ -69,6 +69,18 @@ namespace OsmSharp.WinForms.UI
         public Degree MapTilt { get; set; }
 
         /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        public View2D CurrentView
+        {
+            get
+            {
+                return _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
+            }
+        }
+
+        /// <summary>
         /// Holds the map.
         /// </summary>
         private OsmSharp.UI.Map.Map _map;
