@@ -623,6 +623,15 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Gets or sets the map scale factor.
+        /// </summary>
+        public float MapScaleFactor
+        {
+            get { return _bufferFactor; }
+            set { _bufferFactor = value; }
+        }
+
+        /// <summary>
         /// Gets the current view.
         /// </summary>
         public View2D CurrentView
