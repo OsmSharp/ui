@@ -268,6 +268,21 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
+        /// Returns true if the object is visible on the view.
+        /// </summary>
+        /// <returns>true</returns>
+        /// <c>false</c>
+        /// <param name="view">View.</param>
+        public override bool IsVisibleIn(View2D view)
+        {
+            if (view.OverlapsWithBox(MinX, MinY, MaxX, MaxY))
+            {
+                return true; // maybe a better hittest?
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>

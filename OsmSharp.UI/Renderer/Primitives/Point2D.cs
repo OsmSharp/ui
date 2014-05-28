@@ -139,6 +139,18 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
+        /// Returns true if the object is visible on the view.
+        /// </summary>
+        /// <returns>true</returns>
+        /// <c>false</c>
+        /// <param name="view">View.</param>
+        /// <param name="zoom"></param>
+        public override bool IsVisibleIn(View2D view)
+        {
+            return view.Contains(this.X, this.Y);
+        }
+
+        /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>

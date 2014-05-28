@@ -119,7 +119,23 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="view">View.</param>
         /// <param name="zoom"></param>
         public override bool IsVisibleIn(View2D view, float zoom)
-        { // TODO: refine this visible check.
+        {
+            if (this.MinZoom > zoom || this.MaxZoom < zoom)
+            { // outside of zoom bounds!
+                return false;
+            }
+
+            return _bounds.Overlaps(view.OuterBox);
+        }
+
+        /// <summary>
+        /// Returns true if the object is visible on the view.
+        /// </summary>
+        /// <returns>true</returns>
+        /// <c>false</c>
+        /// <param name="view">View.</param>
+        public override bool IsVisibleIn(View2D view)
+        {
             return _bounds.Overlaps(view.OuterBox);
         }
 

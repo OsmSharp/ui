@@ -113,7 +113,7 @@ namespace OsmSharp.UI.Renderer.Primitives
         #region IScene2DPrimitive implementation
 
         /// <summary>
-        /// Returns true if the object is visible on the view.
+        /// Returns true if the object is visible in the given view.
         /// </summary>
         /// <returns>true</returns>
         /// <c>false</c>
@@ -126,6 +126,16 @@ namespace OsmSharp.UI.Renderer.Primitives
                 return false;
             }
 
+            return this.IsVisibleIn(view);
+        }
+
+        /// <summary>
+        /// Returns true if the object is visible in the given view.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        public override bool IsVisibleIn(View2D view)
+        {
             return view.Contains(this.X, this.Y);
         }
 

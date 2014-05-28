@@ -25,14 +25,6 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public class Polygon2D : Primitive2D
     {
-        ///// <summary>
-        ///// Creates a new Polygon2D.
-        ///// </summary>
-        //public Polygon2D()
-        //{
-
-        //}
-
         /// <summary>
         /// Creates a new Polygon2D.
         /// </summary>
@@ -263,6 +255,21 @@ namespace OsmSharp.UI.Renderer.Primitives
                 return false;
             }
 
+            if (view.OverlapsWithBox(MinX, MinY, MaxX, MaxY))
+            {
+                return true; // maybe a better hittest?
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the object is visible on the view.
+        /// </summary>
+        /// <returns>true</returns>
+        /// <c>false</c>
+        /// <param name="view">View.</param>
+        public override bool IsVisibleIn(View2D view)
+        {
             if (view.OverlapsWithBox(MinX, MinY, MaxX, MaxY))
             {
                 return true; // maybe a better hittest?

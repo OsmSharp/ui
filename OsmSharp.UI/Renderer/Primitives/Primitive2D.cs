@@ -26,12 +26,19 @@ namespace OsmSharp.UI.Renderer.Primitives
     public abstract class Primitive2D
     {
         /// <summary>
-        /// Returns true if the object is visible on the view.
+        /// Returns true if the object is visible in the view and for the given zoom factor.
         /// </summary>
         /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
-        /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
+        /// <param name="view">The view.</param>
+        /// <param name="zoom">The zoom factor.</param>
         public abstract bool IsVisibleIn(View2D view, float zoom);
+
+        /// <summary>
+        /// Returns true if the object is visible in the view.
+        /// </summary>
+        /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
+        /// <param name="view">The view.</param>
+        public abstract bool IsVisibleIn(View2D view);
 
         /// <summary>
         /// Returns the bounding box for this primitive.
