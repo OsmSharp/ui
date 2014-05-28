@@ -13,6 +13,8 @@ namespace OsmSharp.WinForms.UI.Sample
         [STAThread]
         static void Main()
         {
+            Native.Initialize();
+
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(
                 new OsmSharp.WinForms.UI.Logging.ConsoleTraceListener());

@@ -81,9 +81,9 @@ namespace OsmSharp.WinForms.UI.Sample
             //scene = merger.BuildMergedScene(scene);
 
             //map.AddLayer(new LayerScene(scene));
-            //var dataSource = MemoryDataSource.CreateFromPBFStream(
-            //    new FileInfo(@"kempen.osm.pbf").OpenRead());
-            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            var dataSource = MemoryDataSource.CreateFromPBFStream(
+                new FileInfo(@"kempen-big.osm.pbf").OpenRead());
+            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //map.AddLayer(new LayerTile(new NativeImageCache(), @"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 200));
             //map.AddLayer(new LayerScene(
             //    Scene2D.Deserialize(new FileInfo(@"default.map").OpenRead(),
@@ -98,7 +98,7 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
-            this.mapControl1.MapZoom = 16;
+            this.mapControl1.MapZoom = 14;
             this.mapControl1.MapMouseClick += mapControl1_MapMouseClick;
         }
 

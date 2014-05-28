@@ -134,6 +134,7 @@
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileDefaultsForRouting.cs" />
     <Compile Include="Tiles\TileRange.cs" />
+    <Compile Include="Tiles\TileRangeIndex.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Xml\OsmDocument.cs" />
     <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
