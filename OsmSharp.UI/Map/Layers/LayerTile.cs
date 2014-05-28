@@ -347,32 +347,90 @@ namespace OsmSharp.UI.Map.Layers
             var primitives = new List<Primitive2D>();
             try
             {
-                lock (_cache)
+                // calculate the current zoom level.
+                var zoomLevel = (int)System.Math.Round(_projection.ToZoomLevel(zoomFactor), 0);
+
+                if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
                 {
-                    foreach (var tile in _cache)
+                    // build the bounding box.
+                    var viewBox = view.OuterBox;
+                    var box = new GeoCoordinateBox(_projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                                  _projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+
+                    var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
+                    var tileRangeIndex = new TileRangeIndex(tileRange);
+
+                    var primitivePerTile = new Dictionary<Tile, Primitive2D>();
+                    lock (_cache)
                     {
-                        if (tile.Value.IsVisibleIn(view, zoomFactor))
+                        Image2D temp;
+                        foreach (var tile in _cache)
                         {
-                            Image2D temp;
-                            var minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
-                            var maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
-                            if (zoomFactor < maxZoom && zoomFactor > minZoom)
+                            if (tile.Value.IsVisibleIn(view))
                             {
-                                _cache.TryGet(tile.Key, out temp);
-                                primitives.Add(tile.Value);
+                                tileRangeIndex.Add(tile.Key);
+                                primitivePerTile.Add(tile.Key, tile.Value);
+
+                                var minZoom = _projection.ToZoomFactor(tile.Key.Zoom - _zoomMinOffset);
+                                var maxZoom = _projection.ToZoomFactor(tile.Key.Zoom + (1 - _zoomMinOffset));
+                                if (zoomFactor < maxZoom && zoomFactor > minZoom)
+                                { // just hit the cache for tiles of this zoom level.
+                                    _cache.TryGet(tile.Key, out temp);
+                                }
+                            }
+                        }
+
+                        // set the ascending flag.
+                        if (_previousZoomFactor != zoomFactor)
+                        { // only change flag when difference.
+                            _ascending = (_previousZoomFactor < zoomFactor);
+                            _previousZoomFactor = zoomFactor;
+                        }
+
+                        // get candidate tiles for every tile.
+                        var selectedTiles = new List<Tile>();
+                        foreach (var tile in tileRange)
+                        {
+                            var best = tileRangeIndex.ChooseBest(tile, _ascending);
+                            foreach (var bestTile in best)
+                            {
+                                if (!selectedTiles.Contains(bestTile))
+                                { // make sure no doubles are added!
+                                    selectedTiles.Add(bestTile);
+                                }
+                            }
+                        }
+
+                        // sort according to the tiles index.
+                        selectedTiles.Sort(delegate(Tile x, Tile y)
+                        {
+                            return TileRangeIndex.TileWeight(tileRange.Zoom, x.Zoom, !_ascending).CompareTo(
+                                TileRangeIndex.TileWeight(tileRange.Zoom, y.Zoom, !_ascending));
+                        });
+                        selectedTiles.Reverse();
+
+                        // recursively remove tiles.
+                        for (int idx = selectedTiles.Count; idx > 0; idx--)
+                        {
+                            if (selectedTiles[selectedTiles.Count - idx].IsOverlappedBy(
+                                selectedTiles.GetRange(selectedTiles.Count - idx + 1, selectedTiles.Count - (selectedTiles.Count - idx + 1))))
+                            {
+                                selectedTiles.RemoveAt(selectedTiles.Count - idx);
+                            }
+                        }
+
+                        // TODO: trim this collection so that only tiles remain close to the zoom level not overlapping.
+                        Image2D primitive;
+                        foreach (Tile tile in selectedTiles)
+                        {
+                            if (_cache.TryPeek(tile, out primitive))
+                            { // add to the primitives list.
+                                primitives.Add(primitive);
                             }
                         }
                     }
                 }
-
-                // set the ascending flag.
-                if (_previousZoomFactor != zoomFactor)
-                { // only change flag when difference.
-                    _ascending = (_previousZoomFactor < zoomFactor);
-                    _previousZoomFactor = zoomFactor;
-                }
-
-                primitives.Sort(this);
+                return primitives;
             }
             catch (Exception ex)
             { // don't worry about exceptions here.

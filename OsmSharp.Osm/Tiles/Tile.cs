@@ -145,10 +145,10 @@ namespace OsmSharp.Osm.Tiles
         {
             get
             {
-                return new TileRange(2*this.X, 
-                    2*this.Y, 
-                    2*this.X + 1, 
-                    2*this.Y + 1, 
+                return new TileRange(2 * this.X,
+                    2 * this.Y,
+                    2 * this.X + 1,
+                    2 * this.Y + 1,
                     this.Zoom + 1);
             }
         }
@@ -160,9 +160,9 @@ namespace OsmSharp.Osm.Tiles
         /// <returns></returns>
         public TileRange GetSubTiles(int zoom)
         {
-            if (this.Zoom > zoom) { throw new ArgumentOutOfRangeException("zoom", "Subtiles can only be calculated for higher zooms.");  }
+            if (this.Zoom > zoom) { throw new ArgumentOutOfRangeException("zoom", "Subtiles can only be calculated for higher zooms."); }
 
-            if(this.Zoom == zoom)
+            if (this.Zoom == zoom)
             { // just return a range of one tile.
                 return new TileRange(this.X, this.Y, this.X, this.Y, this.Zoom);
             }
@@ -186,14 +186,63 @@ namespace OsmSharp.Osm.Tiles
         {
             if (tile == null) { throw new ArgumentNullException("tile"); }
 
-            if(tile.Zoom == this.Zoom)
+            if (tile.Zoom == this.Zoom)
             { // only overlaps when identical.
                 return tile.Equals(this);
             }
-            else if(tile.Zoom > this.Zoom)
+            else if (tile.Zoom > this.Zoom)
             { // the zoom is bigger.
                 var range = this.GetSubTiles(tile.Zoom);
                 return range.Contains(tile);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if this tile is completely overlapped by tiles in the given collection.
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <returns></returns>
+        public bool IsOverlappedBy(IEnumerable<Tile> tiles)
+        {
+            var foundTiles = new Dictionary<int, HashSet<Tile>>();
+            foreach (Tile tile in tiles)
+            {
+                if (tile.Zoom <= this.Zoom)
+                { // check regular overlaps.
+                    if (tile.Overlaps(this))
+                    { // ok, this collection overlaps this tile.
+                        return true;
+                    }
+                }
+                else
+                { // tile is at a higher zoom level but several tiles combined can still overlap this one.
+                    HashSet<Tile> found;
+                    if (!foundTiles.TryGetValue(tile.Zoom, out found))
+                    { // create new hashset.
+                        found = new HashSet<Tile>();
+                        foundTiles.Add(tile.Zoom, found);
+                    }
+                    found.Add(tile);
+                }
+            }
+
+            // ok still no conclusive answer, check found tiles.
+            foreach (var foundTilePair in foundTiles)
+            {
+                var subtiles = this.GetSubTiles(foundTilePair.Key);
+                int count = 0;
+                foreach (var foundTile in foundTilePair.Value)
+                {
+                    if (subtiles.Contains(foundTile))
+                    { // the tile is in the subtiles collection.
+                        count++;
+                    }
+                }
+                if (subtiles.Count == foundTilePair.Value.Count)
+                { // if the match is exact all subtiles are covered.
+                    return true;
+                }
             }
             return false;
         }
@@ -218,7 +267,7 @@ namespace OsmSharp.Osm.Tiles
             //    return 5;
             //}
 
-            ulong size = (ulong) System.Math.Pow(2, 2*(zoom - 1));
+            ulong size = (ulong)System.Math.Pow(2, 2 * (zoom - 1));
             return Tile.CalculateTileId(zoom - 1) + size;
         }
 
@@ -233,7 +282,7 @@ namespace OsmSharp.Osm.Tiles
         {
             ulong id = Tile.CalculateTileId(zoom);
             long width = (long)System.Math.Pow(2, zoom);
-            return id + (ulong)x + (ulong)(y*width);
+            return id + (ulong)x + (ulong)(y * width);
         }
 
         /// <summary>
@@ -279,7 +328,7 @@ namespace OsmSharp.Osm.Tiles
         {
             get
             {
-                if(this.X >= 0 &&
+                if (this.X >= 0 &&
                     this.Y >= 0 &&
                     this.Zoom >= 0)
                 { // some are negative.
