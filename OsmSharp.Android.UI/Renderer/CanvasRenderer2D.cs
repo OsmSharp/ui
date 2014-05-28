@@ -331,7 +331,7 @@ namespace OsmSharp.Android.UI
 			if(x.Length > 1)
 			{
 				_paint.Color = new global::Android.Graphics.Color(color);
-                _paint.StrokeWidth = (float)width * _scaleFactor;
+                _paint.StrokeWidth = this.ToPixels(width) * _scaleFactor;
 				if(fill)
 				{
 					_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
