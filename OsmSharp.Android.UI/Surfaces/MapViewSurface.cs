@@ -188,6 +188,9 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private float _extra = 1.25f;
 
+        /// <summary>
+        /// Holds the scale factor to 'increase/decrease' size of objects rendered. (1 = unscaled, 3 = 3 x bigger)
+        /// </summary>
         private float _bufferFactor = 3.0f;
 
         /// <summary>

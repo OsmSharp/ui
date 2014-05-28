@@ -140,6 +140,11 @@ namespace OsmSharp.Android.UI
 		bool MapAllowZoom { get; set; }
 
         /// <summary>
+        /// Gets or sets the scale factor.
+        /// </summary>
+        float MapScaleFactor { get; set; }
+
+        /// <summary>
         /// Gets the current view.
         /// </summary>
         View2D CurrentView { get; }
