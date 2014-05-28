@@ -199,10 +199,8 @@ namespace OsmSharp.UI.Map.Layers
                 }
 
                 // load the tile.
-                string url = string.Format(_tilesURL,
-                                 tile.Zoom,
-                                 tile.X,
-                                 tile.Y);
+                string url = this.FormatURL(tile);
+
                 var request = (HttpWebRequest)HttpWebRequest.Create(
                                   url);
                 request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
@@ -276,6 +274,26 @@ namespace OsmSharp.UI.Map.Layers
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Returns a formatted URL to get the tile from.
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private string FormatURL(Tile tile)
+        {
+            if(_tilesURL.Contains("{x}"))
+            { // assume /{z}/{x}/{y} format.
+                return _tilesURL.Replace("{z}", tile.Zoom.ToString())
+                    .Replace("{x}", tile.X.ToString())
+                    .Replace("{y}", tile.Y.ToString());
+            }
+            // assume {0}/{1}/{2} format.
+            return string.Format(_tilesURL,
+                                    tile.Zoom,
+                                    tile.X,
+                                    tile.Y);
         }
 
         /// <summary>

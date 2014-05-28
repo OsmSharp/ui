@@ -81,10 +81,10 @@ namespace OsmSharp.WinForms.UI.Sample
             //scene = merger.BuildMergedScene(scene);
 
             //map.AddLayer(new LayerScene(scene));
-            var dataSource = MemoryDataSource.CreateFromPBFStream(
-                new FileInfo(@"kempen-big.osm.pbf").OpenRead());
-            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
-            //map.AddLayer(new LayerTile(new NativeImageCache(), @"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 200));
+            //var dataSource = MemoryDataSource.CreateFromPBFStream(
+            //    new FileInfo(@"kempen-big.osm.pbf").OpenRead());
+            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200));
             //map.AddLayer(new LayerScene(
             //    Scene2D.Deserialize(new FileInfo(@"default.map").OpenRead(),
             //        true)));
