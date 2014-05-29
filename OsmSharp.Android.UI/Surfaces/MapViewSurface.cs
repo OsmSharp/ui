@@ -133,7 +133,7 @@ namespace OsmSharp.Android.UI
             this.MapMaxZoomLevel = 20;
 
             // calculate scale factor.
-            _scaleFactor = (float)System.Math.Floor(Resources.DisplayMetrics.Xdpi / 160);
+            _scaleFactor = 1;//(float)System.Math.Floor(Resources.DisplayMetrics.Xdpi / 160);
 
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
                 new CanvasRenderer2D(1));
@@ -191,7 +191,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Holds the scale factor to 'increase/decrease' size of objects rendered. (1 = unscaled, 3 = 3 x bigger)
         /// </summary>
-        private float _bufferFactor = 3.0f;
+        private float _bufferFactor = 1.0f;
 
         /// <summary>
         /// Triggers rendering.
