@@ -44,8 +44,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             Stream stream = testFile.OpenRead();
-            OsmSharp.Osm.Streams.OsmStreamSource source = new PBFOsmStreamSource(stream);
-            source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress(source);
+            var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
+            source.RegisterSource(new PBFOsmStreamSource(stream));
 
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHPreProcessor.Pre");
             performanceInfo.Start();

@@ -26,10 +26,8 @@ namespace OsmSharp.Osm.Streams.Filters
     /// <summary>
     /// A data source reporting progress.
     /// </summary>
-    public class OsmStreamFilterProgress : OsmStreamSource
+    public class OsmStreamFilterProgress : OsmStreamFilter
     {
-        private readonly OsmStreamSource _reader;
-
         private OsmGeoType? _lastType = OsmGeoType.Node;
         private long _lastTypeStart;
 
@@ -45,9 +43,9 @@ namespace OsmSharp.Osm.Streams.Filters
         /// Creates a new progress reporting source.
         /// </summary>
         /// <param name="reader"></param>
-        public OsmStreamFilterProgress(OsmStreamSource reader)
+        public OsmStreamFilterProgress()
         {
-            _reader = reader;
+
         }
 
         /// <summary>
@@ -55,7 +53,12 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override void Initialize()
         {
-            _reader.Initialize();
+            if (this.Source == null)
+            {
+                throw new Exception("No target registered!");
+            }
+            // no intialisation this filter does the same thing every time.
+            this.Source.Initialize();
 
             _lastTypeStart = 0;
             _lastType = null;
@@ -77,7 +80,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            return _reader.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
+            return this.Source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations);
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            OsmGeo current = _reader.Current();
+            OsmGeo current = this.Source.Current();
 
             // keep the start ticks.
             long ticksStart = DateTime.Now.Ticks;
@@ -172,7 +175,7 @@ namespace OsmSharp.Osm.Streams.Filters
             _relation = 0;
             _relationTicks = 0;
 
-            _reader.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -180,7 +183,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override bool CanReset
         {
-            get { return _reader.CanReset; }
+            get { return this.Source.CanReset; }
         }
     }
 }

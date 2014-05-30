@@ -22,7 +22,9 @@ namespace OsmSharp.Test.Performance.Osm.Streams.Complete
             var testFile = new FileInfo(@".\TestFiles\kempen-big.osm.pbf");
             var stream = testFile.OpenRead();
             var source = new PBFOsmStreamSource(stream);
-            var completeSource = new OsmSharp.Osm.Streams.Complete.OsmSimpleCompleteStreamSource(new OsmStreamFilterProgress(source));
+            var progress = new OsmStreamFilterProgress();
+            progress.RegisterSource(source);
+            var completeSource = new OsmSharp.Osm.Streams.Complete.OsmSimpleCompleteStreamSource(progress);
 
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("OsmSimpleCompleteStreamSourceTests.Pull");
             performanceInfo.Start();

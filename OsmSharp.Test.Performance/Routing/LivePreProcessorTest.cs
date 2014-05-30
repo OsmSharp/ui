@@ -47,8 +47,8 @@ namespace OsmSharp.Test.Performance.Routing
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
-            OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
+            var progress = new OsmStreamFilterProgress();
+            progress.RegisterSource(new PBFOsmStreamSource(stream));
 
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("LivePreProcessor");
             performanceInfo.Start();

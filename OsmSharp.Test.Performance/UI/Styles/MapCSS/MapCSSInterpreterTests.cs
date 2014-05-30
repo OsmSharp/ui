@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfSource));
             Stream stream = testFile.OpenRead();
             OsmStreamSource source = new PBFOsmStreamSource(stream);
-            OsmStreamFilterProgress progress = new OsmStreamFilterProgress(source);
+            OsmStreamFilterProgress progress = new OsmStreamFilterProgress();
             target.RegisterSource(progress);
 
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer(string.Format("{0}.Add", name));
