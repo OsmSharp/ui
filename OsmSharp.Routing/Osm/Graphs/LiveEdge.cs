@@ -1,4 +1,4 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -127,7 +127,8 @@ namespace OsmSharp.Routing.Osm.Graphs
                 // only the coordinates can be different now.
                 if (this.Coordinates != null)
                 { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherLive.Coordinates.Length)
+                    if (otherLive.Coordinates == null ||
+                        this.Coordinates.Length != otherLive.Coordinates.Length)
                     { // impossible, different number of coordinates.
                         return false;
                     }
