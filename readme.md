@@ -13,23 +13,14 @@ Features
 ### Vector Rendering
 Rendering OpenStreetMap-data using MapCSS or a custom style interpreter. Using a vector format for mobile devices rendering offline map data on Android/iOS is also possible.
 
-<p>
-	<img src="http://osmsharp.com/sites/default/files/iphone_screenshot1.png" width="300"/><img src="http://osmsharp.com/sites/default/files/iphone_screenshot2.png" width="300"/>
-	<img src="http://osmsharp.com/sites/default/files/mapscreenshot3.png" width="600"/>
-</p>
-
 ### Routing
-Routing also using OpenStreetMap-data. Custom routing profiles are possible and offline routing on mobile devices can be done using a pre-processed binary format.
-
-<p>
-	<img src="http://osmsharp.com/sites/default/files/error_correction_dykstra.png"/>
-</p>
+Routing also using OpenStreetMap-data or most other available networks. Custom routing profiles are possible and offline routing on mobile devices can be done using a pre-processed binary format.
 
 ### Optimisation Code
 OsmSharp started as a project for logistical optimisation. There are several solvers for the (A)TSP and some VRP's.
 
 <p>
-	<img src="http://osmsharp.com/sites/default/files/optimization.png" width="600"/>
+	<img src="http://osmsharp.com/sites/default/files/routing_screenshot.png" width="600"/>
 </p>
 
 ### Data Processing
