@@ -95,7 +95,7 @@ namespace OsmSharp.Android.UI.Sample
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
             map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
-            //map.AddLayer(new LayerTile(@"http://tiles.openseamap.org/seamark/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png"));
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
@@ -140,7 +140,7 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView.MapMaxZoomLevel = 20;
             //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
-            _mapView.MapCenter = new GeoCoordinate(51.26361, 4.78620);
+            _mapView.MapCenter = new GeoCoordinate(54.17426, 12.08644);
 			_mapView.MapZoom = 18;
             _mapView.MapAllowTilt = false;
             _mapView.MapScaleFactor = 2;
@@ -183,6 +183,8 @@ namespace OsmSharp.Android.UI.Sample
             //    _mapView.Pause();
             //    _mapView.Map.Pause();
             //}
+            //_mapView.Map[0].IsVisible = !_mapView.Map[0].IsVisible;
+            //_mapView.Map[1].IsVisible = !_mapView.Map[1].IsVisible;
         }
 
         public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)

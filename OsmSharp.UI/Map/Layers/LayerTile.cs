@@ -509,6 +509,11 @@ namespace OsmSharp.UI.Map.Layers
                 return;
             }
 
+            if(!this.IsVisible)
+            { // if the map is not visible also do not accept changes.
+                return;
+            }
+
             try
             {
                 // calculate the current zoom level.

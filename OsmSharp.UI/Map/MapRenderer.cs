@@ -51,7 +51,6 @@ namespace OsmSharp.UI.Map
 		/// Render the specified target, projection, layers, zoomFactor and coordinate.
 		/// </summary>
 		/// <param name="target">Target.</param>
-		/// <param name="projection">Projection.</param>
 		/// <param name="layers">Layers.</param>
         /// <param name="view">View</param>
         /// <param name="zoomFactor">View</param>
@@ -64,8 +63,11 @@ namespace OsmSharp.UI.Map
 			var scenes = new List<Scene2D>();
 			for (int layerIdx = 0; layerIdx < layers.Count; layerIdx++)
 			{
-                primitives = primitives.Concat(
-                    layers[layerIdx].Get(zoomFactor, view));
+                if (layers[layerIdx].IsVisible)
+                {
+                    primitives = primitives.Concat(
+                        layers[layerIdx].Get(zoomFactor, view));
+                }
 			}
 			
 			// render the scenes.
@@ -88,8 +90,12 @@ namespace OsmSharp.UI.Map
             var scenes = new List<Scene2D>();
             for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
             {
-                primitives = primitives.Concat(
-                    map[layerIdx].Get(zoomFactor, view));
+                if (map[layerIdx].IsVisible)
+                {
+                    primitives = primitives.Concat(
+                        map[layerIdx].Get(zoomFactor, view));
+
+                }
             }
 
             // render the scenes.

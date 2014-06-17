@@ -185,8 +185,11 @@ namespace OsmSharp.Android.UI
                 var layers = new List<Layer>();
                 for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
                 {
-                    // get the layer.
-                    layers.Add(this.Map[layerIdx]);
+                    if (this.Map[layerIdx].IsVisible)
+                    {
+                        // get the layer.
+                        layers.Add(this.Map[layerIdx]);
+                    }
                 }
 
                 _renderer.Render(_target,
@@ -413,8 +416,11 @@ namespace OsmSharp.Android.UI
             var layers = new List<Layer>();
             for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
             {
-                // get the layer.
-                layers.Add(this.Map[layerIdx]);
+                if (this.Map[layerIdx].IsVisible)
+                {
+                    // get the layer.
+                    layers.Add(this.Map[layerIdx]);
+                }
             }
 
             _renderer.Render(_target,

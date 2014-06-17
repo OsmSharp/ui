@@ -30,6 +30,14 @@ namespace OsmSharp.UI.Map.Layers
     public abstract class Layer
     {
         /// <summary>
+        /// Creates a new layer.
+        /// </summary>
+        public Layer()
+        {
+            this.IsVisible = true;
+        }
+
+        /// <summary>
         /// The minimum zoom.
         /// </summary>
         /// <remarks>
@@ -88,6 +96,31 @@ namespace OsmSharp.UI.Map.Layers
         /// An event raised when the content of this layer has changed.
         /// </summary>
         protected internal event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+
+        /// <summary>
+        /// Holds the visible flag.
+        /// </summary>
+        private bool _isVisible;
+
+        /// <summary>
+        /// Gets or sets the visible flag.
+        /// </summary>
+        public bool IsVisible
+        {
+            get
+            {
+                return _isVisible;
+            }
+            set
+            {
+                if(_isVisible != value)
+                { // trigger a changed event after.
+                    _isVisible = value;
+
+                    this.RaiseLayerChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the tag.

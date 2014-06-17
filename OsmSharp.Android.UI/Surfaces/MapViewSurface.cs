@@ -332,7 +332,10 @@ namespace OsmSharp.Android.UI
                     var layers = new List<Layer>();
                     for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
                     { // get the layer.
-                        layers.Add(this.Map[layerIdx]);
+                        if (this.Map[layerIdx].IsVisible)
+                        {
+                            layers.Add(this.Map[layerIdx]);
+                        }
                     }
 
                     // add the internal layers.
