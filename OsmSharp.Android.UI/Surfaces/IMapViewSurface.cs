@@ -171,6 +171,25 @@ namespace OsmSharp.Android.UI
         void ZoomToMarkers(List<MapMarker> markers, double percentage);
 
         /// <summary>
+        /// Pauses all activity in this MapView.
+        /// </summary>
+        void Pause();
+
+        /// <summary>
+        /// Returns true if this MapView is paused.
+        /// </summary>
+        /// <returns></returns>
+        bool IsPaused
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Resumes all activity in this MapView.
+        /// </summary>
+        void Resume();
+
+        /// <summary>
         /// Closes this surface.
         /// </summary>
         void Close();

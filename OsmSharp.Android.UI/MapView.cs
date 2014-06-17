@@ -474,6 +474,33 @@ namespace OsmSharp.Android.UI
 		}
 
         /// <summary>
+        /// Pauses all activity in this MapView.
+        /// </summary>
+        public void Pause()
+        {
+            _mapView.Pause();
+        }
+
+        /// <summary>
+        /// Returns true if all activity in this MapView is paused.
+        /// </summary>
+        public bool IsPaused
+        {
+            get
+            {
+                return _mapView.IsPaused;
+            }
+        }
+
+        /// <summary>
+        /// Resumes all activity in this MapView.
+        /// </summary>
+        public void Resume()
+        {
+            _mapView.Resume();
+        }
+
+        /// <summary>
         /// Closes this mapview.
         /// </summary>
         public void Close()

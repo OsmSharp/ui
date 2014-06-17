@@ -158,6 +158,11 @@ namespace OsmSharp.Android.UI
                 new CanvasRenderer2D(_scaleFactor));
         }
 
+        /// <summary>
+        /// Suspended rendering.
+        /// </summary>
+        private bool _renderingSuspended = false;
+
 		/// <summary>
 		/// Holds the off screen buffered image.
 		/// </summary>
@@ -308,8 +313,13 @@ namespace OsmSharp.Android.UI
 		{
             try
             {
+                if (_renderingSuspended)
+                { // no rendering when rendering is suspended.
+                    return;
+                }
+
                 if (_cacheRenderer.IsRunning)
-                {
+                { // cancel previous render.
                     _cacheRenderer.CancelAndWait();
                 }
 
@@ -655,8 +665,12 @@ namespace OsmSharp.Android.UI
         {
             try
             {
-                OsmSharp.Logging.Log.TraceEvent("OnDraw", TraceEventType.Information, "OnDraw Start.");
                 base.OnDraw(canvas);
+
+                if (_renderingSuspended)
+                { // do nothing when rendering is suspended.
+                    return;
+                }
 
                 // set the height/width.
                 if (_surfaceHeight != canvas.Height ||
@@ -684,10 +698,6 @@ namespace OsmSharp.Android.UI
                         zoomFactor,
                         new Primitive2D[] { _onScreenBuffer });
                 }
-
-                Thread.Sleep(1);
-
-                OsmSharp.Logging.Log.TraceEvent("OnDraw", TraceEventType.Information, "OnDraw End.");
             }
             catch (Exception ex)
             {
@@ -1189,6 +1199,64 @@ namespace OsmSharp.Android.UI
         #endregion
 
         /// <summary>
+        /// Pauses all ongoing activity in this MapViewSurface.
+        /// </summary>
+        public void Pause()
+        {
+            try
+            {
+                _listener.Stop();
+                if (_mapViewAnimator != null)
+                { // stop all ongoing animations.
+                    _mapViewAnimator.Stop();
+                }
+
+                // suspend rendering.
+                _renderingSuspended = true;
+
+                // stop current rendering if any.
+                this.StopRendering();
+            }
+            catch (Exception ex)
+            {
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.Pause", TraceEventType.Critical,
+                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this activity is paused.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPaused
+        {
+            get
+            {
+                return _renderingSuspended;
+            }
+        }
+
+        /// <summary>
+        /// Resumes all activity in this MapViewSurface.
+        /// </summary>
+        public void Resume()
+        {
+            try
+            {
+                // suspend rendering.
+                _renderingSuspended = false;
+
+                // stop current rendering if any.
+                this.TriggerRendering(true);
+            }
+            catch (Exception ex)
+            {
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.Resume", TraceEventType.Critical,
+                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
+            }
+        }
+
+        /// <summary>
         /// Closes this surface.
         /// </summary>
         public void Close()
@@ -1205,7 +1273,7 @@ namespace OsmSharp.Android.UI
             }
             catch(Exception ex)
             {
-                OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Critical,
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.Close", TraceEventType.Critical,
                     string.Format("An unhandled exception occured:{0}", ex.ToString()));
             }
         }

@@ -135,6 +135,7 @@ namespace OsmSharp.Android.UI.Sample
             _mapView = new MapView(this, new MapViewSurface(this));
             //_mapView = new MapView(this, new MapViewGLSurface(this));
             //_mapView.MapTapEvent += new MapViewEvents.MapTapEventDelegate(_mapView_MapTapEvent);
+            _mapView.MapTapEvent += _mapView_MapTapEvent;
             _mapView.Map = map;
             //_mapView.MapMaxZoomLevel = 20;
             //_mapView.MapMinZoomLevel = 10;
@@ -142,6 +143,7 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapCenter = new GeoCoordinate(51.26361, 4.78620);
 			_mapView.MapZoom = 18;
             _mapView.MapAllowTilt = false;
+            _mapView.MapScaleFactor = 2;
 
 			// add markers.
 			_mapView.AddMarker (from);
@@ -168,6 +170,18 @@ namespace OsmSharp.Android.UI.Sample
 
 			SetContentView (layout);
 		}
+
+        void _mapView_MapTapEvent(GeoCoordinate coordinate)
+        {
+            //if(_mapView.IsPaused)
+            //{
+            //    _mapView.Resume();
+            //}
+            //else
+            //{
+            //    _mapView.Pause();
+            //}
+        }
 
         public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)
         {

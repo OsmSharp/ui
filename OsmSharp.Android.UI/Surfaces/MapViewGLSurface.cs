@@ -791,6 +791,34 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Pauses all ongoing activity in this MapViewSurface.
+        /// </summary>
+        public void Pause()
+        {
+            // no pausing the OpenGL-stuff just yet!
+        }
+
+        /// <summary>
+        /// Returns true if this activity is paused.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPaused
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Resumes all activity in this MapViewSurface.
+        /// </summary>
+        public void Resume()
+        {
+            // no resuming the OpenGL-stuff just yet!
+        }
+
+        /// <summary>
         /// Closes this surface.
         /// </summary>
         public void Close()
