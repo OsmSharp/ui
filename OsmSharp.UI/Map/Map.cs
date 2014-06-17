@@ -310,6 +310,38 @@ namespace OsmSharp.UI.Map
         #endregion
 
         /// <summary>
+        /// Pauses all activity in this map and it's layers.
+        /// </summary>
+        public void Pause()
+        {
+            // remove and close all layers.
+            lock (_layers)
+            {
+                var layers = new List<Layer>(_layers);
+                foreach (var layer in layers)
+                {
+                    layer.Pause();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Pauses all activity in this map and it's layers.
+        /// </summary>
+        public void Resume()
+        {
+            // remove and close all layers.
+            lock (_layers)
+            {
+                var layers = new List<Layer>(_layers);
+                foreach (var layer in layers)
+                {
+                    layer.Resume();
+                }
+            }
+        }
+
+        /// <summary>
         /// Closes this map and all it's layers.
         /// </summary>
         /// <remarks>If you want to reuse a layer, please remove it before closing the map.</remarks>

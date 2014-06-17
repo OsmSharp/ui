@@ -94,15 +94,15 @@ namespace OsmSharp.Android.UI.Sample
             //map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
-            //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
             //map.AddLayer(new LayerTile(@"http://tiles.openseamap.org/seamark/{0}/{1}/{2}.png"));
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             var from = new GeoCoordinate(51.261203, 4.780760);
@@ -173,13 +173,15 @@ namespace OsmSharp.Android.UI.Sample
 
         void _mapView_MapTapEvent(GeoCoordinate coordinate)
         {
-            //if(_mapView.IsPaused)
+            //if (_mapView.IsPaused)
             //{
+            //    _mapView.Map.Resume();
             //    _mapView.Resume();
             //}
             //else
             //{
             //    _mapView.Pause();
+            //    _mapView.Map.Pause();
             //}
         }
 

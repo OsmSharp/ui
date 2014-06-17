@@ -95,6 +95,33 @@ namespace OsmSharp.UI.Map.Layers
         public object Tag { get; set; }
 
         /// <summary>
+        /// Pauses all activities in this layer.
+        /// </summary>
+        public virtual void Pause()
+        {
+
+        }
+
+        /// <summary>
+        /// Returns true if this layer is paused.
+        /// </summary>
+        public virtual bool IsPaused
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Resumes all activities in this layer.
+        /// </summary>
+        public virtual void Resume()
+        {
+
+        }
+
+        /// <summary>
         /// Closes the layer.
         /// </summary>
         /// <remarks>Stop with whatever the layer might be doing.</remarks>

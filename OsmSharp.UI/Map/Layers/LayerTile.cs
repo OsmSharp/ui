@@ -82,6 +82,10 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the native image cache.
         /// </summary>
         private NativeImageCacheBase _nativeImageCache;
+        /// <summary>
+        /// Holds the suspended flag.
+        /// </summary>
+        private bool _suspended;
 
         /// <summary>
         /// Creates a new tiles layer.
@@ -107,6 +111,7 @@ namespace OsmSharp.UI.Map.Layers
             _stack = new LimitedStack<Tile>(tileCacheSize, tileCacheSize);
             _timer = new Timer(this.LoadQueuedTiles, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             _attempts = new Dictionary<Tile, int>();
+            _suspended = false;
 
             _projection = new WebMercator();
         }
@@ -141,6 +146,11 @@ namespace OsmSharp.UI.Map.Layers
         {
             try
             {
+                if (_suspended)
+                { // stop loading tiles.
+                    return;
+                }
+
                 lock (_stack)
                 { // make sure that access to the queue is synchronized.
                     int queue = _stack.Count;
@@ -173,6 +183,11 @@ namespace OsmSharp.UI.Map.Layers
         {
             try
             {
+                if (_suspended)
+                { // stop loading tiles.
+                    return;
+                }
+
                 // a tile was found to load.
                 Tile tile = state as Tile;
 
@@ -330,8 +345,10 @@ namespace OsmSharp.UI.Map.Layers
                         }
                     }
 
-                    // raise the layer changed event.
-                    this.RaiseLayerChanged();
+                    if (!_suspended)
+                    { // only raise the event when not suspended but do no throw away a tile, that would be a waste.
+                        this.RaiseLayerChanged();
+                    }
                 }
                 else
                 {
@@ -357,12 +374,15 @@ namespace OsmSharp.UI.Map.Layers
         /// Returns all primitives from this layer visible for the given parameters.
         /// </summary>
         /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
         /// <param name="view"></param>
         /// <returns></returns>
         protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
+            if(_suspended)
+            { // just return an empty primitives list if suspended.
+                return primitives;
+            }
             try
             {
                 // calculate the current zoom level.
@@ -484,6 +504,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="view"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
+            if (_suspended)
+            { // do not accept trigger changes if suspended.
+                return;
+            }
+
             try
             {
                 // calculate the current zoom level.
@@ -590,6 +615,39 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Pauses all activity in this layer.
+        /// </summary>
+        public override void Pause()
+        {
+            // set suspended flag.
+            _suspended = true;
+
+            lock(_stack)
+            { // empty stack to tiles to-be-loaded but keep cache until layer is closed!
+                _stack.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this flag is paused.
+        /// </summary>
+        public override bool IsPaused
+        {
+            get
+            {
+                return _suspended;
+            }
+        }
+
+        /// <summary>
+        /// Resumes the activity in this layer.
+        /// </summary>
+        public override void Resume()
+        { // here only the suspended flag needs to be reset, just wait for the next request.
+            _suspended = false;
+        }
 
         /// <summary>
         /// Closes this layer.
