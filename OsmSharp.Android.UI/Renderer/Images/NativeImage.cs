@@ -37,7 +37,10 @@ namespace OsmSharp.Android.UI.Renderer.Images
         /// <param name="image"></param>
         public NativeImage(Bitmap image)
         {
-            if (image == null) { throw new ArgumentNullException("Cannot create a native image wrapper around null"); }
+            if (image == null)
+            {
+                throw new ArgumentNullException("Cannot create a native image wrapper around null");
+            }
 
             _image = image;
         }
@@ -89,14 +92,14 @@ namespace OsmSharp.Android.UI.Renderer.Images
 
             // Release the unmanaged resource in any case as they will not be 
             // released by GC
-            if(this._image != null)
+            if (this._image != null)
             { // dispose of the native image.
                 try
                 {
                     this._image.Recycle();
                     this._image.Dispose();
                 }
-                catch(Exception)
+                catch (Exception)
                 { // TODO: figure out whyt this happens, ask someone at Xamarin if needed.
                     // whatever happens, don't crash!
                 }
@@ -105,7 +108,7 @@ namespace OsmSharp.Android.UI.Renderer.Images
                     this._image = null;
                 }
             }
-        }     
+        }
 
         /// <summary>
         /// Finalizer.
@@ -129,7 +132,7 @@ namespace OsmSharp.Android.UI.Renderer.Images
         public override bool Equals(object obj)
         {
             var other = (obj as NativeImage);
-            if(other != null)
+            if (other != null && this._image != null)
             {
                 return other._image.Equals(this._image);
             }
@@ -142,8 +145,7 @@ namespace OsmSharp.Android.UI.Renderer.Images
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return 1332480824 ^
-                this._image.GetHashCode();
+            return (this._image == null) ? 0 : (1332480824 ^ this._image.GetHashCode());
         }
     }
 }
