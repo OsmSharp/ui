@@ -124,11 +124,13 @@ namespace OsmSharp.Android.UI
 
             lock (_markers)
             {
+                if (marker.Image == null)
+                    return;
+
                 _markers.Add(marker); // add to marker list.
                 marker.AttachTo(this); // attach to this view.
 
-                var layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
-                //var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
+                var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
 
                 layoutParams.LeftMargin = -1;
                 layoutParams.TopMargin = -1;
@@ -183,6 +185,7 @@ namespace OsmSharp.Android.UI
                     foreach (MapMarker marker in _markers)
                     {
                         this.RemoveView(marker);
+                        marker.Dispose();
                     }
                     _markers.Clear();
                 }

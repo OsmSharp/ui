@@ -139,7 +139,9 @@ namespace OsmSharp.Android.UI.Renderer.Images
             var other = (obj as NativeImage);
             lock (_lock)
             {
-                if (other != null && this._image != null)
+                if (other != null &&
+                    other._image != null &&
+                    this._image != null)
                 {
                     return other._image.Equals(this._image);
                 }

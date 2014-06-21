@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Timers;
+using Android.Graphics;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -181,8 +182,8 @@ namespace OsmSharp.Android.UI.Sample
 
             _mapView.ClearMarkers();
 
-            var marker1 = new MapMarker(this, from, MapMarkerAlignmentType.Center);
-            marker1.SetImageResource(Resource.Drawable.marker);
+            var img = BitmapFactory.DecodeResource(this.Resources, Resource.Drawable.marker);
+            MapMarker marker1 = new MapMarker(this, from, MapMarkerAlignmentType.CenterBottom, img);
             _mapView.AddMarker(marker1);
 
             _mapView.AddMarker(to);
