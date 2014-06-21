@@ -26,6 +26,8 @@ namespace OsmSharp.Android.UI.Renderer.Images
     /// </summary>
     public class NativeImage : INativeImage
     {
+        static readonly object _lock = new object();
+
         /// <summary>
         /// Holds the native image.
         /// </summary>
@@ -56,7 +58,10 @@ namespace OsmSharp.Android.UI.Renderer.Images
             }
             set
             {
-                _image = value;
+                lock (_lock)
+                {
+                    _image = value;
+                }
             }
         }
 
@@ -132,9 +137,12 @@ namespace OsmSharp.Android.UI.Renderer.Images
         public override bool Equals(object obj)
         {
             var other = (obj as NativeImage);
-            if (other != null && this._image != null)
+            lock (_lock)
             {
-                return other._image.Equals(this._image);
+                if (other != null && this._image != null)
+                {
+                    return other._image.Equals(this._image);
+                }
             }
             return false;
         }
@@ -145,7 +153,10 @@ namespace OsmSharp.Android.UI.Renderer.Images
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return (this._image == null) ? 0 : (1332480824 ^ this._image.GetHashCode());
+            int result;
+            lock (_lock)
+                result = (this._image == null) ? 0 : (1332480824 ^ this._image.GetHashCode());
+            return result;
         }
     }
 }

@@ -41,13 +41,13 @@ using System.Timers;
 
 namespace OsmSharp.Android.UI.Sample
 {
-	/// <summary>
-	/// The main activity.
-	/// </summary>
+    /// <summary>
+    /// The main activity.
+    /// </summary>
     // [Activity(ConfigurationChanges = global::Android.Content.PM.ConfigChanges.Orientation | global::Android.Content.PM.ConfigChanges.ScreenLayout)]
     [Activity]
     public class MainActivity : Activity
-	{
+    {
         /// <summary>
         /// Holds the router.
         /// </summary>
@@ -78,35 +78,37 @@ namespace OsmSharp.Android.UI.Sample
         /// </summary>
         private IEnumerator<GeoCoordinate> _enumerator;
 
-		/// <summary>
-		/// Raises the create event.
-		/// </summary>
-		/// <param name="bundle">Bundle.</param>
-		protected override void OnCreate (Bundle bundle)
-		{
-			base.OnCreate (bundle);
+        /// <summary>
+        /// Raises the create event.
+        /// </summary>
+        /// <param name="bundle">Bundle.</param>
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
 
             // hide title bar.
             this.RequestWindowFeature(global::Android.Views.WindowFeatures.NoTitle);
 
-			// initialize map.
-			var map = new Map();
+            // initialize map.
+            var map = new Map();
             //map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
-            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
-            map.AddLayer(new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png"));
+
+            var layer = new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png");
+            map.AddLayer(layer);
+            //map.AddLayer(new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png"));
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
-			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
             //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
             //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
-            var from = new GeoCoordinate(51.261203, 4.780760);
-            var to = new GeoCoordinate(51.267797, 4.801362);
+            //var from = new GeoCoordinate(51.261203, 4.780760);
+            //var to = new GeoCoordinate(51.267797, 4.801362);
 
             // deserialize the preprocessed graph.
             var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
@@ -140,36 +142,51 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView.MapMaxZoomLevel = 20;
             //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
-            _mapView.MapCenter = new GeoCoordinate(54.17426, 12.08644);
-			_mapView.MapZoom = 18;
+            _mapView.MapCenter = new GeoCoordinate(51.261203, 4.780760);
+            _mapView.MapZoom = 16;
             _mapView.MapAllowTilt = false;
             _mapView.MapScaleFactor = 2;
 
-			// add markers.
-			_mapView.AddMarker (from);
-			_mapView.AddMarker (to);
+            // add markers.
+            AddMarkers();
+            //_mapView.AddMarker(from);
+            //_mapView.AddMarker(to);
 
             // initialize a text view to display routing instructions.
             _textView = new TextView(this);
             _textView.SetBackgroundColor(global::Android.Graphics.Color.White);
             _textView.SetTextColor(global::Android.Graphics.Color.Black);
 
-			// add the mapview to the linear layout.
+            // add the mapview to the linear layout.
             var layout = new RelativeLayout(this);
             //layout.Orientation = Orientation.Vertical;
             //layout.AddView(_textView);
             layout.AddView(_mapView);
 
             // create the route tracker animator.
-			//_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
+            //_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
             //// simulate a mapzoom change every 5 seconds.
             //Timer timer = new Timer(200);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
-			SetContentView (layout);
-		}
+            SetContentView(layout);
+        }
+
+        void AddMarkers()
+        {
+            var from = new GeoCoordinate(51.261203, 4.780760);
+            var to = new GeoCoordinate(51.267797, 4.801362);
+
+            _mapView.ClearMarkers();
+
+            var marker1 = new MapMarker(this, from, MapMarkerAlignmentType.Center);
+            marker1.SetImageResource(Resource.Drawable.marker);
+            _mapView.AddMarker(marker1);
+
+            _mapView.AddMarker(to);
+        }
 
         void _mapView_MapTapEvent(GeoCoordinate coordinate)
         {
@@ -215,5 +232,5 @@ namespace OsmSharp.Android.UI.Sample
         {
             _mapView.MapZoom = _mapView.MapZoom - 0.05f;
         }
-	}
+    }
 }
