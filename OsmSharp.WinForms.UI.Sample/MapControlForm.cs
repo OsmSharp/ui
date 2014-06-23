@@ -62,9 +62,9 @@ namespace OsmSharp.WinForms.UI.Sample
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
 
-            // initialize router.
-            _router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
-                new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
+            //// initialize router.
+            //_router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
+            //    new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
 
             //Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
             //    16, 14, 12, 10 }));

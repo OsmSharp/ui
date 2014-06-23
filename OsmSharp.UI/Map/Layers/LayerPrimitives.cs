@@ -92,6 +92,59 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
+        /// Adds a polyline.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="sizePixels"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public void AddPolyline(GeoCoordinate[] points, float sizePixels, int color)
+        {
+            var x = new double[points.Length];
+            var y = new double[points.Length];
+            for(int idx = 0; idx < points.Length; idx++)
+            {
+                var projected =_projection.ToPixel(points[idx]);
+                x[idx] = projected[0];
+                y[idx] = projected[1];
+            }
+
+            uint? pointsId = _scene.AddPoints(x, y);
+            if (pointsId.HasValue)
+            {
+                _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, color, sizePixels, Renderer.Primitives.LineJoin.Round, null);
+                this.RaiseLayerChanged();
+            }
+        }
+
+        /// <summary>
+        /// Adds a polyline.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="fill"></param>
+        /// <returns></returns>
+        public void AddPolygon(GeoCoordinate[] points, int color, float width, bool fill)
+        {
+            var x = new double[points.Length];
+            var y = new double[points.Length];
+            for (int idx = 0; idx < points.Length; idx++)
+            {
+                var projected = _projection.ToPixel(points[idx]);
+                x[idx] = projected[0];
+                y[idx] = projected[1];
+            }
+
+            var pointsId = _scene.AddPoints(x, y);
+            if (pointsId.HasValue)
+            {
+                _scene.AddStylePolygon(pointsId.Value, 0, float.MinValue, float.MaxValue, color, width, fill);
+                this.RaiseLayerChanged();
+            }
+        }
+
+        /// <summary>
         /// Clears all data from this layer.
         /// </summary>
         public void Clear()
