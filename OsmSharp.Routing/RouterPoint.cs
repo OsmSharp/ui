@@ -39,7 +39,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="id"></param>
         /// <param name="location"></param>
-        internal RouterPoint(long id, GeoCoordinate location)
+        public RouterPoint(long id, GeoCoordinate location)
         {
             _id = id;
             this.Location = location;

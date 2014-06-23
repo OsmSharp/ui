@@ -231,7 +231,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Key] == null && route != null) ||
                         (fromDic[to.Key] != null && route == null) ||
                         ((fromDic[to.Key] != null && route != null) && fromDic[to.Key] != route))
@@ -357,7 +357,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                     // calculate the route.
                     PathSegment<long> route = router.Calculate(_data, _interpreter, 
-                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue);
+                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
                     fromDic[to.Key] = route;
                 }
             }
