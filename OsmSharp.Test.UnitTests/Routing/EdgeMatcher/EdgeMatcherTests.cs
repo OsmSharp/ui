@@ -264,7 +264,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
 //                (fromName.Longitude + toName.Longitude) / 2.0);
 
             const float delta = 0.01f;
-            var result = router.SearchClosest(data, interpreter, vehicle, nonameLocation, delta, matcher, pointTags);
+            var result = router.SearchClosest(data, interpreter, vehicle, nonameLocation, delta, matcher, pointTags, null);
             if (result.Distance < double.MaxValue)
             { // there is a result.
                 Assert.IsFalse(notFound, "A result was found but was supposed not to  be found!");

@@ -38,9 +38,10 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         PathSegment<long> Calculate(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList target, double max);
+            PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates all routes between all source and all target vertices.
@@ -54,7 +55,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <returns></returns>
         PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<TEdgeData> _data_graph, IRoutingInterpreter _interpreter,
             Vehicle vehicle, PathSegmentVisitList[] sources,
-            PathSegmentVisitList[] targets, double maxSearch);
+            PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates the weight of the shortest path between two given vertices.
@@ -67,7 +68,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="max"></param>
         /// <returns></returns>
         double CalculateWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList target, double max);
+            PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates a shortest path between the source vertex and any of the targets and returns the shortest.
@@ -80,7 +81,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="max"></param>
         /// <returns></returns>
         PathSegment<long> CalculateToClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates all routes from a given source to all given targets.
@@ -93,7 +94,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="max"></param>
         /// <returns></returns>
         double[] CalculateOneToManyWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates all routes from a given sources to all given targets.
@@ -106,7 +107,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="max"></param>
         /// <returns></returns>
         double[][] CalculateManyToManyWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max);
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Returns true if range calculation is supported.
@@ -123,7 +124,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="weight"></param>
         /// <returns></returns>
         HashSet<long> CalculateRange(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, double weight);
+            PathSegmentVisitList source, double weight, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Returns true if the search can move beyond the given weight.
@@ -135,7 +136,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="weight"></param>
         /// <returns></returns>
         bool CheckConnectivity(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, double weight);
+            PathSegmentVisitList source, double weight, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Searches for the closest routable point.
@@ -149,7 +150,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <returns></returns>
         SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags);
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters);
 
         /// <summary>
         /// Searches for the closest routable point.
@@ -164,7 +165,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="verticesOnly">Only match vertices.</param>
         /// <returns></returns>
         SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly);
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters);
     }
 
     /// <summary>

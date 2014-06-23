@@ -48,7 +48,7 @@ namespace OsmSharp.Routing
         /// Creates a new router with the given router implementation.
         /// </summary>
         /// <param name="router"></param>
-        private Router(ITypedRouter router)
+        public Router(ITypedRouter router)
         {
             _router = router;
         }

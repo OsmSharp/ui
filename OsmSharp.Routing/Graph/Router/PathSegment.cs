@@ -117,8 +117,9 @@ namespace OsmSharp.Routing.Graph.Router
         /// Concatenates this path after the given path.
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="comparer"></param>
         /// <returns></returns>
-        public PathSegment<TIdType> ConcatenateAfter(PathSegment<TIdType> path)
+        public PathSegment<TIdType> ConcatenateAfter(PathSegment<TIdType> path, Func<TIdType, TIdType, int> comparer)
         {
             PathSegment<TIdType> clone = this.Clone();
             PathSegment<TIdType> first = clone.First();
@@ -132,13 +133,36 @@ namespace OsmSharp.Routing.Graph.Router
                 current = current.From;
             }
 
-            if (first.VertexId.Equals(path.VertexId))
-            {
-                first.Weight = pathClone.Weight;
-                first.From = pathClone.From;
-                return clone;
+            if (comparer == null)
+            { // use default equals.
+                if (first.VertexId.Equals(path.VertexId))
+                {
+                    first.Weight = pathClone.Weight;
+                    first.From = pathClone.From;
+                    return clone;
+                }
+                throw new ArgumentException("Paths must share beginning and end vertices to concatenate!");
             }
-            throw new ArgumentException("Paths must share beginning and end vertices to concatenate!");
+            else 
+            { // use custom comparer.
+                if (comparer.Invoke(first.VertexId, path.VertexId) == 0)
+                {
+                    first.Weight = pathClone.Weight;
+                    first.From = pathClone.From;
+                    return clone;
+                }
+                throw new ArgumentException("Paths must share beginning and end vertices to concatenate!");
+            }
+        }
+
+        /// <summary>
+        /// Concatenates this path after the given path.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public PathSegment<TIdType> ConcatenateAfter(PathSegment<TIdType> path)
+        {
+            return this.ConcatenateAfter(path, null);
         }
 
         /// <summary>
