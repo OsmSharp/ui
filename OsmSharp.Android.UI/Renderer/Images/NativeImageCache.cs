@@ -75,24 +75,35 @@ namespace OsmSharp.Android.UI.Renderer.Images
 
             lock (_usedImages)
             { // synchronize access to this cache.
-                if(_unusedImages.Count > 0)
+                if (_unusedImages.Count > 0)
                 { // there are unused images, first recover one from there.
                     // get unused image and remove.
                     var unusedImage = _unusedImages.First();
                     _unusedImages.Remove(unusedImage);
 
                     var newNativeImage = global::Android.Graphics.BitmapFactory.DecodeByteArray(data, 0, data.Length, new global::Android.Graphics.BitmapFactory.Options()
-                        {
-                            InBitmap = (unusedImage as NativeImage).Image,
-                            InSampleSize = 1
-                        });
+                    {
+                        InBitmap = (unusedImage as NativeImage).Image,
+                        InSampleSize = 1
+                    });
+
+                    // DecodeByteArray could return null: if we assign null to
+                    // NativeImage.Image, NativeImage.GetHashCode crashes on a
+                    // NullPointerException. So in this case, just roll back
+                    // and return null. User code should handle this.
+                    if (newNativeImage == null)
+                    {
+                        // Rollback
+                        _unusedImages.Add(unusedImage);
+                        return null;
+                    }
 
                     // change native image and add to used images.
                     (unusedImage as NativeImage).Image = newNativeImage;
                     _usedImages.Add(unusedImage);
                     return unusedImage;
                 }
-                else if(_unusedImages.Count + _usedImages.Count < _cacheSize)
+                else if (_unusedImages.Count + _usedImages.Count < _cacheSize)
                 { // there is still space to add a used iamge.
                     var newNativeImage = global::Android.Graphics.BitmapFactory.DecodeByteArray(data, 0, data.Length, new global::Android.Graphics.BitmapFactory.Options()
                     {
