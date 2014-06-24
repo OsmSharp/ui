@@ -94,8 +94,9 @@ namespace OsmSharp.Android.UI.Sample
             //map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
-            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png", 120));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             map.AddLayer(new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png"));
+            map[0].IsVisible = false;
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
@@ -104,15 +105,15 @@ namespace OsmSharp.Android.UI.Sample
             //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
             //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
-            // define dummy from and to points.
-            var from = new GeoCoordinate(51.261203, 4.780760);
-            var to = new GeoCoordinate(51.267797, 4.801362);
+            //// define dummy from and to points.
+            //var from = new GeoCoordinate(51.261203, 4.780760);
+            //var to = new GeoCoordinate(51.267797, 4.801362);
 
-            // deserialize the preprocessed graph.
-            var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
-            TagsCollectionBase metaData = null;
-            var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
-            var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
+            //// deserialize the preprocessed graph.
+            //var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
+            //TagsCollectionBase metaData = null;
+            //var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
+            //var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
 
             //// initialize router.
             //_router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
@@ -145,9 +146,9 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapAllowTilt = false;
             _mapView.MapScaleFactor = 2;
 
-			// add markers.
-			_mapView.AddMarker (from);
-			_mapView.AddMarker (to);
+            //// add markers.
+            //_mapView.AddMarker (from);
+            //_mapView.AddMarker (to);
 
             // initialize a text view to display routing instructions.
             _textView = new TextView(this);
@@ -183,8 +184,8 @@ namespace OsmSharp.Android.UI.Sample
             //    _mapView.Pause();
             //    _mapView.Map.Pause();
             //}
-            //_mapView.Map[0].IsVisible = !_mapView.Map[0].IsVisible;
-            //_mapView.Map[1].IsVisible = !_mapView.Map[1].IsVisible;
+            _mapView.Map[0].IsVisible = !_mapView.Map[0].IsVisible;
+            _mapView.Map[1].IsVisible = !_mapView.Map[1].IsVisible;
         }
 
         public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)

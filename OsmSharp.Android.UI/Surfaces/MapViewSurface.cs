@@ -521,17 +521,23 @@ namespace OsmSharp.Android.UI
         {
             try
             {
-                // notify map layout of changes.
-                if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
-                {
-                    // create the current view.
-                    View2D view = this.CreateView();
+                if (!_renderingSuspended)
+                { // rendering is not suspended!
+                    // notify map layout of changes.
+                    if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
+                    {
+                        // create the current view.
+                        View2D view = this.CreateView();
 
-                    // notify listener.
-                    _listener.NotifyChange(view, this.MapZoom);
+                        // notify listener.
+                        if (view != null)
+                        { // only notify listener if there is a view.
+                            _listener.NotifyChange(view, this.MapZoom);
+                        }
+                    }
+                    _previouslyRenderedView = null;
+                    _previouslyChangedView = null;
                 }
-                _previouslyRenderedView = null;
-                _previouslyChangedView = null;
             }
             catch (Exception ex)
             {
@@ -715,17 +721,29 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public View2D CreateView()
 		{
-            float height = this.SurfaceHeight / _bufferFactor;
-            float width = this.SurfaceWidth / _bufferFactor;
+            try
+            {
+                if (this.Map != null && this.Map.Projection != null && this.MapCenter != null)
+                { // only create a view when a map is set and a valid mapcenter is present.
+                    float height = this.SurfaceHeight / _bufferFactor;
+                    float width = this.SurfaceWidth / _bufferFactor;
 
-			// calculate the center/zoom in scene coordinates.
-			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
-			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+                    // calculate the center/zoom in scene coordinates.
+                    var sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+                    var sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
-			// create the view for this control.
-			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-			                         width, height, sceneZoomFactor, 
-			                         _invertX, _invertY, this.MapTilt);
+                    // create the view for this control.
+                    return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+                                             width, height, sceneZoomFactor,
+                                             _invertX, _invertY, this.MapTilt);
+                }
+            }
+            catch (Exception ex)
+            {
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.CreateView()", TraceEventType.Critical,
+                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
+            }
+            return null;
 		}
 
 		/// <summary>
@@ -1053,29 +1071,41 @@ namespace OsmSharp.Android.UI
         /// <param name="percentage"></param>
         public void ZoomToMarkers(List<MapMarker> markers, double percentage)
         {
-            float height = this.SurfaceHeight;
-            float width = this.SurfaceWidth;
-			if (width > 0) {
-				PointF2D[] points = new PointF2D[markers.Count];
-				for (int idx = 0; idx < markers.Count; idx++) {
-					points [idx] = new PointF2D (this.Map.Projection.ToPixel (markers [idx].Location));
-				}
-				View2D view = this.CreateView ();
-				View2D fittedView = view.Fit (points, percentage);
-
-				float zoom = (float)this.Map.Projection.ToZoomLevel (fittedView.CalculateZoom (
-					                         width, height));
-				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates (
-					                                   fittedView.Center [0], fittedView.Center [1]);
-
-                this.SetMapView (center, this.MapTilt, zoom);
-			} else {
-                _latestZoomCall = new MapViewMarkerZoomEvent()
+            try
+            {
+                float height = this.SurfaceHeight;
+                float width = this.SurfaceWidth;
+                if (width > 0)
                 {
-                    Markers = markers,
-                    Percentage = percentage
-                };
-			}
+                    PointF2D[] points = new PointF2D[markers.Count];
+                    for (int idx = 0; idx < markers.Count; idx++)
+                    {
+                        points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
+                    }
+                    View2D view = this.CreateView();
+                    View2D fittedView = view.Fit(points, percentage);
+
+                    float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+                                                 width, height));
+                    GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+                                                           fittedView.Center[0], fittedView.Center[1]);
+
+                    this.SetMapView(center, this.MapTilt, zoom);
+                }
+                else
+                {
+                    _latestZoomCall = new MapViewMarkerZoomEvent()
+                    {
+                        Markers = markers,
+                        Percentage = percentage
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.ZoomToMarkers", TraceEventType.Critical,
+                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
+            }
         }
 
         /// <summary>
@@ -1086,7 +1116,7 @@ namespace OsmSharp.Android.UI
         {
             if (disposing == true)
             {
-                //someone want the deterministic release of all resources
+                //someone wants the deterministic release of all resources
                 //Let us release all the managed resources
             }
             else
