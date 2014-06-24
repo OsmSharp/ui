@@ -18,6 +18,7 @@
 
 using Android.App;
 using Android.Content;
+using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using OsmSharp.Android.UI.Renderer.Images;
@@ -95,13 +96,22 @@ namespace OsmSharp.Android.UI
 		public MapViewSurface (Context context) :
 			base (context)
         {
-            // register default invalidation trigger.
-            (this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
-
-            this.MapAllowPan = true;
-            this.MapAllowTilt = true;
-            this.MapAllowZoom = true;
+            // do not do too much here could cause https://github.com/OsmSharp/OsmSharp/issues/129
+            // just wait for a C# reference with patience and initialize stuff in IMapViewSurface.Initialize()
 		}
+
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
+        /// </summary>
+        /// <param name="javaReference"></param>
+        /// <param name="transfer"></param>
+        /// <remarks>Fixes an issue in Xamarin (leaky abstraction): </remarks>
+        public MapViewSurface(IntPtr javaReference, JniHandleOwnership transfer)
+            :base(javaReference, transfer)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MapView.MapViewSurface(IntPtr javaReference, JniHandleOwnership transfer)", TraceEventType.Warning,
+                "A call to the MapViewSurfaceContructor occured: check https://github.com/OsmSharp/OsmSharp/issues/129");
+        }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapView"/> class.
@@ -111,12 +121,8 @@ namespace OsmSharp.Android.UI
 		public MapViewSurface (Context context, IAttributeSet attrs) :
 			base (context, attrs)
         {
-            // register default invalidation trigger.
-            (this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
-
-            this.MapAllowPan = true;
-            this.MapAllowTilt = true;
-            this.MapAllowZoom = true;
+            // do not do too much here could cause https://github.com/OsmSharp/OsmSharp/issues/129
+            // just wait for a C# reference with patience and initialize stuff in IMapViewSurface.Initialize()
 		}
 
         /// <summary>
@@ -125,6 +131,13 @@ namespace OsmSharp.Android.UI
         /// <param name="mapLayout"></param>
         void IMapViewSurface.Initialize(MapView mapLayout)
         {
+            this.MapAllowPan = true;
+            this.MapAllowTilt = true;
+            this.MapAllowZoom = true;
+
+            // register default invalidation trigger.
+            (this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
+
             _mapView = mapLayout;
             this.SetWillNotDraw(false);
             // this.SetWillNotCacheDrawing(true);
