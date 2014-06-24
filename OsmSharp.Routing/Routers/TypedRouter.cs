@@ -34,7 +34,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// A class that implements common functionality for any routing algorithm.
     /// </summary>
-    internal abstract class TypedRouter<TEdgeData> : ITypedRouter
+    public abstract class TypedRouter<TEdgeData> : ITypedRouter
         where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -107,7 +107,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
+        public virtual Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             return this.Calculate(vehicle, source, target, float.MaxValue);
         }
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
+        public virtual Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -131,7 +131,7 @@ namespace OsmSharp.Routing.Routers
 
             // calculate the route.
             PathSegment<long> route = _router.Calculate(_dataGraph, _interpreter, vehicle,
-                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), max);
+                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), max, null);
 
             // convert to an OsmSharpRoute.
             return this.ConstructRoute(vehicle, route, source, target);
@@ -144,7 +144,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public virtual Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return this.CalculateToClosest(vehicle, source, targets, float.MaxValue);
         }
@@ -157,7 +157,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public virtual Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -168,7 +168,7 @@ namespace OsmSharp.Routing.Routers
 
             // calculate the route.
             var route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
-                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, targets, true), max);
+                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, targets, true), max, null);
 
             // find the target.
             var target = targets.First(x => x.Id == route.VertexId);
@@ -184,7 +184,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public virtual Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return this.CalculateManyToMany(vehicle, new[] { source }, targets)[0];
         }
@@ -196,7 +196,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public virtual Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -206,7 +206,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             var routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue);
+                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
 
             var constructedRoutes = new Route[sources.Length][];
             for (int x = 0; x < sources.Length; x++)
@@ -230,7 +230,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
+        public virtual double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -241,7 +241,7 @@ namespace OsmSharp.Routing.Routers
 
             // calculate the route.
             return _router.CalculateWeight(_dataGraph, _interpreter, vehicle,
-                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), float.MaxValue);
+                this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), float.MaxValue, null);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public virtual double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -261,7 +261,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             return _router.CalculateOneToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, source, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue);
+                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public virtual double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -281,13 +281,13 @@ namespace OsmSharp.Routing.Routers
             }
 
             return _router.CalculateManyToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue);
+                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
         }
 
         /// <summary>
         /// Returns true if range calculation is supported.
         /// </summary>
-        public bool IsCalculateRangeSupported
+        public virtual bool IsCalculateRangeSupported
         {
             get
             {
@@ -302,7 +302,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="orgin"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgin, float weight)
+        public virtual HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgin, float weight)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -312,7 +312,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             HashSet<long> objectsAtWeight = _router.CalculateRange(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, orgin, false),
-                weight);
+                weight, null);
 
             var locations = new HashSet<GeoCoordinate>();
             foreach (long vertex in objectsAtWeight)
@@ -330,7 +330,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
+        public virtual bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -339,7 +339,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            return _router.CheckConnectivity(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, point, false), weight);
+            return _router.CheckConnectivity(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, point, false), weight, null);
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight)
+        public virtual bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -379,7 +379,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
+        protected virtual Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
         {
             if (route != null)
             {
@@ -399,7 +399,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="toResolved"></param>
         /// <param name="vertices"></param>
         /// <returns></returns>
-        internal Route Generate(
+        protected virtual Route Generate(
             Vehicle vehicle,
             RouterPoint fromResolved,
             RouterPoint toResolved,
@@ -469,7 +469,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="vertices"></param>
         /// <returns></returns>
-        private RoutePointEntry[] GenerateEntries(Vehicle vehicle, long[] vertices)
+        protected virtual RoutePointEntry[] GenerateEntries(Vehicle vehicle, long[] vertices)
         {
             // create an entries list.
             var entries = new List<RoutePointEntry>();
@@ -624,7 +624,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        private List<KeyValuePair<long, IDynamicGraphEdgeData>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
+        protected virtual List<KeyValuePair<long, IDynamicGraphEdgeData>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
             long vertex1, long previousVertex, long nextVertex)
         {
             var neighbours = new List<KeyValuePair<long, IDynamicGraphEdgeData>>();
@@ -810,7 +810,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="p"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private bool MatchArc(Vehicle vehicle, long from, GeoCoordinateSimple[] along, long to, PathSegment<long> path)
+        protected virtual bool MatchArc(Vehicle vehicle, long from, GeoCoordinateSimple[] along, long to, PathSegment<long> path)
         {
             var vertices = path.ToArray();
             if(vertices[0] != from)
@@ -845,7 +845,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// An equality comparer to filter doubles from an arcs-list/array.
         /// </summary>
-        private class ArcEqualityComparer : IEqualityComparer<KeyValuePair<uint, TEdgeData>>
+        protected class ArcEqualityComparer : IEqualityComparer<KeyValuePair<uint, TEdgeData>>
         {
             /// <summary>
             /// Returns true when two edges are the same.
@@ -888,7 +888,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        private IDynamicGraphEdgeData GetEdgeData(Vehicle vehicle, long vertex1, long vertex2)
+        protected virtual IDynamicGraphEdgeData GetEdgeData(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
@@ -970,7 +970,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        private GeoCoordinate GetCoordinate(Vehicle vehicle, long vertex)
+        protected virtual GeoCoordinate GetCoordinate(Vehicle vehicle, long vertex)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
@@ -1010,7 +1010,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private RouterPoint Normalize(RouterPoint point)
+        protected RouterPoint Normalize(RouterPoint point)
         {
             RouterPoint normalize;
             if (!_routerPoints.TryGetValue(point.Location, out normalize))
@@ -1026,7 +1026,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        private bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
+        protected bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
         {
             return _routerPoints.TryGetValue(location, out point);
         }
@@ -1036,7 +1036,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="resolvedId"></param>
         /// <returns></returns>
-        private bool GetRouterPoint(long resolvedId, out RouterPoint point)
+        protected bool GetRouterPoint(long resolvedId, out RouterPoint point)
         {
             point = _routerPoints.Values.First(x => x.Id == resolvedId);
             return point != null;
@@ -1048,7 +1048,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate)
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate)
         {
             return this.Resolve(vehicle, coordinate, false);
         }
@@ -1060,7 +1060,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
             return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, null, null, verticesOnly);
         }
@@ -1072,7 +1072,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate)
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
             return this.Resolve(vehicle, delta, coordinate, false);
         }
@@ -1085,7 +1085,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, bool verticesOnly)
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, bool verticesOnly)
         {
             return this.Resolve(vehicle, delta, coordinate, null, null, verticesOnly);
         }
@@ -1097,7 +1097,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="pointTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags)
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags)
         {
             return this.Resolve(vehicle, coordinate, pointTags, false);
         }
@@ -1110,7 +1110,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
         {
             return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
         }
@@ -1123,7 +1123,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="pointTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, TagsCollectionBase pointTags)
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, TagsCollectionBase pointTags)
         {
             return this.Resolve(vehicle, delta, coordinate, pointTags, false);
         }
@@ -1137,7 +1137,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
         {
             return this.Resolve(vehicle, delta, coordinate, null, pointTags, verticesOnly);
         }
@@ -1150,7 +1150,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollectionBase matchingTags)
         {
             return this.Resolve(vehicle, coordinate, matcher, matchingTags, false);
@@ -1165,7 +1165,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
+        public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollectionBase matchingTags, bool verticesOnly)
         {
             return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
@@ -1181,7 +1181,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
                                    IEdgeMatcher matcher, TagsCollectionBase matchingTags)
         {
             return this.Resolve(vehicle, delta, coordinate, matcher, matchingTags, false);
@@ -1197,7 +1197,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
+        public virtual RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
                                    IEdgeMatcher matcher, TagsCollectionBase matchingTags, bool verticesOnly)
         {
             // check routing profiles.
@@ -1208,7 +1208,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             var result = _router.SearchClosest(_dataGraph, _interpreter,
-                vehicle, coordinate, delta, matcher, matchingTags, verticesOnly); // search the closest routable object.
+                vehicle, coordinate, delta, matcher, matchingTags, verticesOnly, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -1240,7 +1240,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
+        public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
         {
             return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate);
         }
@@ -1252,7 +1252,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate)
+        public virtual RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate)
         {
             var points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
@@ -1270,7 +1270,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate,
+        public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate,
             IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
             return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
@@ -1286,7 +1286,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate,
+        public virtual RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate,
                                      IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
             var points = new RouterPoint[coordinate.Length];
@@ -1303,7 +1303,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate)
+        public virtual GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate)
         {
             return this.Search(vehicle, coordinate, false);
         }
@@ -1315,7 +1315,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta"></param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate)
+        public virtual GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
             return this.Search(vehicle, delta, coordinate, false);
         }
@@ -1327,7 +1327,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
+        public virtual GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -1347,7 +1347,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        public GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate, bool verticesOnly)
+        public virtual GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate, bool verticesOnly)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -1358,7 +1358,7 @@ namespace OsmSharp.Routing.Routers
 
             // search for a close edge/vertex.
             var result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate,
-                delta, null, null, verticesOnly); // search the closest routable object.
+                delta, null, null, verticesOnly, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -1390,7 +1390,7 @@ namespace OsmSharp.Routing.Routers
         /// Returns the next resolved id.
         /// </summary>
         /// <returns></returns>
-        private long GetNextResolvedId()
+        protected long GetNextResolvedId()
         {
             long next = _nextResolvedId;
             _nextResolvedId--;
@@ -1411,7 +1411,7 @@ namespace OsmSharp.Routing.Routers
         /// Returns the next intermediate id.
         /// </summary>
         /// <returns></returns>
-        private long GetNextIntermediateId()
+        protected long GetNextIntermediateId()
         {
             long next = _nextIntermediateId;
             _nextIntermediateId++;
@@ -1423,7 +1423,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        private bool IsIntermediate(long vertex)
+        protected bool IsIntermediate(long vertex)
         {
             return vertex >= long.MinValue && vertex <= IntermediatePoints;
         }
@@ -1438,7 +1438,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        private TypedRouterResolvedGraph GetForProfile(Vehicle vehicle)
+        protected TypedRouterResolvedGraph GetForProfile(Vehicle vehicle)
         {
             TypedRouterResolvedGraph graph;
             if (!_resolvedGraphs.TryGetValue(vehicle, out graph))
@@ -1458,7 +1458,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="resolvedPoint"></param>
         /// <param name="edgeData"></param>
         /// <returns></returns>
-        private RouterPoint AddResolvedPointExact(Vehicle vehicle, uint vertex1, uint vertex2, GeoCoordinate resolvedCoordinate, TEdgeData edgeData)
+        protected RouterPoint AddResolvedPointExact(Vehicle vehicle, uint vertex1, uint vertex2, GeoCoordinate resolvedCoordinate, TEdgeData edgeData)
         {
             Meter epsilon = 1;
 
@@ -1640,7 +1640,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="position"></param>
         /// <param name="edgeData"></param>
         /// <returns></returns>
-        private RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position, TEdgeData edgeData)
+        protected RouterPoint AddResolvedPoint(Vehicle vehicle, uint vertex1, uint vertex2, double position, TEdgeData edgeData)
         {
             Meter epsilon = 1;
 
@@ -1880,7 +1880,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="resolvedPoint"></param>
         /// <param name="backwards"></param>
         /// <returns></returns>
-        private PathSegmentVisitList RouteResolvedGraph(Vehicle vehicle, RouterPoint resolvedPoint, bool? backwards)
+        protected PathSegmentVisitList RouteResolvedGraph(Vehicle vehicle, RouterPoint resolvedPoint, bool? backwards)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
@@ -1957,7 +1957,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="resolvedPoints"></param>
         /// <param name="backwards"></param>
         /// <returns></returns>
-        private PathSegmentVisitList[] RouteResolvedGraph(Vehicle vehicle, RouterPoint[] resolvedPoints, bool backwards)
+        protected PathSegmentVisitList[] RouteResolvedGraph(Vehicle vehicle, RouterPoint[] resolvedPoints, bool backwards)
         {
             var visitLists = new PathSegmentVisitList[resolvedPoints.Length];
             for (int idx = 0; idx < resolvedPoints.Length; idx++)
@@ -2005,7 +2005,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        private PathSegment<long> ResolvedShortest(Vehicle vehicle, long vertex1, long vertex2)
+        protected PathSegment<long> ResolvedShortest(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);

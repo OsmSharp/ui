@@ -52,11 +52,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList to, double max)
+        public PathSegment<long> Calculate(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList to, double max, Dictionary<string, object> parameters)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
-                new PathSegmentVisitList[] { to }, max);
+                new PathSegmentVisitList[] { to }, max, null);
         }
 
         /// <summary>
@@ -69,14 +69,14 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="maxSearch"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch)
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
         {
             var results = new PathSegment<long>[sources.Length][];
             for (int sourceIdx = 0; sourceIdx < sources.Length; sourceIdx++)
             {
                 results[sourceIdx] = this.DoCalculation(graph, interpreter, vehicle,
-                   sources[sourceIdx], targets, maxSearch, false, false);
+                   sources[sourceIdx], targets, maxSearch, false, false, parameters);
             }
             return results;
         }
@@ -92,10 +92,10 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <returns></returns>
         public double CalculateWeight(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList from, PathSegmentVisitList to, double max)
+            PathSegmentVisitList from, PathSegmentVisitList to, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long> closest = this.CalculateToClosest(graph, interpreter, vehicle, from,
-                new PathSegmentVisitList[] { to }, max);
+                new PathSegmentVisitList[] { to }, max, null);
             if (closest != null)
             {
                 return closest.Weight;
@@ -113,11 +113,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
+        public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
-                from, targets, max, false, false);
+                from, targets, max, false, false, parameters);
             if (result != null && result.Length == 1)
             {
                 return result[0];
@@ -136,10 +136,10 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="max"></param>
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
-                   source, targets, max, false, false);
+                   source, targets, max, false, false, null);
 
             var weights = new double[many.Length];
             for (int idx = 0; idx < many.Length; idx++)
@@ -166,13 +166,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
+        public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             var results = new double[sources.Length][];
             for (int idx = 0; idx < sources.Length; idx++)
             {
-                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max);
+                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max, null);
 
                 OsmSharp.Logging.Log.TraceEvent("DykstraRoutingLive", TraceEventType.Information, "Calculating weights... {0}%",
                     (int)(((float)idx / (float)sources.Length) * 100));
@@ -201,10 +201,10 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList source, double weight)
+        public HashSet<long> CalculateRange(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
-            return this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
+            return this.CalculateRange(graph, interpreter, vehicle, source, weight, true, null);
         }
 
         /// <summary>
@@ -217,11 +217,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
-            Vehicle vehicle, PathSegmentVisitList source, double weight, bool forward)
+        public HashSet<long> CalculateRange(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList source, double weight, bool forward, Dictionary<string, object> parameters)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
-                   source, new PathSegmentVisitList[0], weight, false, true, forward);
+                   source, new PathSegmentVisitList[0], weight, false, true, forward, parameters);
 
             var resultVertices = new HashSet<long>();
             for (int idx = 0; idx < result.Length; idx++)
@@ -241,13 +241,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <returns></returns>
         public bool CheckConnectivity(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, double weight)
+            PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
-            HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
+            HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true, null);
 
             if (range.Count > 0)
             {
-                range = this.CalculateRange(graph, interpreter, vehicle, source, weight, false);
+                range = this.CalculateRange(graph, interpreter, vehicle, source, weight, false, null);
                 if (range.Count > 0)
                 {
                     return true;
@@ -272,9 +272,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
-            bool stopAtFirst, bool returnAtWeight)
+            bool stopAtFirst, bool returnAtWeight, Dictionary<string, object> parameters)
         {
-            return this.DoCalculation(graph, interpreter, vehicle, source, targets, weight, stopAtFirst, returnAtWeight, true);
+            return this.DoCalculation(graph, interpreter, vehicle, source, targets, weight, stopAtFirst, returnAtWeight, true, parameters);
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
-            bool stopAtFirst, bool returnAtWeight, bool forward)
+            bool stopAtFirst, bool returnAtWeight, bool forward, Dictionary<string, object> parameters)
         {
             // make copies of the target and source visitlist.
             var source = sourceList.Clone() as PathSegmentVisitList;

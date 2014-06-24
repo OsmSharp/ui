@@ -52,9 +52,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
-            return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
+            return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false, null);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
         public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.
 

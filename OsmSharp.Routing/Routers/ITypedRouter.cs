@@ -10,7 +10,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// Abstracts the functionality of implemented by any TypeRouter class.
     /// </summary>
-    internal interface ITypedRouter
+    public interface ITypedRouter
     {
         #region Capabilities
 

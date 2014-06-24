@@ -27,7 +27,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// An implementation of an in-memory dynamic graph.
     /// </summary>
-    internal class TypedRouterResolvedGraph
+    public class TypedRouterResolvedGraph
     {
         /// <summary>
         /// Holds all graph data.
@@ -202,7 +202,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Represents a resolved edge.
         /// </summary>
-        internal class RouterResolvedGraphEdge : IDynamicGraphEdgeData
+        public class RouterResolvedGraphEdge : IDynamicGraphEdgeData
         {
             /// <summary>
             /// Creates a new resolved edge.
