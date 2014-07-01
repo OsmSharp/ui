@@ -119,11 +119,11 @@ namespace OsmSharp.Collections
         #region Table
 
         /// <summary>
-        /// Adds a new object.
+        /// Adds a new object without checking if it exists already.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private uint AddObject(Type value)
+        public uint AddObject(Type value)
         {
             uint value_int = _nextIdx;
 

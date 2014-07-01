@@ -51,6 +51,17 @@ namespace OsmSharp.Collections.Tags.Index
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
+        public TagsTableCollectionIndex(bool reverseIndex)
+        {
+            _tagsTable = new ObjectTable<Tag>(true);
+            _tagsCollectionTable = new ObjectTable<OsmTags>(reverseIndex);
+
+            this.Add(new TagsCollection());
+        }
+
+        /// <summary>
+        /// Creates a new tags index with a given strings table.
+        /// </summary>
         /// <param name="tagsTable"></param>
         public TagsTableCollectionIndex(ObjectTable<Tag> tagsTable)
         {
@@ -117,6 +128,28 @@ namespace OsmSharp.Collections.Tags.Index
             if (osmTags != null)
             {
                 return _tagsCollectionTable.Add(osmTags);
+            }
+            throw new ArgumentNullException("tags", "Tags dictionary cannot be null or empty!");
+        }
+
+        /// <summary>
+        /// Adds tags to this index without check if they exists already.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public uint AddObject(TagsCollectionBase tags)
+        {
+            int idx = 0;
+            uint[] tagsArray = new uint[tags.Count];
+            foreach (Tag tag in tags)
+            {
+                tagsArray[idx] = _tagsTable.Add(tag);
+                idx++;
+            }
+            var osmTags = new OsmTags(tagsArray);
+            if (osmTags != null)
+            {
+                return _tagsCollectionTable.AddObject(osmTags);
             }
             throw new ArgumentNullException("tags", "Tags dictionary cannot be null or empty!");
         }

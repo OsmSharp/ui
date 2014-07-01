@@ -128,7 +128,9 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         protected virtual ITagsCollectionIndex CreateTagsCollectionIndex()
         {
-            return new TagsTableCollectionIndex();
+            var tagsTable =  new TagsTableCollectionIndex(false);
+            // tagsTable.DropReverseIndexex();
+            return tagsTable;
         }
 
         /// <summary>
@@ -327,7 +329,7 @@ namespace OsmSharp.Routing.Graph.Serialization
                                 currentTags.RemoveRange(0, index);
                                 if (tagsCollection.Count > 0)
                                 { // there are tags.
-                                    tagsCollectionIndex.Add(tagsCollection);
+                                    tagsCollectionIndex.AddObject(tagsCollection);
                                 }
                                 break;
                             }

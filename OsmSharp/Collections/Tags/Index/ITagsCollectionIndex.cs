@@ -29,5 +29,12 @@ namespace OsmSharp.Collections.Tags.Index
         /// <param name="tags"></param>
         /// <returns></returns>
         uint Add(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Adds new tags but without checking if they exist already.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        uint AddObject(TagsCollectionBase tags);
     }
 }
