@@ -46,7 +46,7 @@ namespace OsmSharp.iOS.UI
 	[Register("MapView")]
 	public class MapView : UIView, IMapView, IInvalidatableMapSurface
 	{
-        private static const float MAX_ZOOM_LEVEL = 22;
+        private const float MAX_ZOOM_LEVEL = 22;
 		private bool _invertX = false;
 		private bool _invertY = false;
 
