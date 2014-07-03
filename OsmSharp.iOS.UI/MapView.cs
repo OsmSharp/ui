@@ -867,9 +867,13 @@ namespace OsmSharp.iOS.UI
 		{
 			get	{ return _mapZoom; }
 			set {
-                if (value > _mapMaxZoomLevel || value < _mapMinZoomLevel)
+                if (value > _mapMaxZoomLevel)
                 {
-                    _mapZoom = value;
+                    _mapZoom = MAX_ZOOM_LEVEL;
+                }
+                else if (value < _mapMinZoomLevel)
+                {
+                    _mapZoom = 0;
                 }
                 else
                 {
