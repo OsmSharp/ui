@@ -84,14 +84,18 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetArcs(searchBox);
 
             if (!verticesOnly)
             { // find both closest arcs and vertices.
                 // loop over all.
                 foreach (KeyValuePair<uint, KeyValuePair<uint, TEdgeData>> arc in arcs)
                 {
-                    TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                    if (!graph.TagsIndex.Contains(arc.Value.Value.Tags))
+                    { // skip this edge, no valid tags found.
+                        continue;
+                    }
+                    var arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     if (canBeTraversed)
                     { // the edge can be traversed.

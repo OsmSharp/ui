@@ -395,6 +395,21 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
                 }
                 return null;
             }
+
+            /// <summary>
+            /// Returns true if the tags with the given id are in this collection.
+            /// </summary>
+            /// <param name="tagsId"></param>
+            /// <returns></returns>
+            public bool Contains(uint tagsId)
+            {
+                TagsCollection collection;
+                if (_tags.TryGetValue(tagsId, out collection))
+                {
+                    return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -521,6 +536,34 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
                 this.DeserializeBlock(blockIdx);
 
                 return _currentBlock.Get(tagsId);
+            }
+
+            /// <summary>
+            /// Returns true if the tags with the given id are in this collection.
+            /// </summary>
+            /// <param name="tagsId"></param>
+            /// <returns></returns>
+            public bool Contains(uint tagsId)
+            {
+                // check bounds of current block.
+                if (_currentBlock != null)
+                {
+                    if (tagsId >= _currentBlockMin &&
+                        tagsId < (_currentBlockMin + _blockSize))
+                    { // tag is in current block.
+                        return true;
+                    }
+                }
+
+                // load another block.
+                int blockIdx = (int)System.Math.Floor((float)tagsId / (float)_blockSize);
+
+                // check if outside of the scope of this index.
+                if (blockIdx >= _blockPositions.Length)
+                {
+                    return false;
+                }
+                return true;
             }
         }
     }
