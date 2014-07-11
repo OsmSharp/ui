@@ -196,6 +196,16 @@ namespace OsmSharp.Collections
         }
 
         /// <summary>
+        /// Returns true if the object with the given id are in this collection.
+        /// </summary>
+        /// <param name="valueIdx"></param>
+        /// <returns></returns>
+        public bool Contains(uint valueIdx)
+        {
+            return _objects.Length > valueIdx;
+        }
+
+        /// <summary>
         /// Returns a copy of all data in this object table.
         /// </summary>
         /// <returns></returns>

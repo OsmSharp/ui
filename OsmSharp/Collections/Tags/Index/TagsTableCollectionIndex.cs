@@ -111,6 +111,16 @@ namespace OsmSharp.Collections.Tags.Index
         }
 
         /// <summary>
+        /// Returns true if the tags with the given id are in this collection.
+        /// </summary>
+        /// <param name="tagsId"></param>
+        /// <returns></returns>
+        public bool Contains(uint tagsId)
+        {
+            return _tagsCollectionTable.Contains(tagsId);
+        }
+
+        /// <summary>
         /// Adds tags to this index.
         /// </summary>
         /// <param name="tags"></param>
