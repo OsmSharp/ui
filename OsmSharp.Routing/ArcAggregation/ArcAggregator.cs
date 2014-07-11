@@ -174,22 +174,24 @@ namespace OsmSharp.Routing.ArcAggregation
                 return true;
             }
             // create tag interpreters for arcs to try and work out if the arcs are different for the given vehicle.
-            TagsCollectionBase previousTagsDic = new TagsCollection();
-            foreach (Tag pair in previous_arc.Tags)
+            var previousTagsDic = new TagsCollection();
+            if (previous_arc.Tags != null)
             {
-                previousTagsDic.Add(pair.Key, pair.Value);
+                foreach (Tag pair in previous_arc.Tags)
+                {
+                    previousTagsDic.Add(pair.Key, pair.Value);
+                }
             }
             var nextTagsDic = new TagsCollection();
-            foreach (Tag pair in next_arc.Tags)
+            if (next_arc.Tags != null)
             {
-                nextTagsDic.Add(pair.Key, pair.Value);
+                foreach (Tag pair in next_arc.Tags)
+                {
+                    nextTagsDic.Add(pair.Key, pair.Value);
+                }
             }
             if (!vehicle.IsEqualFor(previousTagsDic, nextTagsDic))
             { // the previous and the next edge do not represent a change for the given vehicle.
-                //RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
-                //RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);
-                //if (!previous_interpreter.IsEqualForVehicle(vehicle, next_interpreter))
-                //{
                 return true;
             }
             return false;
