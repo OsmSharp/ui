@@ -218,6 +218,24 @@ namespace OsmSharp.Routing.Graph.Router
         }
 
         /// <summary>
+        /// Returns all the vertices in an array along with their respective weight.
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<TIdType, double>[] ToArrayWithWeight()
+        {
+            var vertices = new List<Tuple<TIdType, double>>();
+            var next = this;
+            while (next.From != null)
+            {
+                vertices.Add(new Tuple<TIdType, double>(next.VertexId, next.Weight));
+                next = next.From;
+            }
+            vertices.Add(new Tuple<TIdType, double>(next.VertexId, next.Weight));
+            vertices.Reverse();
+            return vertices.ToArray();
+        }
+
+        /// <summary>
         /// Returns true if the path is the samen.
         /// </summary>
         /// <param name="segment1"></param>
