@@ -17,17 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 using OsmSharp.Units.Angle;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.WinForms.UI.Renderer.Images;
 
@@ -548,6 +545,11 @@ namespace OsmSharp.WinForms.UI.Renderer
         }
 
         #endregion
+
+	    ~GraphicsRenderer2D()
+	    {
+	        _pen.Dispose();
+	    }
 
         /// <summary>
         /// Gets the char widths for the given string and given font.
