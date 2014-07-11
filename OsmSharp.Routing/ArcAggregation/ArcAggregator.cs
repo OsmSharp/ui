@@ -57,7 +57,7 @@ namespace OsmSharp.Routing.ArcAggregation
         public AggregatedPoint Aggregate(Route route)
         {
             // create the enumerator.
-            AggregatedPointEnumerator enumerator = new AggregatedPointEnumerator(route);
+            var enumerator = new AggregatedPointEnumerator(route);
 
             AggregatedRoutePoint previous = null;
             AggregatedRoutePoint current = null;
@@ -124,7 +124,7 @@ namespace OsmSharp.Routing.ArcAggregation
                 }
                 else
                 { // test if point is significant.
-                    AggregatedArc nextArc = this.CreateArcAndPoint(previous, current, next);
+                    var nextArc = this.CreateArcAndPoint(previous, current, next);
 
                     // test if the next point is significant.
                     if (previousArc == null)
@@ -163,7 +163,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="next_arc"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        private bool IsSignificant(Vehicle vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
+        protected virtual bool IsSignificant(Vehicle vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
         {
             if (previous_arc.Next.Points != null && previous_arc.Next.Points.Count > 0)
             { // the point has at least one important point.
