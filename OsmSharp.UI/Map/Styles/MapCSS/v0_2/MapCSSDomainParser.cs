@@ -746,6 +746,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     case "bevel":
                                         casingLinejoin.Value = LineJoinEnum.Bevel;
                                         break;
+                                    case "none":
+                                        casingLinejoin.Value = LineJoinEnum.None;
+                                        break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
                                                                                 string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));

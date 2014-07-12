@@ -61,7 +61,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private const float OffsetCasing = 2;
         private const float OffsetCasingLeftRight = 2.1f;
         private const float OffsetLinePattern = 2.9f;
-        private const float OffsetLine = 3;
+        private const float OffsetCasingNoJoin = 3;
+        private const float OffsetLine = 3.1f;
         private const float OffsetPoint = 4;
         private const float OffsetDefaultPoint = 4.1f;
         private const float OffsetLineText = 4.9f;
@@ -605,6 +606,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     { // was not rendered as an area.
                         // the way has to rendered as a line.
                         LineJoin lineJoin;
+                        LineJoin casingLineJoin;
                         if (!rule.TryGetProperty("lineJoin", out lineJoin))
                         {
                             lineJoin = LineJoin.Miter;
@@ -626,6 +628,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             { // casing: use the casing layer.
                                 casingColor = -1;
                             }
+                            if (!rule.TryGetProperty("casingLineJoin", out casingLineJoin))
+                            { 
+                                casingLineJoin = LineJoin.Miter;
+                            }
                             float width;
                             if (!rule.TryGetProperty("width", out width))
                             {
@@ -636,8 +642,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             {
                                 if (casingWidth > 0)
                                 { // adds the casing
-                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(casingLineJoin == LineJoin.None ? OffsetCasingNoJoin : OffsetCasing, zIndex),  // support for bridges
+                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), casingLineJoin, dashes);
                                     success = true;
                                 }
                                 if (dashes == null)
@@ -822,6 +828,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                             if (rule.TryGetProperty("color", out color))
                             {
+                                if (rule.TryGetProperty("opacity", out fillOpacity))
+                                {
+                                    SimpleColor simpleFillColor = new SimpleColor() { Value = color };
+                                    color = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                        simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                                }
+
                                 scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
@@ -1014,8 +1027,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         else if (declaration is DeclarationLineJoin)
                         {
                             var declarationLineJoin = (declaration as DeclarationLineJoin);
-                            properties.AddProperty("lineJoin", declarationLineJoin.Eval(
-                                mapCSSObject));
+
+                            if (declarationLineJoin.Qualifier == QualifierLineJoinEnum.LineJoin)
+                            {
+                                properties.AddProperty("lineJoin", declarationLineJoin.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationLineJoin.Qualifier == QualifierLineJoinEnum.CasingLineJoin)
+                            {
+                                properties.AddProperty("casingLineJoin", declarationLineJoin.Eval(
+                                    mapCSSObject));
+                            }
                         }
                         else if (declaration is DeclarationDashes)
                         {

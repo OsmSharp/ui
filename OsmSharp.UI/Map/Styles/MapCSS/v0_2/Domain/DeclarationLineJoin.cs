@@ -30,6 +30,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     {
         Round,
         Miter,
-        Bevel
+        Bevel,
+        None
     }
 }
