@@ -25,7 +25,6 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI;
