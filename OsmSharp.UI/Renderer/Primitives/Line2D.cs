@@ -32,14 +32,16 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="dashes"></param>
-        public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, int[] dashes)
+        public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, LineCap lineCap, int[] dashes)
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
             this.Width = width;
             this.LineJoin = lineJoin;
+            this.LineCap = lineCap;
             this.Dashes = dashes;
 
             MinX = int.MaxValue;
@@ -81,10 +83,11 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, LineCap lineCap, int[] dashes,
             float minZoom, float maxZoom)
         {
             this.X = x;
@@ -92,6 +95,7 @@ namespace OsmSharp.UI.Renderer.Primitives
             this.Color = color;
             this.Width = width;
             this.LineJoin = lineJoin;
+            this.LineCap = lineCap;
             this.Dashes = dashes;
 
             MinX = int.MaxValue;
@@ -133,11 +137,12 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="minX"></param>
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, LineCap lineCap, int[] dashes,
             int minX, int maxX, int minY, int maxY)
         {
             this.X = x;
@@ -145,6 +150,7 @@ namespace OsmSharp.UI.Renderer.Primitives
             this.Color = color;
             this.Width = width;
             this.LineJoin = lineJoin;
+            this.LineCap = lineCap;
             this.Dashes = dashes;
 
             MinX = minX;
@@ -225,6 +231,11 @@ namespace OsmSharp.UI.Renderer.Primitives
         public LineJoin LineJoin { get; set; }
 
         /// <summary>
+        /// Gets or sets the linecap.
+        /// </summary>
+        public LineCap LineCap { get; set; }
+
+        /// <summary>
         /// Gets or sets the line dashses.
         /// </summary>
         public int[] Dashes { get; set; }
@@ -302,6 +313,16 @@ namespace OsmSharp.UI.Renderer.Primitives
         Round,
         Miter,
         Bevel,
+        None
+    }
+
+    /// <summary>
+    /// Enumerated the different linecap options.
+    /// </summary>
+    public enum LineCap
+    {
+        Round,
+        Square,
         None
     }
 }

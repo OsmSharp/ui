@@ -245,7 +245,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 StyleLine style = _index.LineStyles[styleId];
 
                 // build the primitive.
-                Line2D line = new Line2D(x, y, style.Color, style.Width, style.LineJoin, style.Dashes);
+                Line2D line = new Line2D(x, y, style.Color, style.Width, style.LineJoin, style.LineCap, style.Dashes);
                 line.Layer = style.Layer;
                 line.MinZoom = style.MinZoom;
                 line.MaxZoom = style.MaxZoom;

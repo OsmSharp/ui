@@ -46,27 +46,33 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public LineJoin LineJoin { get; set; }
 
         /// <summary>
+        /// Gets or set the line cap.
+        /// </summary>
+        [ProtoMember(5)]
+        public LineCap LineCap { get; set; }
+
+        /// <summary>
         /// Gets or sets teh line dashes.
         /// </summary>
-        [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public int[] Dashes { get; set; }
 
         /// <summary>
         /// Gets or sets the layer.
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(7)]
         public uint Layer { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
-        [ProtoMember(7)]
+        [ProtoMember(8)]
         public float MinZoom { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
-        [ProtoMember(8)]
+        [ProtoMember(9)]
         public float MaxZoom { get; set; }
 
         /// <summary>
@@ -80,6 +86,7 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 return this.Color.GetHashCode() ^
                     this.Width.GetHashCode() ^
                     this.LineJoin.GetHashCode() ^
+                    this.LineCap.GetHashCode() ^
                     this.Layer.GetHashCode() ^
                     this.MinZoom.GetHashCode() ^
                     this.MaxZoom.GetHashCode();
@@ -87,6 +94,7 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             int hashcode = this.Color.GetHashCode() ^
                 this.Width.GetHashCode() ^
                 this.LineJoin.GetHashCode() ^
+                this.LineCap.GetHashCode() ^
                 this.Layer.GetHashCode() ^
                 this.MinZoom.GetHashCode() ^
                 this.MaxZoom.GetHashCode();
@@ -108,6 +116,7 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 if ((obj as StyleLine).Color == this.Color &&
                     (obj as StyleLine).Width == this.Width &&
                     (obj as StyleLine).LineJoin == this.LineJoin &&
+                    (obj as StyleLine).LineCap == this.LineCap &&
                     (obj as StyleLine).Layer == this.Layer &&
                     (obj as StyleLine).MinZoom == this.MinZoom &&
                     (obj as StyleLine).MaxZoom == this.MaxZoom)

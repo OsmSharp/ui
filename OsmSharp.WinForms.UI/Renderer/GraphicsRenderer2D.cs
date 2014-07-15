@@ -181,10 +181,11 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
-	    /// <param name="lineJoin"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
 	    /// <param name="dashes"></param>
-	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, int[] dashes)
+	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width,
+            OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, OsmSharp.UI.Renderer.Primitives.LineCap lineCap, int[] dashes)
 	    {
 //	        float widthInPixels = this.ToPixels(width);
 
@@ -217,8 +218,24 @@ namespace OsmSharp.WinForms.UI.Renderer
 		        default:
 		            throw new ArgumentOutOfRangeException("lineJoin");
 		    }
-            _pen.StartCap = LineCap.Round;
-            _pen.EndCap = LineCap.Round;
+            switch (lineCap)
+            {
+                case OsmSharp.UI.Renderer.Primitives.LineCap.Round:
+                    _pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    break;
+                case OsmSharp.UI.Renderer.Primitives.LineCap.Square:
+                    _pen.StartCap = System.Drawing.Drawing2D.LineCap.Square;
+                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.Square;
+                    break;
+                case OsmSharp.UI.Renderer.Primitives.LineCap.None:
+                    // just keep the default.
+                    _pen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("lineCap");
+            }
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {

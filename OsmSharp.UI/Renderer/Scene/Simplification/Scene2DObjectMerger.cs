@@ -255,7 +255,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                         {
                             StyleLine styleLine = source.GetStyleLine(scene2DStyleLine.StyleLineId);
                             target.AddStyleLine(pointsId.Value, styleLine.Layer, styleLine.MinZoom, styleLine.MaxZoom,
-                                styleLine.Color, styleLine.Width, styleLine.LineJoin, styleLine.Dashes);
+                                styleLine.Color, styleLine.Width, styleLine.LineJoin, styleLine.LineCap, styleLine.Dashes);
                             continue;
                         }
                         var scene2DStyleLineText = (style as Scene2DStyleLineText);

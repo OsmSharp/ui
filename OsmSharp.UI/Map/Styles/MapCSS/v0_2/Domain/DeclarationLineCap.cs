@@ -30,7 +30,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     {
         None,
         Round,
-        Square,
-        Butt
+        Square
     }
 }

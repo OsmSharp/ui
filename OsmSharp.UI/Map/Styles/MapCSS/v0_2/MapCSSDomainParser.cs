@@ -517,9 +517,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     case "square":
                                         linecap.Value = LineCapEnum.Square;
                                         break;
-                                    case "butt":
-                                        linecap.Value = LineCapEnum.Butt;
-                                        break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
                                                                                 string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
@@ -548,9 +545,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                         break;
                                     case "square":
                                         casingLinecap.Value = LineCapEnum.Square;
-                                        break;
-                                    case "butt":
-                                        casingLinecap.Value = LineCapEnum.Butt;
                                         break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,

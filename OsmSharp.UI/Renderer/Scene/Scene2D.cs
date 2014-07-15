@@ -1066,8 +1066,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="dashes"></param>
-        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
+        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, LineCap lineCap,
+            int[] dashes)
         {// add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1108,6 +1110,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             Color = color,
                             Dashes = dashes,
                             LineJoin = lineJoin,
+                            LineCap = lineCap,
                             Width = width,
                             Layer = layer,
                             MinZoom = minimumZoomFactor,
@@ -1203,7 +1206,7 @@ namespace OsmSharp.UI.Renderer.Scene
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
-            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.Dashes, style.MinZoom, style.MaxZoom);
+            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.LineCap, style.Dashes, style.MinZoom, style.MaxZoom);
             primitive.Id = id;
             primitive.Layer = style.Layer;
 

@@ -61,8 +61,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private const float OffsetCasing = 2;
         private const float OffsetCasingLeftRight = 2.1f;
         private const float OffsetLinePattern = 2.9f;
-        private const float OffsetCasingNoJoin = 3;
-        private const float OffsetLine = 3.1f;
+        private const float OffsetLine = 3;
         private const float OffsetPoint = 4;
         private const float OffsetDefaultPoint = 4.1f;
         private const float OffsetLineText = 4.9f;
@@ -410,7 +409,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     if (points.HasValue)
                     {
                         scene.AddStyleLine(points.Value, this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue,
-                            SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                            SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, LineCap.None, null);
                     }
                 }
             }
@@ -603,13 +602,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
 
                     if (renderAsLine)
-                    { // was not rendered as an area.
+                    { 
+                        // was not rendered as an area.
                         // the way has to rendered as a line.
                         LineJoin lineJoin;
-                        LineJoin casingLineJoin;
+                        LineCap lineCap;
                         if (!rule.TryGetProperty("lineJoin", out lineJoin))
                         {
                             lineJoin = LineJoin.Miter;
+                        }
+                        if (!rule.TryGetProperty("lineCap", out lineCap))
+                        {
+                            lineCap = LineCap.Round;
                         }
                         int[] dashes;
                         if (!rule.TryGetProperty("dashes", out dashes))
@@ -620,6 +624,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             float casingWidth;
                             int casingColor;
+                            LineJoin casingLineJoin;
+                            LineCap casingLineCap;
                             if (!rule.TryGetProperty("casingWidth", out casingWidth))
                             {
                                 casingWidth = 0;
@@ -632,6 +638,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             { 
                                 casingLineJoin = LineJoin.Miter;
                             }
+                            if (!rule.TryGetProperty("casingLineCap", out casingLineCap))
+                            {
+                                casingLineCap = LineCap.Round;
+                            }
                             float width;
                             if (!rule.TryGetProperty("width", out width))
                             {
@@ -642,20 +652,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             {
                                 if (casingWidth > 0)
                                 { // adds the casing
-                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(casingLineJoin == LineJoin.None ? OffsetCasingNoJoin : OffsetCasing, zIndex),  // support for bridges
-                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), casingLineJoin, dashes);
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), casingLineJoin, casingLineCap, dashes);
                                     success = true;
                                 }
                                 if (dashes == null)
                                 { // dashes not set, use line offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
-                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                        minZoom, maxZoom, color, width, lineJoin, lineCap, dashes);
                                     success = true;
                                 }
                                 else
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                        minZoom, maxZoom, color, width, lineJoin, lineCap, dashes);
                                     success = true;
                                 }
 
@@ -1036,6 +1046,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             else if (declarationLineJoin.Qualifier == QualifierLineJoinEnum.CasingLineJoin)
                             {
                                 properties.AddProperty("casingLineJoin", declarationLineJoin.Eval(
+                                    mapCSSObject));
+                            }
+                        }
+                        else if (declaration is DeclarationLineCap)
+                        {
+                            var declarationLineCap = (declaration as DeclarationLineCap);
+
+                            if (declarationLineCap.Qualifier == QualifierLineCapEnum.LineCap)
+                            {
+                                properties.AddProperty("lineCap", declarationLineCap.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationLineCap.Qualifier == QualifierLineCapEnum.CasingLineCap)
+                            {
+                                properties.AddProperty("casingLineCap", declarationLineCap.Eval(
                                     mapCSSObject));
                             }
                         }
