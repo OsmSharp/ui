@@ -64,8 +64,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Creates a new v2 serializer.
         /// </summary>
-        /// <param name="compress">Flag telling this serializer to compress it's data.</param>
-        public CHEdgeDataDataSourceSerializer(bool compress)
+        public CHEdgeDataDataSourceSerializer()
         {
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.
@@ -82,8 +81,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Creates a new v2 serializer.
         /// </summary>
-        public CHEdgeDataDataSourceSerializer(bool compress,
-            int regionZoom, int heightBinSize, int blockVertexSize)
+        public CHEdgeDataDataSourceSerializer(int regionZoom, int heightBinSize, int blockVertexSize)
         {
             _regionZoom = regionZoom;
             _heightBinSize = heightBinSize;

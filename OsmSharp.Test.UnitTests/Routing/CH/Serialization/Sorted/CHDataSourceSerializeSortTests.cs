@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
-            CHEdgeDataDataSourceSerializer serializer = new CHEdgeDataDataSourceSerializer(true);
+            CHEdgeDataDataSourceSerializer serializer = new CHEdgeDataDataSourceSerializer();
             var sortedGraph = serializer.SortGraph(original);
             original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()

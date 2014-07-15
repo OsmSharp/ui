@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public virtual Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
+        public virtual Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -134,7 +134,7 @@ namespace OsmSharp.Routing.Routers
                 this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), max, null);
 
             // convert to an OsmSharpRoute.
-            return this.ConstructRoute(vehicle, route, source, target);
+            return this.ConstructRoute(vehicle, route, source, target, geometryOnly);
         }
 
         /// <summary>
@@ -381,12 +381,25 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected virtual Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
         {
+            return this.ConstructRoute(vehicle, route, source, target, false);
+        }
+
+        /// <summary>
+        /// Converts a linked route to an OsmSharpRoute.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="route"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        protected virtual Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target, bool geometryOnly)
+        {
             if (route != null)
             {
                 long[] vertices = route.ToArray();
 
                 // construct the actual graph route.
-                return this.Generate(vehicle, source, target, vertices);
+                return this.Generate(vehicle, source, target, vertices, geometryOnly);
             }
             return null; // calculation failed!
         }
@@ -398,12 +411,14 @@ namespace OsmSharp.Routing.Routers
         /// <param name="fromResolved"></param>
         /// <param name="toResolved"></param>
         /// <param name="vertices"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         protected virtual Route Generate(
             Vehicle vehicle,
             RouterPoint fromResolved,
             RouterPoint toResolved,
-            long[] vertices)
+            long[] vertices,
+            bool geometryOnly)
         {
             // create the route.
             Route route = null;
@@ -418,7 +433,7 @@ namespace OsmSharp.Routing.Routers
                 RoutePointEntry[] entries;
                 if (vertices.Length > 0)
                 {
-                    entries = this.GenerateEntries(vehicle, vertices);
+                    entries = this.GenerateEntries(vehicle, vertices, geometryOnly);
                 }
                 else
                 {
@@ -468,8 +483,10 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertices"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual RoutePointEntry[] GenerateEntries(Vehicle vehicle, long[] vertices)
+        protected virtual RoutePointEntry[] GenerateEntries(Vehicle vehicle, long[] vertices,
+            bool geometryOnly)
         {
             // create an entries list.
             var entries = new List<RoutePointEntry>();
@@ -487,6 +504,9 @@ namespace OsmSharp.Routing.Routers
 
             // create all the other entries except the last one.
             var nodePrevious = vertices[0];
+            TagsCollectionBase currentTags = new TagsCollection();
+            var name = string.Empty;
+            var names = new Dictionary<string, string>();
             for (int idx = 1; idx < vertices.Length - 1; idx++)
             {
                 // get all the data needed to calculate the next route entry.
@@ -499,9 +519,12 @@ namespace OsmSharp.Routing.Routers
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
                 // STEP1: Get the names.
-                var currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
-                var name = _interpreter.EdgeInterpreter.GetName(currentTags);
-                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+                if(!geometryOnly)
+                { // also ge all metadata.
+                    currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
+                    name = _interpreter.EdgeInterpreter.GetName(currentTags);
+                    names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+                }
 
                 // add intermediate entries.
                 if (edge.Coordinates != null)
@@ -541,15 +564,18 @@ namespace OsmSharp.Routing.Routers
                             consideredNeighbours.Add(neighbourKeyCoordinate);
 
                             var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                            var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
 
                             // build the side street info.
                             var sideStreet = new RoutePointEntrySideStreet();
                             sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
                             sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
-                            sideStreet.Tags = tags.ConvertFrom();
-                            sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                            sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                            if (!geometryOnly)
+                            { // get metadata for this section too.
+                                var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
+                                sideStreet.Tags = tags.ConvertFrom();
+                                sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
+                                sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                            }
 
                             sideStreets.Add(sideStreet);
                         }
@@ -578,11 +604,14 @@ namespace OsmSharp.Routing.Routers
             {
                 int last_idx = vertices.Length - 1;
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[last_idx - 1], vertices[last_idx]);
-                TagsCollectionBase tags = _dataGraph.TagsIndex.Get(edge.Tags);
+                if (!geometryOnly)
+                {
+                    currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
 
-                // get names.
-                var name = _interpreter.EdgeInterpreter.GetName(tags);
-                var names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                    // get names.
+                    name = _interpreter.EdgeInterpreter.GetName(currentTags);
+                    names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
+                }
 
                 // add intermediate entries.
                 if (edge.Coordinates != null)
@@ -593,9 +622,9 @@ namespace OsmSharp.Routing.Routers
                         entry.Latitude = edge.Coordinates[idx].Latitude;
                         entry.Longitude = edge.Coordinates[idx].Longitude;
                         entry.Type = RoutePointEntryType.Along;
-                        entry.Tags = tags.ConvertFrom();
+                        entry.Tags = currentTags.ConvertFrom();
                         entry.WayFromName = name;
-                        entry.WayFromNames = names;
+                        entry.WayFromNames = names.ConvertFrom();
 
                         entries.Add(entry);
                     }
@@ -607,9 +636,9 @@ namespace OsmSharp.Routing.Routers
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
-                last.Tags = tags.ConvertFrom();
+                last.Tags = currentTags.ConvertFrom();
                 last.WayFromName = name;
-                last.WayFromNames = names;
+                last.WayFromNames = names.ConvertFrom();
 
                 entries.Add(last);
             }

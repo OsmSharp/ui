@@ -60,7 +60,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                Vehicle.Car);
 
             // create serializer.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();

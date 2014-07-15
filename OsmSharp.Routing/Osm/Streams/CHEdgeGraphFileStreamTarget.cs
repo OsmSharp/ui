@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.Osm.Streams
             TagsCollectionBase metaTags = new TagsCollection();
 
             // create serializer.
-            var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+            var routingSerializer = new CHEdgeDataDataSourceSerializer();
             routingSerializer.Serialize(_graphStream, _graph, metaTags);
             _graphStream.Flush();
         }

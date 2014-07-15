@@ -423,6 +423,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 blockSize = _blocksIndex.LocationIndex[blockIdx] - _blocksIndex.LocationIndex[blockIdx - 1];
             }
 
+            //OsmSharp.Logging.Log.TraceEvent("CHEdgeDataDataSource.DeserializeBlock", Logging.TraceEventType.Information,
+            //    "Deserializing block {0}...", blockId);
             return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, true);
         }
 

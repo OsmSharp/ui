@@ -41,8 +41,9 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <param name="geometryOnly">Returns only the route geometry when true.</param>
         /// <returns></returns>
-        Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max);
+        Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
