@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             // calculate the route.
-            PathSegment<long> route = _router.Calculate(_dataGraph, _interpreter, vehicle,
+            var route = _router.Calculate(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(vehicle, source, false), this.RouteResolvedGraph(vehicle, target, true), max, null);
 
             // convert to an OsmSharpRoute.
@@ -469,10 +469,13 @@ namespace OsmSharp.Routing.Routers
                 route.Entries = entries;
 
                 // calculate metrics.
-                var calculator = new TimeCalculator(_interpreter);
-                Dictionary<string, double> metrics = calculator.Calculate(route);
-                route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
-                route.TotalTime = metrics[TimeCalculator.TIME_KEY];
+                if (!geometryOnly)
+                {
+                    var calculator = new TimeCalculator(_interpreter);
+                    Dictionary<string, double> metrics = calculator.Calculate(route);
+                    route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
+                    route.TotalTime = metrics[TimeCalculator.TIME_KEY];
+                }
             }
 
             return route;
@@ -545,39 +548,42 @@ namespace OsmSharp.Routing.Routers
 
                 // STEP2: Get the side streets
                 var sideStreets = new List<RoutePointEntrySideStreet>();
-                var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent, nodePrevious, nodeNext);
-                var consideredNeighbours = new HashSet<GeoCoordinate>();
-                if (neighbours.Count > 0)
-                { // construct neighbours list.
-                    foreach (var neighbour in neighbours)
-                    {
-                        var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                        if (neighbour.Value.Coordinates != null &&
-                            neighbour.Value.Coordinates.Length > 0)
-                        { // get the first of the coordinates array.
-                            neighbourKeyCoordinate = new GeoCoordinate(
-                                neighbour.Value.Coordinates[0].Latitude,
-                                neighbour.Value.Coordinates[0].Longitude);
-                        }
-                        if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
-                        { // neighbour has not been considered yet.
-                            consideredNeighbours.Add(neighbourKeyCoordinate);
-
-                            var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-
-                            // build the side street info.
-                            var sideStreet = new RoutePointEntrySideStreet();
-                            sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
-                            sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
-                            if (!geometryOnly)
-                            { // get metadata for this section too.
-                                var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
-                                sideStreet.Tags = tags.ConvertFrom();
-                                sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                                sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                if (!geometryOnly)
+                {
+                    var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent, nodePrevious, nodeNext);
+                    var consideredNeighbours = new HashSet<GeoCoordinate>();
+                    if (neighbours.Count > 0)
+                    { // construct neighbours list.
+                        foreach (var neighbour in neighbours)
+                        {
+                            var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                            if (neighbour.Value.Coordinates != null &&
+                                neighbour.Value.Coordinates.Length > 0)
+                            { // get the first of the coordinates array.
+                                neighbourKeyCoordinate = new GeoCoordinate(
+                                    neighbour.Value.Coordinates[0].Latitude,
+                                    neighbour.Value.Coordinates[0].Longitude);
                             }
+                            if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
+                            { // neighbour has not been considered yet.
+                                consideredNeighbours.Add(neighbourKeyCoordinate);
 
-                            sideStreets.Add(sideStreet);
+                                var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+
+                                // build the side street info.
+                                var sideStreet = new RoutePointEntrySideStreet();
+                                sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
+                                sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
+                                if (!geometryOnly)
+                                { // get metadata for this section too.
+                                    var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
+                                    sideStreet.Tags = tags.ConvertFrom();
+                                    sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
+                                    sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                                }
+
+                                sideStreets.Add(sideStreet);
+                            }
                         }
                     }
                 }
