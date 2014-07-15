@@ -21,7 +21,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization.Sorted.v2;
+using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;

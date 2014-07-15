@@ -127,6 +127,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         [ProtoMember(4)]
         public byte Direction { get; set; }
+
+        /// <summary>
+        /// Holds the tags id associated with this arc.
+        /// </summary>
+        [ProtoMember(5)]
+        public uint TagsId { get; set; }
     }
 
     /// <summary>

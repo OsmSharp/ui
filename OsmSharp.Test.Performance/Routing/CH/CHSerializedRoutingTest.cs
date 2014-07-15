@@ -21,7 +21,7 @@ using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.CH.Serialization.Sorted.v2;
+using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;

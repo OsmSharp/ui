@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Ionic.Zlib;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
@@ -25,9 +28,10 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf.Meta;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using OsmSharp.Collections.Tags.Serializer;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Serializer.Index;
+using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -40,17 +44,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the zoom-level of the regions.
         /// </summary>
-        private const int RegionZoom = 15;
+        private int _regionZoom = 15;
 
         /// <summary>
         /// Holds the size of the height-bins to be sorted in.
         /// </summary>
-        private const int HeightBinSize = 3;
+        private int _heightBinSize = 3;
 
         /// <summary>
         /// Holds the maximum number of vertices in a block.
         /// </summary>
-        private const int BlockVertexSize = 100;
+        private int _blockVertexSize = 100;
 
         /// <summary>
         /// Holds the runtime type model.
@@ -76,11 +80,33 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         /// <summary>
+        /// Creates a new v2 serializer.
+        /// </summary>
+        public CHEdgeDataDataSourceSerializer(bool compress,
+            int regionZoom, int heightBinSize, int blockVertexSize)
+        {
+            _regionZoom = regionZoom;
+            _heightBinSize = heightBinSize;
+            _blockVertexSize = blockVertexSize;
+
+            RuntimeTypeModel typeModel = TypeModel.Create();
+            typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.
+            typeModel.Add(typeof(CHBlock), true); // the block definition.
+            typeModel.Add(typeof(CHVertex), true); // a vertex definition.
+            typeModel.Add(typeof(CHArc), true); // an arc definition.
+
+            typeModel.Add(typeof(CHVertexRegionIndex), true); // the index containing all regions.
+            typeModel.Add(typeof(CHVertexRegion), true); // the region definition.
+
+            _runtimeTypeModel = typeModel;
+        }
+
+        /// <summary>
         /// Returns the version string.
         /// </summary>
         public override string VersionString
         {
-            get { return "CHEdgeData.v2"; }
+            get { return "CHEdgeData.v3"; }
         }
 
         /// <summary>
@@ -93,7 +119,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             DynamicGraphRouterDataSource<CHEdgeData> graph)
         {
             // sort the graph.
-            IDynamicGraph<CHEdgeData> sortedGraph = CHEdgeDataDataSourceSerializer.SortGraph(graph);
+            IDynamicGraph<CHEdgeData> sortedGraph = this.SortGraph(graph);
 
             // create the regions.
             SortedDictionary<ulong, List<uint>> regions = new SortedDictionary<ulong, List<uint>>();
@@ -103,7 +129,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 float latitude, longitude;
                 sortedGraph.GetVertex(newVertexId, out latitude, out longitude);
                 Tile tile = Tile.CreateAroundLocation(new GeoCoordinate(
-                    latitude, longitude), RegionZoom);
+                    latitude, longitude), _regionZoom);
                 List<uint> regionVertices;
                 if (!regions.TryGetValue(tile.Id, out regionVertices))
                 {
@@ -114,8 +140,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // serialize the sorted graph.
-            // [START_OF_BLOCKS][[SIZE_OF_REGION_INDEX][REGION_INDEX][REGIONS]][[SIZE_OF_BLOCK_INDEX][BLOCK_INDEX][BLOCKS]]
+            // [START_OF_BLOCKS][START_OF_TAGS][[SIZE_OF_REGION_INDEX][REGION_INDEX][REGIONS]][[SIZE_OF_BLOCK_INDEX][BLOCK_INDEX][BLOCKS]][TAGS]
             // STRART_OF_BLOCKS:        4bytes
+            // START_OF_STAGS:          4bytes
 
             // SIZE_OF_REGION_INDEX:    4bytes
             // REGION_INDEX:            see SIZE_OF_REGION_INDEX
@@ -131,28 +158,25 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             chRegionIndex.RegionIds = new ulong[regions.Count];
             var memoryStream = new MemoryStream();
             int regionIdx = 0;
-            foreach(KeyValuePair<ulong, List<uint>> region in regions)
+            foreach (KeyValuePair<ulong, List<uint>> region in regions)
             {
                 // serialize.
                 CHVertexRegion chRegion = new CHVertexRegion();
                 chRegion.Vertices = region.Value.ToArray();
                 _runtimeTypeModel.Serialize(memoryStream, chRegion);
- 
+
                 // set index.
                 chRegionIndex.LocationIndex[regionIdx] = (int)memoryStream.Position;
                 chRegionIndex.RegionIds[regionIdx] = region.Key;
                 regionIdx++;
             }
-            stream.Seek(8, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
+            stream.Seek(12, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
             _runtimeTypeModel.Serialize(stream, chRegionIndex); // write region index.
-            int sizeRegionIndex = (int)(stream.Position - 8); // now at beginning of [REGIONS]
+            int sizeRegionIndex = (int)(stream.Position - 12); // now at beginning of [REGIONS]
             memoryStream.Seek(0, SeekOrigin.Begin);
             memoryStream.WriteTo(stream); // write regions.
             memoryStream.Dispose();
             int startOfBlocks = (int)stream.Position; // now at beginning of [SIZE_OF_BLOCK_INDEX]
-            stream.Seek(0, SeekOrigin.Begin); // move to beginning
-            stream.Write(BitConverter.GetBytes(startOfBlocks), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
-            stream.Write(BitConverter.GetBytes(sizeRegionIndex), 0, 4); // write size of blocks index.
 
             // serialize the blocks and build their index.
             memoryStream = new MemoryStream();
@@ -163,7 +187,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 uint blockId = vertexId;
                 List<CHArc> blockArcs = new List<CHArc>();
                 List<CHVertex> blockVertices = new List<CHVertex>();
-                while (vertexId < blockId + BlockVertexSize &&
+                while (vertexId < blockId + _blockVertexSize &&
                     vertexId < sortedGraph.VertexCount + 1)
                 { // create this block.
                     CHVertex chVertex = new CHVertex();
@@ -179,6 +203,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         chArc.ShortcutId = sortedArc.Value.ContractedVertexId;
                         chArc.Weight = sortedArc.Value.Weight;
                         chArc.Direction = sortedArc.Value.Direction;
+                        chArc.TagsId = sortedArc.Value.Tags;
                         blockArcs.Add(chArc);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
@@ -191,9 +216,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 CHBlock block = new CHBlock();
                 block.Arcs = blockArcs.ToArray();
                 block.Vertices = blockVertices.ToArray(); // TODO: get rid of the list and create an array to begin with.
-                
+
                 // write blocks.
-                _runtimeTypeModel.Serialize(memoryStream, block);
+                MemoryStream blockStream = new MemoryStream();
+                _runtimeTypeModel.Serialize(blockStream, block);
+                byte[] compressed = GZipStream.CompressBuffer(blockStream.ToArray());
+                blockStream.Dispose();
+
+                memoryStream.Write(compressed, 0, compressed.Length);
                 blockLocations.Add((int)memoryStream.Position);
             }
             CHBlockIndex blockIndex = new CHBlockIndex();
@@ -205,8 +235,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             memoryStream.Seek(0, SeekOrigin.Begin);
             memoryStream.WriteTo(stream); // write blocks.
             memoryStream.Dispose();
+
+            // write tags after blocks.
+            int tagsPosition = (int)stream.Position;
+            TagIndexSerializer.SerializeBlocks(stream, graph.TagsIndex, 1000);
+
             stream.Seek(startOfBlocks, SeekOrigin.Begin); // move to [SIZE_OF_BLOCK_INDEX]
             stream.Write(BitConverter.GetBytes(sizeBlockIndex), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
+
+            // write index.
+            stream.Seek(0, SeekOrigin.Begin); // move to beginning
+            stream.Write(BitConverter.GetBytes(startOfBlocks), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
+            stream.Write(BitConverter.GetBytes(tagsPosition), 0, 4);
+            stream.Write(BitConverter.GetBytes(sizeRegionIndex), 0, 4); // write size of region index.
             stream.Flush();
         }
 
@@ -215,35 +256,29 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="graph"></param>
         /// <returns></returns>
-        public static IDynamicGraph<CHEdgeData> SortGraph(IDynamicGraph<CHEdgeData> graph)
+        public IDynamicGraph<CHEdgeData> SortGraph(IDynamicGraph<CHEdgeData> graph)
         {
             // also add all downward edges.
             graph.AddDownwardEdges();
 
             // sort the topologically ordered vertices into bins representing a certain height range.
             List<uint>[] heightBins = new List<uint>[1000];
-            HashSet<uint> vertices = new HashSet<uint>();
             foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
             { // enumerates all vertixes depth-first.
-                if (!vertices.Contains(vertexDepth.VertexId))
-                {
-                    vertices.Add(vertexDepth.VertexId);
-
-                    int binIdx = (int)(vertexDepth.Depth / HeightBinSize);
-                    if (heightBins.Length < binIdx)
-                    { // resize bin array if needed.
-                        Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
-                    }
-
-                    // add to the current bin.
-                    List<uint> bin = heightBins[binIdx];
-                    if (bin == null)
-                    { // create new bin.
-                        bin = new List<uint>();
-                        heightBins[binIdx] = bin;
-                    }
-                    bin.Add(vertexDepth.VertexId);
+                int binIdx = (int)(vertexDepth.Depth / _heightBinSize);
+                if (heightBins.Length < binIdx)
+                { // resize bin array if needed.
+                    Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
                 }
+
+                // add to the current bin.
+                List<uint> bin = heightBins[binIdx];
+                if (bin == null)
+                { // create new bin.
+                    bin = new List<uint>();
+                    heightBins[binIdx] = bin;
+                }
+                bin.Add(vertexDepth.VertexId);
             }
 
             // temp test.
@@ -274,39 +309,34 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 List<uint> bin = heightBins[idx];
                 if (bin != null)
                 { // translate ids.
-                    // fill current bin ids and add vertices to the new graph.
-                    //foreach (uint binVertexId in bin)
-                    //{
-                    //    float latitude, longitude;
-                    //    graph.GetVertex(binVertexId, out latitude, out longitude);
-                    //    newVertexId = sortedGraph.AddVertex(latitude, longitude);
-
-                    //    currentBinIds.Add(binVertexId, newVertexId); // add to the current bin index.
-                    //}
                     foreach (uint binVertexId in bin)
                     {
                         currentBinIds.TryGetValue(binVertexId, out newVertexId);
 
                         // get the higher arcs and convert their ids.
-                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcsHigher(binVertexId);
+                        //KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcsHigher(binVertexId);
+                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(binVertexId);
                         foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                         {
-                            // get target vertex.
-                            uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
-                            // convert edge.
-                            CHEdgeData newEdge = new CHEdgeData();
-                            newEdge.Direction = arc.Value.Direction;
-                            if (arc.Value.HasContractedVertex)
-                            { // contracted info.
-                                newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Value.ContractedVertexId, currentBinIds, heightBins);
+                            if (arc.Value.IsInformative || arc.Value.ToHigher)
+                            {
+                                // get target vertex.
+                                uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
+                                // convert edge.
+                                CHEdgeData newEdge = new CHEdgeData();
+                                newEdge.Direction = arc.Value.Direction;
+                                if (arc.Value.HasContractedVertex)
+                                { // contracted info.
+                                    newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Value.ContractedVertexId, currentBinIds, heightBins);
+                                }
+                                else
+                                { // no contracted info.
+                                    newEdge.ContractedVertexId = 0;
+                                }
+                                newEdge.Tags = arc.Value.Tags;
+                                newEdge.Weight = arc.Value.Weight;
+                                sortedGraph.AddArc(newVertexId, nextVertexArcId, newEdge, null);
                             }
-                            else
-                            { // no contracted info.
-                                newEdge.ContractedVertexId = 0;
-                            }
-                            newEdge.Tags = arc.Value.Tags;
-                            newEdge.Weight = arc.Value.Weight;
-                            sortedGraph.AddArc(newVertexId, nextVertexArcId, newEdge, null);
                         }
                     }
                 }
@@ -358,10 +388,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
             int startOfBlocks = BitConverter.ToInt32(intBytes, 0);
-
-            // deserialize regions index.
+            stream.Read(intBytes, 0, 4);
+            int startOfTags = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
             int sizeRegionIndex = BitConverter.ToInt32(intBytes, 0);
+
+            // deserialize regions index.
             var chVertexRegionIndex = (CHVertexRegionIndex)_runtimeTypeModel.Deserialize(
                 new CappedStream(stream, stream.Position, sizeRegionIndex), null,
                     typeof(CHVertexRegionIndex));
@@ -374,8 +406,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 new CappedStream(stream, stream.Position, sizeBlockIndex), null,
                     typeof(CHBlockIndex));
 
-            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 8,
-                chVertexRegionIndex, RegionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, BlockVertexSize);
+            // deserialize tags.
+            stream.Seek(startOfTags, SeekOrigin.Begin);
+            ITagsCollectionIndexReadonly tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
+
+            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 12,
+                chVertexRegionIndex, _regionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, (uint)_blockVertexSize,
+                tagsIndex);
         }
 
         /// <summary>
@@ -421,8 +458,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
                 var memoryStream = new MemoryStream(buffer);
                 var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-                return (CHVertexRegion)_runtimeTypeModel.Deserialize(gZipStream
-                                                                             , null,
+                return (CHVertexRegion)_runtimeTypeModel.Deserialize(gZipStream, null,
                                                                              typeof(CHVertexRegion));
             }
             return (CHVertexRegion)_runtimeTypeModel.Deserialize(
