@@ -50,9 +50,14 @@ namespace OsmSharp.UI.Map.Layers
         {
             // build the zoom-level cutoffs.
             List<float> zoomFactors = new List<float>();
+            zoomFactors.Add(18);
+            zoomFactors.Add(17);
             zoomFactors.Add(16);
+            zoomFactors.Add(15);
             zoomFactors.Add(14);
+            zoomFactors.Add(13);
             zoomFactors.Add(12);
+            zoomFactors.Add(11);
             zoomFactors.Add(10);
 
             _dataSource = dataSource;

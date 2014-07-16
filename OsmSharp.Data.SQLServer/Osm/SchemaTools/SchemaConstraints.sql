@@ -6,15 +6,16 @@ UPDATE node_tags SET [key] = LTRIM(RTRIM([key])) WHERE [key] <> LTRIM(RTRIM([key
 
 -- Create indexes
 IF NOT EXISTS (SELECT  1 FROM sysindexes WHERE name = 'IDX_NODE_TILE' AND id = OBJECT_ID('dbo.node'))
-    CREATE INDEX IDX_NODE_TILE ON node(tile  ASC) ;
+    CREATE INDEX IDX_NODE_TILE ON node(tile ASC);
 
 IF NOT EXISTS (SELECT 1 FROM sysindexes WHERE name = 'IDX_WAY_NODES_NODE' AND id = OBJECT_ID('dbo.way_nodes'))
-    CREATE INDEX IDX_WAY_NODES_NODE ON dbo.way_nodes(node_id  ASC) ;
+    CREATE INDEX IDX_WAY_NODES_NODE ON dbo.way_nodes(node_id ASC);
 
---IF NOT EXISTS (SELECT 1 FROM  sysindexes WHERE name = 'IDX_WAY_NODES_WAY_SEQUENCE' AND id = OBJECT_ID('dbo.way_nodes'))
---    CREATE INDEX IDX_WAY_NODES_WAY_SEQUENCE ON dbo.way_nodes(way_id  ASC,sequence_id  ASC) ;
+IF NOT EXISTS (SELECT 1 FROM  sysindexes WHERE name = 'IDX_WAY_NODES_WAY_SEQUENCE' AND id = OBJECT_ID('dbo.way_nodes'))
+    CREATE NONCLUSTERED INDEX IDX_WAY_NODES_WAY_SEQUENCE ON dbo.way_nodes(way_id ASC, sequence_id ASC);
 
-
+IF NOT EXISTS (SELECT 1 FROM  sysindexes WHERE name = 'IDX_RELATION_MEMBERS_SEQUENCE' AND id = OBJECT_ID('dbo.relation_members'))
+    CREATE NONCLUSTERED INDEX IDX_RELATION_MEMBERS_SEQUENCE ON dbo.relation_members(member_id ASC, member_type ASC, sequence_id ASC);
 
 
 -- Remove duplicates
