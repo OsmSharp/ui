@@ -93,9 +93,9 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-            // map.AddLayer(new LayerTile(new NativeImageCache(), @"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+//            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
+//                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
 
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
@@ -104,33 +104,38 @@ namespace OsmSharp.iOS.UI.Sample
 //				"OsmSharp.iOS.UI.Sample.default.map");
 //			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
-			// define dummy from and to points.
+            var primitivesLayer = new LayerPrimitives(map.Projection);
+            primitivesLayer.AddPoint(new GeoCoordinate(51.26371, 4.78601), 10,
+                SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+            map.AddLayer(primitivesLayer);
+
+//			// define dummy from and to points.
 			var from = new GeoCoordinate(51.261203, 4.780760);
 			var to = new GeoCoordinate(51.267797, 4.801362);
-
-			// deserialize the pre-processed graph.
-			var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
-			TagsCollectionBase metaData = null;
-			var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-				"OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing");
-			var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
-
-			// initialize router.
-			_router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
-
-			// resolve points.
-			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
-			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
-
-			// calculate route.
-			Route route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			RouteTracker routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
-			_enumerator = route.GetRouteEnumerable(10).GetEnumerator();
-
-			// add a router layer.
-			_routeLayer = new LayerRoute(map.Projection);
-			_routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
-			map.AddLayer(_routeLayer);
+//
+//			// deserialize the pre-processed graph.
+//			var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
+//			TagsCollectionBase metaData = null;
+//			var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+//				"OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.routing");
+//			var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
+//
+//			// initialize router.
+//			_router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
+//
+//			// resolve points.
+//			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
+//			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
+//
+//			// calculate route.
+//			Route route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+//			RouteTracker routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
+//			_enumerator = route.GetRouteEnumerable(10).GetEnumerator();
+//
+//			// add a router layer.
+//			_routeLayer = new LayerRoute(map.Projection);
+//			_routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
+//			map.AddLayer(_routeLayer);
 
 			// define the mapview.
 			_mapView = new MapView();
@@ -148,7 +153,7 @@ namespace OsmSharp.iOS.UI.Sample
 			_mapView.AddMarker (to);
 
 			// create the route tracker animator.
-			_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
+            // _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
 //			// simulate a number of gps-location update along the calculated route.
 //			Timer timer = new Timer(250);
@@ -156,17 +161,6 @@ namespace OsmSharp.iOS.UI.Sample
 //			timer.Start();
 
 			View = _mapView;
-		}
-
-		/// <summary>
-		/// Views the did appear.
-		/// </summary>
-		/// <param name="animated">If set to <c>true</c> animated.</param>
-		public override void ViewDidAppear (bool animated)
-		{
-			base.ViewDidAppear (animated);
-
-			(_mapView as IMapView).Invalidate ();
 		}
 
 		/// <summary>
