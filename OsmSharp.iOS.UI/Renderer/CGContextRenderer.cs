@@ -87,6 +87,11 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private float _scaleX;
 
+        /// <summary>
+        /// Holds a utility rectangle to be reused.
+        /// </summary>
+        private RectangleF _rectangle = new RectangleF();
+
 		/// <summary>
 		/// Transforms the target using the specified view.
 		/// </summary>
@@ -138,7 +143,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		private double[] Tranform(double x, double y)
+		private double[] Transform(double x, double y)
 		{
 			return _view.ToViewPort(_target.Width * _scaleFactor, _target.Height * _scaleFactor, x, y);
 		}
@@ -194,11 +199,14 @@ namespace OsmSharp.iOS.UI
 		/// <param name="backColor"></param>
 		protected override void DrawBackColor(Target2DWrapper<CGContextWrapper> target, int backColor)
 		{
-			SimpleColor backColorSimple = SimpleColor.FromArgb(backColor);
+            var backColorSimple = SimpleColor.FromArgb(backColor);
 			target.Target.CGContext.SetFillColor(backColorSimple.R / 256.0f, backColorSimple.G / 256.0f, backColorSimple.B / 256.0f,
 				backColorSimple.A / 256.0f);
-			target.Target.CGContext.FillRect(new RectangleF(0, 0, 
-				target.Width * _scaleFactor, target.Height * _scaleFactor));
+            _rectangle.X = 0;
+            _rectangle.Y = 0;
+            _rectangle.Width = target.Width * _scaleFactor;
+            _rectangle.Height = target.Height * _scaleFactor;
+            target.Target.CGContext.FillRect(_rectangle);
 		}
 
 		/// <summary>
@@ -211,11 +219,16 @@ namespace OsmSharp.iOS.UI
 		/// <param name="size">Size.</param>
 		protected override void DrawPoint(Target2DWrapper<CGContextWrapper> target, double x, double y, int color, double size)
 		{
+            var transformed = this.Transform(x, y);
             var colorSimple = SimpleColor.FromArgb(color);
-			var radius = (float)size / 2.0f; //this.ToPixels(size) * _scaleFactor;
-			target.Target.CGContext.SetFillColor(colorSimple.R / 256.0f, colorSimple.G / 256.0f, colorSimple.B / 256.0f,
+            var radius = (float)(this.ToPixels(size) * _scaleFactor) / 2.0f; ;
+            target.Target.CGContext.SetFillColor(colorSimple.R / 256.0f, colorSimple.G / 256.0f, colorSimple.B / 256.0f,
 				colorSimple.A / 256.0f);
-            target.Target.CGContext.FillEllipseInRect(new RectangleF((float)x - radius, (float)y - radius, radius, radius));
+            _rectangle.X = (float)transformed[0] - radius;
+            _rectangle.Y = (float)transformed[1] - radius;
+            _rectangle.Width = radius * 2;
+            _rectangle.Height = radius * 2;
+            target.Target.CGContext.FillEllipseInRect(_rectangle);
 		}
 
 		/// <summary>
@@ -340,9 +353,9 @@ namespace OsmSharp.iOS.UI
             target.Target.CGContext.SetAllowsSubpixelPositioning(true);
             target.Target.CGContext.SetShouldAntialias(true);
 
-            PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
-            PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
-            PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
+            PointF2D bottomLeft = new PointF2D(this.Transform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
+            PointF2D bottomRight = new PointF2D(this.Transform(bounds.BottomRight[0], bounds.BottomRight[1]));
+            PointF2D topLeft = new PointF2D(this.Transform(bounds.TopLeft[0], bounds.TopLeft[1]));
             //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
             RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
@@ -353,8 +366,12 @@ namespace OsmSharp.iOS.UI
             target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
             target.Target.CGContext.ScaleCTM(-1, 1);
 
-            target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
-                (float)transformed.Width, (float)transformed.Height), image);
+            // build rectangle.
+            _rectangle.X = 0;
+            _rectangle.Y = 0;
+            _rectangle.Width = (float)transformed.Width;
+            _rectangle.Height = (float)transformed.Height;
+            target.Target.CGContext.DrawImage(_rectangle, image);
 
             target.Target.CGContext.RestoreState();
         }
@@ -382,9 +399,9 @@ namespace OsmSharp.iOS.UI
             target.Target.CGContext.SetAllowsSubpixelPositioning(true);
             target.Target.CGContext.SetShouldAntialias(true);
 
-            PointF2D bottomLeft = new PointF2D(this.Tranform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
-            PointF2D bottomRight = new PointF2D(this.Tranform(bounds.BottomRight[0], bounds.BottomRight[1]));
-            PointF2D topLeft = new PointF2D(this.Tranform(bounds.TopLeft[0], bounds.TopLeft[1]));
+            PointF2D bottomLeft = new PointF2D(this.Transform(bounds.BottomLeft[0], bounds.BottomLeft[1]));
+            PointF2D bottomRight = new PointF2D(this.Transform(bounds.BottomRight[0], bounds.BottomRight[1]));
+            PointF2D topLeft = new PointF2D(this.Transform(bounds.TopLeft[0], bounds.TopLeft[1]));
             //PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
             RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
@@ -394,8 +411,12 @@ namespace OsmSharp.iOS.UI
             target.Target.CGContext.TranslateCTM((float)transformed.BottomLeft[0], (float)transformed.BottomLeft[1]);
             target.Target.CGContext.RotateCTM(-(float)((Radian)transformed.Angle).Value);
 
-            target.Target.CGContext.DrawImage(new RectangleF(0, 0, 
-                (float)transformed.Width, (float)transformed.Height), image);
+            // build rectangle.
+            _rectangle.X = 0;
+            _rectangle.Y = 0;
+            _rectangle.Width = (float)transformed.Width;
+            _rectangle.Height = (float)transformed.Height;
+            target.Target.CGContext.DrawImage(_rectangle, image);
 
             target.Target.CGContext.RestoreState();
         }
@@ -412,7 +433,7 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawText(Target2DWrapper<CGContextWrapper> target, double x, double y, string text, int color, double size,
 		                                  int? haloColor, int? haloRadius, string fontName)
 		{
-			double[] transformed = this.Tranform(x, y);
+			double[] transformed = this.Transform(x, y);
 			float xPixels = (float)transformed[0];
 			float yPixels = (float)transformed[1];
 			float textSize = this.ToPixels(size) * _scaleFactor;
@@ -491,7 +512,7 @@ namespace OsmSharp.iOS.UI
 			double[] yTransformed = new double[ya.Length];
 			for (int idx = 0; idx < xa.Length; idx++)
 			{
-				double[] transformed = this.Tranform(xa[idx], ya[idx]);
+				double[] transformed = this.Transform(xa[idx], ya[idx]);
 				xTransformed[idx] = transformed[0];
 				yTransformed[idx] = transformed[1];
 			}
