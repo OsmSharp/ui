@@ -430,8 +430,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // interpret the results.
             foreach (var rule in rules)
             {
-                int zIndex;
-                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                float zIndex;
+                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
