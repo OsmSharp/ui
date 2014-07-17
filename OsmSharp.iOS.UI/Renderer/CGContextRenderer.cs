@@ -210,8 +210,12 @@ namespace OsmSharp.iOS.UI
 		/// <param name="color">Color.</param>
 		/// <param name="size">Size.</param>
 		protected override void DrawPoint(Target2DWrapper<CGContextWrapper> target, double x, double y, int color, double size)
-		{			
-
+		{
+            var colorSimple = SimpleColor.FromArgb(color);
+			var radius = (float)size / 2.0f; //this.ToPixels(size) * _scaleFactor;
+			target.Target.CGContext.SetFillColor(colorSimple.R / 256.0f, colorSimple.G / 256.0f, colorSimple.B / 256.0f,
+				colorSimple.A / 256.0f);
+            target.Target.CGContext.FillEllipseInRect(new RectangleF((float)x - radius, (float)y - radius, radius, radius));
 		}
 
 		/// <summary>
