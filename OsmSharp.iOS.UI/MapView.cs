@@ -1207,7 +1207,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="marker"></param>
 		public bool RemoveMarker(MapMarker marker)
 		{
-			if (marker == null)
+            if (marker != null)
 			{
 				marker.DetachFrom(this); // remove the map view.
 				marker.RemoveFromSuperview();
