@@ -132,24 +132,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         if(selector.SelectorRule == null)
                         { // there is no selector rule, not irrelevant tags, no short-list of relevant tags possible.
-                            switch (selector.Type)
-                            {
-                                case SelectorTypeEnum.Node:
-                                    _keysForNodes = null;
-                                    break;
-                                case SelectorTypeEnum.Way:
-                                    _keysForWays = null;
-                                    break;
-                                case SelectorTypeEnum.Relation:
-                                    _keysForRelations = null;
-                                    break;
-                                case SelectorTypeEnum.Line:
-                                    _keysForLines = null;
-                                    break;
-                                case SelectorTypeEnum.Area:
-                                    //_keysForAreas = null;
-                                    break;
-                            }
+                            //switch (selector.Type)
+                            //{
+                            //    case SelectorTypeEnum.Node:
+                            //        _keysForNodes = null;
+                            //        break;
+                            //    case SelectorTypeEnum.Way:
+                            //        _keysForWays = null;
+                            //        break;
+                            //    case SelectorTypeEnum.Relation:
+                            //        _keysForRelations = null;
+                            //        break;
+                            //    case SelectorTypeEnum.Line:
+                            //        _keysForLines = null;
+                            //        break;
+                            //    case SelectorTypeEnum.Area:
+                            //        _keysForAreas = null;
+                            //        break;
+                            //}
                         }
                         else
                         { // there might be relevant tags in this selector rule.
