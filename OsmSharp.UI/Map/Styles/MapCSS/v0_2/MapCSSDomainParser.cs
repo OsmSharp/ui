@@ -319,29 +319,105 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     selector.SelectorRule = selector.SelectorRule & opExistsRule;
                                 }
                             }
-                            else if (attributeSelector.Children[0].Text == "<" ||
-                                attributeSelector.Children[0].Text == ">" ||
-                                attributeSelector.Children[0].Text == "=" ||
-                                attributeSelector.Children[0].Text == "!=")
+                            else if (attributeSelector.Children[0].Text == "OP_NOT_EXIST")
                             {
-                                // the exists selector.
+                                // the not exists selector.
+                                var opNotExistsRule = new SelectorRuleTag();
+                                opNotExistsRule.Invert = true;
+
+                                if (attributeSelector.ChildCount < 2)
+                                {
+                                    // oeps, this is not possible.
+                                    throw new MapCSSDomainParserException(attributeSelector,
+                                                                          "OP_NOT_EXIST without tag value!");
+                                }
+                                opNotExistsRule.Tag = attributeSelector.Children[1].Text;
+
+                                // add the tags.
+                                if (selector.SelectorRule == null)
+                                {
+                                    selector.SelectorRule = opNotExistsRule;
+                                }
+                                else
+                                {
+                                    selector.SelectorRule = selector.SelectorRule & opNotExistsRule;
+                                }
+                            }
+                            else if (attributeSelector.Children[0].Text == "OP_TRUTHY")
+                            {
+                                // the truth value selector.
+                                var opTruthyRuleYesValue = new SelectorRuleTagValueComparison();
+                                var opTruthyRuleTrueValue = new SelectorRuleTagValueComparison();
+                                var opTruthyRuleOneValue = new SelectorRuleTagValueComparison();
+
+                                if (attributeSelector.ChildCount < 2)
+                                {
+                                    // oeps, this is not possible.
+                                    throw new MapCSSDomainParserException(attributeSelector,
+                                                                          "OP_TRUTHY without tag value!");
+                                }
+
+                                opTruthyRuleYesValue.Tag = attributeSelector.Children[1].Text;
+                                opTruthyRuleYesValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
+                                opTruthyRuleYesValue.Value = "yes";
+
+                                opTruthyRuleTrueValue.Tag = attributeSelector.Children[1].Text;
+                                opTruthyRuleTrueValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
+                                opTruthyRuleTrueValue.Value = "true";
+
+                                opTruthyRuleOneValue.Tag = attributeSelector.Children[1].Text;
+                                opTruthyRuleOneValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
+                                opTruthyRuleOneValue.Value = "1";
+
+                                var opTruthyRule = opTruthyRuleYesValue | opTruthyRuleTrueValue | opTruthyRuleOneValue;
+
+                                // add the tags.
+                                if (selector.SelectorRule == null)
+                                {
+                                    selector.SelectorRule = opTruthyRule;
+                                }
+                                else
+                                {
+                                    selector.SelectorRule = selector.SelectorRule & opTruthyRule;
+                                }
+                            }
+                            else if (attributeSelector.Children[0].Text == "<" ||
+                                     attributeSelector.Children[0].Text == ">" ||
+                                     attributeSelector.Children[0].Text == "<=" ||
+                                     attributeSelector.Children[0].Text == ">=" ||
+                                     attributeSelector.Children[0].Text == "=" ||
+                                     attributeSelector.Children[0].Text == "!=")
+                            {
+                                // the comparison selector.
                                 var selectorRuleTagValueComparison = new SelectorRuleTagValueComparison();
 
                                 if (attributeSelector.ChildCount < 3)
                                 {
                                     // oeps, this is not possible.
                                     throw new MapCSSDomainParserException(attributeSelector,
-                                                                          "Tag selector without tag/key value!");
+                                        "Tag selector without tag/key value!");
                                 }
                                 switch (attributeSelector.Children[0].Text)
                                 {
                                     case ">":
-                                        selectorRuleTagValueComparison.Comparator = 
-                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.GreaterThan;
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .GreaterThan;
                                         break;
                                     case "<":
                                         selectorRuleTagValueComparison.Comparator =
-                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.GreaterThan;
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .SmallerThan;
+                                        break;
+                                    case ">=":
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .GreaterThanOrEqual;
+                                        break;
+                                    case "<=":
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .SmallerThanOrEqual;
                                         break;
                                     case "=":
                                         selectorRuleTagValueComparison.Comparator =
@@ -354,8 +430,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     default:
                                         // oeps, this is not possible.
                                         throw new MapCSSDomainParserException(attributeSelector,
-                                                                              string.Format("{0} not found as comparator",
-                                                                                attributeSelector.Children[0].Text));
+                                            string.Format("{0} not found as comparator",
+                                                attributeSelector.Children[0].Text));
                                 }
                                 selectorRuleTagValueComparison.Tag = attributeSelector.Children[1].Text;
                                 selectorRuleTagValueComparison.Value = attributeSelector.Children[2].Text;
@@ -374,7 +450,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             {
                                 // oeps, this is not possible.
                                 throw new MapCSSDomainParserException(attributeSelector,
-                                                                      "Attibute selector not found!");
+                                    "Attibute selector not found!");
                             }
                         }
                     }
@@ -808,6 +884,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(fontSize);
                             break;
                         case "text-offset":
+                        case "text-offset-y":
                             var textOffset = new DeclarationInt();
                             textOffset.Qualifier = DeclarationIntEnum.TextOffset;
                             if (evalCall != null)
@@ -831,6 +908,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(textOffset);
                             break;
                         case "max-width":
+                        case "text-wrap-width":
                             var maxWidth = new DeclarationInt();
                             maxWidth.Qualifier = DeclarationIntEnum.MaxWidth;
                             if (evalCall != null)
@@ -1060,17 +1138,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(image);
                             break;
                         case "z-index":
-                            var zIndex = new DeclarationInt();
-                            zIndex.Qualifier = DeclarationIntEnum.ZIndex;
+                            var zIndex = new DeclarationFloat();
+                            zIndex.Qualifier = DeclarationFloatEnum.ZIndex;
                             if (evalCall != null)
                             {
                                 zIndex.EvalFunction = evalCall;
                             }
                             else
                             {
-                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
                                 {
-                                    zIndex.Value = valueInt;
+                                    zIndex.Value = valueFloat;
                                 }
                                 else
                                 { // value could not be parsed.
@@ -1359,6 +1437,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
 
                             // add declaration.
                             rule.Declarations.Add(text);
+                            break;
+                        case "text-anchor-horizontal":
+                            // TODO: implement
+                            break;
+                        case "text-anchor-vertical":
+                            // TODO: implement
+                            break;
+                        case "text-offset-x":
+                            // TODO: implement
                             break;
                         default:
                             var declarationCustom = new DeclarationCustom();

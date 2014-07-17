@@ -88,6 +88,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Casing width opacity.
         /// </summary>
-        CasingWidth
+        CasingWidth,
+        /// <summary>
+        /// ZIndex 
+        /// </summary>
+        ZIndex
     }
 }

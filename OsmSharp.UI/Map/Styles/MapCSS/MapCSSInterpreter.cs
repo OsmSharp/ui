@@ -147,7 +147,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     _keysForLines = null;
                                     break;
                                 case SelectorTypeEnum.Area:
-                                    _keysForAreas = null;
+                                    //_keysForAreas = null;
                                     break;
                             }
                         }
@@ -570,8 +570,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
-                int zIndex ;
-                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                float zIndex ;
+                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
@@ -812,8 +812,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
-                int zIndex;
-                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                float zIndex;
+                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
@@ -900,9 +900,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 case DeclarationIntEnum.FillColor:
                                     properties.AddProperty("fillColor", declarationInt.Eval(mapCSSObject));
                                     break;
-                                case DeclarationIntEnum.ZIndex:
-                                    properties.AddProperty("zIndex", declarationInt.Eval(mapCSSObject));
-                                    break;
                                 case DeclarationIntEnum.Color:
                                     properties.AddProperty("color", declarationInt.Eval(mapCSSObject));
                                     break;
@@ -980,6 +977,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     break;
                                 case DeclarationFloatEnum.CasingWidth:
                                     properties.AddProperty("casingWidth", declarationFloat.Eval(mapCSSObject));
+                                    break;
+                                case DeclarationFloatEnum.ZIndex:
+                                    properties.AddProperty("zIndex", declarationFloat.Eval(mapCSSObject));
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
