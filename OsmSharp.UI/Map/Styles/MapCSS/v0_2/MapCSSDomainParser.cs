@@ -172,6 +172,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
             // parse the selector(s).
             rule.Selectors = new List<Selector>();
             int simpleSelectorIdx = 0;
+            // TODO: handle layer selector??
             while (ruleTree.Children[simpleSelectorIdx].Text == "SIMPLE_SELECTOR")
             { // see what this SIMPLE_SELECTOR is all about.
                 var simpleSelectorTree = ruleTree.Children[simpleSelectorIdx] as CommonTree;
