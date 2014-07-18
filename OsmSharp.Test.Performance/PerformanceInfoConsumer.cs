@@ -35,12 +35,55 @@ namespace OsmSharp.Test.Performance
         private string _name;
 
         /// <summary>
+        /// Holds the memory usage timer.
+        /// </summary>
+        private System.Threading.Timer _memoryUsageTimer;
+
+        /// <summary>
+        /// Holds the memory usage log.
+        /// </summary>
+        private List<double> _memoryUsageLog = new List<double>();
+
+        /// <summary>
+        /// Holds the time spent on logging memory usage.
+        /// </summary>
+        private long _memoryUsageLoggingDuration = 0;
+
+        /// <summary>
         /// Creates the a new performance info consumer.
         /// </summary>
         /// <param name="name"></param>
         public PerformanceInfoConsumer(string name)
         {
             _name = name;
+        }
+
+        /// <summary>
+        /// Creates the a new performance info consumer.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="memUseLoggingInterval"></param>
+        public PerformanceInfoConsumer(string name, int memUseLoggingInterval)
+        {
+            _name = name;
+            _memoryUsageTimer = new System.Threading.Timer(LogMemoryUsage, null, memUseLoggingInterval, memUseLoggingInterval);
+        }
+
+        /// <summary>
+        /// Called when it's time to log memory usage.
+        /// </summary>
+        /// <param name="state"></param>
+        private void LogMemoryUsage(object state)
+        {
+            long ticksBefore = DateTime.Now.Ticks;
+            lock (_memoryUsageLog)
+            {
+                GC.Collect();
+                Process p = Process.GetCurrentProcess();
+                _memoryUsageLog.Add(System.Math.Round((p.PrivateMemorySize64 - _memory.Value) / 1024.0 / 1024.0, 4));
+
+                _memoryUsageLoggingDuration = _memoryUsageLoggingDuration + (DateTime.Now.Ticks - ticksBefore);
+            }
         }
 
         /// <summary>
@@ -102,18 +145,34 @@ namespace OsmSharp.Test.Performance
         /// </summary>
         public void Stop()
         {
+            _memoryUsageTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            _memoryUsageTimer.Dispose();
             if (_ticks.HasValue)
             {
-                double seconds = new TimeSpan(DateTime.Now.Ticks - _ticks.Value).TotalMilliseconds / 1000.0;
+                lock (_memoryUsageLog)
+                {
+                    var seconds = new TimeSpan(DateTime.Now.Ticks - _ticks.Value - _memoryUsageLoggingDuration).TotalMilliseconds / 1000.0;
 
-                GC.Collect();
-                Process p = Process.GetCurrentProcess();
-                double memoryDiff = System.Math.Round((p.PrivateMemorySize64 - _memory.Value) / 1024.0 / 1024.0, 4);
+                    GC.Collect();
+                    var p = Process.GetCurrentProcess();
+                    var memoryDiff = System.Math.Round((p.PrivateMemorySize64 - _memory.Value) / 1024.0 / 1024.0, 4);
 
-                OsmSharp.Logging.Log.TraceEvent("PF:" + _name, OsmSharp.Logging.TraceEventType.Information,
-                    string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff.",
-                        new DateTime(_ticks.Value).ToShortTimeString(),
-                        seconds, memoryDiff));
+                    if (_memoryUsageLog.Count > 0)
+                    { // there was memory usage logging.
+                        double max = _memoryUsageLog.Max();
+                        OsmSharp.Logging.Log.TraceEvent("PF:" + _name, OsmSharp.Logging.TraceEventType.Information,
+                            string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff with {3}MB max used.",
+                                new DateTime(_ticks.Value).ToShortTimeString(),
+                                seconds, memoryDiff, max));
+                    }
+                    else
+                    { // no memory usage logged.
+                        OsmSharp.Logging.Log.TraceEvent("PF:" + _name, OsmSharp.Logging.TraceEventType.Information,
+                            string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff.",
+                                new DateTime(_ticks.Value).ToShortTimeString(),
+                                seconds, memoryDiff));
+                    }
+                }
             }
         }
     }

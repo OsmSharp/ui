@@ -83,7 +83,7 @@ namespace OsmSharp.Osm.PBF
             }
 
             // start processing.
-            PrimitiveBlock block = this.MoveNext();
+            var block = this.MoveNext();
             while (block != null)
             {
                 // report the next block to the consumer.
@@ -95,11 +95,27 @@ namespace OsmSharp.Osm.PBF
         }
 
         /// <summary>
+        /// Holds a block object that can be reused.
+        /// </summary>
+        private PrimitiveBlock _block = new PrimitiveBlock();
+
+        /// <summary>
         /// Moves to the next primitive block, returns null at the end.
         /// </summary>
         /// <returns></returns>
         public PrimitiveBlock MoveNext()
         {
+            // make sure previous block data is removed.
+            if (_block.primitivegroup != null)
+            {
+                _block.primitivegroup.Clear();
+            }
+            if (_block.stringtable != null)
+            {
+                _block.stringtable.s.Clear();
+            }
+
+            // read next block.
             PrimitiveBlock block = null;
             int length;
             bool not_found_but = true;
@@ -157,8 +173,7 @@ namespace OsmSharp.Osm.PBF
 
                         if (header.type == "OSMData")
                         {
-                            block = _runtimeTypeModel.Deserialize(sourceStream, null, _primitiveBlockType) as PrimitiveBlock;
-                            // block = Serializer.Deserialize<PrimitiveBlock>(sourceStream);
+                            block = _runtimeTypeModel.Deserialize(sourceStream, _block, _primitiveBlockType) as PrimitiveBlock;
                         }
                     }
                 }
