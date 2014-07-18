@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the index of vertices per bounding box.
         /// </summary>
-        private readonly ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
+        private ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
 
         /// <summary>
         /// Holds the tags index.
@@ -53,7 +53,6 @@ namespace OsmSharp.Routing.Graph
         /// Holds the supported vehicle profiles.
         /// </summary>
         private readonly HashSet<Vehicle> _supportedVehicles;
-
         /// <summary>
         /// Creates a new osm memory router data source.
         /// </summary>
@@ -63,7 +62,22 @@ namespace OsmSharp.Routing.Graph
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
             _graph = new MemoryDynamicGraph<TEdgeData>();
-            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
+            _vertexIndex = null; // do not create an index initially.
+            _tagsIndex = tagsIndex;
+
+            _supportedVehicles = new HashSet<Vehicle>();
+        }
+
+        /// <summary>
+        /// Creates a new osm memory router data source.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        public DynamicGraphRouterDataSource(ITagsCollectionIndexReadonly tagsIndex, int initSize)
+        {
+            if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
+
+            _graph = new MemoryDynamicGraph<TEdgeData>(initSize);
+            _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
             _supportedVehicles = new HashSet<Vehicle>();
@@ -81,7 +95,7 @@ namespace OsmSharp.Routing.Graph
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
             _graph = graph;
-            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
+            _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
             _supportedVehicles = new HashSet<Vehicle>();
@@ -124,6 +138,32 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Deactivates the vertex index.
+        /// </summary>
+        public void DropVertexIndex()
+        {
+            _vertexIndex = null;
+        }
+
+        /// <summary>
+        /// Rebuilds the vertex index.
+        /// </summary>
+        public void RebuildVertexIndex()
+        {
+            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
+            for (uint vertex = 0; vertex <= _graph.VertexCount; vertex++)
+            {
+                float latitude, longitude;
+                if (_graph.GetVertex(vertex, out latitude, out longitude))
+                {
+                    _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
+                        vertex);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Returns all arcs inside the given bounding box.
         /// </summary>
         /// <param name="box"></param>
@@ -131,16 +171,21 @@ namespace OsmSharp.Routing.Graph
         public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(
             GeoCoordinateBox box)
         {
+            if (_vertexIndex == null) {
+                // rebuild on-the-fly.
+                this.RebuildVertexIndex();
+            }
+
             // get all the vertices in the given box.
-            IEnumerable<uint> vertices = _vertexIndex.GetInside(
+            var vertices = _vertexIndex.GetInside(
                 box);
 
             // loop over all vertices and get the arcs.
             var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
             foreach (uint vertex in vertices)
             {
-                KeyValuePair<uint, TEdgeData>[] localArcs = this.GetArcs(vertex);
-                foreach (KeyValuePair<uint, TEdgeData> localArc in localArcs)
+                var localArcs = this.GetArcs(vertex);
+                foreach (var localArc in localArcs)
                 {
                     arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
                         vertex, localArc));
@@ -192,8 +237,11 @@ namespace OsmSharp.Routing.Graph
         public uint AddVertex(float latitude, float longitude, byte neighboursEstimate)
         {
             uint vertex = _graph.AddVertex(latitude, longitude, neighboursEstimate);
-            _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                vertex);
+            if (_vertexIndex != null)
+            {
+                _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
+                    vertex);
+            }
             return vertex;
         }
 
@@ -206,8 +254,11 @@ namespace OsmSharp.Routing.Graph
         public uint AddVertex(float latitude, float longitude)
         {
             uint vertex = _graph.AddVertex(latitude, longitude);
-            _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                vertex);
+            if (_vertexIndex != null)
+            {
+                _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
+                    vertex);
+            }
             return vertex;
         }
 
@@ -268,18 +319,21 @@ namespace OsmSharp.Routing.Graph
         /// Trims this graph.
         /// </summary>
         /// <param name="max"></param>
-        public void Trim(uint max)
+        public void Trim(uint vertices)
         {
-            _graph.Trim(max);
+            _graph.Trim(vertices);
 
             // rebuild index.
-            float latitude, longitude;
-            _vertexIndex.Clear();
-            for (uint idx = 0; idx < max; idx++)
+            if (_vertexIndex != null)
             {
-                if (_graph.GetVertex(idx, out latitude, out longitude))
+                float latitude, longitude;
+                _vertexIndex.Clear();
+                for (uint idx = 0; idx < vertices; idx++)
                 {
-                    _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
+                    if (_graph.GetVertex(idx, out latitude, out longitude))
+                    {
+                        _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
+                    }
                 }
             }
         }

@@ -22,6 +22,10 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Osm.Streams.Filters;
 using System;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -35,7 +39,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "england-latest.osm.pbf");
+            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "belgium-latest.osm.pbf");
         }
 
         /// <summary>
@@ -54,14 +58,20 @@ namespace OsmSharp.Test.Performance.Routing
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
-            var router = Router.CreateLiveFrom(progress, new OsmRoutingInterpreter());
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
+            targetData.RegisterSource(progress);
+            targetData.Pull();
 
             stream.Dispose();
 
             performanceInfo.Stop();
             // make sure the router is still here after GC to note the memory difference.
-            OsmSharp.Logging.Log.TraceEvent("LivePreProcessor", Logging.TraceEventType.Information, router.ToString());
-            router = null;
+            OsmSharp.Logging.Log.TraceEvent("LivePreProcessor", Logging.TraceEventType.Information, memoryData.ToString());
+            memoryData = null;
 
             GC.Collect();
         }

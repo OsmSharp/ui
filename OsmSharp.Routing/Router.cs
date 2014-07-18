@@ -67,9 +67,11 @@ namespace OsmSharp.Routing
 
             // read from the OSM-stream.
             var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            memoryData.DropVertexIndex();
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
+            memoryData.RebuildVertexIndex();
 
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
