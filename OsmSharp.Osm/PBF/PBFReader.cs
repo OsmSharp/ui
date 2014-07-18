@@ -20,6 +20,7 @@ using System;
 using System.IO;
 using Ionic.Zlib;
 using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.Osm.PBF
 {
@@ -34,12 +35,31 @@ namespace OsmSharp.Osm.PBF
         private readonly Stream _stream;
 
         /// <summary>
+        /// Holds the runtime type model.
+        /// </summary>
+        private readonly RuntimeTypeModel _runtimeTypeModel;
+
+        /// <summary>
+        /// Holds the types of the objects to be deserialized.
+        /// </summary>
+        private readonly Type _blockHeaderType = typeof(BlockHeader);
+        private readonly Type _blobType = typeof(Blob);
+        private readonly Type _primitiveBlockType = typeof(PrimitiveBlock);
+        private readonly Type _headerBlockType = typeof(HeaderBlock);
+
+        /// <summary>
         /// Creates a new PBF reader.
         /// </summary>
         /// <param name="stream"></param>
         public PBFReader(Stream stream)
         {
             _stream = stream;
+
+            _runtimeTypeModel = RuntimeTypeModel.Create();
+            _runtimeTypeModel.Add(_blockHeaderType, true);
+            _runtimeTypeModel.Add(_blobType, true);
+            _runtimeTypeModel.Add(_primitiveBlockType, true);
+            _runtimeTypeModel.Add(_headerBlockType, true);
         }
 
         /// <summary>
@@ -103,38 +123,42 @@ namespace OsmSharp.Osm.PBF
                     // limiting myself to v1 features
                     using (var tmp = new LimitedStream(_stream, length))
                     {
-                        header = Serializer.Deserialize<BlockHeader>(tmp);
+                        header = _runtimeTypeModel.Deserialize(tmp, null, _blockHeaderType) as BlockHeader;
+                        // header = Serializer.Deserialize<BlockHeader>(tmp);
                     }
                     Blob blob;
                     using (var tmp = new LimitedStream(_stream, header.datasize))
                     {
-                        blob = Serializer.Deserialize<Blob>(tmp);
+                        blob = _runtimeTypeModel.Deserialize(tmp, null, _blobType) as Blob;
+                        // blob = Serializer.Deserialize<Blob>(tmp);
                     }
 
                     // construct the source stream, compressed or not.
-                    Stream source_stream = null;
+                    Stream sourceStream = null;
                     if (blob.zlib_data == null)
                     { // use a regular uncompressed stream.
-                        source_stream = new MemoryStream(blob.raw);
+                        sourceStream = new MemoryStream(blob.raw);
                     }
                     else
                     { // construct a compressed stream.
                         var ms = new MemoryStream(blob.zlib_data);
-                        source_stream = new ZLibStreamWrapper(ms);
+                        sourceStream = new ZLibStreamWrapper(ms);
                     }
 
                     // use the stream to read the block.
-                    using (source_stream)
+                    using (sourceStream)
                     {
                         if (header.type == "OSMHeader")
                         {
-                            Serializer.Deserialize<HeaderBlock>(source_stream);
+                            _runtimeTypeModel.Deserialize(sourceStream, null, _headerBlockType);
+                            // Serializer.Deserialize<HeaderBlock>(source_stream);
                             not_found_but = true;
                         }
 
                         if (header.type == "OSMData")
                         {
-                            block = Serializer.Deserialize<PrimitiveBlock>(source_stream);
+                            block = _runtimeTypeModel.Deserialize(sourceStream, null, _primitiveBlockType) as PrimitiveBlock;
+                            // block = Serializer.Deserialize<PrimitiveBlock>(sourceStream);
                         }
                     }
                 }
