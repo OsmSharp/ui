@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.SqlServer.Types;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
@@ -144,6 +145,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
             _nodeTable.Columns.Add(new DataColumn("version", typeof(int)));
             _nodeTable.Columns.Add(new DataColumn("usr", typeof(string)));
             _nodeTable.Columns.Add(new DataColumn("usr_id", typeof(int)));
+            _nodeTable.Columns.Add(new DataColumn("location", typeof(SqlGeography)));
 
             // create node_tags bulk objects.
             _nodeTagsTable = new DataTable();
@@ -270,6 +272,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
             nodeRow["tile"] = Tile.CreateAroundLocation(node.Latitude.Value, node.Longitude.Value, TileDefaultsForRouting.Zoom).Id;
             nodeRow["usr"] = node.UserName == null ? DBNull.Value : (object)node.UserName.Truncate(SQLServerSchemaConstants.RelationUsr);
             nodeRow["usr_id"] = node.UserId.ConvertToDBValue();
+            nodeRow["location"] = node.ConvertToDBGeography();
             _nodeTable.Rows.Add(nodeRow);
 
             // tags.

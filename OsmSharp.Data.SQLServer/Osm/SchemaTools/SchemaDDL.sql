@@ -76,7 +76,8 @@ if object_id('dbo.node', 'U') is null
     tile          bigint   null,
     [version]     integer  null,
     usr           varchar(100) null,
-    usr_id        integer  null
+    usr_id        integer  null,
+	location	  geography not null
   ); 
 
 
@@ -99,7 +100,8 @@ if object_id('dbo.way', 'U') is null
     visible       bit      null,
     [version]     integer  null,
     usr           varchar(100) null,
-    usr_id        integer  null
+    usr_id        integer  null,
+	line		  geography null
   ); 
 
 
@@ -130,7 +132,8 @@ if object_id('dbo.relation', 'U') is null
     visible       bit      null,
     [version]     integer  null,
     usr           varchar(100) null,
-    usr_id        integer  null
+    usr_id        integer  null,
+	shape		  geography null
   ); 
 
 

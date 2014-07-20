@@ -28,8 +28,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum LineCapEnum
     {
-        None,
         Round,
-        Square
+        Square,
+        None
     }
 }

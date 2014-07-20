@@ -18,6 +18,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Microsoft.SqlServer.Types;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Xml.v0_6;
 
 namespace OsmSharp.Data.SQLServer
 {
@@ -42,6 +45,11 @@ namespace OsmSharp.Data.SQLServer
             {
                 return DBNull.Value;
             }
+        }
+
+        public static SqlGeography ConvertToDBGeography(this Node node)
+        {
+            return SqlGeography.Point(node.Latitude.Value, node.Longitude.Value, 4326);
         }
     }
 }

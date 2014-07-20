@@ -638,6 +638,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             { 
                                 casingLineJoin = LineJoin.Miter;
                             }
+                            if (rule.TryGetProperty("casingLineCap", out casingLineCap))
+                            {
+                                
+                            }
                             if (!rule.TryGetProperty("casingLineCap", out casingLineCap))
                             {
                                 casingLineCap = LineCap.Round;
@@ -702,6 +706,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                         scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
                                             minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
                                         success = true;
+                                    }
+                                    else
+                                    {
+                                        
                                     }
                                 }
                             }

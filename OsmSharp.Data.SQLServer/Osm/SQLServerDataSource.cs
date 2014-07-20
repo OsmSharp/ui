@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
+using Microsoft.SqlServer.Types;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.SQLServer.Osm.SchemaTools;
 using OsmSharp.Math.Geo;
