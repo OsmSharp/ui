@@ -69,7 +69,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            while (this.DoMoveNext())
+            while (this.DoMoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
                 if (this.Current().Type == OsmGeoType.Node &&
                     !ignoreNodes)
@@ -94,9 +94,9 @@ namespace OsmSharp.Osm.Streams.Filters
         /// Moves to the next object.
         /// </summary>
         /// <returns></returns>
-        private bool DoMoveNext()
+        private bool DoMoveNext(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            if (this.Source.MoveNext())
+            if (this.Source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
                 _current = this.Source.Current();
 

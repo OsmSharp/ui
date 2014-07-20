@@ -67,12 +67,12 @@ namespace OsmSharp.Test.Performance.Routing
         public static void TestSerializedRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
+            var router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
+                new OsmRoutingInterpreter());
+
             var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
             performanceInfo.Start();
             performanceInfo.Report("Routing {0} routes...", testCount);
-
-            var router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
-                new OsmRoutingInterpreter());
 
             int successCount = 0;
             int totalCount = testCount;

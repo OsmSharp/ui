@@ -269,6 +269,29 @@ namespace OsmSharp.iOS.UI
 			_backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
 		}
 
+        /// <summary>
+        /// Gets or sets the frame.
+        /// </summary>
+        /// <value>The frame.</value>
+        public override RectangleF Frame
+        {
+            get
+            {
+                return base.Frame;
+            }
+            set
+            {
+                base.Frame = value;
+
+                if (_rect.Width == 0 && value.Width != 0)
+                { // trigger the initial rendering when the frame has a size for the first time.
+                    _rect = value;
+                    (this as IMapView).Invalidate();
+                }
+            }
+        }
+
+
 		/// <summary>
 		/// Gestures the recognizer should begin.
 		/// </summary>
@@ -1184,7 +1207,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="marker"></param>
 		public bool RemoveMarker(MapMarker marker)
 		{
-			if (marker == null)
+            if (marker != null)
 			{
 				marker.DetachFrom(this); // remove the map view.
 				marker.RemoveFromSuperview();

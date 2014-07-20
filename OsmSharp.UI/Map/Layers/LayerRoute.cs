@@ -106,6 +106,8 @@ namespace OsmSharp.UI.Map.Layers
                         color.Value, (float)width, Renderer.Primitives.LineJoin.Round, Renderer.Primitives.LineCap.Round, null);
                 }
             }
+
+            this.RaiseLayerChanged();
         }
 
         #endregion

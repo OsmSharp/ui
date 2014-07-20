@@ -59,11 +59,11 @@ namespace OsmSharp.Test.Performance
             //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
             // test the routing preprocessor.
-            //Routing.LivePreProcessorTest.Test();
+            Routing.LivePreProcessorTest.Test();
             //Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();
             //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
-            //Routing.CH.CHSerializedRoutingTest.Test();
+            Routing.CH.CHSerializedRoutingTest.Test();
 
             //// test serializer/deseriazation routing performance.
             //Stream serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Performance
 
 
             // tests the mapcss interpretation.
-            Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+            //Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
             //// test some rendering implementations.
             //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(serializedScene,
             //    (width, height) =>

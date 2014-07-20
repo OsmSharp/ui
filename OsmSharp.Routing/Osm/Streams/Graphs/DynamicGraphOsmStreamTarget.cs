@@ -560,7 +560,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public override bool OnBeforePull()
         {
             // do the pull.
-            this.DoPull();
+            this.DoPull(true, false, false);
 
             // reset the source.
             this.Source.Reset();
@@ -579,7 +579,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             base.OnAfterPull();
 
             // execute pre-processor.
-            IPreProcessor preProcessor = this.GetPreprocessor();
+            var preProcessor = this.GetPreprocessor();
             if(preProcessor != null)
             { // there is a pre-processor, trigger execution.
                 preProcessor.Start();

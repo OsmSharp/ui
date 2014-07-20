@@ -128,7 +128,18 @@ namespace OsmSharp.Osm.Streams
         /// </summary>
         protected void DoPull()
         {
-            while (_source.MoveNext())
+            this.DoPull(false, false, false);
+        }
+
+        /// <summary>
+        /// Does the pull operation until source is exhausted.
+        /// </summary>
+        /// <param name="ignoreNodes">Makes the source skip all nodes.</param>
+        /// <param name="ignoreWays">Makes the source skip all ways.</param>
+        /// <param name="ignoreRelations">Makes the source skip all relations.</param>
+        protected void DoPull(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
+        {
+            while (_source.MoveNext(ignoreNodes, ignoreWays, ignoreRelations))
             {
                 object sourceObject = _source.Current();
                 if (sourceObject is Node)

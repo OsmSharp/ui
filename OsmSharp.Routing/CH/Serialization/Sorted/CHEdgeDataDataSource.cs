@@ -19,12 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OsmSharp.Collections.Cache;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Cache;
 using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsCollectionIndex _tagsIndex;
+        private ITagsCollectionIndexReadonly _tagsIndex;
 
         /// <summary>
         /// Holds the stream.
@@ -59,7 +59,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer, IEnumerable<string> vehicles,
             int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
-            int startOfBlocks, CHBlockIndex blockIndex, uint blockSize)
+            int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
+            ITagsCollectionIndexReadonly tagsIndex)
         {
             _stream = stream;
             _serializer = serializer;
@@ -68,9 +69,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             this.InitializeRegions(startOfRegions, regionIndex, zoom);
             this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
 
-            _blocks = new LRUCache<uint, CHBlock>(10);
-            _regions = new LRUCache<ulong, CHVertexRegion>(10);
-            _tagsIndex = new TagsTableCollectionIndex();
+            _blocks = new LRUCache<uint, CHBlock>(1000);
+            _regions = new LRUCache<ulong, CHVertexRegion>(1000);
+            _tagsIndex = tagsIndex;
         }
 
         /// <summary>
@@ -228,7 +229,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             for (int idx = 0; idx < regionIndex.LocationIndex.Length; idx++)
             {
                 StreamPart streamPart = new StreamPart();
-                if(idx == 0)
+                if (idx == 0)
                 { // start is at startOfRegions.
                     streamPart.Offset = startOfRegions;
                     streamPart.Length = regionIndex.LocationIndex[0];
@@ -279,7 +280,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         private CHVertexRegion DeserializeRegion(ulong id)
         {
             StreamPart part;
-            if(_regionStreamParts.TryGetValue(id, out part))
+            if (_regionStreamParts.TryGetValue(id, out part))
             {
                 return _serializer.DeserializeRegion(_stream, part.Offset, part.Length, false);
             }
@@ -334,7 +335,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
             CHBlock block;
-            if(!_blocks.TryGet(blockId, out block))
+            if (!_blocks.TryGet(blockId, out block))
             { // damn block not cached!
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
@@ -346,7 +347,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 _blocks.Add(blockId, block);
             }
             uint blockIdx = vertexId - blockId;
-            if(block.Vertices != null &&
+            if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
                 latitude = block.Vertices[blockIdx].Latitude;
@@ -391,6 +392,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     edgeData.Direction = chArc.Direction;
                     edgeData.ContractedVertexId = chArc.ShortcutId;
                     edgeData.Weight = chArc.Weight;
+                    edgeData.Tags = chArc.TagsId;
                     arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
                         chArc.TargetId, edgeData);
                 }
@@ -421,10 +423,21 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 blockSize = _blocksIndex.LocationIndex[blockIdx] - _blocksIndex.LocationIndex[blockIdx - 1];
             }
 
-            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, false);
+            //OsmSharp.Logging.Log.TraceEvent("CHEdgeDataDataSource.DeserializeBlock", Logging.TraceEventType.Information,
+            //    "Deserializing block {0}...", blockId);
+            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, true);
         }
 
         #endregion
+
+        /// <summary>
+        /// Initialize the tags index.
+        /// </summary>
+        /// <param name="startOfTags"></param>
+        private void InitializeTagsIndex(int startOfTags)
+        {
+
+        }
 
 
         public void AddRestriction(uint[] route)
