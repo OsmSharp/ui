@@ -707,10 +707,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                             minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
                                         success = true;
                                     }
-                                    else
-                                    {
-                                        
-                                    }
                                 }
                             }
                         }
