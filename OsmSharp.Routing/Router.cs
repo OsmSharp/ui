@@ -185,10 +185,11 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <param name="geometryOnly">Returns the geometry only when true.</param>
         /// <returns></returns>
-        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
+        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false)
         {
-            return _router.Calculate(vehicle, source, target, max);
+            return _router.Calculate(vehicle, source, target, max, geometryOnly);
         }
 
         /// <summary>

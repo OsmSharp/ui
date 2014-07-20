@@ -21,7 +21,7 @@ using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.CH.Serialization.Sorted.v2;
+using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
@@ -43,10 +43,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
-                "kempen-big.osm.pbf.routing", box, 1000);
+                "kempen-big.osm.pbf.routing", box, 100);
 
             // test instructions.
-            CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
+            //CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Report("Routing {0} routes...", testCount);
 
             TagsCollectionBase metaData = null;
-            var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+            var routingSerializer = new CHEdgeDataDataSourceSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
                 stream, out metaData, true);
 
@@ -120,7 +120,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
                 if (fromPoint != null && toPoint != null)
                 {
-                    Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
+                    Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint, float.MaxValue, true);
                     if (route != null)
                     {
                         successCount++;
@@ -165,7 +165,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Report("Routing & generating instructions...");
 
             TagsCollectionBase metaData = null;
-            var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+            var routingSerializer = new CHEdgeDataDataSourceSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
                 stream, out metaData, true);
 
