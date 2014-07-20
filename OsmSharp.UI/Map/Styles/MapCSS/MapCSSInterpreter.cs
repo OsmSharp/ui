@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
@@ -26,6 +27,7 @@ using OsmSharp.Math.Algorithms;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Interpreter;
+using OsmSharp.Routing;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
@@ -499,11 +501,39 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
 						fontFamily = "Arial"; // just some default font.
 					}
+                    int maxWidth;
+                    if (!rule.TryGetProperty("maxWidth", out maxWidth))
+                    {
+                        maxWidth = 50;
+                    }
 
                     // a text is to be drawn.
                     string value;
                     if (node.Tags.TryGetValue(text, out value))
                     {
+                        if (value.Length > maxWidth)
+                        {
+                            var valueBuilder = new StringBuilder();
+                            var splitValue = value.Split(' ');
+                            valueBuilder.Append(splitValue[0]);
+                            for (int i = 1; i < splitValue.Length; i++)
+                            {
+                                var part = splitValue[i];
+
+                                if (valueBuilder.Length + part.Length > maxWidth)
+                                {
+                                    valueBuilder.AppendLine();
+                                }
+                                else
+                                {
+                                    valueBuilder.Append(" ");
+                                }
+
+                                valueBuilder.Append(part);
+                            }
+                            value = valueBuilder.ToString();
+                        }
+
                         if (!pointId.HasValue)
                         {
                             pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
