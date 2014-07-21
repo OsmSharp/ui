@@ -321,8 +321,8 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public enum LineCap
     {
+        None,
         Round,
-        Square,
-        None
+        Square
     }
 }
