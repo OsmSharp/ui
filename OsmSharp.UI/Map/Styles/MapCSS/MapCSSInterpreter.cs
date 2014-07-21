@@ -27,7 +27,6 @@ using OsmSharp.Math.Algorithms;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Interpreter;
-using OsmSharp.Routing;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
