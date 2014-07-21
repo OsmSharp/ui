@@ -28,9 +28,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum LineJoinEnum
     {
+        None,
         Round,
         Miter,
-        Bevel,
-        None
+        Bevel
     }
 }

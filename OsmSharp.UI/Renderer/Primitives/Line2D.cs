@@ -310,10 +310,10 @@ namespace OsmSharp.UI.Renderer.Primitives
     /// </summary>
     public enum LineJoin
     {
+        None,
         Round,
         Miter,
-        Bevel,
-        None
+        Bevel
     }
 
     /// <summary>
