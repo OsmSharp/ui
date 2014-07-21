@@ -500,6 +500,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
 						fontFamily = "Arial"; // just some default font.
 					}
+                    FontStyle fontStyle;
+                    if (!rule.TryGetProperty("fontStyle", out fontStyle))
+                    {
+                        fontStyle = FontStyle.Normal;
+                    }
+                    FontWeight fontWeight;
+                    if (!rule.TryGetProperty("fontWeight", out fontWeight))
+                    {
+                        fontWeight = FontWeight.Normal;
+                    }
                     int maxWidth;
                     if (!rule.TryGetProperty("maxWidth", out maxWidth))
                     {
@@ -539,7 +549,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                            projection.LatitudeToY(node.Coordinate.Latitude));
                         }
                         scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
-						              haloColorNullable, haloRadiusNullable, fontFamily);
+						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight);
                     }
                 }
             }
@@ -725,11 +735,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     {
                                         fontFamily = "Arial"; // just some default font.
                                     }
+                                    FontStyle fontStyle;
+                                    if (!rule.TryGetProperty("fontStyle", out fontStyle))
+                                    {
+                                        fontStyle = FontStyle.Normal;
+                                    }
+                                    FontWeight fontWeight;
+                                    if (!rule.TryGetProperty("fontWeight", out fontWeight))
+                                    {
+                                        fontWeight = FontWeight.Normal;
+                                    }
+
                                     string name;
                                     if (way.Tags.TryGetValue(nameTag, out name))
                                     {
                                         scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, fontStyle, fontWeight, haloColorNullable, haloRadiusNullable);
                                         success = true;
                                     }
                                 }
@@ -1097,6 +1118,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             var declarationDashes = (declaration as DeclarationDashes);
                             properties.AddProperty("dashes", declarationDashes.Eval(
+                                mapCSSObject));
+                        }
+                        else if (declaration is DeclarationFontWeight)
+                        {
+                            var declarationFontWeight = (declaration as DeclarationFontWeight);
+                            properties.AddProperty("fontWeight", declarationFontWeight.Eval(
+                                mapCSSObject));
+                        } 
+                        else if (declaration is DeclarationFontStyle)
+                        {
+                            var declarationFontStyle = (declaration as DeclarationFontStyle);
+                            properties.AddProperty("fontStyle", declarationFontStyle.Eval(
                                 mapCSSObject));
                         }
                     }

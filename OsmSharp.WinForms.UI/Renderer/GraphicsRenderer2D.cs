@@ -51,6 +51,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             target.Target = Graphics.FromImage(bitmap);
             target.Target.CompositingMode = CompositingMode.SourceOver;
             target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
+            target.Target.TextRenderingHint = target.BackTarget.TextRenderingHint;
             target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
             target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
 
@@ -363,8 +364,10 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="fontName"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
-            int? haloColor, int? haloRadius, string fontName)
+            int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, FontWeight fontWeight)
         {
             float sizeInPixels = this.ToPixels(size);
             Color textColor = Color.FromArgb(color); 
@@ -372,7 +375,15 @@ namespace OsmSharp.WinForms.UI.Renderer
             float transformedX = (float)transformed[0];
             float transformedY = (float)transformed[1];
 
-            using (var font = new Font(FontFamily.GenericSansSerif, sizeInPixels))
+            var targetFontStyle = System.Drawing.FontStyle.Regular;
+
+            if (fontStyle == OsmSharp.UI.Renderer.Primitives.FontStyle.Italic)
+                targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Italic;
+
+            if (fontWeight == FontWeight.Bold)
+                targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Bold;
+
+            using (var font = new Font(fontName, sizeInPixels, targetFontStyle))
             {
                 using (var brush = new SolidBrush(textColor))
                 {
@@ -415,15 +426,26 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="fontName"></param>
-        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
-            double size, int? haloColor, int? haloRadius, string fontName)
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
+        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color,
+            double size, int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, 
+            FontWeight fontWeight)
         {
             if (x.Length > 1)
             {
                 float sizeInPixels = this.ToPixels(size);
                 Color textColor = Color.FromArgb(color);
 
-                using (var font = new Font(FontFamily.GenericSansSerif, sizeInPixels))
+                var targetFontStyle = System.Drawing.FontStyle.Regular;
+
+                if (fontStyle == OsmSharp.UI.Renderer.Primitives.FontStyle.Italic)
+                    targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Italic;
+
+                if (fontWeight == FontWeight.Bold)
+                    targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Bold;
+
+                using (var font = new Font(fontName, sizeInPixels, targetFontStyle))
                 {
                     // get some metrics on the texts.
                     var characterWidths = GetCharacterWidths(target.Target, text, font);

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.UI.Renderer.Primitives;
 using ProtoBuf;
 
 namespace OsmSharp.UI.Renderer.Scene.Styles
@@ -57,21 +58,33 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public string Font { get; set; }
 
         /// <summary>
-        /// Gets or sets the layer.
+        /// Gets or sets the font style.
         /// </summary>
         [ProtoMember(6)]
+        public FontStyle FontStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font weight.
+        /// </summary>
+        [ProtoMember(7)]
+        public FontWeight FontWeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(8)]
         public uint Layer { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
-        [ProtoMember(7)]
+        [ProtoMember(9)]
         public float MinZoom { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
-        [ProtoMember(8)]
+        [ProtoMember(10)]
         public float MaxZoom { get; set; }
 
         /// <summary>
@@ -86,6 +99,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.Size.GetHashCode() ^
                     this.HaloColor.GetHashCode() ^
                     this.HaloRadius.GetHashCode() ^
+                    this.FontStyle.GetHashCode() ^
+                    this.FontWeight.GetHashCode() ^
                     this.Layer.GetHashCode() ^
                     this.MinZoom.GetHashCode() ^
                     this.MaxZoom.GetHashCode();
@@ -95,6 +110,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 this.HaloColor.GetHashCode() ^
                 this.HaloRadius.GetHashCode() ^
                 this.Font.GetHashCode() ^
+                this.FontStyle.GetHashCode() ^
+                this.FontWeight.GetHashCode() ^
                 this.Layer.GetHashCode() ^
                 this.MinZoom.GetHashCode() ^
                 this.MaxZoom.GetHashCode();
@@ -114,6 +131,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     (obj as StyleText).HaloRadius == this.HaloRadius &&
                     (obj as StyleText).HaloColor == this.HaloColor &&
                     (obj as StyleText).Font == this.Font &&
+                    (obj as StyleText).FontStyle == this.FontStyle &&
+                    (obj as StyleText).FontWeight == this.FontWeight &&
                     (obj as StyleText).Layer == this.Layer &&
                     (obj as StyleText).MinZoom == this.MinZoom &&
                     (obj as StyleText).MaxZoom == this.MaxZoom;

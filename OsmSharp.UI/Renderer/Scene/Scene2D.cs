@@ -962,9 +962,11 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="font"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
         /// <returns></returns>
         public List<uint> AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
-            int? haloColor, int? haloRadius, string font)
+            int? haloColor, int? haloRadius, string font, FontStyle fontStyle, FontWeight fontWeight)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -986,6 +988,8 @@ namespace OsmSharp.UI.Renderer.Scene
                         Color = color,
                         Size = size,
                         Font = font,
+                        FontStyle = fontStyle,
+                        FontWeight = fontWeight,
                         HaloColor = haloColor,
                         HaloRadius = haloRadius,
                         Layer = layer,
@@ -1038,6 +1042,8 @@ namespace OsmSharp.UI.Renderer.Scene
             // convert image.
             primitive.Color = style.Color;
             primitive.Font = style.Font;
+            primitive.FontStyle = style.FontStyle;
+            primitive.FontWeight = style.FontWeight;
             primitive.HaloColor = style.HaloColor;
             primitive.HaloRadius = style.HaloRadius;
             primitive.Size = style.Size;
@@ -1224,10 +1230,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="size"></param>
         /// <param name="text"></param>
         /// <param name="font"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
-        public List<uint> AddStyleLineText(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font,
-            int? haloColor, int? haloRadius)
+        public List<uint> AddStyleLineText(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font, FontStyle fontStyle, 
+            FontWeight fontWeight, int? haloColor, int? haloRadius)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1273,6 +1281,8 @@ namespace OsmSharp.UI.Renderer.Scene
                             Color = color,
                             Size = size,
                             Font = font,
+                            FontStyle = fontStyle,
+                            FontWeight = fontWeight,
                             HaloColor = haloColor,
                             HaloRadius = haloRadius,
                             Layer = layer,
@@ -1328,8 +1338,10 @@ namespace OsmSharp.UI.Renderer.Scene
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
             var primitive = new LineText2D(geo.X, geo.Y, style.Color, style.Size, text, style.HaloColor, style.HaloRadius, style.MinZoom, style.MaxZoom);
-            primitive.Id = id;
             primitive.Font = style.Font;
+            primitive.FontStyle = style.FontStyle;
+            primitive.FontWeight = style.FontWeight;
+            primitive.Id = id;
             primitive.Layer = style.Layer;
 
             return primitive;

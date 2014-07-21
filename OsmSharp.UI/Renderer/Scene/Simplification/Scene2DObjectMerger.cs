@@ -165,7 +165,8 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     string text = source.GetText(sceneTextObject.TextId);
 
                     target.AddText(target.AddPoint(scenePoint.X, scenePoint.Y), styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
-                        styleText.Size, text, styleText.Color, styleText.HaloColor, styleText.HaloRadius, styleText.Font);
+                        styleText.Size, text, styleText.Color, styleText.HaloColor, styleText.HaloRadius, styleText.Font, 
+                        styleText.FontStyle, styleText.FontWeight);
                 }
             }
 
@@ -264,7 +265,8 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                             StyleText styleText = source.GetStyleLineText(scene2DStyleLineText.StyleLineTextId);
                             string text = source.GetText(scene2DStyleLineText.TextId);
                             target.AddStyleLineText(pointsId.Value, styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
-                                styleText.Color, styleText.Size, text, styleText.Font, styleText.HaloColor, styleText.HaloRadius);
+                                styleText.Color, styleText.Size, text, styleText.Font, styleText.FontStyle, styleText.FontWeight,
+                                styleText.HaloColor, styleText.HaloRadius);
                             continue;
                         }
                     }

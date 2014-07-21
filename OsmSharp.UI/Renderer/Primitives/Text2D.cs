@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Primitives
@@ -63,9 +64,10 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="font"></param>
+        /// <param name="fontStyle"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, string font,
+        public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, string font, 
                       float minZoom, float maxZoom)
         {
             this.X = x;
@@ -145,6 +147,18 @@ namespace OsmSharp.UI.Renderer.Primitives
         public string Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the font style.
+        /// </summary>
+        /// <value>The font.</value>
+        public FontStyle FontStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font weight.
+        /// </summary>
+        /// <value>The font.</value>
+        public FontWeight FontWeight { get; set; }
+
+        /// <summary>
         /// The minimum zoom.
         /// </summary>
         public float MinZoom { get; set; }
@@ -194,5 +208,23 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Enumerated the different FontStyle options.
+    /// </summary>
+    public enum FontStyle
+    {
+        Italic,
+        Normal
+    }
+
+    /// <summary>
+    /// Enumerated the different FontStyle options.
+    /// </summary>
+    public enum FontWeight
+    {
+        Bold,
+        Normal
     }
 }

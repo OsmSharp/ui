@@ -249,7 +249,7 @@ namespace OsmSharp.UI.Renderer
                         case Primitive2DType.LineText2D:
                             LineText2D lineText = (LineText2D)primitive;
                             this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
-                                this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
+                                this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font, lineText.FontStyle, lineText.FontWeight);
                             break;
                         case Primitive2DType.Point2D:
                             Point2D point = (Point2D)primitive;
@@ -271,7 +271,7 @@ namespace OsmSharp.UI.Renderer
                         case Primitive2DType.Text2D:
                             Text2D text = (Text2D)primitive;
                             this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
+                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font, text.FontStyle, text.FontWeight);
                             break;
                     }
                 }
@@ -407,8 +407,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
-		                                 int? haloColor, int? haloRadius, string fontName);
+        protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
+                                         int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight);
 
         /// <summary>
         /// Draws text along a given line.
@@ -419,7 +419,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text"></param>
-        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
-		                                     double size, int? haloColor, int? haloRadius, string fontName);
+        protected abstract void DrawLineText(Target2DWrapper<TTarget> target2DWrapper, double[] x, double[] y, string text, int color, 
+		                                     double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight);
 	}
 }
