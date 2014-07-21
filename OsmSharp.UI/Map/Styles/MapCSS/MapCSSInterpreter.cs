@@ -432,8 +432,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // interpret the results.
             foreach (var rule in rules)
             {
-                float zIndex;
-                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
@@ -600,8 +600,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
-                float zIndex ;
-                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
@@ -667,10 +667,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             if (!rule.TryGetProperty("casingLineJoin", out casingLineJoin))
                             { 
                                 casingLineJoin = LineJoin.Miter;
-                            }
-                            if (rule.TryGetProperty("casingLineCap", out casingLineCap))
-                            {
-                                
                             }
                             if (!rule.TryGetProperty("casingLineCap", out casingLineCap))
                             {
@@ -846,8 +842,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
-                float zIndex;
-                if (!rule.TryGetProperty<float>("zIndex", out zIndex))
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
                     zIndex = 0;
                 }
@@ -934,6 +930,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 case DeclarationIntEnum.FillColor:
                                     properties.AddProperty("fillColor", declarationInt.Eval(mapCSSObject));
                                     break;
+                                case DeclarationIntEnum.ZIndex:
+                                    properties.AddProperty("zIndex", declarationInt.Eval(mapCSSObject));
+                                    break;
                                 case DeclarationIntEnum.Color:
                                     properties.AddProperty("color", declarationInt.Eval(mapCSSObject));
                                     break;
@@ -1011,9 +1010,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     break;
                                 case DeclarationFloatEnum.CasingWidth:
                                     properties.AddProperty("casingWidth", declarationFloat.Eval(mapCSSObject));
-                                    break;
-                                case DeclarationFloatEnum.ZIndex:
-                                    properties.AddProperty("zIndex", declarationFloat.Eval(mapCSSObject));
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();

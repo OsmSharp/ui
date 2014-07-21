@@ -18,8 +18,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Xml.v0_6;
 
 namespace OsmSharp.Data.SQLServer
 {

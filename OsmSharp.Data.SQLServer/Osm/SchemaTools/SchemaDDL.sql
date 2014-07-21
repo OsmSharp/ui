@@ -76,7 +76,7 @@ if object_id('dbo.node', 'U') is null
     tile          bigint   null,
     [version]     integer  null,
     usr           varchar(100) null,
-    usr_id        integer  null,=
+    usr_id        integer  null
   ); 
 
 
