@@ -33,6 +33,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     public enum DeclarationIntEnum
     {
         FillColor,
+        ZIndex,
         Color,
         CasingColor,
         Extrude,

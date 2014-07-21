@@ -172,7 +172,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
             // parse the selector(s).
             rule.Selectors = new List<Selector>();
             int simpleSelectorIdx = 0;
-            // TODO: handle layer selector??
             while (ruleTree.Children[simpleSelectorIdx].Text == "SIMPLE_SELECTOR")
             { // see what this SIMPLE_SELECTOR is all about.
                 var simpleSelectorTree = ruleTree.Children[simpleSelectorIdx] as CommonTree;
@@ -342,44 +341,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                 else
                                 {
                                     selector.SelectorRule = selector.SelectorRule & opNotExistsRule;
-                                }
-                            }
-                            else if (attributeSelector.Children[0].Text == "OP_TRUTHY")
-                            {
-                                // the truth value selector.
-                                var opTruthyRuleYesValue = new SelectorRuleTagValueComparison();
-                                var opTruthyRuleTrueValue = new SelectorRuleTagValueComparison();
-                                var opTruthyRuleOneValue = new SelectorRuleTagValueComparison();
-
-                                if (attributeSelector.ChildCount < 2)
-                                {
-                                    // oeps, this is not possible.
-                                    throw new MapCSSDomainParserException(attributeSelector,
-                                                                          "OP_TRUTHY without tag value!");
-                                }
-
-                                opTruthyRuleYesValue.Tag = attributeSelector.Children[1].Text;
-                                opTruthyRuleYesValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
-                                opTruthyRuleYesValue.Value = "yes";
-
-                                opTruthyRuleTrueValue.Tag = attributeSelector.Children[1].Text;
-                                opTruthyRuleTrueValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
-                                opTruthyRuleTrueValue.Value = "true";
-
-                                opTruthyRuleOneValue.Tag = attributeSelector.Children[1].Text;
-                                opTruthyRuleOneValue.Comparator = SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.Equal;
-                                opTruthyRuleOneValue.Value = "1";
-
-                                var opTruthyRule = opTruthyRuleYesValue | opTruthyRuleTrueValue | opTruthyRuleOneValue;
-
-                                // add the tags.
-                                if (selector.SelectorRule == null)
-                                {
-                                    selector.SelectorRule = opTruthyRule;
-                                }
-                                else
-                                {
-                                    selector.SelectorRule = selector.SelectorRule & opTruthyRule;
                                 }
                             }
                             else if (attributeSelector.Children[0].Text == "<" ||
@@ -909,7 +870,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(textOffset);
                             break;
                         case "max-width":
-                        case "text-wrap-width":
                             var maxWidth = new DeclarationInt();
                             maxWidth.Qualifier = DeclarationIntEnum.MaxWidth;
                             if (evalCall != null)
@@ -1139,17 +1099,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(image);
                             break;
                         case "z-index":
-                            var zIndex = new DeclarationFloat();
-                            zIndex.Qualifier = DeclarationFloatEnum.ZIndex;
+                            var zIndex = new DeclarationInt();
+                            zIndex.Qualifier = DeclarationIntEnum.ZIndex;
                             if (evalCall != null)
                             {
                                 zIndex.EvalFunction = evalCall;
                             }
                             else
                             {
-                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
                                 {
-                                    zIndex.Value = valueFloat;
+                                    zIndex.Value = valueInt;
                                 }
                                 else
                                 { // value could not be parsed.
