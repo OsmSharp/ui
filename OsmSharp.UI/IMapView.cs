@@ -95,6 +95,11 @@ namespace OsmSharp.UI
         View2D CurrentView { get; }
 
         /// <summary>
+        /// Gets the density.
+        /// </summary>
+        float Density { get; }
+
+        /// <summary>
         /// Notifies a map change.
         /// </summary>
         /// <param name="pixelsWidth"></param>
