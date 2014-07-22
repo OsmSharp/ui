@@ -124,7 +124,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
 		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
-		                                  double width, LineJoin lineJoin, int[] dashes)
+		                                  double width, LineJoin lineJoin, LineCap lineCap, int[] dashes)
 		{
             _z = _z + 0.0001f;
 
@@ -192,13 +192,13 @@ namespace OsmSharp.Android.UI
 		}
 
 		protected override void DrawText (Target2DWrapper<OpenGLTarget2D> target, double x, double y, string text, int color, 
-		                                  double size, int? haloColor, int? haloRadius, string fontName)
+		                                  double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight)
 		{
 
 		}
 
-		protected override void DrawLineText (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, string text, int color, 
-		                                      double size, int? haloColor, int? haloRadius, string fontName)
+		protected override void DrawLineText (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, string text, int color,
+                                              double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight)
 		{
 
 		}
