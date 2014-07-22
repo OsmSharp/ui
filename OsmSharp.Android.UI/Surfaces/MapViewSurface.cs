@@ -274,9 +274,10 @@ namespace OsmSharp.Android.UI
             // stop current rendering.
             if (_renderingThread != null &&
                 _renderingThread.IsAlive)
-            {
-                if (_cacheRenderer.IsRunning)
-                {
+            { // a rendering thread is alive.
+                if (_cacheRenderer != null &&
+                    _cacheRenderer.IsRunning)
+                { // there is a running cache renderer and thus there is something to cancel.
                     this.Map.ViewChangedCancel();
                     _cacheRenderer.CancelAndWait();
                 }
@@ -772,8 +773,8 @@ namespace OsmSharp.Android.UI
 			// execute suspended events.
 			if (_latestZoomCall != null)
 			{ // there was a suspended call.
-                		var latestZoomCall = _latestZoomCall;
-                		_latestZoomCall = null;
+                var latestZoomCall = _latestZoomCall;
+                _latestZoomCall = null;
 				this.ZoomToMarkers(
                     			latestZoomCall.Markers,
                     			latestZoomCall.Percentage);
@@ -958,74 +959,85 @@ namespace OsmSharp.Android.UI
 		/// <param name="e">E.</param>
 		public bool OnTouch (global::Android.Views.View v, MotionEvent e)
 		{
-            _tagGestureDetector.OnTouchEvent (e);
-			_scaleGestureDetector.OnTouchEvent (e);
-			_rotateGestureDetector.OnTouchEvent (e);
-			_moveGestureDetector.OnTouchEvent (e);
-
-            if (_deltaX != 0 || _deltaY != 0 || // was there movement?
-                _deltaScale != 1.0 || // was there scale?
-                _deltaDegrees != 0)
-            { // was there rotation?
-                bool movement = false;
-                if (this.MapAllowZoom &&
-                    _deltaScale != 1.0)
+            try
+            {
+                if (!_renderingSuspended && this.Map != null && this.Map.Projection != null && this.MapCenter != null)
                 {
-                    // calculate the scale.
-                    double zoomFactor = this.Map.Projection.ToZoomFactor(this.MapZoom);
-                    zoomFactor = zoomFactor * _deltaScale;
-                    this.MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
+                    _tagGestureDetector.OnTouchEvent(e);
+                    _scaleGestureDetector.OnTouchEvent(e);
+                    _rotateGestureDetector.OnTouchEvent(e);
+                    _moveGestureDetector.OnTouchEvent(e);
 
-                    movement = true;
+                    if (_deltaX != 0 || _deltaY != 0 || // was there movement?
+                        _deltaScale != 1.0 || // was there scale?
+                        _deltaDegrees != 0)
+                    { // was there rotation?
+                        bool movement = false;
+                        if (this.MapAllowZoom &&
+                            _deltaScale != 1.0)
+                        {
+                            // calculate the scale.
+                            double zoomFactor = this.Map.Projection.ToZoomFactor(this.MapZoom);
+                            zoomFactor = zoomFactor * _deltaScale;
+                            this.MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
+
+                            movement = true;
+                        }
+
+                        if (this.MapAllowPan)
+                        {
+                            // stop the animation.
+                            this.StopCurrentAnimation();
+
+                            // recreate the view.
+                            View2D view = this.CreateView();
+
+                            // calculate the new center in pixels.
+                            double centerXPixels = this.SurfaceWidth / 2.0f - _deltaX;
+                            double centerYPixles = this.SurfaceHeight / 2.0f - _deltaY;
+
+                            // calculate the new center from the view.
+                            double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight,
+                                                                      centerXPixels, centerYPixles);
+
+                            // convert to the projected center.
+                            _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+
+                            movement = true;
+                        }
+
+                        // do the rotation stuff around the new center.
+                        if (this.MapAllowTilt &&
+                            _deltaDegrees != 0)
+                        {
+                            // recreate the view.
+                            View2D view = this.CreateView();
+
+                            View2D rotatedView = view.RotateAroundCenter((Degree)(-_deltaDegrees));
+                            _mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
+
+                            movement = true;
+                        }
+
+                        _deltaScale = 1;
+                        _deltaDegrees = 0;
+                        _deltaX = 0;
+                        _deltaY = 0;
+
+                        // notify touch.
+                        if (movement)
+                        {
+                            _mapView.RaiseMapTouched();
+
+                            this.NotifyMovement();
+                        }
+                    }
                 }
-
-                if (this.MapAllowPan)
-                {
-                    // stop the animation.
-                    this.StopCurrentAnimation();
-
-                    // recreate the view.
-                    View2D view = this.CreateView();
-
-                    // calculate the new center in pixels.
-                    double centerXPixels = this.SurfaceWidth / 2.0f - _deltaX;
-                    double centerYPixles = this.SurfaceHeight / 2.0f - _deltaY;
-
-                    // calculate the new center from the view.
-                    double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight,
-                                                              centerXPixels, centerYPixles);
-
-                    // convert to the projected center.
-                    _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
-
-                    movement = true;
-                }
-
-                // do the rotation stuff around the new center.
-                if (this.MapAllowTilt &&
-                    _deltaDegrees != 0)
-                {
-                    // recreate the view.
-                    View2D view = this.CreateView();
-
-                    View2D rotatedView = view.RotateAroundCenter((Degree)(-_deltaDegrees));
-                    _mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
-
-                    movement = true;
-                }
-
-                _deltaScale = 1;
-                _deltaDegrees = 0;
-                _deltaX = 0;
-                _deltaY = 0;
-
-                // notify touch.
-                if (movement)
-                {
-                    _mapView.RaiseMapTouched();
-
-                    this.NotifyMovement();
-                }
+            }
+            catch (Exception ex)
+            {
+                OsmSharp.Logging.Log.TraceEvent("MapViewSurface.OnTouch", TraceEventType.Critical,
+                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
             }
 			return true;
 		}
