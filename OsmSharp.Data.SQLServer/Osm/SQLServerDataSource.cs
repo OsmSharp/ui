@@ -706,7 +706,7 @@ namespace OsmSharp.Data.SQLServer.Osm
             // remove this nasty BETWEEN operation because it depends on the database (!) what results are returned (including or excluding bounds!!!)
             string sql
                 = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id " +
-                  "FROM node WHERE  (tile IN ({4})) AND (visible = 1)"; //" AND (latitude >= {0} AND latitude < {1} AND longitude >= {2} AND longitude < {3})";
+                  "FROM node WHERE  (tile IN ({4})) AND (visible = 1) AND (latitude >= {0} AND latitude < {1} AND longitude >= {2} AND longitude < {3})";
             sql = string.Format(sql,
                         latitudeMin.ToString(System.Globalization.CultureInfo.InvariantCulture),
                         latitudeMax.ToString(System.Globalization.CultureInfo.InvariantCulture),
