@@ -85,11 +85,6 @@ namespace OsmSharp.Android.UI
         private MapView _mapView;
 
         /// <summary>
-        /// Holds the scalefactor.
-        /// </summary>
-        private float _scaleFactor;
-
-        /// <summary>
         /// Holds the density factor.
         /// </summary>
         private float _density;
@@ -153,9 +148,7 @@ namespace OsmSharp.Android.UI
             // gets the system density.
             _density = global::Android.Content.Res.Resources.System.DisplayMetrics.Density;
 
-            // calculate scale factor.
-            _scaleFactor = 1;//(float)System.Math.Floor(Resources.DisplayMetrics.Xdpi / 160);
-
+            // create the renderer.
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
                 new CanvasRenderer2D(1));
 
@@ -176,7 +169,7 @@ namespace OsmSharp.Android.UI
             // initialize all the caching stuff.
             _backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
             _cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
-                new CanvasRenderer2D(_scaleFactor));
+                new CanvasRenderer2D(1));
         }
 
         /// <summary>
