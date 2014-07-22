@@ -71,6 +71,11 @@ namespace OsmSharp.Android.UI
 		View2D CreateView();
 
         /// <summary>
+        /// Gets the density.
+        /// </summary>
+        float Density { get; }
+
+        /// <summary>
         /// Gets or sets the map.
         /// </summary>
         Map Map
