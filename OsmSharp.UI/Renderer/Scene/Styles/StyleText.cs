@@ -58,6 +58,24 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public string Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(6)]
+        public uint Layer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(7)]
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(8)]
+        public float MaxZoom { get; set; }
+
+        /// <summary>
         /// Gets or sets the font style.
         /// </summary>
         [ProtoMember(6)]
@@ -68,24 +86,6 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         /// </summary>
         [ProtoMember(7)]
         public FontWeight FontWeight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the layer.
-        /// </summary>
-        [ProtoMember(8)]
-        public uint Layer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minzoom.
-        /// </summary>
-        [ProtoMember(9)]
-        public float MinZoom { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minzoom.
-        /// </summary>
-        [ProtoMember(10)]
-        public float MaxZoom { get; set; }
 
         /// <summary>
         /// Returns the hashcode for this instance.
@@ -99,22 +99,22 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.Size.GetHashCode() ^
                     this.HaloColor.GetHashCode() ^
                     this.HaloRadius.GetHashCode() ^
-                    this.FontStyle.GetHashCode() ^
-                    this.FontWeight.GetHashCode() ^
                     this.Layer.GetHashCode() ^
                     this.MinZoom.GetHashCode() ^
-                    this.MaxZoom.GetHashCode();
+                    this.MaxZoom.GetHashCode() ^
+                    this.FontStyle.GetHashCode() ^
+                    this.FontWeight.GetHashCode();
             }
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
                 this.HaloColor.GetHashCode() ^
                 this.HaloRadius.GetHashCode() ^
                 this.Font.GetHashCode() ^
-                this.FontStyle.GetHashCode() ^
-                this.FontWeight.GetHashCode() ^
                 this.Layer.GetHashCode() ^
                 this.MinZoom.GetHashCode() ^
-                this.MaxZoom.GetHashCode();
+                this.MaxZoom.GetHashCode() ^
+                this.FontStyle.GetHashCode() ^
+                this.FontWeight.GetHashCode();
         }
 
         /// <summary>
@@ -127,15 +127,15 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             if (obj is StyleText)
             {
                 return (obj as StyleText).Size == this.Size &&
-                    (obj as StyleText).Color == this.Color &&
-                    (obj as StyleText).HaloRadius == this.HaloRadius &&
-                    (obj as StyleText).HaloColor == this.HaloColor &&
-                    (obj as StyleText).Font == this.Font &&
-                    (obj as StyleText).FontStyle == this.FontStyle &&
-                    (obj as StyleText).FontWeight == this.FontWeight &&
-                    (obj as StyleText).Layer == this.Layer &&
-                    (obj as StyleText).MinZoom == this.MinZoom &&
-                    (obj as StyleText).MaxZoom == this.MaxZoom;
+                       (obj as StyleText).Color == this.Color &&
+                       (obj as StyleText).HaloRadius == this.HaloRadius &&
+                       (obj as StyleText).HaloColor == this.HaloColor &&
+                       (obj as StyleText).Font == this.Font &&
+                       (obj as StyleText).Layer == this.Layer &&
+                       (obj as StyleText).MinZoom == this.MinZoom &&
+                       (obj as StyleText).MaxZoom == this.MaxZoom &&
+                       (obj as StyleText).FontStyle == this.FontStyle &&
+                       (obj as StyleText).FontWeight == this.FontWeight;
             }
             return false;
         }
