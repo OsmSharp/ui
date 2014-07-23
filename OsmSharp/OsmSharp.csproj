@@ -62,6 +62,7 @@
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SparseLargeBitArray32.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />

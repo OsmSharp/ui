@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
+    <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
