@@ -30,6 +30,8 @@ using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections;
+using OsmSharp.Collections.LongIndex;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -139,7 +141,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _tagsIndex = tagsIndex;
             _idTransformations = idTransformations;
             _preIndexMode = true;
-            _preIndex = new OsmSharp.Collections.HugeHashSet<long>();
+            _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
             _usedTwiceOrMore = new OsmSharp.Collections.HugeHashSet<long>();
 
             _dataCache = new OsmDataCacheMemory();
@@ -193,7 +195,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the index of all relevant nodes.
         /// </summary>
-        private OsmSharp.Collections.HugeHashSet<long> _preIndex;
+        private ILongIndex _preIndex;
 
         /// <summary>
         /// Holds the id transformations.
@@ -232,11 +234,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         _coordinates[node.Id.Value] = new GeoCoordinateSimple() {
                             Latitude = (float)node.Latitude.Value, 
                             Longitude = (float)node.Longitude.Value};
-                        if (_coordinates.Count == _preIndex.Count)
-                        {
-                            _preIndex.Clear();
-                            _preIndex = null;
-                        }
+                        // TODO: find a way to drop the preindex.
+                        //if (_coordinates.Count == _preIndex.Count)
+                        //{
+                        //    _preIndex.Clear();
+                        //    _preIndex = null;
+                        //}
 
                         if (_bounds == null)
                         { // create bounds.
