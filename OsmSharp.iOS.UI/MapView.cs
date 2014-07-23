@@ -978,7 +978,18 @@ namespace OsmSharp.iOS.UI
 		{
 			get;
 			set;
-		} 
+		}
+
+        /// <summary>
+        /// Gets the density.
+        /// </summary>
+        public float Density
+        {
+            get
+            {
+                return 1;
+            }
+        }
         
         /// <summary>
         /// Gets the current view.
