@@ -110,6 +110,33 @@ namespace OsmSharp.Routing.Osm.Graphs
         }
 
         /// <summary>
+        /// Creates the exact reverse of this edge.
+        /// </summary>
+        /// <returns></returns>
+        public IDynamicGraphEdgeData Reverse()
+        {
+            if (this.Coordinates != null)
+            {
+                var reverseCoordiantes = new GeoCoordinateSimple[this.Coordinates.Length];
+                this.Coordinates.CopyToReverse(reverseCoordiantes, 0);
+                return new LiveEdge()
+                {
+                    Coordinates = reverseCoordiantes,
+                    Distance = this.Distance,
+                    Forward = !this.Forward,
+                    Tags = this.Tags
+                };
+            }
+            return new LiveEdge()
+            {
+                Coordinates = null,
+                Distance = this.Distance,
+                Forward = !this.Forward,
+                Tags = this.Tags
+            };
+        }
+
+        /// <summary>
         /// Returns true if the other edge represents the same information than this edge.
         /// </summary>
         /// <param name="other"></param>

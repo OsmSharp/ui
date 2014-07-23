@@ -270,6 +270,15 @@ namespace OsmSharp.Routing.CH.PreProcessing
         }
 
         /// <summary>
+        /// Reverses this edge.
+        /// </summary>
+        /// <returns></returns>
+        public IDynamicGraphEdgeData Reverse()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Converts this given edge to a purely informative edge.
         /// </summary>
         /// <returns></returns>

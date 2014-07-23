@@ -21,43 +21,9 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Abstracts a graph implementation.
     /// </summary>
-    public interface IDynamicGraph<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
+    public interface IDynamicGraph<TEdgeData> : IDynamicGraphWriteOnly<TEdgeData>
         where TEdgeData : IDynamicGraphEdgeData
     {
-        /// <summary>
-        /// Adds a vertex.
-        /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <returns></returns>
-        uint AddVertex(float latitude, float longitude);
-
-        /// <summary>
-        /// Sets the vertex.
-        /// </summary>
-        /// <param name="vertex"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        void SetVertex(uint vertex, float latitude, float longitude);
-
-        /// <summary>
-        /// Adds a vertex.
-        /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
-        /// <returns></returns>
-        uint AddVertex(float latitude, float longitude, byte neighboursEstimate);
-
-        /// <summary>
-        /// Adds an arc with associated data.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="data"></param>
-        /// <param name="comparer"></param>
-        void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
-
         /// <summary>
         /// Deletes all arcs starting at the given vertex.
         /// </summary>

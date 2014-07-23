@@ -50,6 +50,12 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Returns the exact reverse edge.
+        /// </summary>
+        /// <returns></returns>
+        IDynamicGraphEdgeData Reverse();
+
+        /// <summary>
         /// Returns true if the given edge equals this edge geometrically.
         /// </summary>
         /// <param name="other"></param>

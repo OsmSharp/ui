@@ -16,18 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
+using System.Collections.Generic;
 
-namespace OsmSharp.Test.Unittests.Routing
+namespace OsmSharp.Test.Unittests.Routing.Graph
 {
     /// <summary>
     /// Tests a simple weighed dynamic graph.
     /// </summary>
     [TestFixture]
-    public class LiveEdgeDynamicGraphTests
+    public class MemoryDynamicGraphTests
     {
         /// <summary>
         /// Returns a graph.
@@ -44,8 +44,8 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestLiveEdgeDynamicGraphVertex()
         {
-            IDynamicGraph<LiveEdge> graph = this.CreateGraph();
-            uint vertex = graph.AddVertex(51, 4);
+            var graph = this.CreateGraph();
+            var vertex = graph.AddVertex(51, 4);
 
             float latitude, longitude;
             graph.GetVertex(vertex, out latitude, out longitude);
@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(51, latitude);
             Assert.AreEqual(4, longitude);
 
-            KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(vertex);
+            var arcs = graph.GetArcs(vertex);
             Assert.AreEqual(0, arcs.Length);
         }
 
@@ -63,11 +63,11 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestLiveEdgeDynamicGraphVertex10000()
         {
-            IDynamicGraph<LiveEdge> graph = this.CreateGraph();
+            var graph = this.CreateGraph();
             int count = 10000;
             while (count > 0)
             {
-                uint vertex = graph.AddVertex(51, 4);
+                var vertex = graph.AddVertex(51, 4);
 
                 float latitude, longitude;
                 graph.GetVertex(vertex, out latitude, out longitude);
@@ -75,7 +75,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 Assert.AreEqual(51, latitude);
                 Assert.AreEqual(4, longitude);
 
-                KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(vertex);
+                var arcs = graph.GetArcs(vertex);
                 Assert.AreEqual(0, arcs.Length);
 
                 count--;
@@ -90,9 +90,9 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestLiveEdgeDynamicGraphEdge()
         {
-            IDynamicGraph<LiveEdge> graph = this.CreateGraph();
-            uint vertex1 = graph.AddVertex(51, 1);
-            uint vertex2 = graph.AddVertex(51, 2);
+            var graph = this.CreateGraph();
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
 
             graph.AddArc(vertex1, vertex2, new LiveEdge()
                                                {
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing
                                                    Tags = 0
                                                }, null);
 
-            KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(vertex1);
+            var arcs = graph.GetArcs(vertex1);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(0, arcs[0].Value.Tags);
             Assert.AreEqual(vertex2, arcs[0].Key);
@@ -125,7 +125,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void TestLiveEdgeDynamicGraphEdge10000()
         {
             int count = 10000;
-            IDynamicGraph<LiveEdge> graph = this.CreateGraph();
+            var graph = this.CreateGraph();
             uint vertex1 = graph.AddVertex(51, 1);
             while (count > 0)
             {
