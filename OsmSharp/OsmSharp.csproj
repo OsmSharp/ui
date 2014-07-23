@@ -47,6 +47,7 @@
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
     <Compile Include="Collections\ISet.cs" />
+    <Compile Include="Collections\LargeBitArray32.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
     <Compile Include="Collections\LongIndex\LongIndex.cs" />
