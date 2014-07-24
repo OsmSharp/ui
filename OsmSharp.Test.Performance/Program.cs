@@ -60,8 +60,8 @@ namespace OsmSharp.Test.Performance
 
             // test the routing preprocessor.
             //Routing.LivePreProcessorTest.Test();
-            Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-            //Routing.LiveRoutingTest.Test();
+            //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
+            Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();
             //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
             //Routing.CH.CHSerializedRoutingTest.Test();

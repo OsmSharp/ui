@@ -317,7 +317,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (_interpreter.EdgeInterpreter.IsRoutable(way.Tags))
             { // the way is a road.
                 if (_preIndexMode)
-                { // index only relevant nodes.
+                { // index relevant and used nodes.
                     if (way.Nodes != null)
                     { // this way has nodes.
                         int wayNodesCount = way.Nodes.Count;
@@ -330,7 +330,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             }
                             else
                             { // node is used.
-                                _preIndex.Add(node); 
+                                _preIndex.Add(node);
                             }
                         }
 
@@ -345,55 +345,57 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                 }
                 else
-                { 
-                    if (true)
-                    { // loop over all edges.
-                        if (way.Nodes != null && way.Nodes.Count > 1)
-                        { // way has at least two nodes.
-                            if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
-                                way.Tags))
-                            { // the edge is traversable, add the edges.
-                                uint? from = this.AddRoadNode(way.Nodes[0]);
-                                List<long> intermediates = new List<long>();
-                                for (int idx = 1; idx < way.Nodes.Count; idx++)
-                                { // the to-node.
-                                    long currentNodeId = way.Nodes[idx];
-                                    if (!_collectIntermediates || 
-                                        _relevantNodes.Contains(currentNodeId) ||
-                                        idx == way.Nodes.Count - 1)
-                                    { // node is an important node.
-                                        uint? to = this.AddRoadNode(currentNodeId);
+                { // add actual edges.
+                    if (way.Nodes != null && way.Nodes.Count > 1)
+                    { // way has at least two nodes.
+                        if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
+                            way.Tags))
+                        { // the edge is traversable, add the edges.
+                            uint? from = this.AddRoadNode(way.Nodes[0]);
+                            List<long> intermediates = new List<long>();
+                            for (int idx = 1; idx < way.Nodes.Count; idx++)
+                            { // the to-node.
+                                long currentNodeId = way.Nodes[idx];
+                                if (!_collectIntermediates ||
+                                    _relevantNodes.Contains(currentNodeId) ||
+                                    idx == way.Nodes.Count - 1)
+                                { // node is an important node.
+                                    uint? to = this.AddRoadNode(currentNodeId);
 
-                                        // add the edge(s).
-                                        if (from.HasValue && to.HasValue)
-                                        { // add a road edge.
-                                            // build coordinates.
-                                            var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
-                                            for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                    // add the edge(s).
+                                    if (from.HasValue && to.HasValue)
+                                    { // add a road edge.
+                                        // build coordinates.
+                                        var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
+                                        for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                        {
+                                            GeoCoordinateSimple coordinate;
+                                            if (!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
                                             {
-                                                GeoCoordinateSimple coordinate;
-                                                if(!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
-                                                {
-                                                    break;
-                                                }
+                                                break;
                                             }
+                                            intermediateCoordinates.Add(new GeoCoordinateSimple()
+                                            {
+                                                Latitude = coordinate.Latitude,
+                                                Longitude = coordinate.Longitude
+                                            });
+                                        }
 
-                                            if (intermediateCoordinates.Count == intermediates.Count)
-                                            { // all coordinates have been found.
-                                                if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
-                                                { // add the reverse too if it has been indicated that this was needed.
-                                                    intermediateCoordinates.Reverse();
-                                                    this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
-                                                }
+                                        if (intermediateCoordinates.Count == intermediates.Count)
+                                        { // all coordinates have been found.
+                                            if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
+                                            { // add the reverse too if it has been indicated that this was needed.
+                                                intermediateCoordinates.Reverse();
+                                                this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
                                             }
                                         }
-                                        from = to; // the to node becomes the from.
-                                        intermediates.Clear();
                                     }
-                                    else
-                                    { // this node is just an intermediate.
-                                        intermediates.Add(currentNodeId);
-                                    }
+                                    from = to; // the to node becomes the from.
+                                    intermediates.Clear();
+                                }
+                                else
+                                { // this node is just an intermediate.
+                                    intermediates.Add(currentNodeId);
                                 }
                             }
                         }
