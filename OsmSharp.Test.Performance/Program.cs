@@ -59,7 +59,8 @@ namespace OsmSharp.Test.Performance
             //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
             // test the routing preprocessor.
-            Routing.LivePreProcessorTest.Test();
+            //Routing.LivePreProcessorTest.Test();
+            Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
             //Routing.LiveRoutingTest.Test();
             //Routing.CH.CHPreProcessorTest.Test();
             //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
