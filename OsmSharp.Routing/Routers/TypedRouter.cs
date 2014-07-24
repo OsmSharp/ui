@@ -1685,7 +1685,7 @@ namespace OsmSharp.Routing.Routers
             // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
             PathSegment<long> path = null;
             var intermediates = new List<long>();
-            if(edgeData.Coordinates != null)
+            if(edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
             { // the resolved edge has intermediate coordinates.
                 RouterPoint intermediaRouterpoint;
                 for(int idx = 0; idx < edgeData.Coordinates.Length; idx++)
@@ -1774,7 +1774,7 @@ namespace OsmSharp.Routing.Routers
                     graph.AddVertex(vertex2, latitude2, longitude2);
                 }
 
-                if (edgeData.Coordinates != null)
+                if (edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
                 { // add intermediate points.
                     // create the route manually.
                     vertices = new long[2 + edgeData.Coordinates.Length];

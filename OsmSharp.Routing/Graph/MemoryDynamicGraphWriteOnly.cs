@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IDynamicGraphEdgeData
     {
         private const int EDGE_SIZE = 4;
-        private const int NO_EDGE = int.MaxValue;
+        private const uint NO_EDGE = uint.MaxValue;
         private const int NODEA = 0;
         private const int NODEB = 1;
         private const int NEXTNODEA = 2;

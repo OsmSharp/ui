@@ -16,8 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm;
@@ -25,13 +26,11 @@ using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Collections;
-using OsmSharp.Collections.LongIndex;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -54,7 +53,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsCollectionIndex _tagsIndex;
+        private ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the osm data cache.
@@ -263,7 +262,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
                         { // tests quickly if a given node is possibly a restriction.
                             List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
-                            if(vehicles != null &&
+                            if (vehicles != null &&
                                 vehicles.Count > 0)
                             { // add all the restrictions.
                                 uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
@@ -289,7 +288,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private readonly ILongIndex _relevantNodes;
+        private ILongIndex _relevantNodes;
 
         /// <summary>
         /// Returns the boundingbox of all accepted nodes.
@@ -595,7 +594,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             tagsFilter.RegisterSource(source);
 
             base.RegisterSource(tagsFilter);
-            //base.RegisterSource(source);
         }
 
         /// <summary>
@@ -629,6 +627,27 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // there is a pre-processor, trigger execution.
                 preProcessor.Start();
             }
+        }
+
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
+        public override void Close()
+        {
+            _coordinates.Clear();
+            _dataCache.Clear();
+            _idTransformations.Clear();
+            if(_nodesToCache != null)
+            {
+                _nodesToCache.Clear();
+            }
+            if (_waysToCache != null)
+            {
+                _waysToCache.Clear();
+            }
+            _preIndex = null;
+            _relevantNodes = null;
+            _tagsIndex = null;
         }
     }
 }

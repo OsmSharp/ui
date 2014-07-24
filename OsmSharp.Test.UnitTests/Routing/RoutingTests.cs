@@ -563,9 +563,9 @@ namespace OsmSharp.Test.Unittests.Routing
             var basicRouter = this.BuildBasicRouter(data);
             var router = this.BuildRouter(data, interpreter, basicRouter);
 
-            var route = router.Calculate(Vehicle.Car,
-                router.Resolve(Vehicle.Car, vertex20211),
-                router.Resolve(Vehicle.Car, vertex20212));
+            var vertex20211Resolved = router.Resolve(Vehicle.Car, vertex20211);
+            var vertex20212Resolved = router.Resolve(Vehicle.Car, vertex20212);
+            var route = router.Calculate(Vehicle.Car, vertex20211Resolved, vertex20212Resolved);
 
             Assert.AreEqual(2, route.Entries.Length);
             Assert.AreEqual(vertex20211.Latitude, route.Entries[0].Latitude, 0.0001);
