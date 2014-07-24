@@ -116,8 +116,8 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         private Route CalculateTSP(Stream dataStream, Stream csvStream, bool pbf, Vehicle vehicleEnum)
         {
             // create the router.
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            Router router = Router.CreateLiveFrom(
+            var interpreter = new OsmRoutingInterpreter();
+            var router = Router.CreateLiveFrom(
                 new XmlOsmStreamSource(dataStream), interpreter);
 
             // read the source files.

@@ -30,6 +30,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
+using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -53,7 +54,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             DynamicGraphRouterDataSource<LiveEdge> memoryData =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memoryData, interpreter, tagsIndex);
+                memoryData, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
             XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceName));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();
