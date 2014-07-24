@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperMetric()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+            var route = this.CalculateTSP(Assembly.GetExecutingAssembly()
                                                             .GetManifestResourceStream(
                                                                 @"OsmSharp.Test.Unittests.tsp_real.osm"),
                                                     Assembly.GetExecutingAssembly()

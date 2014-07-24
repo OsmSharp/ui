@@ -147,7 +147,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _idTransformations = idTransformations;
             _preIndexMode = true;
             _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
-            _usedTwiceOrMore = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
@@ -289,7 +289,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private readonly ILongIndex _usedTwiceOrMore;
+        private readonly ILongIndex _relevantNodes;
 
         /// <summary>
         /// Returns the boundingbox of all accepted nodes.
@@ -321,15 +321,25 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // index only relevant nodes.
                     if (way.Nodes != null)
                     {
-                        foreach (long node in way.Nodes)
+                        for (int idx = 0; idx < way.Nodes.Count; idx++)
                         {
+                            var node = way.Nodes[idx];
                             if (_preIndex.Contains(node))
                             {
-                                _usedTwiceOrMore.Add(node);
+                                _relevantNodes.Add(node);
                             }
                             else
                             {
                                 _preIndex.Add(node); // node is relevant.
+                            }
+
+                            if(idx == 0)
+                            {
+                                _relevantNodes.Add(node);
+                            }
+                            else if(idx == way.Nodes.Count - 1)
+                            {
+                                _relevantNodes.Add(node);
                             }
                         }
                     }
@@ -348,24 +358,33 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                 for (int idx = 1; idx < way.Nodes.Count; idx++)
                                 { // the to-node.
                                     long currentNodeId = way.Nodes[idx];
-                                    if(!_collectIntermediates || _usedTwiceOrMore.Contains(currentNodeId))
+                                    if (!_collectIntermediates || 
+                                        _relevantNodes.Contains(currentNodeId) ||
+                                        idx == way.Nodes.Count - 1)
                                     { // node is an important node.
                                         uint? to = this.AddRoadNode(currentNodeId);
-
-                                        // build coordinates.
-                                        var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
-                                        for(int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
-                                        {
-                                            intermediateCoordinates.Add(_coordinates[intermediates[coordIdx]]);
-                                        }
 
                                         // add the edge(s).
                                         if (from.HasValue && to.HasValue)
                                         { // add a road edge.
-                                            if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
-                                            { // add the reverse too if it has been indicated that this was needed.
-                                                intermediateCoordinates.Reverse();
-                                                this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
+                                            // build coordinates.
+                                            var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
+                                            for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                            {
+                                                GeoCoordinateSimple coordinate;
+                                                if(!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
+                                                {
+                                                    break;
+                                                }
+                                            }
+
+                                            if (intermediateCoordinates.Count == intermediates.Count)
+                                            { // all coordinates have been found.
+                                                if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
+                                                { // add the reverse too if it has been indicated that this was needed.
+                                                    intermediateCoordinates.Reverse();
+                                                    this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
+                                                }
                                             }
                                         }
                                         from = to; // the to node becomes the from.
@@ -402,7 +421,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         coordinates.Latitude, coordinates.Longitude);
                     _coordinates.Remove(nodeId); // free the memory again!
 
-                    if (_usedTwiceOrMore.Contains(nodeId))
+                    if (_relevantNodes.Contains(nodeId))
                     {
                         _idTransformations[nodeId] = id;
                     }
