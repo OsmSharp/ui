@@ -319,26 +319,27 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 if (_preIndexMode)
                 { // index only relevant nodes.
                     if (way.Nodes != null)
-                    {
-                        for (int idx = 0; idx < way.Nodes.Count; idx++)
+                    { // this way has nodes.
+                        int wayNodesCount = way.Nodes.Count;
+                        for (int idx = 0; idx < wayNodesCount; idx++)
                         {
                             var node = way.Nodes[idx];
                             if (_preIndex.Contains(node))
-                            {
+                            { // node is relevant.
                                 _relevantNodes.Add(node);
                             }
                             else
-                            {
-                                _preIndex.Add(node); // node is relevant.
+                            { // node is used.
+                                _preIndex.Add(node); 
                             }
+                        }
 
-                            if(idx == 0)
-                            {
-                                _relevantNodes.Add(node);
-                            }
-                            else if(idx == way.Nodes.Count - 1)
-                            {
-                                _relevantNodes.Add(node);
+                        if (wayNodesCount > 0)
+                        { // first node is always relevant.
+                            _relevantNodes.Add(way.Nodes[0]);
+                            if (wayNodesCount > 1)
+                            { // last node is always relevant.
+                                _relevantNodes.Add(way.Nodes[wayNodesCount - 1]);
                             }
                         }
                     }
