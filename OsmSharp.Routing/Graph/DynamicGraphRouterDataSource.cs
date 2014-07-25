@@ -343,6 +343,16 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Resizes the internal data structures of the graph to handle the number of vertices/edges estimated.
+        /// </summary>
+        /// <param name="vertexEstimate"></param>
+        /// <param name="edgeEstimate"></param>
+        public void Resize(long vertexEstimate, long edgeEstimate)
+        {
+            _graph.Resize(vertexEstimate, edgeEstimate);
+        }
+
+        /// <summary>
         /// Returns the number of vertices in this graph.
         /// </summary>
         public uint VertexCount

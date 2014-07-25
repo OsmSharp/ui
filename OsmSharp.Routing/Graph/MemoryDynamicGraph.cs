@@ -96,31 +96,48 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Increases the memory allocation for this dynamic graph.
+        /// Increases the memory allocation.
         /// </summary>
         private void IncreaseVertexSize()
         {
+            this.IncreaseVertexSize(_coordinates.Length + 10000);
+        }
+
+        /// <summary>
+        /// Increases the memory allocation.
+        /// </summary>
+        /// <param name="size"></param>
+        private void IncreaseVertexSize(int size)
+        {
             var oldLength = _coordinates.Length;
-            Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 10000);
-            Array.Resize<uint>(ref _vertices, _vertices.Length + 10000);
-            for (int idx = oldLength; idx < oldLength + 10000; idx++)
+            Array.Resize<GeoCoordinateSimple>(ref _coordinates, size);
+            Array.Resize<uint>(ref _vertices, size);
+            for (int idx = oldLength; idx < size; idx++)
             {
                 _vertices[idx] = NO_EDGE;
             }
         }
 
         /// <summary>
-        /// Increases the memory allocation for this dynamic graph.
+        /// Increases the memory allocation.
         /// </summary>
         private void IncreaseEdgeSize()
         {
+            this.IncreaseEdgeSize(_edges.Length + 10000);
+        }
+
+        /// <summary>
+        /// Increases the memory allocation.
+        /// </summary>
+        private void IncreaseEdgeSize(int size)
+        {
             var oldLength = _edges.Length;
-            Array.Resize<uint>(ref _edges, _edges.Length + 10000);
-            for (int idx = oldLength; idx < oldLength + 10000; idx++)
+            Array.Resize<uint>(ref _edges, size);
+            for (int idx = oldLength; idx < size; idx++)
             {
                 _edges[idx] = NO_EDGE;
             }
-            Array.Resize<TEdgeData>(ref _edgeData, _edgeData.Length + (10000 / EDGE_SIZE));
+            Array.Resize<TEdgeData>(ref _edgeData, size / EDGE_SIZE);
         }
 
         /// <summary>
@@ -254,7 +271,7 @@ namespace OsmSharp.Routing.Graph
 
                 // create a new edge.
                 edgeId = _nextEdgeId;
-                if (_nextEdgeId + NODEA >= _edges.Length)
+                if (_nextEdgeId + NEXTNODEB >= _edges.Length)
                 { // there is a need to increase edges array.
                     this.IncreaseEdgeSize();
                 }
@@ -275,7 +292,7 @@ namespace OsmSharp.Routing.Graph
                 edgeId = _nextEdgeId;
                 _vertices[vertex1] = _nextEdgeId;
 
-                if (_nextEdgeId + NODEA >= _edges.Length)
+                if (_nextEdgeId + NEXTNODEB >= _edges.Length)
                 { // there is a need to increase edges array.
                     this.IncreaseEdgeSize();
                 }
@@ -575,6 +592,20 @@ namespace OsmSharp.Routing.Graph
             // resize edges.
             Array.Resize<TEdgeData>(ref _edgeData, (int)(_nextEdgeId / EDGE_SIZE));
             Array.Resize<uint>(ref _edges, (int)_nextEdgeId);
+        }
+
+        /// <summary>
+        /// Resizes the internal data structures of the graph to handle the number of vertices/edges estimated.
+        /// </summary>
+        /// <param name="vertexEstimate"></param>
+        /// <param name="edgeEstimate"></param>
+        public void Resize(long vertexEstimate, long edgeEstimate)
+        {
+            // resize coordinates/vertices.
+            this.IncreaseVertexSize((int)vertexEstimate);
+
+            // resize edges.
+            this.IncreaseEdgeSize((int)edgeEstimate);
         }
 
         /// <summary>

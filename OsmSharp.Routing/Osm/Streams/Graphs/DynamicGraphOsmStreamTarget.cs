@@ -624,6 +624,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // reset the source.
             this.Source.Reset();
 
+            // resize graph.
+            // TODO: study avery cardinality and slightly overestimate here.
+            _dynamicGraph.Resize(_relevantNodes.Count, (long)(_relevantNodes.Count * 5));
+
             // move out of pre-index mode.
             _preIndexMode = false;
 
@@ -643,6 +647,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // there is a pre-processor, trigger execution.
                 preProcessor.Start();
             }
+
+            // trim the graph.
+            _dynamicGraph.Trim();
         }
 
         /// <summary>

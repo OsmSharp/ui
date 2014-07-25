@@ -68,5 +68,12 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <remarks>Be careful when doing this, could need up to 2x the current memory usage.</remarks>
         void Trim();
+
+        /// <summary>
+        /// Resizes the internal data structures of the graph to handle the number of vertices/edges estimated.
+        /// </summary>
+        /// <param name="vertexEstimate"></param>
+        /// <param name="edgeEstimate"></param>
+        void Resize(long vertexEstimate, long edgeEstimate);
     }
 }

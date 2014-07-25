@@ -48,5 +48,13 @@ namespace OsmSharp.Collections.LongIndex
         /// </summary>
         /// <param name="number"></param>
         void Remove(long number);
+
+        /// <summary>
+        /// Returns the number of flags that are set.
+        /// </summary>
+        long Count
+        {
+            get;
+        }
     }
 }
