@@ -105,12 +105,6 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(0, arcs[0].Value.Tags);
             Assert.AreEqual(vertex2, arcs[0].Key);
 
-            graph.AddEdge(vertex2, vertex1, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 0
-            }, null);
-
             arcs = graph.GetEdges(vertex2);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(0, arcs[0].Value.Tags);
@@ -134,17 +128,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 graph.AddEdge(vertex1, vertex2, new LiveEdge()
                                                    {
                                                        Tags = 0,
-                                                       Forward =  false
+                                                       Forward =  true
                                                    }, null);
 
-                KeyValuePair<uint, LiveEdge>[] arcs = graph.GetEdges(vertex1);
+                var arcs = graph.GetEdges(vertex1);
                 Assert.AreEqual(10000 - count + 1, arcs.Length);
-
-                graph.AddEdge(vertex2, vertex1, new LiveEdge()
-                                                    {
-                                                        Tags = 0,
-                                                        Forward = false
-                                                    }, null);
 
                 arcs = graph.GetEdges(vertex2);
                 Assert.AreEqual(1, arcs.Length);
