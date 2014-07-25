@@ -231,24 +231,6 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds a new vertex to this graph.
-        /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
-        /// <returns></returns>
-        public uint AddVertex(float latitude, float longitude, byte neighboursEstimate)
-        {
-            uint vertex = _graph.AddVertex(latitude, longitude, neighboursEstimate);
-            if (_vertexIndex != null)
-            {
-                _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                    vertex);
-            }
-            return vertex;
-        }
-
-        /// <summary>
         /// Adds a new vertex.
         /// </summary>
         /// <param name="latitude"></param>

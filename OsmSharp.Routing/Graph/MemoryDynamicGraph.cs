@@ -124,18 +124,6 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds a new vertex to this graph.
-        /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
-        /// <returns></returns>
-        public uint AddVertex(float latitude, float longitude, byte neighboursEstimate)
-        {
-            return this.AddVertex(latitude, longitude);
-        }
-
-        /// <summary>
         /// Adds a new vertex.
         /// </summary>
         /// <param name="latitude"></param>
@@ -168,6 +156,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="longitude"></param>
         public void SetVertex(uint vertex, float latitude, float longitude)
         {
+            if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
+
             _coordinates[vertex].Latitude = latitude;
             _coordinates[vertex].Longitude = longitude;
         }
@@ -181,7 +171,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public bool GetVertex(uint id, out float latitude, out float longitude)
         {
-            if (_vertices.Length > id)
+            if (_nextVertexId > id)
             {
                 latitude = _coordinates[id].Latitude;
                 longitude = _coordinates[id].Longitude;
@@ -190,19 +180,6 @@ namespace OsmSharp.Routing.Graph
             latitude = float.MaxValue;
             longitude = float.MaxValue;
             return false;
-        }
-
-        /// <summary>
-        /// Returns an enumerable of all vertices.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<uint> GetVertices()
-        {
-            if (_nextVertexId > 1)
-            {
-                return Range.UInt32(1, (uint)_nextVertexId - 1, 1U);
-            }
-            return new List<uint>();
         }
 
         /// <summary>
@@ -227,120 +204,119 @@ namespace OsmSharp.Routing.Graph
         {
             if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
-            if (_vertices.Length > vertex1 && 
-                _vertices.Length > vertex2)
-            {
-                var edgeId = _vertices[vertex1];
-                if (_vertices[vertex1] != NO_EDGE)
-                { // check for an existing edge first.
-                    // check if the arc exists already.
-                    edgeId = _vertices[vertex1];
-                    uint nextEdgeSlot = 0;
-                    while (edgeId != NO_EDGE)
-                    { // keep looping.
-                        uint otherVertexId = 0;
-                        uint previousEdgeId = edgeId;
-                        bool forward = true;
-                        if (_edges[edgeId + NODEA] == vertex1)
+            if (vertex1 == vertex2) { throw new ArgumentException("Given vertices must be different."); }
+            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
+            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
+
+            var edgeId = _vertices[vertex1];
+            if (_vertices[vertex1] != NO_EDGE)
+            { // check for an existing edge first.
+                // check if the arc exists already.
+                edgeId = _vertices[vertex1];
+                uint nextEdgeSlot = 0;
+                while (edgeId != NO_EDGE)
+                { // keep looping.
+                    uint otherVertexId = 0;
+                    uint previousEdgeId = edgeId;
+                    bool forward = true;
+                    if (_edges[edgeId + NODEA] == vertex1)
+                    {
+                        otherVertexId = _edges[edgeId + NODEB];
+                        nextEdgeSlot = edgeId + NEXTNODEA;
+                        edgeId = _edges[edgeId + NEXTNODEA];
+                    }
+                    else
+                    {
+                        otherVertexId = _edges[edgeId + NODEA];
+                        nextEdgeSlot = edgeId + NEXTNODEB;
+                        edgeId = _edges[edgeId + NEXTNODEB];
+                        forward = false;
+                    }
+                    if (otherVertexId == vertex2)
+                    { // this is the edge we need.
+                        if (!forward)
                         {
-                            otherVertexId = _edges[edgeId + NODEB];
-                            nextEdgeSlot = edgeId + NEXTNODEA;
-                            edgeId = _edges[edgeId + NEXTNODEA];
+                            data = (TEdgeData)data.Reverse();
                         }
-                        else
-                        {
-                            otherVertexId = _edges[edgeId + NODEA];
-                            nextEdgeSlot = edgeId + NEXTNODEB;
-                            edgeId = _edges[edgeId + NEXTNODEB];
-                            forward = false;
-                        }
-                        if (otherVertexId == vertex2)
-                        { // this is the edge we need.
-                            if (!forward)
-                            {
-                                data = (TEdgeData)data.Reverse();
+                        if (comparer != null)
+                        { // there is a comparer.
+                            var existingData = _edgeData[previousEdgeId / 4];
+                            if (comparer.Overlaps(data, existingData))
+                            { // an arc was found that represents the same directional information.
+                                _edgeData[previousEdgeId / 4] = data;
                             }
-                            if(comparer != null)
-                            { // there is a comparer.
-                                var existingData = _edgeData[previousEdgeId / 4];
-                                if (comparer.Overlaps(data, existingData))
-                                { // an arc was found that represents the same directional information.
-                                    _edgeData[previousEdgeId / 4] = data;
-                                }
-                                return;
-                            }
-                            _edgeData[previousEdgeId / 4] = data;
                             return;
                         }
+                        _edgeData[previousEdgeId / 4] = data;
+                        return;
                     }
-
-                    // create a new edge.
-                    edgeId = _nextEdgeId;
-                    if (_nextEdgeId + NODEA >= _edges.Length)
-                    { // there is a need to increase edges array.
-                        this.IncreaseEdgeSize();
-                    }
-                    _edges[_nextEdgeId + NODEA] = vertex1;
-                    _edges[_nextEdgeId + NODEB] = vertex2;
-                    _edges[_nextEdgeId + NEXTNODEA] = NO_EDGE;
-                    _edges[_nextEdgeId + NEXTNODEB] = NO_EDGE;
-                    _nextEdgeId = _nextEdgeId + EDGE_SIZE;
-
-                    // append the new edge to the from list.
-                    _edges[nextEdgeSlot] = edgeId;
-
-                    // set data.
-                    _edgeData[edgeId / 4] = data;
-                }
-                else
-                { // create a new edge and set.
-                    edgeId = _nextEdgeId;
-                    _vertices[vertex1] = _nextEdgeId;
-
-                    if (_nextEdgeId + NODEA >= _edges.Length)
-                    { // there is a need to increase edges array.
-                        this.IncreaseEdgeSize();
-                    }
-                    _edges[_nextEdgeId + NODEA] = vertex1;
-                    _edges[_nextEdgeId + NODEB] = vertex2;
-                    _edges[_nextEdgeId + NEXTNODEA] = NO_EDGE;
-                    _edges[_nextEdgeId + NEXTNODEB] = NO_EDGE;
-                    _nextEdgeId = _nextEdgeId + EDGE_SIZE;
-
-                    // set data.
-                    _edgeData[edgeId / 4] = data;
                 }
 
-                var toEdgeId = _vertices[vertex2];
-                if (toEdgeId != NO_EDGE)
-                { // there are existing edges.
-                    uint nextEdgeSlot = 0;
-                    while (toEdgeId != NO_EDGE)
-                    { // keep looping.
-                        uint otherVertexId = 0;
-                        if (_edges[edgeId + NODEA] == vertex2)
-                        {
-                            otherVertexId = _edges[toEdgeId + NODEB];
-                            toEdgeId = _edges[toEdgeId + NEXTNODEA];
-                            nextEdgeSlot = toEdgeId + NEXTNODEA;
-                        }
-                        else
-                        {
-                            otherVertexId = _edges[toEdgeId + NODEA];
-                            toEdgeId = _edges[toEdgeId + NEXTNODEB];
-                            nextEdgeSlot = toEdgeId + NEXTNODEB;
-                        }
-                    }
-                    _vertices[vertex2] = nextEdgeSlot;
+                // create a new edge.
+                edgeId = _nextEdgeId;
+                if (_nextEdgeId + NODEA >= _edges.Length)
+                { // there is a need to increase edges array.
+                    this.IncreaseEdgeSize();
                 }
-                else
-                { // there are no existing edges.
-                    _vertices[vertex2] = _vertices[vertex1];
-                }
+                _edges[_nextEdgeId + NODEA] = vertex1;
+                _edges[_nextEdgeId + NODEB] = vertex2;
+                _edges[_nextEdgeId + NEXTNODEA] = NO_EDGE;
+                _edges[_nextEdgeId + NEXTNODEB] = NO_EDGE;
+                _nextEdgeId = _nextEdgeId + EDGE_SIZE;
 
-                return;
+                // append the new edge to the from list.
+                _edges[nextEdgeSlot] = edgeId;
+
+                // set data.
+                _edgeData[edgeId / 4] = data;
             }
-            throw new ArgumentOutOfRangeException("from");
+            else
+            { // create a new edge and set.
+                edgeId = _nextEdgeId;
+                _vertices[vertex1] = _nextEdgeId;
+
+                if (_nextEdgeId + NODEA >= _edges.Length)
+                { // there is a need to increase edges array.
+                    this.IncreaseEdgeSize();
+                }
+                _edges[_nextEdgeId + NODEA] = vertex1;
+                _edges[_nextEdgeId + NODEB] = vertex2;
+                _edges[_nextEdgeId + NEXTNODEA] = NO_EDGE;
+                _edges[_nextEdgeId + NEXTNODEB] = NO_EDGE;
+                _nextEdgeId = _nextEdgeId + EDGE_SIZE;
+
+                // set data.
+                _edgeData[edgeId / 4] = data;
+            }
+
+            var toEdgeId = _vertices[vertex2];
+            if (toEdgeId != NO_EDGE)
+            { // there are existing edges.
+                uint nextEdgeSlot = 0;
+                while (toEdgeId != NO_EDGE)
+                { // keep looping.
+                    uint otherVertexId = 0;
+                    if (_edges[toEdgeId + NODEA] == vertex2)
+                    {
+                        otherVertexId = _edges[toEdgeId + NODEB];
+                        nextEdgeSlot = toEdgeId + NEXTNODEA;
+                        toEdgeId = _edges[toEdgeId + NEXTNODEA];
+                    }
+                    else
+                    {
+                        otherVertexId = _edges[toEdgeId + NODEA];
+                        nextEdgeSlot = toEdgeId + NEXTNODEB;
+                        toEdgeId = _edges[toEdgeId + NEXTNODEB];
+                    }
+                }
+                _edges[nextEdgeSlot] = edgeId;
+            }
+            else
+            { // there are no existing edges point the vertex straight to it's first edge.
+                _vertices[vertex2] = edgeId;
+            }
+
+            return;
         }
 
         /// <summary>
@@ -349,94 +325,182 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex"></param>
         public void RemoveEdges(uint vertex)
         {
-            throw new NotImplementedException();
+            var edges = this.GetEdges(vertex);
+
+            foreach(var edge in edges)
+            {
+                this.RemoveEdge(vertex, edge.Key);
+            }
         }
 
         /// <summary>
         /// Deletes the edge between the two given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        public void RemoveEdge(uint from, uint to)
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        public void RemoveEdge(uint vertex1, uint vertex2)
         {
-            throw new NotImplementedException();
+            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
+            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
+
+            // remove for vertex1.
+            var nextEdgeId = _vertices[vertex1];
+            uint nextEdgeSlot = 0;
+            uint previousEdgeSlot = 0;
+            uint currentEdgeId = 0;
+            while (nextEdgeId != NO_EDGE)
+            { // keep looping.
+                uint otherVertexId = 0;
+                currentEdgeId = nextEdgeId;
+                previousEdgeSlot = nextEdgeSlot;
+                if (_edges[nextEdgeId + NODEA] == vertex1)
+                {
+                    otherVertexId = _edges[nextEdgeId + NODEB];
+                    nextEdgeSlot = nextEdgeId + NEXTNODEA;
+                    nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
+                }
+                else
+                {
+                    otherVertexId = _edges[nextEdgeId + NODEA];
+                    nextEdgeSlot = nextEdgeId + NEXTNODEB;
+                    nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
+                }
+                if (otherVertexId == vertex2)
+                { // this is the edge we need.
+                    if (_vertices[vertex1] == currentEdgeId)
+                    { // the edge being remove if the 'first' edge.
+                        // point to the next edge.
+                        _vertices[vertex1] = nextEdgeId;
+                    }
+                    else
+                    { // the edge being removed is not the 'first' edge.
+                        // set the previous edge slot to the current edge id being the next one.
+                        _edges[previousEdgeSlot] = nextEdgeId;
+                    }
+                    break;
+                }
+            }
+
+            // remove for vertex2.
+            nextEdgeId = _vertices[vertex2];
+            nextEdgeSlot = 0;
+            previousEdgeSlot = 0;
+            currentEdgeId = 0;
+            while (nextEdgeId != NO_EDGE)
+            { // keep looping.
+                uint otherVertexId = 0;
+                currentEdgeId = nextEdgeId;
+                previousEdgeSlot = nextEdgeSlot;
+                if (_edges[nextEdgeId + NODEA] == vertex2)
+                {
+                    otherVertexId = _edges[nextEdgeId + NODEB];
+                    nextEdgeSlot = nextEdgeId + NEXTNODEA;
+                    nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
+                }
+                else
+                {
+                    otherVertexId = _edges[nextEdgeId + NODEA];
+                    nextEdgeSlot = nextEdgeId + NEXTNODEB;
+                    nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
+                }
+                if (otherVertexId == vertex1)
+                { // this is the edge we need.
+                    if (_vertices[vertex2] == currentEdgeId)
+                    { // the edge being remove if the 'first' edge.
+                        // point to the next edge.
+                        _vertices[vertex2] = nextEdgeId;
+                    }
+                    else
+                    { // the edge being removed is not the 'first' edge.
+                        // set the previous edge slot to the current edge id being the next one.
+                        _edges[previousEdgeSlot] = nextEdgeId;
+                    }
+
+                    // reset everything about this edge.
+                    _edges[currentEdgeId + NODEA] = NO_EDGE;
+                    _edges[currentEdgeId + NODEB] = NO_EDGE;
+                    _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
+                    _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
+                    _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
+                    return;
+                }
+            }
+            throw new Exception("Edge could not be reached from vertex2. Data in graph is invalid.");
         }
 
         /// <summary>
         /// Returns all arcs starting at the given vertex.
         /// </summary>
-        /// <param name="vertexId"></param>
+        /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId)
+        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertex)
         {
-            if (_vertices.Length > vertexId)
-            {
-                var edgeId = _vertices[vertexId];
-                if (edgeId == NO_EDGE)
-                { // there are no edges.
-                    return new KeyValuePair<uint, TEdgeData>[0];
-                }
+            if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
-                // loop over edges until a NO_EDGE is encountered.
-                var edges = new List<KeyValuePair<uint, TEdgeData>>();
-                while (edgeId != NO_EDGE)
-                { // keep looping.
-                    if (_edges[edgeId + NODEA] == vertexId)
-                    {
-                        var otherVertexId = _edges[edgeId + NODEB];
-                        edges.Add(
-                            new KeyValuePair<uint, TEdgeData>(otherVertexId, _edgeData[edgeId / 4]));
-                        edgeId = _edges[edgeId + NEXTNODEA];
-                    }
-                    else
-                    {
-                        var otherVertexId = _edges[edgeId + NODEA];
-                        edges.Add(
-                            new KeyValuePair<uint, TEdgeData>(otherVertexId, (TEdgeData)_edgeData[edgeId / 4].Reverse()));
-                        edgeId = _edges[edgeId + NEXTNODEB];
-                    }
-                }
-
-                return edges.ToArray();
+            var edgeId = _vertices[vertex];
+            if (edgeId == NO_EDGE)
+            { // there are no edges.
+                return new KeyValuePair<uint, TEdgeData>[0];
             }
-            return new KeyValuePair<uint, TEdgeData>[0]; // return empty data if the vertex does not exist!
+
+            // loop over edges until a NO_EDGE is encountered.
+            var edges = new List<KeyValuePair<uint, TEdgeData>>();
+            while (edgeId != NO_EDGE)
+            { // keep looping.
+                if (_edges[edgeId + NODEA] == vertex)
+                {
+                    var otherVertexId = _edges[edgeId + NODEB];
+                    edges.Add(
+                        new KeyValuePair<uint, TEdgeData>(otherVertexId, _edgeData[edgeId / 4]));
+                    edgeId = _edges[edgeId + NEXTNODEA];
+                }
+                else
+                {
+                    var otherVertexId = _edges[edgeId + NODEA];
+                    edges.Add(
+                        new KeyValuePair<uint, TEdgeData>(otherVertexId, (TEdgeData)_edgeData[edgeId / 4].Reverse()));
+                    edgeId = _edges[edgeId + NEXTNODEB];
+                }
+            }
+
+            return edges.ToArray();
         }
 
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="neighbour"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertex1, uint vertex2)
         {
-            if (_vertices.Length > vertexId)
-            { // edge out of range.
-                if (_vertices[vertexId] == NO_EDGE)
-                { // no edges here!
-                    return false;
+            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
+            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
+
+            if (_vertices[vertex1] == NO_EDGE)
+            { // no edges here!
+                return false;
+            }
+            var edgeId = _vertices[vertex1];
+            uint nextEdgeSlot = 0;
+            while (edgeId != NO_EDGE)
+            { // keep looping.
+                uint otherVertexId = 0;
+                if (_edges[edgeId + NODEA] == vertex1)
+                {
+                    otherVertexId = _edges[edgeId + NODEB];
+                    edgeId = _edges[edgeId + NEXTNODEA];
+                    nextEdgeSlot = edgeId + NEXTNODEA;
                 }
-                var edgeId = _vertices[vertexId];
-                uint nextEdgeSlot = 0;
-                while (edgeId != NO_EDGE)
-                { // keep looping.
-                    uint otherVertexId = 0;
-                    if (_edges[edgeId + NODEA] == vertexId)
-                    {
-                        otherVertexId = _edges[edgeId + NODEB];
-                        edgeId = _edges[edgeId + NEXTNODEA];
-                        nextEdgeSlot = edgeId + NEXTNODEA;
-                    }
-                    else
-                    {
-                        otherVertexId = _edges[edgeId + NODEA];
-                        edgeId = _edges[edgeId + NEXTNODEB];
-                        nextEdgeSlot = edgeId + NEXTNODEB;
-                    }
-                    if (otherVertexId == neighbour)
-                    { // this is the edge we need.
-                        return true;
-                    }
+                else
+                {
+                    otherVertexId = _edges[edgeId + NODEA];
+                    edgeId = _edges[edgeId + NEXTNODEB];
+                    nextEdgeSlot = edgeId + NEXTNODEB;
+                }
+                if (otherVertexId == vertex2)
+                { // this is the edge we need.
+                    return true;
                 }
             }
             return false;
@@ -451,37 +515,42 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
         {
-            if (_vertices.Length > vertex1 &&
-                _vertices.Length > vertex2)
-            { // edge out of range.
-                if (_vertices[vertex1] == NO_EDGE)
-                { // no edges here!
-                    data = default(TEdgeData);
-                    return false;
+            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
+            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
+
+            if (_vertices[vertex1] == NO_EDGE)
+            { // no edges here!
+                data = default(TEdgeData);
+                return false;
+            }
+            var edgeId = _vertices[vertex1];
+            uint nextEdgeSlot = 0;
+            while (edgeId != NO_EDGE)
+            { // keep looping.
+                uint otherVertexId = 0;
+                var currentEdgeId = edgeId;
+                bool forward = true;
+                if (_edges[edgeId + NODEA] == vertex1)
+                {
+                    otherVertexId = _edges[edgeId + NODEB];
+                    edgeId = _edges[edgeId + NEXTNODEA];
+                    nextEdgeSlot = edgeId + NEXTNODEA;
                 }
-                var edgeId = _vertices[vertex1];
-                uint nextEdgeSlot = 0;
-                while (edgeId != NO_EDGE)
-                { // keep looping.
-                    uint otherVertexId = 0;
-                    var currentEdgeId = edgeId;
-                    if (_edges[edgeId + NODEA] == vertex1)
+                else
+                {
+                    otherVertexId = _edges[edgeId + NODEA];
+                    edgeId = _edges[edgeId + NEXTNODEB];
+                    nextEdgeSlot = edgeId + NEXTNODEB;
+                    forward = false;
+                }
+                if (otherVertexId == vertex2)
+                { // this is the edge we need.
+                    data = _edgeData[currentEdgeId / EDGE_SIZE];
+                    if (!forward)
                     {
-                        otherVertexId = _edges[edgeId + NODEB];
-                        edgeId = _edges[edgeId + NEXTNODEA];
-                        nextEdgeSlot = edgeId + NEXTNODEA;
+                        data = (TEdgeData)data.Reverse();
                     }
-                    else
-                    {
-                        otherVertexId = _edges[edgeId + NODEA];
-                        edgeId = _edges[edgeId + NEXTNODEB];
-                        nextEdgeSlot = edgeId + NEXTNODEB;
-                    }
-                    if (otherVertexId == vertex2)
-                    { // this is the edge we need.
-                        data = _edgeData[currentEdgeId / EDGE_SIZE];
-                        return true;
-                    }
+                    return true;
                 }
             }
             data = default(TEdgeData);

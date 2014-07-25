@@ -19,6 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Routing.Graph
@@ -39,6 +40,67 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         }
 
         /// <summary>
+        /// Tests argument out of range.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphArguments()
+        {
+            // create graph with one vertex and start adding vertex2.
+            var graph = this.CreateGraph();
+            uint vertex1 = graph.AddVertex(0, 0);
+            uint vertex2 = graph.AddVertex(0, 0);
+            uint vertex3 = 3;
+
+            Assert.Catch<ArgumentOutOfRangeException>(() => {
+                graph.AddEdge(vertex3, vertex1, new LiveEdge());
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.AddEdge(vertex1, vertex3, new LiveEdge());
+            });
+            Assert.Catch<ArgumentException>(() =>
+            {
+                graph.AddEdge(vertex1, vertex1, new LiveEdge());
+            });
+            Assert.Catch<ArgumentException>(() =>
+            {
+                graph.AddEdge(vertex1, vertex1, new LiveEdge());
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.AddEdge(vertex1, vertex2, new LiveEdge()
+                    {
+                        Forward = false
+                    });
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.ContainsEdge(vertex3, vertex1);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.ContainsEdge(vertex1, vertex3);
+            });
+            LiveEdge edge;
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.GetEdge(vertex3, vertex1, out edge);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.GetEdge(vertex1, vertex3, out edge);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.GetEdges(vertex3);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                graph.SetVertex(vertex3, 10, 10);
+            });
+        }
+
+        /// <summary>
         /// Tests adding a vertex.
         /// </summary>
         [Test]
@@ -49,12 +111,17 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             float latitude, longitude;
             graph.GetVertex(vertex, out latitude, out longitude);
-
             Assert.AreEqual(51, latitude);
             Assert.AreEqual(4, longitude);
+            graph.SetVertex(vertex, 52, 5);
+            graph.GetVertex(vertex, out latitude, out longitude);
+            Assert.AreEqual(52, latitude);
+            Assert.AreEqual(5, longitude);
 
             var arcs = graph.GetEdges(vertex);
             Assert.AreEqual(0, arcs.Length);
+
+            Assert.IsFalse(graph.GetVertex(100, out latitude, out longitude));
         }
 
         /// <summary>
@@ -109,8 +176,15 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(0, arcs[0].Value.Tags);
             Assert.AreEqual(vertex1, arcs[0].Key);
-        }
 
+            LiveEdge edge;
+            Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
+            Assert.AreEqual(0, edge.Tags);
+            Assert.AreEqual(true, edge.Forward);
+            Assert.IsTrue(graph.GetEdge(vertex2, vertex1, out edge));
+            Assert.AreEqual(0, edge.Tags);
+            Assert.AreEqual(false, edge.Forward);
+        }
 
         /// <summary>
         /// Tests adding 10000 edges.
@@ -141,6 +215,476 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 count--;
             }
+        }
+
+        /// <summary>
+        /// Tests adding an edge and the reverse edge.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphEdge1()
+        {
+            uint tagsId = 10;
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = tagsId
+            }, null);
+
+            // test forward edge.
+            var arcs = graph.GetEdges(vertex1);
+            Assert.AreEqual(1, arcs.Length);
+            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex2, arcs[0].Key);
+            Assert.AreEqual(true, arcs[0].Value.Forward);
+
+            // test backward edge: backward edge is added automatically.
+            arcs = graph.GetEdges(vertex2);
+            Assert.AreEqual(1, arcs.Length);
+            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex1, arcs[0].Key);
+            Assert.AreEqual(false, arcs[0].Value.Forward);
+
+            // add a third vertex.
+            var vertex3 = graph.AddVertex(51, 2);
+            var edge = new LiveEdge()
+            {
+                Forward = true,
+                Tags = tagsId
+            };
+            graph.AddEdge(vertex1, vertex3, edge, null);
+
+            // test forward edges.
+            arcs = graph.GetEdges(vertex1);
+            Assert.AreEqual(2, arcs.Length);
+            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex2, arcs[0].Key);
+            Assert.AreEqual(true, arcs[0].Value.Forward);
+            Assert.AreEqual(tagsId, arcs[1].Value.Tags);
+            Assert.AreEqual(vertex3, arcs[1].Key);
+            Assert.AreEqual(true, arcs[1].Value.Forward);
+
+            // test backward edge: backward edge is added automatically.
+            arcs = graph.GetEdges(vertex3);
+            Assert.AreEqual(1, arcs.Length);
+            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex1, arcs[0].Key);
+            Assert.AreEqual(false, arcs[0].Value.Forward);
+        }
+
+        /// <summary>
+        /// Tests adding and removing one edge.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphAddRemove1()
+        {
+            uint tagsId = 10;
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = tagsId
+            }, null);
+
+            // test forward edge.
+            var arcs = graph.GetEdges(vertex1);
+            Assert.AreEqual(1, arcs.Length);
+            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex2, arcs[0].Key);
+            Assert.AreEqual(true, arcs[0].Value.Forward);
+
+            // remove edge again.
+            graph.RemoveEdge(vertex1, vertex2);
+
+            // check if the edge is gone.
+            arcs = graph.GetEdges(vertex1);
+            Assert.AreEqual(0, arcs.Length);
+        }
+
+        /// <summary>
+        /// Tests adding and removing two edges.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphAddRemove2()
+        {
+            uint tagsId = 10;
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = tagsId
+            }, null);
+
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = tagsId
+            }, null);
+
+            // test edges.
+            var edges = graph.GetEdges(vertex1);
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(true, edges[0].Value.Forward);
+            edges = graph.GetEdges(vertex2);
+            Assert.AreEqual(2, edges.Length);
+            edges = graph.GetEdges(vertex3);
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(false, edges[0].Value.Forward);
+
+            // remove edge again.
+            graph.RemoveEdge(vertex1, vertex2);
+
+            // test edges.
+            edges = graph.GetEdges(vertex1);
+            Assert.AreEqual(0, edges.Length);
+            edges = graph.GetEdges(vertex2);
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex3, edges[0].Key);
+            Assert.AreEqual(true, edges[0].Value.Forward);
+            edges = graph.GetEdges(vertex3);
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(false, edges[0].Value.Forward);
+
+        }
+
+        /// <summary>
+        /// Tests adding and remove an arbitrary number of edges.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphAddRemoveX()
+        {
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
+            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex3));
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
+            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex3));
+
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex4));
+            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex2));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 3);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 2);
+        }
+
+        /// <summary>
+        /// Test removing an edge at the end.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphRemoveEnd()
+        {
+
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex2, vertex4);
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex4));
+            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 1);
+        }
+
+        /// <summary>
+        /// Test removing an edge in the middle.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphRemoveMiddle()
+        {
+
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex2, vertex3);
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex2));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 2);
+        }
+
+        /// <summary>
+        /// Test removing an edge in the beginning.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphRemoveBegin()
+        {
+
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex2, vertex1);
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdge(vertex1, vertex2));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 0);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 2);
+        }
+
+        /// <summary>
+        /// Test removing an edge in the beginning.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphRemoveAll()
+        {
+
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            });
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            });
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            });
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            });
+
+            graph.RemoveEdge(vertex2, vertex1);
+            graph.RemoveEdge(vertex2, vertex3);
+            graph.RemoveEdge(vertex4, vertex3);
+            graph.RemoveEdge(vertex4, vertex2);
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex3));
+            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
+        }
+
+        /// <summary>
+        /// Tests removing all edges for one vertex.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphRemoveAllOneVertex()
+        {
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            });
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            });
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            });
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            });
+
+            graph.RemoveEdges(vertex2);
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
+            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
+        }
+
+        /// <summary>
+        /// Tests overwrite an edge with a reverse edge.
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphAddReverse()
+        {
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            graph.AddEdge(vertex2, vertex1, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <summary>
         /// Flag indicating if this is a forward or backward edge relative to the tag descriptions.
         /// </summary>
-        public bool Forward 
+        public bool Forward
         {
             get
             { // true when first bit is 0.
@@ -143,10 +143,10 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <returns></returns>
         public bool Equals(IDynamicGraphEdgeData other)
         {
-            if(other is LiveEdge)
+            if (other is LiveEdge)
             { // ok, type is the same.
                 var otherLive = (LiveEdge)other;
-                if(otherLive._value != this._value)
+                if (otherLive._value != this._value)
                 { // basic info different.
                     return false;
                 }
@@ -213,6 +213,15 @@ namespace OsmSharp.Routing.Osm.Graphs
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns a description of this edge.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}-{1}", this.Tags, this.Distance);
         }
     }
 }

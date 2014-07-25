@@ -41,15 +41,6 @@ namespace OsmSharp.Routing.Graph
         void SetVertex(uint vertex, float latitude, float longitude);
 
         /// <summary>
-        /// Adds a vertex.
-        /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
-        /// <returns></returns>
-        uint AddVertex(float latitude, float longitude, byte neighboursEstimate);
-
-        /// <summary>
         /// Adds an edge with associated data.
         /// </summary>
         /// <param name="from"></param>
