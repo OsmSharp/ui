@@ -71,7 +71,6 @@
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\IDynamicGraphWriteOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
-    <Compile Include="Graph\MemoryDynamicGraphWriteOnly.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />

@@ -312,27 +312,34 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Trims this graph.
+        /// Compresses the internal of the graph, freeing new space.
         /// </summary>
         /// <param name="max"></param>
+        public void Compress()
+        {
+            _graph.Trim();
+
+            // rebuild index.
+            if (_vertexIndex != null)
+            {
+                float latitude, longitude;
+                _vertexIndex.Clear();
+                for (uint idx = 0; idx < _graph.VertexCount; idx++)
+                {
+                    if (_graph.GetVertex(idx, out latitude, out longitude))
+                    {
+                        _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Trims all internal data structures.
+        /// </summary>
         public void Trim()
         {
-            throw new NotImplementedException();
-            //_graph.Trim(vertices);
-
-            //// rebuild index.
-            //if (_vertexIndex != null)
-            //{
-            //    float latitude, longitude;
-            //    _vertexIndex.Clear();
-            //    for (uint idx = 0; idx < vertices; idx++)
-            //    {
-            //        if (_graph.GetVertex(idx, out latitude, out longitude))
-            //        {
-            //            _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
-            //        }
-            //    }
-            //}
+            _graph.Trim();
         }
 
         /// <summary>

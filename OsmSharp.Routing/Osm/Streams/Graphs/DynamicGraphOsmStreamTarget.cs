@@ -365,6 +365,23 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
                                     { // add a road edge.
+                                        while(from.Value == to.Value)
+                                        {
+                                            if(intermediates.Count > 0)
+                                            {
+                                                uint? dummy = this.AddRoadNode(intermediates[0]);
+                                                intermediates.RemoveAt(0);
+                                                if(dummy.HasValue && from.Value != dummy.Value)
+                                                {
+                                                    this.AddRoadEdge(way.Tags, true, from.Value, dummy.Value, null);
+                                                    from = dummy;
+                                                }
+                                            }
+                                            else
+                                            { // no use to continue.
+                                                break;
+                                            }
+                                        }
                                         // build coordinates.
                                         var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
                                         for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
@@ -381,13 +398,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                             });
                                         }
 
-                                        if (intermediateCoordinates.Count == intermediates.Count)
+                                        if (intermediateCoordinates.Count == intermediates.Count &&
+                                            from.Value != to.Value)
                                         { // all coordinates have been found.
-                                            if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
-                                            { // add the reverse too if it has been indicated that this was needed.
-                                                intermediateCoordinates.Reverse();
-                                                this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
-                                            }
+                                            this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates);
                                         }
                                     }
                                     from = to; // the to node becomes the from.
@@ -441,7 +455,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        protected virtual bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        protected virtual void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
@@ -462,7 +476,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                 _dynamicGraph.AddEdge(from, to, edgeData, _edgeComparer);
             }
-            return false;
         }
 
         /// <summary>

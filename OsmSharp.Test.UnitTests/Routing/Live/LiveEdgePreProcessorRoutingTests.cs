@@ -57,7 +57,6 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             uint vertex3 = graph.AddVertex(51.267592f, 4.8013024f);
 
             graph.AddEdge(vertex1, vertex2, edge, null);
-            graph.AddEdge(vertex2, vertex1, edge, null);
             graph.AddEdge(vertex2, vertex3, edge, null);
             graph.AddEdge(vertex3, vertex2, edge, null);
 

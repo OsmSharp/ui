@@ -174,7 +174,14 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             _graph.RemoveEdge(vertexToProcess, oldEdge.Key);
 
                             // add new arc.
-                            _graph.AddEdge(vertexToProcess, oldEdge.Key, oldEdgeValue, null);
+                            if (oldEdgeValue.Forward)
+                            {
+                                _graph.AddEdge(vertexToProcess, oldEdge.Key, oldEdgeValue, null);
+                            }
+                            else
+                            {
+                                _graph.AddEdge(vertexToProcess, oldEdge.Key, (LiveEdge)oldEdgeValue.Reverse(), null);
+                            }
 
                             // add edges to keep.
                             foreach(var edgeToKeep in edgesToKeep)
@@ -209,23 +216,29 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                 ignoreList.Add(vertices[vertices.Count - 2]); // make sure this arc is ignored in next iteration.
                             }
 
-                            // STEP4: Add new edges.
-                            _graph.AddEdge(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
+                            // STEP4: Add new edge.
+                            if (oldEdge.Value.Forward)
                             {
-                                Coordinates = coordinates,
-                                Forward = oldEdge.Value.Forward,
-                                Tags = oldEdge.Value.Tags,
-                                Distance = distance
-                            }, this);
-                            var reverse = new GeoCoordinateSimple[coordinates.Length];
-                            coordinates.CopyToReverse(reverse, 0);
-                            _graph.AddEdge(vertices[vertices.Count - 1], vertices[0], new LiveEdge()
+                                _graph.AddEdge(vertices[0], vertices[vertices.Count - 1], new LiveEdge()
+                                {
+                                    Coordinates = coordinates,
+                                    Forward = oldEdge.Value.Forward,
+                                    Tags = oldEdge.Value.Tags,
+                                    Distance = distance
+                                }, this);
+                            }
+                            else
                             {
-                                Coordinates = reverse,
-                                Forward = !oldEdge.Value.Forward,
-                                Tags = oldEdge.Value.Tags,
-                                Distance = distance
-                            }, this);
+                                var reverse = new GeoCoordinateSimple[coordinates.Length];
+                                coordinates.CopyToReverse(reverse, 0);
+                                _graph.AddEdge(vertices[vertices.Count - 1], vertices[0], new LiveEdge()
+                                {
+                                    Coordinates = reverse,
+                                    Forward = !oldEdge.Value.Forward,
+                                    Tags = oldEdge.Value.Tags,
+                                    Distance = distance
+                                }, this);
+                            }
                         }
                     }
                 }
@@ -276,7 +289,14 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         { // add all arcs.
                             if (edge.Key != vertex)
                             { // this edge is not an edge that has the same end-start point.
-                                _graph.AddEdge(nextCompressedPosition, edge.Key, edge.Value, null);
+                                if(edge.Value.Forward)
+                                {
+                                    _graph.AddEdge(nextCompressedPosition, edge.Key, edge.Value, null);
+                                }
+                                else
+                                {
+                                    _graph.AddEdge(nextCompressedPosition, edge.Key, (LiveEdge)edge.Value.Reverse(), null);
+                                }
                             }
                             else
                             { // this edge is an edge that has the same end-start point.
@@ -295,7 +315,14 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                         if (reverseEdge.Key == vertex)
                                         { // ok, replace this edge.
                                             _graph.RemoveEdge(edge.Key, vertex);
-                                            _graph.AddEdge(edge.Key, nextCompressedPosition, reverseEdge.Value, null);
+                                            if(reverseEdge.Value.Forward)
+                                            {
+                                                _graph.AddEdge(edge.Key, nextCompressedPosition, reverseEdge.Value, null);
+                                            }
+                                            else
+                                            {
+                                                _graph.AddEdge(edge.Key, nextCompressedPosition, (LiveEdge)reverseEdge.Value.Reverse(), null);
+                                            }
                                         }
                                     }
                                 }
@@ -320,6 +347,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
             }
 
             // remove all extra space.
+            _graph.Compress();
             _graph.Trim();
         }
 

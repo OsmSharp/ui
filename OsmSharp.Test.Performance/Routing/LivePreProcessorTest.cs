@@ -61,8 +61,7 @@ namespace OsmSharp.Test.Performance.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            //var memoryData = new MemoryDynamicGraphWriteOnly<LiveEdge>(10000000);
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex, 100000000);
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();

@@ -664,6 +664,152 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         }
 
         /// <summary>
+        /// Tests trimming the graph but edges only (all vertices are stull used).
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphCompressEdges()
+        {
+
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex2, vertex3);
+
+            graph.Compress();
+
+            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex2));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 2);
+
+
+            graph = new MemoryDynamicGraph<LiveEdge>();
+
+            vertex1 = graph.AddVertex(51, 1);
+            vertex2 = graph.AddVertex(51, 2);
+            vertex3 = graph.AddVertex(51, 3);
+            vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex3, vertex4);
+
+            graph.Compress();
+
+            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex4));
+            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex3));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 3);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex4).Length, 1);
+
+            LiveEdge edge;
+            Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
+            Assert.AreEqual(1, edge.Tags);
+            Assert.IsTrue(graph.GetEdge(vertex2, vertex3, out edge));
+            Assert.AreEqual(2, edge.Tags);
+            Assert.IsTrue(graph.GetEdge(vertex4, vertex2, out edge));
+            Assert.AreEqual(4, edge.Tags);
+        }
+
+        /// <summary>
+        /// Tests trimming the graph but edges only (all vertices are stull used).
+        /// </summary>
+        [Test]
+        public void TestLiveEdgeDynamicGraphCompressVertices()
+        {
+            var graph = new MemoryDynamicGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            // make vertex4 obsolete.
+            graph.RemoveEdges(vertex4);
+
+            graph.Compress();
+
+            Assert.AreEqual(3, graph.VertexCount);
+
+            Assert.AreEqual(graph.GetEdges(vertex1).Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).Length, 2);
+            Assert.AreEqual(graph.GetEdges(vertex3).Length, 1);
+        }
+
+        /// <summary>
         /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]

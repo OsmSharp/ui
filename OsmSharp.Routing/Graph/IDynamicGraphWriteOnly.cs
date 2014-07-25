@@ -58,8 +58,15 @@ namespace OsmSharp.Routing.Graph
         void AddEdge(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
 
         /// <summary>
-        /// Trims this graph to it's smallest possible size.
+        /// Compresses all the data in this graph.
         /// </summary>
+        /// <remarks>Does not trim or resize the internal data structures. Use Trim()</remarks>
+        void Compress();
+
+        /// <summary>
+        /// Trims all internal datastructures to their smallest possible size.
+        /// </summary>
+        /// <remarks>Be careful when doing this, could need up to 2x the current memory usage.</remarks>
         void Trim();
     }
 }

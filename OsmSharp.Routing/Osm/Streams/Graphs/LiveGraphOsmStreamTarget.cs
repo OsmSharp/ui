@@ -26,6 +26,7 @@ using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System;
 using System.Collections.Generic;
@@ -176,7 +177,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        protected override bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
@@ -196,12 +197,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
                 this.DynamicGraph.AddEdge(from, to, edgeData, this.EdgeComparer);
-
-                // add reverse edge and return true.
-                var reverseEdgeData = (LiveEdge)edgeData.Reverse();
-                this.DynamicGraph.AddEdge(to, from, reverseEdgeData, this.EdgeComparer);
             }
-            return true;
         }
 
         /// <summary>
@@ -226,7 +222,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             uint tagsId = tagsIndex.Add(tags);
 
-            GeoCoordinateSimple[] coordinates = intermediates.ToArray();
+            GeoCoordinateSimple[] coordinates = null;
+            if (intermediates != null && intermediates.Count > 0)
+            { // only instiate if needed.
+                coordinates = intermediates.ToArray();
+            }
 
             return new LiveEdge()
             {

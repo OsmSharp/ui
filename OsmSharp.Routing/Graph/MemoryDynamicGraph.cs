@@ -343,6 +343,12 @@ namespace OsmSharp.Routing.Graph
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
+            if(_vertices[vertex1] == NO_EDGE ||
+                _vertices[vertex2] == NO_EDGE)
+            { // no edge to remove here!
+                return;
+            }
+
             // remove for vertex1.
             var nextEdgeId = _vertices[vertex1];
             uint nextEdgeSlot = 0;
@@ -558,16 +564,17 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Trims the size of this graph.
+        /// Trims the internal data structures of this graph.
         /// </summary>
-        /// <param name="max"></param>
-        public void Trim(uint max)
+        public void Trim()
         {
-            throw new NotImplementedException();
-            //Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)max);
-            //// Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, (int)max);
-
-            //_nextVertexId = max;
+            // resize coordinates/vertices.
+            Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)_nextVertexId);
+            Array.Resize<uint>(ref _vertices, (int)_nextVertexId);
+           
+            // resize edges.
+            Array.Resize<TEdgeData>(ref _edgeData, (int)(_nextEdgeId / EDGE_SIZE));
+            Array.Resize<uint>(ref _edges, (int)_nextEdgeId);
         }
 
         /// <summary>
@@ -578,10 +585,108 @@ namespace OsmSharp.Routing.Graph
             get { return _nextVertexId - 1; }
         }
 
-
-        public void Trim()
+        /// <summary>
+        /// Trims the size of this graph to it's smallest possible size.
+        /// </summary>
+        public void Compress()
         {
-            throw new NotImplementedException();
+            // trim edges.
+            uint maxAllocatedEdgeId = 0;
+            for (uint edgeId = 0; edgeId < _nextEdgeId; edgeId = edgeId + EDGE_SIZE)
+            {
+                if (_edges[edgeId] != NO_EDGE)
+                { // this edge is allocated.
+                    if (edgeId != maxAllocatedEdgeId)
+                    { // there is data here.
+                        this.MoveEdge(edgeId, maxAllocatedEdgeId);
+                    }
+                    maxAllocatedEdgeId = maxAllocatedEdgeId + EDGE_SIZE;
+                }
+            }
+            _nextEdgeId = maxAllocatedEdgeId;
+
+            // trim vertices.
+            uint minUnAllocatedVertexId = 0;
+            for(uint vertexId = 0; vertexId < _nextVertexId; vertexId++)
+            {
+                if(_vertices[vertexId] != NO_EDGE)
+                {
+                    minUnAllocatedVertexId = vertexId;
+                }
+            }
+            _nextVertexId = minUnAllocatedVertexId + 1;
+        }
+
+        /// <summary>
+        /// Moves an edge from one location to another.
+        /// </summary>
+        /// <param name="oldEdgeId"></param>
+        /// <param name="newEdgeId"></param>
+        private void MoveEdge(uint oldEdgeId, uint newEdgeId)
+        {
+            // first copy the data.
+            _edges[newEdgeId + NODEA] = _edges[oldEdgeId + NODEA];
+            _edges[newEdgeId + NODEB] = _edges[oldEdgeId + NODEB];
+            _edges[newEdgeId + NEXTNODEA] = _edges[oldEdgeId + NEXTNODEA];
+            _edges[newEdgeId + NEXTNODEB] = _edges[oldEdgeId + NEXTNODEB];
+            _edgeData[newEdgeId / EDGE_SIZE] = _edgeData[oldEdgeId / EDGE_SIZE];
+
+            // loop over all edges of vertex1 and replace the oldEdgeId with the new one.
+            uint vertex1 = _edges[oldEdgeId + NODEA];
+            var edgeId = _vertices[vertex1];
+            if (edgeId == oldEdgeId)
+            { // edge is the first one, easy!
+                _vertices[vertex1] = newEdgeId;
+            }
+            else
+            { // edge is somewhere in the edges list.
+                while (edgeId != NO_EDGE)
+                { // keep looping.
+                    var edgeIdLocation = edgeId + NEXTNODEB;
+                    if (_edges[edgeId + NODEA] == vertex1)
+                    { // edge loction is different.
+                        edgeIdLocation = edgeId + NEXTNODEA;
+                    }
+                    edgeId = _edges[edgeIdLocation];
+                    if (edgeId == oldEdgeId)
+                    {
+                        _edges[edgeIdLocation] = newEdgeId;
+                        break;
+                    }
+                }
+            }            
+            
+            // loop over all edges of vertex2 and replace the oldEdgeId with the new one.
+            uint vertex2 = _edges[oldEdgeId + NODEB];
+            edgeId = _vertices[vertex2];
+            if (edgeId == oldEdgeId)
+            { // edge is the first one, easy!
+                _vertices[vertex2] = newEdgeId;
+            }
+            else
+            { // edge is somewhere in the edges list.
+                while (edgeId != NO_EDGE)
+                { // keep looping.
+                    var edgeIdLocation = edgeId + NEXTNODEB;
+                    if (_edges[edgeId + NODEA] == vertex2)
+                    { // edge loction is different.
+                        edgeIdLocation = edgeId + NEXTNODEA;
+                    }
+                    edgeId = _edges[edgeIdLocation];
+                    if (edgeId == oldEdgeId)
+                    {
+                        _edges[edgeIdLocation] = newEdgeId;
+                        break;
+                    }
+                }
+            }
+
+            // remove the old data.
+            _edges[oldEdgeId + NODEA] = NO_EDGE;
+            _edges[oldEdgeId + NODEB] = NO_EDGE;
+            _edges[oldEdgeId + NEXTNODEA] = NO_EDGE;
+            _edges[oldEdgeId + NEXTNODEB] = NO_EDGE;
+            _edgeData[oldEdgeId / EDGE_SIZE] = default(TEdgeData);
         }
     }
 }
