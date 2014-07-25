@@ -170,7 +170,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 new HashSet<KeyValuePair<uint, CHEdgeData>>();
 
             // get all information from the source.
-            KeyValuePair<uint, CHEdgeData>[] edges = _target.GetArcs(vertex);
+            KeyValuePair<uint, CHEdgeData>[] edges = _target.GetEdges(vertex);
 
             // remove all informative edges.
             edges = edges.RemoveInformativeEdges();
@@ -181,7 +181,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // remove the edges from the neighbours to the target.
             foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
             { // remove the edge.
-                _target.DeleteArc(edge.Key, vertex);
+                _target.RemoveEdge(edge.Key, vertex);
 
                 // keep the neighbour.
                 if (_keepDirectNeighbours && !edge.Value.HasContractedVertex)
@@ -227,9 +227,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         dataXToY.Weight = weight;
                         dataXToY.ContractedVertexId = vertex;
                         if ((dataXToY.Forward || dataXToY.Backward) ||
-                            !_target.HasArc(xEdge.Key, yEdge.Key))
+                            !_target.ContainsEdge(xEdge.Key, yEdge.Key))
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddArc(xEdge.Key, yEdge.Key, dataXToY, _comparer);
+                            _target.AddEdge(xEdge.Key, yEdge.Key, dataXToY, _comparer);
                         }
 
                         // create y-to-x data and edge.
@@ -242,9 +242,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         dataYToX.Weight = weight;
                         dataYToX.ContractedVertexId = vertex;
                         if ((dataYToX.Forward || dataYToX.Backward) ||
-                            !_target.HasArc(yEdge.Key, xEdge.Key))
+                            !_target.ContainsEdge(yEdge.Key, xEdge.Key))
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddArc(yEdge.Key, xEdge.Key, dataYToX, _comparer);
+                            _target.AddEdge(yEdge.Key, xEdge.Key, dataYToX, _comparer);
                         }
                     }
                 }
@@ -261,7 +261,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             {
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
                 {
-                    _target.AddArc(neighbour.Key, vertex, neighbour.Value, null);
+                    _target.AddEdge(neighbour.Key, vertex, neighbour.Value, null);
                 }
             }
 
@@ -377,7 +377,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     {
                         recalculated_weights.Add(
                             new KeyValuePair<uint, float>(vertex, _calculator.Calculate(vertex)));
-                        var arcs = _target.GetArcs(vertex);
+                        var arcs = _target.GetEdges(vertex);
                         if(arcs != null)
                         {
                             totalCadinality = arcs.Length + totalCadinality;
@@ -462,7 +462,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private bool CanBeContractedLocally(uint vertex, float priority)
         {
             // compare the priority with that of it's neighbours.
-            foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetArcs(vertex))
+            foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetEdges(vertex))
             { // check the priority.
                 if (!this.IsContracted(edge.Key))
                 {

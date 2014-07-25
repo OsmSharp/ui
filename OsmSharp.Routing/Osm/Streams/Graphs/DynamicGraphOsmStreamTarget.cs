@@ -460,7 +460,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                _dynamicGraph.AddArc(from, to, edgeData, _edgeComparer);
+                _dynamicGraph.AddEdge(from, to, edgeData, _edgeComparer);
             }
             return false;
         }

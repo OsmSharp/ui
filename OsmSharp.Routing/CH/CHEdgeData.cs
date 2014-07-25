@@ -491,7 +491,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
             {
                 List<KeyValuePair<uint, CHEdgeData>> arcs =
-                    new List<KeyValuePair<uint, CHEdgeData>>(graph.GetArcs(vertexId));
+                    new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
                 foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                 {
                     if (arc.Value.ToHigher)
@@ -501,7 +501,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
                         reverseEdge.Weight = arc.Value.Weight;
 
-                        graph.AddArc(arc.Key, vertexId, reverseEdge, null);
+                        graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
                     }
                 }
             }
@@ -516,7 +516,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IDynamicGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(vertexId);
+            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
             KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)
@@ -540,7 +540,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IDynamicGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(vertexId);
+            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
             KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)

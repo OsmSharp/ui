@@ -457,7 +457,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             }
 
             // start OsmSharp.Routing.
-            var arcs = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+            var arcs = graph.GetEdges(Convert.ToUInt32(current.VertexId));
             chosenVertices.Add(current.VertexId);
 
             // loop until target is found and the route is the shortest!
@@ -610,7 +610,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 }
 
                 // get the neighbors of the current node.
-                arcs = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                arcs = graph.GetEdges(Convert.ToUInt32(current.VertexId));
             }
 
             // return the result.

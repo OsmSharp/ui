@@ -190,13 +190,24 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds and arc to an existing vertex.
+        /// Adds a new edge.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data)
+        {
+            this.AddEdge(vertex1, vertex2, data, null);
+        }
+
+        /// <summary>
+        /// Adds a new edge.
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="comparer">Comparator to compare edges and replace obsolete ones.</param>
-        public void AddArc(uint vertex1, uint vertex2, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
             if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
@@ -313,7 +324,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId)
         {
             if (_vertices.Length > vertexId)
             {
@@ -354,7 +365,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
             if (_vertices.Length > vertexId)
             { // edge out of range.
@@ -389,15 +400,61 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Gets the data associated with the given edge and return true if it exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
+        {
+            if (_vertices.Length > vertex1 &&
+                _vertices.Length > vertex2)
+            { // edge out of range.
+                if (_vertices[vertex1] == NO_EDGE)
+                { // no edges here!
+                    data = default(TEdgeData);
+                    return false;
+                }
+                var edgeId = _vertices[vertex1];
+                uint nextEdgeSlot = 0;
+                while (edgeId != NO_EDGE)
+                { // keep looping.
+                    uint otherVertexId = 0;
+                    var currentEdgeId = edgeId;
+                    if (_edges[edgeId + NODEA] == vertex1)
+                    {
+                        otherVertexId = _edges[edgeId + NODEB];
+                        edgeId = _edges[edgeId + NEXTNODEA];
+                        nextEdgeSlot = edgeId + NEXTNODEA;
+                    }
+                    else
+                    {
+                        otherVertexId = _edges[edgeId + NODEA];
+                        edgeId = _edges[edgeId + NEXTNODEB];
+                        nextEdgeSlot = edgeId + NEXTNODEB;
+                    }
+                    if (otherVertexId == vertex2)
+                    { // this is the edge we need.
+                        data = _edgeData[currentEdgeId / EDGE_SIZE];
+                        return true;
+                    }
+                }
+            }
+            data = default(TEdgeData);
+            return false;
+        }
+
+        /// <summary>
         /// Trims the size of this graph.
         /// </summary>
-        /// <param name="max"></param>
-        public void Trim(uint max)
+        public void Trim()
         {
-            Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)max);
-            // Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, (int)max);
+            throw new NotImplementedException();
+            //Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)max);
+            //// Array.Resize<KeyValuePair<uint, TEdgeData>[]>(ref _vertices, (int)max);
 
-            _nextVertexId = max;
+            //_nextVertexId = max;
         }
 
         /// <summary>

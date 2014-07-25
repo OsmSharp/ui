@@ -341,7 +341,7 @@ namespace OsmSharp.Routing.CH
                     bucket[to.Value] = current.Weight;
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                     // add the neighbours to the queue.
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -491,7 +491,7 @@ namespace OsmSharp.Routing.CH
                     }
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                     // add the neighbours to the queue.
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -1067,7 +1067,7 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -1142,7 +1142,7 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -1259,7 +1259,7 @@ namespace OsmSharp.Routing.CH
 
             // get the edge by querying the forward neighbours of the from-vertex.
             //CHVertex from_vertex = _data.GetCHVertex(edge.From.VertexId);
-            KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(edge.From.VertexId));
+            KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(edge.From.VertexId));
 
             // find the edge with lowest weight.
             var arc = new KeyValuePair<uint, CHEdgeData?>(0, null);
@@ -1277,7 +1277,7 @@ namespace OsmSharp.Routing.CH
             }
             if (arc.Value == null)
             {
-                neighbours = graph.GetArcs(Convert.ToUInt32(edge.VertexId));
+                neighbours = graph.GetEdges(Convert.ToUInt32(edge.VertexId));
                 foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
                     a => a.Key == edge.From.VertexId && a.Value.Backward))
                 {
@@ -1427,7 +1427,7 @@ namespace OsmSharp.Routing.CH
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetEdges(searchBox);
 
             // loop over all.
             var closestWithMatch = new SearchClosestResult<CHEdgeData>(double.MaxValue, 0);
@@ -1486,7 +1486,7 @@ namespace OsmSharp.Routing.CH
                         while (uncontracted.Value.Value.HasContractedVertex)
                         { // try to inflate the contracted vertex.
                             KeyValuePair<uint, CHEdgeData>[] contractedArcs =
-                                graph.GetArcs(uncontracted.Value.Value.ContractedVertexId);
+                                graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
 
                             bool found = false;
                             foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)

@@ -195,11 +195,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                this.DynamicGraph.AddArc(from, to, edgeData, this.EdgeComparer);
+                this.DynamicGraph.AddEdge(from, to, edgeData, this.EdgeComparer);
 
                 // add reverse edge and return true.
                 var reverseEdgeData = (LiveEdge)edgeData.Reverse();
-                this.DynamicGraph.AddArc(to, from, reverseEdgeData, this.EdgeComparer);
+                this.DynamicGraph.AddEdge(to, from, reverseEdgeData, this.EdgeComparer);
             }
             return true;
         }

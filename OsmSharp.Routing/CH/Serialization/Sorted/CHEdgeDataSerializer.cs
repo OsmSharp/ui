@@ -194,7 +194,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     chVertex.Latitude = latitude;
                     chVertex.Longitude = longitude;
                     chVertex.ArcIndex = (ushort)(blockArcs.Count);
-                    foreach (KeyValuePair<uint, CHEdgeData> sortedArc in sortedGraph.GetArcs(vertexId))
+                    foreach (KeyValuePair<uint, CHEdgeData> sortedArc in sortedGraph.GetEdges(vertexId))
                     {
                         CHArc chArc = new CHArc();
                         chArc.TargetId = sortedArc.Key;
@@ -313,7 +313,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
                         // get the higher arcs and convert their ids.
                         //KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcsHigher(binVertexId);
-                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(binVertexId);
+                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(binVertexId);
                         foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                         {
                             if (arc.Value.IsInformative || arc.Value.ToHigher)
@@ -333,7 +333,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                                 }
                                 newEdge.Tags = arc.Value.Tags;
                                 newEdge.Weight = arc.Value.Weight;
-                                sortedGraph.AddArc(newVertexId, nextVertexArcId, newEdge, null);
+                                sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
                             }
                         }
                     }

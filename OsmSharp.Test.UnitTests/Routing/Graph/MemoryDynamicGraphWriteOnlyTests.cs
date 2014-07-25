@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(51, latitude);
             Assert.AreEqual(4, longitude);
 
-            var arcs = graph.GetArcs(vertex);
+            var arcs = graph.GetEdges(vertex);
             Assert.AreEqual(0, arcs.Length);
         }
 
@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Assert.AreEqual(51, latitude);
                 Assert.AreEqual(4, longitude);
 
-                var arcs = graph.GetArcs(vertex);
+                var arcs = graph.GetEdges(vertex);
                 Assert.AreEqual(0, arcs.Length);
 
                 count--;
@@ -86,21 +86,21 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddArc(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
             {
                 Forward = true,
                 Tags = tagsId
             }, null);
 
             // test forward edge.
-            var arcs = graph.GetArcs(vertex1);
+            var arcs = graph.GetEdges(vertex1);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(tagsId, arcs[0].Value.Tags);
             Assert.AreEqual(vertex2, arcs[0].Key);
             Assert.AreEqual(true, arcs[0].Value.Forward);
 
             // test backward edge: backward edge is added automatically.
-            arcs = graph.GetArcs(vertex2);
+            arcs = graph.GetEdges(vertex2);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(tagsId, arcs[0].Value.Tags);
             Assert.AreEqual(vertex1, arcs[0].Key);
@@ -113,10 +113,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Forward = true,
                 Tags = tagsId
             };
-            graph.AddArc(vertex1, vertex3, edge, null);
+            graph.AddEdge(vertex1, vertex3, edge, null);
 
             // test forward edges.
-            arcs = graph.GetArcs(vertex1);
+            arcs = graph.GetEdges(vertex1);
             Assert.AreEqual(2, arcs.Length);
             Assert.AreEqual(tagsId, arcs[0].Value.Tags);
             Assert.AreEqual(vertex2, arcs[0].Key);
@@ -126,7 +126,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(true, arcs[1].Value.Forward);
 
             // test backward edge: backward edge is added automatically.
-            arcs = graph.GetArcs(vertex3);
+            arcs = graph.GetEdges(vertex3);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(tagsId, arcs[0].Value.Tags);
             Assert.AreEqual(vertex1, arcs[0].Key);

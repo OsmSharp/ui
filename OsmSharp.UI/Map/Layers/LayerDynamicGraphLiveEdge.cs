@@ -123,7 +123,7 @@ namespace OsmSharp.UI.Map.Layers
             //                               : SimpleColor.FromArgb (0, 255, 255, 255).Value;
 
             // get data.
-            foreach (var arc in _dataSource.GetArcs(box))
+            foreach (var arc in _dataSource.GetEdges(box))
             {
                 // translate each object into scene object.
                 var arcId = new ArcId()

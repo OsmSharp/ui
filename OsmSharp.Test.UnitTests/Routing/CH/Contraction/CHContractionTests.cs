@@ -73,15 +73,15 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             pre_processor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetArcs(2));
+            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(1));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
             Assert.IsTrue(neighbours.Contains(3));
             Assert.IsFalse(neighbours.Contains(2));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(3));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsFalse(neighbours.Contains(2));
         }
@@ -118,15 +118,15 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             pre_processor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetArcs(2));
+            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(1));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
             Assert.IsTrue(neighbours.Contains(3));
             Assert.IsFalse(neighbours.Contains(2));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(3));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsFalse(neighbours.Contains(2));
         }
@@ -159,17 +159,17 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             pre_processor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetArcs(2));
+            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
             Assert.IsTrue(neighbours.Contains(4));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(1));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
             Assert.IsTrue(neighbours.Contains(3));
             Assert.IsTrue(neighbours.Contains(4));
             Assert.IsFalse(neighbours.Contains(2));
 
-            neighbours = this.BuildNeighboursSet(data.GetArcs(3));
+            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(4));
             Assert.IsFalse(neighbours.Contains(2));

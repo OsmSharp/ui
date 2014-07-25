@@ -50,12 +50,25 @@ namespace OsmSharp.Routing.Graph
         uint AddVertex(float latitude, float longitude, byte neighboursEstimate);
 
         /// <summary>
-        /// Adds an arc with associated data.
+        /// Adds an edge with associated data.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        void AddEdge(uint from, uint to, TEdgeData data);
+
+        /// <summary>
+        /// Adds an edge with associated data.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <param name="comparer"></param>
-        void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+        void AddEdge(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+
+        /// <summary>
+        /// Trims this graph to it's smallest possible size.
+        /// </summary>
+        void Trim();
     }
 }

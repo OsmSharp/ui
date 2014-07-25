@@ -235,7 +235,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             uint vertexNoname1 = data.AddVertex((float)fromNoname.Latitude, (float)fromNoname.Longitude);
             uint vertexNoname2 = data.AddVertex((float)toNoname.Latitude, (float)toNoname.Longitude);
-            data.AddArc(vertexNoname1, vertexNoname2, new LiveEdge()
+            data.AddEdge(vertexNoname1, vertexNoname2, new LiveEdge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)
@@ -245,7 +245,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             tags["name"] = name;
             uint vertexName1 = data.AddVertex((float)fromName.Latitude, (float)fromName.Longitude);
             uint vertexName2 = data.AddVertex((float)toName.Latitude, (float)toName.Longitude);
-            data.AddArc(vertexName1, vertexName2, new LiveEdge()
+            data.AddEdge(vertexName1, vertexName2, new LiveEdge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)

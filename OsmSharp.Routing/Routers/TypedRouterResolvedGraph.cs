@@ -96,7 +96,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public void AddArc(long from, long to, RouterResolvedGraphEdge data)
+        public void AddEdge(long from, long to, RouterResolvedGraphEdge data)
         {
             RouterResolvedGraphVertex vertex;
             if (_vertices.TryGetValue(from, out vertex))
@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public void DeleteArc(long from, long to)
+        public void DeleteEdge(long from, long to)
         {
             RouterResolvedGraphVertex vertex;
             if (_vertices.TryGetValue(from, out vertex))
@@ -160,7 +160,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<long, RouterResolvedGraphEdge>[] GetArcs(long vertex)
+        public KeyValuePair<long, RouterResolvedGraphEdge>[] GetEdges(long vertex)
         {
             if (_vertices.ContainsKey(vertex))
             {

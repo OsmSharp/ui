@@ -99,7 +99,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
             GeoCoordinateBox box)
         {
             List<uint> vertices = this.LoadVerticesIn(box);
@@ -108,7 +108,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int arcCount = 0;
             foreach (uint vertexId in vertices)
             {
-                KeyValuePair<uint, CHEdgeData>[] vertexArcs = this.GetArcs(vertexId);
+                KeyValuePair<uint, CHEdgeData>[] vertexArcs = this.GetEdges(vertexId);
                 foreach (KeyValuePair<uint, CHEdgeData> arc in vertexArcs)
                 {
                     arcCount++;
@@ -158,7 +158,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
         {
             return this.LoadArcs(vertexId);
         }
@@ -169,7 +169,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
         {
             throw new NotImplementedException();
         }
