@@ -605,7 +605,7 @@ namespace OsmSharp.Routing.Graph
             this.IncreaseVertexSize((int)vertexEstimate);
 
             // resize edges.
-            this.IncreaseEdgeSize((int)edgeEstimate);
+            this.IncreaseEdgeSize((int)(edgeEstimate * EDGE_SIZE));
         }
 
         /// <summary>

@@ -626,7 +626,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             // resize graph.
             // TODO: study avery cardinality and slightly overestimate here.
-            _dynamicGraph.Resize(_relevantNodes.Count, (long)(_relevantNodes.Count * 5));
+            long vertexEstimate = _relevantNodes.Count + (long)(_relevantNodes.Count * 0.1);
+            _dynamicGraph.Resize(vertexEstimate, (long)(vertexEstimate * 4));
 
             // move out of pre-index mode.
             _preIndexMode = false;
