@@ -93,6 +93,24 @@ namespace OsmSharp.Osm.Tiles
                 this.YMax >= tile.Y && this.YMin <= tile.Y;
         }
 
+        /// <summary>
+        /// Returns the bounding box for this tile range.
+        /// </summary>
+        public GeoCoordinateBox Box
+        {
+            get
+            {
+                var topLeftTile = new Tile(XMin, YMin, Zoom);
+                var bottomRightTile = new Tile(XMax, YMax, Zoom);
+
+                // calculate the tiles bounding box and set its properties.
+                GeoCoordinate topLeft = topLeftTile.TopLeft;
+                GeoCoordinate bottomRight = bottomRightTile.BottomRight;
+
+                return new GeoCoordinateBox(topLeft, bottomRight);
+            }
+        }
+
         #region Functions
 
         /// <summary>
