@@ -30,6 +30,8 @@ using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections;
+using OsmSharp.Collections.LongIndex;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -75,6 +77,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         private readonly IDynamicGraphEdgeComparer<TEdgeData> _edgeComparer;
 
         /// <summary>
+        /// Holds the collect intermediates flag.
+        /// </summary>
+        private bool _collectIntermediates;
+
+        /// <summary>
         /// Creates a new processor target.
         /// </summary>
         /// <param name="dynamicGraph">The graph that will be filled.</param>
@@ -112,7 +119,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
             IDictionary<long, uint> idTransformations)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null, false)
         {
 
         }
@@ -129,7 +136,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
             ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations,
-            GeoCoordinateBox box)
+            GeoCoordinateBox box, bool collectIntermediates)
         {
             _dynamicGraph = dynamicGraph;
             _interpreter = interpreter;
@@ -139,9 +146,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _tagsIndex = tagsIndex;
             _idTransformations = idTransformations;
             _preIndexMode = true;
-            _preIndex = new OsmSharp.Collections.HugeHashSet<long>();
-            _usedTwiceOrMore = new OsmSharp.Collections.HugeHashSet<long>();
+            _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _usedTwiceOrMore = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
 
+            _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
         }
 
@@ -193,7 +201,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the index of all relevant nodes.
         /// </summary>
-        private OsmSharp.Collections.HugeHashSet<long> _preIndex;
+        private ILongIndex _preIndex;
 
         /// <summary>
         /// Holds the id transformations.
@@ -232,11 +240,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         _coordinates[node.Id.Value] = new GeoCoordinateSimple() {
                             Latitude = (float)node.Latitude.Value, 
                             Longitude = (float)node.Longitude.Value};
-                        if (_coordinates.Count == _preIndex.Count)
-                        {
-                            _preIndex.Clear();
-                            _preIndex = null;
-                        }
+                        // TODO: find a way to drop the preindex.
+                        //if (_coordinates.Count == _preIndex.Count)
+                        //{
+                        //    _preIndex.Clear();
+                        //    _preIndex = null;
+                        //}
 
                         if (_bounds == null)
                         { // create bounds.
@@ -280,7 +289,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private readonly OsmSharp.Collections.HugeHashSet<long> _usedTwiceOrMore;
+        private readonly ILongIndex _usedTwiceOrMore;
 
         /// <summary>
         /// Returns the boundingbox of all accepted nodes.
@@ -326,10 +335,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                 }
                 else
-                {
-                // add the forward edges.
-                //if (!interpreter.IsOneWayReverse())
-                    if (true) // add backward edges too!
+                { 
+                    if (true)
                     { // loop over all edges.
                         if (way.Nodes != null && way.Nodes.Count > 1)
                         { // way has at least two nodes.
@@ -337,18 +344,37 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                 way.Tags))
                             { // the edge is traversable, add the edges.
                                 uint? from = this.AddRoadNode(way.Nodes[0]);
+                                List<long> intermediates = new List<long>();
                                 for (int idx = 1; idx < way.Nodes.Count; idx++)
                                 { // the to-node.
-                                    uint? to = this.AddRoadNode(way.Nodes[idx]);
-                                    // add the edge(s).
-                                    if (from.HasValue && to.HasValue)
-                                    { // add a road edge.
-                                        if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
-                                        { // add the reverse too if it has been indicated that this was needed.
-                                            this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
+                                    long currentNodeId = way.Nodes[idx];
+                                    if(!_collectIntermediates || _usedTwiceOrMore.Contains(currentNodeId))
+                                    { // node is an important node.
+                                        uint? to = this.AddRoadNode(currentNodeId);
+
+                                        // build coordinates.
+                                        var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
+                                        for(int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                        {
+                                            intermediateCoordinates.Add(_coordinates[intermediates[coordIdx]]);
                                         }
+
+                                        // add the edge(s).
+                                        if (from.HasValue && to.HasValue)
+                                        { // add a road edge.
+                                            if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
+                                            { // add the reverse too if it has been indicated that this was needed.
+                                                intermediateCoordinates.Reverse();
+                                                this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
+                                            }
+                                        }
+                                        from = to; // the to node becomes the from.
+                                        intermediates.Clear();
                                     }
-                                    from = to; // the to node becomes the from.
+                                    else
+                                    { // this node is just an intermediate.
+                                        intermediates.Add(currentNodeId);
+                                    }
                                 }
                             }
                         }
@@ -394,7 +420,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        protected virtual bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to)
+        protected virtual bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
@@ -411,7 +437,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
-                TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate);
+                TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
                 _dynamicGraph.AddArc(from, to, edgeData, _edgeComparer);
             }
@@ -423,7 +449,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         /// <returns></returns>
         protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags,
-            bool directionForward, GeoCoordinate from, GeoCoordinate to);
+            bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates);
 
         /// <summary>
         /// Returns true if the edge can be traversed.

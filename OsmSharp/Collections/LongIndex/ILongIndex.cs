@@ -16,31 +16,37 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.Graph
+using System;
+
+namespace OsmSharp.Collections.LongIndex
 {
     /// <summary>
-    /// Abstracts a graph implementation.
+    /// Abstract representation of an index containing flags indexed by longs.
     /// </summary>
-    public interface IDynamicGraph<TEdgeData> : IDynamicGraphWriteOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface ILongIndex
     {
         /// <summary>
-        /// Deletes all arcs starting at the given vertex.
+        /// Sets the flag at the given index.
         /// </summary>
-        /// <param name="vertex"></param>
-        void DeleteArc(uint vertex);
+        /// <param name="number"></param>
+        void Add(long number);
 
         /// <summary>
-        /// Delete all arcs arc between two vertices.
+        /// Sets all flags to false.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        void DeleteArc(uint from, uint to);
+        void Clear();
 
         /// <summary>
-        /// Trims the graph to store a max number of vertices.
+        /// Returns the value of the flag at the given number.
         /// </summary>
-        /// <param name="max"></param>
-        void Trim(uint max);
+        /// <param name="number"></param>
+        /// <returns></returns>
+        bool Contains(long number);
+
+        /// <summary>
+        /// Sets the flag at the given number to false.
+        /// </summary>
+        /// <param name="number"></param>
+        void Remove(long number);
     }
 }

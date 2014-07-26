@@ -21,25 +21,34 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
     /// <summary>
     /// An efficient index for OSM object ids.
     /// </summary>
-    public class LongIndex
+    public class LongIndex : ILongIndex
     {
         /// <summary>
-        /// The root of the positive ids.
+        /// Holds the total size.
         /// </summary>
-        private LongIndexNode _rootPositive;
+        private readonly long _size = (long)(1024 * 1024) * (long)(1024 * 32);
 
         /// <summary>
-        /// The root of the negative ids.
+        /// Holds the block size.
         /// </summary>
-        private LongIndexNode _rootNegative;
+        private readonly int _blockSize = 1024 * 1024;
+
+        /// <summary>
+        /// Holds the positive flags array.
+        /// </summary>
+        private SparseLargeBitArray32 _positiveFlags = null;
+
+        /// <summary>
+        /// Holds the negative flags array.
+        /// </summary>
+        private SparseLargeBitArray32 _negativeFlags = null;
 
         /// <summary>
         /// Creates a new longindex.
         /// </summary>
         public LongIndex()
         {
-            _rootPositive = new LongIndexNode(1);
-            _rootNegative = new LongIndexNode(1);
+
         }
 
         /// <summary>
@@ -99,14 +108,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <param name="number"></param>
         private void PositiveAdd(long number)
         {
-            while (number >= LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            if(_positiveFlags == null)
             {
-                LongIndexNode oldRoot = _rootPositive;
-                _rootPositive = new LongIndexNode((short)(_rootPositive.Base + 1));
-                _rootPositive.Has0 = oldRoot;
+                _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
-            _rootPositive.Add(number);
+            _positiveFlags[number] = true;
         }
 
         /// <summary>
@@ -115,10 +122,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <param name="number"></param>
         private void PositiveRemove(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            if (_positiveFlags == null)
             {
-                _rootPositive.Remove(number);
+                _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
+
+            _positiveFlags[number] = false;
         }
 
         /// <summary>
@@ -128,11 +137,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <returns></returns>
         private bool PositiveContains(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            if (_positiveFlags == null)
             {
-                return _rootPositive.Contains(number);
+                return false;
             }
-            return false;
+
+            return _positiveFlags[number];
         }
 
         #endregion
@@ -145,14 +155,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <param name="number"></param>
         private void NegativeAdd(long number)
         {
-            while (number >= LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            if (_negativeFlags == null)
             {
-                LongIndexNode oldRoot = _rootNegative;
-                _rootNegative = new LongIndexNode((short)(_rootNegative.Base + 1));
-                _rootNegative.Has0 = oldRoot;
+                _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
-            _rootNegative.Add(number);
+            _negativeFlags[number] = true;
         }
 
         /// <summary>
@@ -161,10 +169,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <param name="number"></param>
         private void NegativeRemove(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            if (_negativeFlags == null)
             {
-                _rootNegative.Remove(number);
+                _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
+
+            _negativeFlags[number] = false;
         }
 
         /// <summary>
@@ -174,11 +184,12 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// <returns></returns>
         private bool NegativeContains(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            if (_negativeFlags == null)
             {
-                return _rootNegative.Contains(number);
+                return false;
             }
-            return false;
+
+            return _negativeFlags[number];
         }
 
         #endregion
@@ -188,8 +199,8 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         /// </summary>
         public void Clear()
         {
-            _rootPositive = new LongIndexNode(1);
-            _rootNegative = new LongIndexNode(1);
+            _negativeFlags = null;
+            _positiveFlags = null;
         }    
     }
 }

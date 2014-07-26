@@ -261,6 +261,15 @@ namespace OsmSharp.Routing.Routers
             }
 
             /// <summary>
+            /// Returns the exact reverse edge.
+            /// </summary>
+            /// <returns></returns>
+            public IDynamicGraphEdgeData Reverse()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
             /// Returns true if the other edge represents the same information than this edge.
             /// </summary>
             /// <param name="other"></param>

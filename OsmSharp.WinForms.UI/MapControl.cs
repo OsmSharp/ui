@@ -708,5 +708,13 @@ namespace OsmSharp.WinForms.UI
         {
 
         }
+
+        /// <summary>
+        /// Returns the density.
+        /// </summary>
+        public float Density
+        {
+            get { return 1; }
+        }
     }
 }

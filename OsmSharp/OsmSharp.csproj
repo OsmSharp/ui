@@ -47,11 +47,10 @@
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
     <Compile Include="Collections\ISet.cs" />
+    <Compile Include="Collections\LargeBitArray32.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
-    <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndex.cs" />
     <Compile Include="Collections\LongIndex\LongIndex.cs" />
-    <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
-    <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\PermutationEnumerator.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SparseLargeBitArray32.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />

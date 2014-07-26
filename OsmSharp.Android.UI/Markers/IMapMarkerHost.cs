@@ -31,6 +31,11 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="marker">Marker.</param>
 		void NotifyMarkerChange(MapMarker marker);
+
+        /// <summary>
+        /// Returns the density.
+        /// </summary>
+        float Density { get; }
 	}
 }
 

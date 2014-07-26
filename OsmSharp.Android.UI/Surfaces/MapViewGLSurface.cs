@@ -389,6 +389,17 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Returns the density.
+        /// </summary>
+        public float Density
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
         /// Raises the layout event.
         /// </summary>
         /// <param name="changed">If set to <c>true</c> changed.</param>
