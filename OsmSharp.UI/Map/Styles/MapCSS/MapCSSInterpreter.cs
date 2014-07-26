@@ -513,7 +513,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     int maxWidth;
                     if (!rule.TryGetProperty("maxWidth", out maxWidth))
                     {
-                        maxWidth = 50;
+                        maxWidth = 30;
+                    }
+                    int offsetX, offsetY;
+                    if (!rule.TryGetProperty("textOffsetX", out offsetX))
+                    {
+                        offsetX = 0;
+                    }
+                    if (!rule.TryGetProperty("textOffsetY", out offsetY))
+                    {
+                        offsetY = 0;
                     }
 
                     // a text is to be drawn.
@@ -545,8 +554,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
                         if (!pointId.HasValue)
                         {
-                            pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
-                                           projection.LatitudeToY(node.Coordinate.Latitude));
+                            pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude) + offsetX,
+                                           projection.LatitudeToY(node.Coordinate.Latitude) + offsetY);
                         }
                         scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
 						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight);
@@ -895,7 +904,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                         simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
                                 }
 
-                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
                     }
@@ -980,8 +989,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 case DeclarationIntEnum.TextColor:
                                     properties.AddProperty("textColor", declarationInt.Eval(mapCSSObject));
                                     break;
-                                case DeclarationIntEnum.TextOffset:
-                                    properties.AddProperty("textOffset", declarationInt.Eval(mapCSSObject));
+                                case DeclarationIntEnum.TextOffsetY:
+                                    properties.AddProperty("textOffsetY", declarationInt.Eval(mapCSSObject));
+                                    break;
+                                case DeclarationIntEnum.TextOffsetX:
+                                    properties.AddProperty("textOffsetX", declarationInt.Eval(mapCSSObject));
                                     break;
                                 case DeclarationIntEnum.MaxWidth:
                                     properties.AddProperty("maxWidth", declarationInt.Eval(mapCSSObject));

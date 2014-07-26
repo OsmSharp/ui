@@ -848,7 +848,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-offset":
                         case "text-offset-y":
                             var textOffset = new DeclarationInt();
-                            textOffset.Qualifier = DeclarationIntEnum.TextOffset;
+                            textOffset.Qualifier = DeclarationIntEnum.TextOffsetY;
                             if (evalCall != null)
                             {
                                 textOffset.EvalFunction = evalCall;
@@ -1406,7 +1406,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             // TODO: implement
                             break;
                         case "text-offset-x":
-                            // TODO: implement
+                            var textOffsetX = new DeclarationInt();
+                            textOffsetX.Qualifier = DeclarationIntEnum.TextOffsetX;
+                            if (evalCall != null)
+                            {
+                                textOffsetX.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    textOffsetX.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textOffsetX);
                             break;
                         default:
                             var declarationCustom = new DeclarationCustom();
