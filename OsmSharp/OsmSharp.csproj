@@ -44,6 +44,7 @@
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HashSet.cs" />
+    <Compile Include="Collections\HugeArray.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
     <Compile Include="Collections\ISet.cs" />

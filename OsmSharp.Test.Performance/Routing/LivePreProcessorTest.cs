@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "belgium-latest.osm.pbf");
+            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "europe-latest.osm.pbf");
         }
 
         /// <summary>

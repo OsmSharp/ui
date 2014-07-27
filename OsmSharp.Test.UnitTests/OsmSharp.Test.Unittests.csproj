@@ -141,6 +141,7 @@
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
+    <Compile Include="Collections\HugeArrayTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
     <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
