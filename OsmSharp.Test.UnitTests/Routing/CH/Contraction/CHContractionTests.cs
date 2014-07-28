@@ -16,11 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
@@ -31,7 +28,9 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Collections.Tags.Index;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
 {
@@ -52,28 +51,28 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             //
 
             // build the data.
-            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
+            var data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test1.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
+            var witnessCalculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
-            SparseOrdering sparse_ordering = new SparseOrdering(
+            var sparseOrdering = new SparseOrdering(
                 data);
-            Assert.AreEqual(-1, sparse_ordering.Calculate(2));
-            EdgeDifference edge_difference_ordering = new EdgeDifference(
-                data, witness_calculator);
-            Assert.AreEqual(2, edge_difference_ordering.Calculate(2));
+            Assert.AreEqual(-1, sparseOrdering.Calculate(2));
+            var edgeDifferenceOrdering = new EdgeDifference(
+                data, witnessCalculator);
+            Assert.AreEqual(2, edgeDifferenceOrdering.Calculate(2));
 
             // do the actual contraction.
-            CHPreProcessor pre_processor = new CHPreProcessor(
-                data, edge_difference_ordering, witness_calculator);
-            pre_processor.Contract(2);
+            var preProcessor = new CHPreProcessor(
+                data, edgeDifferenceOrdering, witnessCalculator);
+            preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
+            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
 
@@ -97,28 +96,28 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             //
 
             // build the data.
-            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
+            var data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test2.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
+            var witnessCalculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
-            SparseOrdering sparse_ordering = new SparseOrdering(
+            var sparseOrdering = new SparseOrdering(
                 data);
-            Assert.AreEqual(-1, sparse_ordering.Calculate(2));
-            EdgeDifference edge_difference_ordering = new EdgeDifference(
-                data, witness_calculator);
-            Assert.AreEqual(0, edge_difference_ordering.Calculate(2));
+            Assert.AreEqual(-1, sparseOrdering.Calculate(2));
+            var edgeDifferenceOrdering = new EdgeDifference(
+                data, witnessCalculator);
+            Assert.AreEqual(0, edgeDifferenceOrdering.Calculate(2));
 
             // do the actual contraction.
-            CHPreProcessor pre_processor = new CHPreProcessor(
-                data, edge_difference_ordering, witness_calculator);
-            pre_processor.Contract(2);
+            var preProcessor = new CHPreProcessor(
+                data, edgeDifferenceOrdering, witnessCalculator);
+            preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
+            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
 
@@ -138,28 +137,28 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
         public void TestCHContractionTest3()
         {
             // build the data.
-            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
+            var data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test3.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
+            var witnessCalculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
-            SparseOrdering sparse_ordering = new SparseOrdering(
+            var sparseOrdering = new SparseOrdering(
                 data);
-            Assert.AreEqual(float.MaxValue, sparse_ordering.Calculate(2));
-            EdgeDifference edge_difference_ordering = new EdgeDifference(
-                data, witness_calculator);
-            Assert.AreEqual(3, edge_difference_ordering.Calculate(2));
+            Assert.AreEqual(float.MaxValue, sparseOrdering.Calculate(2));
+            var edgeDifferenceOrdering = new EdgeDifference(
+                data, witnessCalculator);
+            Assert.AreEqual(3, edgeDifferenceOrdering.Calculate(2));
 
             // do the actual contraction.
-            CHPreProcessor pre_processor = new CHPreProcessor(
-                data, edge_difference_ordering, witness_calculator);
-            pre_processor.Contract(2);
+            var preProcessor = new CHPreProcessor(
+                data, edgeDifferenceOrdering, witnessCalculator);
+            preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            HashSet<uint> neighbours = this.BuildNeighboursSet(data.GetEdges(2));
+            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
             Assert.IsTrue(neighbours.Contains(1));
             Assert.IsTrue(neighbours.Contains(3));
             Assert.IsTrue(neighbours.Contains(4));
