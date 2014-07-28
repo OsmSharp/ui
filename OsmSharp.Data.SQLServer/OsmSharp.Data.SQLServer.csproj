@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Osm\SchemaTools\SQLServerSchemaConstants.cs" />
+    <Compile Include="Osm\Streams\SQLServerOsmStreamSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Osm\SchemaTools\SQLServerSchemaTools.cs" />
     <Compile Include="Osm\Streams\SQLServerOsmStreamTarget.cs" />
