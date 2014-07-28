@@ -40,25 +40,16 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private CHEdgeDataComparer _comparer;
 
         /// <summary>
-        /// Holds the keep direct neighbours flag.
-        /// </summary>
-        private bool _keepDirectNeighbours = true;
-
-        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        /// <param name="keepDirectNeighbours"></param>
         public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
-                INodeWitnessCalculator witnessCalculator,
-                bool keepDirectNeighbours)
+                INodeWitnessCalculator witnessCalculator)
         {
             _comparer = new CHEdgeDataComparer();
-
-            _keepDirectNeighbours = keepDirectNeighbours;
 
             _target = target;
 
@@ -68,17 +59,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _queue = new CHPriorityQueue();
             _contracted = new bool[1000];
         }
-
-        /// <summary>
-        /// Creates a new pre-processor.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="calculator"></param>
-        /// <param name="witnessCalculator"></param>
-        public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
-                INodeWeightCalculator calculator,
-                INodeWitnessCalculator witnessCalculator)
-            : this(target, calculator, witnessCalculator, true) { }
 
         #region Contraction
 
@@ -97,25 +77,23 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         private INodeWitnessCalculator _contractionWitnessCalculator = new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(100);
 
-        //private HashSet<uint> _contracted = new HashSet<uint>();
-
         /// <summary>
         /// Starts pre-processing all nodes
         /// </summary>
         public void Start()
         {
-            _misses_queue = new Queue<bool>();
+            _missesQueue = new Queue<bool>();
             _misses = 0;
 
             uint total = _target.VertexCount;
             uint current = 1;
 
             double latestProgress = 0;
-            for (uint current_vertex = 1; current_vertex <= total; current_vertex++)
+            for (uint currentVertex = 1; currentVertex <= total; currentVertex++)
             {
-                float priority = _calculator.Calculate(current_vertex);
+                float priority = _calculator.Calculate(currentVertex);
 
-                _queue.Enqueue(current_vertex, priority);
+                _queue.Enqueue(currentVertex, priority);
 
                 float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
                 if (progress != latestProgress)
@@ -166,85 +144,65 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
 
             // keep the neighbours.
-            HashSet<KeyValuePair<uint, CHEdgeData>> neighbours = 
-                new HashSet<KeyValuePair<uint, CHEdgeData>>();
+            var neighbours = new HashSet<KeyValuePair<uint, CHEdgeData>>();
 
             // get all information from the source.
-            KeyValuePair<uint, CHEdgeData>[] edges = _target.GetEdges(vertex);
-
-            // remove all informative edges.
-            edges = edges.RemoveInformativeEdges();
+            var edges = _target.GetEdges(vertex);
 
             // report the before contraction event.
             this.OnBeforeContraction(vertex, edges);
 
-            // remove the edges from the neighbours to the target.
-            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
-            { // remove the edge.
-                _target.RemoveEdge(edge.Key, vertex);
+            // replace the adjacent edges with edges that are point up.
+            var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>(edges.Length);
+            foreach (var edge in edges)
+            {
+                if (!edge.Value.ToLower && !edge.Value.ToHigher)
+                { // the edge is not to lower or higher.
+                    // use this edge for contraction.
+                    edgesForContractions.Add(edge);
 
-                // keep the neighbour.
-                if (_keepDirectNeighbours && !edge.Value.HasContractedVertex)
-                { // edge does represent a neighbour relation.
-                    neighbours.Add(
-                        new KeyValuePair<uint, CHEdgeData>(edge.Key, edge.Value.ConvertToInformative()));
+                    // overwrite the old edge making it point 'to higher' only.
+                    _target.AddEdge(vertex, edge.Key,
+                        new CHEdgeData(edge.Value.Weight, edge.Value.Forward, edge.Value.Backward, true, edge.Value.ContractedVertexId, edge.Value.Tags));
                 }
             }
 
             // loop over each combination of edges just once.
-            for (int x = 1; x < edges.Length; x++)
+            for (int x = 1; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
-                KeyValuePair<uint, CHEdgeData> xEdge = edges[x];
-                if (xEdge.Value.IsInformative) { continue; }
+                var xEdge = edgesForContractions[x];
 
                 for (int y = 0; y < x; y++)
                 { // loop over all elements.
-                    KeyValuePair<uint, CHEdgeData> yEdge = edges[y];
-                    if (yEdge.Value.IsInformative) { continue; }
+                    var yEdge = edgesForContractions[y];
 
                     // calculate the total weight.
-                    float weight = xEdge.Value.Weight + yEdge.Value.Weight;
+                    var weight = xEdge.Value.Weight + yEdge.Value.Weight;
 
                     // add the combinations of these edges.
                     if (((xEdge.Value.Backward && yEdge.Value.Forward) ||
                         (yEdge.Value.Backward && xEdge.Value.Forward)) &&
                         (xEdge.Key != yEdge.Key))
-                    //if ((xEdge.Value.Backward && yEdge.Value.Forward) &&
-                    //    (xEdge.Key != yEdge.Key))
                     { // there is a connection from x to y and there is no witness path.
-                        bool witnessXToY = _contractionWitnessCalculator.Exists(_target, xEdge.Key, 
+                        var witnessXToY = _contractionWitnessCalculator.Exists(_target, xEdge.Key, 
                             yEdge.Key, vertex, weight, int.MaxValue);
-                        bool witnessYToX = _contractionWitnessCalculator.Exists(_target, yEdge.Key,
+                        var witnessYToX = _contractionWitnessCalculator.Exists(_target, yEdge.Key,
                             xEdge.Key, vertex, weight, int.MaxValue);
 
                         // create x-to-y data and edge.
-                        CHEdgeData dataXToY = new CHEdgeData();
-                        bool forward = (xEdge.Value.Backward && yEdge.Value.Forward) &&
+                        var dataXToY = new CHEdgeData();
+                        var forward = (xEdge.Value.Backward && yEdge.Value.Forward) &&
                             !witnessXToY;
-                        bool backward = (yEdge.Value.Backward && xEdge.Value.Forward) &&
+                        var backward = (yEdge.Value.Backward && xEdge.Value.Forward) &&
                             !witnessYToX;
-                        dataXToY.SetDirection(forward, backward, true);
-                        dataXToY.Weight = weight;
-                        dataXToY.ContractedVertexId = vertex;
-                        if ((dataXToY.Forward || dataXToY.Backward) ||
+                        if ((forward || backward) ||
                             !_target.ContainsEdge(xEdge.Key, yEdge.Key))
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddEdge(xEdge.Key, yEdge.Key, dataXToY, _comparer);
-                        }
+                            dataXToY.SetDirection(forward, backward);
+                            dataXToY.Weight = weight;
+                            dataXToY.ContractedVertexId = vertex;
 
-                        // create y-to-x data and edge.
-                        CHEdgeData dataYToX = new CHEdgeData();
-                        forward = (yEdge.Value.Backward && xEdge.Value.Forward) &&
-                            !witnessYToX;
-                        backward = (xEdge.Value.Backward && yEdge.Value.Forward) &&
-                            !witnessXToY;
-                        dataYToX.SetDirection(forward, backward, true);
-                        dataYToX.Weight = weight;
-                        dataYToX.ContractedVertexId = vertex;
-                        if ((dataYToX.Forward || dataYToX.Backward) ||
-                            !_target.ContainsEdge(yEdge.Key, xEdge.Key))
-                        { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddEdge(yEdge.Key, xEdge.Key, dataYToX, _comparer);
+                            _target.AddEdge(xEdge.Key, yEdge.Key, dataXToY, _comparer);
                         }
                     }
                 }
@@ -255,15 +213,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             // notify a contracted neighbour.
             _calculator.NotifyContracted(vertex);
-
-            // add contracted neighbour edges again.
-            if (_keepDirectNeighbours)
-            {
-                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
-                {
-                    _target.AddEdge(neighbour.Key, vertex, neighbour.Value, null);
-                }
-            }
 
             // report the after contraction event.
             this.OnAfterContraction(vertex, edges);
@@ -327,7 +276,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the misses queue.
         /// </summary>
-        private Queue<bool> _misses_queue;
+        private Queue<bool> _missesQueue;
 
         /// <summary>
         /// Select the next vertex from the queue.
@@ -347,16 +296,16 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 float current_priority = _queue.Weight(first_queued);
                 if (priority != current_priority)
                 { // a succesfull update.
-                    _misses_queue.Enqueue(true);
+                    _missesQueue.Enqueue(true);
                     _misses++;
                 }
                 else
                 { // an unsuccessfull update.
-                    _misses_queue.Enqueue(false);
+                    _missesQueue.Enqueue(false);
                 }
-                if (_misses_queue.Count > _k)
+                if (_missesQueue.Count > _k)
                 { // dequeue and update the misses.
-                    if (_misses_queue.Dequeue())
+                    if (_missesQueue.Dequeue())
                     {
                         _misses--;
                     }
@@ -390,7 +339,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                         "Average card: {0}", (double)totalCadinality/(double)recalculated_weights.Count);
                     _queue = new_queue;
-                    _misses_queue.Clear();
+                    _missesQueue.Clear();
                     _misses = 0;
                 }
                 else

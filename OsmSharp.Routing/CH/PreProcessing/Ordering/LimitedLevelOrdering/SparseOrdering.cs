@@ -51,10 +51,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
         /// <returns></returns>
         public float Calculate(uint vertex)
         {
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetEdges(vertex);
-
-            // remove all informative edges.
-            neighbours = neighbours.RemoveInformativeEdges();
+            var neighbours = _data.GetEdges(vertex);
 
             // check the proper conditions.
             if (neighbours.Length == 2)

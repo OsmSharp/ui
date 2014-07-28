@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestCHEdgeDataSetDirection()
         {
-            CHEdgeData edge = new CHEdgeData();
+            var edge = new CHEdgeData();
             this.DoTestSetDirection(edge, false, false, false);
             this.DoTestSetDirection(edge, true, false, false);
             this.DoTestSetDirection(edge, false, true, false);

@@ -226,7 +226,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="comparer">Comparator to compare edges and replace obsolete ones.</param>
         public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
-            if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
+            // if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
             if (vertex1 == vertex2) { throw new ArgumentException("Given vertices must be different."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }

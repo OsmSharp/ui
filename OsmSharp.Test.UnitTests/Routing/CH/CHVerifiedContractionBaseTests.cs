@@ -16,11 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
@@ -30,13 +28,13 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Math.Geo;
-using OsmSharp.Collections.Tags.Index;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -144,8 +142,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // do the pre-processing part.
-            //INodeWitnessCalculator witness_calculator = new CHRouterWitnessCalculator(_data);
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
+            var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(_data,
                 new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
@@ -356,9 +353,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, 
-                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
-                    fromDic[to.Key] = route;
+                    fromDic[to.Key] = router.Calculate(_data, _interpreter,
+                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null); ;
                 }
             }
         }

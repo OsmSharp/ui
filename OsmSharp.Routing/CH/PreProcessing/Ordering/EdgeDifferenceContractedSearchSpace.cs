@@ -73,10 +73,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             _contraction_count.TryGetValue(vertex, out contracted);
 
             // get the neighbours.
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetEdges(vertex);
-
-            // remove all informative edges.
-            neighbours = neighbours.RemoveInformativeEdges();
+            var neighbours = _data.GetEdges(vertex);
 
             // simulate the construction of new edges.
             int new_edges = 0;

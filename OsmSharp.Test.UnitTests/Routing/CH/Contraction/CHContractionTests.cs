@@ -204,7 +204,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
         /// <returns></returns>
         private HashSet<uint> BuildNeighboursSet(KeyValuePair<uint, CHEdgeData>[] neighbours)
         {
-            neighbours = neighbours.RemoveInformativeEdges();
             var neighboursSet = new HashSet<uint>();
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
