@@ -1400,10 +1400,68 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(text);
                             break;
                         case "text-anchor-horizontal":
-                            // TODO: implement
+                            var textAnchorHorizontal = new DeclarationTextAnchor();
+                            textAnchorHorizontal.Qualifier = DeclarationTextAnchorEnum.Horizontal;
+                            if (evalCall != null)
+                            {
+                                textAnchorHorizontal.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "left":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Left;
+                                        break;
+                                    case "center":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Center;
+                                        break;
+                                    case "right":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Right;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textAnchorHorizontal);
                             break;
                         case "text-anchor-vertical":
-                            // TODO: implement
+                            var textAnchorVertical = new DeclarationTextAnchor();
+                            textAnchorVertical.Qualifier = DeclarationTextAnchorEnum.Vertical;
+                            if (evalCall != null)
+                            {
+                                textAnchorVertical.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "above":
+                                        textAnchorVertical.Value = TextAnchorEnum.Above;
+                                        break;
+                                    case "top":
+                                        textAnchorVertical.Value = TextAnchorEnum.Top;
+                                        break;
+                                    case "center":
+                                        textAnchorVertical.Value = TextAnchorEnum.Center;
+                                        break;
+                                    case "bottom":
+                                        textAnchorVertical.Value = TextAnchorEnum.Bottom;
+                                        break;
+                                    case "below":
+                                        textAnchorVertical.Value = TextAnchorEnum.Below;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textAnchorVertical);
                             break;
                         case "text-offset-x":
                             var textOffsetX = new DeclarationInt();

@@ -524,6 +524,31 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         offsetY = 0;
                     }
+                    TextAnchorEnum horizontalAnchor, verticalAnchor; // TODO: make use of horizontal anchor
+                    if (!rule.TryGetProperty("textAnchorHorizontal", out horizontalAnchor))
+                    {
+                        horizontalAnchor = TextAnchorEnum.Right;
+                    }
+                    if (!rule.TryGetProperty("textAnchorVertical", out verticalAnchor))
+                    {
+                        verticalAnchor = TextAnchorEnum.Bottom;
+                    }
+
+                    // hack-ish way of supporting vertical anchor
+                    switch (verticalAnchor)
+                    {
+                        case TextAnchorEnum.Center:
+                            // leave as is
+                            break;
+                        case TextAnchorEnum.Above:
+                        case TextAnchorEnum.Top:
+                            offsetY -= 16;
+                            break;
+                        case TextAnchorEnum.Bottom:
+                        case TextAnchorEnum.Below:
+                            offsetY += 16;
+                            break;
+                    }
 
                     // a text is to be drawn.
                     string value;
@@ -554,8 +579,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
                         if (!pointId.HasValue)
                         {
-                            pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude) + offsetX,
-                                           projection.LatitudeToY(node.Coordinate.Latitude) + offsetY);
+                            pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
+                                           projection.LatitudeToY(node.Coordinate.Latitude));
                         }
                         scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
 						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight);
@@ -1143,6 +1168,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             var declarationFontStyle = (declaration as DeclarationFontStyle);
                             properties.AddProperty("fontStyle", declarationFontStyle.Eval(
                                 mapCSSObject));
+                        }
+                        else if (declaration is DeclarationTextAnchor)
+                        {
+                            var declarationTextAnchor = (declaration as DeclarationTextAnchor);
+
+                            if (declarationTextAnchor.Qualifier == DeclarationTextAnchorEnum.Horizontal)
+                            {
+                                properties.AddProperty("textAnchorHorizontal", declarationTextAnchor.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationTextAnchor.Qualifier == DeclarationTextAnchorEnum.Vertical)
+                            {
+                                properties.AddProperty("textAnchorVertical", declarationTextAnchor.Eval(
+                                    mapCSSObject));
+                            }
                         }
                     }
 
