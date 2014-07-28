@@ -28,8 +28,8 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
@@ -72,17 +72,38 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsTrue(neighbours.Contains(3));
+            var neighbours = data.GetEdges(2);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1 && x.Value.ToHigher;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3 && x.Value.ToHigher;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
-            Assert.IsTrue(neighbours.Contains(3));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(1);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2 && x.Value.ToLower;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3 && !x.Value.ToHigher && !x.Value.ToLower;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(3);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2 && x.Value.ToLower;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1 && !x.Value.ToHigher && !x.Value.ToLower;
+            }));
         }
 
         /// <summary>
@@ -117,17 +138,38 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsTrue(neighbours.Contains(3));
+            var neighbours = data.GetEdges(2);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1 && x.Value.ToHigher;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3 && x.Value.ToHigher;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
-            Assert.IsTrue(neighbours.Contains(3));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(1);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2 && x.Value.ToLower;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3 && !x.Value.ToHigher && !x.Value.ToLower;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(3);
+            Assert.AreEqual(2, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2 && x.Value.ToLower;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1 && !x.Value.ToHigher && !x.Value.ToLower;
+            }));
         }
 
         /// <summary>
@@ -158,20 +200,48 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             preProcessor.Contract(2);
 
             // check the neighbours of each vertex.
-            var neighbours = this.BuildNeighboursSet(data.GetEdges(2));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsTrue(neighbours.Contains(3));
-            Assert.IsTrue(neighbours.Contains(4));
+            var neighbours = data.GetEdges(2);
+            Assert.AreEqual(3, neighbours.Length);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 4;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(1));
-            Assert.IsTrue(neighbours.Contains(3));
-            Assert.IsTrue(neighbours.Contains(4));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(1);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 3;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 4;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2;
+            }));
 
-            neighbours = this.BuildNeighboursSet(data.GetEdges(3));
-            Assert.IsTrue(neighbours.Contains(1));
-            Assert.IsTrue(neighbours.Contains(4));
-            Assert.IsFalse(neighbours.Contains(2));
+            neighbours = data.GetEdges(3);
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 1;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 4;
+            }));
+            Assert.IsTrue(neighbours.Any((x) =>
+            {
+                return x.Key == 2;
+            }));
         }
 
         /// <summary>
@@ -195,21 +265,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             targetData.Pull();
 
             return data;
-        }
-
-        /// <summary>
-        /// Builds the neighbours set.
-        /// </summary>
-        /// <param name="neighbours"></param>
-        /// <returns></returns>
-        private HashSet<uint> BuildNeighboursSet(KeyValuePair<uint, CHEdgeData>[] neighbours)
-        {
-            var neighboursSet = new HashSet<uint>();
-            foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
-            {
-                neighboursSet.Add(neighbour.Key);
-            }
-            return neighboursSet;
         }
     }
 }

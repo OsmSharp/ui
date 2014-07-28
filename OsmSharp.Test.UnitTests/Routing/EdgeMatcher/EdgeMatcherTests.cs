@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Osm;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
 {
