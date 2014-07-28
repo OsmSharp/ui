@@ -964,9 +964,11 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="font"></param>
         /// <param name="fontStyle"></param>
         /// <param name="fontWeight"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         /// <returns></returns>
         public List<uint> AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
-            int? haloColor, int? haloRadius, string font, FontStyle fontStyle, FontWeight fontWeight)
+            int? haloColor, int? haloRadius, string font, FontStyle fontStyle, FontWeight fontWeight, int xOffset, int yOffset)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -994,7 +996,9 @@ namespace OsmSharp.UI.Renderer.Scene
                         HaloRadius = haloRadius,
                         Layer = layer,
                         MinZoom = minimumZoomFactor,
-                        MaxZoom = maximumZoomFactor
+                        MaxZoom = maximumZoomFactor,
+                        XOffset = xOffset,
+                        YOffset = yOffset
                     };
                     ushort styleId = (ushort)_textStyles.Add(style);
 
@@ -1050,6 +1054,8 @@ namespace OsmSharp.UI.Renderer.Scene
             primitive.Layer = style.Layer;
             primitive.MaxZoom = style.MaxZoom;
             primitive.MinZoom = style.MinZoom;
+            primitive.XOffset = style.XOffset;
+            primitive.YOffset = style.YOffset;
 
             // get the text.
             primitive.Text = _stringTable.Get(sceneObject.TextId);

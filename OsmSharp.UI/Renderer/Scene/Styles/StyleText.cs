@@ -88,6 +88,18 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public FontWeight FontWeight { get; set; }
 
         /// <summary>
+        /// Gets or sets the x-offset of the text.
+        /// </summary>
+        [ProtoMember(8)]
+        public int XOffset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y-offset of the text.
+        /// </summary>
+        [ProtoMember(9)]
+        public int YOffset { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -103,7 +115,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.MinZoom.GetHashCode() ^
                     this.MaxZoom.GetHashCode() ^
                     this.FontStyle.GetHashCode() ^
-                    this.FontWeight.GetHashCode();
+                    this.FontWeight.GetHashCode() ^
+                    this.XOffset.GetHashCode() ^
+                    this.YOffset.GetHashCode();
             }
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
@@ -114,7 +128,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 this.MinZoom.GetHashCode() ^
                 this.MaxZoom.GetHashCode() ^
                 this.FontStyle.GetHashCode() ^
-                this.FontWeight.GetHashCode();
+                this.FontWeight.GetHashCode() ^
+                this.XOffset.GetHashCode() ^
+                this.YOffset.GetHashCode();
         }
 
         /// <summary>
@@ -135,7 +151,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                        (obj as StyleText).MinZoom == this.MinZoom &&
                        (obj as StyleText).MaxZoom == this.MaxZoom &&
                        (obj as StyleText).FontStyle == this.FontStyle &&
-                       (obj as StyleText).FontWeight == this.FontWeight;
+                       (obj as StyleText).FontWeight == this.FontWeight &&
+                       (obj as StyleText).XOffset == this.XOffset &&
+                       (obj as StyleText).YOffset == this.YOffset;
             }
             return false;
         }

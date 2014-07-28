@@ -168,6 +168,16 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// </summary>
         public float MaxZoom { get; set; }
 
+        /// <summary>
+        /// The x-offset for the text.
+        /// </summary>
+        public int XOffset { get; set; }
+
+        /// <summary>
+        /// The y-offset for the text.
+        /// </summary>
+        public int YOffset { get; set; }
+
         #region IScene2DPrimitive implementation
 
         /// <summary>

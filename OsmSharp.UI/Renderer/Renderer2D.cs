@@ -271,7 +271,7 @@ namespace OsmSharp.UI.Renderer
                         case Primitive2DType.Text2D:
                             Text2D text = (Text2D)primitive;
                             this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font, text.FontStyle, text.FontWeight);
+                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font, text.FontStyle, text.FontWeight, text.XOffset, text.YOffset);
                             break;
                     }
                 }
@@ -407,8 +407,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
-                                         int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight);
+        protected abstract void DrawText(Target2DWrapper<TTarget> target2DWrapper, double x, double y, string text, int color, double size,
+                                         int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight, int xOffset, int yOffset);
 
         /// <summary>
         /// Draws text along a given line.

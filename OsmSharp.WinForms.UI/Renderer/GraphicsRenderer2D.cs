@@ -366,14 +366,17 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="fontName"></param>
         /// <param name="fontStyle"></param>
         /// <param name="fontWeight"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
-            int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, FontWeight fontWeight)
+            int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, FontWeight fontWeight,
+            int xOffset, int yOffset)
         {
             float sizeInPixels = this.ToPixels(size);
             Color textColor = Color.FromArgb(color); 
             double[] transformed = this.Tranform(x, y);
-            float transformedX = (float)transformed[0];
-            float transformedY = (float)transformed[1];
+            float transformedX = (float)transformed[0] + xOffset;
+            float transformedY = (float)transformed[1] + yOffset;
 
             var targetFontStyle = System.Drawing.FontStyle.Regular;
 

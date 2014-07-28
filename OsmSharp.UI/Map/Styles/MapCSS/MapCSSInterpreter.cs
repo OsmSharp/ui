@@ -583,7 +583,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                            projection.LatitudeToY(node.Coordinate.Latitude));
                         }
                         scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
-						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight);
+						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight, offsetX, offsetY);
                     }
                 }
             }

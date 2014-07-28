@@ -166,7 +166,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
 
                     target.AddText(target.AddPoint(scenePoint.X, scenePoint.Y), styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
                         styleText.Size, text, styleText.Color, styleText.HaloColor, styleText.HaloRadius, styleText.Font, 
-                        styleText.FontStyle, styleText.FontWeight);
+                        styleText.FontStyle, styleText.FontWeight, styleText.XOffset, styleText.YOffset);
                 }
             }
 
