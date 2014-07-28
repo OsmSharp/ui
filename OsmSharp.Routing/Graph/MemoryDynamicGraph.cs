@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -48,22 +49,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the coordinates of the vertices.
         /// </summary>
-        private GeoCoordinateSimple[] _coordinates;
+        private HugeArray<GeoCoordinateSimple> _coordinates;
 
         /// <summary>
         /// Holds all vertices pointing to it's first edge.
         /// </summary>
-        private uint[] _vertices;
+        private HugeArray<uint> _vertices;
 
         /// <summary>
         /// Holds all edges (meaning vertex1-vertex2)
         /// </summary>
-        private uint[] _edges;
+        private HugeArray<uint> _edges;
 
         /// <summary>
         /// Holds all data associated with edges.
         /// </summary>
-        private TEdgeData[] _edgeData;
+        private HugeArray<TEdgeData> _edgeData;
 
         /// <summary>
         /// Creates a new in-memory graph.
@@ -77,22 +78,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public MemoryDynamicGraph(int sizeEstimate)
+        public MemoryDynamicGraph(long sizeEstimate)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
-            _vertices = new uint[sizeEstimate];
+            _vertices = new HugeArray<uint>(sizeEstimate);
             for (int idx = 0; idx < sizeEstimate; idx++)
             {
                 _vertices[idx] = NO_EDGE;
             }
-            _coordinates = new GeoCoordinateSimple[sizeEstimate];
-            _edges = new uint[sizeEstimate * 3 * EDGE_SIZE];
+            _coordinates = new HugeArray<GeoCoordinateSimple>(sizeEstimate);
+            _edges = new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE);
             for (int idx = 0; idx < sizeEstimate * 3 * EDGE_SIZE; idx++)
             {
                 _edges[idx] = NO_EDGE;
             }
-            _edgeData = new TEdgeData[sizeEstimate * 3];
+            _edgeData = new HugeArray<TEdgeData>(sizeEstimate * 3);
         }
 
         /// <summary>
@@ -107,12 +108,14 @@ namespace OsmSharp.Routing.Graph
         /// Increases the memory allocation.
         /// </summary>
         /// <param name="size"></param>
-        private void IncreaseVertexSize(int size)
+        private void IncreaseVertexSize(long size)
         {
             var oldLength = _coordinates.Length;
-            Array.Resize<GeoCoordinateSimple>(ref _coordinates, size);
-            Array.Resize<uint>(ref _vertices, size);
-            for (int idx = oldLength; idx < size; idx++)
+            _coordinates.Resize(size);
+            // Array.Resize<GeoCoordinateSimple>(ref _coordinates, size);
+            _vertices.Resize(size);
+            // Array.Resize<uint>(ref _vertices, size);
+            for (long idx = oldLength; idx < size; idx++)
             {
                 _vertices[idx] = NO_EDGE;
             }
@@ -129,15 +132,17 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Increases the memory allocation.
         /// </summary>
-        private void IncreaseEdgeSize(int size)
+        private void IncreaseEdgeSize(long size)
         {
             var oldLength = _edges.Length;
-            Array.Resize<uint>(ref _edges, size);
-            for (int idx = oldLength; idx < size; idx++)
+            _edges.Resize(size);
+            // Array.Resize<uint>(ref _edges, size);
+            for (long idx = oldLength; idx < size; idx++)
             {
                 _edges[idx] = NO_EDGE;
             }
-            Array.Resize<TEdgeData>(ref _edgeData, size / EDGE_SIZE);
+            _edgeData.Resize(size / EDGE_SIZE);
+            // Array.Resize<TEdgeData>(ref _edgeData, size / EDGE_SIZE);
         }
 
         /// <summary>
@@ -175,8 +180,10 @@ namespace OsmSharp.Routing.Graph
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
-            _coordinates[vertex].Latitude = latitude;
-            _coordinates[vertex].Longitude = longitude;
+            var coordinate = _coordinates[vertex];
+            coordinate.Latitude = latitude;
+            coordinate.Longitude = longitude;
+            _coordinates[vertex] = coordinate;
         }
 
         /// <summary>
@@ -586,12 +593,16 @@ namespace OsmSharp.Routing.Graph
         public void Trim()
         {
             // resize coordinates/vertices.
-            Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)_nextVertexId);
-            Array.Resize<uint>(ref _vertices, (int)_nextVertexId);
+            _coordinates.Resize(_nextVertexId);
+            // Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)_nextVertexId);
+            _vertices.Resize(_nextVertexId);
+            // Array.Resize<uint>(ref _vertices, (int)_nextVertexId);
            
             // resize edges.
-            Array.Resize<TEdgeData>(ref _edgeData, (int)(_nextEdgeId / EDGE_SIZE));
-            Array.Resize<uint>(ref _edges, (int)_nextEdgeId);
+            _edgeData.Resize(_nextEdgeId / EDGE_SIZE);
+            // Array.Resize<TEdgeData>(ref _edgeData, (int)(_nextEdgeId / EDGE_SIZE));
+            _edgeData.Resize(_nextEdgeId);
+            // Array.Resize<uint>(ref _edges, (int)_nextEdgeId);
         }
 
         /// <summary>
