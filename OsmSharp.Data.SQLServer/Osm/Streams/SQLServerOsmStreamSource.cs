@@ -303,30 +303,36 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         		//node.UserName = _node_reader.GetString(8);
         		//node.UserId = _node_reader.IsDBNull(9) ? -1 : _node_reader.GetInt64(9);
 
-						//Has tags?
+			    //Has tags?
         		if (!_nodeReader.IsDBNull(10))
         		{
-							//if (node.Tags == null)
-								//node.Tags = new Dictionary<string, string>();
-							
-							long currentnode = node.Id.Value;
-							while(currentnode == node.Id.Value){
-								//string key = _node_reader.GetString(11);
-								//string value = _node_reader.GetString(12);
-								//node.Tags.Add(key, value);
-								if (!_nodeReader.Read())
-								{
-									_nodeReader.Close();
-									break;
-								}
-								currentnode = _nodeReader.GetInt64(0);
-							}
-        		}else if (!_nodeReader.Read())
-        			_nodeReader.Close();
-						// set the current variable!
+					var tags = new Dictionary<string, string>();
+					long currentnode = node.Id.Value;
+					while(currentnode == node.Id.Value)
+                    {
+                        string key = _nodeReader.GetString(11);
+                        string value = _nodeReader.GetString(12);
+                        tags.Add(key, value);
+						if (!_nodeReader.Read())
+						{
+							_nodeReader.Close();
+							break;
+						}
+						currentnode = _nodeReader.GetInt64(0);
+					}
+
+                    node.Tags = new TagsCollection(tags);
+        		}
+                else if (!_nodeReader.Read())
+                {
+                    _nodeReader.Close();
+                }
+
+        	    // set the current variable!
         		_current = node;
         		return true;
         	}
+
         	_nodeReader.Close();
         	_nodeReader.Dispose();
         	_nodeReader = null;
