@@ -50,6 +50,8 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Controls\IMapControlHost.cs" />
+    <Compile Include="Controls\MapControl.cs" />
     <Compile Include="Data\SQLite\SQLite.cs" />
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,9 +73,8 @@
     <Compile Include="Surfaces\MapViewGLSurface.cs" />
     <Compile Include="Surfaces\IMapViewSurface.cs" />
     <Compile Include="MapViewEvents.cs" />
-    <Compile Include="Markers\IMapMarkerHost.cs" />
     <Compile Include="Markers\MapMarker.cs" />
-    <Compile Include="Markers\MapMarkerAlignment.cs" />
+    <Compile Include="Controls\MapControlAlignment.cs" />
     <Compile Include="Native.cs" />
   </ItemGroup>
   <ItemGroup>

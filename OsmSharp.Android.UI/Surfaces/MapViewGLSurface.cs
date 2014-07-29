@@ -21,6 +21,7 @@ using Android.Content;
 using Android.Opengl;
 using Android.Util;
 using Android.Views;
+using OsmSharp.Android.UI.Controls;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -783,17 +784,17 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Zooms to the given list of markers.
         /// </summary>
-        /// <param name="markers"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        /// <param name="controls"></param>
+        public void ZoomToControls(List<MapControl> controls, double percentage)
         {
             float height = this.LayoutParameters.Height;
             float width = this.LayoutParameters.Width;
             if (width > 0)
             {
-                PointF2D[] points = new PointF2D[markers.Count];
-                for (int idx = 0; idx < markers.Count; idx++)
+                PointF2D[] points = new PointF2D[controls.Count];
+                for (int idx = 0; idx < controls.Count; idx++)
                 {
-                    points[idx] = markers[idx].Location;
+                    points[idx] = controls[idx].Location;
                 }
                 View2D view = this.CreateView();
                 View2D fittedView = view.Fit(points);
