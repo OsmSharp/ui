@@ -60,8 +60,8 @@ namespace OsmSharp.UI.Map.Layers
         public void AddRoute(Route route)
         {
             // set the default color if none is given.
-            SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-            SimpleColor transparantBlue = SimpleColor.FromArgb(128, blue.R, blue.G, blue.B);
+            var blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+            var transparantBlue = SimpleColor.FromArgb(128, blue.R, blue.G, blue.B);
             this.AddRoute(route, transparantBlue.Value);
         }
 
@@ -83,8 +83,8 @@ namespace OsmSharp.UI.Map.Layers
         public void AddRoute(Route route, int argb, double width)
         {
             if (route != null &&
-            route.Entries != null &&
-            route.Entries.Length > 0)
+                route.Entries != null &&
+                route.Entries.Length > 0)
             { // there are entries.
                 // get x/y.
                 var x = new double[route.Entries.Length];
@@ -98,8 +98,8 @@ namespace OsmSharp.UI.Map.Layers
                 }
 
                 // set the default color if none is given.
-                SimpleColor color = SimpleColor.FromArgb(argb);
-                uint? pointsId = _scene.AddPoints(x, y);
+                var color = SimpleColor.FromArgb(argb);
+                var pointsId = _scene.AddPoints(x, y);
                 if (pointsId.HasValue)
                 {
                     _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, 
@@ -129,6 +129,8 @@ namespace OsmSharp.UI.Map.Layers
         public void Clear()
         {
             _scene.Clear();
+
+            this.RaiseLayerChanged();
         }
 
         /// <summary>

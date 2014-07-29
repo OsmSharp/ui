@@ -21,6 +21,7 @@ using Android.Content;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using OsmSharp.Android.UI.Controls;
 using OsmSharp.Android.UI.Renderer.Images;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
@@ -782,8 +783,8 @@ namespace OsmSharp.Android.UI
             { // there was a suspended call.
                 var latestZoomCall = _latestZoomCall;
                 _latestZoomCall = null;
-                this.ZoomToMarkers(
-                                latestZoomCall.Markers,
+                this.ZoomToControls(
+                                latestZoomCall.Controls,
                                 latestZoomCall.Percentage);
             }
 
@@ -1095,14 +1096,14 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Holds a suspended call to zoom to markers.
         /// </summary>
-        private MapViewMarkerZoomEvent _latestZoomCall;
+        private MapViewControlZoomEvent _latestZoomCall;
 
         /// <summary>
         /// Zooms to the given list of markers.
         /// </summary>
-        /// <param name="markers"></param>
+        /// <param name="controls"></param>
         /// <param name="percentage"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        public void ZoomToControls(List<MapControl> controls, double percentage)
         {
             try
             {
@@ -1110,10 +1111,10 @@ namespace OsmSharp.Android.UI
                 float width = this.SurfaceWidth;
                 if (width > 0)
                 {
-                    PointF2D[] points = new PointF2D[markers.Count];
-                    for (int idx = 0; idx < markers.Count; idx++)
+                    PointF2D[] points = new PointF2D[controls.Count];
+                    for (int idx = 0; idx < controls.Count; idx++)
                     {
-                        points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
+                        points[idx] = new PointF2D(this.Map.Projection.ToPixel(controls[idx].Location));
                     }
                     View2D view = this.CreateView();
                     View2D fittedView = view.Fit(points, percentage);
@@ -1127,9 +1128,9 @@ namespace OsmSharp.Android.UI
                 }
                 else
                 {
-                    _latestZoomCall = new MapViewMarkerZoomEvent()
+                    _latestZoomCall = new MapViewControlZoomEvent()
                     {
-                        Markers = markers,
+                        Controls = controls,
                         Percentage = percentage
                     };
                 }
@@ -1183,13 +1184,13 @@ namespace OsmSharp.Android.UI
             }
         }
 
-        private class MapViewMarkerZoomEvent
+        private class MapViewControlZoomEvent
         {
             /// <summary>
-            /// Gets or sets the markers.
+            /// Gets or sets the controls.
             /// </summary>
-            /// <value>The markers.</value>
-            public List<MapMarker> Markers
+            /// <value>The controls.</value>
+            public List<MapControl> Controls
             {
                 get;
                 set;
