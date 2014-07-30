@@ -1,16 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Collections
+using System;
+
+namespace OsmSharp.Collections.Arrays
 {
     /// <summary>
     /// An array working around the pre .NET 4.5 memory limitations for one object.
     /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    public class HugeArray<T>
+    public class HugeArray<T> : IHugeArray<T>
     {
         /// <summary>
         /// Holds the arrays.
@@ -18,7 +31,7 @@ namespace OsmSharp.Collections
         private T[][] _arrays;
 
         /// <summary>
-        /// Holds the maximuma array size.
+        /// Holds the maximum array size.
         /// </summary>
         private int _arraySize = (int)System.Math.Pow(2, 20);
 
