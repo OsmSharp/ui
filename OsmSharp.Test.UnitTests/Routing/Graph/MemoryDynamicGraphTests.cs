@@ -68,13 +68,6 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
-                graph.AddEdge(vertex1, vertex2, new LiveEdge()
-                    {
-                        Forward = false
-                    });
-            });
-            Assert.Catch<ArgumentOutOfRangeException>(() =>
-            {
                 graph.ContainsEdge(vertex3, vertex1);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
