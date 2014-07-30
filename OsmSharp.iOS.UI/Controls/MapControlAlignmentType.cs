@@ -18,10 +18,10 @@
 
 using System;
 
-namespace OsmSharp.Android.UI.Controls
+namespace OsmSharp.iOS.UI.Controls
 {
 	/// <summary>
-	/// Map control alignment type.
+	/// Map marker alignment type.
 	/// </summary>
 	public enum MapControlAlignmentType
 	{
@@ -39,4 +39,3 @@ namespace OsmSharp.Android.UI.Controls
 		CenterTop
 	}
 }
-
