@@ -21,6 +21,7 @@ Data/SQLServer/Output*/
 Data/SQLite/Output*/
 Core/OsmSharp.UnitTests/test-results*/
 *.userprefs
+*.csproj
 Output*/
 OutputAndroid*/
 OutputWindowsPhone*/
@@ -30,3 +31,4 @@ test-results*/
 .DotSettings
 *.vspx
 *.patch
+UpgradeLog.htm
