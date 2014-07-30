@@ -16,12 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace OsmSharp.Collections.Arrays
 {
     /// <summary>
     /// An abstract representation of a huge array.
     /// </summary>
-    public interface IHugeArray<T>
+    public interface IHugeArray<T> : IDisposable
     {
         /// <summary>
         /// Returns the length of this array.

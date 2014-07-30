@@ -31,12 +31,27 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// Delegate to create a native MemoryMappedFile.
         /// </summary>
         /// <param name="path">The path to file to map.</param>
-        public delegate IMemoryMappedFile NativeMemoryMappedFileCreate(string path);
+        /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
+        public delegate IMemoryMappedFile NativeMemoryMappedFileCreate(string path, long capacity);
 
         /// <summary>
         /// The native MemoryMappedFile create delegate.
         /// </summary>
         private static NativeMemoryMappedFileCreate _nativeMemoryMappedFileDelegate;
+
+        /// <summary>
+        /// Creates a native MemoryMappedFile.
+        /// </summary>
+        /// <param name="path">The path to file to map.</param>
+        /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
+        public static IMemoryMappedFile CreateFromFile(string path, long capacity)
+        {
+            if (_nativeMemoryMappedFileDelegate == null)
+            { // oeps, not initialized.
+                throw new InvalidOperationException("MemoryMappedFile creating delegate not initialized, call OsmSharp.{Platform).UI.Native.Initialize() in the native code.");
+            }
+            return _nativeMemoryMappedFileDelegate.Invoke(path, capacity);
+        }
 
         /// <summary>
         /// Delegate to create a memory-mapped file that has the specified capacity in system memory.
@@ -51,24 +66,11 @@ namespace OsmSharp.IO.MemoryMappedFiles
         private static NativeMemoryMappedFileSharedCreate _nativeMemoryMappedFileSharedDelegate;
 
         /// <summary>
-        /// Creates a native MemoryMappedFile.
-        /// </summary>
-        /// <param name="path">The path to file to map.</param>
-        public static IMemoryMappedFile Create(string path)
-        {
-            if (_nativeMemoryMappedFileDelegate == null)
-            { // oeps, not initialized.
-                throw new InvalidOperationException("MemoryMappedFile creating delegate not initialized, call OsmSharp.{Platform).UI.Native.Initialize() in the native code.");
-            }
-            return _nativeMemoryMappedFileDelegate.Invoke(path);
-        }
-
-        /// <summary>
         /// Creates a new memory-mapped file that has the specified capacity in system memory.
         /// </summary>
         /// <param name="mapName">A name to assign to the memory-mapped file.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public static IMemoryMappedFile Create(string mapName, long capacity)
+        public static IMemoryMappedFile CreateNew(string mapName, long capacity)
         {
             if (_nativeMemoryMappedFileSharedDelegate == null)
             { // oeps, not initialized.
@@ -78,14 +80,40 @@ namespace OsmSharp.IO.MemoryMappedFiles
         }
 
         /// <summary>
+        /// Delegate to calculate the size in-memory of the given type.
+        /// </summary>
+        /// <param name="type">A name to assign to the memory-mapped file.</param>
+        public delegate int SizeDelegate(Type type);
+
+        /// <summary>
+        /// The native get size delegate.
+        /// </summary>
+        private static SizeDelegate _getSizeDelegate;
+
+        /// <summary>
+        /// Calculates the size in-memory of the given type.
+        /// </summary>
+        /// <param name="type">A name to assign to the memory-mapped file.</param>
+        public static int GetSize(Type type)
+        {
+            if (_getSizeDelegate == null)
+            { // oeps, not initialized.
+                throw new InvalidOperationException("MemoryMappedFile get size not initialized, call OsmSharp.{Platform).UI.Native.Initialize() in the native code.");
+            }
+            return _getSizeDelegate.Invoke(type);
+        }
+
+        /// <summary>
         /// Sets the delegate.
         /// </summary>
         /// <param name="createMemoryMappedFile">Creates a memory mapped file delegate.</param>
         /// <param name="createMemoryMappedSharedFile">Creates a shared memory mapped file delegate.</param>
-        public static void SetDelegates(NativeMemoryMappedFileCreate createMemoryMappedFile, NativeMemoryMappedFileSharedCreate createMemoryMappedSharedFile)
+        /// <param name="getSizeDelegate">Delegate to calculate the size in-memory of the given type.</param>
+        public static void SetDelegates(NativeMemoryMappedFileCreate createMemoryMappedFile, NativeMemoryMappedFileSharedCreate createMemoryMappedSharedFile, SizeDelegate getSizeDelegate)
         {
             _nativeMemoryMappedFileDelegate = createMemoryMappedFile;
             _nativeMemoryMappedFileSharedDelegate = createMemoryMappedSharedFile;
+            _getSizeDelegate = getSizeDelegate;
         }
     }
 }

@@ -35,61 +35,103 @@ namespace OsmSharp.Collections.Arrays
         private long _length;
 
         /// <summary>
-        /// Holds the memory mapped file.
+        /// Holds the path to store the memory mapped files.
         /// </summary>
-        private IMemoryMappedFile _file;
+        private string _path;
 
         /// <summary>
-        /// Holds the list of accessors for each range.
+        /// Holds the list of files for each range.
+        /// </summary>
+        private List<IMemoryMappedFile> _files;
+
+        /// <summary>
+        /// Holds the list of accessors for each file.
         /// </summary>
         private List<IMemoryMappedViewAccessor> _accessors;
 
         /// <summary>
         /// Holds the maximum array size.
         /// </summary>
-        private int _arraySize = (int)System.Math.Pow(2, 20);
+        private int _fileElementSize = (int)System.Math.Pow(2, 20);
 
         /// <summary>
-        /// Holds the size of only element in bytes.
+        /// Holds the element size.
         /// </summary>
-        private long _elementSize = -1;
+        private int _elementSize;
 
         /// <summary>
-        /// Represents a memory mapped huge array.
+        /// Holds the maximum array size in bytes.
         /// </summary>
-        /// <param name="file">The memory mapped file to use.</param>
+        private long _fileSizeBytes;
+
+        /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
         /// <param name="size">The size of the array.</param>
-        public MemoryMappedHugeArray(IMemoryMappedFile file, long size)
-            : this(file, size, (int)System.Math.Pow(2, 20))
+        public MemoryMappedHugeArray(long size)
+            : this(size, (int)System.Math.Pow(2, 20))
         {
 
         }
 
         /// <summary>
-        /// Represents a memory mapped huge array.
+        /// Creates a memory mapped huge array.
         /// </summary>
-        /// <param name="file">The memory mapped file to use.</param>
+        /// <param name="size"></param>
+        /// <param name="arraySize"></param>
+        public MemoryMappedHugeArray(long size, int arraySize)
+            : this(null, size, arraySize)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
+        /// <param name="path">The path to the memory mapped files.</param>
+        /// <param name="size">The size of the array.</param>
+        public MemoryMappedHugeArray(string path, long size)
+            : this(path, size, (int)System.Math.Pow(2, 20))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memory mapped huge array.
+        /// </summary>
+        /// <param name="path">The path to the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(IMemoryMappedFile file, long size, int arraySize)
+        public MemoryMappedHugeArray(string path, long size, int arraySize)
         {
-            _file = file;
+            _path = path;
             _length = size;
-            _arraySize = arraySize;
+            _fileElementSize = arraySize;
+            _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
+            _fileSizeBytes = arraySize * _elementSize;
 
-            _elementSize = _file.GetSizeOf<T>();
-
-            long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
-            _accessors = new List<IMemoryMappedViewAccessor>((int)arrayCount);
-            long offset = 0;
-            long accessorSize = _arraySize * _elementSize;
-            for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
+            var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
+            _files = new List<IMemoryMappedFile>(arrayCount);
+            _accessors = new List<IMemoryMappedViewAccessor>(arrayCount);
+            for (int arrayIdx = 0; arrayIdx < arrayCount; arrayIdx++)
             {
-                _accessors.Add(_file.CreateViewAccessor(offset, accessorSize));
-                offset = offset + accessorSize;
+                var file = this.CreateNew();
+                _files.Add(file);
+                _accessors.Add(file.CreateViewAccessor(0, _fileSizeBytes));
             }
-            accessorSize = (size - ((arrayCount - 1) * _arraySize)) * _elementSize;
-            _accessors.Add(_file.CreateViewAccessor(offset, accessorSize));
+        }
+
+        /// <summary>
+        /// Helper method to create a new memory mapped file.
+        /// </summary>
+        /// <returns></returns>
+        private IMemoryMappedFile CreateNew()
+        {
+            if(string.IsNullOrEmpty(_path))
+            {
+                return NativeMemoryMappedFileFactory.CreateFromFile(_path + System.Guid.NewGuid().ToString(), _fileSizeBytes);
+            }
+            return NativeMemoryMappedFileFactory.CreateNew(System.Guid.NewGuid().ToString(), _fileSizeBytes);
         }
 
         /// <summary>
@@ -108,53 +150,27 @@ namespace OsmSharp.Collections.Arrays
         {
             _length = size;
 
-            long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
-            long accessorSize = _arraySize * _elementSize;
-            if (arrayCount < _accessors.Count)
-            {
-                for(int arrayIdx = (int)arrayCount; arrayIdx < _accessors.Count; arrayIdx++)
+            var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
+            _files = new List<IMemoryMappedFile>(arrayCount);
+            if (arrayCount < _files.Count)
+            { // decrease files/accessors.
+                for (int arrayIdx = (int)arrayCount; arrayIdx < _files.Count; arrayIdx++)
                 {
                     _accessors[arrayIdx].Dispose();
                     _accessors[arrayIdx] = null;
+                    _files[arrayIdx].Dispose();
+                    _files[arrayIdx] = null;
                 }
-                _accessors.RemoveRange((int)arrayCount, (int)(_accessors.Count - arrayCount));
+                _files.RemoveRange((int)arrayCount, (int)(_files.Count - arrayCount));
             }
-            long offset = accessorSize * 0;
-            for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
-            {
-                while(arrayIdx >= _accessors.Count)
+            else
+            { // increase files/accessors.
+                for (int arrayIdx = _files.Count; arrayIdx < arrayCount; arrayIdx++)
                 {
-                    _accessors.Add(null);
+                    var file = this.CreateNew();
+                    _files.Add(file);
+                    _accessors.Add(file.CreateViewAccessor(0, _fileSizeBytes));
                 }
-                offset = accessorSize * arrayIdx;
-                if (_accessors[arrayIdx] == null)
-                { // there is no array, create it.
-                    _accessors[arrayIdx] = _file.CreateViewAccessor(offset, accessorSize);
-                }
-                if (_accessors[arrayIdx].Capacity != accessorSize)
-                { // the size is not the same, replace it.
-                    var localArray = _accessors[arrayIdx];
-                    localArray.Dispose();
-                    localArray = _file.CreateViewAccessor(offset, accessorSize);
-                    _accessors[arrayIdx] = localArray;
-                }
-            }
-            offset = (arrayCount - 1) * accessorSize;
-            accessorSize = (size - ((arrayCount - 1) * _arraySize)) * _elementSize;
-            while (arrayCount - 1 >= _accessors.Count)
-            {
-                _accessors.Add(null);
-            }
-            if (_accessors[(int)arrayCount - 1] == null)
-            { // there is no array, create it.
-                _accessors[(int)arrayCount - 1] = _file.CreateViewAccessor(offset, accessorSize);
-            }
-            if (_accessors[(int)arrayCount - 1].Capacity != accessorSize)
-            { // the size is not the same, replace it.
-                var localArray = _accessors[(int)arrayCount - 1];
-                localArray.Dispose();
-                localArray = _file.CreateViewAccessor(offset, accessorSize);
-                _accessors[(int)arrayCount - 1] = localArray;
             }
         }
 
@@ -167,8 +183,8 @@ namespace OsmSharp.Collections.Arrays
         {
             get
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _arraySize);
-                long localIdx = idx % _arraySize;
+                long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
+                long localIdx = idx % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
                 T structure;
                 _accessors[(int)arrayIdx].Read<T>(localPosition, out structure);
@@ -176,11 +192,28 @@ namespace OsmSharp.Collections.Arrays
             }
             set
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _arraySize);
-                long localIdx = idx % _arraySize;
+                long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
+                long localIdx = idx % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
                 _accessors[(int)arrayIdx].Write<T>(localPosition, ref value);
             }
+        }
+
+        /// <summary>
+        /// Diposes of all native resource associated withh this array.
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var accessor in _accessors)
+            {
+                accessor.Dispose();
+            }
+            _accessors.Clear();
+            foreach(var file in _files)
+            {
+                file.Dispose();
+            }
+            _files.Clear();
         }
     }
 }

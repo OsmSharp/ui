@@ -31,19 +31,33 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : struct, IDynamicGraphEdgeData
     {
         /// <summary>
-        /// The memory mapped file for the vertices.
+        /// Holds the coordinates array.
         /// </summary>
-        private IMemoryMappedFile _verticesFile;
+        private MemoryMappedHugeArray<GeoCoordinateSimple> _coordinates;
 
         /// <summary>
-        /// The memory mapped file for the edges.
+        /// Holds the vertex array.
         /// </summary>
-        private IMemoryMappedFile _edgesFile;
+        private MemoryMappedHugeArray<uint> _vertices;
 
         /// <summary>
-        /// The memory mapped file for the coordinates.
+        /// Holds the edges array.
         /// </summary>
-        private IMemoryMappedFile _coordinatesFile;
+        private MemoryMappedHugeArray<uint> _edges;
+
+        /// <summary>
+        /// Creates a new memory mapped file dynamic graph.
+        /// </summary>
+        /// <param name="estimatedSize"></param>
+        public MemoryMappedFileDynamicGraph(long estimatedSize)
+            : this(estimatedSize,
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(estimatedSize),
+            new MemoryMappedHugeArray<uint>(estimatedSize),
+            new MemoryMappedHugeArray<uint>(estimatedSize),
+            new HugeArray<TEdgeData>(estimatedSize))
+        {
+
+        }
 
         /// <summary>
         /// Creates a new memory mapped file dynamic graph.
@@ -51,44 +65,33 @@ namespace OsmSharp.Routing.Graph
         /// <param name="estimatedSize"></param>
         /// <param name="path"></param>
         public MemoryMappedFileDynamicGraph(long estimatedSize, string path)
-            : this(estimatedSize,
-            MemoryMappedFileDynamicGraph<TEdgeData>.CreateRandomMemoryMappedFile(path),
-            MemoryMappedFileDynamicGraph<TEdgeData>.CreateRandomMemoryMappedFile(path),
-            MemoryMappedFileDynamicGraph<TEdgeData>.CreateRandomMemoryMappedFile(path))
+            : this(estimatedSize, 
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(path, estimatedSize),
+            new MemoryMappedHugeArray<uint>(path, estimatedSize),
+            new MemoryMappedHugeArray<uint>(path, estimatedSize),
+            new HugeArray<TEdgeData>(estimatedSize))
         {
 
         }
 
         /// <summary>
-        /// Creates a new memory mapped file dynamic graph based on the given memory mapped files.
+        /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        /// <param name="coordinatesFile"></param>
-        /// <param name="verticesFile"></param>
-        /// <param name="edgesFile"></param>
+        /// <param name="coordinates"></param>
+        /// <param name="vertices"></param>
+        /// <param name="edges"></param>
+        /// <param name="edgeData"></param>
         public MemoryMappedFileDynamicGraph(long estimatedSize,
-            IMemoryMappedFile coordinatesFile,
-            IMemoryMappedFile verticesFile,
-            IMemoryMappedFile edgesFile)
-            : base(estimatedSize,
-                new MemoryMappedHugeArray<GeoCoordinateSimple>(coordinatesFile, 10),
-                new MemoryMappedHugeArray<uint>(verticesFile, 10),
-                new MemoryMappedHugeArray<uint>(edgesFile, 10),
-                new HugeArray<TEdgeData>(10))
+            MemoryMappedHugeArray<GeoCoordinateSimple> coordinates,
+            MemoryMappedHugeArray<uint> vertices,
+            MemoryMappedHugeArray<uint> edges,
+            IHugeArray<TEdgeData> edgeData)
+            : base(estimatedSize, coordinates, vertices, edges, edgeData)
         {
-            _coordinatesFile = coordinatesFile;
-            _edgesFile = edgesFile;
-            _verticesFile = verticesFile;
-        }
-
-        /// <summary>
-        /// Creates a random memory mapped file in the given path.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static IMemoryMappedFile CreateRandomMemoryMappedFile(string path)
-        {
-            return NativeMemoryMappedFileFactory.Create(path + System.Guid.NewGuid().ToString());
+            _coordinates = coordinates;
+            _vertices = vertices;
+            _edges = edges;
         }
 
         /// <summary>
@@ -96,12 +99,12 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public void Dispose()
         {
-            _coordinatesFile.Dispose();
-            _coordinatesFile = null;
-            _edgesFile.Dispose();
-            _edgesFile = null;
-            _verticesFile.Dispose();
-            _verticesFile = null;
+            _coordinates.Dispose();
+            _coordinates = null;
+            _edges.Dispose();
+            _edges = null;
+            _vertices.Dispose();
+            _vertices = null;
         }
     }
 }

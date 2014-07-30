@@ -139,5 +139,10 @@ namespace OsmSharp.Collections.Arrays
                 return _size;
             }
         }
+
+        public void Dispose()
+        {
+
+        }
     }
 }

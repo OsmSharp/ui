@@ -40,20 +40,20 @@ namespace OsmSharp.WinForms.UI
                     return new NativeImageCache();
                 });
             OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.SetDelegates(
-                (path) =>
+                (path, capacity) =>
                 {
                     var file = new FileInfo(path);
-                    if (!file.Exists)
-                    { // make sure to create the file if it does not exist yet!
-                        var fileStream = file.Create();
-                        fileStream.Close();
-                        fileStream.Dispose();
-                    }
-                    return new MemoryMappedFileWrapper(MemoryMappedFile.CreateFromFile(path, FileMode.OpenOrCreate, file.Name, 1000, MemoryMappedFileAccess.ReadWrite));
+                    var fs = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+                    return new MemoryMappedFileWrapper(
+                        MemoryMappedFile.CreateFromFile(fs, file.Name, capacity, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false));
                 },
                 (mapName, capacity) =>
                 {
                     return new MemoryMappedFileWrapper(MemoryMappedFile.CreateNew(mapName, capacity));
+                },
+                (type) =>
+                {
+                    return System.Runtime.InteropServices.Marshal.SizeOf(type);
                 });
         }
     }

@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;
 using System;
 using System.Drawing;
@@ -32,6 +33,8 @@ namespace OsmSharp.Test.Performance
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            Native.Initialize();
+
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(
@@ -39,7 +42,6 @@ namespace OsmSharp.Test.Performance
 
             try
             {
-
                 // set the seed manually.
                 OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 

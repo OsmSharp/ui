@@ -21,6 +21,7 @@ using OsmSharp.Collections.Arrays;
 using OsmSharp.Math.Random;
 using OsmSharp.WinForms.UI;
 using System;
+
 namespace OsmSharp.Test.Unittests.Collections.Arrays
 {  
     /// <summary>
@@ -38,10 +39,9 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
-            using (var memoryMappedFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("testmap", 32 * 1024 * 1024))
+            using (var intArray = new MemoryMappedHugeArray<int>(1000))
             {
                 var intArrayRef = new int[1000];
-                var intArray = new MemoryMappedHugeArray<int>(memoryMappedFile, 1000);
 
                 var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
                 for (int idx = 0; idx < 1000; idx++)
@@ -76,11 +76,9 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
 
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
-            using (var memoryMappedFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("testmap", 32 * 1024 * 1024))
+            using (var intArray = new MemoryMappedHugeArray<int>(1000, 300))
             {
                 var intArrayRef = new int[1000];
-                var intArray = new MemoryMappedHugeArray<int>(
-                    memoryMappedFile, 1000, 300);
 
                 for (int idx = 0; idx < 1000; idx++)
                 {
@@ -106,10 +104,9 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 }
             }
 
-            using (var memoryMappedFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("testmap", 32 * 1024 * 1024))
+            using (var intArray = new MemoryMappedHugeArray<int>(1000, 300))
             {
                 var intArrayRef = new int[1000];
-                var intArray = new MemoryMappedHugeArray<int>(memoryMappedFile, 1000, 300);
 
                 for (int idx = 0; idx < 1000; idx++)
                 {
