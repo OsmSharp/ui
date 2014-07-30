@@ -50,22 +50,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the coordinates of the vertices.
         /// </summary>
-        private HugeArray<GeoCoordinateSimple> _coordinates;
+        private IHugeArray<GeoCoordinateSimple> _coordinates;
 
         /// <summary>
         /// Holds all vertices pointing to it's first edge.
         /// </summary>
-        private HugeArray<uint> _vertices;
+        private IHugeArray<uint> _vertices;
 
         /// <summary>
         /// Holds all edges (meaning vertex1-vertex2)
         /// </summary>
-        private HugeArray<uint> _edges;
+        private IHugeArray<uint> _edges;
 
         /// <summary>
         /// Holds all data associated with edges.
         /// </summary>
-        private HugeArray<TEdgeData> _edgeData;
+        private IHugeArray<TEdgeData> _edgeData;
 
         /// <summary>
         /// Creates a new in-memory graph.
@@ -80,21 +80,39 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryDynamicGraph(long sizeEstimate)
+            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new in-memory graph.
+        /// </summary>
+        /// <param name="sizeEstimate"></param>
+        /// <param name="coordinateArray"></param>
+        /// <param name="vertexArray"></param>
+        /// <param name="edgesArray"></param>
+        /// <param name="edgeDataArray"></param>
+        protected MemoryDynamicGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
-            _vertices = new HugeArray<uint>(sizeEstimate);
+            _vertices = vertexArray;
+            _vertices.Resize(sizeEstimate);
             for (int idx = 0; idx < sizeEstimate; idx++)
             {
                 _vertices[idx] = NO_EDGE;
             }
-            _coordinates = new HugeArray<GeoCoordinateSimple>(sizeEstimate);
-            _edges = new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE);
+            _coordinates = coordinateArray;
+            _coordinates.Resize(sizeEstimate);
+            _edges = edgesArray;
+            _edges.Resize(sizeEstimate * 3 * EDGE_SIZE);
             for (int idx = 0; idx < sizeEstimate * 3 * EDGE_SIZE; idx++)
             {
                 _edges[idx] = NO_EDGE;
             }
-            _edgeData = new HugeArray<TEdgeData>(sizeEstimate * 3);
+            _edgeData = edgeDataArray;
+            _edgeData.Resize(sizeEstimate * 3);
         }
 
         /// <summary>

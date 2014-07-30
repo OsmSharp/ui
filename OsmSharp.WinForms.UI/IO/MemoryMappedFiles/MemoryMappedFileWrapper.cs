@@ -48,7 +48,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <returns></returns>
         public IMemoryMappedViewAccessor CreateViewAccessor(long offset, long size)
         {
-            return new MemoryMappedViewAccessorWrapper(_file.CreateViewAccessor(offset, size));
+            return new MemoryMappedViewAccessorWrapper(_file.CreateViewAccessor(offset, size, MemoryMappedFileAccess.ReadWrite));
         }
 
         /// <summary>

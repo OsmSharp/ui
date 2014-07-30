@@ -18,6 +18,7 @@
 
 using OsmSharp.WinForms.UI.IO.MemoryMappedFiles;
 using OsmSharp.WinForms.UI.Renderer.Images;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 
 namespace OsmSharp.WinForms.UI
@@ -41,7 +42,14 @@ namespace OsmSharp.WinForms.UI
             OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.SetDelegates(
                 (path) =>
                 {
-                    return new MemoryMappedFileWrapper(MemoryMappedFile.CreateFromFile(path));
+                    var file = new FileInfo(path);
+                    if (!file.Exists)
+                    { // make sure to create the file if it does not exist yet!
+                        var fileStream = file.Create();
+                        fileStream.Close();
+                        fileStream.Dispose();
+                    }
+                    return new MemoryMappedFileWrapper(MemoryMappedFile.CreateFromFile(path, FileMode.OpenOrCreate, file.Name, 1000, MemoryMappedFileAccess.ReadWrite));
                 },
                 (mapName, capacity) =>
                 {
