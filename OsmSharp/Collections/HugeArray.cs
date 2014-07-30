@@ -20,7 +20,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Holds the maximuma array size.
         /// </summary>
-        private int _arraySize = (int)System.Math.Pow(2, 30);
+        private int _arraySize = (int)System.Math.Pow(2, 20);
 
         /// <summary>
         /// Holds the size of this array.
@@ -51,7 +51,7 @@ namespace OsmSharp.Collections
         /// </summary>
         /// <param name="size"></param>
         public HugeArray(long size)
-            : this(size, (int)System.Math.Pow(2, 30))
+            : this(size, (int)System.Math.Pow(2, 20))
         {
 
         }
