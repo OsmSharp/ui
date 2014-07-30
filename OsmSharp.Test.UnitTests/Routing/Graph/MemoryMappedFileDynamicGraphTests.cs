@@ -47,8 +47,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestLiveEdgeDynamicGraphArguments()
         {
             // create graph with one vertex and start adding vertex2.
-            var tempPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\";
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, tempPath))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 uint vertex1 = graph.AddVertex(0, 0);
                 uint vertex2 = graph.AddVertex(0, 0);
@@ -104,7 +106,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphVertex()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 var vertex = graph.AddVertex(51, 4);
 
@@ -130,7 +135,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphVertex10000()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 int count = 10000;
                 while (count > 0)
@@ -159,7 +167,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -196,7 +207,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge10000()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 int count = 10000;
                 uint vertex1 = graph.AddVertex(51, 1);
@@ -229,7 +243,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge1()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -289,7 +306,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemove1()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -323,7 +343,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemove2()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -382,7 +405,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemoveX()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -456,9 +482,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveEnd()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -503,9 +531,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveMiddle()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -550,9 +580,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveBegin()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -597,9 +629,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveAll()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -644,9 +678,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveAllOneVertex()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -688,9 +724,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphCompressEdges()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -731,8 +769,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Assert.AreEqual(graph.GetEdges(vertex4).Length, 2);
             }
 
-
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
                 uint vertex1 = graph.AddVertex(51, 1);
                 uint vertex2 = graph.AddVertex(51, 2);
@@ -789,9 +829,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphCompressVertices()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
                 var vertex3 = graph.AddVertex(51, 3);
@@ -838,9 +880,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddReverse()
         {
-            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, System.IO.Path.GetTempPath()))
+            var coordinatesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("coordinates", 32 * 1024 * 1024);
+            var vertexFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("vertex", 32 * 1024 * 1024);
+            var edgesFile = OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.Create("edges", 32 * 1024 * 1024);
+            using (var graph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000, coordinatesFile, vertexFile, edgesFile))
             {
-
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
 
