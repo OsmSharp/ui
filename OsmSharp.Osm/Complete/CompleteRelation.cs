@@ -291,48 +291,36 @@ namespace OsmSharp.Osm
                         Node simpleNode = osmGeoSource.GetNode(memberId);
                         if(simpleNode == null)
                         {
-                            return null;
+                            continue;
                         }
                         Node completeNode = simpleNode;
                         if (completeNode != null)
                         {
                             member.Member = completeNode;
                         }
-                        else
-                        {
-                            return null;
-                        }
                         break;
                     case OsmGeoType.Way:
                         Way simpleWay = osmGeoSource.GetWay(memberId);
                         if(simpleWay == null)
                         {
-                            return null;
+                            continue;
                         }
                         CompleteWay completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
                         if (completeWay != null)
                         {
                             member.Member = completeWay;
                         }
-                        else
-                        {
-                            return null;
-                        }
                         break;
                     case OsmGeoType.Relation:
                         Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
                         if(simpleRelationMember == null)
                         {
-                            return null;
+                            continue;
                         }
                         CompleteRelation completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
                         if (completeRelation != null)
                         {
                             member.Member = completeRelation;
-                        }
-                        else
-                        {
-                            return null;
                         }
                         break;
                 }
