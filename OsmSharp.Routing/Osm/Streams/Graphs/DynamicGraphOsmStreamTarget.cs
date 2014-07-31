@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
 using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
@@ -88,7 +89,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
-            : this(dynamicGraph, interpreter, edgeComparer, new TagsTableCollectionIndex(), new Dictionary<long, uint>())
+            : this(dynamicGraph, interpreter, edgeComparer, new TagsTableCollectionIndex(), new HugeDictionary<long, uint>())
         {
 
         }
@@ -102,7 +103,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new Dictionary<long, uint>())
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>())
         {
 
         }
@@ -132,6 +133,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
+        /// <param name="collectIntermediates"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
             ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations,
