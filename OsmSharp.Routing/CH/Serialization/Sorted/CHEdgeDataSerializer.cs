@@ -194,7 +194,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     chVertex.Latitude = latitude;
                     chVertex.Longitude = longitude;
                     chVertex.ArcIndex = (ushort)(blockArcs.Count);
-                    foreach (KeyValuePair<uint, CHEdgeData> sortedArc in sortedGraph.GetArcs(vertexId))
+                    foreach (KeyValuePair<uint, CHEdgeData> sortedArc in sortedGraph.GetEdges(vertexId))
                     {
                         CHArc chArc = new CHArc();
                         chArc.TargetId = sortedArc.Key;
@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             graph.AddDownwardEdges();
 
             // sort the topologically ordered vertices into bins representing a certain height range.
-            List<uint>[] heightBins = new List<uint>[1000];
+            var heightBins = new List<uint>[1000];
             foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
             { // enumerates all vertixes depth-first.
                 int binIdx = (int)(vertexDepth.Depth / _heightBinSize);
@@ -270,7 +270,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
 
                 // add to the current bin.
-                List<uint> bin = heightBins[binIdx];
+                var bin = heightBins[binIdx];
                 if (bin == null)
                 { // create new bin.
                     bin = new List<uint>();
@@ -280,12 +280,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // temp test.
-            MemoryDynamicGraph<CHEdgeData> sortedGraph = new MemoryDynamicGraph<CHEdgeData>();
-            Dictionary<uint, uint> currentBinIds = new Dictionary<uint, uint>();
+            var sortedGraph = new MemoryDynamicGraph<CHEdgeData>();
+            var currentBinIds = new Dictionary<uint, uint>();
             uint newVertexId;
             for (int idx = 0; idx < heightBins.Length; idx++)
             {
-                List<uint> bin = heightBins[idx];
+                var bin = heightBins[idx];
                 if (bin != null)
                 { // translate ids.
                     // fill current bin ids and add vertices to the new graph.
@@ -304,7 +304,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             newVertexId = 0;
             for (int idx = 0; idx < heightBins.Length; idx++)
             {
-                List<uint> bin = heightBins[idx];
+                var bin = heightBins[idx];
                 if (bin != null)
                 { // translate ids.
                     foreach (uint binVertexId in bin)
@@ -312,16 +312,15 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         currentBinIds.TryGetValue(binVertexId, out newVertexId);
 
                         // get the higher arcs and convert their ids.
-                        //KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcsHigher(binVertexId);
-                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(binVertexId);
+                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(binVertexId);
                         foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                         {
-                            if (arc.Value.IsInformative || arc.Value.ToHigher)
+                            if (arc.Value.ToHigher)
                             {
                                 // get target vertex.
                                 uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
                                 // convert edge.
-                                CHEdgeData newEdge = new CHEdgeData();
+                                var newEdge = new CHEdgeData();
                                 newEdge.Direction = arc.Value.Direction;
                                 if (arc.Value.HasContractedVertex)
                                 { // contracted info.
@@ -333,7 +332,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                                 }
                                 newEdge.Tags = arc.Value.Tags;
                                 newEdge.Weight = arc.Value.Weight;
-                                sortedGraph.AddArc(newVertexId, nextVertexArcId, newEdge, null);
+                                sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
                             }
                         }
                     }

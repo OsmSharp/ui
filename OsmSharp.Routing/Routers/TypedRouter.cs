@@ -913,7 +913,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected virtual KeyValuePair<uint, TEdgeData>[] GetNeighboursUndirected(long vertex1)
         {
-            return _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
+            return _dataGraph.GetEdges(Convert.ToUInt32(vertex1));
         }
 
         /// <summary>
@@ -931,7 +931,7 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 List<TEdgeData> edges = new List<TEdgeData>();
-                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
+                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetEdges(Convert.ToUInt32(vertex1));
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex2)
@@ -972,7 +972,7 @@ namespace OsmSharp.Routing.Routers
                     }
                     return shortestEdge;
                 }
-                arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex2));
+                arcs = _dataGraph.GetEdges(Convert.ToUInt32(vertex2));
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex1)
@@ -986,7 +986,7 @@ namespace OsmSharp.Routing.Routers
             else
             { // one of the vertices was a resolved vertex.
                 // edge should be in the resolved graph.
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetArcs(vertex1);
+                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetEdges(vertex1);
                 foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
                 {
                     if (arc.Key == vertex2)
@@ -1617,10 +1617,10 @@ namespace OsmSharp.Routing.Routers
                     {
                         long intermediateId = this.GetNextIntermediateId();
                         graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
-                        graph.AddArc(previousVertex, intermediateId,
+                        graph.AddEdge(previousVertex, intermediateId,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  edgeData.Forward));
-                        graph.AddArc(intermediateId, previousVertex,
+                        graph.AddEdge(intermediateId, previousVertex,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  !edgeData.Forward));
                         vertices[idx + 1] = intermediateId;
@@ -1631,10 +1631,10 @@ namespace OsmSharp.Routing.Routers
 
                         previousVertex = intermediateId;
                     }
-                    graph.AddArc(previousVertex, vertex2,
+                    graph.AddEdge(previousVertex, vertex2,
                         new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                              edgeData.Forward));
-                    graph.AddArc(vertex2, previousVertex,
+                    graph.AddEdge(vertex2, previousVertex,
                         new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                              !edgeData.Forward));
                     vertices[vertices.Length - 1] = vertex2;
@@ -1685,7 +1685,7 @@ namespace OsmSharp.Routing.Routers
             // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
             PathSegment<long> path = null;
             var intermediates = new List<long>();
-            if(edgeData.Coordinates != null)
+            if(edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
             { // the resolved edge has intermediate coordinates.
                 RouterPoint intermediaRouterpoint;
                 for(int idx = 0; idx < edgeData.Coordinates.Length; idx++)
@@ -1774,7 +1774,7 @@ namespace OsmSharp.Routing.Routers
                     graph.AddVertex(vertex2, latitude2, longitude2);
                 }
 
-                if (edgeData.Coordinates != null)
+                if (edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
                 { // add intermediate points.
                     // create the route manually.
                     vertices = new long[2 + edgeData.Coordinates.Length];
@@ -1785,10 +1785,10 @@ namespace OsmSharp.Routing.Routers
                     {
                         long intermediateId = this.GetNextIntermediateId();
                         graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
-                        graph.AddArc(previousVertex, intermediateId,
+                        graph.AddEdge(previousVertex, intermediateId,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  edgeData.Forward));
-                        graph.AddArc(intermediateId, previousVertex,
+                        graph.AddEdge(intermediateId, previousVertex,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  !edgeData.Forward));
                         vertices[idx + 1] = intermediateId;
@@ -1799,10 +1799,10 @@ namespace OsmSharp.Routing.Routers
 
                         previousVertex = intermediateId;
                     }
-                    graph.AddArc(previousVertex, vertex2,
+                    graph.AddEdge(previousVertex, vertex2,
                         new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                              edgeData.Forward));
-                    graph.AddArc(vertex2, previousVertex,
+                    graph.AddEdge(vertex2, previousVertex,
                         new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                              !edgeData.Forward));
                     vertices[vertices.Length - 1] = vertex2;
@@ -1876,8 +1876,8 @@ namespace OsmSharp.Routing.Routers
             long vertexTo = vertices[positionIdx + 1];
 
             // remove the arc.
-            graph.DeleteArc(vertexFrom, vertexTo);
-            graph.DeleteArc(vertexTo, vertexFrom);
+            graph.DeleteEdge(vertexFrom, vertexTo);
+            graph.DeleteEdge(vertexTo, vertexFrom);
 
             // add new vertex.
             long resolvedVertex = this.GetNextResolvedId();
@@ -1885,19 +1885,19 @@ namespace OsmSharp.Routing.Routers
                 (float)resolvedCoordinate.Longitude);
 
             // add the arcs.
-            graph.AddArc(vertexFrom, resolvedVertex,
+            graph.AddEdge(vertexFrom, resolvedVertex,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
                                       edgeData.Tags,
                                       edgeData.Forward));
-            graph.AddArc(resolvedVertex, vertexFrom,
+            graph.AddEdge(resolvedVertex, vertexFrom,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
                                       edgeData.Tags,
                                       !edgeData.Forward));
-            graph.AddArc(resolvedVertex, vertexTo,
+            graph.AddEdge(resolvedVertex, vertexTo,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
                                       edgeData.Tags,
                                       edgeData.Forward));
-            graph.AddArc(vertexTo, resolvedVertex,
+            graph.AddEdge(vertexTo, resolvedVertex,
                                   new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
                                       edgeData.Tags,
                                       !edgeData.Forward));
@@ -1955,7 +1955,7 @@ namespace OsmSharp.Routing.Routers
 
                 // get the neighbours.
                 KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs =
-                    graph.GetArcs(current.VertexId);
+                    graph.GetEdges(current.VertexId);
                 float latitude, longitude;
                 graph.GetVertex(current.VertexId, out latitude, out longitude);
                 var currentCoordinates = new GeoCoordinate(latitude, longitude);
@@ -2072,7 +2072,7 @@ namespace OsmSharp.Routing.Routers
 
                 // get the neighbours.
                 KeyValuePair<long, OsmSharp.Routing.Routers.TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = 
-                    graph.GetArcs(current.VertexId);
+                    graph.GetEdges(current.VertexId);
                 float latitudeCurrent, longitudeCurrent;
                 graph.GetVertex(current.VertexId, out latitudeCurrent, out longitudeCurrent);
                 for (int idx = 0; idx < arcs.Length; idx++)

@@ -40,8 +40,9 @@ namespace OsmSharp.UI.Animations
 
         /// <summary>
         /// Holds the minimum allowed timespan.
+        /// 16 millisec = 62 animation frames per second
         /// </summary>
-		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 50);
+		private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 16);
 
 //        /// <summary>
 //        /// Holds a synchronization object for the timer elapsed event.
@@ -138,39 +139,19 @@ namespace OsmSharp.UI.Animations
         }
 
         /// <summary>
-        /// Holds the target zoom level.
+        /// Holds all states of the animation.
         /// </summary>
-        private float _targetZoom;
-
-        /// <summary>
-        /// Holds the target tilt.
-        /// </summary>
-        private Degree _targetTilt;
-
-        /// <summary>
-        /// Holds the target center.
-        /// </summary>
-        private GeoCoordinate _targetCenter;
-
-        /// <summary>
-        /// Holds the step zoom level.
-        /// </summary>
-        private float _stepZoom;
-
-        /// <summary>
-        /// Holds the step tilt.
-        /// </summary>
-        private double _stepTilt;
-
-        /// <summary>
-        /// Holds the step center.
-        /// </summary>
-        private GeoCoordinate _stepCenter;
+        private MapAnimationState _startState, _endState, _currentState;
 
         /// <summary>
         /// Holds the timer.
         /// </summary>
         private Timer _timer;
+
+        /// <summary>
+        /// Holds the time in milliseconds for the start and end of the animation.
+        /// </summary>
+        private long _startTime, _endTime, _duration;
 
 		/// <summary>
 		/// Holds the timer status.
@@ -178,14 +159,9 @@ namespace OsmSharp.UI.Animations
 		private AnimatorStatus _timerStatus;
 
         /// <summary>
-        /// Holds the current step.
+        /// Holds the cubic function representing the animation itself.
         /// </summary>
-        private int _currentStep;
-
-        /// <summary>
-        /// Holds the maximum number of steps.
-        /// </summary>
-        private int _maxSteps;
+        private CubicBezier _animationFunction;
 
         /// <summary>
         /// Starts an animation to the given parameters.
@@ -205,37 +181,31 @@ namespace OsmSharp.UI.Animations
 				_timer.Dispose();
 			}
 
-			// set the targets.
-			_targetCenter = center;
-			_targetTilt = mapTilt;
-			_targetZoom = zoomLevel;
+            // Create the animation function.
+            _animationFunction = CubicBezier.createEase();
 
-			// calculate the animation steps.
-			_maxSteps = (int)System.Math.Round((double)time.TotalMilliseconds / (double)_minimumTimeSpan.TotalMilliseconds, 0);
-			_currentStep = 0;
-			_stepCenter = new GeoCoordinate(
-				(_targetCenter.Latitude - _mapView.MapCenter.Latitude) / _maxSteps,
-				(_targetCenter.Longitude - _mapView.MapCenter.Longitude) / _maxSteps);
-			_stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
-
-			// calculate the map tilt, make sure it turns along the smallest corner.
-			double diff = _targetTilt.SmallestDifference(_mapView.MapTilt);
-			OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Information, diff.ToString());
-				_stepTilt = (diff / _maxSteps);
+			// Initialaize the start and end state of the map.
+            _startState = new MapAnimationState(_mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter);
+            _endState   = new MapAnimationState(zoomLevel, mapTilt, center);
+            _currentState = new MapAnimationState(_mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter);
 
 			OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
-				string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
-					_stepZoom, _stepTilt, _stepCenter.ToString(), 
-					_targetZoom, _targetTilt, _targetCenter.ToString(), 
+				string.Format("Started new animation to z:{0} t:{1} c:{2} from z:{3} t:{4} c:{5}.",
+					_endState.Zoom, _endState.Tilt, _endState.Center.ToString(), 
 					_mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter.ToString()));
 
 			// disable auto invalidate.
 			_mapView.RegisterAnimator(this);
 
+            _startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            _duration = (long)time.TotalMilliseconds;
+            _endTime = _startTime + _duration;
+
 			// start the timer.
 			// create a new timer.
 			_timerStatus = new AnimatorStatus();
 			_timer = new Timer(new TimerCallback(_timer_Elapsed), _timerStatus, 0, (int)_minimumTimeSpan.TotalMilliseconds);
+            
 		}
 
         /// <summary>
@@ -255,6 +225,10 @@ namespace OsmSharp.UI.Animations
 			_mapView.RegisterAnimator(null);
 		}
 
+
+        private double _timeProgress;
+        private double _animationProgress;
+
         /// <summary>
         /// The timer has elapsed.
         /// </summary>
@@ -265,44 +239,35 @@ namespace OsmSharp.UI.Animations
 			if (status.Cancelled)
 			{ // check status when cancelled return.
 				return;
-			} 
-
-			_currentStep++;
-			if (_currentStep < _maxSteps)
-			{ // there is still need for a change.
-				GeoCoordinate center = new GeoCoordinate(// update center.
-					                       (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
-					                       (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
-				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
-				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
-
-				_mapView.SetMapView(center, mapTilt, mapZoom);
-				return;
 			}
-			else if (_currentStep == _maxSteps)
-			{ // this is the last step.
-				// enable auto invalidate.
-				_mapView.RegisterAnimator(null);
 
-				// stop the timer, animation has been finished.
-				_timerStatus.Cancelled = true;
-				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-				_timer.Dispose();
+            long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            // Check if the animation should be finished.
+            if (currentTime >= _endTime) 
+            {
+                _currentState = _endState;
+                Stop();
+            }
+            else
+            {
+                _timeProgress = (double)(currentTime - _startTime) / (double)_duration;
+                _animationProgress = _animationFunction.ComputeY(_timeProgress, getEpsilon(_duration/1000));
 
-				// set mapview.
-				_mapView.SetMapView(_targetCenter, _targetTilt, _targetZoom);
-			}
-			else
-			{ // hmm animator should be finished?
-				// enable auto invalidate.
-				_mapView.RegisterAnimator(null);
-
-				// stop the timer, animation has been finished.
-				_timerStatus.Cancelled = true;
-				_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-				_timer.Dispose();
-			}
+                _currentState.Zoom = (float)_animationProgress * (_endState.Zoom - _startState.Zoom) + _startState.Zoom;
+                _currentState.Tilt = _animationProgress * (_endState.Tilt.SmallestDifference(_startState.Tilt)) + _startState.Tilt;
+                _currentState.Center = new GeoCoordinate(_animationProgress * (_endState.Center.Latitude - _startState.Center.Latitude) + _startState.Center.Latitude,
+                                                         _animationProgress * (_endState.Center.Longitude - _startState.Center.Longitude) + _startState.Center.Longitude);
+            }
+            _mapView.SetMapView(_currentState.Center, _currentState.Tilt, _currentState.Zoom);
 		}
+
+        
+
+        // The epsilon value to pass given that the animation is going to run over |dur| seconds. The longer the
+	    // animation, the more precision is needed in the timing function result to avoid ugly discontinuities.
+	    private double getEpsilon(float duration) {
+		    return 1.0/(200.0*duration);
+	    }
 
 		private class AnimatorStatus
 		{
@@ -316,5 +281,33 @@ namespace OsmSharp.UI.Animations
 				set;
 			}
 		}
+
+        /// <summary>
+        ///  Holds the state of a map during animations.
+        /// </summary>
+        private class MapAnimationState
+        {
+            public MapAnimationState(float zoom, Degree tilt, GeoCoordinate center)
+            {
+                Zoom = zoom;
+                Tilt = tilt;
+                Center = center;
+            }
+            public float Zoom
+            {
+                get;
+                set;
+            }
+            public Degree Tilt
+            {
+                get;
+                set;
+            }
+            public GeoCoordinate Center
+            {
+                get;
+                set;
+            }
+        }
     }
 }

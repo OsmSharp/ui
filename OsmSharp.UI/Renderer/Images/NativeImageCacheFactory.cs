@@ -29,7 +29,7 @@ namespace OsmSharp.UI.Renderer.Images
     public static class NativeImageCacheFactory
     {
         /// <summary>
-        /// Deletate to create a native image cache.
+        /// Delegate to create a native image cache.
         /// </summary>
         public delegate NativeImageCacheBase NativeImageCreate();
 

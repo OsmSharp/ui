@@ -136,11 +136,29 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
-        /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
+        /// <param name="vehicles"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations, 
             GeoCoordinateBox box, IEnumerable<Vehicle> vehicles)
-            : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box, false)
+            : this(dynamicGraph, interpreter, tagsIndex, idTransformations, box, vehicles, true)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamicGraph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="idTransformations"></param>
+        /// <param name="box"></param>
+        /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
+        /// <param name="collectIntermediates"></param>
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations, 
+            GeoCoordinateBox box, IEnumerable<Vehicle> vehicles, bool collectIntermediates)
+            : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box, collectIntermediates)
         {
             _vehicles = new HashSet<Vehicle>();
             if (vehicles != null)
@@ -159,7 +177,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        protected override bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
@@ -178,18 +196,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                this.DynamicGraph.AddArc(from, to, edgeData, this.EdgeComparer);
-
-                // add reverse edge and return true.
-                var reverseEdgeData = new LiveEdge()
-                    {
-                        Forward = !edgeData.Forward,
-                        Tags = edgeData.Tags,
-                        Distance = edgeData.Distance
-                    };
-                this.DynamicGraph.AddArc(to, from, reverseEdgeData, this.EdgeComparer);
+                this.DynamicGraph.AddEdge(from, to, edgeData, this.EdgeComparer);
             }
-            return true;
         }
 
         /// <summary>
@@ -215,8 +223,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             uint tagsId = tagsIndex.Add(tags);
 
             GeoCoordinateSimple[] coordinates = null;
-            if(intermediates != null && intermediates.Count > 0)
-            {
+            if (intermediates != null && intermediates.Count > 0)
+            { // only instiate if needed.
                 coordinates = intermediates.ToArray();
             }
 
@@ -259,8 +267,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <returns></returns>
         public override IPreProcessor GetPreprocessor()
         {
-            // return null;
-            return new LiveEdgePreprocessor(this.DynamicGraph);
+            return null;
+            // return new LiveEdgePreprocessor(this.DynamicGraph);
         }
 
         #region Static Processing Functions

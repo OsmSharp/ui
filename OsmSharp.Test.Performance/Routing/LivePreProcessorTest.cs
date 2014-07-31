@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "germany-latest.osm.pbf");
+            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "europe-latest.osm.pbf");
         }
 
         /// <summary>
@@ -61,7 +61,8 @@ namespace OsmSharp.Test.Performance.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex, 100000000);
+            var memoryGraph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000000, @"c:\temp\");
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryGraph, tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();

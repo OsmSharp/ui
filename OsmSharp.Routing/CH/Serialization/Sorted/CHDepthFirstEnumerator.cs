@@ -76,7 +76,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // search for the next arc.
-            KeyValuePair<uint, CHEdgeData>[] edges = _graph.GetArcs(_current.Vertex);
+            KeyValuePair<uint, CHEdgeData>[] edges = _graph.GetEdges(_current.Vertex);
             int arcIdx = _current.ArcIdx;
             arcIdx++;
             while (arcIdx < edges.Length)

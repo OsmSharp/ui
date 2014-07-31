@@ -84,7 +84,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            var arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetEdges(searchBox);
 
             if (!verticesOnly)
             { // find both closest arcs and vertices.

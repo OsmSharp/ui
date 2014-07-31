@@ -16,8 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm;
@@ -25,13 +26,11 @@ using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Collections;
-using OsmSharp.Collections.LongIndex;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -54,7 +53,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsCollectionIndex _tagsIndex;
+        private ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the osm data cache.
@@ -147,7 +146,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _idTransformations = idTransformations;
             _preIndexMode = true;
             _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
-            _usedTwiceOrMore = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
@@ -263,7 +262,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
                         { // tests quickly if a given node is possibly a restriction.
                             List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
-                            if(vehicles != null &&
+                            if (vehicles != null &&
                                 vehicles.Count > 0)
                             { // add all the restrictions.
                                 uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
@@ -289,7 +288,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private readonly ILongIndex _usedTwiceOrMore;
+        private ILongIndex _relevantNodes;
 
         /// <summary>
         /// Returns the boundingbox of all accepted nodes.
@@ -318,63 +317,99 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (_interpreter.EdgeInterpreter.IsRoutable(way.Tags))
             { // the way is a road.
                 if (_preIndexMode)
-                { // index only relevant nodes.
+                { // index relevant and used nodes.
                     if (way.Nodes != null)
-                    {
-                        foreach (long node in way.Nodes)
+                    { // this way has nodes.
+                        int wayNodesCount = way.Nodes.Count;
+                        for (int idx = 0; idx < wayNodesCount; idx++)
                         {
+                            var node = way.Nodes[idx];
                             if (_preIndex.Contains(node))
-                            {
-                                _usedTwiceOrMore.Add(node);
+                            { // node is relevant.
+                                _relevantNodes.Add(node);
                             }
                             else
-                            {
-                                _preIndex.Add(node); // node is relevant.
+                            { // node is used.
+                                _preIndex.Add(node);
+                            }
+                        }
+
+                        if (wayNodesCount > 0)
+                        { // first node is always relevant.
+                            _relevantNodes.Add(way.Nodes[0]);
+                            if (wayNodesCount > 1)
+                            { // last node is always relevant.
+                                _relevantNodes.Add(way.Nodes[wayNodesCount - 1]);
                             }
                         }
                     }
                 }
                 else
-                { 
-                    if (true)
-                    { // loop over all edges.
-                        if (way.Nodes != null && way.Nodes.Count > 1)
-                        { // way has at least two nodes.
-                            if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
-                                way.Tags))
-                            { // the edge is traversable, add the edges.
-                                uint? from = this.AddRoadNode(way.Nodes[0]);
-                                List<long> intermediates = new List<long>();
-                                for (int idx = 1; idx < way.Nodes.Count; idx++)
-                                { // the to-node.
-                                    long currentNodeId = way.Nodes[idx];
-                                    if(!_collectIntermediates || _usedTwiceOrMore.Contains(currentNodeId))
-                                    { // node is an important node.
-                                        uint? to = this.AddRoadNode(currentNodeId);
+                { // add actual edges.
+                    if (way.Nodes != null && way.Nodes.Count > 1)
+                    { // way has at least two nodes.
+                        if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
+                            way.Tags))
+                        { // the edge is traversable, add the edges.
+                            uint? from = this.AddRoadNode(way.Nodes[0]);
+                            List<long> intermediates = new List<long>();
+                            for (int idx = 1; idx < way.Nodes.Count; idx++)
+                            { // the to-node.
+                                long currentNodeId = way.Nodes[idx];
+                                if (!_collectIntermediates ||
+                                    _relevantNodes.Contains(currentNodeId) ||
+                                    idx == way.Nodes.Count - 1)
+                                { // node is an important node.
+                                    uint? to = this.AddRoadNode(currentNodeId);
 
-                                        // build coordinates.
-                                        var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
-                                        for(int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                    // add the edge(s).
+                                    if (from.HasValue && to.HasValue)
+                                    { // add a road edge.
+                                        while(from.Value == to.Value)
                                         {
-                                            intermediateCoordinates.Add(_coordinates[intermediates[coordIdx]]);
-                                        }
-
-                                        // add the edge(s).
-                                        if (from.HasValue && to.HasValue)
-                                        { // add a road edge.
-                                            if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates))
-                                            { // add the reverse too if it has been indicated that this was needed.
-                                                intermediateCoordinates.Reverse();
-                                                this.AddRoadEdge(way.Tags, false, to.Value, from.Value, intermediateCoordinates);
+                                            if(intermediates.Count > 0)
+                                            {
+                                                uint? dummy = this.AddRoadNode(intermediates[0]);
+                                                intermediates.RemoveAt(0);
+                                                if(dummy.HasValue && from.Value != dummy.Value)
+                                                {
+                                                    this.AddRoadEdge(way.Tags, true, from.Value, dummy.Value, null);
+                                                    from = dummy;
+                                                }
+                                            }
+                                            else
+                                            { // no use to continue.
+                                                break;
                                             }
                                         }
-                                        from = to; // the to node becomes the from.
-                                        intermediates.Clear();
+                                        // build coordinates.
+                                        var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
+                                        for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
+                                        {
+                                            GeoCoordinateSimple coordinate;
+                                            if (!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
+                                            {
+                                                break;
+                                            }
+                                            intermediateCoordinates.Add(new GeoCoordinateSimple()
+                                            {
+                                                Latitude = coordinate.Latitude,
+                                                Longitude = coordinate.Longitude
+                                            });
+                                        }
+
+                                        if (intermediateCoordinates.Count == intermediates.Count &&
+                                            from.Value != to.Value)
+                                        { // all coordinates have been found.
+                                            this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates);
+                                        }
                                     }
-                                    else
-                                    { // this node is just an intermediate.
-                                        intermediates.Add(currentNodeId);
-                                    }
+                                    from = to; // the to node becomes the from.
+                                    intermediates.Clear();
+                                }
+                                else
+                                { // this node is just an intermediate.
+                                    intermediates.Add(currentNodeId);
                                 }
                             }
                         }
@@ -402,7 +437,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         coordinates.Latitude, coordinates.Longitude);
                     _coordinates.Remove(nodeId); // free the memory again!
 
-                    if (_usedTwiceOrMore.Contains(nodeId))
+                    if (_relevantNodes.Contains(nodeId))
                     {
                         _idTransformations[nodeId] = id;
                     }
@@ -420,7 +455,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        protected virtual bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        protected virtual void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
             float longitude;
@@ -439,9 +474,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                _dynamicGraph.AddArc(from, to, edgeData, _edgeComparer);
+                _dynamicGraph.AddEdge(from, to, edgeData, _edgeComparer);
             }
-            return false;
         }
 
         /// <summary>
@@ -576,7 +610,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             tagsFilter.RegisterSource(source);
 
             base.RegisterSource(tagsFilter);
-            //base.RegisterSource(source);
         }
 
         /// <summary>
@@ -590,6 +623,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             // reset the source.
             this.Source.Reset();
+
+            // resize graph.
+            // TODO: study avery cardinality and slightly overestimate here.
+            long vertexEstimate = _relevantNodes.Count + (long)(_relevantNodes.Count * 0.1);
+            _dynamicGraph.Resize(vertexEstimate, (long)(vertexEstimate * 4));
 
             // move out of pre-index mode.
             _preIndexMode = false;
@@ -610,6 +648,30 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // there is a pre-processor, trigger execution.
                 preProcessor.Start();
             }
+
+            // trim the graph.
+            _dynamicGraph.Trim();
+        }
+
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
+        public override void Close()
+        {
+            _coordinates.Clear();
+            _dataCache.Clear();
+            _idTransformations.Clear();
+            if(_nodesToCache != null)
+            {
+                _nodesToCache.Clear();
+            }
+            if (_waysToCache != null)
+            {
+                _waysToCache.Clear();
+            }
+            _preIndex = null;
+            _relevantNodes = null;
+            _tagsIndex = null;
         }
     }
 }

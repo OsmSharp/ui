@@ -341,7 +341,7 @@ namespace OsmSharp.Routing.CH
                     bucket[to.Value] = current.Weight;
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                     // add the neighbours to the queue.
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -491,7 +491,7 @@ namespace OsmSharp.Routing.CH
                     }
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                     // add the neighbours to the queue.
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -1067,7 +1067,7 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -1142,7 +1142,7 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(current.VertexId));
+                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -1225,10 +1225,9 @@ namespace OsmSharp.Routing.CH
                 while (current != null && current.From != null)
                 {
                     // recursively convert edge.
-                    var localPath =
-                        new PathSegment<long>(current.VertexId, -1, new PathSegment<long>(
-                                                                    current.From.VertexId));
-                    PathSegment<long> expandedArc = this.ConvertArc(graph, localPath);
+                    var localPath = new PathSegment<long>(current.VertexId, -1, 
+                        new PathSegment<long>(current.From.VertexId));
+                    var expandedArc = this.ExpandEdge(graph, localPath);
                     if (expandedPath != null)
                     {
                         expandedPath = expandedPath.ConcatenateAfter(expandedArc);
@@ -1248,71 +1247,48 @@ namespace OsmSharp.Routing.CH
         /// Converts the given edge and expands it if needed.
         /// </summary>
         /// <param name="graph"></param>
-        /// <param name="edge"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        private PathSegment<long> ConvertArc(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> edge)
+        private PathSegment<long> ExpandEdge(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> path)
         {
-            if (edge.VertexId < 0 || edge.From.VertexId < 0)
+            if (path.VertexId < 0 || path.From.VertexId < 0)
             { // these edges are not part of the regular network!
-                return edge;
+                return path;
             }
 
-            // get the edge by querying the forward neighbours of the from-vertex.
-            //CHVertex from_vertex = _data.GetCHVertex(edge.From.VertexId);
-            KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(Convert.ToUInt32(edge.From.VertexId));
+            // the from/to vertex.
+            uint fromVertex = (uint)path.From.VertexId;
+            uint toVertex = (uint)path.VertexId;
 
-            // find the edge with lowest weight.
-            var arc = new KeyValuePair<uint, CHEdgeData?>(0, null);
-            foreach (KeyValuePair<uint, CHEdgeData> forwardArc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                a => a.Key == edge.VertexId && a.Value.Forward))
-            {
-                if (arc.Value == null)
-                {
-                    arc = new KeyValuePair<uint, CHEdgeData?>(forwardArc.Key, forwardArc.Value);
-                }
-                else if (arc.Value.Value.Weight > forwardArc.Value.Weight)
-                {
-                    arc = new KeyValuePair<uint, CHEdgeData?>(forwardArc.Key, forwardArc.Value);
-                }
+            // get the edge.
+            CHEdgeData data;
+            if (graph.GetEdge((uint)path.From.VertexId, (uint)path.VertexId, out data))
+            { // there is an edge.
+                uint contractedVertex = data.ContractedVertexId;
+                return this.ExpandEdge(graph, path, fromVertex, contractedVertex, toVertex);
             }
-            if (arc.Value == null)
-            {
-                neighbours = graph.GetArcs(Convert.ToUInt32(edge.VertexId));
-                foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                    a => a.Key == edge.From.VertexId && a.Value.Backward))
-                {
-                    if (arc.Value == null)
-                    {
-                        arc = new KeyValuePair<uint, CHEdgeData?>(backward.Key, backward.Value);
-                    }
-                    else if (arc.Value.Value.Weight > backward.Value.Weight)
-                    {
-                        arc = new KeyValuePair<uint, CHEdgeData?>(backward.Key, backward.Value);
-                    }
-                }
-                return this.ConvertArc(graph, edge, arc.Key, Convert.ToUInt32(arc.Value.Value.ContractedVertexId), Convert.ToUInt32(edge.VertexId));
-            }
-            else
-            {
-                return this.ConvertArc(graph, edge, Convert.ToUInt32(edge.From.VertexId), arc.Value.Value.ContractedVertexId, arc.Key);
-            }
+            throw new Exception(string.Format("Edge {0} not found!", path.ToInvariantString()));
         }
 
-        private PathSegment<long> ConvertArc(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> edge,
-                                         uint vertexFromId, uint vertexContractedId, uint vertexToId)
+        /// <summary>
+        /// Expands the given edge. 
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="edge"></param>
+        /// <param name="fromVertex"></param>
+        /// <param name="contractedVertex"></param>
+        /// <param name="toVertex"></param>
+        /// <returns></returns>
+        private PathSegment<long> ExpandEdge(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> edge,
+            uint fromVertex, uint contractedVertex, uint toVertex)
         {
-            // check if the arc is a shortcut.
-            if (vertexContractedId > 0)
-            {
+            if (contractedVertex > 0)
+            { // there is nothing to expand.
                 // arc is a shortcut.
-                var firstPath = new PathSegment<long>(vertexToId, -1,
-                                                             new PathSegment<long>(vertexContractedId));
-                PathSegment<long> firstPathExpanded = this.ConvertArc(graph, firstPath);
-
-                var secondPath = new PathSegment<long>(vertexContractedId, -1,
-                                                              new PathSegment<long>(vertexFromId));
-                PathSegment<long> secondPathExpanded = this.ConvertArc(graph, secondPath);
-
+                var firstPath = new PathSegment<long>(toVertex, -1, new PathSegment<long>(contractedVertex));
+                var firstPathExpanded = this.ExpandEdge(graph, firstPath);
+                var secondPath = new PathSegment<long>(contractedVertex, -1, new PathSegment<long>(fromVertex));
+                var secondPathExpanded = this.ExpandEdge(graph, secondPath);
 
                 // link the two paths.
                 firstPathExpanded = firstPathExpanded.ConcatenateAfter(secondPathExpanded);
@@ -1353,10 +1329,19 @@ namespace OsmSharp.Routing.CH
 
         #endregion
 
+        /// <summary>
+        /// Represents the result of a calculation.
+        /// </summary>
         private struct CHResult
         {
+            /// <summary>
+            /// The shortest forward path.
+            /// </summary>
             public PathSegment<long> Forward { get; set; }
 
+            /// <summary>
+            /// The shortest backward path.
+            /// </summary>
             public PathSegment<long> Backward { get; set; }
         }
 
@@ -1393,7 +1378,7 @@ namespace OsmSharp.Routing.CH
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             // first try a very small area.
-            SearchClosestResult<CHEdgeData> result = this.DoSearchClosest(graph, interpreter,
+            var result = this.DoSearchClosest(graph, interpreter,
                 vehicle, coordinate, delta / 10, matcher, pointTags, verticesOnly);
             if (result.Distance < double.MaxValue)
             { // success!
@@ -1427,7 +1412,7 @@ namespace OsmSharp.Routing.CH
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetEdges(searchBox);
 
             // loop over all.
             var closestWithMatch = new SearchClosestResult<CHEdgeData>(double.MaxValue, 0);
@@ -1486,7 +1471,7 @@ namespace OsmSharp.Routing.CH
                         while (uncontracted.Value.Value.HasContractedVertex)
                         { // try to inflate the contracted vertex.
                             KeyValuePair<uint, CHEdgeData>[] contractedArcs =
-                                graph.GetArcs(uncontracted.Value.Value.ContractedVertexId);
+                                graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
 
                             bool found = false;
                             foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)

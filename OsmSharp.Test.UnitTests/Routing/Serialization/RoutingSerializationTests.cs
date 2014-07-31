@@ -64,7 +64,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -154,7 +154,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -245,7 +245,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -448,8 +448,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetArcs(vertex);
-                var arcs = network.GetArcs(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex);
+                var arcs = network.GetEdges(vertex);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
                     Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
@@ -530,8 +530,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetArcs(vertex);
-                var arcs = network.GetArcs(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex);
+                var arcs = network.GetEdges(vertex);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
                     Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);

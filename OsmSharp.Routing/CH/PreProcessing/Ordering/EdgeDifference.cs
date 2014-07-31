@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the witness calculator.
         /// </summary>
-        private INodeWitnessCalculator _witness_calculator;
+        private INodeWitnessCalculator _witnessCalculator;
 
         /// <summary>
         /// Holds the data.
@@ -44,11 +44,11 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// Creates a new edge difference calculator.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="witness_calculator"></param>
-        public EdgeDifference(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
+        /// <param name="witnessCalculator"></param>
+        public EdgeDifference(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
         {
             _data = data;
-            _witness_calculator = witness_calculator;
+            _witnessCalculator = witnessCalculator;
         }
 
         /// <summary>
@@ -59,33 +59,39 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         public float Calculate(uint vertex)
         {
             // get the neighbours.
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
-
-            // remove all informative edges.
-            neighbours = neighbours.RemoveInformativeEdges();
+            var neighbours = _data.GetEdges(vertex);
 
             // simulate the construction of new edges.
-            int new_edges = 0;
-            int removed = neighbours.Length;
+            int newEdges = 0;
+            int removed = 0;
+            var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>(neighbours.Length);
+            foreach(var neighbour in neighbours)
+            {
+                if (!neighbour.Value.ToLower && !neighbour.Value.ToHigher)
+                {
+                    edgesForContractions.Add(neighbour);
+                    removed++;
+                }
+            }
 
             // loop over all neighbours and check for witnesses.
-            foreach (KeyValuePair<uint, CHEdgeData> from in neighbours)
+            foreach (var from in edgesForContractions)
             { // loop over all incoming neighbours
-                foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
+                foreach (var to in edgesForContractions)
                 { // loop over all outgoing neighbours
                     if (to.Key != from.Key &&
                         to.Value.Forward && from.Value.Backward)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witness_calculator.Exists(_data, from.Key, to.Key, vertex,
+                        if (!_witnessCalculator.Exists(_data, from.Key, to.Key, vertex,
                             (float)from.Value.Weight + (float)to.Value.Weight, 1000))
                         { // no witness exists.
-                            new_edges++;
+                            newEdges++;
                         }
                     }
                 }
             }
-            return (2 * new_edges) - removed;
+            return (2 * newEdges) - removed;
         }
 
         /// <summary>

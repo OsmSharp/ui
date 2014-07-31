@@ -40,10 +40,13 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Collections\Arrays\IHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMappedHugeArray.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HashSet.cs" />
+    <Compile Include="Collections\Arrays\HugeArray.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
     <Compile Include="Collections\ISet.cs" />
@@ -135,6 +138,9 @@
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\IMemoryMappedFile.cs" />
+    <Compile Include="IO\MemoryMappedFiles\IMemoryMappedViewAccessor.cs" />
+    <Compile Include="IO\MemoryMappedFiles\NativeMemoryMappedFileFactory.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />

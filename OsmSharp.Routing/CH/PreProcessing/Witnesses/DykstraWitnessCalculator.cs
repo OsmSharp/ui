@@ -119,7 +119,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         }
 
                         // get the neighbours.
-                        KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(current.VertexId);
+                        KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(current.VertexId);
                         for (int idx = 0; idx < neighbours.Length; idx++)
                         {
                             var neighbourPair = neighbours[idx];

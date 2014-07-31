@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
@@ -224,7 +224,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -253,7 +253,19 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
         {
             throw new NotImplementedException();
         }

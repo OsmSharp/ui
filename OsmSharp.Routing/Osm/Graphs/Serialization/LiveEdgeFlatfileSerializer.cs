@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetArcs(vertex);
+                var arcs = graph.GetEdges(vertex);
                 if (arcs != null)
                 { // serialize the arcs.
                     for (int idx = 0; idx < arcs.Length; idx++)
@@ -114,7 +114,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
-                    graph.AddArc(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
+                    graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new LiveEdge()
                         {
                             Coordinates = serializableEdges[idx].Coordinates,

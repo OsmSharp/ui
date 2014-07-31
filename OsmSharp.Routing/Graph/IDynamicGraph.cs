@@ -25,22 +25,16 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Deletes all arcs starting at the given vertex.
+        /// Removes all edges from/to the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
-        void DeleteArc(uint vertex);
+        void RemoveEdges(uint vertex);
 
         /// <summary>
-        /// Delete all arcs arc between two vertices.
+        /// Delete the edge between the two given vertices.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        void DeleteArc(uint from, uint to);
-
-        /// <summary>
-        /// Trims the graph to store a max number of vertices.
-        /// </summary>
-        /// <param name="max"></param>
-        void Trim(uint max);
+        void RemoveEdge(uint from, uint to);
     }
 }

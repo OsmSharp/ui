@@ -41,21 +41,39 @@ namespace OsmSharp.Routing.Graph
         void SetVertex(uint vertex, float latitude, float longitude);
 
         /// <summary>
-        /// Adds a vertex.
+        /// Adds an edge with associated data.
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
-        /// <returns></returns>
-        uint AddVertex(float latitude, float longitude, byte neighboursEstimate);
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        void AddEdge(uint from, uint to, TEdgeData data);
 
         /// <summary>
-        /// Adds an arc with associated data.
+        /// Adds an edge with associated data.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <param name="comparer"></param>
-        void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+        void AddEdge(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+
+        /// <summary>
+        /// Compresses all the data in this graph.
+        /// </summary>
+        /// <remarks>Does not trim or resize the internal data structures. Use Trim()</remarks>
+        void Compress();
+
+        /// <summary>
+        /// Trims all internal datastructures to their smallest possible size.
+        /// </summary>
+        /// <remarks>Be careful when doing this, could need up to 2x the current memory usage.</remarks>
+        void Trim();
+
+        /// <summary>
+        /// Resizes the internal data structures of the graph to handle the number of vertices/edges estimated.
+        /// </summary>
+        /// <param name="vertexEstimate"></param>
+        /// <param name="edgeEstimate"></param>
+        void Resize(long vertexEstimate, long edgeEstimate);
     }
 }

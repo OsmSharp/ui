@@ -145,8 +145,11 @@ namespace OsmSharp.Test.Performance
         /// </summary>
         public void Stop()
         {
-            _memoryUsageTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            _memoryUsageTimer.Dispose();
+            if (_memoryUsageTimer != null)
+            { // only dispose and stop when there IS a timer.
+                _memoryUsageTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                _memoryUsageTimer.Dispose();
+            }
             if (_ticks.HasValue)
             {
                 lock (_memoryUsageLog)

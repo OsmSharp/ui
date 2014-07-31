@@ -16,12 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -79,7 +77,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Direction flag to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
         ///                to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
         ///                no low/high info: ( 8=bidirectional,  9=forward, 10=backward, 11=not forward and not backward).
-        ///                only informative: (12=bidirectional, 13=forward, 14=backward, 15=not forward and not backward).
         /// </summary>
         public byte Direction { get; set; }
 
@@ -259,56 +256,53 @@ namespace OsmSharp.Routing.CH.PreProcessing
         }
 
         /// <summary>
-        /// Returns true if this edge is informative.
-        /// </summary>
-        public bool IsInformative
-        {
-            get
-            {
-                return this.Direction >= 12;
-            }
-        }
-
-        /// <summary>
-        /// Reverses this edge.
+        /// Creates the exact reverse of this edge.
         /// </summary>
         /// <returns></returns>
         public IDynamicGraphEdgeData Reverse()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Converts this given edge to a purely informative edge.
-        /// </summary>
-        /// <returns></returns>
-        public CHEdgeData ConvertToInformative()
-        {
-            CHEdgeData informativeData = new CHEdgeData();
-            informativeData.Direction = this.Direction;
-            informativeData.ContractedVertexId = this.ContractedVertexId;
-            informativeData.Tags = this.Tags;
-            informativeData.Weight = this.Weight;
-
-            // convert the direction.
-            if (informativeData.Direction <= 3)
+            // to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
+            // to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
+            // no low/high info: ( 8=bidirectional,  9=forward, 10=backward, 11=not forward and not backward).          
+            var data = new CHEdgeData();
+            data.Tags = this.Tags;
+            data.ContractedVertexId = this.ContractedVertexId;
+            data.Weight = this.Weight;
+            data.Direction = this.Direction;
+            switch(this.Direction)
             {
-                informativeData.Direction = (byte)(informativeData.Direction + 12);
+                case 0: // to higher bidirectional.
+                    data.Direction = 4; // to lower bidirectional.
+                    break;
+                case 1: // to higher forward.
+                    data.Direction = 6; // to lower backward.
+                    break;
+                case 2: // to higher backward.
+                    data.Direction = 5; // to lower forward.
+                    break;
+                case 3: // to higher no directional info.
+                    data.Direction = 7; // to lower no directional info.
+                    break;
+                case 4: // to lower bidirectional.
+                    data.Direction = 0; // to higher bidirectional.
+                    break;
+                case 5: // to lower forward.
+                    data.Direction = 2; // to higher backward.
+                    break;
+                case 6: // to lower backward.
+                    data.Direction = 1; // to higher forward.
+                    break;
+                case 7: // to lower no directional info.
+                    data.Direction = 3; // to higher no directional info.
+                    break;
+                case 9: // no low/high forward.
+                    data.Direction = 10; // no low/high backward.
+                    break;
+                case 10: // no low/high backward.
+                    data.Direction = 9; // no low/high forward.
+                    break;
             }
-            else if (informativeData.Direction <= 7)
-            {
-                informativeData.Direction = (byte)(informativeData.Direction + 8);
-            }
-            else if (informativeData.Direction <= 11)
-            {
-                informativeData.Direction = (byte)(informativeData.Direction + 4);
-            }
-            else
-            { // edge was already informative.
-                throw new InvalidCastException("Edge was already informative!");
-            }
-
-            return informativeData;
+            return data;
         }
 
         /// <summary>
@@ -432,40 +426,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
     public static class CHExtensions
     {
         /// <summary>
-        /// Removes all informative edges.
-        /// </summary>
-        /// <param name="edges"></param>
-        public static KeyValuePair<uint, CHEdgeData>[] RemoveInformativeEdges(this KeyValuePair<uint, CHEdgeData>[] edges)
-        {
-            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
-            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
-            {
-                if (!edge.Value.IsInformative)
-                {
-                    result.Add(edge);
-                }
-            }
-            return result.ToArray();
-        }
-
-        /// <summary>
-        /// Removes all uninformative edges.
-        /// </summary>
-        /// <param name="edges"></param>
-        public static KeyValuePair<uint, CHEdgeData>[] KeepInformativeEdges(this KeyValuePair<uint, CHEdgeData>[] edges)
-        {
-            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
-            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
-            {
-                if (edge.Value.IsInformative)
-                {
-                    result.Add(edge);
-                }
-            }
-            return result.ToArray();
-        }
-
-        /// <summary>
         /// Removes all contracted edges.
         /// </summary>
         /// <param name="edges"></param>
@@ -491,17 +451,17 @@ namespace OsmSharp.Routing.CH.PreProcessing
             for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
             {
                 List<KeyValuePair<uint, CHEdgeData>> arcs =
-                    new List<KeyValuePair<uint, CHEdgeData>>(graph.GetArcs(vertexId));
+                    new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
                 foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                 {
                     if (arc.Value.ToHigher)
                     {
                         // create severse edge.
-                        CHEdgeData reverseEdge = new CHEdgeData();
+                        var reverseEdge = new CHEdgeData();
                         reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
                         reverseEdge.Weight = arc.Value.Weight;
 
-                        graph.AddArc(arc.Key, vertexId, reverseEdge, null);
+                        graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
                     }
                 }
             }
@@ -516,7 +476,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IDynamicGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(vertexId);
+            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
             KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)
@@ -540,7 +500,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IDynamicGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetArcs(vertexId);
+            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
             KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)
