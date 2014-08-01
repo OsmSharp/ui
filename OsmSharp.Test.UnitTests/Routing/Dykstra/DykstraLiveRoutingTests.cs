@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Collections;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
@@ -79,7 +80,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
 
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-                var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
+                var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
                 var sorter = new OsmStreamFilterSort();

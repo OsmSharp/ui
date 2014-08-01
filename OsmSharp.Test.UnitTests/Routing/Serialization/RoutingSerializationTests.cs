@@ -37,6 +37,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -64,7 +65,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -154,7 +155,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -245,7 +246,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new Dictionary<long, uint>(), null, null, false);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);

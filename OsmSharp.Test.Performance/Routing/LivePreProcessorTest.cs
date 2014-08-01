@@ -54,15 +54,15 @@ namespace OsmSharp.Test.Performance.Routing
             var progress = new OsmStreamFilterProgress();
             progress.RegisterSource(new PBFOsmStreamSource(stream));
 
-            var performanceInfo = new PerformanceInfoConsumer("LivePreProcessor", 5000);
+            var performanceInfo = new PerformanceInfoConsumer("LivePreProcessor", 20000);
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            var memoryGraph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000000, @"c:\temp\");
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryGraph, tagsIndex);
+            // var memoryGraph = new MemoryMappedFileDynamicGraph<LiveEdge>(1000000, @"c:\temp\");
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();
