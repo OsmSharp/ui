@@ -139,6 +139,7 @@
     <Compile Include="Renderer\Scene\Storage\SceneObjectBlock.cs" />
     <Compile Include="Renderer\Scene\Storage\SceneObjectRTreeSerializer.cs" />
     <Compile Include="Renderer\Scene\Storage\SceneSerializer.cs" />
+    <Compile Include="Renderer\Scene\Styles\StyleIcon.cs" />
     <Compile Include="Renderer\Scene\Styles\StyleLine.cs" />
     <Compile Include="Renderer\Scene\Styles\StylePoint.cs" />
     <Compile Include="Renderer\Scene\Styles\StylePolygon.cs" />

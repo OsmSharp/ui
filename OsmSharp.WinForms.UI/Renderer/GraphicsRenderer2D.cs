@@ -303,7 +303,9 @@ namespace OsmSharp.WinForms.UI.Renderer
 
 	            // draw the image.
 	            double[] transformed = this.Tranform(x, y);
-	            target.Target.DrawImage(image, (float) transformed[0], (float) transformed[1]);
+	            transformed[0] = transformed[0] - (image.Width / 2.0);
+                transformed[1] = transformed[1] - (image.Height / 2.0);
+	            target.Target.DrawImage(image, (float)transformed[0], (float)transformed[1]);
 	        }
         }
 

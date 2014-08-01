@@ -79,6 +79,11 @@ namespace OsmSharp.UI.Renderer.Scene
         private ObjectTable<StylePolygon> _polygonStyles;
 
         /// <summary>
+        /// Holds the icon styles.
+        /// </summary>
+        private ObjectTable<StyleIcon> _iconStyles;
+
+        /// <summary>
         /// Holds the next id.
         /// </summary>
         private uint _nextId = 0;
@@ -152,6 +157,7 @@ namespace OsmSharp.UI.Renderer.Scene
             _textStyles = new ObjectTable<StyleText>(true);
             _lineStyles = new ObjectTable<StyleLine>(true);
             _polygonStyles = new ObjectTable<StylePolygon>(true);
+            _iconStyles = new ObjectTable<StyleIcon>(true);
 
             // geo indexes.
             _pointIndex = new ObjectTable<ScenePoint>(true);
@@ -509,16 +515,16 @@ namespace OsmSharp.UI.Renderer.Scene
                         {
                             case SceneObjectType.IconObject:
                                 SceneIconObject icon = sceneObject as SceneIconObject;
-                                byte[] iconStyle = _imageIndex[(int)icon.StyleId];
-                                //if (Scene2DZoomRange.Contains(zoom))
-                                //{
-                                point = _pointIndex.Get(icon.GeoId);
-                                if (view.Contains(point.X, point.Y))
+                                StyleIcon iconStyle = _iconStyles.Get(icon.StyleId);
+                                if (Scene2DZoomRange.Contains(iconStyle.MinZoom, iconStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, icon, iconStyle));
+                                    point = _pointIndex.Get(icon.GeoId);
+                                    if (view.Contains(point.X, point.Y))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, icon, iconStyle));
+                                    }
                                 }
-                                //}
                                 break;
                             case SceneObjectType.LineObject:
                                 SceneLineObject line = sceneObject as SceneLineObject;
@@ -612,7 +618,7 @@ namespace OsmSharp.UI.Renderer.Scene
             switch (sceneObject.Enum)
             {
                 case SceneObjectType.IconObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject, _imageIndex[(int)sceneObject.StyleId]);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject, _iconStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.LineObject:
                     return this.ConvertToPrimitive(id, sceneObject as SceneLineObject, _lineStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.LineTextObject:
@@ -885,20 +891,22 @@ namespace OsmSharp.UI.Renderer.Scene
                 // check the current object's zoom range against the current min/max zoom factor.
                 if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
+                    
                     // add to the scene.
                     // build the zoom range.
-                    // TODO: zoom and layer for icon.
-                    //Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                    //{
-                    //    MinZoom = minimumZoomFactor,
-                    //    MaxZoom = maximumZoomFactor
-                    //};
-                    //ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
+                    StyleIcon style = new StyleIcon()
+                    {
+                        ImageId = imageId,
+                        Layer = layer,
+                        MinZoom = minimumZoomFactor,
+                        MaxZoom = maximumZoomFactor
+                    };
+                    ushort styleId = (ushort)_iconStyles.Add(style);
 
                     // add the scene object.
                     uint id = _nextId;
-                    _sceneObjects[idx].Add(id, 
-                        new SceneIconObject() { StyleId = imageId, GeoId = pointId });
+                    _sceneObjects[idx].Add(id,
+                        new SceneIconObject() { StyleId = styleId, GeoId = pointId });
                     _nextId++;
                     newIds.Add(id);
                 }
@@ -931,15 +939,16 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, byte[] style)
+        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, StyleIcon style)
         {
             Icon2D primitive = new Icon2D();
             primitive.Id = id;
 
             // convert image.
-            primitive.Image = style;
-            primitive.Layer = 0; // TODO: image layers!!!
-            // TODO: zoom levels.
+            primitive.Image = _imageIndex[(int)style.ImageId];
+            primitive.Layer = style.Layer;
+            primitive.MinZoom = style.MinZoom;
+            primitive.MaxZoom = style.MaxZoom;
 
             // get the geo.
             ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
