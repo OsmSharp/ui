@@ -40,7 +40,7 @@ namespace OsmSharp.iOS.UI.Controls
         /// <summary>
         /// holds pointer to user-object
         /// </summary>
-        public abstract object Tag { get; set; }
+        public virtual object Tag { get; set; }
 
         /// <summary>
         /// Gets or sets the location.

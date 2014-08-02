@@ -60,7 +60,7 @@ namespace OsmSharp.Android.UI.Controls
         /// <summary>
         /// holds pointer to user-object
         /// </summary>
-        public abstract object Tag { get; set; }
+        public virtual object Tag { get; set; }
 
         /// <summary>
         /// Attaches this control to the given control host.
