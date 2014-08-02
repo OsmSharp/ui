@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -51,7 +52,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex">Holds all the tags.</param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>())
+            : this(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>())
         {
 
         }
@@ -64,7 +65,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations)
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null, null)
         {
 
@@ -79,7 +80,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, GeoCoordinateBox box)
-            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box, null)
+            : this(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), box, null)
         {
 
         }
@@ -93,7 +94,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex">Holds all the tags.</param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
-            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), vehicles)
+            : this(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), vehicles)
         {
 
         }
@@ -107,7 +108,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations, IEnumerable<Vehicle> vehicles)
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, IEnumerable<Vehicle> vehicles)
             : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null, vehicles)
         {
 
@@ -123,7 +124,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, GeoCoordinateBox box, IEnumerable<Vehicle> vehicles)
-            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box, vehicles)
+            : this(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), box, vehicles)
         {
 
         }
@@ -138,7 +139,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         /// <param name="vehicles"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations, 
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, 
             GeoCoordinateBox box, IEnumerable<Vehicle> vehicles)
             : this(dynamicGraph, interpreter, tagsIndex, idTransformations, box, vehicles, true)
         {
@@ -156,7 +157,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations, 
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, 
             GeoCoordinateBox box, IEnumerable<Vehicle> vehicles, bool collectIntermediates)
             : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box, collectIntermediates)
         {

@@ -118,7 +118,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
-            IDictionary<long, uint> idTransformations)
+            HugeDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null, false)
         {
 
@@ -136,7 +136,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="collectIntermediates"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations,
+            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations,
             GeoCoordinateBox box, bool collectIntermediates)
         {
             _dynamicGraph = dynamicGraph;
@@ -207,14 +207,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the id transformations.
         /// </summary>
-        private readonly IDictionary<long, uint> _idTransformations;
+        private readonly HugeDictionary<long, uint> _idTransformations;
 
         /// <summary>
         /// Initializes the processing.
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple>();
+            _coordinates = new HugeDictionary<long, GeoCoordinateSimple>();
         }
 
         /// <summary>
