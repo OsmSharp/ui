@@ -37,6 +37,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.CH.Serialization;
+using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -450,31 +451,36 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
                 var referenceArcs = referenceNetwork.GetEdges(vertex);
                 var arcs = network.GetEdges(vertex);
+                Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
-                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
-                    Assert.AreEqual(referenceArcs[idx].Value.Distance, arcs[idx].Value.Distance);
-                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
-                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
-                    if (referenceArcs[idx].Value.Coordinates == null)
+                    var referenceArc = referenceArcs[idx];
+                    // find the same edge in the new arcs.
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+                    
+                    Assert.AreEqual(referenceArc.Key, arc.Key);
+                    Assert.AreEqual(referenceArc.Value.Distance, arc.Value.Distance);
+                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
+                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    if (referenceArc.Value.Coordinates == null)
                     { // other arc coordinates also null?
-                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                        Assert.IsNull(arc.Value.Coordinates);
                     }
                     else
                     { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        for (int coordIdx = 0; coordIdx < referenceArc.Value.Coordinates.Length; coordIdx++)
                         {
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Latitude,
+                                arc.Value.Coordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Longitude,
+                                arc.Value.Coordinates[coordIdx].Longitude);
                         }
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
-                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
+                    var tags = network.TagsIndex.Get(arc.Value.Tags);
                     if (referenceTags == null)
                     { // other tags also have to be null.
                         Assert.IsNull(tags);
@@ -532,31 +538,36 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
                 var referenceArcs = referenceNetwork.GetEdges(vertex);
                 var arcs = network.GetEdges(vertex);
+                Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
-                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
-                    Assert.AreEqual(referenceArcs[idx].Value.Weight, arcs[idx].Value.Weight);
-                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
-                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
-                    if (referenceArcs[idx].Value.Coordinates == null)
+                    var referenceArc = referenceArcs[idx];
+                    // find the same edge in the new arcs.
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+
+                    Assert.AreEqual(referenceArc.Key, arc.Key);
+                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
+                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
+                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    if (referenceArc.Value.Coordinates == null)
                     { // other arc coordinates also null?
-                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                        Assert.IsNull(arc.Value.Coordinates);
                     }
                     else
                     { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        for (int coordIdx = 0; coordIdx < referenceArc.Value.Coordinates.Length; coordIdx++)
                         {
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Latitude,
+                                arc.Value.Coordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Longitude,
+                                arc.Value.Coordinates[coordIdx].Longitude);
                         }
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
-                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
+                    var tags = network.TagsIndex.Get(arc.Value.Tags);
                     if (referenceTags == null)
                     { // other tags also have to be null.
                         Assert.IsNull(tags);
