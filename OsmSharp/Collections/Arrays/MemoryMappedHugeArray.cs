@@ -50,9 +50,14 @@ namespace OsmSharp.Collections.Arrays
         private List<IMemoryMappedViewAccessor> _accessors;
 
         /// <summary>
-        /// Holds the maximum array size.
+        /// Holds the default file element size.
         /// </summary>
-        private int _fileElementSize = (int)System.Math.Pow(2, 20);
+        private static long DefaultFileElementSize = (long)1024 * (long)1024 * (long)128;
+
+        /// <summary>
+        /// Holds the file element size.
+        /// </summary>
+        private long _fileElementSize = DefaultFileElementSize;
 
         /// <summary>
         /// Holds the element size.
@@ -69,7 +74,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         /// <param name="size">The size of the array.</param>
         public MemoryMappedHugeArray(long size)
-            : this(size, (int)System.Math.Pow(2, 20))
+            : this(size, DefaultFileElementSize)
         {
 
         }
@@ -79,7 +84,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         /// <param name="size"></param>
         /// <param name="arraySize"></param>
-        public MemoryMappedHugeArray(long size, int arraySize)
+        public MemoryMappedHugeArray(long size, long arraySize)
             : this(null, size, arraySize)
         {
 
@@ -91,7 +96,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="path">The path to the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
         public MemoryMappedHugeArray(string path, long size)
-            : this(path, size, (int)System.Math.Pow(2, 20))
+            : this(path, size, DefaultFileElementSize)
         {
 
         }
@@ -102,7 +107,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="path">The path to the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(string path, long size, int arraySize)
+        public MemoryMappedHugeArray(string path, long size, long arraySize)
         {
             _path = path;
             _length = size;
@@ -127,7 +132,7 @@ namespace OsmSharp.Collections.Arrays
         /// <returns></returns>
         private IMemoryMappedFile CreateNew()
         {
-            if(string.IsNullOrEmpty(_path))
+            if(!string.IsNullOrEmpty(_path))
             {
                 return NativeMemoryMappedFileFactory.CreateFromFile(_path + System.Guid.NewGuid().ToString(), _fileSizeBytes);
             }

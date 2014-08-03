@@ -238,15 +238,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                     if (_box == null || _box.Contains(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
                     { // the coordinate is acceptable.
-                        _coordinates[node.Id.Value] = new GeoCoordinateSimple() {
-                            Latitude = (float)node.Latitude.Value, 
-                            Longitude = (float)node.Longitude.Value};
-                        // TODO: find a way to drop the preindex.
-                        //if (_coordinates.Count == _preIndex.Count)
-                        //{
-                        //    _preIndex.Clear();
-                        //    _preIndex = null;
-                        //}
+                        _coordinates[node.Id.Value] = new GeoCoordinateSimple()
+                        {
+                            Latitude = (float)node.Latitude.Value,
+                            Longitude = (float)node.Longitude.Value
+                        };
+                        if (_relevantNodes.Contains(node.Id.Value))
+                        { // add these node straight into the graph, no need for them exists as seperate coordinates.
+                            this.AddRoadNode(node.Id.Value);
+                        }
 
                         if (_bounds == null)
                         { // create bounds.
