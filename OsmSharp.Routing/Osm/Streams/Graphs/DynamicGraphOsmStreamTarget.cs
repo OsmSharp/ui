@@ -243,10 +243,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             Latitude = (float)node.Latitude.Value,
                             Longitude = (float)node.Longitude.Value
                         };
-                        if (_relevantNodes.Contains(node.Id.Value))
-                        { // add these node straight into the graph, no need for them exists as seperate coordinates.
-                            this.AddRoadNode(node.Id.Value);
-                        }
+                         // TODO: find a way to drop the preindex.
+                         //if (_coordinates.Count == _preIndex.Count)
+                         //{
+                        //    _preIndex.Clear();
+                         //    _preIndex = null;
+                         //}
 
                         if (_bounds == null)
                         { // create bounds.
