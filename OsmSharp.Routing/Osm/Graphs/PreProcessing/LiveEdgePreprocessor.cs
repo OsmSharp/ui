@@ -103,7 +103,8 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
 
                         // don't re-process edges that already have coordinates.
                         GeoCoordinateSimple[] oldEdgeValueCoordinates;
-                        if (_graph.GetEdgeShape(vertexToProcess, oldEdge.Key, out oldEdgeValueCoordinates))
+                        _graph.GetEdgeShape(vertexToProcess, oldEdge.Key, out oldEdgeValueCoordinates);
+                        if (oldEdgeValueCoordinates != null)
                         { // this edge has already been processed.
                             break;
                         }
@@ -139,7 +140,8 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
 
                             // check for intermediates.
                             GeoCoordinateSimple[] nextEdgeValueCoordinates;
-                            if (_graph.GetEdgeShape(current, nextEdge.Key, out nextEdgeValueCoordinates))
+                            _graph.GetEdgeShape(current, nextEdge.Key, out nextEdgeValueCoordinates);
+                            if (nextEdgeValueCoordinates != null)
                             { // oeps, there are intermediates already, this can occur when two osm-ways are drawn on top of eachother.
                                 break;
                             }
