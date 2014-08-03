@@ -197,7 +197,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
         {
-            throw new InvalidOperationException();
+            CHEdgeData data;
+            shape = null;
+            return this.LoadArc(vertex1, vertex2, out data);
         }
 
         /// <summary>

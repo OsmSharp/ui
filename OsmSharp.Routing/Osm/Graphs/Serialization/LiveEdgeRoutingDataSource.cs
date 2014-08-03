@@ -289,7 +289,6 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (vertex != null &&
                     vertex.Arcs != null)
                 {
-                    var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
                     for (int idx = 0; idx < vertex.Arcs.Length; idx++)
                     {
                         if (vertex.Arcs[idx].Item1 == vertex2)
@@ -328,7 +327,6 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (vertex != null &&
                     vertex.Arcs != null)
                 {
-                    var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
                     for (int idx = 0; idx < vertex.Arcs.Length; idx++)
                     {
                         if(vertex.Arcs[idx].Item1 == vertex2)
