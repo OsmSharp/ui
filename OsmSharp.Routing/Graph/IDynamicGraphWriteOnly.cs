@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
@@ -41,7 +42,7 @@ namespace OsmSharp.Routing.Graph
         void SetVertex(uint vertex, float latitude, float longitude);
 
         /// <summary>
-        /// Adds an edge with associated data.
+        /// Adds an edge with associated data and no shapes.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -54,8 +55,18 @@ namespace OsmSharp.Routing.Graph
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
+        /// <param name="coordinates"></param>
+        void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates);
+
+        /// <summary>
+        /// Adds an edge with associated data.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        void AddEdge(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+        void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer);
 
         /// <summary>
         /// Compresses all the data in this graph.

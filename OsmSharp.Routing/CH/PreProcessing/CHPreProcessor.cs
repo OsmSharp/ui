@@ -163,7 +163,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                     // overwrite the old edge making it point 'to higher' only.
                     _target.AddEdge(vertex, edge.Key,
-                        new CHEdgeData(edge.Value.Weight, edge.Value.Forward, edge.Value.Backward, true, edge.Value.ContractedVertexId, edge.Value.Tags));
+                        new CHEdgeData(edge.Value.Weight, edge.Value.Forward, edge.Value.Backward, true, edge.Value.ContractedVertexId, edge.Value.Tags), null);
                 }
             }
 
@@ -202,7 +202,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             dataXToY.Weight = weight;
                             dataXToY.ContractedVertexId = vertex;
 
-                            _target.AddEdge(xEdge.Key, yEdge.Key, dataXToY, _comparer);
+                            _target.AddEdge(xEdge.Key, yEdge.Key, dataXToY, null, _comparer);
                         }
                     }
                 }

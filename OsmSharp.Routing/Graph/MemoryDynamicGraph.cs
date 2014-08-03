@@ -16,11 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Arrays;
+using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
-using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Collections;
-using OsmSharp.Collections.Arrays;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -85,7 +84,7 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryDynamicGraph(long sizeEstimate)
-            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3))
+            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeArray<GeoCoordinateSimple[]>(sizeEstimate * 3))
         {
 
         }
@@ -98,7 +97,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexArray"></param>
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
-        protected MemoryDynamicGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray)
+        /// <param name="edgeShapeArray"></param>
+        protected MemoryDynamicGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, IHugeArray<GeoCoordinateSimple[]> edgeShapeArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
@@ -118,6 +118,8 @@ namespace OsmSharp.Routing.Graph
             }
             _edgeData = edgeDataArray;
             _edgeData.Resize(sizeEstimate * 3);
+            _edgeShapes = edgeShapeArray;
+            _edgeShapes.Resize(sizeEstimate * 3);
         }
 
         /// <summary>
@@ -136,9 +138,7 @@ namespace OsmSharp.Routing.Graph
         {
             var oldLength = _coordinates.Length;
             _coordinates.Resize(size);
-            // Array.Resize<GeoCoordinateSimple>(ref _coordinates, size);
             _vertices.Resize(size);
-            // Array.Resize<uint>(ref _vertices, size);
             for (long idx = oldLength; idx < size; idx++)
             {
                 _vertices[idx] = NO_EDGE;
@@ -160,13 +160,12 @@ namespace OsmSharp.Routing.Graph
         {
             var oldLength = _edges.Length;
             _edges.Resize(size);
-            // Array.Resize<uint>(ref _edges, size);
             for (long idx = oldLength; idx < size; idx++)
             {
                 _edges[idx] = NO_EDGE;
             }
             _edgeData.Resize(size / EDGE_SIZE);
-            // Array.Resize<TEdgeData>(ref _edgeData, size / EDGE_SIZE);
+            _edgeShapes.Resize(size / EDGE_SIZE);
         }
 
         /// <summary>
@@ -247,8 +246,21 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
+        /// <param name="coordinates"></param>
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        {
+            this.AddEdge(vertex1, vertex2, data, coordinates, null);
+        }
+
+        /// <summary>
+        /// Adds an edge with the associated data.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <param name="coordinates"></param>
         /// <param name="comparer">Comparator to compare edges and replace obsolete ones.</param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
             // if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
@@ -292,10 +304,12 @@ namespace OsmSharp.Routing.Graph
                             if (comparer.Overlaps(data, existingData))
                             { // an arc was found that represents the same directional information.
                                 _edgeData[previousEdgeId / 4] = data;
+                                _edgeShapes[previousEdgeId / 4] = coordinates;
                             }
                             return;
                         }
                         _edgeData[previousEdgeId / 4] = data;
+                        _edgeShapes[previousEdgeId / 4] = coordinates;
                         return;
                     }
                 }
@@ -317,6 +331,7 @@ namespace OsmSharp.Routing.Graph
 
                 // set data.
                 _edgeData[edgeId / 4] = data;
+                _edgeShapes[edgeId / 4] = coordinates;
             }
             else
             { // create a new edge and set.
@@ -335,6 +350,7 @@ namespace OsmSharp.Routing.Graph
 
                 // set data.
                 _edgeData[edgeId / 4] = data;
+                _edgeShapes[edgeId / 4] = coordinates;
             }
 
             var toEdgeId = _vertices[vertex2];
@@ -476,6 +492,7 @@ namespace OsmSharp.Routing.Graph
                     _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
                     _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
                     _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
+                    _edgeShapes[currentEdgeId / EDGE_SIZE] = null;
                     return;
                 }
             }
@@ -676,9 +693,8 @@ namespace OsmSharp.Routing.Graph
            
             // resize edges.
             _edgeData.Resize(_nextEdgeId / EDGE_SIZE);
-            // Array.Resize<TEdgeData>(ref _edgeData, (int)(_nextEdgeId / EDGE_SIZE));
-            _edgeData.Resize(_nextEdgeId);
-            // Array.Resize<uint>(ref _edges, (int)_nextEdgeId);
+            _edgeShapes.Resize(_nextEdgeId / EDGE_SIZE);
+            _edges.Resize(_nextEdgeId);
         }
 
         /// <summary>

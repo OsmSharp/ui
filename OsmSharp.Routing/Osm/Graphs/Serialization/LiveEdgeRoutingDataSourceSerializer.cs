@@ -143,13 +143,18 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             // get destination tile.
                             if (graph.GetVertex(arc.Key, out latitude, out longitude))
                             { // the destionation was found.
+                                GeoCoordinateSimple[] arcValueCoordinates;
+                                if(!graph.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates))
+                                {
+                                    arcValueCoordinates = null;
+                                }
                                 var destinationTile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
                                 serializableGraphArcs.DestinationId[idx] = arc.Key;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
                                 serializableGraphArcs.Forward[idx] = arc.Value.Forward;
                                 serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
-                                    Coordinates = SerializableCoordinate.FromSimpleArray(arc.Value.Coordinates)
+                                    Coordinates = SerializableCoordinate.FromSimpleArray(arcValueCoordinates)
                                 };
                                 serializableGraphArcs.Distances[idx] = arc.Value.Distance;
 

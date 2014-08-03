@@ -92,11 +92,6 @@ namespace OsmSharp.Routing.Osm.Graphs
         }
 
         /// <summary>
-        /// Gets or sets the list of intermediate coordinates.
-        /// </summary>
-        public GeoCoordinateSimple[] Coordinates { get; set; }
-
-        /// <summary>
         /// Gets/or sets the total distance of this edge.
         /// </summary>
         public float Distance { get; set; }
@@ -115,21 +110,8 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <returns></returns>
         public IDynamicGraphEdgeData Reverse()
         {
-            if (this.Coordinates != null)
-            {
-                var reverseCoordiantes = new GeoCoordinateSimple[this.Coordinates.Length];
-                this.Coordinates.CopyToReverse(reverseCoordiantes, 0);
-                return new LiveEdge()
-                {
-                    Coordinates = reverseCoordiantes,
-                    Distance = this.Distance,
-                    Forward = !this.Forward,
-                    Tags = this.Tags
-                };
-            }
             return new LiveEdge()
             {
-                Coordinates = null,
                 Distance = this.Distance,
                 Forward = !this.Forward,
                 Tags = this.Tags
@@ -149,67 +131,6 @@ namespace OsmSharp.Routing.Osm.Graphs
                 if (otherLive._value != this._value)
                 { // basic info different.
                     return false;
-                }
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (otherLive.Coordinates == null ||
-                        this.Coordinates.Length != otherLive.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherLive.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherLive.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherLive.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherLive.Coordinates == null;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the other edge represents the same geographical information than this edge.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool EqualsGeometrically(IDynamicGraphEdgeData other)
-        {
-            if (other is LiveEdge)
-            { // ok, type is the same.
-                var otherLive = (LiveEdge)other;
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherLive.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherLive.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherLive.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherLive.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherLive.Coordinates == null;
                 }
             }
             return false;

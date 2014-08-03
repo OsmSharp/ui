@@ -279,7 +279,19 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         public void AddEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
-            _graph.AddEdge(vertex1, vertex2, data);
+            _graph.AddEdge(vertex1, vertex2, data, null);
+        }
+
+        /// <summary>
+        /// Adds a new edge.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <param name="coordinates"></param>
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        {
+            _graph.AddEdge(vertex1, vertex2, data, coordinates);
         }
 
         /// <summary>
@@ -288,10 +300,11 @@ namespace OsmSharp.Routing.Graph
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
+        /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        public void AddEdge(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
-            _graph.AddEdge(from, to, data, comparer);
+            _graph.AddEdge(from, to, data, coordinates, comparer);
         }
 
         /// <summary>

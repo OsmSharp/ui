@@ -54,19 +54,19 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 Assert.Catch<ArgumentOutOfRangeException>(() =>
                 {
-                    graph.AddEdge(vertex3, vertex1, new LiveEdge());
+                    graph.AddEdge(vertex3, vertex1, new LiveEdge(), null);
                 });
                 Assert.Catch<ArgumentOutOfRangeException>(() =>
                 {
-                    graph.AddEdge(vertex1, vertex3, new LiveEdge());
+                    graph.AddEdge(vertex1, vertex3, new LiveEdge(), null);
                 });
                 Assert.Catch<ArgumentException>(() =>
                 {
-                    graph.AddEdge(vertex1, vertex1, new LiveEdge());
+                    graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
                 });
                 Assert.Catch<ArgumentException>(() =>
                 {
-                    graph.AddEdge(vertex1, vertex1, new LiveEdge());
+                    graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
                 });
                 Assert.Catch<ArgumentOutOfRangeException>(() =>
                 {

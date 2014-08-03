@@ -71,13 +71,18 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     {
                         if (arcs[idx].Key > vertex)
                         {
+                            GeoCoordinateSimple[] coordinates;
+                            if(!graph.GetEdgeShape(vertex, arcs[idx].Key, out coordinates))
+                            {
+                                coordinates = null;
+                            }
                             arcsQueue.Add(new SerializableEdge()
                             {
                                 Distance = arcs[idx].Value.Distance,
                                 FromId = vertex,
                                 ToId = arcs[idx].Key,
                                 Value = arcs[idx].Value.Value,
-                                Coordinates = arcs[idx].Value.Coordinates
+                                Coordinates = coordinates
                             });
 
                             if (arcsQueue.Count == blockSize)
@@ -121,10 +126,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new LiveEdge()
                         {
-                            Coordinates = serializableEdges[idx].Coordinates,
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, null);
+                        }, serializableEdges[idx].Coordinates, null);
                 }
             }
         }

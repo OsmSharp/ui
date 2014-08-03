@@ -135,7 +135,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                this.DynamicGraph.AddEdge(from, to, edgeData, this.EdgeComparer);
+                this.DynamicGraph.AddEdge(from, to, edgeData, intermediates.ToArray(), this.EdgeComparer);
             }
         }
 
@@ -171,8 +171,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             {
                 Forward = directionForward,
                 Tags = tagsId,
-                Distance = (float)from.DistanceEstimate(to).Value,
-                Coordinates = coordinates
+                Distance = (float)from.DistanceEstimate(to).Value
             };
         }
 

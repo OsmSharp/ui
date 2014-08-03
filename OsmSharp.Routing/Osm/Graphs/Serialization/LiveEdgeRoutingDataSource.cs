@@ -159,11 +159,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         if (vertex != null &&
                             vertex.Arcs != null)
                         {
-                            KeyValuePair<uint, Osm.Graphs.LiveEdge>[] localArcs = vertex.Arcs;
-                            foreach (KeyValuePair<uint, Osm.Graphs.LiveEdge> localArc in localArcs)
+                            var localArcs = vertex.Arcs;
+                            foreach (var localArc in localArcs)
                             {
                                 arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>(
-                                    vertexId, localArc));
+                                    vertexId, new KeyValuePair<uint, Osm.Graphs.LiveEdge>(localArc.Item1, localArc.Item2)));
                             }
                         }
                     }
@@ -243,7 +243,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (vertex != null &&
                     vertex.Arcs != null)
                 {
-                    return vertex.Arcs;
+                    var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
+                    for(int idx = 0; idx< vertex.Arcs.Length; idx++)
+                    {
+                        arcs[idx] = new KeyValuePair<uint, LiveEdge>(
+                            vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
+                    }
+                    return arcs;
                 }
             }
             return new KeyValuePair<uint, Osm.Graphs.LiveEdge>[0];
@@ -300,7 +306,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Holds an array of edges starting at this vertex.
             /// </summary>
-            public KeyValuePair<uint, Osm.Graphs.LiveEdge>[] Arcs;
+            public Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>[] Arcs;
         }
 
         /// <summary>
@@ -438,7 +444,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         // convert the arcs.
                         if (tileData.Arcs[vertexIdx] != null)
                         {
-                            var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[tileData.Arcs[vertexIdx].DestinationId.Length];
+                            var arcs = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>[tileData.Arcs[vertexIdx].DestinationId.Length];
                             for (int idx = 0; idx < tileData.Arcs[vertexIdx].DestinationId.Length; idx++)
                             {
                                 // create the tags collection.
@@ -458,13 +464,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 var edge = new Osm.Graphs.LiveEdge();
                                 edge.Forward = tileData.Arcs[vertexIdx].Forward[idx];
                                 edge.Tags = tags;
-                                edge.Coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
+                                var coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
                                     tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
                                 edge.Distance = tileData.Arcs[vertexIdx].Distances[idx];
 
                                 // convert the arc.
-                                arcs[idx] = new KeyValuePair<uint, Osm.Graphs.LiveEdge>(
-                                    tileData.Arcs[vertexIdx].DestinationId[idx], edge);
+                                arcs[idx] = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>(
+                                    tileData.Arcs[vertexIdx].DestinationId[idx], edge, coordinates);
 
                                 // store the target tile.
                                 var targetTile = new Tile(tileData.Arcs[vertexIdx].TileX[idx],

@@ -20,7 +20,6 @@ using NUnit.Framework;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
-using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Routing.Graph
 {
@@ -52,19 +51,19 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             uint vertex3 = 3;
 
             Assert.Catch<ArgumentOutOfRangeException>(() => {
-                graph.AddEdge(vertex3, vertex1, new LiveEdge());
+                graph.AddEdge(vertex3, vertex1, new LiveEdge(), null);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
-                graph.AddEdge(vertex1, vertex3, new LiveEdge());
+                graph.AddEdge(vertex1, vertex3, new LiveEdge(), null);
             });
             Assert.Catch<ArgumentException>(() =>
             {
-                graph.AddEdge(vertex1, vertex1, new LiveEdge());
+                graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
             });
             Assert.Catch<ArgumentException>(() =>
             {
-                graph.AddEdge(vertex1, vertex1, new LiveEdge());
+                graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
@@ -586,23 +585,23 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             {
                 Forward = true,
                 Tags = 1
-            });
+            }, null);
             graph.AddEdge(vertex2, vertex3, new LiveEdge()
             {
                 Forward = true,
                 Tags = 2
-            });
+            }, null);
             graph.AddEdge(vertex3, vertex4, new LiveEdge()
             {
                 Forward = true,
                 Tags = 3
-            });
+            }, null);
 
             graph.AddEdge(vertex4, vertex2, new LiveEdge()
             {
                 Forward = true,
                 Tags = 4
-            });
+            }, null);
 
             graph.RemoveEdge(vertex2, vertex1);
             graph.RemoveEdge(vertex2, vertex3);
