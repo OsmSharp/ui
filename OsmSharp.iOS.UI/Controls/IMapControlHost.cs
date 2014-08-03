@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap (OSM) SDK
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -17,25 +17,20 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using OsmSharp.UI;
 
-namespace OsmSharp.iOS.UI
+namespace OsmSharp.iOS.UI.Controls
 {
-	/// <summary>
-	/// Map marker alignment type.
-	/// </summary>
-	public enum MapMarkerAlignmentType
-	{
-		/// <summary>
-		/// The center of the image is aligned with the position of the marker.
-		/// </summary>
-		Center,
-		/// <summary>
-		/// The center of the bottom of the image is aligned with the position of the marker.
-		/// </summary>
-		CenterBottom,
-		/// <summary>
-		/// The center of the top of the image is aligined with the position of the marker.
-		/// </summary>
-		CenterTop
-	}
+    /// <summary>
+    /// Abstract definition of a map marker host.
+    /// </summary>
+    public interface IMapControlHost : IMapView
+    {
+        /// <summary>
+        /// Notifies this host that the given marker has changed.
+        /// </summary>
+        /// <param name="marker">Marker.</param>
+        void NotifyControlChange(MapControl marker);
+    }
 }
+

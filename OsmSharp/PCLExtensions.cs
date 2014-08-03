@@ -56,7 +56,7 @@ namespace OsmSharp
         }
 
         /// <summary>
-        /// Performs the specified action on each element of the List<T>.
+        /// Performs the specified action on each element of the List.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="enumeration"></param>

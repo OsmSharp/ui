@@ -37,6 +37,7 @@ using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using System.Collections.ObjectModel;
+using OsmSharp.iOS.UI.Controls;
 
 namespace OsmSharp.iOS.UI
 {
@@ -44,7 +45,7 @@ namespace OsmSharp.iOS.UI
 	/// Map view.
 	/// </summary>
 	[Register("MapView")]
-	public class MapView : UIView, IMapView, IInvalidatableMapSurface
+    public class MapView : UIView, IMapView, IInvalidatableMapSurface, IMapControlHost
 	{
         private const float MAX_ZOOM_LEVEL = 22;
 		private bool _invertX = false;
@@ -155,6 +156,7 @@ namespace OsmSharp.iOS.UI
 			this.UserInteractionEnabled = true;
 
 			_markers = new List<MapMarker>();
+            _controls = new List<MapControl>();
 
 			if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
 			{
@@ -999,6 +1001,22 @@ namespace OsmSharp.iOS.UI
             get { return this.CreateView(this.Frame); }
         }
 
+        /// <summary>
+        /// Returns the current width.
+        /// </summary>
+        public int CurrentWidth
+        {
+            get { return (int)_rect.Width; }
+        }
+
+        /// <summary>
+        /// Returns the current height.
+        /// </summary>
+        public int CurrentHeight
+        {
+            get { return (int)_rect.Height; }
+        }
+
 		#region IMapView implementation
 
 		/// <summary>
@@ -1081,7 +1099,7 @@ namespace OsmSharp.iOS.UI
 			{
 				View2D view = this.CreateView(rect);
 
-				this.NotifyMapChangeToMarkers(rect.Width, rect.Height, view, this.Map.Projection);
+				this.NotifyMapChangeToControls(rect.Width, rect.Height, view, this.Map.Projection);
 			}
 
 			// tell this view it needs to refresh.
@@ -1136,136 +1154,117 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
-		#region Map Markers
+		#region Controls
 
 		/// <summary>
-		/// Holds the markers.
+		/// Holds the controls.
 		/// </summary>
-		private List<MapMarker> _markers;
+		private List<MapControl> _controls;
 
 		/// <summary>
-		/// Returns the mapmarkers list.
+		/// Returns the mapcontrols list.
 		/// </summary>
-		/// <value>The markers.</value>
-		public void AddMarker(MapMarker marker)
+		/// <value>The controls.</value>
+		public void AddControl(MapControl control)
 		{
-			if (marker == null)
+			if (control == null)
 			{
-				throw new ArgumentNullException("marker");
+				throw new ArgumentNullException("control");
 			}
-			;
 
-			marker.AttachTo(this); // attach this view to the marker.
-			_markers.Add(marker); // add to markers list.
-			this.Add(marker); // add to this view.
+			control.AttachTo(this); // attach this view to the control.
+			_controls.Add(control); // add to controls list.
+			this.Add(control.BaseView); // add to this view.
 
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
 				View2D view = this.CreateView(rect);
-				this.NotifyMapChangeToMarker(rect.Width, rect.Height, view, this.Map.Projection, marker);
+				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
 			}
 		}
 
         /// <summary>
-        /// Returns a read-only collection of markers.
+        /// Returns a read-only collection of controls.
         /// </summary>
-        public ReadOnlyCollection<MapMarker> Markers
+        public ReadOnlyCollection<MapControl> Controls
         {
             get
             {
-                return _markers.AsReadOnly();
+                return _controls.AsReadOnly();
             }
         }
 
 		/// <summary>
-		/// Adds the marker.
+		/// Clears all map controls.
 		/// </summary>
-		/// <returns>The marker.</returns>
-		/// <param name="location">Location.</param>
-		public MapMarker AddMarker(GeoCoordinate location)
+		public void ClearControls()
 		{
-			if (location == null)
+			if (_controls != null)
 			{
-				throw new ArgumentNullException("location");
-			}
-			;
-
-			MapMarker marker = new MapMarker(location);
-			this.AddMarker(marker);
-			return marker;
-		}
-
-		/// <summary>
-		/// Clears all map markers.
-		/// </summary>
-		public void ClearMarkers()
-		{
-			if (_markers != null)
-			{
-				foreach (MapMarker marker in _markers)
+				foreach (MapControl control in _controls)
 				{
-					marker.DetachFrom(this);
-					marker.RemoveFromSuperview();
+					control.DetachFrom(this);
+					control.BaseView.RemoveFromSuperview();
 				}
-				_markers.Clear();
+				_controls.Clear();
 			}
 		}
 
 		/// <summary>
-		/// Removes the given map marker.
+		/// Removes the given map control.
 		/// </summary>
-		/// <param name="marker"></param>
-		public bool RemoveMarker(MapMarker marker)
+		/// <param name="control"></param>
+		public bool RemoveControl(MapControl control)
 		{
-            if (marker != null)
+            if (control != null)
 			{
-				marker.DetachFrom(this); // remove the map view.
-				marker.RemoveFromSuperview();
-				return _markers.Remove(marker);
+				control.DetachFrom(this); // remove the map view.
+				control.BaseView.RemoveFromSuperview();
+				return _controls.Remove(control);
 			}
 			return false;
 		}
 
 		/// <summary>
-		/// Zoom to the current markers.
+		/// Zoom to the current controls.
 		/// </summary>
-		public void ZoomToMarkers()
+		public void ZoomToControls()
 		{
-			this.ZoomToMarkers(_markers);
+			this.ZoomToControls(_controls);
 		}
 
 		/// <summary>
-		/// Zoom to the current markers.
+		/// Zoom to the current controls.
 		/// </summary>
-		public void ZoomToMarkers(double percentage)
+		public void ZoomToControls(double percentage)
 		{
-			this.ZoomToMarkers(_markers, percentage);
+			this.ZoomToControls(_controls, percentage);
 		}
 
 		/// <summary>
-		/// Zoom to the current markers.
+		/// Zoom to the current controls.
 		/// </summary>
-		public void ZoomToMarkers(List<MapMarker> markers)
+		public void ZoomToControls(List<MapControl> controls)
 		{
-			this.ZoomToMarkers(markers, 15);
+			this.ZoomToControls(controls, 15);
 		}
 
 		/// <summary>
 		/// Zoom to the given makers list.
 		/// </summary>
-		/// <param name="marker"></param>
-		public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+		/// <param name="control"></param>
+		public void ZoomToControls(List<MapControl> controls, double percentage)
 		{
 			float width = this.Frame.Width;
 			float height = this.Frame.Height;
 			RectangleF rect = this.Frame;
 			if (width > 0)
 			{
-				PointF2D[] points = new PointF2D[markers.Count];
-				for (int idx = 0; idx < markers.Count; idx++)
+				PointF2D[] points = new PointF2D[controls.Count];
+				for (int idx = 0; idx < controls.Count; idx++)
 				{
-					points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
+					points[idx] = new PointF2D(this.Map.Projection.ToPixel(controls[idx].Location));
 				}
 				View2D view = this.CreateView(rect);
 				View2D fittedView = view.Fit(points, percentage);
@@ -1282,6 +1281,153 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
+        #region Markers
+
+        /// <summary>
+        /// Holds the markers.
+        /// </summary>
+        private List<MapMarker> _markers;
+
+        /// <summary>
+        /// Returns the mapmarkers list.
+        /// </summary>
+        /// <value>The markers.</value>
+        public void AddMarker(MapMarker marker)
+        {
+            if (marker == null)
+            {
+                throw new ArgumentNullException("marker");
+            }
+
+            marker.AttachTo(this); // attach this view to the marker.
+            _markers.Add(marker); // add to markers list.
+            this.Add(marker.View); // add to this view.
+
+            RectangleF rect = this.Frame;
+            if (rect.Width > 0 && rect.Height > 0)
+            {
+                View2D view = this.CreateView(rect);
+                this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, marker);
+            }
+        }
+
+        /// <summary>
+        /// Returns a read-only collection of markers.
+        /// </summary>
+        public ReadOnlyCollection<MapMarker> Markers
+        {
+            get
+            {
+                return _markers.AsReadOnly();
+            }
+        }
+
+        /// <summary>
+        /// Adds the marker.
+        /// </summary>
+        /// <returns>The marker.</returns>
+        /// <param name="location">Location.</param>
+        public MapMarker AddMarker(GeoCoordinate location)
+        {
+            if (location == null)
+            {
+                throw new ArgumentNullException("location");
+            }
+            ;
+
+            MapMarker marker = new MapMarker(location);
+            this.AddMarker(marker);
+            return marker;
+        }
+
+        /// <summary>
+        /// Clears all map markers.
+        /// </summary>
+        public void ClearMarkers()
+        {
+            if (_markers != null)
+            {
+                foreach (MapMarker marker in _markers)
+                {
+                    marker.DetachFrom(this);
+                    marker.View.RemoveFromSuperview();
+                }
+                _markers.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Removes the given map marker.
+        /// </summary>
+        /// <param name="marker"></param>
+        public bool RemoveMarker(MapMarker marker)
+        {
+            if (marker != null)
+            {
+                marker.DetachFrom(this); // remove the map view.
+                marker.View.RemoveFromSuperview();
+                return _markers.Remove(marker);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers()
+        {
+            this.ZoomToMarkers(_markers);
+        }
+
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers(double percentage)
+        {
+            this.ZoomToMarkers(_markers, percentage);
+        }
+
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {
+            this.ZoomToMarkers(markers, 15);
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="marker"></param>
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        {
+            float width = this.Frame.Width;
+            float height = this.Frame.Height;
+            RectangleF rect = this.Frame;
+            if (width > 0)
+            {
+                PointF2D[] points = new PointF2D[markers.Count];
+                for (int idx = 0; idx < markers.Count; idx++)
+                {
+                    points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
+                }
+                View2D view = this.CreateView(rect);
+                View2D fittedView = view.Fit(points, percentage);
+
+                float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+                    width, height));
+                GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+                    fittedView.Center[0], fittedView.Center[1]);
+
+                _mapCenter = center;
+                this.MapZoom = zoom;
+
+                this.NotifyMovementByInvoke();
+            }
+        }
+
+        #endregion
+
 		/// <summary>
 		/// Notifies the map change to markers.
 		/// </summary>
@@ -1289,20 +1435,24 @@ namespace OsmSharp.iOS.UI
 		/// <param name="pixelsHeight">Pixels height.</param>
 		/// <param name="view">View.</param>
 		/// <param name="projection">Projection.</param>
-		internal void NotifyMapChangeToMarkers(double pixelsWidth, double pixelsHeight, View2D view, 
+		internal void NotifyMapChangeToControls(double pixelsWidth, double pixelsHeight, View2D view, 
 		                                       IProjection projection)
 		{
-			foreach (MapMarker marker in _markers)
+			foreach (var marker in _markers)
 			{
-				this.NotifyMapChangeToMarker(pixelsWidth, pixelsHeight, view, projection, marker);
+				this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
 			}
+            foreach (var control in _controls)
+            {
+                this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
+            }
 		}
 
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.
 		/// </summary>
 		/// <param name="mapMarker"></param>
-		internal void NotifyMarkerChange(MapMarker mapMarker)
+        public void NotifyControlChange(MapControl control)
 		{
 			RectangleF rect = this.Frame;
 			// notify map layout of changes.
@@ -1310,7 +1460,7 @@ namespace OsmSharp.iOS.UI
 			{
 				View2D view = this.CreateView(rect);
 
-				this.NotifyMapChangeToMarker(rect.Width, rect.Height, view, this.Map.Projection, mapMarker);
+				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
 			}
 		}
 
@@ -1322,8 +1472,8 @@ namespace OsmSharp.iOS.UI
 		/// <param name="view"></param>
 		/// <param name="projection"></param>
 		/// <param name="mapMarker"></param>
-		internal void NotifyMapChangeToMarker(double pixelsWidth, double pixelsHeight, View2D view, 
-		                                      IProjection projection, MapMarker mapMarker)
+		internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, 
+		                                      IProjection projection, MapControl mapMarker)
 		{
 			if (mapMarker != null)
 			{
@@ -1389,6 +1539,6 @@ namespace OsmSharp.iOS.UI
 				_renderingThread = null;
 			}
 		}
-	}
+    }
 }
 

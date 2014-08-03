@@ -81,6 +81,22 @@ namespace OsmSharp.WinForms.UI
         }
 
         /// <summary>
+        /// Returns the current height.
+        /// </summary>
+        public int CurrentHeight
+        {
+            get { return this.Width; }
+        }
+
+        /// <summary>
+        /// Returns the current width.
+        /// </summary>
+        public int CurrentWidth
+        {
+            get { return this.Height; }
+        }
+
+        /// <summary>
         /// Holds the map.
         /// </summary>
         private OsmSharp.UI.Map.Map _map;

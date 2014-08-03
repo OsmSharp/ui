@@ -39,6 +39,11 @@ using System.Diagnostics;
 
 namespace System.Collections.Generic
 {
+    /// <summary>
+    /// Sorted dictionary.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     [DebuggerDisplay("Count={Count}")]
     public class SortedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, ICollection, IEnumerable
     {
@@ -107,22 +112,39 @@ namespace System.Collections.Generic
         NodeHelper hlp;
 
         #region Constructor
+
+        /// <summary>
+        /// Creates a new sorted dictionary.
+        /// </summary>
         public SortedDictionary()
             : this((IComparer<TKey>)null)
         {
         }
 
+        /// <summary>
+        /// Creates a new sorted dictionary.
+        /// </summary>
+        /// <param name="comparer"></param>
         public SortedDictionary(IComparer<TKey> comparer)
         {
             hlp = NodeHelper.GetHelper(comparer);
             tree = new RBTree(hlp);
         }
 
+        /// <summary>
+        /// Creates a new sorted dictionary.
+        /// </summary>
+        /// <param name="dic"></param>
         public SortedDictionary(IDictionary<TKey, TValue> dic)
             : this(dic, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new sorted dictionary.
+        /// </summary>
+        /// <param name="dic"></param>
+        /// <param name="comparer"></param>
         public SortedDictionary(IDictionary<TKey, TValue> dic, IComparer<TKey> comparer)
             : this(comparer)
         {
@@ -135,16 +157,27 @@ namespace System.Collections.Generic
 
         #region PublicProperty
 
+        /// <summary>
+        /// Gets the current comparer.
+        /// </summary>
         public IComparer<TKey> Comparer
         {
             get { return hlp.cmp; }
         }
 
+        /// <summary>
+        /// Returns the count.
+        /// </summary>
         public int Count
         {
             get { return (int)tree.Count; }
         }
 
+        /// <summary>
+        /// Returns the value associated with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public TValue this[TKey key]
         {
             get
@@ -163,11 +196,17 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns the key collection.
+        /// </summary>
         public KeyCollection Keys
         {
             get { return new KeyCollection(this); }
         }
 
+        /// <summary>
+        /// Returns the value collection.
+        /// </summary>
         public ValueCollection Values
         {
             get { return new ValueCollection(this); }
@@ -176,6 +215,11 @@ namespace System.Collections.Generic
 
         #region PublicMethod
 
+        /// <summary>
+        /// Adds a new key value pair.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(TKey key, TValue value)
         {
             if (key == null)
@@ -186,16 +230,29 @@ namespace System.Collections.Generic
                 throw new ArgumentException("key already present in dictionary", "key");
         }
 
+        /// <summary>
+        /// Clears all items.
+        /// </summary>
         public void Clear()
         {
             tree.Clear();
         }
 
+        /// <summary>
+        /// Returns true if the given key is in this dictionary.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(TKey key)
         {
             return tree.Lookup(key) != null;
         }
 
+        /// <summary>
+        /// Return true if the given value is in this dictionary.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool ContainsValue(TValue value)
         {
             IEqualityComparer<TValue> vcmp = EqualityComparer<TValue>.Default;
@@ -205,6 +262,11 @@ namespace System.Collections.Generic
             return false;
         }
 
+        /// <summary>
+        /// Copies all key value pairs to this dictionary.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             if (Count == 0)
@@ -220,16 +282,31 @@ namespace System.Collections.Generic
                 array[arrayIndex++] = n.AsKV();
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public Enumerator GetEnumerator()
         {
             return new Enumerator(this);
         }
 
+        /// <summary>
+        /// Removes the item associated with the key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(TKey key)
         {
             return tree.Remove(key) != null;
         }
 
+        /// <summary>
+        /// Gets the value associated with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
             Node n = (Node)tree.Lookup(key);
@@ -398,12 +475,19 @@ namespace System.Collections.Generic
 
         #endregion
 
+        /// <summary>
+        /// Represents a value collection.
+        /// </summary>
         [DebuggerDisplay("Count={Count}")]
         public sealed class ValueCollection : ICollection<TValue>,
             IEnumerable<TValue>, ICollection, IEnumerable
         {
             SortedDictionary<TKey, TValue> _dic;
 
+            /// <summary>
+            /// Creates a new value collection.
+            /// </summary>
+            /// <param name="dic"></param>
             public ValueCollection(SortedDictionary<TKey, TValue> dic)
             {
                 _dic = dic;
@@ -424,6 +508,11 @@ namespace System.Collections.Generic
                 return _dic.ContainsValue(item);
             }
 
+            /// <summary>
+            /// Copies all values into this value collection.
+            /// </summary>
+            /// <param name="array"></param>
+            /// <param name="arrayIndex"></param>
             public void CopyTo(TValue[] array, int arrayIndex)
             {
                 if (Count == 0)
@@ -438,6 +527,9 @@ namespace System.Collections.Generic
                     array[arrayIndex++] = n.value;
             }
 
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
             public int Count
             {
                 get { return _dic.Count; }
@@ -458,6 +550,10 @@ namespace System.Collections.Generic
                 return GetEnumerator();
             }
 
+            /// <summary>
+            /// Returns the enumerator.
+            /// </summary>
+            /// <returns></returns>
             public Enumerator GetEnumerator()
             {
                 return new Enumerator(_dic);
@@ -492,6 +588,9 @@ namespace System.Collections.Generic
                 return new Enumerator(_dic);
             }
 
+            /// <summary>
+            /// Represents an enumerator.
+            /// </summary>
             public struct Enumerator : IEnumerator<TValue>, IEnumerator, IDisposable
             {
                 RBTree.NodeEnumerator host;
@@ -504,11 +603,18 @@ namespace System.Collections.Generic
                     host = dic.tree.GetEnumerator();
                 }
 
+                /// <summary>
+                /// Returns the current value.
+                /// </summary>
                 public TValue Current
                 {
                     get { return current; }
                 }
 
+                /// <summary>
+                /// Move to the next value.
+                /// </summary>
+                /// <returns></returns>
                 public bool MoveNext()
                 {
                     if (!host.MoveNext())
@@ -517,6 +623,9 @@ namespace System.Collections.Generic
                     return true;
                 }
 
+                /// <summary>
+                /// Diposes this enumerator.
+                /// </summary>
                 public void Dispose()
                 {
                     host.Dispose();
@@ -538,12 +647,19 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Represents a key collection.
+        /// </summary>
         [DebuggerDisplay("Count={Count}")]
         public sealed class KeyCollection : ICollection<TKey>,
             IEnumerable<TKey>, ICollection, IEnumerable
         {
             SortedDictionary<TKey, TValue> _dic;
 
+            /// <summary>
+            /// Creates a new key collection.
+            /// </summary>
+            /// <param name="dic"></param>
             public KeyCollection(SortedDictionary<TKey, TValue> dic)
             {
                 _dic = dic;
@@ -569,6 +685,11 @@ namespace System.Collections.Generic
                 return GetEnumerator();
             }
 
+            /// <summary>
+            /// Copies all values to this key collection.
+            /// </summary>
+            /// <param name="array"></param>
+            /// <param name="arrayIndex"></param>
             public void CopyTo(TKey[] array, int arrayIndex)
             {
                 if (Count == 0)
@@ -583,6 +704,9 @@ namespace System.Collections.Generic
                     array[arrayIndex++] = n.key;
             }
 
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
             public int Count
             {
                 get { return _dic.Count; }
@@ -598,6 +722,10 @@ namespace System.Collections.Generic
                 throw new NotSupportedException();
             }
 
+            /// <summary>
+            /// Gets the enumerator.
+            /// </summary>
+            /// <returns></returns>
             public Enumerator GetEnumerator()
             {
                 return new Enumerator(_dic);
@@ -632,6 +760,9 @@ namespace System.Collections.Generic
                 return new Enumerator(_dic);
             }
 
+            /// <summary>
+            /// Represents the enumerator.
+            /// </summary>
             public struct Enumerator : IEnumerator<TKey>, IEnumerator, IDisposable
             {
                 RBTree.NodeEnumerator host;
@@ -644,11 +775,18 @@ namespace System.Collections.Generic
                     host = dic.tree.GetEnumerator();
                 }
 
+                /// <summary>
+                /// Returns the current itme.
+                /// </summary>
                 public TKey Current
                 {
                     get { return current; }
                 }
 
+                /// <summary>
+                /// Move to the next item.
+                /// </summary>
+                /// <returns></returns>
                 public bool MoveNext()
                 {
                     if (!host.MoveNext())
@@ -657,6 +795,9 @@ namespace System.Collections.Generic
                     return true;
                 }
 
+                /// <summary>
+                /// Diposes the current enumerator.
+                /// </summary>
                 public void Dispose()
                 {
                     host.Dispose();
@@ -678,6 +819,9 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Represents a key-value enumerator.
+        /// </summary>
         public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDisposable, IDictionaryEnumerator, IEnumerator
         {
             RBTree.NodeEnumerator host;
@@ -690,11 +834,18 @@ namespace System.Collections.Generic
                 host = dic.tree.GetEnumerator();
             }
 
+            /// <summary>
+            /// Returns the current item.
+            /// </summary>
             public KeyValuePair<TKey, TValue> Current
             {
                 get { return current; }
             }
 
+            /// <summary>
+            /// Move to the next item.
+            /// </summary>
+            /// <returns></returns>
             public bool MoveNext()
             {
                 if (!host.MoveNext())
@@ -703,6 +854,9 @@ namespace System.Collections.Generic
                 return true;
             }
 
+            /// <summary>
+            /// Diposes this enumerator.
+            /// </summary>
             public void Dispose()
             {
                 host.Dispose();

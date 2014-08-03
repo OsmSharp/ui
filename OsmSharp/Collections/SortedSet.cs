@@ -90,8 +90,8 @@ namespace OsmSharp.Collections
 
 
         /// <summary>
-        ///     Gets the System.Collections.Generic.IEqualityComparer<T> object that is used
-        ///     to determine equality for the values in the System.Collections.Generic.SortedSet<T>.
+        ///     Gets the System.Collections.Generic.IEqualityComparer object that is used
+        ///     to determine equality for the values in the System.Collections.Generic.SortedSet.
         /// </summary>
         public IComparer<T> Comparer
         {
@@ -101,13 +101,10 @@ namespace OsmSharp.Collections
             }
         }
 
-        //
-        // Summary:
-        //     Gets the maximum value in the System.Collections.Generic.SortedSet<T>, as
-        //     defined by the comparer.
-        //
-        // Returns:
-        //     The maximum value in the set.
+        /// <summary>
+        ///     Gets the maximum value in the System.Collections.Generic.SortedSet, as
+        ///     defined by the comparer.
+        /// </summary>
         public T Max 
         { 
             get
@@ -116,13 +113,10 @@ namespace OsmSharp.Collections
             }
         }
 
-        //
-        // Summary:
-        //     Gets the minimum value in the System.Collections.Generic.SortedSet<T>, as
-        //     defined by the comparer.
-        //
-        // Returns:
-        //     The minimum value in the set.
+        /// <summary>
+        ///     Gets the minimum value in the System.Collections.Generic.SortedSet, as
+        ///     defined by the comparer.
+        /// </summary>
         public T Min
         {
             get
@@ -223,8 +217,7 @@ namespace OsmSharp.Collections
         }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="SortedSet{T}"/>
-        //     is read-only.
+        /// Gets a value indicating whether the SortedSet is read-only.
         /// </summary>
         public bool IsReadOnly
         {
@@ -252,7 +245,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
-        /// <returns>A System.Collections.Generic.IEnumerator<T> that can be used to iterate through
+        /// <returns>A System.Collections.Generic.IEnumerator that can be used to iterate through
         ///     the collection.</returns>
         public IEnumerator<T> GetEnumerator()
         {
