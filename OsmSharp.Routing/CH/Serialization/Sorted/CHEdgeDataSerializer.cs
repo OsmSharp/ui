@@ -16,10 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Ionic.Zlib;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Tags.Serializer.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
@@ -28,10 +27,9 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf.Meta;
-using OsmSharp.Collections.Tags.Serializer;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Collections.Tags.Serializer.Index;
-using OsmSharp.Collections.Tags.Index;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -117,10 +115,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             DynamicGraphRouterDataSource<CHEdgeData> graph)
         {
             // sort the graph.
-            IDynamicGraph<CHEdgeData> sortedGraph = this.SortGraph(graph);
+            var sortedGraph = this.SortGraph(graph);
 
             // create the regions.
-            SortedDictionary<ulong, List<uint>> regions = new SortedDictionary<ulong, List<uint>>();
+            var regions = new SortedDictionary<ulong, List<uint>>();
             for (uint newVertexId = 1; newVertexId < sortedGraph.VertexCount + 1; newVertexId++)
             {
                 // add to the CHRegions.
@@ -151,15 +149,15 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             // BLOCKS:                  from START_OF_BLOCKS + 4bytes + SIZE_OF_BLOCKS_INDEX until END.
 
             // serialize regions and build their index.
-            CHVertexRegionIndex chRegionIndex = new CHVertexRegionIndex();
+            var chRegionIndex = new CHVertexRegionIndex();
             chRegionIndex.LocationIndex = new int[regions.Count];
             chRegionIndex.RegionIds = new ulong[regions.Count];
             var memoryStream = new MemoryStream();
             int regionIdx = 0;
-            foreach (KeyValuePair<ulong, List<uint>> region in regions)
+            foreach (var region in regions)
             {
                 // serialize.
-                CHVertexRegion chRegion = new CHVertexRegion();
+                var chRegion = new CHVertexRegion();
                 chRegion.Vertices = region.Value.ToArray();
                 _runtimeTypeModel.Serialize(memoryStream, chRegion);
 
@@ -178,23 +176,23 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
             // serialize the blocks and build their index.
             memoryStream = new MemoryStream();
-            List<int> blockLocations = new List<int>();
+            var blockLocations = new List<int>();
             uint vertexId = 1;
             while (vertexId < sortedGraph.VertexCount)
             {
                 uint blockId = vertexId;
-                List<CHArc> blockArcs = new List<CHArc>();
-                List<CHVertex> blockVertices = new List<CHVertex>();
+                var blockArcs = new List<CHArc>();
+                var blockVertices = new List<CHVertex>();
                 while (vertexId < blockId + _blockVertexSize &&
                     vertexId < sortedGraph.VertexCount + 1)
                 { // create this block.
-                    CHVertex chVertex = new CHVertex();
+                    var chVertex = new CHVertex();
                     float latitude, longitude;
                     sortedGraph.GetVertex(vertexId, out latitude, out longitude);
                     chVertex.Latitude = latitude;
                     chVertex.Longitude = longitude;
                     chVertex.ArcIndex = (ushort)(blockArcs.Count);
-                    foreach (KeyValuePair<uint, CHEdgeData> sortedArc in sortedGraph.GetEdges(vertexId))
+                    foreach (var sortedArc in sortedGraph.GetEdges(vertexId))
                     {
                         CHArc chArc = new CHArc();
                         chArc.TargetId = sortedArc.Key;
@@ -256,8 +254,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         public IDynamicGraph<CHEdgeData> SortGraph(IDynamicGraph<CHEdgeData> graph)
         {
-            // also add all downward edges.
-            graph.AddDownwardEdges();
+            //// also add all downward edges.
+            //graph.AddDownwardEdges();
 
             // sort the topologically ordered vertices into bins representing a certain height range.
             var heightBins = new List<uint>[1000];
@@ -315,25 +313,22 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(binVertexId);
                         foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
                         {
-                            if (arc.Value.ToHigher)
-                            {
-                                // get target vertex.
-                                uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
-                                // convert edge.
-                                var newEdge = new CHEdgeData();
-                                newEdge.Direction = arc.Value.Direction;
-                                if (arc.Value.HasContractedVertex)
-                                { // contracted info.
-                                    newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Value.ContractedVertexId, currentBinIds, heightBins);
-                                }
-                                else
-                                { // no contracted info.
-                                    newEdge.ContractedVertexId = 0;
-                                }
-                                newEdge.Tags = arc.Value.Tags;
-                                newEdge.Weight = arc.Value.Weight;
-                                sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
+                            // get target vertex.
+                            uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
+                            // convert edge.
+                            var newEdge = new CHEdgeData();
+                            newEdge.Direction = arc.Value.Direction;
+                            if (arc.Value.HasContractedVertex)
+                            { // contracted info.
+                                newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Value.ContractedVertexId, currentBinIds, heightBins);
                             }
+                            else
+                            { // no contracted info.
+                                newEdge.ContractedVertexId = 0;
+                            }
+                            newEdge.Tags = arc.Value.Tags;
+                            newEdge.Weight = arc.Value.Weight;
+                            sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
                         }
                     }
                 }

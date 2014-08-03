@@ -442,30 +442,30 @@ namespace OsmSharp.Routing.CH.PreProcessing
             return result.ToArray();
         }
 
-        /// <summary>
-        /// Adds all downward edges.
-        /// </summary>
-        /// <param name="graph"></param>
-        public static void AddDownwardEdges(this IDynamicGraph<CHEdgeData> graph)
-        { // add the reverse edges to get a easy depth-first search.
-            for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
-            {
-                List<KeyValuePair<uint, CHEdgeData>> arcs =
-                    new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
-                foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
-                {
-                    if (arc.Value.ToHigher)
-                    {
-                        // create severse edge.
-                        var reverseEdge = new CHEdgeData();
-                        reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
-                        reverseEdge.Weight = arc.Value.Weight;
+        ///// <summary>
+        ///// Adds all downward edges.
+        ///// </summary>
+        ///// <param name="graph"></param>
+        //public static void AddDownwardEdges(this IDynamicGraph<CHEdgeData> graph)
+        //{ // add the reverse edges to get a easy depth-first search.
+        //    for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
+        //    {
+        //        List<KeyValuePair<uint, CHEdgeData>> arcs =
+        //            new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
+        //        foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
+        //        {
+        //            if (arc.Value.ToHigher)
+        //            {
+        //                // create severse edge.
+        //                var reverseEdge = new CHEdgeData();
+        //                reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
+        //                reverseEdge.Weight = arc.Value.Weight;
 
-                        graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
-                    }
-                }
-            }
-        }
+        //                graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
+        //            }
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Returns the arcs that point to higher vertices.

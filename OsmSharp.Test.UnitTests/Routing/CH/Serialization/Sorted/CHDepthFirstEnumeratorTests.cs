@@ -53,8 +53,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                                                                interpreter,
                                                                Vehicle.Car);
 
-            // add the downward edges.
-            original.AddDownwardEdges();
+            //// add the downward edges.
+            //original.AddDownwardEdges();
 
             // enumerate using depth-first search.
             CHDepthFirstEnumerator enumerator =
