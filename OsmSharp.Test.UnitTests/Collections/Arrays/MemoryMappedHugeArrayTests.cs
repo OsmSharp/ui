@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
-            using (var intArray = new MemoryMappedHugeArray<int>(1000))
+            using (var intArray = new MemoryMappedHugeArray<int>(1000, 1024))
             {
                 var intArrayRef = new int[1000];
 

@@ -413,6 +413,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
+        /// <param name="intermediates"></param>
         protected virtual void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
