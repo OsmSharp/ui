@@ -167,7 +167,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             double distanceTotal = 0;
                             var previous = fromCoordinates;
                             GeoCoordinateSimple[] arcValueValueCoordinates;
-                            if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates))
+                            if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                                arcValueValueCoordinates != null)
                             { // calculate distance along all coordinates.
                                 for (int idx = 0; idx < arcValueValueCoordinates.Length; idx++)
                                 {
