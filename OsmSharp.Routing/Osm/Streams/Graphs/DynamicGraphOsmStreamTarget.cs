@@ -67,11 +67,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         private bool _preIndexMode;
 
         /// <summary>
-        /// The bounding box to limit nodes if any.
-        /// </summary>
-        private readonly GeoCoordinateBox _box;
-
-        /// <summary>
         /// Holds the edge comparer.
         /// </summary>
         private readonly IDynamicGraphEdgeComparer<TEdgeData> _edgeComparer;
@@ -119,7 +114,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
             HugeDictionary<long, uint> idTransformations)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null, false)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, false)
         {
 
         }
@@ -132,17 +127,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
-        /// <param name="box"></param>
         /// <param name="collectIntermediates"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations,
-            GeoCoordinateBox box, bool collectIntermediates)
+            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates)
         {
             _dynamicGraph = dynamicGraph;
             _interpreter = interpreter;
             _edgeComparer = edgeComparer;
-            _box = box;
 
             _tagsIndex = tagsIndex;
             _idTransformations = idTransformations;
@@ -190,11 +182,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
-        /// Holds the bounds of the nodes that have been added up until now.
-        /// </summary>
-        private GeoCoordinateBox _bounds = null;
-
-        /// <summary>
         /// Holds the coordinates.
         /// </summary>
         private OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple> _coordinates;
@@ -235,52 +222,30 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // only save the coordinates for relevant nodes.
                     // save the node-coordinates.
                     // add the relevant nodes.
+                    _coordinates[node.Id.Value] = new GeoCoordinateSimple()
+                    {
+                        Latitude = (float)node.Latitude.Value,
+                        Longitude = (float)node.Longitude.Value
+                    };
 
-                    if (_box == null || _box.Contains(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
-                    { // the coordinate is acceptable.
-                        _coordinates[node.Id.Value] = new GeoCoordinateSimple()
-                        {
-                            Latitude = (float)node.Latitude.Value,
-                            Longitude = (float)node.Longitude.Value
-                        };
-                         // TODO: find a way to drop the preindex.
-                         //if (_coordinates.Count == _preIndex.Count)
-                         //{
-                        //    _preIndex.Clear();
-                         //    _preIndex = null;
-                         //}
-
-                        if (_bounds == null)
-                        { // create bounds.
-                            _bounds = new GeoCoordinateBox(
-                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
-                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
-                        }
-                        else
-                        { // expand bounds.
-                            _bounds.ExpandWith(
-                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
-                        }
-
-                        // add the node as a possible restriction.
-                        if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
-                        { // tests quickly if a given node is possibly a restriction.
-                            List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
-                            if (vehicles != null &&
-                                vehicles.Count > 0)
-                            { // add all the restrictions.
-                                uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
-                                uint[] restriction = new uint[] { vertexId };
-                                if (vehicles.Contains(null))
-                                { // restriction is valid for all vehicles.
-                                    _dynamicGraph.AddRestriction(restriction);
-                                }
-                                else
-                                { // restriction is restricted to some vehicles only.
-                                    foreach (Vehicle vehicle in vehicles)
-                                    {
-                                        _dynamicGraph.AddRestriction(vehicle, restriction);
-                                    }
+                    // add the node as a possible restriction.
+                    if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
+                    { // tests quickly if a given node is possibly a restriction.
+                        List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
+                        if (vehicles != null &&
+                            vehicles.Count > 0)
+                        { // add all the restrictions.
+                            uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
+                            uint[] restriction = new uint[] { vertexId };
+                            if (vehicles.Contains(null))
+                            { // restriction is valid for all vehicles.
+                                _dynamicGraph.AddRestriction(restriction);
+                            }
+                            else
+                            { // restriction is restricted to some vehicles only.
+                                foreach (Vehicle vehicle in vehicles)
+                                {
+                                    _dynamicGraph.AddRestriction(vehicle, restriction);
                                 }
                             }
                         }
@@ -293,17 +258,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Holds a list of nodes used twice or more.
         /// </summary>
         private ILongIndex _relevantNodes;
-
-        /// <summary>
-        /// Returns the boundingbox of all accepted nodes.
-        /// </summary>
-        public GeoCoordinateBox Box
-        {
-            get
-            {
-                return _bounds;
-            }
-        }
 
         /// <summary>
         /// Adds a given way.

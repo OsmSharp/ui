@@ -82,7 +82,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
-                    memoryData, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, null, false);
+                    memoryData, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
                 var sorter = new OsmStreamFilterSort();

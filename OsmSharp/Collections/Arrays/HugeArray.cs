@@ -140,6 +140,9 @@ namespace OsmSharp.Collections.Arrays
             }
         }
 
+        /// <summary>
+        /// Diposes of all associated native resources held by this object.
+        /// </summary>
         public void Dispose()
         {
 
