@@ -25,7 +25,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
-using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Routing.Live
 {

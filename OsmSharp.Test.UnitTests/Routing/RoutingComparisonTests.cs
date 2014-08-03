@@ -89,26 +89,26 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
         {
             // build the routing settings.
-            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
+            var data = this.BuildDykstraDataSource(interpreter, embeddedName);
 
             // build the reference router.;
-            Router referenceRouter = this.BuildDykstraRouter(
+            var referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter,
                     new DykstraRoutingLive());
 
             // build the router to be tested.
-            Router router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName, contract);
 
-            RouterPoint referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
-            RouterPoint referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
-            RouterPoint resolvedFrom = router.Resolve(Vehicle.Car, from);
-            RouterPoint resolvedTo = router.Resolve(Vehicle.Car, to);
+            var referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
+            var referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
+            var resolvedFrom = router.Resolve(Vehicle.Car, from);
+            var resolvedTo = router.Resolve(Vehicle.Car, to);
 
-            Route referenceRoute = referenceRouter.Calculate(Vehicle.Car, referenceResolvedFrom, referenceResolvedTo);
-            Route route = router.Calculate(Vehicle.Car, resolvedFrom, resolvedTo);
+            var referenceRoute = referenceRouter.Calculate(Vehicle.Car, referenceResolvedFrom, referenceResolvedTo);
+            var route = router.Calculate(Vehicle.Car, resolvedFrom, resolvedTo);
 
             this.CompareRoutes(referenceRoute, route);
         }
@@ -119,18 +119,18 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TestCompareAll(string embeddedName, bool contract)
         {
             // build the routing settings.
-            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
+            var data = this.BuildDykstraDataSource(interpreter, embeddedName);
 
             // build the reference router.;
-            Router referenceRouter = this.BuildDykstraRouter(
+            var referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter, 
                     new DykstraRoutingLive());
 
             // build the router to be tested.
-            Router router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName, contract);
 
             this.TestCompareAll(data, referenceRouter, router);
         }
@@ -166,7 +166,7 @@ namespace OsmSharp.Test.Unittests.Routing
             }
 
             // limit tests to a fixed number.
-            int maxTestCount = 1000;
+            int maxTestCount = 100;
             int testEveryOther = (resolved.Length * resolved.Length) / maxTestCount;
             testEveryOther = System.Math.Max(testEveryOther, 1);
 
