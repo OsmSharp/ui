@@ -41,6 +41,9 @@ namespace OsmSharp.Osm.PBF.Dense
         /// Consumes a primitive block.
         /// </summary>
         /// <param name="block"></param>
+        /// <param name="ignoreNodes"></param>
+        /// <param name="ignoreWays"></param>
+        /// <param name="ignoreRelations"></param>
         public bool ProcessPrimitiveBlock(PrimitiveBlock block, bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
             bool success = false;
