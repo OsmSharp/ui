@@ -68,6 +68,11 @@ namespace OsmSharp.Routing.Graph
         private IHugeArray<TEdgeData> _edgeData;
 
         /// <summary>
+        /// Holds all shapes associated with edges.
+        /// </summary>
+        private IHugeArray<GeoCoordinateSimple[]> _edgeShapes;
+
+        /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryDynamicGraph()
@@ -556,20 +561,22 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Gets the data associated with the given edge and return true if it exists.
+        /// Gets the index associated with the given edge and return true if it exists.
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="data"></param>
+        /// <param name="edgeDataIdx"></param>
+        /// <param name="edgeDataForward"></param>
         /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
+        private bool GetEdgeIdx(uint vertex1, uint vertex2, out long edgeDataIdx, out bool edgeDataForward)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
             if (_vertices[vertex1] == NO_EDGE)
             { // no edges here!
-                data = default(TEdgeData);
+                edgeDataIdx = -1;
+                edgeDataForward = false;
                 return false;
             }
             var edgeId = _vertices[vertex1];
@@ -578,7 +585,7 @@ namespace OsmSharp.Routing.Graph
             { // keep looping.
                 uint otherVertexId = 0;
                 var currentEdgeId = edgeId;
-                bool forward = true;
+                edgeDataForward = true;
                 if (_edges[edgeId + NODEA] == vertex1)
                 {
                     otherVertexId = _edges[edgeId + NODEB];
@@ -590,19 +597,69 @@ namespace OsmSharp.Routing.Graph
                     otherVertexId = _edges[edgeId + NODEA];
                     edgeId = _edges[edgeId + NEXTNODEB];
                     nextEdgeSlot = edgeId + NEXTNODEB;
-                    forward = false;
+                    edgeDataForward = false;
                 }
                 if (otherVertexId == vertex2)
                 { // this is the edge we need.
-                    data = _edgeData[currentEdgeId / EDGE_SIZE];
-                    if (!forward)
-                    {
-                        data = (TEdgeData)data.Reverse();
-                    }
+                    edgeDataIdx = currentEdgeId / EDGE_SIZE;
                     return true;
                 }
             }
+            edgeDataForward = false;
+            edgeDataIdx = -1;
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the data associated with the given edge and return true if it exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
+        {
+            long edgeDataIdx;
+            bool edgeDataForward;
+            if(this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
+            { // the edge exists.
+                data = _edgeData[edgeDataIdx];
+                if(!edgeDataForward)
+                { // edge is backward.
+                    data = (TEdgeData)data.Reverse();
+                }
+                return true;
+            }
             data = default(TEdgeData);
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the shape associated with the given edge and returns true if it exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            long edgeDataIdx;
+            bool edgeDataForward;
+            if (this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
+            { // the edge exists.
+                shape = _edgeShapes[edgeDataIdx];
+                if (!edgeDataForward && shape != null)
+                { // edge is backward.
+                    var reverse = new GeoCoordinateSimple[shape.Length];
+                    for (int idx = 0; idx < shape.Length; idx++)
+                    {
+                        reverse[idx] = shape[shape.Length - idx - 1];
+                    }
+                    shape = reverse;
+                }
+                return true;
+            }
+            shape = null;
             return false;
         }
 

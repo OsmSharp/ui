@@ -24,6 +24,7 @@ using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -228,6 +229,18 @@ namespace OsmSharp.Routing.Graph
         public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
         {
             return _graph.GetEdge(vertex1, vertex2, out data);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            return _graph.GetEdgeShape(vertex1, vertex2, out shape);
         }
 
         /// <summary>

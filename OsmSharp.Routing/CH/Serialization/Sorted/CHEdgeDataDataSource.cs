@@ -26,6 +26,7 @@ using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -185,6 +186,18 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
         {
             return this.LoadArc(vertex1, vertex2, out data);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            throw new InvalidOperationException();
         }
 
         /// <summary>

@@ -28,6 +28,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
@@ -267,6 +268,18 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="data"></param>
         /// <returns></returns>
         public bool GetEdge(uint vertex1, uint vertex2, out LiveEdge data)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
         {
             throw new NotImplementedException();
         }

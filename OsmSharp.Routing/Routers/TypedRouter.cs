@@ -530,13 +530,14 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add intermediate entries.
-                if (edge.Coordinates != null)
+                var coordinates = this.GetEdgeShape(vehicle, nodePrevious, nodeCurrent);
+                if (coordinates != null)
                 { // loop over coordinates.
-                    for (int coordinateIdx = 0; coordinateIdx < edge.Coordinates.Length; coordinateIdx++)
+                    for (int coordinateIdx = 0; coordinateIdx < coordinates.Length; coordinateIdx++)
                     {
                         var entry = new RoutePointEntry();
-                        entry.Latitude = edge.Coordinates[coordinateIdx].Latitude;
-                        entry.Longitude = edge.Coordinates[coordinateIdx].Longitude;
+                        entry.Latitude = coordinates[coordinateIdx].Latitude;
+                        entry.Longitude = coordinates[coordinateIdx].Longitude;
                         entry.Type = RoutePointEntryType.Along;
                         entry.Tags = currentTags.ConvertFrom();
                         entry.WayFromName = name;
@@ -557,12 +558,13 @@ namespace OsmSharp.Routing.Routers
                         foreach (var neighbour in neighbours)
                         {
                             var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                            if (neighbour.Value.Coordinates != null &&
-                                neighbour.Value.Coordinates.Length > 0)
+                            var neighbourValueCoordinates = this.GetEdgeShape(vehicle, nodeCurrent, neighbour.Key);
+                            if (neighbourValueCoordinates != null &&
+                                neighbourValueCoordinates.Length > 0)
                             { // get the first of the coordinates array.
                                 neighbourKeyCoordinate = new GeoCoordinate(
-                                    neighbour.Value.Coordinates[0].Latitude,
-                                    neighbour.Value.Coordinates[0].Longitude);
+                                    neighbourValueCoordinates[0].Latitude,
+                                    neighbourValueCoordinates[0].Longitude);
                             }
                             if (!consideredNeighbours.Contains(neighbourKeyCoordinate))
                             { // neighbour has not been considered yet.
@@ -608,8 +610,8 @@ namespace OsmSharp.Routing.Routers
             // create the last entry.
             if (vertices.Length > 1)
             {
-                int last_idx = vertices.Length - 1;
-                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[last_idx - 1], vertices[last_idx]);
+                int lastIdx = vertices.Length - 1;
+                var edge = this.GetEdgeData(vehicle, vertices[lastIdx - 1], vertices[lastIdx]);
                 if (!geometryOnly)
                 {
                     currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
@@ -620,13 +622,14 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add intermediate entries.
-                if (edge.Coordinates != null)
+                var coordinates = this.GetEdgeShape(vehicle, vertices[lastIdx - 1], vertices[lastIdx]);
+                if (coordinates != null)
                 { // loop over coordinates.
-                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    for (int idx = 0; idx < coordinates.Length; idx++)
                     {
                         var entry = new RoutePointEntry();
-                        entry.Latitude = edge.Coordinates[idx].Latitude;
-                        entry.Longitude = edge.Coordinates[idx].Longitude;
+                        entry.Latitude = coordinates[idx].Latitude;
+                        entry.Longitude = coordinates[idx].Longitude;
                         entry.Type = RoutePointEntryType.Along;
                         entry.Tags = currentTags.ConvertFrom();
                         entry.WayFromName = name;
@@ -637,7 +640,7 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add last entry.
-                coordinate = this.GetCoordinate(vehicle, vertices[last_idx]);
+                coordinate = this.GetCoordinate(vehicle, vertices[lastIdx]);
                 var last = new RoutePointEntry();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
@@ -680,7 +683,7 @@ namespace OsmSharp.Routing.Routers
                 var arcs = this.GetNeighboursUndirected(vertex1);
 
                 // remove duplicates.
-                arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
+                // arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
 
                 // check if arcs left.
                 if(arcs.Length == 0)
@@ -710,7 +713,8 @@ namespace OsmSharp.Routing.Routers
                         // match path with edge.
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
-                            if(this.MatchArc(vehicle, vertex1, arcs[idx].Value.Coordinates, arcs[idx].Key, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Key);
+                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Key, path))
                             { // arc matches, remove from array.
                                 var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
                                 newArcs.RemoveAt(idx);
@@ -740,7 +744,8 @@ namespace OsmSharp.Routing.Routers
                         // match path with edge.
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
-                            if(this.MatchArc(vehicle, vertex1, arcs[idx].Value.Coordinates, arcs[idx].Key, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Key);
+                            if(this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Key, path))
                             { // arc matches, remove from array.
                                 var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
                                 newArcs.RemoveAt(idx);
@@ -757,12 +762,13 @@ namespace OsmSharp.Routing.Routers
                     { // this is an arc to the previous point.
                         var distance = 0.0;
                         var previous = vertex1Coordinate;
-                        if (arc.Value.Coordinates != null)
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        if (coordinates != null)
                         { // there are intermediates.
-                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            for (int idx = 0; idx < coordinates.Length; idx++)
                             {
-                                var current = new GeoCoordinate(arc.Value.Coordinates[idx].Latitude,
-                                    arc.Value.Coordinates[idx].Longitude);
+                                var current = new GeoCoordinate(coordinates[idx].Latitude,
+                                    coordinates[idx].Longitude);
                                 distance = distance + previous.DistanceReal(current).Value;
                                 previous = current;
                             }
@@ -778,12 +784,13 @@ namespace OsmSharp.Routing.Routers
                     { // this is an arc to the next point.
                         var distance = 0.0;
                         var previous = vertex1Coordinate;
-                        if (arc.Value.Coordinates != null)
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        if (coordinates != null)
                         { // there are intermediates.
-                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            for (int idx = 0; idx < coordinates.Length; idx++)
                             {
-                                var current = new GeoCoordinate(arc.Value.Coordinates[idx].Latitude,
-                                    arc.Value.Coordinates[idx].Longitude);
+                                var current = new GeoCoordinate(coordinates[idx].Latitude,
+                                    coordinates[idx].Longitude);
                                 distance = distance + previous.DistanceReal(current).Value;
                                 previous = current;
                             }
@@ -797,17 +804,18 @@ namespace OsmSharp.Routing.Routers
                     }
                     if (checkIntermediates)
                     { // check all intermeditate coordinates for next/previous.
-                        if (arc.Value.Coordinates != null)
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        if (coordinates != null)
                         { // loop over coordinates.
-                            for (int idx = 0; idx < arc.Value.Coordinates.Length; idx++)
+                            for (int idx = 0; idx < coordinates.Length; idx++)
                             {
-                                if (arc.Value.Coordinates[idx].Latitude == nextCoordinate.Latitude &&
-                                    arc.Value.Coordinates[idx].Longitude == nextCoordinate.Longitude)
+                                if (coordinates[idx].Latitude == nextCoordinate.Latitude &&
+                                    coordinates[idx].Longitude == nextCoordinate.Longitude)
                                 {
                                     indexOfNext = neighbours.Count;
                                 }
-                                if (arc.Value.Coordinates[idx].Latitude == previousCoordinate.Latitude &&
-                                    arc.Value.Coordinates[idx].Longitude == previousCoordinate.Longitude)
+                                if (coordinates[idx].Latitude == previousCoordinate.Latitude &&
+                                    coordinates[idx].Longitude == previousCoordinate.Longitude)
                                 {
                                     indexOfPrevious = neighbours.Count;
                                 }
@@ -878,35 +886,6 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        /// An equality comparer to filter doubles from an arcs-list/array.
-        /// </summary>
-        protected class ArcEqualityComparer : IEqualityComparer<KeyValuePair<uint, TEdgeData>>
-        {
-            /// <summary>
-            /// Returns true when two edges are the same.
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <returns></returns>
-            public bool Equals(KeyValuePair<uint, TEdgeData> x, KeyValuePair<uint, TEdgeData> y)
-            {
-                return x.Key == y.Key &&
-                    x.Value.EqualsGeometrically(y.Value);
-            }
-
-            /// <summary>
-            /// Returns a hashcode for each edge.
-            /// </summary>
-            /// <param name="obj"></param>
-            /// <returns></returns>
-            public int GetHashCode(KeyValuePair<uint, TEdgeData> obj)
-            {
-                return obj.Key.GetHashCode();
-            }
-        }
-
-
-        /// <summary>
         /// Returns all the arcs representing neighbours for the given vertex.
         /// </summary>
         /// <param name="vertex1"></param>
@@ -926,61 +905,14 @@ namespace OsmSharp.Routing.Routers
         protected virtual IDynamicGraphEdgeData GetEdgeData(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                List<TEdgeData> edges = new List<TEdgeData>();
-                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetEdges(Convert.ToUInt32(vertex1));
-                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
-                {
-                    if (arc.Key == vertex2)
-                    {
-                        edges.Add(arc.Value);
-                    }
-                }
-                if(edges.Count == 1)
-                { // only one edge found: perfect!
-                    return edges[0];
-                }
-                else if(edges.Count > 1)
-                { // more than one edge found: damn, we need to calculate the shortest one.
-                    double shortest = double.MaxValue;
-                    TEdgeData shortestEdge = default(TEdgeData);
-                    var start = this.GetCoordinate(Vehicle.Car, vertex1);
-                    foreach(var edge in edges)
-                    {
-                        double distance = 0;
-                        var previous = start;
-                        if(edge.Coordinates != null)
-                        {
-                            for(int idx = 0; idx < edge.Coordinates.Length; idx++)
-                            {
-                                var current = new GeoCoordinate(edge.Coordinates[idx].Latitude,
-                                    edge.Coordinates[idx].Longitude);
-                                distance  =distance + current.DistanceReal(previous).Value;
-                                previous = current;
-                            }
-                        }
-                        distance = distance + this.GetCoordinate(Vehicle.Car, vertex2).DistanceReal(previous).Value;
-
-                        if(distance < shortest)
-                        { // found new shortest edge.
-                            shortest = distance;
-                            shortestEdge = edge;
-                        }
-                    }
-                    return shortestEdge;
-                }
-                arcs = _dataGraph.GetEdges(Convert.ToUInt32(vertex2));
-                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
-                {
-                    if (arc.Key == vertex1)
-                    {
-                        var edge = new TypedRouterResolvedGraph.RouterResolvedGraphEdge(
-                            arc.Value.Tags, !arc.Value.Forward);
-                        return edge;
-                    }
+                TEdgeData data;
+                if(_dataGraph.GetEdge((uint)vertex1, (uint)vertex2, out data))
+                { // edge was found, yay!
+                    return data;
                 }
             }
             else
@@ -992,6 +924,42 @@ namespace OsmSharp.Routing.Routers
                     if (arc.Key == vertex2)
                     {
                         return arc.Value;
+                    }
+                }
+            }
+            throw new Exception(string.Format("Edge {0}->{1} not found!",
+                vertex1, vertex2));
+        }
+
+        /// <summary>
+        /// Returns the edge shape between the two neighbouring vertices.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <returns></returns>
+        protected virtual GeoCoordinateSimple[] GetEdgeShape(Vehicle vehicle, long vertex1, long vertex2)
+        {
+            // get the resolved graph for the given profile.
+            var graph = this.GetForProfile(vehicle);
+
+            if (vertex1 > 0 && vertex2 > 0)
+            { // none of the vertixes was a resolved vertex.
+                GeoCoordinateSimple[] shape;
+                if (_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
+                { // edge was found, yay!
+                    return shape;
+                }
+            }
+            else
+            { // one of the vertices was a resolved vertex.
+                // edge should be in the resolved graph.
+                var arcs = graph.GetEdges(vertex1);
+                foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
+                {
+                    if (arc.Key == vertex2)
+                    {
+                        return arc.Value.Coordinates;
                     }
                 }
             }
@@ -1259,7 +1227,7 @@ namespace OsmSharp.Routing.Routers
                 else if(result.IntermediateIndex.HasValue)
                 { // an exact match with an intermediate coordinate.
                     return this.AddResolvedPointExact(vehicle, result.Vertex1.Value, result.Vertex2.Value, new GeoCoordinate(
-                        result.Edge.Coordinates[result.IntermediateIndex.Value].Latitude, result.Edge.Coordinates[result.IntermediateIndex.Value].Longitude), result.Edge);
+                        result.Coordinates[result.IntermediateIndex.Value].Latitude, result.Coordinates[result.IntermediateIndex.Value].Longitude), result.Edge);
                 }
                 else
                 { // the result is on an edge.
@@ -1503,12 +1471,13 @@ namespace OsmSharp.Routing.Routers
             // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
             PathSegment<long> path = null;
             var intermediates = new List<long>();
-            if (edgeData.Coordinates != null)
+            var edgeCoordinates = this.GetEdgeShape(vehicle, vertex1, vertex2);
+            if (edgeCoordinates != null)
             { // the resolved edge has intermediate coordinates.
                 RouterPoint intermediaRouterpoint;
-                for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if (this.GetRouterPoint(new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude),
+                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude),
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1606,17 +1575,17 @@ namespace OsmSharp.Routing.Routers
                     graph.AddVertex(vertex2, latitude2, longitude2);
                 }
 
-                if (edgeData.Coordinates != null)
+                if (edgeCoordinates != null)
                 { // add intermediate points.
                     // create the route manually.
-                    vertices = new long[2 + edgeData.Coordinates.Length];
+                    vertices = new long[2 + edgeCoordinates.Length];
                     vertices[0] = vertex1;
 
                     long previousVertex = vertex1;
-                    for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                    for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                     {
                         long intermediateId = this.GetNextIntermediateId();
-                        graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                        graph.AddVertex(intermediateId, edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude);
                         graph.AddEdge(previousVertex, intermediateId,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  edgeData.Forward));
@@ -1627,7 +1596,7 @@ namespace OsmSharp.Routing.Routers
 
                         // add as a resolved point.
                         this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
-                            edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude)));
+                            edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
                     }
@@ -1685,12 +1654,13 @@ namespace OsmSharp.Routing.Routers
             // calculate a shortest path but make sure that is aligned with the coordinates in the edge.
             PathSegment<long> path = null;
             var intermediates = new List<long>();
-            if(edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
+            var edgeCoordinates = this.GetEdgeShape(vehicle, vertex1, vertex2);
+            if (edgeCoordinates != null && edgeCoordinates.Length > 0)
             { // the resolved edge has intermediate coordinates.
                 RouterPoint intermediaRouterpoint;
-                for(int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if(this.GetRouterPoint(new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude), 
+                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude), 
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1774,17 +1744,17 @@ namespace OsmSharp.Routing.Routers
                     graph.AddVertex(vertex2, latitude2, longitude2);
                 }
 
-                if (edgeData.Coordinates != null && edgeData.Coordinates.Length > 0)
+                if (edgeCoordinates != null && edgeCoordinates.Length > 0)
                 { // add intermediate points.
                     // create the route manually.
-                    vertices = new long[2 + edgeData.Coordinates.Length];
+                    vertices = new long[2 + edgeCoordinates.Length];
                     vertices[0] = vertex1;
 
                     long previousVertex = vertex1;
-                    for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                    for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                     {
                         long intermediateId = this.GetNextIntermediateId();
-                        graph.AddVertex(intermediateId, edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                        graph.AddVertex(intermediateId, edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude);
                         graph.AddEdge(previousVertex, intermediateId,
                             new TypedRouterResolvedGraph.RouterResolvedGraphEdge(edgeData.Tags,
                                                                                  edgeData.Forward));
@@ -1795,7 +1765,7 @@ namespace OsmSharp.Routing.Routers
 
                         // add as a resolved point.
                         this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
-                            edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude)));
+                            edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
                     }
@@ -1825,11 +1795,11 @@ namespace OsmSharp.Routing.Routers
             float latitude, longitude;
             var previous = new GeoCoordinate(latitude1, longitude1);
             GeoCoordinate current;
-            if (edgeData.Coordinates != null)
+            if (edgeCoordinates != null)
             {
-                for (int idx = 0; idx < edgeData.Coordinates.Length; idx++)
+                for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    current = new GeoCoordinate(edgeData.Coordinates[idx].Latitude, edgeData.Coordinates[idx].Longitude);
+                    current = new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude);
                     totalDistance = totalDistance + current.DistanceReal(previous).Value;
                     previous = current;
                 }

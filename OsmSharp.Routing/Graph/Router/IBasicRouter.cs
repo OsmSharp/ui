@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Graph.Router
 {
@@ -163,6 +164,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="matcher">The matcher to match to edges.</param>
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <param name="verticesOnly">Only match vertices.</param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters);
@@ -193,8 +195,10 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="distance"></param>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="position"></param>
-        public SearchClosestResult(double distance, uint vertex1, uint vertex2, int intermediateIndex, TEdgeData edge)
+        /// <param name="intermediateIndex"></param>
+        /// <param name="edge"></param>
+        /// <param name="coordinates"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, int intermediateIndex, TEdgeData edge, GeoCoordinateSimple[] coordinates)
             : this()
         {
             this.Distance = distance;
@@ -202,6 +206,7 @@ namespace OsmSharp.Routing.Graph.Router
             this.Vertex2 = vertex2;
             this.IntermediateIndex = intermediateIndex;
             this.Edge = edge;
+            this.Coordinates = coordinates;
         }
 
         /// <summary>
@@ -211,7 +216,9 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="position"></param>
-        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position, TEdgeData edge)
+        /// <param name="edge"></param>
+        /// <param name="coordinates"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position, TEdgeData edge, GeoCoordinateSimple[] coordinates)
             : this()
         {
             this.Distance = distance;
@@ -219,6 +226,7 @@ namespace OsmSharp.Routing.Graph.Router
             this.Vertex2 = vertex2;
             this.Position = position;
             this.Edge = edge;
+            this.Coordinates = coordinates;
         }
 
         /// <summary>
@@ -250,5 +258,10 @@ namespace OsmSharp.Routing.Graph.Router
         /// The edge data.
         /// </summary>
         public TEdgeData Edge { get; private set; }
+
+        /// <summary>
+        /// The coordinates.
+        /// </summary>
+        public GeoCoordinateSimple[] Coordinates { get; set; }
     }
 }

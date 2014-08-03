@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Logging;
 using OsmSharp.Units.Distance;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH
 {
@@ -1419,7 +1420,7 @@ namespace OsmSharp.Routing.CH
             var closestWithoutMatch = new SearchClosestResult<CHEdgeData>(double.MaxValue, 0);
             if (!verticesOnly)
             {
-                foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
+                foreach (var arc in arcs)
                 {
                     // test the two points.
                     float fromLatitude, fromLongitude;
@@ -1430,7 +1431,11 @@ namespace OsmSharp.Routing.CH
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceEstimate(fromCoordinates).Value;
-
+                        GeoCoordinateSimple[] coordinates;
+                        if(!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                        {
+                            coordinates = null;
+                        }
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
@@ -1467,14 +1472,13 @@ namespace OsmSharp.Routing.CH
                         }
 
                         // get the uncontracted arc from the contracted vertex.
-                        KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> uncontracted = arc;
+                        var uncontracted = arc;
                         while (uncontracted.Value.Value.HasContractedVertex)
                         { // try to inflate the contracted vertex.
-                            KeyValuePair<uint, CHEdgeData>[] contractedArcs =
-                                graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
+                            var contractedArcs = graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
 
                             bool found = false;
-                            foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)
+                            foreach (var contractedArc in contractedArcs)
                             { // loop over all contracted arcs.
                                 if (contractedArc.Key == uncontracted.Key)
                                 { // the edge is and edge to the target.
@@ -1545,7 +1549,7 @@ namespace OsmSharp.Routing.CH
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value);
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinates);
 
                                     // try and match.
                                     //if(matcher.Match(_

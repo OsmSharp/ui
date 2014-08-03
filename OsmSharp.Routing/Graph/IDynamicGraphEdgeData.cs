@@ -37,11 +37,6 @@ namespace OsmSharp.Routing.Graph
         bool RepresentsNeighbourRelations { get; }
 
         /// <summary>
-        /// Returns intermidiate coordinates (if any).
-        /// </summary>
-        GeoCoordinateSimple[] Coordinates { get; }
-
-        /// <summary>
         /// Returns the tags identifier.
         /// </summary>
         uint Tags
@@ -54,13 +49,6 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <returns></returns>
         IDynamicGraphEdgeData Reverse();
-
-        /// <summary>
-        /// Returns true if the given edge equals this edge geometrically.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        bool EqualsGeometrically(IDynamicGraphEdgeData other);
     }
 
     /// <summary>
