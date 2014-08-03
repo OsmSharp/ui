@@ -67,7 +67,7 @@ namespace OsmSharp
         /// <typeparam name="T"></typeparam>
         /// <param name="list">The list to copy from.</param>
         /// <param name="index">The start of the elements </param>
-        /// <param name="length"></param>
+        /// <param name="count"></param>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">The index to start copying to in the array.</param>
         public static void CopyToReverse<T>(this List<T> list, int index, T[] array, int arrayIndex, int count)
@@ -85,7 +85,7 @@ namespace OsmSharp
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The array to copy from.</param>
         /// <param name="index">The start of the elements </param>
-        /// <param name="length"></param>
+        /// <param name="count"></param>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">The index to start copying to in the array.</param>
         public static void CopyTo<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
@@ -101,7 +101,7 @@ namespace OsmSharp
         /// Copies all elements from the list into the given array starting at the given index but in reverse order.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list">The array to copy from.</param>
+        /// <param name="source">The array to copy from.</param>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">The index to start copying to in the array.</param>
         public static void CopyToReverse<T>(this T[] source, T[] array, int arrayIndex)
@@ -115,7 +115,7 @@ namespace OsmSharp
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The array to copy from.</param>
         /// <param name="index">The start of the elements </param>
-        /// <param name="length"></param>
+        /// <param name="count"></param>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">The index to start copying to in the array.</param>
         public static void CopyToReverse<T>(this T[] source, int index, T[] array, int arrayIndex, int count)

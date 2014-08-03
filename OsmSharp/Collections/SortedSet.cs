@@ -223,8 +223,7 @@ namespace OsmSharp.Collections
         }
 
         /// <summary>
-        /// Gets a value indicating whether the <see cref="SortedSet{T}"/>
-        //     is read-only.
+        /// Gets a value indicating whether the SortedSet is read-only.
         /// </summary>
         public bool IsReadOnly
         {
