@@ -228,6 +228,7 @@ namespace OsmSharp.Collections
             /// Serializes the given object table to the stream.
             /// </summary>
             /// <param name="stream"></param>
+            /// <param name="objectTable"></param>
             public void Serialize(Stream stream, ObjectTable<Type> objectTable)
             {
                 // [OBJECT_COUNT][OBJECT_DATA]
@@ -278,7 +279,6 @@ namespace OsmSharp.Collections
             /// Deserializes one object.
             /// </summary>
             /// <param name="stream"></param>
-            /// <param name="value"></param>
             /// <returns></returns>
             public abstract Type DeserializeObject(Stream stream);
         }
