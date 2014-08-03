@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap (OSM) SDK
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -16,14 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using Android.Views;
-using Android.Widget;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Renderer;
 using System;
+using MonoTouch.UIKit;
+using OsmSharp.UI.Renderer;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Android.UI.Controls
+namespace OsmSharp.iOS.UI.Controls
 {
     /// <summary>
     /// A wrapper around a view that can appear on top of the MapView.
@@ -33,19 +32,15 @@ namespace OsmSharp.Android.UI.Controls
         /// <summary>
         /// Returns the view baseclass.
         /// </summary>
-        public abstract View BaseView
+        public abstract UIView BaseView
         {
             get;
         }
 
         /// <summary>
-        /// Returns the handle.
+        /// holds pointer to user-object
         /// </summary>
-        public abstract IntPtr Handle
-        {
-            get;
-        }
-
+        public virtual object Tag { get; set; }
 
         /// <summary>
         /// Gets or sets the location.
@@ -58,15 +53,16 @@ namespace OsmSharp.Android.UI.Controls
         }
 
         /// <summary>
-        /// holds pointer to user-object
-        /// </summary>
-        public virtual object Tag { get; set; }
-
-        /// <summary>
         /// Attaches this control to the given control host.
         /// </summary>
         /// <param name="controlHost">Map view.</param>
         internal abstract void AttachTo(IMapControlHost controlHost);
+
+        /// <summary>
+        /// Detaches this control to the given control host.
+        /// </summary>
+        /// <param name="controlHost">Control host.</param>
+        internal abstract void DetachFrom(IMapControlHost controlHost);
 
         /// <summary>
         /// Sets layout.
@@ -78,18 +74,14 @@ namespace OsmSharp.Android.UI.Controls
         /// <returns></returns>
         internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
 
-        /// <summary>
-        /// Disposes of all native resources.
-        /// </summary>
         public abstract void Dispose();
     }
 
     /// <summary>
-    /// A wrapper around a view that can appear on top of the MapView.
+    /// Map control.
     /// </summary>
-    /// <typeparam name="TView"></typeparam>
     public class MapControl<TView> : MapControl
-        where TView : View
+        where TView : UIView
     {
         /// <summary>
         /// Holds the view being displayed.
@@ -120,47 +112,7 @@ namespace OsmSharp.Android.UI.Controls
             _location = location;
             _alignment = alignment;
 
-            _view.SetMinimumWidth(width);
-            _view.SetMinimumHeight(height);
-
-            var layoutParams = new FrameLayout.LayoutParams(width, height + 5);
-            layoutParams.LeftMargin = -1;
-            layoutParams.TopMargin = -1;
-            layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-            _view.LayoutParameters = layoutParams;
-        }
-
-        /// <summary>
-        /// Returns the view.
-        /// </summary>
-        public TView View
-        {
-            get
-            {
-                return _view;
-            }
-        }
-
-        /// <summary>
-        /// Returns the base view.
-        /// </summary>
-        public override View BaseView
-        {
-            get
-            {
-                return this.View;
-            }
-        }
-
-        /// <summary>
-        /// Returns the handle.
-        /// </summary>
-        public override IntPtr Handle
-        {
-            get
-            {
-                return _view.Handle;
-            }
+            _view.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
         }
 
         /// <summary>
@@ -172,22 +124,18 @@ namespace OsmSharp.Android.UI.Controls
         /// Gets or sets the location.
         /// </summary>
         /// <value>The location.</value>
-        public override GeoCoordinate Location
-        {
-            get
-            {
+        public override GeoCoordinate Location {
+            get {
                 return _location;
             }
-            set
-            {
+            set {
                 _location = value;
 
-                if (_controlHost != null && _location != null)
-                {
-                    _controlHost.NotifyControlChange(this);
+                if (_controlHost != null) {
+                    _controlHost.NotifyControlChange (this);
                 }
             }
-        }
+        } 
 
         /// <summary>
         /// Gets or sets the alignment.
@@ -210,6 +158,28 @@ namespace OsmSharp.Android.UI.Controls
         }
 
         /// <summary>
+        /// Returns the view.
+        /// </summary>
+        public TView View
+        {
+            get
+            {
+                return _view;
+            }
+        }
+
+        /// <summary>
+        /// Returns the base view.
+        /// </summary>
+        public override UIView BaseView
+        {
+            get
+            {
+                return this.View;
+            }
+        }
+
+        /// <summary>
         /// Attaches this control to the given control host.
         /// </summary>
         /// <param name="controlHost">Map view.</param>
@@ -219,14 +189,12 @@ namespace OsmSharp.Android.UI.Controls
         }
 
         /// <summary>
-        /// Returns the current control host.
+        /// Detaches this control from the given control host.
         /// </summary>
-        protected IMapControlHost Host
+        /// <param name="controlHost">The control host.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
         {
-            get
-            {
-                return _controlHost;
-            }
+            _controlHost = null;
         }
 
         /// <summary>
@@ -238,32 +206,22 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="projection">Projection.</param>
         internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
-            if (this.Location != null)
-            { // only set layout if there is a location set.
-                var projected = projection.ToPixel(this.Location);
-                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+            double[] projected = projection.ToPixel (this.Location);
+            double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
 
-                // set the new location depending on the size of the image and the alignment parameter.
-                double leftMargin = locationPixel[0];
-                double topMargin = locationPixel[1];
-
-                leftMargin = locationPixel[0] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
-
-                switch (_alignment)
-                {
-                    case MapControlAlignmentType.Center:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
-                        break;
-                    case MapControlAlignmentType.CenterTop:
-                        break;
-                    case MapControlAlignmentType.CenterBottom:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
-                }
-
-                (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
-                (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
+            // set the new location depending on the size of the image and the alignment parameter.
+            double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0;
+            double topMargin = locationPixel [1];
+            switch (_alignment) {
+                case MapControlAlignmentType.CenterTop:
+                    topMargin = locationPixel [1] + this.View.Frame.Height / 2.0;
+                    break;
+                case MapControlAlignmentType.CenterBottom:
+                    topMargin = locationPixel [1] - this.View.Frame.Height / 2.0;
+                    break;
             }
+            this.View.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
+
             return true;
         }
 

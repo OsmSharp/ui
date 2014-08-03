@@ -390,7 +390,7 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Notifies the map change.
         /// </summary>
-        /// <param name="pixelWidth"></param>
+        /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <param name="view"></param>
         /// <param name="projection"></param>
@@ -560,6 +560,22 @@ namespace OsmSharp.Android.UI
         public float Density
         {
             get { return _mapView.Density; }
+        }
+
+        /// <summary>
+        /// Returns the current width.
+        /// </summary>
+        public int CurrentWidth
+        {
+            get { return _mapView.Width; }
+        }
+
+        /// <summary>
+        /// Returns the current height.
+        /// </summary>
+        public int CurrentHeight
+        {
+            get { return _mapView.Height; }
         }
 
         #region IMapView implementation

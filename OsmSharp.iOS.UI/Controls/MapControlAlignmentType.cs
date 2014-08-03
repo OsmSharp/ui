@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2014 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,21 +16,26 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.UI;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Renderer;
+using System;
 
-namespace OsmSharp.Android.UI.Controls
+namespace OsmSharp.iOS.UI.Controls
 {
-    /// <summary>
-    /// Abstract definition of a map marker host.
-    /// </summary>
-    public interface IMapControlHost : IMapView
-    {        
-        /// <summary>
-        /// Notifies this host that the given marker has changed.
-        /// </summary>
-        /// <param name="marker">Marker.</param>
-        void NotifyControlChange(MapControl marker);
-    }
+	/// <summary>
+	/// Map marker alignment type.
+	/// </summary>
+	public enum MapControlAlignmentType
+	{
+		/// <summary>
+        /// The center of the control is aligned with the position of the control.
+		/// </summary>
+		Center,
+		/// <summary>
+        /// The center of the bottom of the control is aligned with the position of the control.
+		/// </summary>
+		CenterBottom,
+		/// <summary>
+        /// The center of the top of the control is aligined with the position of the control.
+		/// </summary>
+		CenterTop
+	}
 }

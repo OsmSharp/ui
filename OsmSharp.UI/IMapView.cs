@@ -95,6 +95,24 @@ namespace OsmSharp.UI
         View2D CurrentView { get; }
 
         /// <summary>
+        /// Gets the current width.
+        /// </summary>
+        /// <value>The width.</value>
+        int CurrentWidth
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the current height.
+        /// </summary>
+        /// <value>The height.</value>
+        int CurrentHeight
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the density.
         /// </summary>
         float Density { get; }

@@ -18,7 +18,7 @@
 
 using System;
 
-namespace OsmSharp.Android.UI
+namespace OsmSharp.Android.UI.Controls
 {
 	/// <summary>
 	/// Map control alignment type.
