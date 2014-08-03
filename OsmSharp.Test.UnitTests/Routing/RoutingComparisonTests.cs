@@ -229,18 +229,6 @@ namespace OsmSharp.Test.Unittests.Routing
                     var referenceEntry = reference.Entries[entryIdx];
                     var routeEntry = route.Entries[entryIdx];
 
-                    //Assert.AreEqual(referenceEntry.WayFromName, routeEntry.WayFromName);
-                    //if(referenceEntry.WayFromNames != null)
-                    //{ // there are way names.
-                    //    for(int namesIdx = 0; namesIdx < referenceEntry.WayFromNames.Length; namesIdx++)
-                    //    {
-                    //        Assert.AreEqual(referenceEntry.WayFromNames[idx], routeEntry.WayFromNames[idx]);
-                    //    }
-                    //}
-                    //else
-                    //{ // there are no way names.
-                    //    Assert.IsNull(routeEntry.WayFromNames);
-                    //}
                     if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
                     { // there are way names.
                         Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);
