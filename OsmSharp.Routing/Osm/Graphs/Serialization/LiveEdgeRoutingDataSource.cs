@@ -16,26 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Structures;
+using OsmSharp.Math.Structures.QTree;
+using OsmSharp.Osm.Tiles;
+using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Tiles;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math.Structures;
-using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
     /// <summary>
     /// A router data source that dynamically loads data.
     /// </summary>
-    internal class V2RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
+    internal class RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
     {
         /// <summary>
         /// Holds all graph data.
@@ -72,10 +71,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="v1RoutingDataSourceSerializer"></param>
         /// <param name="vehicles"></param>
         /// <param name="initialCapacity"></param>
-        internal V2RouterLiveEdgeDataSource(
+        internal RouterLiveEdgeDataSource(
             Stream stream, bool compressed,
-            V2RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
-            int zoom, V2RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
+            RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
+            int zoom, RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
             IEnumerable<string> vehicles,
             int initialCapacity = 1000)
         {
@@ -394,7 +393,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Holds the routing serializer.
         /// </summary>
-        private readonly V2RoutingDataSourceLiveEdgeSerializer _routingDataSourceSerializer;
+        private readonly RoutingDataSourceLiveEdgeSerializer _routingDataSourceSerializer;
 
         /// <summary>
         /// Holds the tile metas.
@@ -518,7 +517,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 var edge = new Osm.Graphs.LiveEdge();
                                 edge.Forward = tileData.Arcs[vertexIdx].Forward[idx];
                                 edge.Tags = tags;
-                                var coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
+                                var coordinates = RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
                                     tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
                                 edge.Distance = tileData.Arcs[vertexIdx].Distances[idx];
 

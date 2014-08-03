@@ -50,10 +50,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
     public class RoutingSerializationTests
     {
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the V2 routing serializer.
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2DataSourceTest()
+        public void RoutingSerializationDataSourceTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -140,10 +140,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2RoutingTest()
+        public void RoutingSerializationRoutingTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -164,7 +164,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -231,10 +231,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2CompressedRoutingTest()
+        public void RoutingSerializationCompressedRoutingTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -255,7 +255,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(true);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -322,10 +322,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2RoutingComparisonTest()
+        public void RoutingSerializationRoutingComparisonTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
@@ -339,7 +339,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                interpreter);
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
