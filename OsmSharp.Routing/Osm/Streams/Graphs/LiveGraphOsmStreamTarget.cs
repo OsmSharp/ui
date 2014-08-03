@@ -135,7 +135,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                this.DynamicGraph.AddEdge(from, to, edgeData, intermediates.ToArray(), this.EdgeComparer);
+                GeoCoordinateSimple[] intermediatesArray = null;
+                if(intermediates != null)
+                {
+                    intermediatesArray = intermediates.ToArray();
+                }
+                this.DynamicGraph.AddEdge(from, to, edgeData, intermediatesArray, this.EdgeComparer);
             }
         }
 

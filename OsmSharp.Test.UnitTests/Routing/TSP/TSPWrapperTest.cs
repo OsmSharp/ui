@@ -1,22 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
-using OsmSharp.Routing;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2014 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using NUnit.Framework;
-using System.IO;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Routing.Graph;
 using OsmSharp.IO.DelimitedFiles;
-using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.TSP;
 using OsmSharp.Routing.TSP.Genetic;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Osm.Streams.Filters;
-using OsmSharp.Osm.Xml.Streams;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.TSP
 {
@@ -33,14 +43,10 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperVehicle()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
-                                                    Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.csv"),
-                                                    false,
-                                                    Vehicle.Car);
+            Route route = this.CalculateTSP(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.csv"),
+                false, Vehicle.Car);
 
             Assert.IsNotNull(route);
             Assert.AreEqual(Vehicle.Car, route.Vehicle);
@@ -53,14 +59,10 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperMetric()
         {
             // calculate TSP.
-            var route = this.CalculateTSP(Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
-                                                    Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.csv"),
-                                                    false,
-                                                    Vehicle.Car);
+            var route = this.CalculateTSP(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.csv"),
+                false, Vehicle.Car);
 
             Assert.IsNotNull(route);
             Assert.AreNotEqual(0, route.TotalDistance);
@@ -74,14 +76,10 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperOne()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
-                                                    Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_one.csv"),
-                                                    false,
-                                                    Vehicle.Car);
+            Route route = this.CalculateTSP(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_one.csv"),
+                false, Vehicle.Car);
 
             Assert.IsNotNull(route);
         }
@@ -93,14 +91,10 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperTwo()
         {
             // calculate TSP.
-            var route = this.CalculateTSP(Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
-                                                    Assembly.GetExecutingAssembly()
-                                                            .GetManifestResourceStream(
-                                                                @"OsmSharp.Test.Unittests.tsp_two.csv"),
-                                                    false,
-                                                    Vehicle.Car);
+            var route = this.CalculateTSP(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_two.csv"),
+                false, Vehicle.Car);
 
             Assert.IsNotNull(route);
         }
