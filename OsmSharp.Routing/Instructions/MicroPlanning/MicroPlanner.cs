@@ -38,14 +38,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Creates a new planner.
         /// </summary>
-        public MicroPlanner(ILanguageGenerator language_generator, IRoutingInterpreter interpreter)
+        public MicroPlanner(ILanguageGenerator languageGenerator, IRoutingInterpreter interpreter)
         {
             _interpreter = interpreter;
 
             this.InitializeMachines();
             this.InitializeMessagesStack();
 
-            this.SentencePlanner = new SentencePlanner(language_generator);
+            this.SentencePlanner = new SentencePlanner(languageGenerator);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 }
 
                 // show the latest success anyway.
-                if (_latest_final >= 0)
+                if (_latestFinal >= 0)
                 { // do the latest succes.
-                    this.Success(_latest_machine);
+                    this.Success(_latestMachine);
 
                     // get the next object.
                     if (_current != null)
@@ -162,6 +162,17 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             _machines.Add(new RoundaboutMachine(this));
         }
 
+        /// <summary>
+        /// Returns the machines list.
+        /// </summary>
+        public List<MicroPlannerMachine> Machines
+        {
+            get
+            {
+                return _machines;
+            }
+        }
+
         #endregion
 
         #region Planning Queue
@@ -174,22 +185,22 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Holds the current list of invalid machines.
         /// </summary>
-        private List<MicroPlannerMachine> _invalid_machines;
+        private List<MicroPlannerMachine> _invalidMachines;
         
         /// <summary>
         /// Holds the current list of machines that reached a final machine.
         /// </summary>
-        private List<MicroPlannerMachine> _valid_machines;
+        private List<MicroPlannerMachine> _validMachines;
 
         /// <summary>
         /// Holds the position of the latest final.
         /// </summary>
-        private int _latest_final;
+        private int _latestFinal;
 
         /// <summary>
         /// Holds the machine that finaled latest.
         /// </summary>
-        private MicroPlannerMachine _latest_machine;
+        private MicroPlannerMachine _latestMachine;
 
         /// <summary>
         /// Initializes the messages stack.
@@ -204,11 +215,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// </summary>
         private void ResetMessagesStack(bool reset_errors)
         {
-            _invalid_machines = new List<MicroPlannerMachine>();
-            _valid_machines = new List<MicroPlannerMachine>();
+            _invalidMachines = new List<MicroPlannerMachine>();
+            _validMachines = new List<MicroPlannerMachine>();
             _messagesStack = new List<MicroPlannerMessage>();
-            _latest_final = -1;
-            _latest_machine = null;
+            _latestFinal = -1;
+            _latestMachine = null;
         }
 
         /// <summary>
@@ -227,17 +238,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="message"></param>
         private void Plan(MicroPlannerMessage message)
         {
-            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", TraceEventType.Information,
-                message.ToString());
-
             // add the message to the stack.
             _messagesStack.Add(message);
 
             // put the message through the machine.
             foreach (MicroPlannerMachine machine in _machines)
             {
-                if (!_invalid_machines.Contains(machine)
-                    && !_valid_machines.Contains(machine))
+                if (!_invalidMachines.Contains(machine)
+                    && !_validMachines.Contains(machine))
                 { // only use machines that are still valid!
                     machine.Consume(message);
 
@@ -262,13 +270,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="machine"></param>
         internal void Success(MicroPlannerMachine machine)
         {
-            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", TraceEventType.Information,
-                machine.ToString());
-
             // reset the current point/arc.
-            if (_messagesStack.Count > _latest_final + 1)
+            if (_messagesStack.Count > _latestFinal + 1)
             {
-                MicroPlannerMessage message = _messagesStack[_latest_final];
+                MicroPlannerMessage message = _messagesStack[_latestFinal];
                 if (message is MicroPlannerMessageArc)
                 {
                     _current = (message as MicroPlannerMessageArc).Arc;
@@ -300,7 +305,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             int priority = machine.Priority;
             foreach (MicroPlannerMachine other_machine in _machines)
             {
-                if (!_invalid_machines.Contains(other_machine))
+                if (!_invalidMachines.Contains(other_machine))
                 {
                     if (other_machine.Priority > priority)
                     { // not sure this machine's final state is actually the final state.
@@ -320,20 +325,20 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="messages"></param>
         internal void ReportFinal(MicroPlannerMachine machine, IList<MicroPlannerMessage> messages)
         {
-            if (_latest_final == _messagesStack.Count - 1)
+            if (_latestFinal == _messagesStack.Count - 1)
             { // check if a machine with the same match length has higher priority.
-                if (_latest_machine.Priority >= machine.Priority)
+                if (_latestMachine.Priority >= machine.Priority)
                 { // the current machine has the same match length and has higher or the same priority.
                     return;
                 }
             }
 
             // update the latest final value.
-            _latest_final = _messagesStack.Count - 1;
-            _latest_machine = machine;
+            _latestFinal = _messagesStack.Count - 1;
+            _latestMachine = machine;
 
             // add the machine to the valid machines.
-            _valid_machines.Add(machine);
+            _validMachines.Add(machine);
 
             // check and see if all other machines with higher priority are invalid.
             this.CheckMachine(machine);
@@ -346,18 +351,18 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         internal void ReportReset(MicroPlannerMachine machine)
         {
             // the machine cannot be used anymore until a reset occurs.
-            _invalid_machines.Add(machine);
+            _invalidMachines.Add(machine);
 
             // check if the latest machine is now successfull.
-            if (_latest_machine != null)
+            if (_latestMachine != null)
             {
-                this.CheckMachine(_latest_machine);
+                this.CheckMachine(_latestMachine);
             }
 
             // check to see if not all machine are invalid! 
-            if (_invalid_machines.Count == _machines.Count)
+            if (_invalidMachines.Count == _machines.Count)
             {
-                if(_latest_machine == null)
+                if(_latestMachine == null)
                 { // all machine went in error!
                     throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messagesStack);
                 }
