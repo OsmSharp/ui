@@ -132,6 +132,13 @@ namespace OsmSharp.UI
 	/// </summary>
 	public static class MapViewDelegates 
 	{
+        /// <summary>
+        /// Delegate used for map touches.
+        /// </summary>
+        /// <param name="mapView"></param>
+        /// <param name="newZoom"></param>
+        /// <param name="newTilt"></param>
+        /// <param name="newCenter"></param>
 		public delegate void MapTouchedDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
 	}
 }
