@@ -803,7 +803,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0}:{1}",
+            return string.Format("{0}={1}",
                 this.Key, this.Value);
         }
     }
