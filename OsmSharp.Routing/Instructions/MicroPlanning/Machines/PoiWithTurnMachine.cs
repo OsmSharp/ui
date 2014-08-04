@@ -115,26 +115,30 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedArc previousArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            var poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            var previousArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
 
             // get the pois list.
-            List<Routing.ArcAggregation.Output.PointPoi> pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
+            var pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
             // get the angle from the pois point.
-            RelativeDirection direction = poisPoint.Angle;
+            var direction = poisPoint.Angle;
 
             // calculate the box.
-            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+            var coordinates = new List<GeoCoordinate>();
             foreach (Routing.ArcAggregation.Output.PointPoi poi in pois)
             {
                 coordinates.Add(poi.Location);
             }
             coordinates.Add(poisPoint.Location);
-            GeoCoordinateBox box = new GeoCoordinateBox(coordinates.ToArray());
+            var box = new GeoCoordinateBox(coordinates.ToArray());
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GeneratePoi(poisPoint.EntryIdx, box, pois, direction);
+            var metaData = new Dictionary<string, object>();
+            metaData["direction"] = direction;
+            metaData["pois"] = pois;
+            metaData["type"] = "poi";
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, poisPoint.EntryIdx, box, pois);
         }
 
         public override bool Equals(object obj)

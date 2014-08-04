@@ -237,7 +237,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             var languageGenerator = new LanguageTestGenerator();
 
             // generate instructions.
-            List<Instruction> instructions = InstructionGenerator.Generate(route, new OsmRoutingInterpreter(), languageGenerator);
+            var instructions = InstructionGenerator.Generate(route, new OsmRoutingInterpreter(), languageGenerator);
             Assert.AreEqual(3, instructions.Count);
             Assert.AreEqual("GenerateRoundabout:1", instructions[1].Text);
         }

@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
     /// <summary>
     /// Plans aggregated messages into instructions.
     /// </summary>
-    internal class MicroPlanner
+    public class MicroPlanner
     {
         /// <summary>
         /// Holds the routing interpreter.

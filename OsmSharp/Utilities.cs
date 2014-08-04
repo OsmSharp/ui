@@ -622,6 +622,26 @@ namespace OsmSharp
             dataStream.Dispose();
             return deserializedValue;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryGetValue<T>(this Dictionary<string, object> dictionary, string key, out T value)
+        {
+            object valueObject;
+            if(dictionary.TryGetValue(key, out valueObject))
+            {
+                value = (T)valueObject;
+                return true;
+            }
+            value = default(T);
+            return false;
+        }
     }
 
     /// <summary>

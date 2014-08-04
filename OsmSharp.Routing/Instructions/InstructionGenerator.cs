@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.Instructions
         public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter)
         {
             return InstructionGenerator.Generate(route, interpreter,
-                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.EnglishLanguageGenerator());
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.Instructions
         public static List<Instruction> Generate(AggregatedPoint aggregatePoint, IRoutingInterpreter interpreter)
         {
 			return InstructionGenerator.Generate(aggregatePoint, interpreter,
-                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.EnglishLanguageGenerator());
         }
 
         /// <summary>

@@ -28,220 +28,113 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
     /// <summary>
     /// Language test generator.
     /// </summary>
-    public class LanguageTestGenerator : ILanguageGenerator
+    public class LanguageTestGenerator : LanguageGenerator
     {
         /// <summary>
-        /// Direct turn instruction.
+        /// Direction turn instruction.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="streetTo"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="street"></param>
         /// <param name="direction"></param>
-        /// <param name="list"></param>
+        /// <param name="pois"></param>
         /// <returns></returns>
-        public Instruction GenerateDirectTurn(Instruction instruction,
-            int streetCountBeforeTurn,
-            TagsCollectionBase streetTo,
-            RelativeDirectionEnum direction,
-            List<PointPoi> list)
+        protected override string GenerateDirectTurn(int countBefore, TagsCollectionBase street, RelativeDirection direction, List<PointPoi> pois)
         {
-            instruction.Text = string.Format("GenerateDirectTurn:{0}_{1}_{2}",
-                                             streetCountBeforeTurn, direction.ToString(), list.Count);
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("streetCountBeforeTurn", streetCountBeforeTurn);
-            instruction.Extras.Add("streetTo", streetTo);
-            instruction.Extras.Add("direction", direction);
-            instruction.Extras.Add("list", list);
-
-            return instruction;
+            return string.Format("GenerateDirectTurn:{0}_{1}_{2}", countBefore, direction.Direction.ToString(), pois.Count);
         }
 
         /// <summary>
         /// Generates an indirect turn.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="streetCountTurn"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="streetTo"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="street"></param>
         /// <param name="direction"></param>
-        /// <param name="list"></param>
+        /// <param name="pois"></param>
         /// <returns></returns>
-        public Instruction GenerateIndirectTurn(Instruction instruction,
-            int streetCountTurn,
-            int streetCountBeforeTurn,
-            TagsCollectionBase streetTo,
-            RelativeDirectionEnum direction,
-            List<PointPoi> list)
+        protected override string GenerateIndirectTurn(int countBefore, TagsCollectionBase street, RelativeDirection direction, List<PointPoi> pois)
         {
-            instruction.Text = string.Format("GenerateIndirectTurn:{0}_{1}_{2}_{3}",
-                                             streetCountTurn, streetCountBeforeTurn,
-                                             direction.ToString(), list.Count);
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("streetCountTurn", streetCountTurn);
-            instruction.Extras.Add("streetCountBeforeTurn", streetCountBeforeTurn);
-            instruction.Extras.Add("streetTo", streetTo);
-            instruction.Extras.Add("direction", direction);
-            instruction.Extras.Add("list", list);
-
-            return instruction;
+            return string.Format("GenerateIndirectTurn:{0}_{1}_{2}", countBefore, direction.Direction.ToString(), pois.Count);
         }
 
         /// <summary>
-        /// Generates poi instruction.
+        /// Generates POI instruction.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="list"></param>
         /// <param name="direction"></param>
+        /// <param name="pois"></param>
         /// <returns></returns>
-        public Instruction GeneratePoi(Instruction instruction, List<PointPoi> list,
-            RelativeDirectionEnum? direction)
+        protected override string GeneratePOI(RelativeDirection direction, List<PointPoi> pois)
         {
-            if (direction.HasValue)
+            if (direction != null)
             {
-                instruction.Text = string.Format("GeneratePoi:{0}_{1}",
-                    list.Count, direction.Value.ToString());
+                return string.Format("GeneratePoi:{0}_{1}", pois.Count, direction.Direction.ToString());
             }
             else
             {
-                instruction.Text = string.Format("GeneratePoi:{0}",
-                                                 list.Count);
+                return string.Format("GeneratePoi:{0}", pois.Count);
             }
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("direction", direction);
-            instruction.Extras.Add("list", list);
-
-            return instruction;
         }
 
         /// <summary>
         /// Generates a direct follow turn.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="streetTo"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="street"></param>
         /// <param name="direction"></param>
-        /// <param name="list"></param>
+        /// <param name="pois"></param>
         /// <returns></returns>
-        public Instruction GenerateDirectFollowTurn(Instruction instruction,
-            int streetCountBeforeTurn,
-            TagsCollectionBase streetTo,
-            RelativeDirectionEnum direction,
-            List<PointPoi> list)
+        protected override string GenerateDirectFollowTurn(int countBefore, TagsCollectionBase street, RelativeDirection direction, List<PointPoi> pois)
         {
-            instruction.Text = string.Format("GenerateDirectFollowTurn:{0}_{1}_{2}",
-                                             streetCountBeforeTurn, direction.ToString(), list.Count);
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("streetCountBeforeTurn", streetCountBeforeTurn);
-            instruction.Extras.Add("streetTo", streetTo);
-            instruction.Extras.Add("direction", direction);
-            instruction.Extras.Add("list", list);
-
-            return instruction;
+            return string.Format("GenerateDirectFollowTurn:{0}_{1}_{2}", countBefore, direction.Direction.ToString(), pois.Count);
         }
 
         /// <summary>
         /// Generates an indirect follow turn.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="streetCountTurn"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="streetTo"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="street"></param>
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        public Instruction GenerateIndirectFollowTurn(Instruction instruction,
-            int streetCountTurn,
-            int streetCountBeforeTurn,
-            TagsCollectionBase streetTo,
-            RelativeDirectionEnum direction,
-            List<PointPoi> list)
+        protected override string GenerateIndirectFollowTurn(int countBefore, TagsCollectionBase street, RelativeDirection direction, List<PointPoi> list)
         {
-            instruction.Text = string.Format("GenerateDirectFollowTurn:{0}_{1}_{2}",
-                                             streetCountBeforeTurn, streetCountBeforeTurn,
-                                             direction.ToString(), list.Count);
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("streetCountTurn", streetCountTurn);
-            instruction.Extras.Add("streetCountBeforeTurn", streetCountBeforeTurn);
-            instruction.Extras.Add("streetTo", streetTo);
-            instruction.Extras.Add("direction", direction);
-            instruction.Extras.Add("list", list);
-
-            return instruction;
+            return string.Format("GenerateDirectFollowTurn:{0}_{1}_{2}",
+                                             countBefore, direction.Direction.ToString(), list.Count);
         }
 
         /// <summary>
         /// Generates an immidiate turn.
         /// </summary>
-        /// <param name="instruction"></param>
-        /// <param name="firstStreetCountTo"></param>
-        /// <param name="firstStreetTo"></param>
+        /// <param name="countBefore"></param>
+        /// <param name="firstStreet"></param>
         /// <param name="firstDirection"></param>
-        /// <param name="secondStreetTo"></param>
+        /// <param name="secondStreet"></param>
         /// <param name="secondDirection"></param>
+        /// <param name="pois"></param>
         /// <returns></returns>
-        public Instruction GenerateImmidiateTurn(Instruction instruction,
-            int firstStreetCountTo,
-            TagsCollectionBase firstStreetTo,
-            OsmSharp.Math.Geo.Meta.RelativeDirection firstDirection,
-            TagsCollectionBase secondStreetTo,
-            RelativeDirection secondDirection)
+        protected override string GenerateImmidiateTurn(int countBefore, TagsCollectionBase firstStreet, RelativeDirection firstDirection, TagsCollectionBase secondStreet, RelativeDirection secondDirection, List<PointPoi> pois)
         {
-            instruction.Text = string.Format("GenerateImmidiateTurn:{0}_{1}_{2}_{3}",
-                                             firstStreetCountTo, firstDirection,
-                                             firstDirection.ToString(),
-                                             secondDirection.ToString());
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("firstStreetCountTo", firstStreetCountTo);
-            instruction.Extras.Add("firstStreetTo", firstStreetTo);
-            instruction.Extras.Add("firstDirection", firstDirection);
-            instruction.Extras.Add("secondStreetTo", secondStreetTo);
-            instruction.Extras.Add("secondDirection", secondDirection);
-
-            return instruction;
+            return string.Format("GenerateImmidiateTurn:{0}_{1}_{2}_{3}", countBefore, firstDirection, firstDirection.Direction.ToString(), secondDirection.Direction.ToString());
         }
 
         /// <summary>
         /// Generates a roundabout instruction.
         /// </summary>
-        /// <param name="instruction"></param>
         /// <param name="count"></param>
-        /// <param name="nextStreet"></param>
+        /// <param name="street"></param>
         /// <returns></returns>
-        public Instruction GenerateRoundabout(Instruction instruction,
-            int count, TagsCollectionBase nextStreet)
+        protected override string GenerateRoundabout(int count, TagsCollectionBase street)
         {
-            instruction.Text = string.Format("GenerateRoundabout:{0}",
-                                             count);
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("count", count);
-            instruction.Extras.Add("nextStreet", nextStreet);
-
-            return instruction;
+            return string.Format("GenerateRoundabout:{0}", count);
         }
 
         /// <summary>
         /// Generates a simple turn instruction.
         /// </summary>
-        /// <param name="instruction"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public Instruction GenerateSimpleTurn(Instruction instruction,
-            RelativeDirectionEnum direction)
+        protected override string GenerateTurn(RelativeDirection direction)
         {
-            instruction.Text = string.Format("GenerateSimpleTurn:{0}",
-                                             direction.ToString());
-
-            instruction.Extras = new Dictionary<string, object>();
-            instruction.Extras.Add("direction", direction);
-
-            return instruction;
+            return string.Format("GenerateSimpleTurn:{0}", direction.ToString());
         }
     }
 }

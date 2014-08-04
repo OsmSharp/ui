@@ -149,8 +149,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         public override void Succes()
         {
             // get the last arc and the last point.
-            AggregatedArc latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
-            AggregatedPoint latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            var latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            var latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
 
             // count the number of streets in the same turning direction as the turn
             // that was found.
@@ -165,13 +165,18 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             }
 
             // construct the box indicating the location of the resulting find by this machine.
-            GeoCoordinate point1 = latestPoint.Location;
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            var point1 = latestPoint.Location;
+            var box = new GeoCoordinateBox(
                 new GeoCoordinate(point1.Latitude - 0.001f, point1.Longitude - 0.001f),
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GenerateRoundabout(latestPoint.EntryIdx, box, count - 1, latestPoint.Next.Tags);
+            var metaData = new Dictionary<string, object>();
+            metaData["count"] = count - 1;
+            metaData["street"] = latestPoint.Next.Tags;
+            metaData["pois"] = latestPoint.Points;
+            metaData["type"] = "roundabout";
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
         }
 
         public override bool Equals(object obj)
