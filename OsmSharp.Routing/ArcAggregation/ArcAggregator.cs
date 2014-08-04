@@ -401,6 +401,6 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <summary>
         /// Gets or sets the route point entry.
         /// </summary>
-        public RouteSegments Entry { get; set; }
+        public RouteSegment Entry { get; set; }
     }
 }

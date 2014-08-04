@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
 
             var route1 = new Route();
             route1.Vehicle = Vehicle.Car.UniqueName;
-            var route1entry1 = new RouteSegments();
+            var route1entry1 = new RouteSegment();
             route1entry1.Distance = -1;
             route1entry1.Latitude = 50.98624687752063f;
             route1entry1.Longitude = 2.902620979360633f;
@@ -84,7 +84,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry1.Name = string.Empty;
             route1entry1.Names = null;
 
-            RouteSegments route1entry2 = new RouteSegments();
+            RouteSegment route1entry2 = new RouteSegment();
             route1entry2.Distance = -1;
             route1entry2.Latitude = 50.98624687752063f;
             route1entry2.Longitude = 2.9027639004471673f;
@@ -116,7 +116,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry2.Name = string.Empty;
             route1entry2.Names = null;
 
-            RouteSegments route1entry3 = new RouteSegments();
+            RouteSegment route1entry3 = new RouteSegment();
             route1entry3.Distance = -1;
             route1entry3.Latitude = 50.986156907620895f;
             route1entry3.Longitude = 2.9027639004471673f;
@@ -148,7 +148,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry3.Name = string.Empty;
             route1entry3.Names = null;
 
-            RouteSegments route1entry4 = new RouteSegments();
+            RouteSegment route1entry4 = new RouteSegment();
             route1entry4.Distance = -1;
             route1entry4.Latitude = 50.9861564788317f;
             route1entry4.Longitude = 2.902620884621392f;
@@ -180,7 +180,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry4.Name = string.Empty;
             route1entry4.Names = null;
 
-            route1.Segments = new RouteSegments[4];
+            route1.Segments = new RouteSegment[4];
             route1.Segments[0] = route1entry1;
             route1.Segments[1] = route1entry2;
             route1.Segments[2] = route1entry3;
@@ -235,7 +235,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
 
             var route1 = new Route();
             route1.Vehicle = Vehicle.Car.UniqueName;
-            var route1entry0 = new RouteSegments();
+            var route1entry0 = new RouteSegment();
             route1entry0.Distance = -1;
             route1entry0.Latitude = 50.98624687752063f;
             route1entry0.Longitude = 2.902620979360633f;
@@ -267,7 +267,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry0.Name = string.Empty;
             route1entry0.Names = null;
 
-            RouteSegments route1entry1 = new RouteSegments();
+            RouteSegment route1entry1 = new RouteSegment();
             route1entry1.Distance = -1;
             route1entry1.Latitude = 50.98624687752063f;
             route1entry1.Longitude = 2.902620979360633f;
@@ -299,7 +299,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry1.Name = string.Empty;
             route1entry1.Names = null;
 
-            RouteSegments route1entry2 = new RouteSegments();
+            RouteSegment route1entry2 = new RouteSegment();
             route1entry2.Distance = -1;
             route1entry2.Latitude = 50.98624687752063f;
             route1entry2.Longitude = 2.9027639004471673f;
@@ -331,7 +331,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry2.Name = string.Empty;
             route1entry2.Names = null;
 
-            RouteSegments route1entry3 = new RouteSegments();
+            RouteSegment route1entry3 = new RouteSegment();
             route1entry3.Distance = -1;
             route1entry3.Latitude = 50.986156907620895f;
             route1entry3.Longitude = 2.9027639004471673f;
@@ -363,7 +363,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry3.Name = string.Empty;
             route1entry3.Names = null;
 
-            RouteSegments route1entry4 = new RouteSegments();
+            RouteSegment route1entry4 = new RouteSegment();
             route1entry4.Distance = -1;
             route1entry4.Latitude = 50.9861564788317f;
             route1entry4.Longitude = 2.902620884621392f;
@@ -395,7 +395,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry4.Name = string.Empty;
             route1entry4.Names = null;
 
-            route1.Segments = new RouteSegments[5];
+            route1.Segments = new RouteSegment[5];
             route1.Segments[0] = route1entry0;
             route1.Segments[1] = route1entry1;
             route1.Segments[2] = route1entry2;

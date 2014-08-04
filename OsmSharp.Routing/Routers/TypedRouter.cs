@@ -440,14 +440,14 @@ namespace OsmSharp.Routing.Routers
             {
                 route = new Route();
                 route.Vehicle = vehicle.UniqueName;
-                RouteSegments[] segments;
+                RouteSegment[] segments;
                 if (vertices.Length > 0)
                 {
                     segments = this.GenerateEntries(vehicle, vertices, geometryOnly);
                 }
                 else
                 {
-                    segments = new RouteSegments[0];
+                    segments = new RouteSegment[0];
                 }
 
                 // create the from routing point.
@@ -477,7 +477,7 @@ namespace OsmSharp.Routing.Routers
                 route.Segments = segments;
 
                 // calculate metrics.
-                if (!geometryOnly)
+                if (!geometryOnly && _metricsCalculator != null)
                 { // calculate metrics.
                     route.Metrics = RouteMetric.ConvertFrom(_metricsCalculator.Calculate(route));
                 }
@@ -493,23 +493,26 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual RouteSegments[] GenerateEntries(Vehicle vehicle, Tuple<long, double>[] vertices, bool geometryOnly)
+        protected virtual RouteSegment[] GenerateEntries(Vehicle vehicle, Tuple<long, double>[] vertices, bool geometryOnly)
         {
             // create an entries list.
-            var entries = new List<RouteSegments>();
+            var entries = new List<RouteSegment>();
 
             // create the first entry.
             var coordinate = this.GetCoordinate(vehicle, vertices[0].Item1);
-            var first = new RouteSegments();
+            var first = new RouteSegment();
             first.Latitude = (float)coordinate.Latitude;
             first.Longitude = (float)coordinate.Longitude;
             first.Type = RouteSegmentType.Start;
             first.Name = null;
             first.Names = null;
-
+            first.Distance = 0;
+            first.Time = 0;
             entries.Add(first);
 
             // create all the other entries except the last one.
+            var distance = 0.0;
+            var time = 0.0;
             var nodePrevious = vertices[0];
             TagsCollectionBase currentTags = new TagsCollection();
             var name = string.Empty;
@@ -517,44 +520,88 @@ namespace OsmSharp.Routing.Routers
             for (int idx = 1; idx < vertices.Length - 1; idx++)
             {
                 // get all the data needed to calculate the next route entry.
-                var nodeCurrent = vertices[idx];
                 var nodePreviousCoordinate = coordinate;
-                var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1].Item1);
+                var nodeCurrent = vertices[idx];
+                var nodeCurrentCoordinate = this.GetCoordinate(vehicle, nodeCurrent.Item1);
                 var nodeNext = vertices[idx + 1];
-                var edge = this.GetEdgeData(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
+                var nodeNextCoordinate = this.GetCoordinate(vehicle, nodeNext.Item1);
+
+                // get coordinates and calculate distance.
+                var coordinates = this.GetEdgeShape(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
+                var localDistance = 0.0;
+                if (!geometryOnly)
+                { // also get all metadata.
+                    if (coordinates != null)
+                    { // there are intermediates.
+                        var prevCoordinate = nodePreviousCoordinate;
+                        for (int coordinateIdx = 0; coordinateIdx < coordinates.Length; coordinateIdx++)
+                        {
+                            var curCoordinate = new GeoCoordinate(coordinates[coordinateIdx].Latitude, coordinates[coordinateIdx].Longitude);
+                            localDistance = localDistance + prevCoordinate.DistanceReal(curCoordinate).Value;
+                            prevCoordinate = curCoordinate;
+                        }
+                        localDistance = localDistance + prevCoordinate.DistanceReal(nodeCurrentCoordinate).Value;
+                    }
+                    else
+                    { // there are no intermediates.
+                        localDistance = nodeCurrentCoordinate.DistanceReal(nodePreviousCoordinate).Value;
+                    }
+                }
 
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
+                var beforeTime = time;
+                var beforeDistance = distance;
+                var localTime = 0.0;
+                distance = distance + localDistance;
+                if(_router.WeightType == RouterWeightType.Time)
+                { // if the router uses time as a metric, use this for the route too.
+                    localTime = nodeCurrent.Item2 - time;
+                    time = nodeCurrent.Item2;
+                }
 
                 // STEP1: Get the names.
                 if(!geometryOnly)
-                { // also ge all metadata.
+                { // also get all metadata.
+                    var edge = this.GetEdgeData(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
                     currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
                     name = _interpreter.EdgeInterpreter.GetName(currentTags);
                     names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
                 }
 
                 // add intermediate entries.
-                var coordinates = this.GetEdgeShape(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
-                if (coordinates != null)
+                if(coordinates != null)
                 { // loop over coordinates.
+                    var curDistance = 0.0;
+                    var prevCoordinate = nodePreviousCoordinate;
                     for (int coordinateIdx = 0; coordinateIdx < coordinates.Length; coordinateIdx++)
                     {
-                        var entry = new RouteSegments();
+                        var entry = new RouteSegment();
                         entry.Latitude = coordinates[coordinateIdx].Latitude;
                         entry.Longitude = coordinates[coordinateIdx].Longitude;
                         entry.Type = RouteSegmentType.Along;
                         entry.Tags = currentTags.ConvertFrom();
                         entry.Name = name;
                         entry.Names = names.ConvertFrom();
-
+                        if (!geometryOnly)
+                        { // also get all metadata.
+                            var curCoordinate = new GeoCoordinate(coordinates[coordinateIdx].Latitude, coordinates[coordinateIdx].Longitude);
+                            curDistance = curDistance + prevCoordinate.DistanceReal(curCoordinate).Value;
+                            entry.Distance = curDistance;
+                            if (_router.WeightType == RouterWeightType.Time)
+                            { // if the router uses time as a metric, use this for the route too.
+                                entry.Time = localTime * (curDistance / localDistance);
+                            }
+                            prevCoordinate = curCoordinate;
+                        }
                         entries.Add(entry);
                     }
                 }
 
                 // STEP2: Get the side streets
-                var sideStreets = new List<RouteSegmentBranch>();
+                RouteSegmentBranch[] sideStreetsArray = null;
                 if (!geometryOnly)
                 {
+                    var sideStreets = new List<RouteSegmentBranch>();
                     var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent.Item1, nodePrevious.Item1, nodeNext.Item1);
                     var consideredNeighbours = new HashSet<GeoCoordinate>();
                     if (neighbours.Count > 0)
@@ -591,20 +638,20 @@ namespace OsmSharp.Routing.Routers
                                 sideStreets.Add(sideStreet);
                             }
                         }
+                        sideStreetsArray = sideStreets.ToArray();
                     }
                 }
 
-                // create the route entry.
-                var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent.Item1);
-
-                var routeEntry = new RouteSegments();
-                routeEntry.Latitude = (float)nextCoordinate.Latitude;
-                routeEntry.Longitude = (float)nextCoordinate.Longitude;
-                routeEntry.SideStreets = sideStreets.ToArray();
+                var routeEntry = new RouteSegment();
+                routeEntry.Latitude = (float)nodeCurrentCoordinate.Latitude;
+                routeEntry.Longitude = (float)nodeCurrentCoordinate.Longitude;
+                routeEntry.SideStreets = sideStreetsArray;
                 routeEntry.Tags = currentTags.ConvertFrom();
                 routeEntry.Type = RouteSegmentType.Along;
                 routeEntry.Name = name;
                 routeEntry.Names = names.ConvertFrom();
+                routeEntry.Distance = distance;
+                routeEntry.Time = time;
                 entries.Add(routeEntry);
 
                 // set the previous node.
@@ -631,7 +678,7 @@ namespace OsmSharp.Routing.Routers
                 { // loop over coordinates.
                     for (int idx = 0; idx < coordinates.Length; idx++)
                     {
-                        var entry = new RouteSegments();
+                        var entry = new RouteSegment();
                         entry.Latitude = coordinates[idx].Latitude;
                         entry.Longitude = coordinates[idx].Longitude;
                         entry.Type = RouteSegmentType.Along;
@@ -645,7 +692,7 @@ namespace OsmSharp.Routing.Routers
 
                 // add last entry.
                 coordinate = this.GetCoordinate(vehicle, vertices[lastIdx].Item1);
-                var last = new RouteSegments();
+                var last = new RouteSegment();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RouteSegmentType.Stop;

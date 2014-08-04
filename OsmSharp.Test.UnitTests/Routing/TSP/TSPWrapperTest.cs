@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
                 false, Vehicle.Car);
 
             Assert.IsNotNull(route);
-            Assert.AreEqual(Vehicle.Car, route.Vehicle);
+            Assert.AreEqual(Vehicle.Car.UniqueName, route.Vehicle);
         }
 
         /// <summary>

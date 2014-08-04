@@ -39,8 +39,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         {
             var route = new Route();
             route.Vehicle = Vehicle.Car.UniqueName;
-            route.Segments = new RouteSegments[3];
-            route.Segments[0] = new RouteSegments()
+            route.Segments = new RouteSegment[3];
+            route.Segments[0] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = 50.999f,
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 SideStreets = null,
                 Type = RouteSegmentType.Start
             };
-            route.Segments[1] = new RouteSegments()
+            route.Segments[1] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = 51,
@@ -77,7 +77,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[2] = new RouteSegments()
+            route.Segments[2] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = 51,
@@ -123,8 +123,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             var route = new Route();
             route.Vehicle = Vehicle.Car.UniqueName;
-            route.Segments = new RouteSegments[5];
-            route.Segments[0] = new RouteSegments()
+            route.Segments = new RouteSegment[5];
+            route.Segments[0] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)southSouth.Latitude,
@@ -139,7 +139,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 SideStreets = null,
                 Type = RouteSegmentType.Start
             };
-            route.Segments[1] = new RouteSegments()
+            route.Segments[1] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)south.Latitude,
@@ -171,7 +171,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[2] = new RouteSegments()
+            route.Segments[2] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)east.Latitude,
@@ -193,7 +193,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[3] = new RouteSegments()
+            route.Segments[3] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)north.Latitude,
@@ -214,7 +214,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[4] = new RouteSegments()
+            route.Segments[4] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)northNorth.Latitude,
@@ -261,8 +261,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             var route = new Route();
             route.Vehicle = Vehicle.Car.UniqueName;
-            route.Segments = new RouteSegments[6];
-            route.Segments[0] = new RouteSegments()
+            route.Segments = new RouteSegment[6];
+            route.Segments[0] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)southSouth.Latitude,
@@ -277,7 +277,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 SideStreets = null,
                 Type = RouteSegmentType.Start
             };
-            route.Segments[1] = new RouteSegments()
+            route.Segments[1] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)southSouth.Latitude,
@@ -289,7 +289,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 SideStreets = null,
                 Type = RouteSegmentType.Along
             };
-            route.Segments[2] = new RouteSegments()
+            route.Segments[2] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)south.Latitude,
@@ -321,7 +321,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[3] = new RouteSegments()
+            route.Segments[3] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)east.Latitude,
@@ -343,7 +343,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[4] = new RouteSegments()
+            route.Segments[4] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)north.Latitude,
@@ -364,7 +364,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                     }
                 }
             };
-            route.Segments[5] = new RouteSegments()
+            route.Segments[5] = new RouteSegment()
             {
                 Distance = 0,
                 Latitude = (float)northNorth.Latitude,

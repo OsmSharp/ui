@@ -61,7 +61,7 @@ namespace OsmSharp.Routing
         /// An ordered array of route entries reprenting the details of the route to the next
         /// route point.
         /// </summary>
-        public RouteSegments[] Segments { get; set; }
+        public RouteSegment[] Segments { get; set; }
 
         /// <summary>
         /// The time this route was created.
@@ -159,8 +159,8 @@ namespace OsmSharp.Routing
             if (route1.Vehicle != route2.Vehicle) { throw new ArgumentException("Route vechicles do not match!"); }
 
             // get the end/start point.
-            RouteSegments end = route1.Segments[route1.Segments.Length - 1];
-            RouteSegments start = route2.Segments[0];
+            RouteSegment end = route1.Segments[route1.Segments.Length - 1];
+            RouteSegment start = route2.Segments[0];
 
             // only do all this if the routes are 'concatenable'.
             if (end.Latitude == start.Latitude &&
@@ -170,13 +170,13 @@ namespace OsmSharp.Routing
                 Route route = new Route();
 
                 // concatenate points.
-                List<RouteSegments> entries = new List<RouteSegments>();
+                List<RouteSegment> entries = new List<RouteSegment>();
                 // add points for the first route except the last point.
                 for (int idx = 0; idx < route1.Segments.Length - 1; idx++)
                 {
                     if (clone)
                     {
-                        entries.Add(route1.Segments[idx].Clone() as RouteSegments);
+                        entries.Add(route1.Segments[idx].Clone() as RouteSegment);
                     }
                     else
                     {
@@ -185,8 +185,8 @@ namespace OsmSharp.Routing
                 }
 
                 // merge last and first entry.
-                RouteSegments mergedEntry =
-                    route1.Segments[route1.Segments.Length - 1].Clone() as RouteSegments;
+                RouteSegment mergedEntry =
+                    route1.Segments[route1.Segments.Length - 1].Clone() as RouteSegment;
                 mergedEntry.Type = RouteSegmentType.Along;
                 if (route2.Segments[0].Points != null && route2.Segments[0].Points.Length > 0)
                 { // merge in important points from the second route too but do not keep duplicates.
@@ -217,7 +217,7 @@ namespace OsmSharp.Routing
                 {
                     if (clone)
                     {
-                        entries.Add(route2.Segments[idx].Clone() as RouteSegments);
+                        entries.Add(route2.Segments[idx].Clone() as RouteSegment);
                     }
                     else
                     {
@@ -566,7 +566,7 @@ namespace OsmSharp.Routing
     /// <summary>
     /// Represents a point and the previous segment of the route.
     /// </summary>
-    public class RouteSegments : ICloneable
+    public class RouteSegment : ICloneable
     {
         /// <summary>
         /// The type of this entry.
@@ -641,7 +641,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public object Clone()
         {
-            var clone = new RouteSegments();
+            var clone = new RouteSegment();
             clone.Distance = this.Distance;
             clone.Latitude = this.Latitude;
             clone.Longitude = this.Longitude;
