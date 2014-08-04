@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -325,7 +326,8 @@ namespace OsmSharp.Routing
         {
             int entryIdx;
             Meter distanceToProjected;
-            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+            Second timeToProjected;
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected, out timeToProjected);
         }
 
         /// <summary>
@@ -335,33 +337,35 @@ namespace OsmSharp.Routing
         /// <param name="projectedCoordinates"></param>
         /// <param name="distanceToProjected"></param>
         /// <returns></returns>
-        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out Meter distanceToProjected)
+        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out Meter distanceToProjected, out Second timeFromStart)
         {
             int entryIdx;
-            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected, out timeFromStart);
         }
 
         /// <summary>
         /// Calculates the closest point on the route relative to the given coordinate.
         /// </summary>
         /// <param name="coordinates"></param>
-        /// <param name="distanceToProjected"></param>
+        /// <param name="distanceFromStart"></param>
         /// <returns></returns>
-        public bool ProjectOn(GeoCoordinate coordinates, out Meter distanceToProjected)
+        public bool ProjectOn(GeoCoordinate coordinates, out Meter distanceFromStart)
         {
             int entryIdx;
             GeoCoordinate projectedCoordinates;
-            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceToProjected);
+            Second timeFromStart;
+            return this.ProjectOn(coordinates, out projectedCoordinates, out entryIdx, out distanceFromStart, out timeFromStart);
         }
 
         /// <summary>
         /// Calculates the closest point on the route relative to the given coordinate.
         /// </summary>
         /// <returns></returns>
-        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out int entryIndex, out Meter distanceFromStart)
+        public bool ProjectOn(GeoCoordinate coordinates, out GeoCoordinate projectedCoordinates, out int entryIndex, out Meter distanceFromStart, out Second timeFromStart)
         {
             double distance = double.MaxValue;
             distanceFromStart = 0;
+            timeFromStart = 0;
             double currentDistanceFromStart = 0;
             projectedCoordinates = null;
             entryIndex = -1;
@@ -383,7 +387,16 @@ namespace OsmSharp.Routing
                         projectedCoordinates = projected;
                         entryIndex = idx;
                         distance = currentDistance;
-                        distanceFromStart = currentDistanceFromStart + projected.DistanceReal(points[idx]);
+
+                        // calculate distance/time.
+                        double localDistance = projected.DistanceReal(points[idx]).Value;
+                        distanceFromStart = currentDistanceFromStart + localDistance;
+                        if(this.HasTimes && idx > 0)
+                        { // there should be proper timing information.
+                            double timeToSegment = this.Entries[idx].Time;
+                            double timeToNextSegment = this.Entries[idx + 1].Time;
+                            timeFromStart = timeToSegment + ((timeToNextSegment - timeToSegment) * (localDistance / line.LengthReal.Value));
+                        }
                     }
                 }
 
@@ -395,7 +408,11 @@ namespace OsmSharp.Routing
                     projectedCoordinates = projected;
                     entryIndex = idx;
                     distance = currentDistance;
-                    distanceFromStart = currentDistanceFromStart + projected.DistanceReal(points[idx]);
+                    distanceFromStart = currentDistanceFromStart;
+                    if (this.HasTimes)
+                    { // there should be proper timing information.
+                        timeFromStart = this.Entries[idx].Time;
+                    }
                 }
                 
                 // update distance from start.
@@ -411,6 +428,10 @@ namespace OsmSharp.Routing
                 entryIndex = points.Count - 1;
                 distance = currentDistance;
                 distanceFromStart = currentDistanceFromStart;
+                if (this.HasTimes)
+                { // there should be proper timing information.
+                    timeFromStart = this.Entries[points.Count - 1].Time;
+                }
             }
             return true;
         }

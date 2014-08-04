@@ -20,6 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -396,10 +397,11 @@ namespace OsmSharp.Test.Unittests.Routing
             int entryIdx;
             GeoCoordinate projected;
             Meter distanceFromStart;
+            Second timeFromStart;
 
             var distance = 5.0;
             var location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
@@ -411,7 +413,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             distance = 15.0;
             location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
@@ -423,7 +425,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             distance = 25;
             location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);

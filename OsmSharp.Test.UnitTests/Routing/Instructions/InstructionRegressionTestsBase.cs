@@ -34,6 +34,7 @@ using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Units.Distance;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -97,8 +98,9 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                         reference.Entries[idx].Longitude);
                     Meter referenceDistance, distance;
                     GeoCoordinate referenceProjected, projected;
-                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out referenceDistance);
-                    route.ProjectOn(referenceCoordinate, out projected, out distance);
+                    Second referenceTime, time;
+                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out referenceDistance, out referenceTime);
+                    route.ProjectOn(referenceCoordinate, out projected, out distance, out time);
 
                     Assert.AreEqual(0, referenceProjected.DistanceReal(projected).Value, delta); // projected points have to match.
                     Assert.AreEqual(referenceDistance.Value, distance.Value, 0.1); // compare calculated distance to 10cm accuracy.

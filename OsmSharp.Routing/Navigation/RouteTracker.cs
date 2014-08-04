@@ -22,6 +22,7 @@ using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Routing.Navigation
 {
@@ -120,6 +121,33 @@ namespace OsmSharp.Routing.Navigation
         }
 
         /// <summary>
+        /// Holds the estimated time from start loction.
+        /// </summary>
+        private Second _timeFromStart;
+
+        /// <summary>
+        /// Holds the ESTIMATED time between the start position and the current position.
+        /// </summary>
+        public Second TimeFromStart
+        {
+            get
+            {
+                return _timeFromStart;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this tracker is reporting time information.
+        /// </summary>
+        public bool HasTimes
+        {
+            get
+            {
+                return _route.HasTimes;
+            }
+        }
+
+        /// <summary>
         /// Holds the distance from the start location.
         /// </summary>
         private Meter _distanceFromStart;
@@ -132,6 +160,22 @@ namespace OsmSharp.Routing.Navigation
             get
             {
                 return _distanceFromStart;
+            }
+        }
+
+        /// <summary>
+        /// Holds the ESTIMATED time to the end location.
+        /// </summary>
+        private Second _timeToEnd;
+
+        /// <summary>
+        /// Holds the ESTIMATED time to the end location.
+        /// </summary>
+        public Second TimeToEnd
+        {
+            get
+            {
+                return _timeToEnd;
             }
         }
 
@@ -232,11 +276,13 @@ namespace OsmSharp.Routing.Navigation
                 totalDistance = totalDistance + previous.DistanceReal(next).Value;
                 previous = next;
             }
+            double totalTime = _route.TotalTime;
 
             // project onto the route.
             int entryIdx;
-            _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart);
+            _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart, out _timeFromStart);
             _distanceToEnd = totalDistance - _distanceFromStart;
+            _timeToEnd = totalTime - _timeFromStart.Value;
 
             // find the next instruction.
             _nextInstructionIdx = -1;
