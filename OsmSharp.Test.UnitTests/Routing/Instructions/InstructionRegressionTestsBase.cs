@@ -86,16 +86,16 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         {
             double delta = 0.0001;
 
-            if (reference.Entries == null)
+            if (reference.Segments == null)
             { // both routes are empty.
-                Assert.IsNull(route.Entries);
+                Assert.IsNull(route.Segments);
             }
             else
             { // compare the geometry of the routes.
-                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                for (int idx = 0; idx < reference.Segments.Length; idx++)
                 {
-                    var referenceCoordinate = new GeoCoordinate(reference.Entries[idx].Latitude,
-                        reference.Entries[idx].Longitude);
+                    var referenceCoordinate = new GeoCoordinate(reference.Segments[idx].Latitude,
+                        reference.Segments[idx].Longitude);
                     Meter referenceDistance, distance;
                     GeoCoordinate referenceProjected, projected;
                     Second referenceTime, time;
@@ -136,15 +136,15 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             Route route3540 = router.Calculate(Vehicle.Car, point35resolved, point40resolved);
 
             // check if both routes are equal.
-            Assert.AreEqual(route3540.Entries.Length, route3540concatenated.Entries.Length);
-            for (int idx = 0; idx < route3540.Entries.Length; idx++)
+            Assert.AreEqual(route3540.Segments.Length, route3540concatenated.Segments.Length);
+            for (int idx = 0; idx < route3540.Segments.Length; idx++)
             {
-                Assert.AreEqual(route3540.Entries[idx].Distance, route3540concatenated.Entries[idx].Distance);
-                Assert.AreEqual(route3540.Entries[idx].Latitude, route3540concatenated.Entries[idx].Latitude);
-                Assert.AreEqual(route3540.Entries[idx].Longitude, route3540concatenated.Entries[idx].Longitude);
-                Assert.AreEqual(route3540.Entries[idx].Time, route3540concatenated.Entries[idx].Time);
-                Assert.AreEqual(route3540.Entries[idx].Type, route3540concatenated.Entries[idx].Type);
-                Assert.AreEqual(route3540.Entries[idx].Name, route3540concatenated.Entries[idx].Name);
+                Assert.AreEqual(route3540.Segments[idx].Distance, route3540concatenated.Segments[idx].Distance);
+                Assert.AreEqual(route3540.Segments[idx].Latitude, route3540concatenated.Segments[idx].Latitude);
+                Assert.AreEqual(route3540.Segments[idx].Longitude, route3540concatenated.Segments[idx].Longitude);
+                Assert.AreEqual(route3540.Segments[idx].Time, route3540concatenated.Segments[idx].Time);
+                Assert.AreEqual(route3540.Segments[idx].Type, route3540concatenated.Segments[idx].Type);
+                Assert.AreEqual(route3540.Segments[idx].Name, route3540concatenated.Segments[idx].Name);
 
                 // something that is allowed to be different in this case!
                 // route3540.Entries[idx].Points != null
@@ -208,7 +208,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             }
             if (route3540.Metrics != null)
             {
-                for (int metricIdx = 0; metricIdx < route3540concatenated.Entries.Length; metricIdx++)
+                for (int metricIdx = 0; metricIdx < route3540concatenated.Segments.Length; metricIdx++)
                 {
                     Assert.AreEqual(route3540.Metrics[metricIdx].Key, route3540concatenated.Metrics[metricIdx].Key);
                     Assert.AreEqual(route3540.Metrics[metricIdx].Value, route3540concatenated.Metrics[metricIdx].Value);
@@ -220,7 +220,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             }
 
             // remove the point in between, the only difference between the regular and the concatenated route.
-            route3540concatenated.Entries[7].Points = null;
+            route3540concatenated.Segments[7].Points = null;
 
             // create the language generator.
             var languageGenerator = new LanguageTestGenerator();

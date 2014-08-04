@@ -110,7 +110,7 @@ namespace OsmSharp.Routing.Navigation
             {
                 if (this.NextInstruction != null)
                 { // the next instruction exists.
-                    RouteSegments entry = _route.Entries[this.NextInstruction.EntryIdx];
+                    RouteSegments entry = _route.Segments[this.NextInstruction.EntryIdx];
                     if (entry != null)
                     { // entry found.
                         return new GeoCoordinate(entry.Latitude, entry.Longitude);
@@ -268,11 +268,11 @@ namespace OsmSharp.Routing.Navigation
             _currentPosition = location;
 
             // calculate the total distance.
-            var previous = new GeoCoordinate(_route.Entries[0].Latitude, _route.Entries[0].Longitude); ;
+            var previous = new GeoCoordinate(_route.Segments[0].Latitude, _route.Segments[0].Longitude); ;
             var totalDistance = 0.0;
-            for (int idx = 1; idx < _route.Entries.Length; idx++)
+            for (int idx = 1; idx < _route.Segments.Length; idx++)
             {
-                GeoCoordinate next = new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude);
+                GeoCoordinate next = new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude);
                 totalDistance = totalDistance + previous.DistanceReal(next).Value;
                 previous = next;
             }
@@ -303,9 +303,9 @@ namespace OsmSharp.Routing.Navigation
             // calculate the distance to the next instruction.
             previous = _currentRoutePosition;
             var distance = 0.0;
-            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].EntryIdx && idx < _route.Entries.Length; idx++)
+            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].EntryIdx && idx < _route.Segments.Length; idx++)
             {
-                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude));
+                GeoCoordinate next = (new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude));
                 distance = distance + previous.DistanceReal(next).Value;
                 previous = next;
             }

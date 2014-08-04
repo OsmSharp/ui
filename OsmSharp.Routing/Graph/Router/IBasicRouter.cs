@@ -53,6 +53,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <param name="maxSearch"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<TEdgeData> _data_graph, IRoutingInterpreter _interpreter,
             Vehicle vehicle, PathSegmentVisitList[] sources,
@@ -67,6 +68,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         double CalculateWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters);
@@ -80,6 +82,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         PathSegment<long> CalculateToClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
@@ -93,6 +96,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         double[] CalculateOneToManyWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
@@ -106,6 +110,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         double[][] CalculateManyToManyWeight(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
@@ -123,6 +128,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         HashSet<long> CalculateRange(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters);
@@ -135,6 +141,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         bool CheckConnectivity(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters);
@@ -149,6 +156,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="delta">The size of the box to search in.</param>
         /// <param name="matcher">The matcher to match to edges.</param>
         /// <param name="pointTags">The properties of the point to match.</param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters);
@@ -168,6 +176,33 @@ namespace OsmSharp.Routing.Graph.Router
         /// <returns></returns>
         SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters);
+
+        /// <summary>
+        /// Gets the weight type.
+        /// </summary>
+        RouterWeightType WeightType
+        {
+            get;
+        }
+    }
+
+    /// <summary>
+    /// Enumerates the type of weights used by a basis router.
+    /// </summary>
+    public enum RouterWeightType
+    {
+        /// <summary>
+        /// The router weights are time-estimates.
+        /// </summary>
+        Time,
+        /// <summary>
+        /// The router weights are distances.
+        /// </summary>
+        Distance,
+        /// <summary>
+        /// The router-weights are completely custom.
+        /// </summary>
+        Custom
     }
 
     /// <summary>

@@ -48,6 +48,17 @@ namespace OsmSharp.Routing.CH
         }
 
         /// <summary>
+        /// Gets the weight type.
+        /// </summary>
+        public RouterWeightType WeightType
+        {
+            get
+            {
+                return RouterWeightType.Time;
+            }
+        }
+
+        /// <summary>
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
         /// <param name="graph"></param>
@@ -56,6 +67,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public PathSegment<long> Calculate(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
@@ -75,6 +87,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="targets"></param>
         /// <param name="maxSearch"></param>
         /// <param name="graph"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
@@ -103,6 +116,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public double CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
@@ -126,6 +140,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
@@ -142,6 +157,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
@@ -161,6 +177,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
@@ -185,6 +202,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public HashSet<long> CalculateRange(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
@@ -200,6 +218,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         public bool CheckConnectivity(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)

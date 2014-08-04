@@ -120,7 +120,7 @@ namespace OsmSharp.Routing
             Vehicle vehicle = null;
             if(VehiclesByName == null)
             { // no vehicles have been registered.
-                throw new InvalidOperationException("No vehicles have been registered.");
+                Vehicle.RegisterVehicles();
             }
             if(!VehiclesByName.TryGetValue(uniqueName, out vehicle))
             { // vehicle name not registered.

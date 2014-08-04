@@ -85,13 +85,13 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             
             // verify the simple route result.
             Assert.IsNotNull(route);
-            Assert.AreEqual(3, route.Entries.Length);
-            Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
-            Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
-            Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
-            Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
-            Assert.AreEqual(vertex3Coordinate.Latitude, route.Entries[2].Latitude);
-            Assert.AreEqual(vertex3Coordinate.Longitude, route.Entries[2].Longitude);
+            Assert.AreEqual(3, route.Segments.Length);
+            Assert.AreEqual(vertex1Coordinate.Latitude, route.Segments[0].Latitude);
+            Assert.AreEqual(vertex1Coordinate.Longitude, route.Segments[0].Longitude);
+            Assert.AreEqual(vertex2Coordinate.Latitude, route.Segments[1].Latitude);
+            Assert.AreEqual(vertex2Coordinate.Longitude, route.Segments[1].Longitude);
+            Assert.AreEqual(vertex3Coordinate.Latitude, route.Segments[2].Latitude);
+            Assert.AreEqual(vertex3Coordinate.Longitude, route.Segments[2].Longitude);
 
             // 1 -> 2: 1 -> 2.
             router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
@@ -101,11 +101,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
             // verify the simple route result.
             Assert.IsNotNull(route);
-            Assert.AreEqual(2, route.Entries.Length);
-            Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
-            Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
-            Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
-            Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
+            Assert.AreEqual(2, route.Segments.Length);
+            Assert.AreEqual(vertex1Coordinate.Latitude, route.Segments[0].Latitude);
+            Assert.AreEqual(vertex1Coordinate.Longitude, route.Segments[0].Longitude);
+            Assert.AreEqual(vertex2Coordinate.Latitude, route.Segments[1].Latitude);
+            Assert.AreEqual(vertex2Coordinate.Longitude, route.Segments[1].Longitude);
         }
     }
 }

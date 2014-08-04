@@ -299,27 +299,27 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="route"></param>
         protected void CompareRoutes(Route reference, Route route)
         {
-            if (reference.Entries == null)
+            if (reference.Segments == null)
             {
-                Assert.IsNull(route.Entries);
+                Assert.IsNull(route.Segments);
             }
             else
             {
-                Assert.AreEqual(reference.Entries.Length, route.Entries.Length);
-                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                Assert.AreEqual(reference.Segments.Length, route.Segments.Length);
+                for (int idx = 0; idx < reference.Segments.Length; idx++)
                 {
-                    Assert.AreEqual(reference.Entries[idx].Distance,
-                        route.Entries[idx].Distance);
-                    Assert.AreEqual(reference.Entries[idx].Latitude,
-                        route.Entries[idx].Latitude);
-                    Assert.AreEqual(reference.Entries[idx].Longitude,
-                        route.Entries[idx].Longitude);
-                    Assert.AreEqual(reference.Entries[idx].Time,
-                        route.Entries[idx].Time);
-                    Assert.AreEqual(reference.Entries[idx].Type,
-                        route.Entries[idx].Type);
-                    Assert.AreEqual(reference.Entries[idx].Name,
-                        route.Entries[idx].Name);
+                    Assert.AreEqual(reference.Segments[idx].Distance,
+                        route.Segments[idx].Distance);
+                    Assert.AreEqual(reference.Segments[idx].Latitude,
+                        route.Segments[idx].Latitude);
+                    Assert.AreEqual(reference.Segments[idx].Longitude,
+                        route.Segments[idx].Longitude);
+                    Assert.AreEqual(reference.Segments[idx].Time,
+                        route.Segments[idx].Time);
+                    Assert.AreEqual(reference.Segments[idx].Type,
+                        route.Segments[idx].Type);
+                    Assert.AreEqual(reference.Segments[idx].Name,
+                        route.Segments[idx].Name);
                 }
             }
         }

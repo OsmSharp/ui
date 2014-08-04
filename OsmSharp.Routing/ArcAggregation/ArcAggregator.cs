@@ -330,7 +330,7 @@ namespace OsmSharp.Routing.ArcAggregation
                 {
                     _current = new AggregatedRoutePoint();
                     _current.EntryIndex = _entryIdx;
-                    _current.Entry = _route.Entries[_entryIdx];                    
+                    _current.Entry = _route.Segments[_entryIdx];                    
                 }
                 return _current;
             }
@@ -367,12 +367,12 @@ namespace OsmSharp.Routing.ArcAggregation
         public bool MoveNext()
         {
             _current = null;
-            if (_route.Entries == null)
+            if (_route.Segments == null)
             {
                 return false;
             }
             _entryIdx++;
-            return _route.Entries.Length > _entryIdx;
+            return _route.Segments.Length > _entryIdx;
         }
 
         /// <summary>

@@ -23,6 +23,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Metrics;
 using OsmSharp.Routing.Metrics.Time;
 using OsmSharp.Units.Distance;
 using System;
@@ -369,7 +370,27 @@ namespace OsmSharp.Routing.Routers
             return connectivityArray;
         }
 
-        #region OsmSharpRoute Building
+        #region Route Building
+
+        /// <summary>
+        /// Holds the metrics calculator.
+        /// </summary>
+        private RouteMetricCalculator _metricsCalculator;
+
+        /// <summary>
+        /// Gets or sets the metrics calculator.
+        /// </summary>
+        public RouteMetricCalculator MetricCalculator
+        {
+            get
+            {
+                return _metricsCalculator;
+            }
+            set
+            {
+                _metricsCalculator = value;
+            }
+        }
 
         /// <summary>
         /// Converts a linked route to an OsmSharpRoute.
@@ -395,17 +416,14 @@ namespace OsmSharp.Routing.Routers
         protected virtual Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target, bool geometryOnly)
         {
             if (route != null)
-            {
-                long[] vertices = route.ToArray();
-
-                // construct the actual graph route.
-                return this.Generate(vehicle, source, target, vertices, geometryOnly);
+            { // construct the actual route, get associated meta-data and calculate metrics.
+                return this.Generate(vehicle, source, target, route.ToArrayWithWeight(), geometryOnly);
             }
             return null; // calculation failed!
         }
 
         /// <summary>
-        /// Generates an osm sharp route from a graph route.
+        /// Generates an route from a graph route.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="fromResolved"></param>
@@ -413,12 +431,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual Route Generate(
-            Vehicle vehicle,
-            RouterPoint fromResolved,
-            RouterPoint toResolved,
-            long[] vertices,
-            bool geometryOnly)
+        protected virtual Route Generate(Vehicle vehicle, RouterPoint fromResolved, RouterPoint toResolved, Tuple<long, double>[] vertices, bool geometryOnly)
         {
             // create the route.
             Route route = null;
@@ -426,55 +439,47 @@ namespace OsmSharp.Routing.Routers
             if (vertices != null)
             {
                 route = new Route();
-
-                // set the vehicle.
                 route.Vehicle = vehicle.UniqueName;
-
-                RouteSegments[] entries;
+                RouteSegments[] segments;
                 if (vertices.Length > 0)
                 {
-                    entries = this.GenerateEntries(vehicle, vertices, geometryOnly);
+                    segments = this.GenerateEntries(vehicle, vertices, geometryOnly);
                 }
                 else
                 {
-                    entries = new RouteSegments[0];
+                    segments = new RouteSegments[0];
                 }
 
                 // create the from routing point.
-                var from = new RoutePoint();
-                //from.Name = from_point.Name;
-                from.Latitude = (float)fromResolved.Location.Latitude;
-                from.Longitude = (float)fromResolved.Location.Longitude;
-                if (entries.Length > 0)
-                {
-                    entries[0].Points = new RoutePoint[1];
-                    entries[0].Points[0] = from;
-                    entries[0].Points[0].Tags = RouteTagsExtensions.ConvertFrom(fromResolved.Tags);
+                if (segments.Length > 0)
+                { // there is at least one segment.
+                    var from = new RoutePoint();
+                    from.Latitude = (float)fromResolved.Location.Latitude;
+                    from.Longitude = (float)fromResolved.Location.Longitude;
+                    segments[0].Points = new RoutePoint[1];
+                    segments[0].Points[0] = from;
+                    segments[0].Points[0].Tags = RouteTagsExtensions.ConvertFrom(fromResolved.Tags);
                 }
 
                 // create the to routing point.
-                var to = new RoutePoint();
-                //to.Name = to_point.Name;
-                to.Latitude = (float)toResolved.Location.Latitude;
-                to.Longitude = (float)toResolved.Location.Longitude;
-                if (entries.Length > 0)
-                {
+                if (segments.Length > 0)
+                { // there is at least one segment.
+                    var to = new RoutePoint();
+                    to.Latitude = (float)toResolved.Location.Latitude;
+                    to.Longitude = (float)toResolved.Location.Longitude;
                     //to.Tags = ConvertTo(to_point.Tags);
-                    entries[entries.Length - 1].Points = new RoutePoint[1];
-                    entries[entries.Length - 1].Points[0] = to;
-                    entries[entries.Length - 1].Points[0].Tags = RouteTagsExtensions.ConvertFrom(toResolved.Tags);
+                    segments[segments.Length - 1].Points = new RoutePoint[1];
+                    segments[segments.Length - 1].Points[0] = to;
+                    segments[segments.Length - 1].Points[0].Tags = RouteTagsExtensions.ConvertFrom(toResolved.Tags);
                 }
 
-                // set the routing points.
-                route.Entries = entries;
+                // set the routing segments.
+                route.Segments = segments;
 
                 // calculate metrics.
                 if (!geometryOnly)
-                {
-                    var calculator = new TimeCalculator(_interpreter);
-                    Dictionary<string, double> metrics = calculator.Calculate(route);
-                    route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
-                    route.TotalTime = metrics[TimeCalculator.TIME_KEY];
+                { // calculate metrics.
+                    route.Metrics = RouteMetric.ConvertFrom(_metricsCalculator.Calculate(route));
                 }
             }
 
@@ -488,14 +493,13 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual RouteSegments[] GenerateEntries(Vehicle vehicle, long[] vertices,
-            bool geometryOnly)
+        protected virtual RouteSegments[] GenerateEntries(Vehicle vehicle, Tuple<long, double>[] vertices, bool geometryOnly)
         {
             // create an entries list.
             var entries = new List<RouteSegments>();
 
             // create the first entry.
-            GeoCoordinate coordinate = this.GetCoordinate(vehicle, vertices[0]);
+            var coordinate = this.GetCoordinate(vehicle, vertices[0].Item1);
             var first = new RouteSegments();
             first.Latitude = (float)coordinate.Latitude;
             first.Longitude = (float)coordinate.Longitude;
@@ -515,9 +519,9 @@ namespace OsmSharp.Routing.Routers
                 // get all the data needed to calculate the next route entry.
                 var nodeCurrent = vertices[idx];
                 var nodePreviousCoordinate = coordinate;
-                var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1]);
-                long nodeNext = vertices[idx + 1];
-                var edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
+                var nodeNextCoordinate = this.GetCoordinate(vehicle, vertices[idx + 1].Item1);
+                var nodeNext = vertices[idx + 1];
+                var edge = this.GetEdgeData(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
 
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
@@ -530,7 +534,7 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add intermediate entries.
-                var coordinates = this.GetEdgeShape(vehicle, nodePrevious, nodeCurrent);
+                var coordinates = this.GetEdgeShape(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
                 if (coordinates != null)
                 { // loop over coordinates.
                     for (int coordinateIdx = 0; coordinateIdx < coordinates.Length; coordinateIdx++)
@@ -551,14 +555,14 @@ namespace OsmSharp.Routing.Routers
                 var sideStreets = new List<RouteSegmentBranch>();
                 if (!geometryOnly)
                 {
-                    var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent, nodePrevious, nodeNext);
+                    var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent.Item1, nodePrevious.Item1, nodeNext.Item1);
                     var consideredNeighbours = new HashSet<GeoCoordinate>();
                     if (neighbours.Count > 0)
                     { // construct neighbours list.
                         foreach (var neighbour in neighbours)
                         {
                             var neighbourKeyCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                            var neighbourValueCoordinates = this.GetEdgeShape(vehicle, nodeCurrent, neighbour.Key);
+                            var neighbourValueCoordinates = this.GetEdgeShape(vehicle, nodeCurrent.Item1, neighbour.Key);
                             if (neighbourValueCoordinates != null &&
                                 neighbourValueCoordinates.Length > 0)
                             { // get the first of the coordinates array.
@@ -591,7 +595,7 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // create the route entry.
-                var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
+                var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent.Item1);
 
                 var routeEntry = new RouteSegments();
                 routeEntry.Latitude = (float)nextCoordinate.Latitude;
@@ -611,7 +615,7 @@ namespace OsmSharp.Routing.Routers
             if (vertices.Length > 1)
             {
                 int lastIdx = vertices.Length - 1;
-                var edge = this.GetEdgeData(vehicle, vertices[lastIdx - 1], vertices[lastIdx]);
+                var edge = this.GetEdgeData(vehicle, vertices[lastIdx - 1].Item1, vertices[lastIdx].Item1);
                 if (!geometryOnly)
                 {
                     currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
@@ -622,7 +626,7 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add intermediate entries.
-                var coordinates = this.GetEdgeShape(vehicle, vertices[lastIdx - 1], vertices[lastIdx]);
+                var coordinates = this.GetEdgeShape(vehicle, vertices[lastIdx - 1].Item1, vertices[lastIdx].Item1);
                 if (coordinates != null)
                 { // loop over coordinates.
                     for (int idx = 0; idx < coordinates.Length; idx++)
@@ -640,7 +644,7 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // add last entry.
-                coordinate = this.GetCoordinate(vehicle, vertices[lastIdx]);
+                coordinate = this.GetCoordinate(vehicle, vertices[lastIdx].Item1);
                 var last = new RouteSegments();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
@@ -661,6 +665,8 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertex1"></param>
+        /// <param name="previousVertex"></param>
+        /// <param name="nextVertex"></param>
         /// <returns></returns>
         protected virtual List<KeyValuePair<long, IDynamicGraphEdgeData>> GetNeighboursUndirectedWithEdges(Vehicle vehicle,
             long vertex1, long previousVertex, long nextVertex)
@@ -848,9 +854,9 @@ namespace OsmSharp.Routing.Routers
         /// Tries to match an arc with a given path.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="vertex1"></param>
-        /// <param name="geoCoordinateSimple"></param>
-        /// <param name="p"></param>
+        /// <param name="from"></param>
+        /// <param name="along"></param>
+        /// <param name="to"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         protected virtual bool MatchArc(Vehicle vehicle, long from, GeoCoordinateSimple[] along, long to, PathSegment<long> path)

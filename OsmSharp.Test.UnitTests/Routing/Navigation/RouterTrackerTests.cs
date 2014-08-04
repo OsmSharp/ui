@@ -180,11 +180,11 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry4.Name = string.Empty;
             route1entry4.Names = null;
 
-            route1.Entries = new RouteSegments[4];
-            route1.Entries[0] = route1entry1;
-            route1.Entries[1] = route1entry2;
-            route1.Entries[2] = route1entry3;
-            route1.Entries[3] = route1entry4;
+            route1.Segments = new RouteSegments[4];
+            route1.Segments[0] = route1entry1;
+            route1.Segments[1] = route1entry2;
+            route1.Segments[2] = route1entry3;
+            route1.Segments[3] = route1entry4;
 
             // create the route tracker.
             var routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
@@ -195,7 +195,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             Assert.AreEqual(distance, routeTracker.DistanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, routeTracker.PositionRoute.Latitude, delta);
             Assert.AreEqual(location.Longitude, routeTracker.PositionRoute.Longitude, delta);
-            Assert.AreEqual(new GeoCoordinate(route1.Entries[1].Latitude, route1.Entries[1].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
+            Assert.AreEqual(new GeoCoordinate(route1.Segments[1].Latitude, route1.Segments[1].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
             var locationAfter = routeTracker.PositionAfter(10.0);
 
             distance = 15.0;
@@ -206,9 +206,9 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             Assert.AreEqual(distance, routeTracker.DistanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, routeTracker.PositionRoute.Latitude, delta);
             Assert.AreEqual(location.Longitude, routeTracker.PositionRoute.Longitude, delta);
-            Assert.AreEqual(new GeoCoordinate(route1.Entries[2].Latitude, route1.Entries[2].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
+            Assert.AreEqual(new GeoCoordinate(route1.Segments[2].Latitude, route1.Segments[2].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
 
-            location = new GeoCoordinate(route1.Entries[3].Latitude, route1.Entries[3].Longitude);
+            location = new GeoCoordinate(route1.Segments[3].Latitude, route1.Segments[3].Longitude);
             Meter distanceFromStart;
             route1.ProjectOn(location, out distanceFromStart);
             distance = distanceFromStart.Value;
@@ -395,12 +395,12 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             route1entry4.Name = string.Empty;
             route1entry4.Names = null;
 
-            route1.Entries = new RouteSegments[5];
-            route1.Entries[0] = route1entry0;
-            route1.Entries[1] = route1entry1;
-            route1.Entries[2] = route1entry2;
-            route1.Entries[3] = route1entry3;
-            route1.Entries[4] = route1entry4;
+            route1.Segments = new RouteSegments[5];
+            route1.Segments[0] = route1entry0;
+            route1.Segments[1] = route1entry1;
+            route1.Segments[2] = route1entry2;
+            route1.Segments[3] = route1entry3;
+            route1.Segments[4] = route1entry4;
 
             // create the route tracker.
             var routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
@@ -411,7 +411,7 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             Assert.AreEqual(distance, routeTracker.DistanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, routeTracker.PositionRoute.Latitude, delta);
             Assert.AreEqual(location.Longitude, routeTracker.PositionRoute.Longitude, delta);
-            Assert.AreEqual(new GeoCoordinate(route1.Entries[2].Latitude, route1.Entries[2].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
+            Assert.AreEqual(new GeoCoordinate(route1.Segments[2].Latitude, route1.Segments[2].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
             var locationAfter = routeTracker.PositionAfter(10.0);
 
             distance = 15.0;
@@ -422,9 +422,9 @@ namespace OsmSharp.Test.Unittests.Routing.Navigation
             Assert.AreEqual(distance, routeTracker.DistanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, routeTracker.PositionRoute.Latitude, delta);
             Assert.AreEqual(location.Longitude, routeTracker.PositionRoute.Longitude, delta);
-            Assert.AreEqual(new GeoCoordinate(route1.Entries[3].Latitude, route1.Entries[3].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
+            Assert.AreEqual(new GeoCoordinate(route1.Segments[3].Latitude, route1.Segments[3].Longitude).DistanceReal(location).Value, routeTracker.DistanceNextInstruction.Value, delta);
 
-            location = new GeoCoordinate(route1.Entries[4].Latitude, route1.Entries[4].Longitude);
+            location = new GeoCoordinate(route1.Segments[4].Latitude, route1.Segments[4].Longitude);
             Meter distanceFromStart;
             route1.ProjectOn(location, out distanceFromStart);
             distance = distanceFromStart.Value;

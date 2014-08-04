@@ -204,16 +204,16 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             double delta = 0.0001;
 
-            if (reference.Entries == null)
+            if (reference.Segments == null)
             { // both routes are empty.
-                Assert.IsNull(route.Entries);
+                Assert.IsNull(route.Segments);
             }
             else
             { // compare the geometry of the routes.
-                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                for (int idx = 0; idx < reference.Segments.Length; idx++)
                 {
-                    var referenceCoordinate = new GeoCoordinate(reference.Entries[idx].Latitude,
-                        reference.Entries[idx].Longitude);
+                    var referenceCoordinate = new GeoCoordinate(reference.Segments[idx].Latitude,
+                        reference.Segments[idx].Longitude);
                     Meter referenceDistance, distance;
                     GeoCoordinate referenceProjected, projected;
                     Second referenceTime, time;
@@ -226,8 +226,8 @@ namespace OsmSharp.Test.Unittests.Routing
                     Assert.AreEqual(referenceProjected.Latitude, projected.Latitude, delta);
                     Assert.AreEqual(referenceProjected.Longitude, projected.Longitude, delta);
 
-                    var referenceEntry = reference.Entries[entryIdx];
-                    var routeEntry = route.Entries[entryIdx];
+                    var referenceEntry = reference.Segments[entryIdx];
+                    var routeEntry = route.Segments[entryIdx];
 
                     if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
                     { // there are way names.

@@ -61,7 +61,7 @@ namespace OsmSharp.Routing
         /// An ordered array of route entries reprenting the details of the route to the next
         /// route point.
         /// </summary>
-        public RouteSegments[] Entries { get; set; }
+        public RouteSegments[] Segments { get; set; }
 
         /// <summary>
         /// The time this route was created.
@@ -154,13 +154,13 @@ namespace OsmSharp.Routing
         {
             if (route1 == null) return route2;
             if (route2 == null) return route1;
-            if (route1.Entries.Length == 0) return route2;
-            if (route2.Entries.Length == 0) return route1;
+            if (route1.Segments.Length == 0) return route2;
+            if (route2.Segments.Length == 0) return route1;
             if (route1.Vehicle != route2.Vehicle) { throw new ArgumentException("Route vechicles do not match!"); }
 
             // get the end/start point.
-            RouteSegments end = route1.Entries[route1.Entries.Length - 1];
-            RouteSegments start = route2.Entries[0];
+            RouteSegments end = route1.Segments[route1.Segments.Length - 1];
+            RouteSegments start = route2.Segments[0];
 
             // only do all this if the routes are 'concatenable'.
             if (end.Latitude == start.Latitude &&
@@ -172,32 +172,32 @@ namespace OsmSharp.Routing
                 // concatenate points.
                 List<RouteSegments> entries = new List<RouteSegments>();
                 // add points for the first route except the last point.
-                for (int idx = 0; idx < route1.Entries.Length - 1; idx++)
+                for (int idx = 0; idx < route1.Segments.Length - 1; idx++)
                 {
                     if (clone)
                     {
-                        entries.Add(route1.Entries[idx].Clone() as RouteSegments);
+                        entries.Add(route1.Segments[idx].Clone() as RouteSegments);
                     }
                     else
                     {
-                        entries.Add(route1.Entries[idx]);
+                        entries.Add(route1.Segments[idx]);
                     }
                 }
 
                 // merge last and first entry.
                 RouteSegments mergedEntry =
-                    route1.Entries[route1.Entries.Length - 1].Clone() as RouteSegments;
+                    route1.Segments[route1.Segments.Length - 1].Clone() as RouteSegments;
                 mergedEntry.Type = RouteSegmentType.Along;
-                if (route2.Entries[0].Points != null && route2.Entries[0].Points.Length > 0)
+                if (route2.Segments[0].Points != null && route2.Segments[0].Points.Length > 0)
                 { // merge in important points from the second route too but do not keep duplicates.
                     List<RoutePoint> points = new List<RoutePoint>(mergedEntry.Points);
-                    for (int otherIdx = 0; otherIdx < route2.Entries[0].Points.Length; otherIdx++)
+                    for (int otherIdx = 0; otherIdx < route2.Segments[0].Points.Length; otherIdx++)
                     {
                         bool found = false;
                         for (int idx = 0; idx < points.Count; idx++)
                         {
                             if (points[idx].RepresentsSame(
-                                route2.Entries[0].Points[otherIdx]))
+                                route2.Segments[0].Points[otherIdx]))
                             { // the points represent the same info!
                                 found = true;
                                 break;
@@ -205,7 +205,7 @@ namespace OsmSharp.Routing
                         }
                         if (!found)
                         { // the point was not in there yet!
-                            points.Add(route2.Entries[0].Points[otherIdx]);
+                            points.Add(route2.Segments[0].Points[otherIdx]);
                         }
                     }
                     mergedEntry.Points = points.ToArray();
@@ -213,18 +213,18 @@ namespace OsmSharp.Routing
                 entries.Add(mergedEntry);
 
                 // add points of the next route.
-                for (int idx = 1; idx < route2.Entries.Length; idx++)
+                for (int idx = 1; idx < route2.Segments.Length; idx++)
                 {
                     if (clone)
                     {
-                        entries.Add(route2.Entries[idx].Clone() as RouteSegments);
+                        entries.Add(route2.Segments[idx].Clone() as RouteSegments);
                     }
                     else
                     {
-                        entries.Add(route2.Entries[idx]);
+                        entries.Add(route2.Segments[idx]);
                     }
                 }
-                route.Entries = entries.ToArray();
+                route.Segments = entries.ToArray();
 
                 // concatenate tags.
                 List<RouteTags> tags = new List<RouteTags>();
@@ -283,10 +283,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public List<GeoCoordinate> GetPoints()
         {
-            var coordinates = new List<GeoCoordinate>(this.Entries.Length);
-            for (int p = 0; p < this.Entries.Length; p++)
+            var coordinates = new List<GeoCoordinate>(this.Segments.Length);
+            for (int p = 0; p < this.Segments.Length; p++)
             {
-                coordinates.Add(new GeoCoordinate(this.Entries[p].Latitude, this.Entries[p].Longitude));
+                coordinates.Add(new GeoCoordinate(this.Segments[p].Latitude, this.Segments[p].Longitude));
             }
             return coordinates;
         }
@@ -393,8 +393,8 @@ namespace OsmSharp.Routing
                         distanceFromStart = currentDistanceFromStart + localDistance;
                         if(this.HasTimes && idx > 0)
                         { // there should be proper timing information.
-                            double timeToSegment = this.Entries[idx].Time;
-                            double timeToNextSegment = this.Entries[idx + 1].Time;
+                            double timeToSegment = this.Segments[idx].Time;
+                            double timeToNextSegment = this.Segments[idx + 1].Time;
                             timeFromStart = timeToSegment + ((timeToNextSegment - timeToSegment) * (localDistance / line.LengthReal.Value));
                         }
                     }
@@ -411,7 +411,7 @@ namespace OsmSharp.Routing
                     distanceFromStart = currentDistanceFromStart;
                     if (this.HasTimes)
                     { // there should be proper timing information.
-                        timeFromStart = this.Entries[idx].Time;
+                        timeFromStart = this.Segments[idx].Time;
                     }
                 }
                 
@@ -430,7 +430,7 @@ namespace OsmSharp.Routing
                 distanceFromStart = currentDistanceFromStart;
                 if (this.HasTimes)
                 { // there should be proper timing information.
-                    timeFromStart = this.Entries[points.Count - 1].Time;
+                    timeFromStart = this.Segments[points.Count - 1].Time;
                 }
             }
             return true;

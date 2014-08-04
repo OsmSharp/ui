@@ -83,18 +83,18 @@ namespace OsmSharp.UI.Map.Layers
         public void AddRoute(Route route, int argb, double width)
         {
             if (route != null &&
-                route.Entries != null &&
-                route.Entries.Length > 0)
+                route.Segments != null &&
+                route.Segments.Length > 0)
             { // there are entries.
                 // get x/y.
-                var x = new double[route.Entries.Length];
-                var y = new double[route.Entries.Length];
-                for (int idx = 0; idx < route.Entries.Length; idx++)
+                var x = new double[route.Segments.Length];
+                var y = new double[route.Segments.Length];
+                for (int idx = 0; idx < route.Segments.Length; idx++)
                 {
                     x[idx] = _projection.LongitudeToX(
-                        route.Entries[idx].Longitude);
+                        route.Segments[idx].Longitude);
                     y[idx] = _projection.LatitudeToY(
-                        route.Entries[idx].Latitude);
+                        route.Segments[idx].Latitude);
                 }
 
                 // set the default color if none is given.
