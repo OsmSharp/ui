@@ -481,16 +481,6 @@ namespace OsmSharp.Routing
         /// <remarks>Can also be use for CO2 calculations or quality estimates.</remarks>
         public RouteMetric[] Metrics { get; set; }
 
-        /// <summary>
-        /// Distance in meter to reach this point.
-        /// </summary>
-        public double Distance { get; set; }
-
-        /// <summary>
-        /// Estimated time in seconds to reach this point.
-        /// </summary>
-        public double Time { get; set; }
-
         #region ICloneable Members
 
         /// <summary>
@@ -499,8 +489,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public object Clone()
         {
-            RoutePoint clone = new RoutePoint();
-            clone.Distance = this.Distance;
+            var clone = new RoutePoint();
             clone.Latitude = this.Latitude;
             clone.Longitude = this.Longitude;
             if (this.Metrics != null)
@@ -520,7 +509,6 @@ namespace OsmSharp.Routing
                     clone.Tags[idx] = this.Tags[idx].Clone() as RouteTags;
                 }
             }
-            clone.Time = this.Time;
             return clone;            
         }
 

@@ -24,7 +24,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics;
-using OsmSharp.Routing.Metrics.Time;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -419,7 +418,7 @@ namespace OsmSharp.Routing.Routers
         {
             if (route != null)
             { // construct the actual route, get associated meta-data and calculate metrics.
-                return this.Generate(vehicle, source, target, route.ToArrayWithWeight(), geometryOnly);
+                return this.ConstructRoute(vehicle, source, target, route.ToArrayWithWeight(), geometryOnly);
             }
             return null; // calculation failed!
         }
@@ -433,7 +432,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual Route Generate(Vehicle vehicle, RouterPoint fromResolved, RouterPoint toResolved, Tuple<long, double>[] vertices, bool geometryOnly)
+        protected virtual Route ConstructRoute(Vehicle vehicle, RouterPoint fromResolved, RouterPoint toResolved, Tuple<long, double>[] vertices, bool geometryOnly)
         {
             // create the route.
             Route route = null;
@@ -445,7 +444,7 @@ namespace OsmSharp.Routing.Routers
                 RouteSegment[] segments;
                 if (vertices.Length > 0)
                 {
-                    segments = this.GenerateEntries(vehicle, vertices, geometryOnly);
+                    segments = this.ConstructRouteSegments(vehicle, vertices, geometryOnly);
                 }
                 else
                 {
@@ -478,6 +477,13 @@ namespace OsmSharp.Routing.Routers
                 // set the routing segments.
                 route.Segments = segments;
 
+                if (segments.Length > 0)
+                { // set the distance/time.
+                    route.TotalDistance = route.Segments[route.Segments.Length - 1].Distance;
+                    route.TotalTime = route.Segments[route.Segments.Length - 1].Time;
+                    route.HasTimes = (_router.WeightType == RouterWeightType.Time);
+                }
+
                 // calculate metrics.
                 if (!geometryOnly && _metricsCalculator != null)
                 { // calculate metrics.
@@ -495,7 +501,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual RouteSegment[] GenerateEntries(Vehicle vehicle, Tuple<long, double>[] vertices, bool geometryOnly)
+        protected virtual RouteSegment[] ConstructRouteSegments(Vehicle vehicle, Tuple<long, double>[] vertices, bool geometryOnly)
         {
             // create an entries list.
             var entries = new List<RouteSegment>();
@@ -654,7 +660,14 @@ namespace OsmSharp.Routing.Routers
                 routeEntry.Longitude = (float)nodeCurrentCoordinate.Longitude;
                 routeEntry.SideStreets = sideStreetsArray;
                 routeEntry.Tags = currentTags.ConvertFrom();
-                routeEntry.Type = RouteSegmentType.Along;
+                if (idx < vertices.Length - 1)
+                { // along.
+                    routeEntry.Type = RouteSegmentType.Along;
+                }
+                else
+                { // stop.
+                    routeEntry.Type = RouteSegmentType.Stop;
+                }
                 routeEntry.Name = name;
                 routeEntry.Names = names.ConvertFrom();
                 routeEntry.Distance = distance;
