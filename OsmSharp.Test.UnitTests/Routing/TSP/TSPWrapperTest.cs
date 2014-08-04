@@ -43,7 +43,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperVehicle()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(
+            var route = this.CalculateTSP(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.csv"),
                 false, Vehicle.Car);
@@ -76,7 +76,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         public void TestTSPWrapperOne()
         {
             // calculate TSP.
-            Route route = this.CalculateTSP(
+            var route = this.CalculateTSP(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_real.osm"),
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Test.Unittests.tsp_one.csv"),
                 false, Vehicle.Car);
