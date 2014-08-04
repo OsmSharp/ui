@@ -72,7 +72,6 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <summary>
         /// Creates a new target.
         /// </summary>
-        /// <param name="encoding"></param>
         /// <param name="connectionString"></param>
         public PostgreSQLOsmStreamTarget(string connectionString)
             : this(Encoding.UTF8, connectionString) { }
@@ -80,7 +79,6 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <summary>
         /// Creates a new target.
         /// </summary>
-        /// <param name="encoding"></param>
         /// <param name="connectionString"></param>
         /// <param name="createSchema"></param>
         public PostgreSQLOsmStreamTarget(string connectionString, bool createSchema)
@@ -97,7 +95,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <summary>
         /// Creates a new target.
         /// </summary>
-        /// <param name="encoding"></param>
+        /// <param name="connection"></param>
         public PostgreSQLOsmStreamTarget(NpgsqlConnection connection)
             : this(Encoding.UTF8, connection) { }
 
