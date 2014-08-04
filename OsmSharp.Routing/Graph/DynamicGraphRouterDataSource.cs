@@ -33,12 +33,12 @@ namespace OsmSharp.Routing.Graph
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public class DynamicGraphRouterDataSource<TEdgeData> : IDynamicGraphRouterDataSource<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Holds the basic graph.
         /// </summary>
-        private readonly IDynamicGraph<TEdgeData> _graph;
+        private readonly IGraph<TEdgeData> _graph;
 
         /// <summary>
         /// Holds the index of vertices per bounding box.
@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Graph
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
-            _graph = new MemoryDynamicGraph<TEdgeData>();
+            _graph = new MemoryGraph<TEdgeData>();
             _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.Graph
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
-            _graph = new MemoryDynamicGraph<TEdgeData>(initSize);
+            _graph = new MemoryGraph<TEdgeData>(initSize);
             _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(IDynamicGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
+        public DynamicGraphRouterDataSource(IGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -203,7 +203,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId)
+        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
         {
             return _graph.GetEdges(vertexId);
         }

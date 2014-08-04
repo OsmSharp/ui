@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// An abstract serializer to serialize/deserialize a routing data source to a flat-file.
     /// </summary>
     public abstract class FlatfileSerializer<TEdgeData> : RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Does the v1 serialization.

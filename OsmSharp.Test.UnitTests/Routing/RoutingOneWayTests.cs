@@ -30,7 +30,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Base class with tests around IRouter objects.
     /// </summary>
     public abstract class RoutingOneWayTests<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+        where EdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Builds the router.

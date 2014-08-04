@@ -39,7 +39,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the graph to be enumerated.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _graph;
+        private IGraph<CHEdgeData> _graph;
 
         /// <summary>
         /// Holds the index of visited vertices.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Creates depth-first enumerator.
         /// </summary>
         /// <param name="graph"></param>
-        public CHDepthFirstEnumerator(IDynamicGraph<CHEdgeData> graph)
+        public CHDepthFirstEnumerator(IGraph<CHEdgeData> graph)
         {
             _graph = graph;
             _index = new LongIndex();

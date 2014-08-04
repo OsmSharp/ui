@@ -217,7 +217,7 @@
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
-    <Compile Include="Routing\Graph\MemoryDynamicGraphTests.cs" />
+    <Compile Include="Routing\Graph\MemoryGraphTests.cs" />
     <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />

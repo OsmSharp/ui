@@ -252,7 +252,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="graph"></param>
         /// <returns></returns>
-        public IDynamicGraph<CHEdgeData> SortGraph(IDynamicGraph<CHEdgeData> graph)
+        public IGraph<CHEdgeData> SortGraph(IGraph<CHEdgeData> graph)
         {
             //// also add all downward edges.
             //graph.AddDownwardEdges();
@@ -278,7 +278,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // temp test.
-            var sortedGraph = new MemoryDynamicGraph<CHEdgeData>();
+            var sortedGraph = new MemoryGraph<CHEdgeData>();
             var currentBinIds = new Dictionary<uint, uint>();
             uint newVertexId;
             for (int idx = 0; idx < heightBins.Length; idx++)

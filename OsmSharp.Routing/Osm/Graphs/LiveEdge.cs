@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Osm.Graphs
     /// A simple edge containing the orignal OSM-tags and a flag indicating the direction of this edge relative to the 
     /// OSM-direction.
     /// </summary>
-    public struct LiveEdge : IDynamicGraphEdgeData
+    public struct LiveEdge : IGraphEdgeData
     {
         /// <summary>
         /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
@@ -108,7 +108,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// Creates the exact reverse of this edge.
         /// </summary>
         /// <returns></returns>
-        public IDynamicGraphEdgeData Reverse()
+        public IGraphEdgeData Reverse()
         {
             return new LiveEdge()
             {
@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IDynamicGraphEdgeData other)
+        public bool Equals(IGraphEdgeData other)
         {
             if (other is LiveEdge)
             { // ok, type is the same.

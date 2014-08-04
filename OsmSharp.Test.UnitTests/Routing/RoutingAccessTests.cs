@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Generic tests to test access restrictions using different vehicles.
     /// </summary>
     public abstract class RoutingAccessTests<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Builds the router;

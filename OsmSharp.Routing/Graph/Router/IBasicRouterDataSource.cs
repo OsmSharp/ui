@@ -28,8 +28,8 @@ namespace OsmSharp.Routing.Graph.Router
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IBasicRouterDataSource<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IBasicRouterDataSource<TEdgeData> : IGraphReadOnly<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Returns true if the given vehicle profile is supported by the the data in this data source.

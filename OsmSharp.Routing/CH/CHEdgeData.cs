@@ -26,7 +26,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
     /// <summary>
     /// Represents the data on a CH edge.
     /// </summary>
-    public struct CHEdgeData : IDynamicGraphEdgeData
+    public struct CHEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Creates a new CHEdge data class.
@@ -259,7 +259,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Creates the exact reverse of this edge.
         /// </summary>
         /// <returns></returns>
-        public IDynamicGraphEdgeData Reverse()
+        public IGraphEdgeData Reverse()
         {
             // to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
             // to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
@@ -310,7 +310,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IDynamicGraphEdgeData other)
+        public bool Equals(IGraphEdgeData other)
         {
             if (other is CHEdgeData)
             { // ok, type is the same.
@@ -354,7 +354,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool EqualsGeometrically(IDynamicGraphEdgeData other)
+        public bool EqualsGeometrically(IGraphEdgeData other)
         {
             if (other is CHEdgeData)
             { // ok, type is the same.
@@ -473,7 +473,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IDynamicGraph<CHEdgeData> graph,
+        public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
             KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
@@ -497,7 +497,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IDynamicGraph<CHEdgeData> graph,
+        public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
             KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);

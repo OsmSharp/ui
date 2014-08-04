@@ -24,6 +24,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Osm.Tiles;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
@@ -225,7 +226,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, LiveEdge>[] GetEdges(uint vertexId)
+        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))

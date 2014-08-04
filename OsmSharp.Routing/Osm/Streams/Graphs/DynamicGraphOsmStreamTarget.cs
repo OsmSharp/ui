@@ -39,7 +39,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// Data Processor Target to fill a dynamic graph object.
     /// </summary>
     public abstract class DynamicGraphOsmStreamWriter<TEdgeData> : OsmStreamTarget
-        where TEdgeData : IDynamicGraphEdgeData 
+        where TEdgeData : IGraphEdgeData 
     {
         /// <summary>
         /// Holds the dynamic graph.

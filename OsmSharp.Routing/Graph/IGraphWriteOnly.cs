@@ -22,8 +22,8 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Abstracts a graph implementation that is write-only.
     /// </summary>
-    public interface IDynamicGraphWriteOnly<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IGraphWriteOnly<TEdgeData> : IGraphReadOnly<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Adds a vertex.

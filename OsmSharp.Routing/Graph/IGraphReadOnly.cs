@@ -24,8 +24,8 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Abstracts an graph implementation. 
     /// </summary>
-    public interface IDynamicGraphReadOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IGraphReadOnly<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Gets an existing vertex.
@@ -36,19 +36,19 @@ namespace OsmSharp.Routing.Graph
         bool GetVertex(uint id, out float latitude, out float longitude);
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId);
-
-        /// <summary>
         /// Returns true if the given edge exists.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
         bool ContainsEdge(uint vertexId, uint neighbour);
+
+        /// <summary>
+        /// Returns all arcs for the given vertex.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
 
         /// <summary>
         /// Gets the data associated with the given edge and returns true if the edge exists.
