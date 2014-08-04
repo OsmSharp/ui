@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.VRP
                     routes[routeIdx].Tags = tags.ToArray();
 
                     // set the correct vehicle type.
-                    routes[routeIdx].Vehicle = vehicle;
+                    routes[routeIdx].Vehicle = vehicle.UniqueName;
                 }
             }
 

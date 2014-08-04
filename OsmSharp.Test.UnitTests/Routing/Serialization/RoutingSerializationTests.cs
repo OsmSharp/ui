@@ -207,27 +207,27 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             //deserializedVersion.GetVertex(20, out latitude, out longitude);
             Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
             Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(RouteSegmentType.Start, route.Entries[0].Type);
 
             //deserializedVersion.GetVertex(21, out latitude, out longitude);
             Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
             Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[1].Type);
 
             //deserializedVersion.GetVertex(16, out latitude, out longitude);
             Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
             Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[2].Type);
 
             //deserializedVersion.GetVertex(22, out latitude, out longitude);
             Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
             Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
             Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
             Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Entries[4].Type);
         }
 
         /// <summary>
@@ -298,27 +298,27 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             //deserializedVersion.GetVertex(20, out latitude, out longitude);
             Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
             Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(RouteSegmentType.Start, route.Entries[0].Type);
 
             //deserializedVersion.GetVertex(21, out latitude, out longitude);
             Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
             Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[1].Type);
 
             //deserializedVersion.GetVertex(16, out latitude, out longitude);
             Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
             Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[2].Type);
 
             //deserializedVersion.GetVertex(22, out latitude, out longitude);
             Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
             Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
             Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
             Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Entries[4].Type);
         }
 
         /// <summary>

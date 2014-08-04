@@ -109,7 +109,7 @@ namespace OsmSharp.Routing.Navigation
             {
                 if (this.NextInstruction != null)
                 { // the next instruction exists.
-                    RoutePointEntry entry = _route.Entries[this.NextInstruction.EntryIdx];
+                    RouteSegments entry = _route.Entries[this.NextInstruction.EntryIdx];
                     if (entry != null)
                     { // entry found.
                         return new GeoCoordinate(entry.Latitude, entry.Longitude);

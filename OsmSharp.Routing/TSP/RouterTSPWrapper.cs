@@ -217,7 +217,7 @@ namespace OsmSharp.Routing.TSP
 
             if (tsp != null)
             {
-                tsp.Vehicle = vehicle; // set the correct vehicle type.
+                tsp.Vehicle = vehicle.UniqueName; // set the correct vehicle type.
 
                 if (_interpreter != null)
                 { // there is an interpreter set: calculate time/distance.

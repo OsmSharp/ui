@@ -428,16 +428,16 @@ namespace OsmSharp.Routing.Routers
                 route = new Route();
 
                 // set the vehicle.
-                route.Vehicle = vehicle;
+                route.Vehicle = vehicle.UniqueName;
 
-                RoutePointEntry[] entries;
+                RouteSegments[] entries;
                 if (vertices.Length > 0)
                 {
                     entries = this.GenerateEntries(vehicle, vertices, geometryOnly);
                 }
                 else
                 {
-                    entries = new RoutePointEntry[0];
+                    entries = new RouteSegments[0];
                 }
 
                 // create the from routing point.
@@ -488,20 +488,20 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertices"></param>
         /// <param name="geometryOnly"></param>
         /// <returns></returns>
-        protected virtual RoutePointEntry[] GenerateEntries(Vehicle vehicle, long[] vertices,
+        protected virtual RouteSegments[] GenerateEntries(Vehicle vehicle, long[] vertices,
             bool geometryOnly)
         {
             // create an entries list.
-            var entries = new List<RoutePointEntry>();
+            var entries = new List<RouteSegments>();
 
             // create the first entry.
             GeoCoordinate coordinate = this.GetCoordinate(vehicle, vertices[0]);
-            var first = new RoutePointEntry();
+            var first = new RouteSegments();
             first.Latitude = (float)coordinate.Latitude;
             first.Longitude = (float)coordinate.Longitude;
-            first.Type = RoutePointEntryType.Start;
-            first.WayFromName = null;
-            first.WayFromNames = null;
+            first.Type = RouteSegmentType.Start;
+            first.Name = null;
+            first.Names = null;
 
             entries.Add(first);
 
@@ -535,20 +535,20 @@ namespace OsmSharp.Routing.Routers
                 { // loop over coordinates.
                     for (int coordinateIdx = 0; coordinateIdx < coordinates.Length; coordinateIdx++)
                     {
-                        var entry = new RoutePointEntry();
+                        var entry = new RouteSegments();
                         entry.Latitude = coordinates[coordinateIdx].Latitude;
                         entry.Longitude = coordinates[coordinateIdx].Longitude;
-                        entry.Type = RoutePointEntryType.Along;
+                        entry.Type = RouteSegmentType.Along;
                         entry.Tags = currentTags.ConvertFrom();
-                        entry.WayFromName = name;
-                        entry.WayFromNames = names.ConvertFrom();
+                        entry.Name = name;
+                        entry.Names = names.ConvertFrom();
 
                         entries.Add(entry);
                     }
                 }
 
                 // STEP2: Get the side streets
-                var sideStreets = new List<RoutePointEntrySideStreet>();
+                var sideStreets = new List<RouteSegmentBranch>();
                 if (!geometryOnly)
                 {
                     var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent, nodePrevious, nodeNext);
@@ -573,15 +573,15 @@ namespace OsmSharp.Routing.Routers
                                 var neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
 
                                 // build the side street info.
-                                var sideStreet = new RoutePointEntrySideStreet();
+                                var sideStreet = new RouteSegmentBranch();
                                 sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
                                 sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
                                 if (!geometryOnly)
                                 { // get metadata for this section too.
                                     var tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
                                     sideStreet.Tags = tags.ConvertFrom();
-                                    sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                                    sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                                    sideStreet.Name = _interpreter.EdgeInterpreter.GetName(tags);
+                                    sideStreet.Names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
                                 }
 
                                 sideStreets.Add(sideStreet);
@@ -593,14 +593,14 @@ namespace OsmSharp.Routing.Routers
                 // create the route entry.
                 var nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
 
-                var routeEntry = new RoutePointEntry();
+                var routeEntry = new RouteSegments();
                 routeEntry.Latitude = (float)nextCoordinate.Latitude;
                 routeEntry.Longitude = (float)nextCoordinate.Longitude;
                 routeEntry.SideStreets = sideStreets.ToArray();
                 routeEntry.Tags = currentTags.ConvertFrom();
-                routeEntry.Type = RoutePointEntryType.Along;
-                routeEntry.WayFromName = name;
-                routeEntry.WayFromNames = names.ConvertFrom();
+                routeEntry.Type = RouteSegmentType.Along;
+                routeEntry.Name = name;
+                routeEntry.Names = names.ConvertFrom();
                 entries.Add(routeEntry);
 
                 // set the previous node.
@@ -627,13 +627,13 @@ namespace OsmSharp.Routing.Routers
                 { // loop over coordinates.
                     for (int idx = 0; idx < coordinates.Length; idx++)
                     {
-                        var entry = new RoutePointEntry();
+                        var entry = new RouteSegments();
                         entry.Latitude = coordinates[idx].Latitude;
                         entry.Longitude = coordinates[idx].Longitude;
-                        entry.Type = RoutePointEntryType.Along;
+                        entry.Type = RouteSegmentType.Along;
                         entry.Tags = currentTags.ConvertFrom();
-                        entry.WayFromName = name;
-                        entry.WayFromNames = names.ConvertFrom();
+                        entry.Name = name;
+                        entry.Names = names.ConvertFrom();
 
                         entries.Add(entry);
                     }
@@ -641,13 +641,13 @@ namespace OsmSharp.Routing.Routers
 
                 // add last entry.
                 coordinate = this.GetCoordinate(vehicle, vertices[lastIdx]);
-                var last = new RoutePointEntry();
+                var last = new RouteSegments();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
-                last.Type = RoutePointEntryType.Stop;
+                last.Type = RouteSegmentType.Stop;
                 last.Tags = currentTags.ConvertFrom();
-                last.WayFromName = name;
-                last.WayFromNames = names.ConvertFrom();
+                last.Name = name;
+                last.Names = names.ConvertFrom();
 
                 entries.Add(last);
             }

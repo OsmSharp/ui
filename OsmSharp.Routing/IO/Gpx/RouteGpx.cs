@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.Gpx
             for (int idx = 0; idx < route.Entries.Length; idx++)
             {
                 // get the current entry.
-                RoutePointEntry entry = route.Entries[idx];
+                RouteSegments entry = route.Entries[idx];
 
                 // ================== INITIALIZE A NEW SEGMENT IF NEEDED! ========
                 wptType waypoint;

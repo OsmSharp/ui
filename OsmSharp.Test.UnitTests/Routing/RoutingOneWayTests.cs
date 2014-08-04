@@ -76,22 +76,22 @@ namespace OsmSharp.Test.Unittests.Routing
             data.GetVertex(19, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(RouteSegmentType.Start, route.Entries[0].Type);
 
             data.GetVertex(8, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[1].Type);
 
             data.GetVertex(9, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[2].Type);
 
             data.GetVertex(10, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[3].Type);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Entries[3].Type);
         }
 
         /// <summary>
@@ -115,32 +115,32 @@ namespace OsmSharp.Test.Unittests.Routing
             data.GetVertex(10, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(RouteSegmentType.Start, route.Entries[0].Type);
 
             data.GetVertex(12, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[1].Type);
 
             data.GetVertex(13, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[2].Type);
 
             data.GetVertex(14, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[3].Type);
 
             data.GetVertex(15, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[4].Type);
+            Assert.AreEqual(RouteSegmentType.Along, route.Entries[4].Type);
 
             data.GetVertex(19, out latitude, out longitude);
             Assert.AreEqual(latitude, route.Entries[5].Latitude, 0.00001);
             Assert.AreEqual(longitude, route.Entries[5].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[5].Type);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Entries[5].Type);
         }
 
         /// <summary>

@@ -142,7 +142,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 Assert.AreEqual(route3540.Entries[idx].Longitude, route3540concatenated.Entries[idx].Longitude);
                 Assert.AreEqual(route3540.Entries[idx].Time, route3540concatenated.Entries[idx].Time);
                 Assert.AreEqual(route3540.Entries[idx].Type, route3540concatenated.Entries[idx].Type);
-                Assert.AreEqual(route3540.Entries[idx].WayFromName, route3540concatenated.Entries[idx].WayFromName);
+                Assert.AreEqual(route3540.Entries[idx].Name, route3540concatenated.Entries[idx].Name);
 
                 // something that is allowed to be different in this case!
                 // route3540.Entries[idx].Points != null

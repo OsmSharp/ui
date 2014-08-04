@@ -318,8 +318,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                         route.Entries[idx].Time);
                     Assert.AreEqual(reference.Entries[idx].Type,
                         route.Entries[idx].Type);
-                    Assert.AreEqual(reference.Entries[idx].WayFromName,
-                        route.Entries[idx].WayFromName);
+                    Assert.AreEqual(reference.Entries[idx].Name,
+                        route.Entries[idx].Name);
                 }
             }
         }
