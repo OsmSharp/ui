@@ -278,6 +278,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // index relevant and used nodes.
                     if (way.Nodes != null)
                     { // this way has nodes.
+                        // add new routable tags type.
+                        var routableWayTags = new TagsCollection(way.Tags);
+                        routableWayTags.RemoveAll(x =>
+                        {
+                            return _interpreter.IsRelevantRouting(x.Key);
+                        });
+                        _tagsIndex.Add(routableWayTags);
+
                         int wayNodesCount = way.Nodes.Count;
                         for (int idx = 0; idx < wayNodesCount; idx++)
                         {
@@ -441,7 +449,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags,
+        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags, 
             bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates);
 
         /// <summary>

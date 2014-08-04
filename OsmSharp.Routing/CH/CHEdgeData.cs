@@ -235,7 +235,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public uint ContractedVertexId { get; set; }
 
         /// <summary>
-        /// Returns the tags (0 means no tags). 
+        /// Gets or sets the tags id.
         /// </summary>
         public uint Tags { get; set; }
 

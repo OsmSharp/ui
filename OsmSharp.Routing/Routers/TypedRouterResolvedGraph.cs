@@ -216,9 +216,18 @@ namespace OsmSharp.Routing.Routers
             }
 
             /// <summary>
-            /// Returns the tags identifier.
+            /// Gets or sets the tags id.
             /// </summary>
             public uint Tags
+            {
+                get;
+                private set;
+            }
+
+            /// <summary>
+            /// Gets or sets the type id.
+            /// </summary>
+            public uint TypeId
             {
                 get;
                 private set;

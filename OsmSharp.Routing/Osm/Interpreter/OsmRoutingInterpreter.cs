@@ -16,16 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Interpreter;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Osm;
-using OsmSharp.Collections.Tags;
 using OsmSharp.Units.Speed;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Interpreter
 {
@@ -43,6 +39,11 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// Holds the routing constraints.
         /// </summary>
         private readonly IRoutingConstraints _constraints;
+
+        /// <summary>
+        /// Holds the relevant routing keys.
+        /// </summary>
+        private HashSet<string> _relevantRoutingKeys;
 
         /// <summary>
         /// Holds the relevant keys.
@@ -87,7 +88,8 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         private void FillRelevantTags()
         {
-            _relevantKeys = new HashSet<string> { "oneway", "highway", "name", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction" };
+            _relevantRoutingKeys = new HashSet<string> { "oneway", "highway", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction" }; 
+            _relevantKeys = new HashSet<string> { "name" };
         }
 
         /// <summary>
@@ -97,7 +99,8 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <returns></returns>
         public bool IsRelevant(string key)
         {
-            return _relevantKeys.Contains(key);
+            return _relevantRoutingKeys.Contains(key) ||
+                _relevantKeys.Contains(key);
         }
 
         /// <summary>
@@ -121,6 +124,16 @@ namespace OsmSharp.Routing.Osm.Interpreter
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given tag is relevant for routing.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsRelevantRouting(string key)
+        {
+            return _relevantRoutingKeys.Contains(key);
         }
 
         /// <summary>

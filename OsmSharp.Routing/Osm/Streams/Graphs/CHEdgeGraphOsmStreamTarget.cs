@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="to"></param>
         /// <param name="intermediates"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, 
+        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
             TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             double weight = _vehicle.Weight(tags, from, to);

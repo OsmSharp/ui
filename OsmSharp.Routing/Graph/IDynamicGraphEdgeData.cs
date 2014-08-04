@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Graph
         bool RepresentsNeighbourRelations { get; }
 
         /// <summary>
-        /// Returns the tags identifier.
+        /// Returns the tag id.
         /// </summary>
         uint Tags
         {
