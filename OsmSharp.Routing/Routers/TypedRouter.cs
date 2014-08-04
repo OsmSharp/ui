@@ -519,14 +519,19 @@ namespace OsmSharp.Routing.Routers
             TagsCollectionBase currentTags = new TagsCollection();
             var name = string.Empty;
             var names = new Dictionary<string, string>();
-            for (int idx = 1; idx < vertices.Length - 1; idx++)
+            for (int idx = 1; idx < vertices.Length; idx++)
             {
                 // get all the data needed to calculate the next route entry.
                 var nodePreviousCoordinate = coordinate;
                 var nodeCurrent = vertices[idx];
                 var nodeCurrentCoordinate = this.GetCoordinate(vehicle, nodeCurrent.Item1);
-                var nodeNext = vertices[idx + 1];
-                var nodeNextCoordinate = this.GetCoordinate(vehicle, nodeNext.Item1);
+                Tuple<long, double> nodeNext = null;
+                GeoCoordinate nodeNextCoordinate = null;
+                if (idx < vertices.Length - 1)
+                { // there is a next node.
+                    nodeNext = vertices[idx + 1];
+                    nodeNextCoordinate = this.GetCoordinate(vehicle, nodeNext.Item1);
+                }
 
                 // get coordinates and calculate distance.
                 var coordinates = this.GetEdgeShape(vehicle, nodePrevious.Item1, nodeCurrent.Item1);
@@ -601,7 +606,7 @@ namespace OsmSharp.Routing.Routers
 
                 // STEP2: Get the side streets
                 RouteSegmentBranch[] sideStreetsArray = null;
-                if (!geometryOnly)
+                if (!geometryOnly && idx < vertices.Length - 1)
                 {
                     var sideStreets = new List<RouteSegmentBranch>();
                     var neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent.Item1, nodePrevious.Item1, nodeNext.Item1);
@@ -658,51 +663,6 @@ namespace OsmSharp.Routing.Routers
 
                 // set the previous node.
                 nodePrevious = nodeCurrent;
-            }
-
-            // create the last entry.
-            if (vertices.Length > 1)
-            {
-                int lastIdx = vertices.Length - 1;
-                var edge = this.GetEdgeData(vehicle, vertices[lastIdx - 1].Item1, vertices[lastIdx].Item1);
-                if (!geometryOnly)
-                {
-                    currentTags = _dataGraph.TagsIndex.Get(edge.Tags);
-
-                    // get names.
-                    name = _interpreter.EdgeInterpreter.GetName(currentTags);
-                    names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(currentTags);
-                }
-
-                // add intermediate entries.
-                var coordinates = this.GetEdgeShape(vehicle, vertices[lastIdx - 1].Item1, vertices[lastIdx].Item1);
-                if (coordinates != null)
-                { // loop over coordinates.
-                    for (int idx = 0; idx < coordinates.Length; idx++)
-                    {
-                        var entry = new RouteSegment();
-                        entry.Latitude = coordinates[idx].Latitude;
-                        entry.Longitude = coordinates[idx].Longitude;
-                        entry.Type = RouteSegmentType.Along;
-                        entry.Tags = currentTags.ConvertFrom();
-                        entry.Name = name;
-                        entry.Names = names.ConvertFrom();
-
-                        entries.Add(entry);
-                    }
-                }
-
-                // add last entry.
-                coordinate = this.GetCoordinate(vehicle, vertices[lastIdx].Item1);
-                var last = new RouteSegment();
-                last.Latitude = (float)coordinate.Latitude;
-                last.Longitude = (float)coordinate.Longitude;
-                last.Type = RouteSegmentType.Stop;
-                last.Tags = currentTags.ConvertFrom();
-                last.Name = name;
-                last.Names = names.ConvertFrom();
-
-                entries.Add(last);
             }
 
             // return the result.
