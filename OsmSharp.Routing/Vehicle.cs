@@ -107,7 +107,7 @@ namespace OsmSharp.Routing
             { // initialize the vehicle by name dictionary.
                 VehiclesByName = new Dictionary<string, Vehicle>();
             }
-            VehiclesByName[this.UniqueName] = this;
+            VehiclesByName[this.UniqueName.ToLowerInvariant()] = this;
         }
 
         /// <summary>
@@ -122,6 +122,7 @@ namespace OsmSharp.Routing
             { // no vehicles have been registered.
                 Vehicle.RegisterVehicles();
             }
+            uniqueName = uniqueName.ToLowerInvariant();
             if(!VehiclesByName.TryGetValue(uniqueName, out vehicle))
             { // vehicle name not registered.
                 throw new ArgumentOutOfRangeException(string.Format("Vehicle profile with name {0} not found or not registered.", uniqueName));
