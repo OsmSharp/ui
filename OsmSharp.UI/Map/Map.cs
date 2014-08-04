@@ -63,7 +63,6 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Delegate for map changes.
         /// </summary>
-        /// <param name="?"></param>
         public delegate void MapChangedDelegate();
 
         /// <summary>
@@ -233,7 +232,6 @@ namespace OsmSharp.UI.Map
         /// Adds a new tile layer.
         /// </summary>
         /// <param name="tileUrl">The tile URL.</param>
-        /// <param name="nativeImageCache">The native image cache.</param>
         public LayerTile AddLayerTile(string tileUrl)
         {
             var layerTile = new LayerTile(tileUrl);

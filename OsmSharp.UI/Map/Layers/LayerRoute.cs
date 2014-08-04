@@ -80,6 +80,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="route">Stream.</param>
         /// <param name="argb">Stream.</param>
+        /// <param name="width"></param>
         public void AddRoute(Route route, int argb, double width)
         {
             if (route != null &&
