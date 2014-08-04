@@ -340,7 +340,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Compresses the internal of the graph, freeing new space.
         /// </summary>
-        /// <param name="max"></param>
         public void Compress()
         {
             _graph.Trim();

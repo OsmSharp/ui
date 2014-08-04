@@ -288,7 +288,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
-        /// <param name="metaTags"></param>
+        /// <param name="vehicles"></param>
         /// <returns></returns>
         protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
     }

@@ -120,6 +120,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         public virtual Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false)
         {
@@ -412,6 +413,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="route"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
+        /// <param name="geometryOnly"></param>
         /// <returns></returns>
         protected virtual Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target, bool geometryOnly)
         {
@@ -1081,6 +1083,7 @@ namespace OsmSharp.Routing.Routers
         /// Returns a routerpoint for the given location.
         /// </summary>
         /// <param name="location"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
         protected bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
         {
@@ -1091,6 +1094,7 @@ namespace OsmSharp.Routing.Routers
         /// Returns a routerpoint for the given resolvedId.
         /// </summary>
         /// <param name="resolvedId"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
         protected bool GetRouterPoint(long resolvedId, out RouterPoint point)
         {
@@ -1511,7 +1515,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle"></param>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="resolvedPoint"></param>
+        /// <param name="resolvedCoordinate"></param>
         /// <param name="edgeData"></param>
         /// <returns></returns>
         protected RouterPoint AddResolvedPointExact(Vehicle vehicle, uint vertex1, uint vertex2, GeoCoordinate resolvedCoordinate, TEdgeData edgeData)

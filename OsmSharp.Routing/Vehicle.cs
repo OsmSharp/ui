@@ -272,7 +272,7 @@ namespace OsmSharp.Routing
         /// Returns the weight between points based on the tags and distance.
         /// </summary>
         /// <param name="tags"></param>
-        /// <param name="p"></param>
+        /// <param name="distance"></param>
         /// <returns></returns>
         public virtual float Weight(TagsCollectionBase tags, float distance)
         {

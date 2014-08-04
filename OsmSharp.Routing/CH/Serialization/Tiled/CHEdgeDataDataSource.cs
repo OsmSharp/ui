@@ -68,6 +68,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compressed"></param>
+        /// <param name="vehicles"></param>
         /// <param name="tileMetas"></param>
         /// <param name="zoom"></param>
         /// <param name="v1RoutingDataSourceSerializer"></param>

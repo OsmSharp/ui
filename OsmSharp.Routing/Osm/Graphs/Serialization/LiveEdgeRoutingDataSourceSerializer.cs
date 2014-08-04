@@ -550,7 +550,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns a simple array.
             /// </summary>
-            /// <param name="coordinates"></param>
+            /// <param name="simples"></param>
             /// <returns></returns>
             public static SerializableCoordinate[] FromSimpleArray(GeoCoordinateSimple[] simples)
             {

@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.Gpx
         /// <summary>
         /// Saves the route to a gpx file.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="stream"></param>
         /// <param name="route"></param>
         internal static void Save(Stream stream, Route route)
         {

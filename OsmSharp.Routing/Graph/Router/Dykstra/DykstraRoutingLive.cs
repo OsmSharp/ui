@@ -288,6 +288,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="stopAtFirst"></param>
         /// <param name="returnAtWeight"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
@@ -308,6 +309,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="stopAtFirst"></param>
         /// <param name="returnAtWeight"></param>
         /// <param name="forward"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
