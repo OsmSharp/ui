@@ -522,13 +522,13 @@ namespace OsmSharp.Routing.Routers
             var distance = 0.0;
             var time = 0.0;
             var nodePrevious = vertices[0];
+            var nodePreviousCoordinate = coordinate;
             TagsCollectionBase currentTags = new TagsCollection();
             var name = string.Empty;
             var names = new Dictionary<string, string>();
             for (int idx = 1; idx < vertices.Length; idx++)
             {
                 // get all the data needed to calculate the next route entry.
-                var nodePreviousCoordinate = coordinate;
                 var nodeCurrent = vertices[idx];
                 var nodeCurrentCoordinate = this.GetCoordinate(vehicle, nodeCurrent.Item1);
                 Tuple<long, double> nodeNext = null;
@@ -676,6 +676,7 @@ namespace OsmSharp.Routing.Routers
 
                 // set the previous node.
                 nodePrevious = nodeCurrent;
+                nodePreviousCoordinate = nodeCurrentCoordinate;
             }
 
             // return the result.
