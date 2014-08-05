@@ -78,25 +78,25 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         /// <summary>
         /// Gets or sets the font style.
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(9)]
         public FontStyle FontStyle { get; set; }
 
         /// <summary>
         /// Gets or sets the font weight.
         /// </summary>
-        [ProtoMember(7)]
+        [ProtoMember(10)]
         public FontWeight FontWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the x-offset of the text.
         /// </summary>
-        [ProtoMember(8)]
+        [ProtoMember(11)]
         public int XOffset { get; set; }
 
         /// <summary>
         /// Gets or sets the y-offset of the text.
         /// </summary>
-        [ProtoMember(9)]
+        [ProtoMember(12)]
         public int YOffset { get; set; }
 
         /// <summary>

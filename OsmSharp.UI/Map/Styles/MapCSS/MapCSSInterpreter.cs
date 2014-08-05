@@ -149,7 +149,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     _keysForLines = null;
                                     break;
                                 case SelectorTypeEnum.Area:
-                                    //_keysForAreas = null;
+                                    _keysForAreas = null;
                                     break;
                             }
                         }
