@@ -158,18 +158,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (selector.Type)
                             {
                                 case SelectorTypeEnum.Node:
+                                    if (_keysForNodes == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForNodes);
                                     break;
                                 case SelectorTypeEnum.Way:
+                                    if (_keysForWays == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForWays);
                                     break;
                                 case SelectorTypeEnum.Relation:
+                                    if (_keysForRelations == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForRelations);
                                     break;
                                 case SelectorTypeEnum.Line:
+                                    if (_keysForLines == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForLines);
                                     break;
                                 case SelectorTypeEnum.Area:
+                                    if (_keysForAreas == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForAreas);
                                     break;
                             }
