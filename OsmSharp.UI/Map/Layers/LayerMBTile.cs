@@ -75,7 +75,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Creates a new tiles layer.
         /// </summary>
         /// <param name="connection">The SQLite connection to the MBTiles.</param>
-        /// <param name="nativeImageCache">The native image cache.</param>
         public LayerMBTile(SQLiteConnectionBase connection)
         {
             _nativeImageCache = NativeImageCacheFactory.Create();
@@ -102,7 +101,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Returns all primitives from this layer visible for the given parameters.
         /// </summary>
         /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
         /// <param name="view"></param>
         /// <returns></returns>
         protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
@@ -130,6 +128,14 @@ namespace OsmSharp.UI.Map.Layers
             return primitives;
         }
 
+        /// <summary>
+        /// Notifies this layer that the current mapview has changed.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="center"></param>
+        /// <param name="view"></param>
+        /// <param name="extraView"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // calculate the current zoom level.

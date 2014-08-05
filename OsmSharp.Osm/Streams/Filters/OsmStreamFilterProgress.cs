@@ -42,7 +42,6 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <summary>
         /// Creates a new progress reporting source.
         /// </summary>
-        /// <param name="reader"></param>
         public OsmStreamFilterProgress()
         {
 

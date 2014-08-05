@@ -58,6 +58,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <returns>The point.</returns>
         /// <param name="coordinate">Coordinate.</param>
         /// <param name="sizePixels">Size pixels.</param>
+        /// <param name="color"></param>
         public void AddPoint(GeoCoordinate coordinate, float sizePixels, int color)
         {
             double[] projectedCoordinates = _projection.ToPixel(
@@ -159,6 +160,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
+        /// <param name="extraView"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // all data is preloaded for now.

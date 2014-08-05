@@ -49,6 +49,13 @@ namespace OsmSharp.Routing.Interpreter
         bool IsRelevant(string key, string value);
 
         /// <summary>
+        /// Returns true if the given tag is relevant for this interpreter for routing, false otherwise.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        bool IsRelevantRouting(string key);
+
+        /// <summary>
         /// Returns true if the given vertices can be traversed in the given order.
         /// </summary>
         /// <param name="from"></param>

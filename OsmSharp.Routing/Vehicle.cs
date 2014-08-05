@@ -107,7 +107,7 @@ namespace OsmSharp.Routing
             { // initialize the vehicle by name dictionary.
                 VehiclesByName = new Dictionary<string, Vehicle>();
             }
-            VehiclesByName[this.UniqueName] = this;
+            VehiclesByName[this.UniqueName.ToLowerInvariant()] = this;
         }
 
         /// <summary>
@@ -120,8 +120,9 @@ namespace OsmSharp.Routing
             Vehicle vehicle = null;
             if(VehiclesByName == null)
             { // no vehicles have been registered.
-                throw new InvalidOperationException("No vehicles have been registered.");
+                Vehicle.RegisterVehicles();
             }
+            uniqueName = uniqueName.ToLowerInvariant();
             if(!VehiclesByName.TryGetValue(uniqueName, out vehicle))
             { // vehicle name not registered.
                 throw new ArgumentOutOfRangeException(string.Format("Vehicle profile with name {0} not found or not registered.", uniqueName));
@@ -272,7 +273,7 @@ namespace OsmSharp.Routing
         /// Returns the weight between points based on the tags and distance.
         /// </summary>
         /// <param name="tags"></param>
-        /// <param name="p"></param>
+        /// <param name="distance"></param>
         /// <returns></returns>
         public virtual float Weight(TagsCollectionBase tags, float distance)
         {

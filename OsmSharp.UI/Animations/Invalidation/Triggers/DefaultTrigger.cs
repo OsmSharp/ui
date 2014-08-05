@@ -189,6 +189,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
         /// </summary>
         /// <param name="millis">The milliseconds that the previous rendering took.</param>
         /// <param name="view">The view that was used for the latest rendering.</param>
+        /// <param name="zoom"></param>
         public override void NotifyRenderSuccess(View2D view, double zoom, int millis)
         {
             _latestView = view;

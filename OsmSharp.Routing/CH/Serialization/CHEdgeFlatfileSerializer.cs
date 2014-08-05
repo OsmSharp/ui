@@ -62,25 +62,29 @@ namespace OsmSharp.Routing.CH.Serialization
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetArcs(vertex);
+                var arcs = graph.GetEdges(vertex);
                 if (arcs != null)
-                { // serialize the arcs.
+                { // serialize the arcs, but serialize them only once. 
+                    // choose only those arcs that start at a vertex smaller than the target.
                     for (int idx = 0; idx < arcs.Length; idx++)
                     {
-                        arcsQueue.Add(new SerializableEdge()
+                        if (arcs[idx].Key > vertex)
                         {
-                            FromId = vertex,
-                            ToId = arcs[idx].Key,
-                            ContractedVertexId = arcs[idx].Value.ContractedVertexId,
-                            Direction = arcs[idx].Value.Direction,
-                            Tags = arcs[idx].Value.Tags,
-                            Weight = arcs[idx].Value.Weight
-                        });
+                            arcsQueue.Add(new SerializableEdge()
+                            {
+                                FromId = vertex,
+                                ToId = arcs[idx].Key,
+                                ContractedVertexId = arcs[idx].Value.ContractedVertexId,
+                                Direction = arcs[idx].Value.Direction,
+                                Tags = arcs[idx].Value.Tags,
+                                Weight = arcs[idx].Value.Weight
+                            });
 
-                        if(arcsQueue.Count == blockSize)
-                        { // execute serialization.
-                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
-                            arcsQueue.Clear();
+                            if (arcsQueue.Count == blockSize)
+                            { // execute serialization.
+                                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                                arcsQueue.Clear();
+                            }
                         }
                     }
 
@@ -113,7 +117,7 @@ namespace OsmSharp.Routing.CH.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
-                    graph.AddArc(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
+                    graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new CHEdgeData()
                         {
                             ContractedVertexId = serializableEdges[idx].ContractedVertexId,

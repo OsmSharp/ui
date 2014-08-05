@@ -49,10 +49,10 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
 
-            graph.AddArc(vertex1, vertex2, edge, null);
-            graph.AddArc(vertex2, vertex1, edge, null);
-            graph.AddArc(vertex2, vertex3, edge, null);
-            graph.AddArc(vertex3, vertex2, edge, null);
+            graph.AddEdge(vertex1, vertex2, edge, null);
+            graph.AddEdge(vertex2, vertex1, edge, null);
+            graph.AddEdge(vertex2, vertex3, edge, null);
+            graph.AddEdge(vertex3, vertex2, edge, null);
 
             // execute pre-processor.
             var preProcessor = new LiveEdgePreprocessor(graph);
@@ -60,10 +60,10 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
             // test resulting graph.
             Assert.AreEqual(2, graph.VertexCount);
-            Assert.AreEqual(1, graph.GetArcs(1).Length);
-            Assert.AreEqual(2, graph.GetArcs(1)[0].Key);
-            Assert.AreEqual(1, graph.GetArcs(2).Length);
-            Assert.AreEqual(1, graph.GetArcs(2)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(1).Length);
+            Assert.AreEqual(2, graph.GetEdges(1)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(2).Length);
+            Assert.AreEqual(1, graph.GetEdges(2)[0].Key);
         }
 
         /// <summary>
@@ -90,16 +90,16 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             uint vertex5 = graph.AddVertex(4, 4);
             uint vertex6 = graph.AddVertex(5, 5);
 
-            graph.AddArc(vertex1, vertex2, edge, null); // 1 <-> 2
-            graph.AddArc(vertex2, vertex1, edge, null); // 1 <-> 2
-            graph.AddArc(vertex2, vertex3, edge, null); // 2 <-> 3
-            graph.AddArc(vertex3, vertex2, edge, null); // 2 <-> 3
-            graph.AddArc(vertex3, vertex4, edge, null); // 3 <-> 4
-            graph.AddArc(vertex4, vertex3, edge, null); // 3 <-> 4
-            graph.AddArc(vertex4, vertex5, edge, null); // 4 <-> 5
-            graph.AddArc(vertex5, vertex4, edge, null); // 4 <-> 5
-            graph.AddArc(vertex3, vertex6, edge, null); // 3 <-> 6
-            graph.AddArc(vertex6, vertex3, edge, null); // 3 <-> 6
+            graph.AddEdge(vertex1, vertex2, edge, null); // 1 <-> 2
+            graph.AddEdge(vertex2, vertex1, edge, null); // 1 <-> 2
+            graph.AddEdge(vertex2, vertex3, edge, null); // 2 <-> 3
+            graph.AddEdge(vertex3, vertex2, edge, null); // 2 <-> 3
+            graph.AddEdge(vertex3, vertex4, edge, null); // 3 <-> 4
+            graph.AddEdge(vertex4, vertex3, edge, null); // 3 <-> 4
+            graph.AddEdge(vertex4, vertex5, edge, null); // 4 <-> 5
+            graph.AddEdge(vertex5, vertex4, edge, null); // 4 <-> 5
+            graph.AddEdge(vertex3, vertex6, edge, null); // 3 <-> 6
+            graph.AddEdge(vertex6, vertex3, edge, null); // 3 <-> 6
 
             // execute pre-processor.
             var preProcessor = new LiveEdgePreprocessor(graph);
@@ -108,19 +108,19 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             // test resulting graph.
             Assert.AreEqual(4, graph.VertexCount);
 
-            Assert.AreEqual(1, graph.GetArcs(1).Length);
-            Assert.AreEqual(2, graph.GetArcs(1)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(1).Length);
+            Assert.AreEqual(2, graph.GetEdges(1)[0].Key);
 
-            Assert.AreEqual(3, graph.GetArcs(2).Length);
-            Assert.IsTrue(graph.GetArcs(2).Any(x => x.Key == 1));
-            Assert.IsTrue(graph.GetArcs(2).Any(x => x.Key == 3));
-            Assert.IsTrue(graph.GetArcs(2).Any(x => x.Key == 4));
+            Assert.AreEqual(3, graph.GetEdges(2).Length);
+            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 1));
+            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 3));
+            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 4));
 
-            Assert.AreEqual(1, graph.GetArcs(3).Length);
-            Assert.AreEqual(2, graph.GetArcs(3)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(3).Length);
+            Assert.AreEqual(2, graph.GetEdges(3)[0].Key);
 
-            Assert.AreEqual(1, graph.GetArcs(4).Length);
-            Assert.AreEqual(2, graph.GetArcs(4)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(4).Length);
+            Assert.AreEqual(2, graph.GetEdges(4)[0].Key);
         }
     }
 }

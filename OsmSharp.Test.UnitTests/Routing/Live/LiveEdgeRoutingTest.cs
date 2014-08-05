@@ -16,20 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Collections.Tags.Index;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.Live
 {
@@ -82,7 +82,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
-                    memoryData, interpreter, tagsIndex);
+                    memoryData, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
                 var sorter = new OsmStreamFilterSort();

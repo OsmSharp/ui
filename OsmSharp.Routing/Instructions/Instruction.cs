@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions
 {
@@ -30,51 +30,59 @@ namespace OsmSharp.Routing.Instructions
         /// <summary>
         /// Creates a new instruction with only a location.
         /// </summary>
-        /// <param name="entryIdx"></param>
+        /// <param name="metaData"></param>
+        /// <param name="segmentIdx"></param>
         /// <param name="location"></param>
-        public Instruction(int entryIdx, GeoCoordinateBox location)
+        /// <param name="text"></param>
+        public Instruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox location, string text)
+            : this(metaData, segmentIdx, location, text, new List<PointPoi>())
         {
-            this.EntryIdx = entryIdx;
-            this.Location = location;
+
         }
 
         /// <summary>
         /// Creates a new instruction with a location and points of interest.
         /// </summary>
-        /// <param name="entryIdx"></param>
+        /// <param name="metaData"></param>
+        /// <param name="segmentIdx"></param>
         /// <param name="location"></param>
+        /// <param name="text"></param>
         /// <param name="pois"></param>
-        public Instruction(int entryIdx, GeoCoordinateBox location, List<PointPoi> pois)
+        public Instruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox location, string text, List<PointPoi> pois)
         {
-            this.EntryIdx = entryIdx;
+            this.SegmentIdx = segmentIdx;
             this.Location = location;
             this.Pois = pois;
+            this.MetaData = metaData;
+            this.Text = text;
+
+            this.Pois = new List<PointPoi>();
         }
 
         /// <summary>
         /// The points of interest for this instruction.
         /// </summary>
-        public List<PointPoi> Pois { get; private set; }
+        public virtual List<PointPoi> Pois { get; protected set; }
 
         /// <summary>
         /// The location of this instruction.
         /// </summary>
-        public GeoCoordinateBox Location { get; private set; }
+        public virtual GeoCoordinateBox Location { get; protected set; }
 
         /// <summary>
         /// Gets or sets the entry idx.
         /// </summary>
-        public int EntryIdx { get; private set; }
+        public virtual int SegmentIdx { get; protected set; }
 
         /// <summary>
-        /// The instruction text.
+        /// Gets the instruction text.
         /// </summary>
-        public string Text { get; set; }
+        public virtual string Text { get; protected set; }
 
         /// <summary>
-        /// Gets/sets some extras if needed.
+        /// Gets or sets the meta-data.
         /// </summary>
-        public Dictionary<string, object> Extras { get; set; }
+        public Dictionary<string, object> MetaData { get; private set; }
 
         /// <summary>
         /// Returns a string that represents the current coordinate.

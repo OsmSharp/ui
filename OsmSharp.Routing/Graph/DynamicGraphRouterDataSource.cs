@@ -24,6 +24,7 @@ using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -159,7 +160,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetEdges(
             GeoCoordinateBox box)
         {
             if (_vertexIndex == null) {
@@ -175,7 +176,7 @@ namespace OsmSharp.Routing.Graph
             var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
             foreach (uint vertex in vertices)
             {
-                var localArcs = this.GetArcs(vertex);
+                var localArcs = this.GetEdges(vertex);
                 foreach (var localArc in localArcs)
                 {
                     arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
@@ -202,9 +203,9 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId)
         {
-            return _graph.GetArcs(vertexId);
+            return _graph.GetEdges(vertexId);
         }
 
         /// <summary>
@@ -213,27 +214,33 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
-            return _graph.HasArc(vertexId, neighbour);
+            return _graph.ContainsEdge(vertexId, neighbour);
         }
 
         /// <summary>
-        /// Adds a new vertex to this graph.
+        /// Returns true if the given vertex has the given neighbour.
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        /// <param name="neighboursEstimate"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public uint AddVertex(float latitude, float longitude, byte neighboursEstimate)
+        public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
         {
-            uint vertex = _graph.AddVertex(latitude, longitude, neighboursEstimate);
-            if (_vertexIndex != null)
-            {
-                _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                    vertex);
-            }
-            return vertex;
+            return _graph.GetEdge(vertex1, vertex2, out data);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            return _graph.GetEdgeShape(vertex1, vertex2, out shape);
         }
 
         /// <summary>
@@ -265,24 +272,48 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds a new arc.
+        /// Adds a new edge.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data)
+        {
+            _graph.AddEdge(vertex1, vertex2, data, null);
+        }
+
+        /// <summary>
+        /// Adds a new edge.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <param name="coordinates"></param>
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        {
+            _graph.AddEdge(vertex1, vertex2, data, coordinates);
+        }
+
+        /// <summary>
+        /// Adds a new edge.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
+        /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        public void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
-            _graph.AddArc(from, to, data, comparer);
+            _graph.AddEdge(from, to, data, coordinates, comparer);
         }
 
         /// <summary>
         /// Removes all arcs starting at vertex.
         /// </summary>
         /// <param name="vertex"></param>
-        public void DeleteArc(uint vertex)
+        public void RemoveEdges(uint vertex)
         {
-            _graph.DeleteArc(vertex);
+            _graph.RemoveEdges(vertex);
         }
 
         /// <summary>
@@ -290,9 +321,9 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public void DeleteArc(uint from, uint to)
+        public void RemoveEdge(uint from, uint to)
         {
-            _graph.DeleteArc(from, to);
+            _graph.RemoveEdge(from, to);
         }
 
         /// <summary>
@@ -307,19 +338,18 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Trims this graph.
+        /// Compresses the internal of the graph, freeing new space.
         /// </summary>
-        /// <param name="max"></param>
-        public void Trim(uint vertices)
+        public void Compress()
         {
-            _graph.Trim(vertices);
+            _graph.Trim();
 
             // rebuild index.
             if (_vertexIndex != null)
             {
                 float latitude, longitude;
                 _vertexIndex.Clear();
-                for (uint idx = 0; idx < vertices; idx++)
+                for (uint idx = 0; idx < _graph.VertexCount; idx++)
                 {
                     if (_graph.GetVertex(idx, out latitude, out longitude))
                     {
@@ -327,6 +357,24 @@ namespace OsmSharp.Routing.Graph
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Trims all internal data structures.
+        /// </summary>
+        public void Trim()
+        {
+            _graph.Trim();
+        }
+
+        /// <summary>
+        /// Resizes the internal data structures of the graph to handle the number of vertices/edges estimated.
+        /// </summary>
+        /// <param name="vertexEstimate"></param>
+        /// <param name="edgeEstimate"></param>
+        public void Resize(long vertexEstimate, long edgeEstimate)
+        {
+            _graph.Resize(vertexEstimate, edgeEstimate);
         }
 
         /// <summary>

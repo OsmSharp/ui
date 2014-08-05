@@ -17,27 +17,18 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Android.App;
+using Android.Graphics;
 using Android.OS;
 using Android.Widget;
-using OsmSharp.Android.UI.Data.SQLite;
-using OsmSharp.Android.UI.Renderer.Images;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Android.UI.Controls;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.Navigation;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Renderer.Scene;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Reflection;
 using System.Timers;
-using Android.Graphics;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -147,9 +138,8 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapAllowTilt = false;
             _mapView.MapScaleFactor = 2;
 
-            AddMarkers();
-            //_mapView.AddMarker(from);
-            //_mapView.AddMarker(to);
+            // AddMarkers();
+            AddControls();
 
             // initialize a text view to display routing instructions.
             _textView = new TextView(this);
@@ -181,10 +171,22 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.ClearMarkers();
 
             var img = BitmapFactory.DecodeResource(this.Resources, Resource.Drawable.marker);
-            MapMarker marker1 = new MapMarker(this, from, MapMarkerAlignmentType.CenterBottom, img);
+            MapMarker marker1 = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, img);
             _mapView.AddMarker(marker1);
 
             _mapView.AddMarker(to);
+        }
+
+        void AddControls()
+        {
+            var textView = new TextView(this.ApplicationContext);
+            textView.Text = "Some text here, hopefully.";
+            textView.TextSize = 10;
+            textView.SetTextColor(global::Android.Graphics.Color.Black);
+
+            var textViewControl = new MapControl<TextView>(textView, new GeoCoordinate(51.261203, 4.780760), MapControlAlignmentType.CenterBottom,
+                100, 200);
+            _mapView.AddControl(textViewControl);
         }
 
         void _mapView_MapTapEvent(GeoCoordinate coordinate)

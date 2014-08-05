@@ -674,6 +674,7 @@ namespace OsmSharp.Math.Primitives
 			return new BoxF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
 		}
 
+        /// <summary>
         /// Returns a scaled version of this bounding box.
         /// </summary>
         /// <param name="factor"></param>

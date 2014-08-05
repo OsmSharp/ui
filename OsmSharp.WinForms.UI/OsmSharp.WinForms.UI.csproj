@@ -77,6 +77,8 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedViewAccessorWrapper.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileWrapper.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="MapControl.cs">
       <SubType>UserControl</SubType>

@@ -19,8 +19,8 @@
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -35,8 +35,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
-                           IBasicRouter<CHEdgeData> router)
+        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> router)
             : base(graph, interpreter, router)
         {
 
@@ -60,7 +59,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected override KeyValuePair<uint, CHEdgeData>[] GetNeighboursUndirected(long vertex1)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetArcs(Convert.ToUInt32(vertex1));
+            KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1));
             return arcs.KeepUncontracted();
         }
     }

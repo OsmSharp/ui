@@ -88,7 +88,7 @@ namespace OsmSharp.Routing.VRP
                 {
                     route = _router.Calculate(Vehicle.Car, points[solution[routeIdx][idx]],
                         points[solution[routeIdx][idx + 1]]);
-                    if (route != null && route.Entries.Length > 0)
+                    if (route != null && route.Segments.Length > 0)
                     {
                         if (tsp == null)
                         { // first route = start
@@ -104,7 +104,7 @@ namespace OsmSharp.Routing.VRP
                 // concatenate the route from the last to the first point again.
                 route = _router.Calculate(vehicle, points[solution[routeIdx][solution[routeIdx].Length - 1]],
                             points[solution[routeIdx][0]]);
-                if (route.Entries.Length > 0)
+                if (route.Segments.Length > 0)
                 {
                     tsp = Route.Concatenate(tsp, route);
                 }
@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.VRP
                     routes[routeIdx].Tags = tags.ToArray();
 
                     // set the correct vehicle type.
-                    routes[routeIdx].Vehicle = vehicle;
+                    routes[routeIdx].Vehicle = vehicle.UniqueName;
                 }
             }
 

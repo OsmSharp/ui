@@ -34,7 +34,7 @@ namespace OsmSharp.IO.DelimitedFiles
         /// Reads a delimited file.
         /// </summary>
         /// <param name="reporter"></param>
-        /// <param name="file"></param>
+        /// <param name="stream"></param>
         /// <param name="delimiter"></param>
         /// <param name="firstRowHasHeaders"></param>
         /// <returns></returns>

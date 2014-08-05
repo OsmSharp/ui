@@ -29,6 +29,7 @@ using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.Serialization.Tiled
 {
@@ -67,6 +68,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compressed"></param>
+        /// <param name="vehicles"></param>
         /// <param name="tileMetas"></param>
         /// <param name="zoom"></param>
         /// <param name="v1RoutingDataSourceSerializer"></param>
@@ -129,7 +131,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
@@ -224,7 +226,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -253,9 +255,85 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if (vertex.Arcs[idx].Key == vertex2)
+                        {
+                            data = vertex.Arcs[idx].Value;
+                            return true;
+                        }
+                    }
+                }
+            }
+            data = default(CHEdgeData);
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if (vertex.Arcs[idx].Key == vertex2)
+                        {
+                            shape = null;
+                            return true;
+                        }
+                    }
+                }
+            }
+            shape = null;
+            return false;
         }
 
         /// <summary>

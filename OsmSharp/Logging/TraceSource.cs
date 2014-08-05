@@ -28,7 +28,7 @@ namespace OsmSharp.Logging
     public class TraceSource
     {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="System.Diagnostics.TraceSource"/> class.
+		/// Initializes a new instance of the TraceSource class.
 		/// </summary>
 		/// <param name="name">Name.</param>
         public TraceSource(string name)
@@ -38,7 +38,7 @@ namespace OsmSharp.Logging
         }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="System.Diagnostics.TraceSource"/> class.
+		/// Initializes a new instance of the TraceSource class.
 		/// </summary>
 		/// <param name="name">Name.</param>
 		/// <param name="level">Level.</param>

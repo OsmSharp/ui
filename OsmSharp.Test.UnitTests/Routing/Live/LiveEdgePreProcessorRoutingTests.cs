@@ -25,7 +25,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
-using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Routing.Live
 {
@@ -56,10 +55,9 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             uint vertex2 = graph.AddVertex(51.267702f, 4.8013396f);
             uint vertex3 = graph.AddVertex(51.267592f, 4.8013024f);
 
-            graph.AddArc(vertex1, vertex2, edge, null);
-            graph.AddArc(vertex2, vertex1, edge, null);
-            graph.AddArc(vertex2, vertex3, edge, null);
-            graph.AddArc(vertex3, vertex2, edge, null);
+            graph.AddEdge(vertex1, vertex2, edge, null);
+            graph.AddEdge(vertex2, vertex3, edge, null);
+            graph.AddEdge(vertex3, vertex2, edge, null);
 
             // save vertex coordinates for later use.
             float latitude, longitude;
@@ -87,13 +85,13 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             
             // verify the simple route result.
             Assert.IsNotNull(route);
-            Assert.AreEqual(3, route.Entries.Length);
-            Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
-            Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
-            Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
-            Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
-            Assert.AreEqual(vertex3Coordinate.Latitude, route.Entries[2].Latitude);
-            Assert.AreEqual(vertex3Coordinate.Longitude, route.Entries[2].Longitude);
+            Assert.AreEqual(3, route.Segments.Length);
+            Assert.AreEqual(vertex1Coordinate.Latitude, route.Segments[0].Latitude);
+            Assert.AreEqual(vertex1Coordinate.Longitude, route.Segments[0].Longitude);
+            Assert.AreEqual(vertex2Coordinate.Latitude, route.Segments[1].Latitude);
+            Assert.AreEqual(vertex2Coordinate.Longitude, route.Segments[1].Longitude);
+            Assert.AreEqual(vertex3Coordinate.Latitude, route.Segments[2].Latitude);
+            Assert.AreEqual(vertex3Coordinate.Longitude, route.Segments[2].Longitude);
 
             // 1 -> 2: 1 -> 2.
             router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
@@ -103,11 +101,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
             // verify the simple route result.
             Assert.IsNotNull(route);
-            Assert.AreEqual(2, route.Entries.Length);
-            Assert.AreEqual(vertex1Coordinate.Latitude, route.Entries[0].Latitude);
-            Assert.AreEqual(vertex1Coordinate.Longitude, route.Entries[0].Longitude);
-            Assert.AreEqual(vertex2Coordinate.Latitude, route.Entries[1].Latitude);
-            Assert.AreEqual(vertex2Coordinate.Longitude, route.Entries[1].Longitude);
+            Assert.AreEqual(2, route.Segments.Length);
+            Assert.AreEqual(vertex1Coordinate.Latitude, route.Segments[0].Latitude);
+            Assert.AreEqual(vertex1Coordinate.Longitude, route.Segments[0].Longitude);
+            Assert.AreEqual(vertex2Coordinate.Latitude, route.Segments[1].Latitude);
+            Assert.AreEqual(vertex2Coordinate.Longitude, route.Segments[1].Longitude);
         }
     }
 }

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -43,14 +41,14 @@
     <Folder Include="Renderer\Images\" />
     <Folder Include="Data\" />
     <Folder Include="Data\SQLite\" />
+    <Folder Include="Controls\" />
+    <Folder Include="Markers\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Renderer\CGContextRenderer.cs" />
     <Compile Include="Renderer\CGContextWrapper.cs" />
     <Compile Include="MapView.cs" />
-    <Compile Include="MapMarker.cs" />
-    <Compile Include="MapMarkerAlignmentType.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="Renderer\Images\NativeImage.cs" />
@@ -60,6 +58,10 @@
     </Compile>
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="Native.cs" />
+    <Compile Include="Controls\IMapControlHost.cs" />
+    <Compile Include="Controls\MapControl.cs" />
+    <Compile Include="Markers\MapMarker.cs" />
+    <Compile Include="Controls\MapControlAlignmentType.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Images\layers.png" />

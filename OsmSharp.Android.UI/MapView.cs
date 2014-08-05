@@ -19,6 +19,7 @@
 using Android.Content;
 using Android.Views;
 using Android.Widget;
+using OsmSharp.Android.UI.Controls;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
@@ -35,7 +36,7 @@ namespace OsmSharp.Android.UI
     /// <summary>
     /// Map view handling the map display and pan-zoon markers and touch-events.
     /// </summary>
-    public class MapView : FrameLayout, IMapMarkerHost, IMapView
+    public class MapView : FrameLayout, IMapControlHost, IMapView
     {
         /// <summary>
         /// Map touched events.
@@ -57,15 +58,10 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private IMapViewSurface _mapView;
 
-        /// <summary>
-        /// Holds the markers.
-        /// </summary>
-        private List<MapMarker> _markers;
-
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapLayout"/> class.
+        /// Initializes a new instance of the MapView.
         /// </summary>
         /// <param name="context">Context.</param>
         /// <param name="surface">Surface.</param>
@@ -75,6 +71,7 @@ namespace OsmSharp.Android.UI
             _mapView = surface;
             _mapView.Initialize(this);
             _markers = new List<MapMarker>();
+            _controls = new List<MapControl>();
 
             this.Initialize();
         }
@@ -104,6 +101,15 @@ namespace OsmSharp.Android.UI
             }
         }
 
+        #region Controls
+
+        #region Markers
+
+        /// <summary>
+        /// Holds the markers.
+        /// </summary>
+        private List<MapMarker> _markers;
+
         /// <summary>
         /// Returns the mapmarkers list.
         /// </summary>
@@ -123,14 +129,9 @@ namespace OsmSharp.Android.UI
                 _markers.Add(marker); // add to marker list.
                 marker.AttachTo(this); // attach to this view.
 
-                var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
-
-                layoutParams.LeftMargin = -1;
-                layoutParams.TopMargin = -1;
-                layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-                this.AddView(marker, layoutParams);
+                this.AddView(marker.View, marker.View.LayoutParameters);
             }
-            this.NotifyMarkerChange(marker);
+            this.NotifyControlChange(marker);
             _mapView.TriggerRendering();
         }
 
@@ -177,7 +178,7 @@ namespace OsmSharp.Android.UI
                 {
                     foreach (MapMarker marker in _markers)
                     {
-                        this.RemoveView(marker);
+                        this.RemoveView(marker.View);
                         marker.Dispose();
                     }
                     _markers.Clear();
@@ -196,7 +197,7 @@ namespace OsmSharp.Android.UI
             {
                 if (marker != null)
                 {
-                    this.RemoveView(marker);
+                    this.RemoveView(marker.View);
                     return _markers.Remove(marker);
                 }
                 return false;
@@ -235,24 +236,210 @@ namespace OsmSharp.Android.UI
         /// Zoom to the given makers list.
         /// </summary>
         /// <param name="markers"></param>
+        /// <param name="percentage"></param>
         public void ZoomToMarkers(List<MapMarker> markers, double percentage)
         {
-            _mapView.ZoomToMarkers(markers, percentage);
+            if (markers == null)
+            {
+                return;
+            }
+
+            var controls = new List<MapControl>(markers.Count);
+            foreach(var marker in markers)
+            {
+                controls.Add(marker);
+            }
+            _mapView.ZoomToControls(controls, percentage);
         }
+
+        #endregion
+
+        #region Controls
+
+        /// <summary>
+        /// Holds the controls.
+        /// </summary>
+        private List<MapControl> _controls;
+
+        /// <summary>
+        /// Returns the mapcontrols list.
+        /// </summary>
+        /// <value>The controls.</value>
+        public void AddControl(MapControl control)
+        {
+            if (control == null)
+            {
+                throw new ArgumentNullException("control");
+            }
+
+            lock (_controls)
+            {
+                _controls.Add(control); // add to control list.
+                control.AttachTo(this); // attach to this view.
+
+                this.AddView(control.BaseView, control.BaseView.LayoutParameters);
+            }
+            this.NotifyControlChange(control);
+            _mapView.TriggerRendering();
+        }
+
+        /// <summary>
+        /// Returns a read-only collection of controls.
+        /// </summary>
+        public ReadOnlyCollection<MapControl> Controls
+        {
+            get
+            {
+                lock (_controls)
+                {
+                    return _controls.AsReadOnly();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears all map controls.
+        /// </summary>
+        public void ClearControls()
+        {
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (MapControl control in _controls)
+                    {
+                        this.RemoveView(control.BaseView);
+                        control.Dispose();
+                    }
+                    _controls.Clear();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the given map control.
+        /// </summary>
+        /// <param name="control"></param>
+        /// <returns></returns>
+        public bool RemoveControl(MapControl control)
+        {
+            lock (_controls)
+            {
+                if (control != null)
+                {
+                    this.RemoveView(control.BaseView);
+                    return _controls.Remove(control);
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Zoom to the current controls.
+        /// </summary>
+        public void ZoomToControls()
+        {
+            this.ZoomToControls(15);
+        }
+
+        /// <summary>
+        /// Zoom to the current controls.
+        /// </summary>
+        public void ZoomToControls(double percentage)
+        {
+            lock (_controls)
+            {
+                this.ZoomToControls(_controls, 15);
+            }
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="controls"></param>
+        public void ZoomToControls(List<MapControl> controls)
+        {
+            this.ZoomToControls(controls, 15);
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="controls"></param>
+        public void ZoomToControls(List<MapControl> controls, double percentage)
+        {
+            _mapView.ZoomToControls(controls, percentage);
+        }
+
+        #endregion
 
         /// <summary>
         /// Notifies this MapView that a map marker has changed.
         /// </summary>
-        /// <param name="mapMarker"></param>
-        public void NotifyMarkerChange(MapMarker mapMarker)
+        /// <param name="mapControl"></param>
+        public void NotifyControlChange(MapControl mapControl)
         { // notify map layout of changes.
             if (_mapView.Width > 0 && _mapView.Height > 0)
             {
                 View2D view = _mapView.CreateView();
 
-                this.NotifyMapChangeToMarker(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapMarker);
+                this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl);
             }
         }
+
+        /// <summary>
+        /// Notifies the map change.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="view"></param>
+        /// <param name="projection"></param>
+        /// <param name="mapControl"></param>
+        internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl)
+        {
+            if (mapControl != null &&
+                mapControl.Handle != IntPtr.Zero)
+            {
+                this.RemoveView(mapControl.BaseView);
+                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
+                {
+                    this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notifies the map change.
+        /// </summary>
+        /// <param name="pixelsWidth">Pixels width.</param>
+        /// <param name="pixelsHeight">Pixels height.</param>
+        /// <param name="view">View.</param>
+        /// <param name="projection">Projection.</param>
+        public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
+                    }
+                }
+            }
+            lock(_controls)
+            {
+                if(_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Initialize this instance.
@@ -375,6 +562,22 @@ namespace OsmSharp.Android.UI
             get { return _mapView.Density; }
         }
 
+        /// <summary>
+        /// Returns the current width.
+        /// </summary>
+        public int CurrentWidth
+        {
+            get { return _mapView.Width; }
+        }
+
+        /// <summary>
+        /// Returns the current height.
+        /// </summary>
+        public int CurrentHeight
+        {
+            get { return _mapView.Height; }
+        }
+
         #region IMapView implementation
 
         /// <summary>
@@ -398,48 +601,6 @@ namespace OsmSharp.Android.UI
         }
 
         #endregion
-
-        /// <summary>
-        /// Notifies the map change.
-        /// </summary>
-        /// <param name="pixelsWidth">Pixels width.</param>
-        /// <param name="pixelsHeight">Pixels height.</param>
-        /// <param name="view">View.</param>
-        /// <param name="projection">Projection.</param>
-        public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
-        {
-            lock (_markers)
-            {
-                if (_markers != null)
-                {
-                    foreach (var marker in _markers)
-                    {
-                        this.NotifyMapChangeToMarker(pixelsWidth, pixelsHeight, view, projection, marker);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Notifies the map change.
-        /// </summary>
-        /// <param name="pixelWidth"></param>
-        /// <param name="pixelsHeight"></param>
-        /// <param name="view"></param>
-        /// <param name="projection"></param>
-        /// <param name="mapMarker"></param>
-        internal void NotifyMapChangeToMarker(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapMarker mapMarker)
-        {
-            if (mapMarker != null &&
-                mapMarker.Handle != IntPtr.Zero)
-            {
-                this.RemoveView(mapMarker);
-                if (mapMarker.SetLayout(pixelsWidth, pixelsHeight, view, projection))
-                {
-                    this.AddView(mapMarker, mapMarker.LayoutParameters);
-                }
-            }
-        }
 
         /// <summary>
         /// Diposes of all resources associated with this object.

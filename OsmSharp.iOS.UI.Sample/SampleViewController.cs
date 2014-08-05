@@ -35,6 +35,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Routing.CH.Serialization.Tiled;
+using OsmSharp.iOS.UI.Controls;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -149,8 +150,15 @@ namespace OsmSharp.iOS.UI.Sample
 			_mapView.MapZoom = 18;
 
 			// add markers.
-			_mapView.AddMarker (from);
+			// _mapView.AddMarker (from);
 			_mapView.AddMarker (to);
+
+            // add control.
+            var textView = new UITextView();
+            textView.Text = "Hey, now there's text on top of the map! Yay!";
+            textView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
+            var textViewControl = new MapControl<UITextView>(textView, from, MapControlAlignmentType.CenterBottom, 75, 75);
+            _mapView.AddControl(textViewControl);
 
 			// create the route tracker animator.
             // _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);

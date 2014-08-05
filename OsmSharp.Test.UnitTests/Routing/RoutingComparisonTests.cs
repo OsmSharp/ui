@@ -16,9 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
@@ -29,9 +28,9 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Units.Distance;
-using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Units.Time;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -91,26 +90,26 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
         {
             // build the routing settings.
-            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
+            var data = this.BuildDykstraDataSource(interpreter, embeddedName);
 
             // build the reference router.;
-            Router referenceRouter = this.BuildDykstraRouter(
+            var referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter,
                     new DykstraRoutingLive());
 
             // build the router to be tested.
-            Router router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName, contract);
 
-            RouterPoint referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
-            RouterPoint referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
-            RouterPoint resolvedFrom = router.Resolve(Vehicle.Car, from);
-            RouterPoint resolvedTo = router.Resolve(Vehicle.Car, to);
+            var referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
+            var referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
+            var resolvedFrom = router.Resolve(Vehicle.Car, from);
+            var resolvedTo = router.Resolve(Vehicle.Car, to);
 
-            Route referenceRoute = referenceRouter.Calculate(Vehicle.Car, referenceResolvedFrom, referenceResolvedTo);
-            Route route = router.Calculate(Vehicle.Car, resolvedFrom, resolvedTo);
+            var referenceRoute = referenceRouter.Calculate(Vehicle.Car, referenceResolvedFrom, referenceResolvedTo);
+            var route = router.Calculate(Vehicle.Car, resolvedFrom, resolvedTo);
 
             this.CompareRoutes(referenceRoute, route);
         }
@@ -121,18 +120,18 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TestCompareAll(string embeddedName, bool contract)
         {
             // build the routing settings.
-            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
+            var data = this.BuildDykstraDataSource(interpreter, embeddedName);
 
             // build the reference router.;
-            Router referenceRouter = this.BuildDykstraRouter(
+            var referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter, 
                     new DykstraRoutingLive());
 
             // build the router to be tested.
-            Router router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName, contract);
 
             this.TestCompareAll(data, referenceRouter, router);
         }
@@ -168,7 +167,7 @@ namespace OsmSharp.Test.Unittests.Routing
             }
 
             // limit tests to a fixed number.
-            int maxTestCount = 1000;
+            int maxTestCount = 100;
             int testEveryOther = (resolved.Length * resolved.Length) / maxTestCount;
             testEveryOther = System.Math.Max(testEveryOther, 1);
 
@@ -205,42 +204,31 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             double delta = 0.0001;
 
-            if (reference.Entries == null)
+            if (reference.Segments == null)
             { // both routes are empty.
-                Assert.IsNull(route.Entries);
+                Assert.IsNull(route.Segments);
             }
             else
             { // compare the geometry of the routes.
-                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                for (int idx = 0; idx < reference.Segments.Length; idx++)
                 {
-                    var referenceCoordinate = new GeoCoordinate(reference.Entries[idx].Latitude,
-                        reference.Entries[idx].Longitude);
+                    var referenceCoordinate = new GeoCoordinate(reference.Segments[idx].Latitude,
+                        reference.Segments[idx].Longitude);
                     Meter referenceDistance, distance;
                     GeoCoordinate referenceProjected, projected;
+                    Second referenceTime, time;
                     int entryIdx;
-                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out entryIdx, out referenceDistance);
-                    route.ProjectOn(referenceCoordinate, out projected, out entryIdx, out distance);
+                    reference.ProjectOn(referenceCoordinate, out referenceProjected, out entryIdx, out referenceDistance, out referenceTime);
+                    route.ProjectOn(referenceCoordinate, out projected, out entryIdx, out distance, out time);
 
                     Assert.AreEqual(0, referenceProjected.DistanceReal(projected).Value, delta); // projected points have to match.
                     Assert.AreEqual(referenceDistance.Value, distance.Value, 0.1); // compare calculated distance to 10cm accuracy.
                     Assert.AreEqual(referenceProjected.Latitude, projected.Latitude, delta);
                     Assert.AreEqual(referenceProjected.Longitude, projected.Longitude, delta);
 
-                    var referenceEntry = reference.Entries[entryIdx];
-                    var routeEntry = route.Entries[entryIdx];
+                    var referenceEntry = reference.Segments[entryIdx];
+                    var routeEntry = route.Segments[entryIdx];
 
-                    //Assert.AreEqual(referenceEntry.WayFromName, routeEntry.WayFromName);
-                    //if(referenceEntry.WayFromNames != null)
-                    //{ // there are way names.
-                    //    for(int namesIdx = 0; namesIdx < referenceEntry.WayFromNames.Length; namesIdx++)
-                    //    {
-                    //        Assert.AreEqual(referenceEntry.WayFromNames[idx], routeEntry.WayFromNames[idx]);
-                    //    }
-                    //}
-                    //else
-                    //{ // there are no way names.
-                    //    Assert.IsNull(routeEntry.WayFromNames);
-                    //}
                     if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
                     { // there are way names.
                         Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);

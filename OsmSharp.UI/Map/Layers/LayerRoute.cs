@@ -60,8 +60,8 @@ namespace OsmSharp.UI.Map.Layers
         public void AddRoute(Route route)
         {
             // set the default color if none is given.
-            SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-            SimpleColor transparantBlue = SimpleColor.FromArgb(128, blue.R, blue.G, blue.B);
+            var blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+            var transparantBlue = SimpleColor.FromArgb(128, blue.R, blue.G, blue.B);
             this.AddRoute(route, transparantBlue.Value);
         }
 
@@ -80,26 +80,27 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="route">Stream.</param>
         /// <param name="argb">Stream.</param>
+        /// <param name="width"></param>
         public void AddRoute(Route route, int argb, double width)
         {
             if (route != null &&
-            route.Entries != null &&
-            route.Entries.Length > 0)
+                route.Segments != null &&
+                route.Segments.Length > 0)
             { // there are entries.
                 // get x/y.
-                var x = new double[route.Entries.Length];
-                var y = new double[route.Entries.Length];
-                for (int idx = 0; idx < route.Entries.Length; idx++)
+                var x = new double[route.Segments.Length];
+                var y = new double[route.Segments.Length];
+                for (int idx = 0; idx < route.Segments.Length; idx++)
                 {
                     x[idx] = _projection.LongitudeToX(
-                        route.Entries[idx].Longitude);
+                        route.Segments[idx].Longitude);
                     y[idx] = _projection.LatitudeToY(
-                        route.Entries[idx].Latitude);
+                        route.Segments[idx].Latitude);
                 }
 
                 // set the default color if none is given.
-                SimpleColor color = SimpleColor.FromArgb(argb);
-                uint? pointsId = _scene.AddPoints(x, y);
+                var color = SimpleColor.FromArgb(argb);
+                var pointsId = _scene.AddPoints(x, y);
                 if (pointsId.HasValue)
                 {
                     _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue,
@@ -129,6 +130,8 @@ namespace OsmSharp.UI.Map.Layers
         public void Clear()
         {
             _scene.Clear();
+
+            this.RaiseLayerChanged();
         }
 
         /// <summary>

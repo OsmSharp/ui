@@ -134,7 +134,7 @@ namespace OsmSharp.Routing.ArcAggregation
                     }
                     else
                     { // there is a previous arc; a test can be done if the current point is significant.
-                        if (this.IsSignificant(route.Vehicle, previousArc, nextArc))
+                        if (this.IsSignificant(Vehicle.GetByUniqueName(route.Vehicle), previousArc, nextArc))
                         { // the arc is significant; append it to the previous arc.
                             previousArc.Next.Next = nextArc;
                             previousArc = nextArc;
@@ -208,8 +208,8 @@ namespace OsmSharp.Routing.ArcAggregation
         {
             // create the arc.
             AggregatedArc a = new AggregatedArc();
-            a.Name = current.Entry.WayFromName;
-            a.Names = current.Entry.WayFromNames.ConvertTo();
+            a.Name = current.Entry.Name;
+            a.Names = current.Entry.Names.ConvertTo();
             a.Tags = current.Entry.Tags.ConvertToTagsCollection();
             if (previous != null)
             {
@@ -239,11 +239,11 @@ namespace OsmSharp.Routing.ArcAggregation
             if (current.Entry.SideStreets != null && current.Entry.SideStreets.Length > 0)
             {
                 p.ArcsNotTaken = new List<KeyValuePair<RelativeDirection, AggregatedArc>>();
-                foreach (RoutePointEntrySideStreet sideStreet in current.Entry.SideStreets)
+                foreach (RouteSegmentBranch sideStreet in current.Entry.SideStreets)
                 {
                     AggregatedArc side = new AggregatedArc();
-                    side.Name = sideStreet.WayName;
-                    side.Names = sideStreet.WayNames.ConvertTo();
+                    side.Name = sideStreet.Name;
+                    side.Names = sideStreet.Names.ConvertTo();
                     side.Tags = sideStreet.Tags.ConvertToTagsCollection();
 
                     RelativeDirection side_direction = null;
@@ -330,7 +330,7 @@ namespace OsmSharp.Routing.ArcAggregation
                 {
                     _current = new AggregatedRoutePoint();
                     _current.EntryIndex = _entryIdx;
-                    _current.Entry = _route.Entries[_entryIdx];                    
+                    _current.Entry = _route.Segments[_entryIdx];                    
                 }
                 return _current;
             }
@@ -367,12 +367,12 @@ namespace OsmSharp.Routing.ArcAggregation
         public bool MoveNext()
         {
             _current = null;
-            if (_route.Entries == null)
+            if (_route.Segments == null)
             {
                 return false;
             }
             _entryIdx++;
-            return _route.Entries.Length > _entryIdx;
+            return _route.Segments.Length > _entryIdx;
         }
 
         /// <summary>
@@ -401,6 +401,6 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <summary>
         /// Gets or sets the route point entry.
         /// </summary>
-        public RoutePointEntry Entry { get; set; }
+        public RouteSegment Entry { get; set; }
     }
 }

@@ -67,6 +67,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
+        /// <param name="extraView"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             _interpretedObjects.Clear();
@@ -123,7 +124,7 @@ namespace OsmSharp.UI.Map.Layers
             //                               : SimpleColor.FromArgb (0, 255, 255, 255).Value;
 
             // get data.
-            foreach (var arc in _dataSource.GetArcs(box))
+            foreach (var arc in _dataSource.GetEdges(box))
             {
                 // translate each object into scene object.
                 var arcId = new ArcId()

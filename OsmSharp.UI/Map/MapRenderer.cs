@@ -39,7 +39,7 @@ namespace OsmSharp.UI.Map
         private readonly Renderer2D<TTarget> _renderer;
 
 		/// <summary>
-        /// Initializes a new instance of the <see cref="OsmSharp.UI.Map.MapRenderer"/> class.
+        /// Initializes a new instance of the MapRenderer class.
 		/// </summary>
 		/// <param name="renderer">The renderer to use.</param>
 		public MapRenderer(Renderer2D<TTarget> renderer)

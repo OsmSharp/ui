@@ -22,6 +22,7 @@ using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Routing.Navigation
 {
@@ -109,13 +110,40 @@ namespace OsmSharp.Routing.Navigation
             {
                 if (this.NextInstruction != null)
                 { // the next instruction exists.
-                    RoutePointEntry entry = _route.Entries[this.NextInstruction.EntryIdx];
+                    RouteSegment entry = _route.Segments[this.NextInstruction.SegmentIdx];
                     if (entry != null)
                     { // entry found.
                         return new GeoCoordinate(entry.Latitude, entry.Longitude);
                     }
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Holds the estimated time from start loction.
+        /// </summary>
+        private Second _timeFromStart;
+
+        /// <summary>
+        /// Holds the ESTIMATED time between the start position and the current position.
+        /// </summary>
+        public Second TimeFromStart
+        {
+            get
+            {
+                return _timeFromStart;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this tracker is reporting time information.
+        /// </summary>
+        public bool HasTimes
+        {
+            get
+            {
+                return _route.HasTimes;
             }
         }
 
@@ -132,6 +160,22 @@ namespace OsmSharp.Routing.Navigation
             get
             {
                 return _distanceFromStart;
+            }
+        }
+
+        /// <summary>
+        /// Holds the ESTIMATED time to the end location.
+        /// </summary>
+        private Second _timeToEnd;
+
+        /// <summary>
+        /// Holds the ESTIMATED time to the end location.
+        /// </summary>
+        public Second TimeToEnd
+        {
+            get
+            {
+                return _timeToEnd;
             }
         }
 
@@ -224,26 +268,28 @@ namespace OsmSharp.Routing.Navigation
             _currentPosition = location;
 
             // calculate the total distance.
-            var previous = new GeoCoordinate(_route.Entries[0].Latitude, _route.Entries[0].Longitude); ;
+            var previous = new GeoCoordinate(_route.Segments[0].Latitude, _route.Segments[0].Longitude); ;
             var totalDistance = 0.0;
-            for (int idx = 1; idx < _route.Entries.Length; idx++)
+            for (int idx = 1; idx < _route.Segments.Length; idx++)
             {
-                GeoCoordinate next = new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude);
+                GeoCoordinate next = new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude);
                 totalDistance = totalDistance + previous.DistanceReal(next).Value;
                 previous = next;
             }
+            double totalTime = _route.TotalTime;
 
             // project onto the route.
             int entryIdx;
-            _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart);
+            _route.ProjectOn(_currentPosition, out _currentRoutePosition, out entryIdx, out _distanceFromStart, out _timeFromStart);
             _distanceToEnd = totalDistance - _distanceFromStart;
+            _timeToEnd = totalTime - _timeFromStart.Value;
 
             // find the next instruction.
             _nextInstructionIdx = -1;
             for (int instructionIdx = 0; instructionIdx < _instructions.Count; instructionIdx++)
             {
                 Instruction instruction = _instructions[instructionIdx];
-                if (instruction.EntryIdx > entryIdx)
+                if (instruction.SegmentIdx > entryIdx)
                 { // stop here!
                     _nextInstructionIdx = instructionIdx;
                     break;
@@ -257,9 +303,9 @@ namespace OsmSharp.Routing.Navigation
             // calculate the distance to the next instruction.
             previous = _currentRoutePosition;
             var distance = 0.0;
-            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].EntryIdx && idx < _route.Entries.Length; idx++)
+            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].SegmentIdx && idx < _route.Segments.Length; idx++)
             {
-                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx].Latitude, _route.Entries[idx].Longitude));
+                GeoCoordinate next = (new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude));
                 distance = distance + previous.DistanceReal(next).Value;
                 previous = next;
             }

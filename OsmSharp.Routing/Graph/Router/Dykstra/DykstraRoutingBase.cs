@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
@@ -51,6 +52,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="matcher"></param>
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
+        /// <param name="parameters"></param>
         public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
@@ -68,6 +70,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
+        /// <param name="parameters"></param>
         public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
@@ -84,7 +87,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            var arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetEdges(searchBox);
 
             if (!verticesOnly)
             { // find both closest arcs and vertices.
@@ -108,6 +111,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         { // return the vertex.
                             var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                             distance = coordinate.DistanceReal(fromCoordinates).Value;
+                            GeoCoordinateSimple[] coordinates;
+                            if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                            {
+                                coordinates = null;
+                            }
 
                             if (distance < distanceEpsilon.Value)
                             { // the distance is smaller than the tolerance value.
@@ -160,11 +168,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             // search along the line.
                             double distanceTotal = 0;
                             var previous = fromCoordinates;
-                            if (arc.Value.Value.Coordinates != null)
+                            GeoCoordinateSimple[] arcValueValueCoordinates;
+                            if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                                arcValueValueCoordinates != null)
                             { // calculate distance along all coordinates.
-                                for(int idx = 0; idx < arc.Value.Value.Coordinates.Length; idx++)
+                                for (int idx = 0; idx < arcValueValueCoordinates.Length; idx++)
                                 {
-                                    var current = new GeoCoordinate(arc.Value.Value.Coordinates[idx].Latitude, arc.Value.Value.Coordinates[idx].Longitude);
+                                    var current = new GeoCoordinate(arcValueValueCoordinates[idx].Latitude, arcValueValueCoordinates[idx].Longitude);
                                     distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
                                     previous = current;
                                 }
@@ -176,12 +186,12 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                 previous = fromCoordinates;
                                 GeoCoordinateLine line;
                                 double distanceToSegment = 0;
-                                if (arc.Value.Value.Coordinates != null)
+                                if (arcValueValueCoordinates != null)
                                 {
-                                    for (int idx = 0; idx < arc.Value.Value.Coordinates.Length; idx++)
+                                    for (int idx = 0; idx < arcValueValueCoordinates.Length; idx++)
                                     {
                                         var current = new GeoCoordinate(
-                                            arc.Value.Value.Coordinates[idx].Latitude, arc.Value.Value.Coordinates[idx].Longitude);
+                                            arcValueValueCoordinates[idx].Latitude, arcValueValueCoordinates[idx].Longitude);
                                         line = new GeoCoordinateLine(previous, current, true, true);
 
                                         distance = line.DistanceReal(coordinate).Value;
@@ -198,7 +208,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                                 double position = distancePoint / distanceTotal;
 
                                                 closestWithoutMatch = new SearchClosestResult<TEdgeData>(
-                                                    distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                                                    distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinates);
                                             }
                                         }
                                         if (distance < closestWithMatch.Distance)
@@ -218,7 +228,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                                 {
 
                                                     closestWithMatch = new SearchClosestResult<TEdgeData>(
-                                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinates);
                                                 }
                                             }
                                         }
@@ -248,7 +258,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                         double position = distancePoint / distanceTotal;
 
                                         closestWithoutMatch = new SearchClosestResult<TEdgeData>(
-                                            distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                                            distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinates);
                                     }
                                 }
                                 if (distance < closestWithMatch.Distance)
@@ -268,7 +278,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                         {
 
                                             closestWithMatch = new SearchClosestResult<TEdgeData>(
-                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinates);
                                         }
                                     }
                                 }                               
@@ -303,18 +313,19 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                 distance, arc.Value.Key);
                         }
 
-                        if(arc.Value.Value.Coordinates != null)
+                        GeoCoordinateSimple[] arcValueValueCoordinates;
+                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates))
                         { // search over intermediate points.
-                            for(int idx = 0; idx < arc.Value.Value.Coordinates.Length; idx++)
+                            for (int idx = 0; idx < arcValueValueCoordinates.Length; idx++)
                             {
                                 vertexCoordinate = new GeoCoordinate(
-                                    arc.Value.Value.Coordinates[idx].Latitude,
-                                    arc.Value.Value.Coordinates[idx].Longitude);
+                                    arcValueValueCoordinates[idx].Latitude,
+                                    arcValueValueCoordinates[idx].Longitude);
                                 distance = coordinate.DistanceReal(vertexCoordinate).Value;
                                 if (distance < closestWithoutMatch.Distance)
                                 { // the distance found is closer.
                                     closestWithoutMatch = new SearchClosestResult<TEdgeData>(
-                                        distance, arc.Key, arc.Value.Key, idx, arc.Value.Value);
+                                        distance, arc.Key, arc.Value.Key, idx, arc.Value.Value, arcValueValueCoordinates);
                                 }
                             }
                         }

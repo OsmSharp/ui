@@ -17,10 +17,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Math.Geo.Simple
 {
@@ -41,5 +37,14 @@ namespace OsmSharp.Math.Geo.Simple
         /// </summary>
         [ProtoMember(2)]
         public float Longitude { get; set; }
+
+        /// <summary>
+        /// Returns a string describing this object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("[{0}:{1}]", this.Latitude.ToInvariantString(), this.Longitude.ToInvariantString());
+        }
     }
 }

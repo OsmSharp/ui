@@ -16,14 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Routing;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -39,9 +36,9 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void RouteConcatenateTagsTest()
         {
-            Route route1 = new Route();
-            route1.Vehicle = Vehicle.Car;
-            RoutePointEntry route1entry1 = new RoutePointEntry();
+            var route1 = new Route();
+            route1.Vehicle = Vehicle.Car.UniqueName;
+            var route1entry1 = new RouteSegment();
             route1entry1.Distance = 10;
             route1entry1.Latitude = -1;
             route1entry1.Longitude = -1;
@@ -59,11 +56,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry1.Tags[0].Key = "highway";
             route1entry1.Tags[0].Value = "residential";
             route1entry1.Time = 10;
-            route1entry1.Type = RoutePointEntryType.Start;
-            route1entry1.WayFromName = string.Empty;
-            route1entry1.WayFromNames = null;
+            route1entry1.Type = RouteSegmentType.Start;
+            route1entry1.Name = string.Empty;
+            route1entry1.Names = null;
 
-            RoutePointEntry route1entry2 = new RoutePointEntry();
+            RouteSegment route1entry2 = new RouteSegment();
             route1entry2.Distance = 10;
             route1entry2.Latitude = -1;
             route1entry2.Longitude = -1;
@@ -81,18 +78,18 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry2.Tags[0].Key = "highway";
             route1entry2.Tags[0].Value = "residential";
             route1entry2.Time = 10;
-            route1entry2.Type = RoutePointEntryType.Start;
-            route1entry2.WayFromName = string.Empty;
-            route1entry2.WayFromNames = null;
+            route1entry2.Type = RouteSegmentType.Start;
+            route1entry2.Name = string.Empty;
+            route1entry2.Names = null;
 
-            route1.Entries = new RoutePointEntry[2];
-            route1.Entries[0] = route1entry1;
-            route1.Entries[1] = route1entry2;
+            route1.Segments = new RouteSegment[2];
+            route1.Segments[0] = route1entry1;
+            route1.Segments[1] = route1entry2;
 
 
-            Route route2 = new Route();
-            route2.Vehicle = Vehicle.Car;
-            RoutePointEntry route2entry1 = new RoutePointEntry();
+            var route2 = new Route();
+            route2.Vehicle = Vehicle.Car.UniqueName;
+            var route2entry1 = new RouteSegment();
             route2entry1.Distance = 10;
             route2entry1.Latitude = -1;
             route2entry1.Longitude = -1;
@@ -110,11 +107,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route2entry1.Tags[0].Key = "highway";
             route2entry1.Tags[0].Value = "residential";
             route2entry1.Time = 10;
-            route2entry1.Type = RoutePointEntryType.Start;
-            route2entry1.WayFromName = string.Empty;
-            route2entry1.WayFromNames = null;
+            route2entry1.Type = RouteSegmentType.Start;
+            route2entry1.Name = string.Empty;
+            route2entry1.Names = null;
 
-            RoutePointEntry route2entry2 = new RoutePointEntry();
+            RouteSegment route2entry2 = new RouteSegment();
             route2entry2.Distance = 10;
             route2entry2.Latitude = -1;
             route2entry2.Longitude = -1;
@@ -132,25 +129,25 @@ namespace OsmSharp.Test.Unittests.Routing
             route2entry2.Tags[0].Key = "highway";
             route2entry2.Tags[0].Value = "residential";
             route2entry2.Time = 10;
-            route2entry2.Type = RoutePointEntryType.Start;
-            route2entry2.WayFromName = string.Empty;
-            route2entry2.WayFromNames = null;
+            route2entry2.Type = RouteSegmentType.Start;
+            route2entry2.Name = string.Empty;
+            route2entry2.Names = null;
 
-            route2.Entries = new RoutePointEntry[2];
-            route2.Entries[0] = route2entry1;
-            route2.Entries[1] = route2entry2;
+            route2.Segments = new RouteSegment[2];
+            route2.Segments[0] = route2entry1;
+            route2.Segments[1] = route2entry2;
 
             Route concatenated = Route.Concatenate(route1, route2);
 
             // test the result.
             Assert.IsNotNull(concatenated);
-            Assert.IsNotNull(concatenated.Entries);
+            Assert.IsNotNull(concatenated.Segments);
             Assert.AreEqual(route1.Vehicle, concatenated.Vehicle);
-            Assert.AreEqual(3, concatenated.Entries.Length);
-            Assert.AreEqual("TestPoint1", concatenated.Entries[0].Points[0].Name);
-            Assert.AreEqual("TestPoint2", concatenated.Entries[1].Points[0].Name);
-            Assert.AreEqual("TestPoint3", concatenated.Entries[1].Points[1].Name);
-            Assert.AreEqual("TestPoint4", concatenated.Entries[2].Points[0].Name);
+            Assert.AreEqual(3, concatenated.Segments.Length);
+            Assert.AreEqual("TestPoint1", concatenated.Segments[0].Points[0].Name);
+            Assert.AreEqual("TestPoint2", concatenated.Segments[1].Points[0].Name);
+            Assert.AreEqual("TestPoint3", concatenated.Segments[1].Points[1].Name);
+            Assert.AreEqual("TestPoint4", concatenated.Segments[2].Points[0].Name);
         }
 
         /// <summary>
@@ -160,7 +157,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RouteConcatenateTagsIdenticalTest()
         {
             Route route1 = new Route();
-            RoutePointEntry route1entry1 = new RoutePointEntry();
+            RouteSegment route1entry1 = new RouteSegment();
             route1entry1.Distance = 10;
             route1entry1.Latitude = -1;
             route1entry1.Longitude = -1;
@@ -178,11 +175,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry1.Tags[0].Key = "highway";
             route1entry1.Tags[0].Value = "residential";
             route1entry1.Time = 10;
-            route1entry1.Type = RoutePointEntryType.Start;
-            route1entry1.WayFromName = string.Empty;
-            route1entry1.WayFromNames = null;
+            route1entry1.Type = RouteSegmentType.Start;
+            route1entry1.Name = string.Empty;
+            route1entry1.Names = null;
 
-            RoutePointEntry route1entry2 = new RoutePointEntry();
+            RouteSegment route1entry2 = new RouteSegment();
             route1entry2.Distance = 10;
             route1entry2.Latitude = -1;
             route1entry2.Longitude = -1;
@@ -200,17 +197,17 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry2.Tags[0].Key = "highway";
             route1entry2.Tags[0].Value = "residential";
             route1entry2.Time = 10;
-            route1entry2.Type = RoutePointEntryType.Start;
-            route1entry2.WayFromName = string.Empty;
-            route1entry2.WayFromNames = null;
+            route1entry2.Type = RouteSegmentType.Start;
+            route1entry2.Name = string.Empty;
+            route1entry2.Names = null;
 
-            route1.Entries = new RoutePointEntry[2];
-            route1.Entries[0] = route1entry1;
-            route1.Entries[1] = route1entry2;
+            route1.Segments = new RouteSegment[2];
+            route1.Segments[0] = route1entry1;
+            route1.Segments[1] = route1entry2;
 
 
             Route route2 = new Route();
-            RoutePointEntry route2entry1 = new RoutePointEntry();
+            RouteSegment route2entry1 = new RouteSegment();
             route2entry1.Distance = 10;
             route2entry1.Latitude = -1;
             route2entry1.Longitude = -1;
@@ -228,11 +225,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route2entry1.Tags[0].Key = "highway";
             route2entry1.Tags[0].Value = "residential";
             route2entry1.Time = 10;
-            route2entry1.Type = RoutePointEntryType.Start;
-            route2entry1.WayFromName = string.Empty;
-            route2entry1.WayFromNames = null;
+            route2entry1.Type = RouteSegmentType.Start;
+            route2entry1.Name = string.Empty;
+            route2entry1.Names = null;
 
-            RoutePointEntry route2entry2 = new RoutePointEntry();
+            RouteSegment route2entry2 = new RouteSegment();
             route2entry2.Distance = 10;
             route2entry2.Latitude = -1;
             route2entry2.Longitude = -1;
@@ -250,24 +247,24 @@ namespace OsmSharp.Test.Unittests.Routing
             route2entry2.Tags[0].Key = "highway";
             route2entry2.Tags[0].Value = "residential";
             route2entry2.Time = 10;
-            route2entry2.Type = RoutePointEntryType.Start;
-            route2entry2.WayFromName = string.Empty;
-            route2entry2.WayFromNames = null;
+            route2entry2.Type = RouteSegmentType.Start;
+            route2entry2.Name = string.Empty;
+            route2entry2.Names = null;
 
-            route2.Entries = new RoutePointEntry[2];
-            route2.Entries[0] = route2entry1;
-            route2.Entries[1] = route2entry2;
+            route2.Segments = new RouteSegment[2];
+            route2.Segments[0] = route2entry1;
+            route2.Segments[1] = route2entry2;
 
             Route concatenated = Route.Concatenate(route1, route2);
 
             // test the result.
             Assert.IsNotNull(concatenated);
-            Assert.IsNotNull(concatenated.Entries);
-            Assert.AreEqual(3, concatenated.Entries.Length);
-            Assert.AreEqual("TestPoint1", concatenated.Entries[0].Points[0].Name);
-            Assert.AreEqual("TestPoint2", concatenated.Entries[1].Points[0].Name);
-            Assert.AreEqual(1, concatenated.Entries[1].Points.Length);
-            Assert.AreEqual("TestPoint4", concatenated.Entries[2].Points[0].Name);
+            Assert.IsNotNull(concatenated.Segments);
+            Assert.AreEqual(3, concatenated.Segments.Length);
+            Assert.AreEqual("TestPoint1", concatenated.Segments[0].Points[0].Name);
+            Assert.AreEqual("TestPoint2", concatenated.Segments[1].Points[0].Name);
+            Assert.AreEqual(1, concatenated.Segments[1].Points.Length);
+            Assert.AreEqual("TestPoint4", concatenated.Segments[2].Points[0].Name);
         }
 
         /// <summary>
@@ -285,8 +282,8 @@ namespace OsmSharp.Test.Unittests.Routing
             // 50.9861564788317, 2.902620884621392 (30m)
 
             Route route1 = new Route();
-            route1.Vehicle = Vehicle.Car;
-            RoutePointEntry route1entry1 = new RoutePointEntry();
+            route1.Vehicle = Vehicle.Car.UniqueName;
+            RouteSegment route1entry1 = new RouteSegment();
             route1entry1.Distance = -1;
             route1entry1.Latitude = 50.98624687752063f;
             route1entry1.Longitude = 2.902620979360633f;
@@ -304,11 +301,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry1.Tags[0].Key = "highway";
             route1entry1.Tags[0].Value = "residential";
             route1entry1.Time = 10;
-            route1entry1.Type = RoutePointEntryType.Start;
-            route1entry1.WayFromName = string.Empty;
-            route1entry1.WayFromNames = null;
+            route1entry1.Type = RouteSegmentType.Start;
+            route1entry1.Name = string.Empty;
+            route1entry1.Names = null;
 
-            RoutePointEntry route1entry2 = new RoutePointEntry();
+            RouteSegment route1entry2 = new RouteSegment();
             route1entry2.Distance = -1;
             route1entry2.Latitude = 50.98624687752063f;
             route1entry2.Longitude = 2.9027639004471673f;
@@ -326,11 +323,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry2.Tags[0].Key = "highway";
             route1entry2.Tags[0].Value = "residential";
             route1entry2.Time = 10;
-            route1entry2.Type = RoutePointEntryType.Start;
-            route1entry2.WayFromName = string.Empty;
-            route1entry2.WayFromNames = null;
+            route1entry2.Type = RouteSegmentType.Start;
+            route1entry2.Name = string.Empty;
+            route1entry2.Names = null;
 
-            RoutePointEntry route1entry3 = new RoutePointEntry();
+            RouteSegment route1entry3 = new RouteSegment();
             route1entry3.Distance = -1;
             route1entry3.Latitude = 50.986156907620895f;
             route1entry3.Longitude = 2.9027639004471673f;
@@ -348,11 +345,11 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry3.Tags[0].Key = "highway";
             route1entry3.Tags[0].Value = "residential";
             route1entry3.Time = 10;
-            route1entry3.Type = RoutePointEntryType.Start;
-            route1entry3.WayFromName = string.Empty;
-            route1entry3.WayFromNames = null;
+            route1entry3.Type = RouteSegmentType.Start;
+            route1entry3.Name = string.Empty;
+            route1entry3.Names = null;
 
-            RoutePointEntry route1entry4 = new RoutePointEntry();
+            RouteSegment route1entry4 = new RouteSegment();
             route1entry4.Distance = -1;
             route1entry4.Latitude = 50.9861564788317f;
             route1entry4.Longitude = 2.902620884621392f;
@@ -370,40 +367,41 @@ namespace OsmSharp.Test.Unittests.Routing
             route1entry4.Tags[0].Key = "highway";
             route1entry4.Tags[0].Value = "residential";
             route1entry4.Time = 10;
-            route1entry4.Type = RoutePointEntryType.Start;
-            route1entry4.WayFromName = string.Empty;
-            route1entry4.WayFromNames = null;
+            route1entry4.Type = RouteSegmentType.Start;
+            route1entry4.Name = string.Empty;
+            route1entry4.Names = null;
 
-            route1.Entries = new RoutePointEntry[4];
-            route1.Entries[0] = route1entry1;
-            route1.Entries[1] = route1entry2;
-            route1.Entries[2] = route1entry3;
-            route1.Entries[3] = route1entry4;
+            route1.Segments = new RouteSegment[4];
+            route1.Segments[0] = route1entry1;
+            route1.Segments[1] = route1entry2;
+            route1.Segments[2] = route1entry3;
+            route1.Segments[3] = route1entry4;
 
             // first test position after.
             var positionAfter = route1.PositionAfter(5);
             Assert.IsNotNull(positionAfter);
-            Assert.AreEqual(5.0, positionAfter.DistanceReal(new GeoCoordinate(route1.Entries[0].Latitude, route1.Entries[0].Longitude)).Value, .0001);
+            Assert.AreEqual(5.0, positionAfter.DistanceReal(new GeoCoordinate(route1.Segments[0].Latitude, route1.Segments[0].Longitude)).Value, .0001);
             positionAfter = route1.PositionAfter(15);
             Assert.IsNotNull(positionAfter);
             Assert.AreEqual(15.0, 
-                new GeoCoordinate(route1.Entries[0].Latitude, route1.Entries[0].Longitude).DistanceReal(new GeoCoordinate(route1.Entries[1].Latitude, route1.Entries[1].Longitude)).Value +
-                positionAfter.DistanceReal(new GeoCoordinate(route1.Entries[1].Latitude, route1.Entries[1].Longitude)).Value, .0001);
+                new GeoCoordinate(route1.Segments[0].Latitude, route1.Segments[0].Longitude).DistanceReal(new GeoCoordinate(route1.Segments[1].Latitude, route1.Segments[1].Longitude)).Value +
+                positionAfter.DistanceReal(new GeoCoordinate(route1.Segments[1].Latitude, route1.Segments[1].Longitude)).Value, .0001);
             positionAfter = route1.PositionAfter(25);
             Assert.IsNotNull(positionAfter);
             Assert.AreEqual(25.0,
-                new GeoCoordinate(route1.Entries[0].Latitude, route1.Entries[0].Longitude).DistanceReal(new GeoCoordinate(route1.Entries[1].Latitude, route1.Entries[1].Longitude)).Value +
-                new GeoCoordinate(route1.Entries[1].Latitude, route1.Entries[1].Longitude).DistanceReal(new GeoCoordinate(route1.Entries[2].Latitude, route1.Entries[2].Longitude)).Value +
-                positionAfter.DistanceReal(new GeoCoordinate(route1.Entries[2].Latitude, route1.Entries[2].Longitude)).Value, .0001);
+                new GeoCoordinate(route1.Segments[0].Latitude, route1.Segments[0].Longitude).DistanceReal(new GeoCoordinate(route1.Segments[1].Latitude, route1.Segments[1].Longitude)).Value +
+                new GeoCoordinate(route1.Segments[1].Latitude, route1.Segments[1].Longitude).DistanceReal(new GeoCoordinate(route1.Segments[2].Latitude, route1.Segments[2].Longitude)).Value +
+                positionAfter.DistanceReal(new GeoCoordinate(route1.Segments[2].Latitude, route1.Segments[2].Longitude)).Value, .0001);
 
             // use position after to test project on.
             int entryIdx;
             GeoCoordinate projected;
             Meter distanceFromStart;
+            Second timeFromStart;
 
             var distance = 5.0;
             var location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
@@ -415,7 +413,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             distance = 15.0;
             location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
@@ -427,7 +425,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             distance = 25;
             location = route1.PositionAfter(distance);
-            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart));
+            Assert.IsTrue(route1.ProjectOn(location, out projected, out entryIdx, out distanceFromStart, out timeFromStart));
             Assert.AreEqual(distance, distanceFromStart.Value, delta);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);

@@ -63,19 +63,28 @@ namespace System.Collections.Generic
         private IComparer<TKey> comparer;
         private int defaultCapacity;
 
-        //
-        // Constructors
-        //
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
         public SortedList()
             : this(INITIAL_SIZE, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
+        /// <param name="capacity"></param>
         public SortedList(int capacity)
             : this(capacity, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
+        /// <param name="capacity"></param>
+        /// <param name="comparer"></param>
         public SortedList(int capacity, IComparer<TKey> comparer)
         {
             if (capacity < 0)
@@ -88,16 +97,29 @@ namespace System.Collections.Generic
             Init(comparer, capacity, true);
         }
 
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
+        /// <param name="comparer"></param>
         public SortedList(IComparer<TKey> comparer)
             : this(INITIAL_SIZE, comparer)
         {
         }
 
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
+        /// <param name="dictionary"></param>
         public SortedList(IDictionary<TKey, TValue> dictionary)
             : this(dictionary, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new sortedset.
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="comparer"></param>
         public SortedList(IDictionary<TKey, TValue> dictionary, IComparer<TKey> comparer)
         {
             if (dictionary == null)
@@ -109,12 +131,9 @@ namespace System.Collections.Generic
                 Add(kvp.Key, kvp.Value);
         }
 
-        //
-        // Properties
-        //
-
-        // ICollection
-
+        /// <summary>
+        /// Returns the count.
+        /// </summary>
         public int Count
         {
             get
@@ -157,6 +176,11 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns the value associated with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public TValue this[TKey key]
         {
             get
@@ -196,6 +220,9 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns the capacity of this list.
+        /// </summary>
         public int Capacity
         {
             get
@@ -240,6 +267,9 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns all the keys.
+        /// </summary>
         public IList<TKey> Keys
         {
             get
@@ -248,6 +278,9 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns all the values.
+        /// </summary>
         public IList<TValue> Values
         {
             get
@@ -288,6 +321,9 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns the comparer.
+        /// </summary>
         public IComparer<TKey> Comparer
         {
             get
@@ -304,10 +340,11 @@ namespace System.Collections.Generic
             }
         }
 
-        //
-        // Public instance methods.
-        //
-
+        /// <summary>
+        /// Adds a new key value pair.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(TKey key, TValue value)
         {
             if (key == null)
@@ -316,6 +353,11 @@ namespace System.Collections.Generic
             PutImpl(key, value, false);
         }
 
+        /// <summary>
+        /// Returns true if the given key is in this list.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(TKey key)
         {
             if (key == null)
@@ -324,6 +366,10 @@ namespace System.Collections.Generic
             return (Find(key) >= 0);
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             for (int i = 0; i < inUse; i++)
@@ -334,6 +380,11 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Removes the element associated with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(TKey key)
         {
             if (key == null)
@@ -359,6 +410,9 @@ namespace System.Collections.Generic
             modificationCount++;
         }
 
+        /// <summary>
+        /// Clears all elements.
+        /// </summary>
         public void Clear()
         {
             defaultCapacity = INITIAL_SIZE;
@@ -500,6 +554,10 @@ namespace System.Collections.Generic
         // SortedList<TKey, TValue>
         //
 
+        /// <summary>
+        /// Returns the element at the given index.
+        /// </summary>
+        /// <param name="index"></param>
         public void RemoveAt(int index)
         {
             KeyValuePair<TKey, TValue>[] table = this.table;
@@ -523,6 +581,11 @@ namespace System.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Returns the index of the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public int IndexOfKey(TKey key)
         {
             if (key == null)
@@ -541,6 +604,11 @@ namespace System.Collections.Generic
             return (indx | (indx >> 31));
         }
 
+        /// <summary>
+        /// Returns the index of the given value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int IndexOfValue(TValue value)
         {
             if (inUse == 0)
@@ -557,17 +625,31 @@ namespace System.Collections.Generic
             return -1;
         }
 
+        /// <summary>
+        /// Returns true if the given value is in this list.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool ContainsValue(TValue value)
         {
             return IndexOfValue(value) >= 0;
         }
 
+        /// <summary>
+        /// Trims the excess capacity.
+        /// </summary>
         public void TrimExcess()
         {
             if (inUse < table.Length * 0.9)
                 Capacity = inUse;
         }
 
+        /// <summary>
+        /// Gets the value for the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
             if (key == null)

@@ -502,6 +502,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
+        /// <param name="extraView"></param>
         protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             if (_suspended)
@@ -584,6 +585,10 @@ namespace OsmSharp.UI.Map.Layers
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Diposes of all resources associated with this object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {            
             if (disposing == true)

@@ -24,6 +24,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI;
 using System.Collections.Generic;
 using OsmSharp.UI.Animations;
+using OsmSharp.Android.UI.Controls;
 
 namespace OsmSharp.Android.UI
 {
@@ -169,11 +170,11 @@ namespace OsmSharp.Android.UI
         void SetMapView(GeoCoordinate center, Degree mapTilt, float zoom);
 
         /// <summary>
-        /// Zooms to the given list of markers.
+        /// Zooms to the given list of map controls.
         /// </summary>
-        /// <param name="markers"></param>
+        /// <param name="controls"></param>
         /// <param name="percentage"></param>
-        void ZoomToMarkers(List<MapMarker> markers, double percentage);
+        void ZoomToControls(List<MapControl> controls, double percentage);
 
         /// <summary>
         /// Pauses all activity in this MapView.
