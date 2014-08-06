@@ -807,9 +807,14 @@ namespace OsmSharp.Routing.Graph
             private MemoryGraph<TEdgeData> _graph;
 
             /// <summary>
+            /// Holds the next edgeId.
+            /// </summary>
+            private uint _nextEdgeId;
+
+            /// <summary>
             /// Holds the current edgeId.
             /// </summary>
-            private uint _edgeId;
+            private uint _currentEdgeId;
 
             /// <summary>
             /// Holds the current vertex.
@@ -825,7 +830,8 @@ namespace OsmSharp.Routing.Graph
             public EdgeEnumerator(MemoryGraph<TEdgeData> graph, uint edgeId, uint vertex)
             {
                 _graph = graph;
-                _edgeId = edgeId;
+                _nextEdgeId = edgeId;
+                _currentEdgeId = 0;
                 _vertex = vertex;
             }
 
@@ -835,17 +841,18 @@ namespace OsmSharp.Routing.Graph
             /// <returns></returns>
             public bool MoveNext()
             {
-                if(_edgeId != NO_EDGE)
+                if(_nextEdgeId != NO_EDGE)
                 { // there is a next edge.
-                    if (_graph._edges[_edgeId + NODEA] == _vertex)
+                    _currentEdgeId = _nextEdgeId;
+                    if (_graph._edges[_nextEdgeId + NODEA] == _vertex)
                     {
-                        _neighbour = _graph._edges[_edgeId + NODEB];
-                        _edgeId = _graph._edges[_edgeId + NEXTNODEA];
+                        _neighbour = _graph._edges[_nextEdgeId + NODEB];
+                        _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEA];
                     }
                     else
                     {
-                        _neighbour = _graph._edges[_edgeId + NODEA];
-                        _edgeId = _graph._edges[_edgeId + NEXTNODEB];
+                        _neighbour = _graph._edges[_nextEdgeId + NODEA];
+                        _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEB];
                     }
                     return true;
                 }
@@ -870,7 +877,7 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             public TEdgeData EdgeData
             {
-                get { return _graph._edgeData[_edgeId / 4]; }
+                get { return _graph._edgeData[_currentEdgeId / 4]; }
             }
 
             /// <summary>
@@ -878,7 +885,7 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             public GeoCoordinateSimple[] Intermediates
             {
-                get { return _graph._edgeShapes[_edgeId / 4]; }
+                get { return _graph._edgeShapes[_currentEdgeId / 4]; }
             }
 
             /// <summary>
