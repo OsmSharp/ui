@@ -454,17 +454,6 @@ namespace OsmSharp.Osm.Interpreter
         private bool CompleteRing(List<KeyValuePair<bool, CompleteWay>> ways, bool[] assignedFlags, 
             List<Node> nodes, bool? role)
         {
-            if (assignedFlags.All(x => x == true))
-            {
-                if (nodes[nodes.Count - 1].Id != nodes[0].Id)
-                {
-                    // All ways assigned and we have no complete ring. Forcibly complete.
-                    nodes.Add(nodes[0]);
-                }
-
-                return true;
-            }
-
             for (int idx = 0; idx < ways.Count; idx++)
             {
                 if (!assignedFlags[idx])

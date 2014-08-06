@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
@@ -338,13 +337,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
                     break;
                 case CompleteOsmType.Relation:
-                    //if (!_mapCSSFile.HasRelationIdSelector &&
-                    //    _keysForRelations != null &&
-                    //    !osmGeo.Tags.ContainsOneOfKeys(_keysForRelations))
-                    //{ // no good keys present.
-                    //    break;
-                    //}
-                    //this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
+                    if (!_mapCSSFile.HasRelationIdSelector &&
+                        _keysForRelations != null &&
+                        !osmGeo.Tags.ContainsOneOfKeys(_keysForRelations))
+                    { // no good keys present.
+                        break;
+                    }
+                    this.TranslateRelation(scene, projection, osmGeo as CompleteRelation);
                     break;
             }
 
@@ -368,37 +367,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         else if (geometry is MultiPolygon)
                         { // a multipolygon.
                             this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
-                        }
-                    }
-                }
-                else if (osmGeo.Type == CompleteOsmType.Relation)
-                {
-                    var rel = osmGeo as CompleteRelation;
-
-                    if (_keysForLines == null || rel.Tags.ContainsOneOfKeys(_keysForLines) ||
-                        _keysForAreas == null || rel.Tags.ContainsOneOfKeys(_keysForAreas) ||
-                        _keysForLines == null || rel.Members.Any(x => x.Member.Tags.ContainsOneOfKeys(_keysForLines)) ||
-                        _keysForAreas == null || rel.Members.Any(x => x.Member.Tags.ContainsOneOfKeys(_keysForAreas)))
-                    {
-                        // good keys present.
-                        var collection = _geometryInterpreter.Interpret(osmGeo);
-                        foreach (Geometry geometry in collection)
-                        {
-                            if (geometry is LineairRing)
-                            {
-                                // a simple lineair ring.
-                                this.TranslateLineairRing(scene, projection, geometry as LineairRing);
-                            }
-                            else if (geometry is Polygon)
-                            {
-                                // a simple polygon.
-                                this.TranslatePolygon(scene, projection, geometry as Polygon);
-                            }
-                            else if (geometry is MultiPolygon)
-                            {
-                                // a multipolygon.
-                                this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
-                            }
                         }
                     }
                 }

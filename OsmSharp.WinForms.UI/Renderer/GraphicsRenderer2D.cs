@@ -394,6 +394,9 @@ namespace OsmSharp.WinForms.UI.Renderer
                 {
                     using (var characterPath = new GraphicsPath())
                     {
+                        var textWidth = target.Target.MeasureString(text, font).Width;
+                        transformedX = transformedX - (textWidth/2f); // center the text
+
                         characterPath.AddString(text, font.FontFamily, (int) font.Style, font.Size, new PointF(transformedX, transformedY), 
                             StringFormat.GenericTypographic);
                         if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
