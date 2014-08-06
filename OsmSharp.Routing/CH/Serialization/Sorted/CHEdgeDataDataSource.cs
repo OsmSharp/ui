@@ -27,6 +27,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -109,8 +110,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int arcCount = 0;
             foreach (uint vertexId in vertices)
             {
-                KeyValuePair<uint, CHEdgeData>[] vertexArcs = this.GetEdges(vertexId);
-                foreach (KeyValuePair<uint, CHEdgeData> arc in vertexArcs)
+                var vertexArcs = this.GetEdges(vertexId).ToKeyValuePairs();
+                foreach (var arc in vertexArcs)
                 {
                     arcCount++;
                     if (arcs.Length <= arcCount)
@@ -155,13 +156,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns an enumerator for edges for the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
+        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
         {
-            return this.LoadArcs(vertexId);
+            return new EdgeEnumerator(this.GetEdgePairs(vertexId));
         }
 
         /// <summary>
@@ -224,6 +225,16 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// Gets/sets the length.
             /// </summary>
             public int Length { get; set; }
+        }
+
+        /// <summary>
+        /// Returns all arcs for the given vertex.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        private KeyValuePair<uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
+        {
+            return this.LoadArcs(vertexId);
         }
 
         #region Regions
@@ -531,14 +542,74 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         #endregion
-
+        
         /// <summary>
-        /// Initialize the tags index.
+        /// An edge enumerator.
         /// </summary>
-        /// <param name="startOfTags"></param>
-        private void InitializeTagsIndex(int startOfTags)
+        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
         {
+            /// <summary>
+            /// Holds the edges.
+            /// </summary>
+            private KeyValuePair<uint, CHEdgeData>[] _edges;
 
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerator.
+            /// </summary>
+            /// <param name="edges"></param>
+            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
+            {
+                _edges = edges;
+            }
+
+            public bool MoveNext()
+            {
+                _current++;
+                return _edges.Length > _current;
+            }
+
+            /// <summary>
+            /// Returns the current neighbour.
+            /// </summary>
+            public uint Neighbour
+            {
+                get { return _edges[_current].Key; }
+            }
+
+            /// <summary>
+            /// Returns the current edge data.
+            /// </summary>
+            public CHEdgeData EdgeData
+            {
+                get { return _edges[_current].Value; }
+            }
+
+            /// <summary>
+            /// Returns the current intermediates.
+            /// </summary>
+            public GeoCoordinateSimple[] Intermediates
+            {
+                get { return null; }
+            }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            /// <returns></returns>
+            public int Count()
+            {
+                int count = 0;
+                while(this.MoveNext())
+                {
+                    count++;
+                }
+                return count;
+            }
         }
 
 

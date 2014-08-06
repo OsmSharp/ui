@@ -361,7 +361,7 @@ namespace OsmSharp.Routing.CH
                     bucket[to.Value] = current.Weight;
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                    var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToKeyValuePairs();
 
                     // add the neighbours to the queue.
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -511,10 +511,10 @@ namespace OsmSharp.Routing.CH
                     }
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                    var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToKeyValuePairs();
 
                     // add the neighbours to the queue.
-                    foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                    foreach (var neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
                         a => a.Value.Forward))
                     {
                         if (!settledVertices.ContainsKey(neighbour.Key))
@@ -1087,10 +1087,10 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToKeyValuePairs();
 
                 // add the neighbours to the queue.
-                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+                foreach (var neighbour in neighbours)
                 {
                     if (neighbour.Value.Forward &&
                         !settledQueue.Forward.ContainsKey(neighbour.Key) &&
@@ -1162,7 +1162,7 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToKeyValuePairs();
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -1499,7 +1499,7 @@ namespace OsmSharp.Routing.CH
                             var contractedArcs = graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
 
                             bool found = false;
-                            foreach (var contractedArc in contractedArcs)
+                            foreach (var contractedArc in contractedArcs.ToKeyValuePairs())
                             { // loop over all contracted arcs.
                                 if (contractedArc.Key == uncontracted.Key)
                                 { // the edge is and edge to the target.

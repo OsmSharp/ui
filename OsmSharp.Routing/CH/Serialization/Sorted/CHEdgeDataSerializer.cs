@@ -192,7 +192,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     chVertex.Latitude = latitude;
                     chVertex.Longitude = longitude;
                     chVertex.ArcIndex = (ushort)(blockArcs.Count);
-                    foreach (var sortedArc in sortedGraph.GetEdges(vertexId))
+                    foreach (var sortedArc in sortedGraph.GetEdges(vertexId).ToKeyValuePairs())
                     {
                         CHArc chArc = new CHArc();
                         chArc.TargetId = sortedArc.Key;
@@ -310,8 +310,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         currentBinIds.TryGetValue(binVertexId, out newVertexId);
 
                         // get the higher arcs and convert their ids.
-                        KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(binVertexId);
-                        foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
+                        var arcs = graph.GetEdges(binVertexId).ToKeyValuePairs();
+                        foreach (var arc in arcs)
                         {
                             // get target vertex.
                             uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);

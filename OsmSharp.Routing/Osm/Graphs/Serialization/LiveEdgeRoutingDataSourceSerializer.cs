@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    var arcs = graph.GetEdges(vertex);
+                    var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
 
                     // serialize the arcs.
                     if (arcs != null && arcs.Length > 0)

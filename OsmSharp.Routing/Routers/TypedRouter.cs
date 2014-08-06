@@ -921,7 +921,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected virtual KeyValuePair<uint, TEdgeData>[] GetNeighboursUndirected(long vertex1)
         {
-            return _dataGraph.GetEdges(Convert.ToUInt32(vertex1));
+            return _dataGraph.GetEdges(Convert.ToUInt32(vertex1)).ToKeyValuePairs();
         }
 
         /// <summary>

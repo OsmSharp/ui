@@ -497,7 +497,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 //var currentCoordinates = new GeoCoordinate(latitude, longitude);
 
                 // update the visited nodes.
-                foreach (KeyValuePair<uint, LiveEdge> neighbour in arcs)
+                foreach (var neighbour in arcs.ToKeyValuePairs())
                 {
                     // check the tags against the interpreter.
                     TagsCollectionBase tags = graph.TagsIndex.Get(neighbour.Value.Tags);

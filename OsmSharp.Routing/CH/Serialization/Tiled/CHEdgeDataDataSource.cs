@@ -30,6 +30,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.CH.Serialization.Tiled
 {
@@ -159,8 +160,8 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                         if (vertex != null &&
                             vertex.Arcs != null)
                         {
-                            KeyValuePair<uint, CHEdgeData>[] localArcs = vertex.Arcs;
-                            foreach (KeyValuePair<uint, CHEdgeData> localArc in localArcs)
+                            var localArcs = vertex.Arcs;
+                            foreach (var localArc in localArcs)
                             {
                                 arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
                                     vertexId, localArc));
@@ -222,11 +223,21 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         }
 
         /// <summary>
+        /// Returns an enumerator for edges for the given vertex.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
+        {
+            return new EdgeEnumerator(this.GetEdgePairs(vertexId));
+        }
+
+        /// <summary>
         /// Returns all arcs for the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
+        private KeyValuePair<uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -544,6 +555,75 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         }
 
         #endregion
+
+        /// <summary>
+        /// An edge enumerator.
+        /// </summary>
+        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
+        {
+            /// <summary>
+            /// Holds the edges.
+            /// </summary>
+            private KeyValuePair<uint, CHEdgeData>[] _edges;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerator.
+            /// </summary>
+            /// <param name="edges"></param>
+            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
+            {
+                _edges = edges;
+            }
+
+            public bool MoveNext()
+            {
+                _current++;
+                return _edges.Length > _current;
+            }
+
+            /// <summary>
+            /// Returns the current neighbour.
+            /// </summary>
+            public uint Neighbour
+            {
+                get { return _edges[_current].Key; }
+            }
+
+            /// <summary>
+            /// Returns the current edge data.
+            /// </summary>
+            public CHEdgeData EdgeData
+            {
+                get { return _edges[_current].Value; }
+            }
+
+            /// <summary>
+            /// Returns the current intermediates.
+            /// </summary>
+            public GeoCoordinateSimple[] Intermediates
+            {
+                get { return null; }
+            }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            /// <returns></returns>
+            public int Count()
+            {
+                int count = 0;
+                while (this.MoveNext())
+                {
+                    count++;
+                }
+                return count;
+            }
+        }
 
         public void AddRestriction(uint[] route)
         {

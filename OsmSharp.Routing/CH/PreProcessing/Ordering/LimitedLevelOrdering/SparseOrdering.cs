@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
             var neighbours = _data.GetEdges(vertex);
 
             // check the proper conditions.
-            if (neighbours.Length == 2)
+            if (neighbours.Count() == 2)
             {
                 return -1;
             }

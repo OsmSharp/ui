@@ -21,6 +21,7 @@ using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -147,7 +148,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var neighbours = new HashSet<KeyValuePair<uint, CHEdgeData>>();
 
             // get all information from the source.
-            var edges = _target.GetEdges(vertex);
+            var edges = _target.GetEdges(vertex).ToKeyValuePairs();
 
             // report the before contraction event.
             this.OnBeforeContraction(vertex, edges);
@@ -326,7 +327,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     {
                         recalculated_weights.Add(
                             new KeyValuePair<uint, float>(vertex, _calculator.Calculate(vertex)));
-                        var arcs = _target.GetEdges(vertex);
+                        var arcs = _target.GetEdges(vertex).ToKeyValuePairs();
                         if(arcs != null)
                         {
                             totalCadinality = arcs.Length + totalCadinality;
@@ -411,7 +412,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private bool CanBeContractedLocally(uint vertex, float priority)
         {
             // compare the priority with that of it's neighbours.
-            foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetEdges(vertex))
+            foreach (var edge in _target.GetEdges(vertex).ToKeyValuePairs())
             { // check the priority.
                 if (!this.IsContracted(edge.Key))
                 {

@@ -65,11 +65,11 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
             { // keep looping until all vertices have been processed.
                 // select a new vertext to select.
                 var vertexToProcess = nextToProcess;
-                var edges = _graph.GetEdges(vertexToProcess);
+                var edges = _graph.GetEdges(vertexToProcess).ToKeyValuePairs();
                 if(edges.Length == 2)
                 { // find one of the neighbours that is usefull.
                     vertexToProcess = edges[0].Key;
-                    edges = _graph.GetEdges(vertexToProcess);
+                    edges = _graph.GetEdges(vertexToProcess).ToKeyValuePairs();
                     verticesList.Clear();
                     verticesList.Add(vertexToProcess);
                     while(edges.Length == 2)
@@ -86,7 +86,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             }
                         }
                         verticesList.Add(vertexToProcess);
-                        edges = _graph.GetEdges(vertexToProcess);
+                        edges = _graph.GetEdges(vertexToProcess).ToKeyValuePairs();
                     }
                 }
                 if(edges.Length > 0)
@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         vertices.Add(current);
 
                         // get next edges list.
-                        var nextEdges = _graph.GetEdges(current);
+                        var nextEdges = _graph.GetEdges(current).ToKeyValuePairs();
                         while (nextEdges.Length == 2)
                         { // ok the current vertex can be removed.
                             var nextEdge = nextEdges[0];
@@ -155,7 +155,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             vertices.Add(current);
 
                             // get next edges.
-                            nextEdges = _graph.GetEdges(current);
+                            nextEdges = _graph.GetEdges(current).ToKeyValuePairs();
                         }
 
                         // check if the edge contains intermediate points.
@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             // keep edges that already have intermediates.
                             GeoCoordinateSimple[] edgeToKeepValueCoordinates = null;
                             var edgesToKeep = new List<Tuple<uint, LiveEdge, GeoCoordinateSimple[]>>();
-                            foreach(var edgeToKeep in _graph.GetEdges(vertexToProcess))
+                            foreach(var edgeToKeep in _graph.GetEdges(vertexToProcess).ToKeyValuePairs())
                             {
                                 edgeToKeepValueCoordinates = null;
                                 if(edgeToKeep.Key == oldEdge.Key && 
@@ -278,7 +278,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
             float latestProgress = -1;
             while (vertex <= _graph.VertexCount)
             {
-                var edges = _graph.GetEdges(vertex);
+                var edges = _graph.GetEdges(vertex).ToKeyValuePairs();
                 if (edges != null && edges.Length > 0)
                 { // ok, this vertex has edges.
                     if (nextCompressedPosition != vertex)
@@ -311,7 +311,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             // update other arcs.
                             if (edge.Key != vertex)
                             { // do not update other arcs if other vertex is the same.
-                                var reverseEdges = _graph.GetEdges(edge.Key);
+                                var reverseEdges = _graph.GetEdges(edge.Key).ToKeyValuePairs();
                                 if (reverseEdges != null)
                                 { // there are reverse edges, check if there is a reference to vertex.
                                     reverseEdges = reverseEdges.Clone() as KeyValuePair<uint, LiveEdge>[];

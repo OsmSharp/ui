@@ -451,8 +451,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex);
-                var arcs = network.GetEdges(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
@@ -542,8 +542,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex);
-                var arcs = network.GetEdges(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {

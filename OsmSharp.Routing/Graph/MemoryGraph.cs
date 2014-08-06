@@ -880,6 +880,20 @@ namespace OsmSharp.Routing.Graph
             {
                 get { return _graph._edgeShapes[_edgeId / 4]; }
             }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            /// <returns></returns>
+            public int Count()
+            {
+                int count = 0;
+                while (this.MoveNext())
+                {
+                    count++;
+                }
+                return count;
+            }
         }
     }
 }

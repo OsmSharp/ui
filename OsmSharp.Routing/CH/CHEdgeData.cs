@@ -476,8 +476,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
-            KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
+            var arcs = graph.GetEdges(vertexId).ToKeyValuePairs();
+            var higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)
             {
@@ -500,8 +500,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
-            KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
+            var arcs = graph.GetEdges(vertexId).ToKeyValuePairs();
+            var higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
             int higherIdx = 0;
             for (int idx = 0; idx < arcs.Length; idx++)
             {

@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetEdges(vertex);
+                var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
                 if (arcs != null)
                 { // serialize the arcs, but serialize them only once. 
                     // choose only those arcs that start at a vertex smaller than the target.

@@ -64,8 +64,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // simulate the construction of new edges.
             int newEdges = 0;
             int removed = 0;
-            var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>(neighbours.Length);
-            foreach(var neighbour in neighbours)
+            var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>(neighbours.Count());
+            foreach(var neighbour in neighbours.ToKeyValuePairs())
             {
                 if (!neighbour.Value.ToLower && !neighbour.Value.ToHigher)
                 {

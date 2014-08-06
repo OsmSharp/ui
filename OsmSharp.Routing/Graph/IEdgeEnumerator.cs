@@ -57,6 +57,11 @@ namespace OsmSharp.Routing.Graph
         {
             get;
         }
+
+        /// <summary>
+        /// Returns and calculates the count.
+        /// </summary>
+        int Count();
     }
 
     /// <summary>

@@ -176,7 +176,7 @@ namespace OsmSharp.Routing.Graph
             var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
             foreach (uint vertex in vertices)
             {
-                var localArcs = this.GetEdges(vertex);
+                var localArcs = this.GetEdges(vertex).ToKeyValuePairs();
                 foreach (var localArc in localArcs)
                 {
                     arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
