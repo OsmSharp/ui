@@ -62,6 +62,11 @@ namespace OsmSharp.Routing.Graph
         /// Returns and calculates the count.
         /// </summary>
         int Count();
+
+        /// <summary>
+        /// Resets this enumerator.
+        /// </summary>
+        void Reset();
     }
 
     /// <summary>
@@ -78,6 +83,7 @@ namespace OsmSharp.Routing.Graph
         public static KeyValuePair<uint, TEdgeData>[] ToKeyValuePairs<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
             where TEdgeData : IGraphEdgeData
         {
+            enumerator.Reset();
             var pairs = new List<KeyValuePair<uint, TEdgeData>>();
             while(enumerator.MoveNext())
             {

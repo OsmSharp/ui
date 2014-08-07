@@ -623,6 +623,14 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                 }
                 return count;
             }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
         }
 
         public void AddRestriction(uint[] route)

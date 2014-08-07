@@ -615,6 +615,14 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 }
                 return count;
             }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
         }
 
 

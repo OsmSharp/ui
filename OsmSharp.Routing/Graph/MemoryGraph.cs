@@ -817,9 +817,24 @@ namespace OsmSharp.Routing.Graph
             private uint _currentEdgeId;
 
             /// <summary>
+            /// Holds the direction flag for the current edge.
+            /// </summary>
+            private bool _currentEdgeInverted = false;
+
+            /// <summary>
             /// Holds the current vertex.
             /// </summary>
             private uint _vertex;
+
+            /// <summary>
+            /// Holds the start vertex.
+            /// </summary>
+            private uint _startVertex;
+
+            /// <summary>
+            /// Holds the start edge.
+            /// </summary>
+            private uint _startEdge;
 
             /// <summary>
             /// Creates a new edge enumerator.
@@ -833,6 +848,10 @@ namespace OsmSharp.Routing.Graph
                 _nextEdgeId = edgeId;
                 _currentEdgeId = 0;
                 _vertex = vertex;
+
+                _startVertex = vertex;
+                _startEdge = edgeId;
+                _currentEdgeInverted = false;
             }
 
             /// <summary>
@@ -848,11 +867,13 @@ namespace OsmSharp.Routing.Graph
                     {
                         _neighbour = _graph._edges[_nextEdgeId + NODEB];
                         _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEA];
+                        _currentEdgeInverted = false;
                     }
                     else
                     {
                         _neighbour = _graph._edges[_nextEdgeId + NODEA];
                         _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEB];
+                        _currentEdgeInverted = true;
                     }
                     return true;
                 }
@@ -877,7 +898,14 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             public TEdgeData EdgeData
             {
-                get { return _graph._edgeData[_currentEdgeId / 4]; }
+                get
+                {
+                    if (_currentEdgeInverted)
+                    {
+                        return (TEdgeData)_graph._edgeData[_currentEdgeId / 4].Reverse();
+                    }
+                    return _graph._edgeData[_currentEdgeId / 4];
+                }
             }
 
             /// <summary>
@@ -900,6 +928,16 @@ namespace OsmSharp.Routing.Graph
                     count++;
                 }
                 return count;
+            }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _nextEdgeId = _startEdge;
+                _currentEdgeId = 0;
+                _vertex = _startVertex;
             }
         }
     }

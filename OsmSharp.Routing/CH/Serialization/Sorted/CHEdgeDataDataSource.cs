@@ -610,6 +610,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
                 return count;
             }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
         }
 
 
