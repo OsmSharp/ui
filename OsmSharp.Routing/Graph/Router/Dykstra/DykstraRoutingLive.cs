@@ -559,7 +559,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             if (constraintsOk)
                             { // all constraints are validated or there are none.
                                 // calculate neighbors weight.
-                                double totalWeight = current.Weight + (speed.MeterPerSecond / neighbour.EdgeData.Distance);
+                                double totalWeight = current.Weight + (neighbour.EdgeData.Distance / speed.MeterPerSecond);
                                 //double totalWeight = current.Weight + neighbour.Value.Distance;
 
                                 // update the visit list;
