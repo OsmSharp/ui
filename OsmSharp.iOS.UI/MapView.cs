@@ -143,10 +143,10 @@ namespace OsmSharp.iOS.UI
 			// set clip to bounds to prevent objects from being rendered/show outside of the mapview.
 			this.ClipsToBounds = true;
 
-			_mapCenter = defaultMapCenter;
+			MapCenter = defaultMapCenter;
 			_map = defaultMap;
-			_mapTilt = defaultMapTilt;
-			_mapZoom = defaultMapZoom;
+			MapTilt = defaultMapTilt;
+			MapZoom = defaultMapZoom;
 
             _map.MapChanged += MapChanged;
 
@@ -614,15 +614,15 @@ namespace OsmSharp.iOS.UI
 				}
 				else if (pinch.State == UIGestureRecognizerState.Began)
 				{
-					_mapZoomLevelBefore = _mapZoom;
+                    _mapZoomLevelBefore = MapZoom;
 				}
 				else
 				{
-					_mapZoom = _mapZoomLevelBefore.Value;
+					MapZoom = _mapZoomLevelBefore.Value;
 
-					double zoomFactor = this.Map.Projection.ToZoomFactor(_mapZoom);
+                    double zoomFactor = this.Map.Projection.ToZoomFactor(MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-					_mapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
+                    MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
 					this.NotifyMovementByInvoke();
 				}
@@ -742,14 +742,8 @@ namespace OsmSharp.iOS.UI
 				else
 				{ // minimum zoom.
                     // Clamp the zoom level between the configured maximum and minimum.
-                    float tapRequestZoom = _mapZoom + 0.5f;
-                    if (tapRequestZoom > this.MapMaxZoomLevel) {
-                        tapRequestZoom = (float)this.MapMaxZoomLevel;
-                    } else if (tapRequestZoom < this.MapMinZoomLevel) {
-                        tapRequestZoom = (float)this.MapMinZoomLevel;
-                    }
-
-					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 1));
+                    float tapRequestZoom = MapZoom + 0.5f;
+					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 0, 0, 500));
 				}
 			}
 		}
@@ -769,7 +763,6 @@ namespace OsmSharp.iOS.UI
 			set
 			{ 
 				_mapCenter = value;
-
 				this.NotifyMovementByInvoke();
 			}
 		}
@@ -894,11 +887,11 @@ namespace OsmSharp.iOS.UI
 			set {
                 if (value > _mapMaxZoomLevel)
                 {
-                    _mapZoom = MAX_ZOOM_LEVEL;
+                    _mapZoom = _mapMaxZoomLevel;
                 }
                 else if (value < _mapMinZoomLevel)
                 {
-                    _mapZoom = 0;
+                    _mapZoom = _mapMinZoomLevel;
                 }
                 else
                 {
@@ -1011,9 +1004,9 @@ namespace OsmSharp.iOS.UI
 		/// <param name="mapZoom">Map zoom.</param>
 		void IMapView.SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
 		{
-			_mapCenter = center;
-			_mapTilt = mapTilt;
-			_mapZoom = mapZoom;
+			MapCenter = center;
+			MapTilt = mapTilt;
+            MapZoom = mapZoom;
 
 			this.NotifyMovementByInvoke();
 		}
