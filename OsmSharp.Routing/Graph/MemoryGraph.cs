@@ -940,7 +940,7 @@ namespace OsmSharp.Routing.Graph
                 _vertex = _startVertex;
             }
 
-            public IEnumerator<IEdge<TEdgeData>> GetEnumerator()
+            public IEnumerator<Edge<TEdgeData>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -952,14 +952,14 @@ namespace OsmSharp.Routing.Graph
                 return this;
             }
 
-            public IEdge<TEdgeData> Current
+            public Edge<TEdgeData> Current
             {
-                get { return this; }
+                get { return new Edge<TEdgeData>(this); }
             }
 
             object System.Collections.IEnumerator.Current
             {
-                get { return this; }
+                get { return new Edge<TEdgeData>(this); }
             }
 
             public void Dispose()

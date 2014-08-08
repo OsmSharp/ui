@@ -22,6 +22,7 @@ using OsmSharp.Routing.Interpreter;
 using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph;
+using System.Linq;
 
 namespace OsmSharp.Routing.Routers
 {

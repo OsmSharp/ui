@@ -632,7 +632,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                 _current = -1;
             }
 
-            public IEnumerator<IEdge<CHEdgeData>> GetEnumerator()
+            public IEnumerator<Edge<CHEdgeData>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -644,14 +644,14 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                 return this;
             }
 
-            public IEdge<CHEdgeData> Current
+            public Edge<CHEdgeData> Current
             {
-                get { return this; }
+                get { return new Edge<CHEdgeData>(this); }
             }
 
             object System.Collections.IEnumerator.Current
             {
-                get { return this; }
+                get { return new Edge<CHEdgeData>(this); }
             }
 
             public void Dispose()

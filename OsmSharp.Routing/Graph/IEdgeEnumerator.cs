@@ -25,17 +25,7 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Represents an abstract edge enumerator, enumerable and edge.
     /// </summary>
-    public interface IEdgeEnumerator<TEdgeData> : IEnumerable<IEdge<TEdgeData>>, IEnumerator<IEdge<TEdgeData>>, IEdge<TEdgeData>
-        where TEdgeData : IGraphEdgeData
-    {
-
-    }
-
-    /// <summary>
-    /// Abstract representation of an edge.
-    /// </summary>
-    /// <typeparam name="TEdgeData"></typeparam>
-    public interface IEdge<TEdgeData> 
+    public interface IEdgeEnumerator<TEdgeData> : IEnumerable<Edge<TEdgeData>>, IEnumerator<Edge<TEdgeData>>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
@@ -82,11 +72,22 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new edge by copying the given edge.
         /// </summary>
         /// <param name="edge"></param>
-        public Edge(IEdge<TEdgeData> edge)
+        public Edge(Edge<TEdgeData> edge)
         {
             this.Neighbour = edge.Neighbour;
             this.EdgeData = edge.EdgeData;
             this.Intermediates = edge.Intermediates;
+        }
+
+        /// <summary>
+        /// Creates a new edge keeping the current stage of the given enumerator.
+        /// </summary>
+        /// <param name="enumerator"></param>
+        public Edge(IEdgeEnumerator<TEdgeData> enumerator)
+        {
+            this.Neighbour = enumerator.Neighbour;
+            this.EdgeData = enumerator.EdgeData;
+            this.Intermediates = enumerator.Intermediates;
         }
 
         /// <summary>
@@ -138,29 +139,6 @@ namespace OsmSharp.Routing.Graph
                 pairs.Add(new KeyValuePair<uint, TEdgeData>(enumerator.Neighbour, enumerator.EdgeData));
             }
             return pairs.ToArray();
-        }
-
-        /// <summary>
-        /// Converts the given edge enumerator ito a list of edge objects.
-        /// </summary>
-        /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="?"></param>
-        /// <returns></returns>
-        public static List<Edge<TEdgeData>> ToList<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
-            where TEdgeData : IGraphEdgeData
-        {
-            enumerator.Reset();
-            var pairs = new List<Edge<TEdgeData>>();
-            while (enumerator.MoveNext())
-            {
-                pairs.Add(new Edge<TEdgeData>()
-                {
-                    EdgeData = enumerator.EdgeData,
-                    Neighbour = enumerator.Neighbour,
-                    Intermediates = enumerator.Intermediates
-                });
-            }
-            return pairs;
         }
     }
 }

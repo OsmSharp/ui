@@ -20,6 +20,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {

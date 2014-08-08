@@ -29,6 +29,7 @@ using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {

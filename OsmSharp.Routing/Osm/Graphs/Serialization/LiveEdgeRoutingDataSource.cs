@@ -624,7 +624,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 _current = -1;
             }
 
-            public IEnumerator<IEdge<LiveEdge>> GetEnumerator()
+            public IEnumerator<Edge<LiveEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -636,14 +636,14 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 return this;
             }
 
-            public IEdge<LiveEdge> Current
+            public Edge<LiveEdge> Current
             {
-                get { return this; }
+                get { return new Edge<LiveEdge>(this); }
             }
 
             object System.Collections.IEnumerator.Current
             {
-                get { return this; }
+                get { return new Edge<LiveEdge>(this); }
             }
 
             public void Dispose()

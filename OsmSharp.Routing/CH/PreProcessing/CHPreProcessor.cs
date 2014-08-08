@@ -22,6 +22,7 @@ using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph;
+using System.Linq;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
