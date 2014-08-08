@@ -315,6 +315,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
             bool stopAtFirst, bool returnAtWeight, bool forward, Dictionary<string, object> parameters)
         {
+            var speeds = new Dictionary<uint, Speed>();
+
             // make copies of the target and source visitlist.
             var source = sourceList.Clone() as PathSegmentVisitList;
             var targets = new PathSegmentVisitList[targetList.Length];
@@ -482,6 +484,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             chosenVertices.Add(current.VertexId);
 
             // loop until target is found and the route is the shortest!
+            var noSpeed = new Speed() { Direction = null, MeterPerSecond = 0 };
             while (true)
             {
                 // get the current labels list (if needed).
@@ -502,15 +505,29 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         continue;
                     }
 
+                    // get the speed from cache or calculate.
+                    Speed speed = noSpeed;
+                    if(!speeds.TryGetValue(neighbour.EdgeData.Tags, out speed))
+                    { // speed not there, calculate speed.
+                        var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
+                        speed = noSpeed;
+                        if (vehicle.CanTraverse(tags))
+                        { // can traverse, speed not null!
+                            speed = new Speed()
+                            {
+                                MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
+                                Direction = vehicle.IsOneWay(tags)
+                            };
+                        }
+                        speeds.Add(neighbour.EdgeData.Tags, speed);
+                    }
+
                     // check the tags against the interpreter.
-                    TagsCollectionBase tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
-                    if (vehicle.CanTraverse(tags))
+                    if (speed.MeterPerSecond > 0 && (!speed.Direction.HasValue || speed.Direction.Value == neighbour.EdgeData.Forward))
+                    //if (vehicle.CanTraverse(tags))
                     { // it's ok; the edge can be traversed by the given vehicle.
-                        bool? oneWay = vehicle.IsOneWay(tags);
-                        bool canBeTraversedOneWay = (!oneWay.HasValue || oneWay.Value == neighbour.EdgeData.Forward);
                         if ((current.From == null ||
-                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)) && // test for turning restrictions.
-                            canBeTraversedOneWay)
+                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)))
                         { // the neighbor is forward and is not settled yet!
                             // check the labels (if needed).
                             bool constraintsOk = true;
@@ -542,7 +559,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             if (constraintsOk)
                             { // all constraints are validated or there are none.
                                 // calculate neighbors weight.
-                                double totalWeight = current.Weight + vehicle.Weight(tags, neighbour.EdgeData.Distance);
+                                double totalWeight = current.Weight + (speed.MeterPerSecond / neighbour.EdgeData.Distance);
                                 //double totalWeight = current.Weight + neighbour.Value.Distance;
 
                                 // update the visit list;
@@ -642,6 +659,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 return segmentsToTarget.ToArray();
             }
             return segmentsAtWeight.ToArray();
+        }
+
+        private struct Speed
+        {
+            public double MeterPerSecond { get; set; }
+
+            public bool? Direction { get; set; }
         }
 
         #endregion
