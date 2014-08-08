@@ -85,10 +85,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             arcsQueue.Clear();
                         }
                     }
-
-                    // serialize.
-                    vertex++;
                 }
+
+                // move to next vertex.
+                vertex++;
             }
 
             if (arcsQueue.Count > 0)
