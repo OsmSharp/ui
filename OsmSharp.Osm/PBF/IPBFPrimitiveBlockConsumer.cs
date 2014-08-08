@@ -27,6 +27,9 @@ namespace OsmSharp.Osm.PBF
         /// Processes a primitive block of OSM data.
         /// </summary>
         /// <param name="block"></param>
+        /// <param name="ignoreNodes"></param>
+        /// <param name="ignoreWays"></param>
+        /// <param name="ignoreRelations"></param>
         bool ProcessPrimitiveBlock(PrimitiveBlock block, bool ignoreNodes, bool ignoreWays, bool ignoreRelations);
     }
 }

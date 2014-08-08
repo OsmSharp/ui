@@ -16,16 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Units.Distance;
-using OsmSharp.Units.Angle;
+using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
-using OsmSharp.Math.Geo.Meta;
-using System.Diagnostics;
+using OsmSharp.Units.Angle;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Math.Geo
 {

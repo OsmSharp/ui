@@ -75,8 +75,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="directionForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="intermediates"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, 
+        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
             TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             double weight = _vehicle.Weight(tags, from, to);
@@ -96,15 +97,17 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     (!directionForward && direction.Value);
             }
 
+            // add tags.
+            var tagsId = tagsIndex.Add(tags);
+
             // initialize the edge data.
-            CHEdgeData edgeData = new CHEdgeData()
+            var edgeData = new CHEdgeData()
             {
                 Weight = (float)weight,
-                Tags = tagsIndex.Add(
-                tags),
+                Tags = tagsId,
                 ContractedVertexId = 0
             };
-            edgeData.SetDirection(forward, backward, true);
+            edgeData.SetDirection(forward, backward);
             return edgeData;
         }
 
@@ -130,48 +133,24 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
-        /// <param name="keepDirectNeighbours"></param>
-        /// <param name="preProcessingPercentage"></param>
         /// <returns></returns>
         public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle,
-            bool keepDirectNeighbours)
+            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var dynamicGraphRouterDataSource =
-                new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
-                dynamicGraphRouterDataSource, interpreter, tagsIndex, vehicle);
+                graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
             targetData.Pull();
 
             // compress the graph.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
-            // INodeWitnessCalculator witnessCalculator = new CHRouterWitnessCalculator();
-            //var edgeDifference = new EdgeDifference(
-            //        dynamicGraphRouterDataSource, witnessCalculator);
-            var edgeDifference = new EdgeDifferenceContractedSearchSpace(dynamicGraphRouterDataSource, witnessCalculator);
-            var preProcessor = new CHPreProcessor(
-                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator, keepDirectNeighbours);
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var edgeDifference = new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator);
+            var preProcessor = new CHPreProcessor(graph, edgeDifference, witnessCalculator);
             preProcessor.Start();
 
-            return dynamicGraphRouterDataSource;
-        }
-        
-        /// <summary>
-        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-                                                                        ITagsCollectionIndex tagsIndex,
-                                                                        IOsmRoutingInterpreter interpreter,
-                                                                        Vehicle vehicle)
-        {
-            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, true);
+            return graph;
         }
 
         /// <summary>
@@ -182,8 +161,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicle"></param>
         /// <returns></returns>
         public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-                                                                        IOsmRoutingInterpreter interpreter,
-                                                                        Vehicle vehicle)
+            IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);
         }

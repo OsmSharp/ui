@@ -26,6 +26,7 @@ using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -99,7 +100,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[] GetEdges(
             GeoCoordinateBox box)
         {
             List<uint> vertices = this.LoadVerticesIn(box);
@@ -108,7 +109,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int arcCount = 0;
             foreach (uint vertexId in vertices)
             {
-                KeyValuePair<uint, CHEdgeData>[] vertexArcs = this.GetArcs(vertexId);
+                KeyValuePair<uint, CHEdgeData>[] vertexArcs = this.GetEdges(vertexId);
                 foreach (KeyValuePair<uint, CHEdgeData> arc in vertexArcs)
                 {
                     arcCount++;
@@ -158,7 +159,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, CHEdgeData>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, CHEdgeData>[] GetEdges(uint vertexId)
         {
             return this.LoadArcs(vertexId);
         }
@@ -169,9 +170,36 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
-            throw new NotImplementedException();
+            CHEdgeData data;
+            return this.GetEdge(vertexId, neighbour, out data);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+        {
+            return this.LoadArc(vertex1, vertex2, out data);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            CHEdgeData data;
+            shape = null;
+            return this.LoadArc(vertex1, vertex2, out data);
         }
 
         /// <summary>
@@ -361,6 +389,80 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         /// <summary>
+        /// Loads the edge between the given vertices.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private bool LoadArc(uint vertex1, uint vertex2, out CHEdgeData data)
+        {
+            uint blockId = CHBlock.CalculateId(vertex1, _blockSize);
+            CHBlock block;
+            if (!_blocks.TryGet(blockId, out block))
+            { // damn block not cached!
+                block = this.DeserializeBlock(blockId);
+                if (block == null)
+                { // oops even now the block is not found!
+                    data = new CHEdgeData();
+                    return false;
+                }
+                _blocks.Add(blockId, block);
+            }
+            uint blockIdx = vertex1 - blockId;
+            if (block.Vertices != null &&
+                blockIdx < block.Vertices.Length)
+            { // block is found and the vertex is there!
+                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
+                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                { // loop over all arcs.
+                    var chArc = block.Arcs[arcIdx];
+                    if(chArc.TargetId == vertex2)
+                    {
+                        data = new CHEdgeData();
+                        data.Direction = chArc.Direction;
+                        data.ContractedVertexId = chArc.ShortcutId;
+                        data.Weight = chArc.Weight;
+                        data.Tags = chArc.TagsId;
+                        return true;
+                    }
+                }
+            }
+            blockId = CHBlock.CalculateId(vertex2, _blockSize);
+            if (!_blocks.TryGet(blockId, out block))
+            { // damn block not cached!
+                block = this.DeserializeBlock(blockId);
+                if (block == null)
+                { // oops even now the block is not found!
+                    data = new CHEdgeData();
+                    return false;
+                }
+                _blocks.Add(blockId, block);
+            }
+            blockIdx = vertex2 - blockId;
+            if (block.Vertices != null &&
+                blockIdx < block.Vertices.Length)
+            { // block is found and the vertex is there!
+                for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
+                    arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
+                { // loop over all arcs.
+                    var chArc = block.Arcs[arcIdx];
+                    if (chArc.TargetId == vertex1)
+                    {
+                        data = new CHEdgeData();
+                        data.Direction = chArc.Direction;
+                        data.ContractedVertexId = chArc.ShortcutId;
+                        data.Weight = chArc.Weight;
+                        data.Tags = chArc.TagsId;
+                        return true;
+                    }
+                }
+            }
+            data = new CHEdgeData();
+            return false;
+        }
+
+        /// <summary>
         /// Loads all arcs associated with the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
@@ -382,13 +484,13 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                KeyValuePair<uint, CHEdgeData>[] arcs = new KeyValuePair<uint, CHEdgeData>[
+                var arcs = new KeyValuePair<uint, CHEdgeData>[
                     block.Vertices[blockIdx].ArcCount];
                 for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
                     arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
                 { // loop over all arcs.
-                    CHArc chArc = block.Arcs[arcIdx];
-                    CHEdgeData edgeData = new CHEdgeData();
+                    var chArc = block.Arcs[arcIdx];
+                    var edgeData = new CHEdgeData();
                     edgeData.Direction = chArc.Direction;
                     edgeData.ContractedVertexId = chArc.ShortcutId;
                     edgeData.Weight = chArc.Weight;

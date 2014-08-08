@@ -39,7 +39,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Holds the virtual size.
         /// </summary>
-        private int _virtualSize;
+        private long _virtualSize;
 
         /// <summary>
         /// Holds the array blocks.
@@ -50,7 +50,7 @@ namespace OsmSharp.Collections
         /// Creates a new sparse array.
         /// </summary>
         /// <param name="size">The initial size.</param>
-        public SparseArray(int size)
+        public SparseArray(long size)
         {
             _virtualSize = size;
             _blockSize = 256;
@@ -129,7 +129,7 @@ namespace OsmSharp.Collections
         /// Resizes this array.
         /// </summary>
         /// <param name="size">The new size.</param>
-        public void Resize(int size)
+        public void Resize(long size)
         {
             if (size >= _virtualSize)
             { // increasing the size is easy!
@@ -159,7 +159,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Gets the length of this array.
         /// </summary>
-        public int Length { get { return _virtualSize; }}
+        public long Length { get { return _virtualSize; }}
 
         /// <summary>
         /// Represents an array block.

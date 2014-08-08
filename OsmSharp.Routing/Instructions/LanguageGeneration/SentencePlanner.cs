@@ -15,14 +15,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Routing.ArcAggregation.Output;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {
@@ -64,144 +62,19 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         }
 
         /// <summary>
-        /// Generates a turn instruction.
+        /// Generates an instruction from the given meta data and given pois.
         /// </summary>
-        /// <param name="entryIdx"></param>
+        /// <param name="metaData"></param>
+        /// <param name="segmentIdx"></param>
         /// <param name="box"></param>
-        /// <param name="direction"></param>
-        /// <param name="streetCountTurn"></param>
-        /// <param name="streetCountBeforeTurn"></param>
-        /// <param name="streetFrom"></param>
-        /// <param name="streetTo"></param>
-        /// <param name="list"></param>
-        internal void GenerateTurn(int entryIdx, GeoCoordinateBox box,
-            RelativeDirection direction, int streetCountTurn, int streetCountBeforeTurn,
-            TagsCollectionBase streetFrom, TagsCollectionBase streetTo, List<PointPoi> list)
+        /// <param name="pois"></param>
+        internal void GenerateInstruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox box, List<PointPoi> pois)
         {
-            // create a new instruction first.
-            Instruction instruction = new Instruction(entryIdx, box, list);
-
-            // pass the instruction to the languate generator.
-            // test if the street is the same but a turn needs to be taken anyway.
-            if (streetFrom == streetTo)
-            {
-                if (streetCountTurn == 0)
-                {// there are no other streets between the one being turned into and the street coming from in the same
-                    // direction as the turn.
-                    instruction = _generator.GenerateDirectFollowTurn(
-                        instruction, streetCountBeforeTurn, streetTo, direction.Direction, list);
-                }
-                else
-                { // there is another street; this is tricky to explain.
-                    instruction = _generator.GenerateIndirectFollowTurn(
-                        instruction, streetCountTurn, streetCountBeforeTurn, streetTo, direction.Direction, list);
-                }
+            string text;
+            if (_generator.Generate(metaData, out text))
+            { // add the instruction to the instructions list.
+                _instructions.Add(new Instruction(metaData, segmentIdx, box, text, pois));
             }
-            else
-            {
-                if (streetCountTurn == 0)
-                { // there are no other streets between the one being turned into and the street coming from in the same
-                    // direction as the turn.
-                    instruction = _generator.GenerateDirectTurn(
-                        instruction, streetCountBeforeTurn, streetTo, direction.Direction, list);
-                }
-                else
-                { // there is another street; this is tricky to explain.
-                    instruction = _generator.GenerateIndirectTurn(
-                        instruction, streetCountTurn, streetCountBeforeTurn, streetTo, direction.Direction, list);
-                }
-            }
-
-            // add the instruction to the instructions list.
-            _instructions.Add(instruction);
-        }
-
-        /// <summary>
-        /// Generates a poi instruction.
-        /// </summary>
-        /// <param name="entryIdx"></param>
-        /// <param name="box"></param>
-        /// <param name="list"></param>
-        /// <param name="direction"></param>
-        internal void GeneratePoi(int entryIdx, GeoCoordinateBox box, 
-            List<PointPoi> list, RelativeDirection direction)
-        {
-            // create a new instruction first.
-            Instruction instruction = new Instruction(entryIdx, box, list);
-            Instruction direction_instruction = null;
-
-            // pass the instruction to the languate generator.
-            if (direction == null)
-            {
-                instruction = _generator.GeneratePoi(instruction, list, null);
-            }
-            else
-            {
-                // create a direction instruction.
-                if (direction.Direction == RelativeDirectionEnum.TurnBack)
-                {
-                    direction_instruction = new Instruction(entryIdx, box, list);
-                    direction_instruction = _generator.GenerateSimpleTurn(direction_instruction, direction.Direction);
-                }
-
-                // generates the instructions.
-                instruction = _generator.GeneratePoi(instruction, list, null);
-            }
-
-            // add the instruction to the instructions list.
-            _instructions.Add(instruction);
-
-            // add the direction instruction.
-            if (direction_instruction != null)
-            {
-                _instructions.Add(direction_instruction);
-            }
-        }
-
-        /// <summary>
-        /// Generates an immidiate turn instruction.
-        /// </summary>
-        /// <param name="entryIdx"></param>
-        /// <param name="box"></param>
-        /// <param name="before_name"></param>
-        /// <param name="first_direction"></param>
-        /// <param name="first_street_count_to"></param>
-        /// <param name="second_direction"></param>
-        /// <param name="first_street_to"></param>
-        /// <param name="second_street_to"></param>
-        /// <param name="list"></param>
-        internal void GenerateImmidiateTurn(int entryIdx, GeoCoordinateBox box,
-            TagsCollectionBase before_name, RelativeDirection first_direction, int first_street_count_to,
-            RelativeDirection second_direction, TagsCollectionBase first_street_to, TagsCollectionBase second_street_to, List<PointPoi> list)
-        {
-            // create a new instruction first.
-            Instruction instruction = new Instruction(entryIdx, box);
-
-            // pass the instruction to the language generator.
-            instruction = _generator.GenerateImmidiateTurn(
-                instruction, first_street_count_to, first_street_to, first_direction, second_street_to, second_direction);
-
-            // add the instruction to the instructions list.
-            _instructions.Add(instruction);
-        }
-
-        /// <summary>
-        /// Generates a roudabout instruction.
-        /// </summary>
-        /// <param name="entryIdx"></param>
-        /// <param name="box"></param>
-        /// <param name="count"></param>
-        /// <param name="next_street"></param>
-        internal void GenerateRoundabout(int entryIdx, GeoCoordinateBox box, int count, TagsCollectionBase next_street)
-        {
-            // create a new instruction first.
-            Instruction instruction = new Instruction(entryIdx, box);
-
-            // pass the instruction to the language generator.
-            instruction = _generator.GenerateRoundabout(instruction, count, next_street);
-
-            // add the instruction to the instructions list.
-            _instructions.Add(instruction);
         }
     }
 }

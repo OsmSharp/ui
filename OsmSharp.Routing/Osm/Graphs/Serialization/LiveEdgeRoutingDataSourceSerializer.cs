@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// A v2 routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public class V2RoutingDataSourceLiveEdgeSerializer : RoutingDataSourceSerializer<LiveEdge>
+    public class RoutingDataSourceLiveEdgeSerializer : RoutingDataSourceSerializer<LiveEdge>
     {
         /// <summary>
         /// Holds the size of the tile meta.
@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// Creates a new v2 serializer.
         /// </summary>
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
-        public V2RoutingDataSourceLiveEdgeSerializer(bool compress)
+        public RoutingDataSourceLiveEdgeSerializer(bool compress)
         {
             _compress = compress;
 
@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    var arcs = graph.GetArcs(vertex);
+                    var arcs = graph.GetEdges(vertex);
 
                     // serialize the arcs.
                     if (arcs != null && arcs.Length > 0)
@@ -143,13 +143,18 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             // get destination tile.
                             if (graph.GetVertex(arc.Key, out latitude, out longitude))
                             { // the destionation was found.
+                                GeoCoordinateSimple[] arcValueCoordinates;
+                                if(!graph.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates))
+                                {
+                                    arcValueCoordinates = null;
+                                }
                                 var destinationTile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
                                 serializableGraphArcs.DestinationId[idx] = arc.Key;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
                                 serializableGraphArcs.Forward[idx] = arc.Value.Forward;
                                 serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
-                                    Coordinates = SerializableCoordinate.FromSimpleArray(arc.Value.Coordinates)
+                                    Coordinates = SerializableCoordinate.FromSimpleArray(arcValueCoordinates)
                                 };
                                 serializableGraphArcs.Distances[idx] = arc.Value.Distance;
 
@@ -301,7 +306,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     typeof(SerializableGraphTileMetas));
 
             // create the datasource.
-            var routerDataSource = new V2RouterLiveEdgeDataSource(stream, decompress, metas, Zoom,
+            var routerDataSource = new RouterLiveEdgeDataSource(stream, decompress, metas, Zoom,
                     this, vehicles, 1000);
             if (!lazy)
             {
@@ -545,7 +550,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns a simple array.
             /// </summary>
-            /// <param name="coordinates"></param>
+            /// <param name="simples"></param>
             /// <returns></returns>
             public static SerializableCoordinate[] FromSimpleArray(GeoCoordinateSimple[] simples)
             {

@@ -53,10 +53,9 @@ namespace OsmSharp.Routing.Metrics
         /// <returns></returns>
         public Dictionary<string, double> Calculate(Route route)
         {
-            OsmSharp.Routing.ArcAggregation.ArcAggregator aggregator = 
-                new OsmSharp.Routing.ArcAggregation.ArcAggregator(_interpreter);
-            AggregatedPoint p = aggregator.Aggregate(route);
-            return this.Calculate(route.Vehicle, p);
+            var aggregator =  new OsmSharp.Routing.ArcAggregation.ArcAggregator(_interpreter);
+            var p = aggregator.Aggregate(route);
+            return this.Calculate(Vehicle.GetByUniqueName(route.Vehicle), p);
         }
 
         /// <summary>

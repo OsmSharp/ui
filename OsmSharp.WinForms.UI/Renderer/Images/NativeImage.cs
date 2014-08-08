@@ -77,6 +77,10 @@ namespace OsmSharp.WinForms.UI.Renderer.Images
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Diposes of all resources associated with this object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing == true)

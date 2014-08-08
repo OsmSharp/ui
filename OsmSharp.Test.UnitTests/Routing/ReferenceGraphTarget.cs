@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing;
@@ -44,7 +45,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles"></param>
         public ReferenceGraphTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
-            : base(dynamicGraph, interpreter, tagsIndex, vehicles)
+            : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), vehicles, false)
         {
 
         }

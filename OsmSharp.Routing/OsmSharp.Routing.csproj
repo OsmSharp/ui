@@ -71,7 +71,7 @@
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\IDynamicGraphWriteOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
-    <Compile Include="Graph\MemoryDynamicGraphWriteOnly.cs" />
+    <Compile Include="Graph\MemoryMappedFileDynamicGraph.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
@@ -85,9 +85,10 @@
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
-    <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />
-    <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleEnglishLanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\Defaults\DutchLanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\Defaults\EnglishLanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\ILanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\LanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\SentencePlanner.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\ImmidiateTurnMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\PoiMachine.cs" />

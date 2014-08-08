@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Osm;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
 {
@@ -235,7 +230,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             uint vertexNoname1 = data.AddVertex((float)fromNoname.Latitude, (float)fromNoname.Longitude);
             uint vertexNoname2 = data.AddVertex((float)toNoname.Latitude, (float)toNoname.Longitude);
-            data.AddArc(vertexNoname1, vertexNoname2, new LiveEdge()
+            data.AddEdge(vertexNoname1, vertexNoname2, new LiveEdge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)
@@ -245,7 +240,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             tags["name"] = name;
             uint vertexName1 = data.AddVertex((float)fromName.Latitude, (float)fromName.Longitude);
             uint vertexName2 = data.AddVertex((float)toName.Latitude, (float)toName.Longitude);
-            data.AddArc(vertexName1, vertexName2, new LiveEdge()
+            data.AddEdge(vertexName1, vertexName2, new LiveEdge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)

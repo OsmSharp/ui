@@ -37,6 +37,9 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.CH.Serialization;
+using System.Linq;
+using OsmSharp.Collections;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -47,10 +50,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
     public class RoutingSerializationTests
     {
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the V2 routing serializer.
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2DataSourceTest()
+        public void RoutingSerializationDataSourceTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -64,7 +67,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -83,7 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             }
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -137,10 +140,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2RoutingTest()
+        public void RoutingSerializationRoutingTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -154,14 +157,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -198,40 +201,40 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             // calculate the route.
             Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(5, route.Entries.Length);
+            Assert.AreEqual(5, route.Segments.Length);
 
             float latitude, longitude;
             //deserializedVersion.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(51.0578537, route.Segments[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922255, route.Segments[0].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Start, route.Segments[0].Type);
 
             //deserializedVersion.GetVertex(21, out latitude, out longitude);
-            Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(51.0578537, route.Segments[1].Latitude, 0.00001);
+            Assert.AreEqual(3.71956515, route.Segments[1].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[1].Type);
 
             //deserializedVersion.GetVertex(16, out latitude, out longitude);
-            Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(51.05773, route.Segments[2].Latitude, 0.00001);
+            Assert.AreEqual(3.719745, route.Segments[2].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[2].Type);
 
             //deserializedVersion.GetVertex(22, out latitude, out longitude);
-            Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
+            Assert.AreEqual(51.05762, route.Segments[3].Latitude, 0.00001);
+            Assert.AreEqual(3.71965766, route.Segments[3].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+            Assert.AreEqual(51.05762, route.Segments[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71917963, route.Segments[4].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Segments[4].Type);
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2CompressedRoutingTest()
+        public void RoutingSerializationCompressedRoutingTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
@@ -245,14 +248,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex);
+                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(true);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -289,40 +292,40 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             // calculate the route.
             var route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(5, route.Entries.Length);
+            Assert.AreEqual(5, route.Segments.Length);
 
             float latitude, longitude;
             //deserializedVersion.GetVertex(20, out latitude, out longitude);
-            Assert.AreEqual(51.0578537, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(3.71922255, route.Entries[0].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.AreEqual(51.0578537, route.Segments[0].Latitude, 0.00001);
+            Assert.AreEqual(3.71922255, route.Segments[0].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Start, route.Segments[0].Type);
 
             //deserializedVersion.GetVertex(21, out latitude, out longitude);
-            Assert.AreEqual(51.0578537, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(3.71956515, route.Entries[1].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
+            Assert.AreEqual(51.0578537, route.Segments[1].Latitude, 0.00001);
+            Assert.AreEqual(3.71956515, route.Segments[1].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[1].Type);
 
             //deserializedVersion.GetVertex(16, out latitude, out longitude);
-            Assert.AreEqual(51.05773, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(3.719745, route.Entries[2].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
+            Assert.AreEqual(51.05773, route.Segments[2].Latitude, 0.00001);
+            Assert.AreEqual(3.719745, route.Segments[2].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[2].Type);
 
             //deserializedVersion.GetVertex(22, out latitude, out longitude);
-            Assert.AreEqual(51.05762, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(3.71965766, route.Entries[3].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
+            Assert.AreEqual(51.05762, route.Segments[3].Latitude, 0.00001);
+            Assert.AreEqual(3.71965766, route.Segments[3].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Along, route.Segments[3].Type);
 
             deserializedVersion.GetVertex(23, out latitude, out longitude);
-            Assert.AreEqual(51.05762, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(3.71917963, route.Entries[4].Longitude, 0.00001);
-            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+            Assert.AreEqual(51.05762, route.Segments[4].Latitude, 0.00001);
+            Assert.AreEqual(3.71917963, route.Segments[4].Longitude, 0.00001);
+            Assert.AreEqual(RouteSegmentType.Stop, route.Segments[4].Type);
         }
 
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationV2RoutingComparisonTest()
+        public void RoutingSerializationRoutingComparisonTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
@@ -336,7 +339,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                interpreter);
 
             // create serializer.
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
+            var routingSerializer = new RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -448,33 +451,42 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetArcs(vertex);
-                var arcs = network.GetArcs(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex);
+                var arcs = network.GetEdges(vertex);
+                Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
-                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
-                    Assert.AreEqual(referenceArcs[idx].Value.Distance, arcs[idx].Value.Distance);
-                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
-                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
-                    if (referenceArcs[idx].Value.Coordinates == null)
+                    var referenceArc = referenceArcs[idx];
+                    // find the same edge in the new arcs.
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+                    
+                    Assert.AreEqual(referenceArc.Key, arc.Key);
+                    Assert.AreEqual(referenceArc.Value.Distance, arc.Value.Distance);
+                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
+                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    GeoCoordinateSimple[] referenceArcValueCoordinates;
+                    GeoCoordinateSimple[] arcValueCoordinates;
+                    Assert.AreEqual(network.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates), 
+                        referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceArcValueCoordinates));
+                    if (referenceArcValueCoordinates == null)
                     { // other arc coordinates also null?
-                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                        Assert.IsNull(arcValueCoordinates);
                     }
                     else
                     { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        for (int coordIdx = 0; coordIdx < referenceArcValueCoordinates.Length; coordIdx++)
                         {
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Latitude,
+                                arcValueCoordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Longitude,
+                                arcValueCoordinates[coordIdx].Longitude);
                         }
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
-                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
+                    var tags = network.TagsIndex.Get(arc.Value.Tags);
                     if (referenceTags == null)
                     { // other tags also have to be null.
                         Assert.IsNull(tags);
@@ -530,33 +542,38 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetArcs(vertex);
-                var arcs = network.GetArcs(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex);
+                var arcs = network.GetEdges(vertex);
+                Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
-                    Assert.AreEqual(referenceArcs[idx].Key, arcs[idx].Key);
-                    Assert.AreEqual(referenceArcs[idx].Value.Weight, arcs[idx].Value.Weight);
-                    Assert.AreEqual(referenceArcs[idx].Value.Forward, arcs[idx].Value.Forward);
-                    Assert.AreEqual(referenceArcs[idx].Value.RepresentsNeighbourRelations, arcs[idx].Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArcs[idx].Value.Tags, arcs[idx].Value.Tags);
-                    if (referenceArcs[idx].Value.Coordinates == null)
+                    var referenceArc = referenceArcs[idx];
+                    // find the same edge in the new arcs.
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+
+                    Assert.AreEqual(referenceArc.Key, arc.Key);
+                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
+                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
+                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    if (referenceArc.Value.Coordinates == null)
                     { // other arc coordinates also null?
-                        Assert.IsNull(arcs[idx].Value.Coordinates);
+                        Assert.IsNull(arc.Value.Coordinates);
                     }
                     else
                     { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcs[idx].Value.Coordinates.Length; coordIdx++)
+                        for (int coordIdx = 0; coordIdx < referenceArc.Value.Coordinates.Length; coordIdx++)
                         {
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Latitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcs[idx].Value.Coordinates[coordIdx].Longitude,
-                                arcs[idx].Value.Coordinates[coordIdx].Longitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Latitude,
+                                arc.Value.Coordinates[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Longitude,
+                                arc.Value.Coordinates[coordIdx].Longitude);
                         }
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArcs[idx].Value.Tags);
-                    var tags = network.TagsIndex.Get(arcs[idx].Value.Tags);
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
+                    var tags = network.TagsIndex.Get(arc.Value.Tags);
                     if (referenceTags == null)
                     { // other tags also have to be null.
                         Assert.IsNull(tags);

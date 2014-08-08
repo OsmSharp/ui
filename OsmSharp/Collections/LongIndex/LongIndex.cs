@@ -34,6 +34,11 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         private readonly int _blockSize = 1024 * 1024;
 
         /// <summary>
+        /// Holds the number of flags.
+        /// </summary>
+        private long _count = 0;
+
+        /// <summary>
         /// Holds the positive flags array.
         /// </summary>
         private SparseLargeBitArray32 _positiveFlags = null;
@@ -113,6 +118,10 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
                 _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
+            if(!_positiveFlags[number])
+            { // there is a new positive flag.
+                _count++;
+            }
             _positiveFlags[number] = true;
         }
 
@@ -127,6 +136,10 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
                 _positiveFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
+            if (_positiveFlags[number])
+            { // there is one less positive flag.
+                _count--;
+            }
             _positiveFlags[number] = false;
         }
 
@@ -160,6 +173,10 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
                 _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
+            if (!_negativeFlags[number])
+            { // there is one more negative flag.
+                _count++;
+            }
             _negativeFlags[number] = true;
         }
 
@@ -174,6 +191,10 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
                 _negativeFlags = new SparseLargeBitArray32(_size, _blockSize);
             }
 
+            if (_negativeFlags[number])
+            { // there is one less negative flag.
+                _count--;
+            }
             _negativeFlags[number] = false;
         }
 
@@ -193,6 +214,17 @@ namespace OsmSharp.Collections.LongIndex.LongIndex
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the number of positive flags.
+        /// </summary>
+        public long Count
+        {
+            get
+            {
+                return _count;
+            }
+        }
 
         /// <summary>
         /// Clears this index.

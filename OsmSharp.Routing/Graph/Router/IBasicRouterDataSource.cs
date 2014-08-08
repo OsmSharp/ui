@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(GeoCoordinateBox box);
+        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetEdges(GeoCoordinateBox box);
 
         /// <summary>
         /// Returns the tags index.

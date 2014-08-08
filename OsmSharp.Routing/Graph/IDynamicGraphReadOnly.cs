@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo.Simple;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph
@@ -39,15 +40,33 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertexId);
+        KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId);
 
         /// <summary>
-        /// Returns true if the given vertex has the neighbour as a neighbour.
+        /// Returns true if the given edge exists.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        bool HasArc(uint vertexId, uint neighbour);
+        bool ContainsEdge(uint vertexId, uint neighbour);
+
+        /// <summary>
+        /// Gets the data associated with the given edge and returns true if the edge exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data);
+
+        /// <summary>
+        /// Gets the shape associated with the given edge and returns true if the edge exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape);
 
         /// <summary>
         /// Returns the total number of vertices.

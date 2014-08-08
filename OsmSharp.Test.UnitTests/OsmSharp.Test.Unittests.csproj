@@ -11,7 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.Test.Unittests</RootNamespace>
     <AssemblyName>OsmSharp.Test.Unittests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -21,6 +21,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Test.Unittests.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Test.Unittests.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +63,7 @@
     <DocumentationFile>..\Output\Debug\x86\OsmSharp.Test.Unittests.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\Output\Release\x86\</OutputPath>
@@ -77,6 +81,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\Release\x86\OsmSharp.Test.Unittests.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -96,6 +101,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DocumentationFile>..\Output\Debug\x64\OsmSharp.Test.Unittests.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\Output\Release\x64\</OutputPath>
@@ -114,6 +120,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\Release\x64\OsmSharp.Test.Unittests.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -140,7 +147,9 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Collections\Arrays\MemoryMappedHugeArrayTests.cs" />
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
+    <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
     <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
@@ -194,7 +203,7 @@
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
     <Compile Include="Routing\CH\Serialization\Tiles\CHRoutingSerializationComparisonTests.cs" />
-    <Compile Include="Routing\Graph\MemoryDynamicGraphWriteOnlyTests.cs" />
+    <Compile Include="Routing\Graph\MemoryMappedFileDynamicGraphTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />
@@ -318,14 +327,20 @@
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{1524c255-2ee5-4c0c-a64c-56ce39a062e3}</Project>
+      <Name>OsmSharp.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.WinForms.UI\OsmSharp.WinForms.UI.csproj">
+      <Project>{1433d177-b342-463c-8128-8399720a35af}</Project>
+      <Name>OsmSharp.WinForms.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Streams\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

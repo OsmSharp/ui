@@ -63,24 +63,33 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetArcs(vertex);
+                var arcs = graph.GetEdges(vertex);
                 if (arcs != null)
-                { // serialize the arcs.
+                { // serialize the arcs, but serialize them only once. 
+                    // choose only those arcs that start at a vertex smaller than the target.
                     for (int idx = 0; idx < arcs.Length; idx++)
                     {
-                        arcsQueue.Add(new SerializableEdge()
+                        if (arcs[idx].Key > vertex)
                         {
-                            Distance = arcs[idx].Value.Distance,
-                            FromId = vertex,
-                            ToId = arcs[idx].Key,
-                            Value = arcs[idx].Value.Value,
-                            Coordinates = arcs[idx].Value.Coordinates
-                        });
+                            GeoCoordinateSimple[] coordinates;
+                            if(!graph.GetEdgeShape(vertex, arcs[idx].Key, out coordinates))
+                            {
+                                coordinates = null;
+                            }
+                            arcsQueue.Add(new SerializableEdge()
+                            {
+                                Distance = arcs[idx].Value.Distance,
+                                FromId = vertex,
+                                ToId = arcs[idx].Key,
+                                Value = arcs[idx].Value.Value,
+                                Coordinates = coordinates
+                            });
 
-                        if (arcsQueue.Count == blockSize)
-                        { // execute serialization.
-                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
-                            arcsQueue.Clear();
+                            if (arcsQueue.Count == blockSize)
+                            { // execute serialization.
+                                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                                arcsQueue.Clear();
+                            }
                         }
                     }
 
@@ -114,13 +123,12 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
-                    graph.AddArc(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
+                    graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new LiveEdge()
                         {
-                            Coordinates = serializableEdges[idx].Coordinates,
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, null);
+                        }, serializableEdges[idx].Coordinates, null);
                 }
             }
         }

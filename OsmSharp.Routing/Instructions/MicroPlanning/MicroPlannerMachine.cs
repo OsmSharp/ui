@@ -22,7 +22,7 @@ using OsmSharp.Math.StateMachines;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
+    public abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {
         /// <summary>
         /// The contains the microplanner to report back to.

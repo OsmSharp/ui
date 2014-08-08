@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.Gpx
         /// <summary>
         /// Saves the route to a gpx file.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="stream"></param>
         /// <param name="route"></param>
         internal static void Save(Stream stream, Route route)
         {
@@ -52,10 +52,10 @@ namespace OsmSharp.Routing.Gpx
             trksegType track_segment = new trksegType();
 
             // loop over all points.
-            for (int idx = 0; idx < route.Entries.Length; idx++)
+            for (int idx = 0; idx < route.Segments.Length; idx++)
             {
                 // get the current entry.
-                RoutePointEntry entry = route.Entries[idx];
+                RouteSegment entry = route.Segments[idx];
 
                 // ================== INITIALIZE A NEW SEGMENT IF NEEDED! ========
                 wptType waypoint;

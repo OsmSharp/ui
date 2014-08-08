@@ -140,19 +140,22 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            var poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
             
-            List<Routing.ArcAggregation.Output.PointPoi> pois = 
-                (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
+            var pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
             // construct the box indicating the location of the resulting find by this machine.
-            GeoCoordinate point1 = pois[0].Location;
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            var point1 = pois[0].Location;
+            var box = new GeoCoordinateBox(
                 new GeoCoordinate(point1.Latitude - 0.001f, point1.Longitude - 0.001f),
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GeneratePoi(poisPoint.EntryIdx, box, pois, null);
+            var metaData = new Dictionary<string, object>();
+            metaData["direction"] = null;
+            metaData["pois"] = pois;
+            metaData["type"] = "poi";
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, poisPoint.EntryIdx, box, pois);
         }
 
         public override bool Equals(object obj)

@@ -18,7 +18,7 @@
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerMessage
+    public class MicroPlannerMessage
     {
 
     }

@@ -994,6 +994,22 @@ namespace OsmSharp.iOS.UI
             get { return this.CreateView(this.Frame); }
         }
 
+        /// <summary>
+        /// Returns the current width.
+        /// </summary>
+        public int CurrentWidth
+        {
+            get { return (int)_rect.Width; }
+        }
+
+        /// <summary>
+        /// Returns the current height.
+        /// </summary>
+        public int CurrentHeight
+        {
+            get { return (int)_rect.Height; }
+        }
+
 		#region IMapView implementation
 
 		/// <summary>
@@ -1516,6 +1532,6 @@ namespace OsmSharp.iOS.UI
 				_renderingThread = null;
 			}
 		}
-	}
+    }
 }
 

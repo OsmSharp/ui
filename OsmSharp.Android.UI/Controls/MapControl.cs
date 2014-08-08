@@ -58,6 +58,11 @@ namespace OsmSharp.Android.UI.Controls
         }
 
         /// <summary>
+        /// holds pointer to user-object
+        /// </summary>
+        public virtual object Tag { get; set; }
+
+        /// <summary>
         /// Attaches this control to the given control host.
         /// </summary>
         /// <param name="controlHost">Map view.</param>
@@ -73,6 +78,9 @@ namespace OsmSharp.Android.UI.Controls
         /// <returns></returns>
         internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
 
+        /// <summary>
+        /// Disposes of all native resources.
+        /// </summary>
         public abstract void Dispose();
     }
 
@@ -208,6 +216,17 @@ namespace OsmSharp.Android.UI.Controls
         internal override void AttachTo(IMapControlHost controlHost)
         {
             _controlHost = controlHost;
+        }
+
+        /// <summary>
+        /// Returns the current control host.
+        /// </summary>
+        protected IMapControlHost Host
+        {
+            get
+            {
+                return _controlHost;
+            }
         }
 
         /// <summary>

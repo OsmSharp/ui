@@ -23,6 +23,9 @@ namespace OsmSharp.Logging
     /// </summary>
     public enum SourceLevels
     {
+        /// <summary>
+        /// All levels.
+        /// </summary>
         All
     }
 }

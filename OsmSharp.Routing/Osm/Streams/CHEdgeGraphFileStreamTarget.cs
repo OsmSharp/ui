@@ -16,10 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Streams;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
@@ -27,8 +25,7 @@ using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Routing.Graph.Router;
+using System.IO;
 
 namespace OsmSharp.Routing.Osm.Streams
 {

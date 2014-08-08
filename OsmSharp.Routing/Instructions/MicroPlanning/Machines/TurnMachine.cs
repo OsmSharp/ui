@@ -130,8 +130,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         public override void Succes()
         {
             // get the last arc and the last point.
-            AggregatedArc latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
-            AggregatedPoint latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            var latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            var latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
 
             // count the number of streets in the same turning direction as the turn
             // that was found.
@@ -146,14 +146,49 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             }
 
             // construct the box indicating the location of the resulting find by this machine.
-            GeoCoordinate point1 = latestPoint.Location;
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            var point1 = latestPoint.Location;
+            var box = new GeoCoordinateBox(
                 new GeoCoordinate(point1.Latitude - 0.001f, point1.Longitude - 0.001f),
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
-        
+
+            // descide what type of instruction to request be generated.  
+            var metaData = new Dictionary<string, object>();         
+            var streetFrom = latestArc.Tags;
+            var streetTo = latestPoint.Next.Tags;
+            var streetCountTurn = 0;
+            var streetCountBeforeTurn = count;
+            var direction = latestPoint.Angle;
+            metaData["count_before"] = streetCountBeforeTurn;
+            metaData["direction"] = direction;
+            if (streetFrom == streetTo)
+            {
+                if (streetCountTurn == 0)
+                {// there are no other streets between the one being turned into and the street coming from in the same
+                    // direction as the turn.
+                    metaData["type"] = "direct_follow_turn";
+                }
+                else
+                { // there is another street; this is tricky to explain.
+                    metaData["type"] = "indirect_follow_turn";
+                }
+            }
+            else
+            {
+                if (streetCountTurn == 0)
+                { // there are no other streets between the one being turned into and the street coming from in the same
+                    // direction as the turn.
+                    metaData["type"] = "direct_turn";
+                }
+                else
+                { // there is another street; this is tricky to explain.
+                    metaData["type"] = "indirect_turn";
+                }
+            }
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GenerateTurn(latestPoint.EntryIdx, box, latestPoint.Angle, 0, count, latestArc.Tags, latestPoint.Next.Tags, latestPoint.Points);
+            metaData["street"] = streetTo;
+            metaData["pois"] = latestPoint.Points;
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
         }
 
         public override bool Equals(object obj)

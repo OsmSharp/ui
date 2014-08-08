@@ -16,25 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Structures;
+using OsmSharp.Math.Structures.QTree;
+using OsmSharp.Osm.Tiles;
+using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Tiles;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math.Structures;
-using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
     /// <summary>
     /// A router data source that dynamically loads data.
     /// </summary>
-    internal class V2RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
+    internal class RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
     {
         /// <summary>
         /// Holds all graph data.
@@ -71,10 +71,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="v1RoutingDataSourceSerializer"></param>
         /// <param name="vehicles"></param>
         /// <param name="initialCapacity"></param>
-        internal V2RouterLiveEdgeDataSource(
+        internal RouterLiveEdgeDataSource(
             Stream stream, bool compressed,
-            V2RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
-            int zoom, V2RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
+            RoutingDataSourceLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
+            int zoom, RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
             IEnumerable<string> vehicles,
             int initialCapacity = 1000)
         {
@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>[] GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
@@ -158,11 +158,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         if (vertex != null &&
                             vertex.Arcs != null)
                         {
-                            KeyValuePair<uint, Osm.Graphs.LiveEdge>[] localArcs = vertex.Arcs;
-                            foreach (KeyValuePair<uint, Osm.Graphs.LiveEdge> localArc in localArcs)
+                            var localArcs = vertex.Arcs;
+                            foreach (var localArc in localArcs)
                             {
                                 arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>(
-                                    vertexId, localArc));
+                                    vertexId, new KeyValuePair<uint, Osm.Graphs.LiveEdge>(localArc.Item1, localArc.Item2)));
                             }
                         }
                     }
@@ -225,7 +225,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, Osm.Graphs.LiveEdge>[] GetArcs(uint vertexId)
+        public KeyValuePair<uint, LiveEdge>[] GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -242,10 +242,16 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 if (vertex != null &&
                     vertex.Arcs != null)
                 {
-                    return vertex.Arcs;
+                    var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
+                    for(int idx = 0; idx< vertex.Arcs.Length; idx++)
+                    {
+                        arcs[idx] = new KeyValuePair<uint, LiveEdge>(
+                            vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
+                    }
+                    return arcs;
                 }
             }
-            return new KeyValuePair<uint, Osm.Graphs.LiveEdge>[0];
+            return new KeyValuePair<uint, LiveEdge>[0];
         }
 
         /// <summary>
@@ -254,9 +260,85 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(uint vertexId, uint neighbour)
+        public bool ContainsEdge(uint vertexId, uint neighbour)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool GetEdge(uint vertex1, uint vertex2, out LiveEdge data)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if (vertex.Arcs[idx].Item1 == vertex2)
+                        {
+                            data = vertex.Arcs[idx].Item2;
+                            return true;
+                        }
+                    }
+                }
+            }
+            data = default(LiveEdge);
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if(vertex.Arcs[idx].Item1 == vertex2)
+                        {
+                            shape = vertex.Arcs[idx].Item3;
+                            return true;
+                        }
+                    }
+                }
+            }
+            shape = null;
+            return false;
         }
 
         /// <summary>
@@ -275,7 +357,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Holds an array of edges starting at this vertex.
             /// </summary>
-            public KeyValuePair<uint, Osm.Graphs.LiveEdge>[] Arcs;
+            public Tuple<uint, LiveEdge, GeoCoordinateSimple[]>[] Arcs;
         }
 
         /// <summary>
@@ -309,7 +391,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Holds the routing serializer.
         /// </summary>
-        private readonly V2RoutingDataSourceLiveEdgeSerializer _routingDataSourceSerializer;
+        private readonly RoutingDataSourceLiveEdgeSerializer _routingDataSourceSerializer;
 
         /// <summary>
         /// Holds the tile metas.
@@ -413,7 +495,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         // convert the arcs.
                         if (tileData.Arcs[vertexIdx] != null)
                         {
-                            var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[tileData.Arcs[vertexIdx].DestinationId.Length];
+                            var arcs = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>[tileData.Arcs[vertexIdx].DestinationId.Length];
                             for (int idx = 0; idx < tileData.Arcs[vertexIdx].DestinationId.Length; idx++)
                             {
                                 // create the tags collection.
@@ -433,13 +515,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 var edge = new Osm.Graphs.LiveEdge();
                                 edge.Forward = tileData.Arcs[vertexIdx].Forward[idx];
                                 edge.Tags = tags;
-                                edge.Coordinates = V2RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
+                                var coordinates = RoutingDataSourceLiveEdgeSerializer.SerializableCoordinate.ToSimpleArray(
                                     tileData.Arcs[vertexIdx].Intermediates[idx].Coordinates);
                                 edge.Distance = tileData.Arcs[vertexIdx].Distances[idx];
 
                                 // convert the arc.
-                                arcs[idx] = new KeyValuePair<uint, Osm.Graphs.LiveEdge>(
-                                    tileData.Arcs[vertexIdx].DestinationId[idx], edge);
+                                arcs[idx] = new Tuple<uint, Osm.Graphs.LiveEdge, GeoCoordinateSimple[]>(
+                                    tileData.Arcs[vertexIdx].DestinationId[idx], edge, coordinates);
 
                                 // store the target tile.
                                 var targetTile = new Tile(tileData.Arcs[vertexIdx].TileX[idx],
