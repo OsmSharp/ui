@@ -582,7 +582,7 @@ namespace OsmSharp.iOS.UI
 					View2D rotatedView = _mapViewBefore.RotateAroundCenter((Radian)rotation.Rotation);
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
 					PointF2D sceneCenter = rotatedView.Rectangle.Center;
-					_mapCenter = this.Map.Projection.ToGeoCoordinates(
+					this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
 					this.NotifyMovementByInvoke();
@@ -630,10 +630,9 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
-		/// Holds the pan offset.
+		/// Holds the previous pan offset.
 		/// </summary>
-		private GeoCoordinate _beforePan;
-
+        private PointF _prevOffset;
 		/// <summary>
 		/// Pan the specified some.
 		/// </summary>
@@ -648,31 +647,24 @@ namespace OsmSharp.iOS.UI
 				PointF offset = pan.TranslationInView(this);
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
-					_beforePan = null;
-
 					this.NotifyMovementByInvoke();
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
-					_beforePan = this.MapCenter;
-				}
-				else if (pan.State == UIGestureRecognizerState.Cancelled ||
-				         pan.State == UIGestureRecognizerState.Failed)
-				{
-					_beforePan = null;
+                    _prevOffset = new PointF(0, 0);
 				}
 				else if (pan.State == UIGestureRecognizerState.Changed)
 				{
-					_mapCenter = _beforePan;
-
 					View2D view = this.CreateView(rect);
-					double centerXPixels = rect.Width / 2.0f - offset.X;
-					double centerYPixels = rect.Height / 2.0f - offset.Y;
+					double centerXPixels = rect.Width / 2.0f - (offset.X - _prevOffset.X);
+					double centerYPixels = rect.Height / 2.0f - (offset.Y - _prevOffset.Y);
+
+                    _prevOffset = offset;
 
 					double[] sceneCenter = view.FromViewPort(rect.Width, rect.Height,
 						                       centerXPixels, centerYPixels);
 
-					_mapCenter = this.Map.Projection.ToGeoCoordinates(
+                    this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
 					this.NotifyMovementByInvoke();
@@ -745,25 +737,6 @@ namespace OsmSharp.iOS.UI
                     float tapRequestZoom = MapZoom + 0.5f;
 					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 0, 0, 500));
 				}
-			}
-		}
-
-		/// <summary>
-		/// The map center.
-		/// </summary>
-		private GeoCoordinate _mapCenter;
-
-		/// <summary>
-		/// Gets or sets the center.
-		/// </summary>
-		/// <value>The center.</value>
-		public GeoCoordinate MapCenter
-		{
-			get { return _mapCenter; }
-			set
-			{ 
-				_mapCenter = value;
-				this.NotifyMovementByInvoke();
 			}
 		}
 
@@ -948,6 +921,106 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
+        /// <summary>
+        /// The map center.
+        /// </summary>
+        private GeoCoordinate _mapCenter;
+
+        /// <summary>
+        /// Gets or sets the center.
+        /// </summary>
+        /// <value>The center.</value>
+        public GeoCoordinate MapCenter
+        {
+            get { return _mapCenter; }
+            set
+            {
+                _mapCenter = ensureViewInsideBoundingBox(value);
+                this.NotifyMovementByInvoke();
+            }
+        }
+
+        /// <summary>
+        /// Box within which one can pan the map
+        /// </summary>
+        private GeoCoordinateBox _mapBoundingBox = null;
+
+        /// <summary>
+        /// Gets or sets the bounding box within which one can pan the map.
+        /// </summary>
+        /// <value>The box.</value>
+        public GeoCoordinateBox MapBoundingBox
+        {
+            get
+            {
+                return _mapBoundingBox;
+            }
+            set
+            {
+                // If the current map center falls outside the bounding box, set the MapCenter to the middle of the box.
+                if (_mapCenter != null && !value.Contains(MapCenter))
+                {
+                    MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
+                }
+                _mapBoundingBox = value;
+            }
+        }
+
+        public GeoCoordinate ensureViewInsideBoundingBox(GeoCoordinate mapCenter)
+        {
+            if (this.CurrentWidth == 0 || this.MapBoundingBox == null) 
+                return mapCenter;
+
+            View2D view = this.CreateView(_rect);
+            double[] topLeftSceneCoordinates = view.FromViewPort(this.CurrentWidth, this.CurrentHeight, 0, 0);
+            GeoCoordinate topLeft = this.Map.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
+
+            double[] bottomRightSceneCoordinates = view.FromViewPort(this.CurrentWidth, this.CurrentHeight, this.CurrentWidth, this.CurrentHeight);
+            GeoCoordinate bottomRight = this.Map.Projection.ToGeoCoordinates(bottomRightSceneCoordinates[0], bottomRightSceneCoordinates[1]);
+
+            // Early exit when the view is inside the box.
+            if (MapBoundingBox.Contains(topLeft) && MapBoundingBox.Contains(bottomRight)) 
+                return mapCenter;
+
+            double viewNorth = topLeft.Latitude;
+            double viewEast = bottomRight.Longitude;
+            double viewSouth = bottomRight.Latitude;
+            double viewWest = topLeft.Longitude;
+
+            double boxNorth = MapBoundingBox.MaxLat;
+            double boxEast = MapBoundingBox.MaxLon;
+            double boxSouth = MapBoundingBox.MinLat;
+            double boxWest = MapBoundingBox.MinLon;
+
+            //TODO: when north and south OR east and west are outside the bounding box, scale the view to fit the box.
+            // or when the area of the view is larger than the area of the box.
+            
+            // Correct all view bounds if neccecary.
+            if (viewNorth > boxNorth)
+            {
+                viewSouth -= viewNorth - boxNorth;
+                viewNorth = boxNorth;
+            }
+            if (viewEast > boxEast)
+            {
+                viewWest -= viewEast - boxEast;
+                viewEast = boxEast;
+            }
+            if (viewSouth < boxSouth)
+            {
+                viewNorth += boxSouth - viewSouth;
+                viewSouth = boxSouth;
+            }
+            if (viewWest < boxWest)
+            {
+                viewEast += boxWest - viewWest;
+                viewWest = boxWest;
+            }
+
+            // Compute and return corrected map center
+            return new GeoCoordinate(viewSouth + (viewNorth - viewSouth) / 2.0f, viewWest + (viewEast - viewWest) / 2.0f);
+        }
+
 		/// <summary>
 		/// Gets or sets the map tilt flag.
 		/// </summary>
@@ -985,6 +1058,7 @@ namespace OsmSharp.iOS.UI
                 return 1;
             }
         }
+
         
         /// <summary>
         /// Gets the current view.
@@ -1267,7 +1341,7 @@ namespace OsmSharp.iOS.UI
 				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
 					                       fittedView.Center[0], fittedView.Center[1]);
 				
-				_mapCenter = center;
+				this.MapCenter = center;
 				this.MapZoom = zoom;
 
 				this.NotifyMovementByInvoke();
@@ -1412,7 +1486,7 @@ namespace OsmSharp.iOS.UI
                 GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
                     fittedView.Center[0], fittedView.Center[1]);
 
-                _mapCenter = center;
+                this.MapCenter = center;
                 this.MapZoom = zoom;
 
                 this.NotifyMovementByInvoke();
