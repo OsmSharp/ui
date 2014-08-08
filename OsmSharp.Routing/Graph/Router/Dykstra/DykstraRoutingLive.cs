@@ -493,8 +493,15 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 }
 
                 // update the visited nodes.
-                foreach (var neighbour in arcs.ToList())
+                while(arcs.MoveNext())
+                // foreach (var neighbour in arcs)
                 {
+                    var neighbour = arcs;
+                    if(chosenVertices.Contains(neighbour.Neighbour))
+                    {
+                        continue;
+                    }
+
                     // check the tags against the interpreter.
                     TagsCollectionBase tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
                     if (vehicle.CanTraverse(tags))
@@ -503,8 +510,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         bool canBeTraversedOneWay = (!oneWay.HasValue || oneWay.Value == neighbour.EdgeData.Forward);
                         if ((current.From == null ||
                             interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)) && // test for turning restrictions.
-                            canBeTraversedOneWay &&
-                            !chosenVertices.Contains(neighbour.Neighbour))
+                            canBeTraversedOneWay)
                         { // the neighbor is forward and is not settled yet!
                             // check the labels (if needed).
                             bool constraintsOk = true;
