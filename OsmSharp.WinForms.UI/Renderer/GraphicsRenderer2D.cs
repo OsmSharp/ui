@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -255,34 +256,80 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The x coordinate.</param>
+        /// <param name="holeX">The x coordinates for holes.</param>
+	    /// <param name="holeY">The y coordinates for holes.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-	    protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
+        protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, double[][] holeX, double[][] holeY, int color,
             double width, bool fill)
         {
             float widthInPixels = this.ToPixels(width);
 
-            var points = new PointF[x.Length];
+            var outerPoints = new PointF[x.Length];
             for (int idx = 0; idx < x.Length; idx++)
             {
                 double[] transformed = this.Tranform(x[idx], y[idx]);
-                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
+                outerPoints[idx] = new PointF((float)transformed[0], (float)transformed[1]);
             }
+
+	        var innerPointSets = new List<PointF[]>();
+            for (int i = 0; i < holeX.GetLength(0); i++)
+            {
+                var innerPoints = new PointF[holeX[i].Length];
+                for (int j = 0; j < holeX[i].Length; j++)
+                {
+                    double[] transformed = this.Tranform(holeX[i][j], holeY[i][j]);
+                    innerPoints[j] = new PointF((float) transformed[0], (float) transformed[1]);
+                }
+                innerPointSets.Add(innerPoints);
+            }
+
             if (fill)
             {
                 using (var brush = new SolidBrush(Color.FromArgb(color)))
                 {
-                    target.Target.FillPolygon(brush, points);
+                    
+                    using (var outerPath = new GraphicsPath())
+                    using (var innerPath = new GraphicsPath())
+                    {
+                        if (outerPoints.Length > 2)
+                        {
+                            outerPath.AddPolygon(outerPoints);
+                        }
+                        else if (outerPoints.Length > 1)
+                        {
+                            outerPath.AddLine(outerPoints[0], outerPoints[1]);
+                        }
+
+
+                        foreach (var innerPoints in innerPointSets)
+                        {
+                            if (innerPoints.Length > 2)
+                            {
+                                innerPath.AddPolygon(innerPoints);
+                            }
+                            else if (innerPoints.Length > 1)
+                            {
+                                innerPath.AddLine(innerPoints[0], innerPoints[1]);
+                            }
+                        }
+
+                        var region = new Region(outerPath);
+                        region.Exclude(innerPath);
+
+                        target.Target.FillRegion(brush, region);
+                    }
                 }
             }
             else
             {
+                // TODO: handle holes for non-filled?
                 using (var pen = new Pen(Color.FromArgb(color), widthInPixels))
                 {
-                    target.Target.DrawPolygon(pen, points);
+                    target.Target.DrawPolygon(pen, outerPoints);
                 }
             }
 		}

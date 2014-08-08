@@ -31,6 +31,7 @@ using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Units;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -667,11 +668,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             uint? pointsId = scene.AddPoints(x, y);
                             if (pointsId.HasValue)
                             {
-                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                                scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                                 success = true;
                                 if (rule.TryGetProperty("color", out color))
                                 {
-                                    scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                    scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                                     success = true;
                                 }
                             }
@@ -843,15 +844,124 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         {
             polygon.Ring.Attributes = polygon.Attributes;
             this.TranslateLineairRing(scene, projection, polygon.Ring);
-            //// build the rules.
-            //List<MapCSSRuleProperties> rules =
-            //    this.BuildRules(new MapCSSObject(polygon));
+            // build the rules.
+            List<MapCSSRuleProperties> rules =
+                this.BuildRules(new MapCSSObject(polygon.Ring));
 
-            //// validate what's there.
-            //if (rules.Count == 0)
-            //{
-            //    return;
-            //}
+            // validate what's there.
+            if (rules.Count == 0)
+            {
+                return;
+            }
+
+            // get x/y.
+            double[] outerX = null, outerY = null;
+            var innerXList = new List<double[]>();
+            var innerYList = new List<double[]>();
+            if (polygon.Ring.Coordinates != null &&
+                polygon.Ring.Coordinates.Count > 0)
+            { // pre-calculate x/y.
+                outerX = new double[polygon.Ring.Coordinates.Count];
+                outerY = new double[polygon.Ring.Coordinates.Count];
+                for (int idx = 0; idx < polygon.Ring.Coordinates.Count; idx++)
+                {
+                    outerX[idx] = projection.LongitudeToX(
+                        polygon.Ring.Coordinates[idx].Longitude);
+                    outerY[idx] = projection.LatitudeToY(
+                        polygon.Ring.Coordinates[idx].Latitude);
+                }
+
+                // simplify.
+                if (outerX.Length > 2)
+                {
+                    double[][] simplified = SimplifyCurve.Simplify(new double[][] { outerX, outerY }, 0.0001);
+                    outerX = simplified[0];
+                    outerY = simplified[1];
+                }
+            }
+
+            foreach (var ring in polygon.Holes)
+            {
+                if (ring.Coordinates != null &&
+                ring.Coordinates.Count > 0)
+                { // pre-calculate x/y.
+                    double[] innerX = new double[ring.Coordinates.Count];
+                    double[] innerY = new double[ring.Coordinates.Count];
+                    for (int idx = 0; idx < ring.Coordinates.Count; idx++)
+                    {
+                        innerX[idx] = projection.LongitudeToX(
+                            ring.Coordinates[idx].Longitude);
+                        innerY[idx] = projection.LatitudeToY(
+                            ring.Coordinates[idx].Latitude);
+                    }
+
+                    // simplify.
+                    if (innerX.Length > 2)
+                    {
+                        double[][] simplified = SimplifyCurve.Simplify(new double[][] { innerX, innerY }, 0.0001);
+                        innerX = simplified[0];
+                        innerY = simplified[1];
+                    }
+
+                    innerXList.Add(innerX);
+                    innerYList.Add(innerY);
+                }
+            }
+
+            foreach (var rule in rules)
+            {
+                float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
+                float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
+
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                {
+                    zIndex = 0;
+                }
+
+                // interpret the results.
+                if (outerX != null)
+                { // there is a valid interpretation of this way.
+                    int color;
+                    int fillColor;
+                    if (rule.TryGetProperty("fillColor", out fillColor))
+                    { // render as an area.
+                        float fillOpacity;
+                        if (rule.TryGetProperty("fillOpacity", out fillOpacity))
+                        {
+                            SimpleColor simpleFillColor = new SimpleColor() { Value = fillColor };
+                            fillColor = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                        }
+                        uint? outerPointsId = scene.AddPoints(outerX, outerY);
+                        uint[] innerPointsIds = new uint[innerXList.Count];
+                        for (int i = 0; i < innerXList.Count; i++)
+                        {
+                            uint? id = scene.AddPoints(innerXList[i], innerYList[i]);
+                            if (id.HasValue)
+                            {
+                                innerPointsIds[i] = id.Value;
+                            }
+                        }
+
+                        if (outerPointsId.HasValue)
+                        {
+                            scene.AddStylePolygon(outerPointsId.Value, innerPointsIds, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                            if (rule.TryGetProperty("color", out color))
+                            {
+                                if (rule.TryGetProperty("opacity", out fillOpacity))
+                                {
+                                    SimpleColor simpleFillColor = new SimpleColor() { Value = color };
+                                    color = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                        simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                                }
+
+                                scene.AddStylePolygon(outerPointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -924,7 +1034,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         uint? pointsId = scene.AddPoints(x, y);
                         if (pointsId.HasValue)
                         {
-                            scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                            scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                             if (rule.TryGetProperty("color", out color))
                             {
                                 if (rule.TryGetProperty("opacity", out fillOpacity))
@@ -934,7 +1044,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                         simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
                                 }
 
-                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
+                                scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
                     }

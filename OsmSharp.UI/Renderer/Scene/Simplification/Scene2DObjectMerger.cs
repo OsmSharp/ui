@@ -358,7 +358,7 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                         if (scene2DStylePolygon != null)
                         {
                             StylePolygon stylePolygon = source.GetStylePolygon(scene2DStylePolygon.StylePolygonId);
-                            target.AddStylePolygon(pointsId.Value, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
+                            target.AddStylePolygon(pointsId.Value, null, stylePolygon.Layer, stylePolygon.MinZoom, stylePolygon.MaxZoom,
                                 stylePolygon.Color, stylePolygon.Width, stylePolygon.Fill);
                             continue;
                         }

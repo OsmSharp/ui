@@ -225,6 +225,16 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
+        /// Gets or sets the x coords for the various holes
+        /// </summary>
+        public double[][] HoleXCoords { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y coords for the various holes
+        /// </summary>
+        public double[][] HoleYCoords { get; set; }
+
+        /// <summary>
         /// The minimum zoom.
         /// </summary>
         public float MinZoom { get; set; }

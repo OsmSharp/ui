@@ -1366,13 +1366,14 @@ namespace OsmSharp.UI.Renderer.Scene
         /// Adds a polygon with the given points and style.
         /// </summary>
         /// <param name="pointsId"></param>
+        /// <param name="innerPointsIds"></param>
         /// <param name="layer"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="fill"></param>
-        public List<uint> AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
+        public List<uint> AddStylePolygon(uint pointsId, uint[] innerPointsIds, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1408,6 +1409,35 @@ namespace OsmSharp.UI.Renderer.Scene
                             geometryId = _pointsIndex.Add(new ScenePoints(simplified[0], simplified[1]));
                         }
 
+                        uint[] holeGeoIds = null;
+                        if (innerPointsIds != null)
+                        {
+                            holeGeoIds = new uint[innerPointsIds.Length];
+                            if (innerPointsIds != null && innerPointsIds.Length > 0)
+                            {
+                                for (int i = 0; i < innerPointsIds.Length; i++)
+                                {
+                                    var innerId = innerPointsIds[i];
+
+                                    ScenePoints innerPointsPair = _pointsIndex.Get(innerId);
+                                    double[][] innerPoints = new double[][] {innerPointsPair.X, innerPointsPair.Y};
+                                    double[][] simplifiedInner =
+                                        OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(innerPoints, epsilon);
+
+                                    uint innerRingId = innerId;
+
+                                    if (simplifiedInner[0].Length < innerPoints[0].Length)
+                                    {
+                                        // add a new simplified geometry.
+                                        innerRingId =
+                                            _pointsIndex.Add(new ScenePoints(simplifiedInner[0], simplifiedInner[1]));
+                                    }
+
+                                    holeGeoIds[i] = innerRingId;
+                                }
+                            }
+                        }
+
                         // add to the scene.
                         // build the style.
                         StylePolygon style = new StylePolygon()
@@ -1423,8 +1453,8 @@ namespace OsmSharp.UI.Renderer.Scene
 
                         // add the scene object.
                         uint id = _nextId;
-                        _sceneObjects[idx].Add(id, 
-                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId });
+                        _sceneObjects[idx].Add(id,
+                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId, HoleGeoIds = holeGeoIds });
                         _nextId++;
                         newIds.Add(id);
                     }
@@ -1464,9 +1494,23 @@ namespace OsmSharp.UI.Renderer.Scene
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
+            var listOfHoleXCoords = new List<double[]>();
+            var listOfHoleYCoords = new List<double[]>();
+            if (sceneObject.HoleGeoIds != null)
+            {
+                foreach (var geoId in sceneObject.HoleGeoIds)
+                {
+                    ScenePoints holePoints = _pointsIndex.Get(geoId);
+                    listOfHoleXCoords.Add(holePoints.X);
+                    listOfHoleYCoords.Add(holePoints.Y);
+                }
+            }
+
             var primitive = new Polygon2D(geo.X, geo.Y, style.Color, style.Width, style.Fill, style.MinZoom, style.MaxZoom);
             primitive.Layer = style.Layer;
             primitive.Id = id;
+            primitive.HoleXCoords = listOfHoleXCoords.ToArray();
+            primitive.HoleYCoords = listOfHoleYCoords.ToArray();
 
             return primitive;
         }

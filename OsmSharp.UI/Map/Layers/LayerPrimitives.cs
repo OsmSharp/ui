@@ -140,7 +140,7 @@ namespace OsmSharp.UI.Map.Layers
             var pointsId = _scene.AddPoints(x, y);
             if (pointsId.HasValue)
             {
-                _scene.AddStylePolygon(pointsId.Value, 0, float.MinValue, float.MaxValue, color, width, fill);
+                _scene.AddStylePolygon(pointsId.Value, null, 0, float.MinValue, float.MaxValue, color, width, fill);
                 this.RaiseLayerChanged();
             }
         }

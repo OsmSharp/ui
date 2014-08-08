@@ -243,7 +243,7 @@ namespace OsmSharp.UI.Renderer
                             //    //    continue;
                             //    //}
                             //}
-                            this.DrawPolygon(target, x, y, polygon.Color,
+                            this.DrawPolygon(target, x, y, polygon.HoleXCoords, polygon.HoleYCoords, polygon.Color,
                                 this.FromPixels(target, view, polygon.Width), polygon.Fill);
                             break;
                         case Primitive2DType.LineText2D:
@@ -367,7 +367,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
+        protected abstract void DrawPolygon(Target2DWrapper<TTarget> target2DWrapper, double[] x, double[] y, double[][] holeX, double[][] holeY, int color, double width, bool fill);
 
 	    /// <summary>
 	    /// Draws an icon on the target unscaled but centered at the given scene coordinates.

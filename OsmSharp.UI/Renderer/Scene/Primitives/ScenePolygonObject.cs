@@ -33,5 +33,11 @@ namespace OsmSharp.UI.Renderer.Scene.Primitives
         {
             this.Enum = SceneObjectType.PolygonObject;
         }
+
+        /// <summary>
+        /// Gets or sets the geometry id for the polygon's holes
+        /// </summary>
+        [ProtoMember(4)]
+        public uint[] HoleGeoIds { get; set; }
     }
 }
