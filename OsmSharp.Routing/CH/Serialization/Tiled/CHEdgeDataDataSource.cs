@@ -631,6 +631,33 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
             {
                 _current = -1;
             }
+
+            public IEnumerator<IEdge<CHEdgeData>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public IEdge<CHEdgeData> Current
+            {
+                get { return this; }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
+            public void Dispose()
+            {
+
+            }
         }
 
         public void AddRestriction(uint[] route)

@@ -939,6 +939,33 @@ namespace OsmSharp.Routing.Graph
                 _currentEdgeId = 0;
                 _vertex = _startVertex;
             }
+
+            public IEnumerator<IEdge<TEdgeData>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public IEdge<TEdgeData> Current
+            {
+                get { return this; }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
+            public void Dispose()
+            {
+
+            }
         }
     }
 }

@@ -192,14 +192,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     chVertex.Latitude = latitude;
                     chVertex.Longitude = longitude;
                     chVertex.ArcIndex = (ushort)(blockArcs.Count);
-                    foreach (var sortedArc in sortedGraph.GetEdges(vertexId).ToKeyValuePairs())
+                    foreach (var sortedArc in sortedGraph.GetEdges(vertexId))
                     {
-                        CHArc chArc = new CHArc();
-                        chArc.TargetId = sortedArc.Key;
-                        chArc.ShortcutId = sortedArc.Value.ContractedVertexId;
-                        chArc.Weight = sortedArc.Value.Weight;
-                        chArc.Direction = sortedArc.Value.Direction;
-                        chArc.TagsId = sortedArc.Value.Tags;
+                        var chArc = new CHArc();
+                        chArc.TargetId = sortedArc.Neighbour;
+                        chArc.ShortcutId = sortedArc.EdgeData.ContractedVertexId;
+                        chArc.Weight = sortedArc.EdgeData.Weight;
+                        chArc.Direction = sortedArc.EdgeData.Direction;
+                        chArc.TagsId = sortedArc.EdgeData.Tags;
                         blockArcs.Add(chArc);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
@@ -310,24 +310,24 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         currentBinIds.TryGetValue(binVertexId, out newVertexId);
 
                         // get the higher arcs and convert their ids.
-                        var arcs = graph.GetEdges(binVertexId).ToKeyValuePairs();
+                        var arcs = graph.GetEdges(binVertexId);
                         foreach (var arc in arcs)
                         {
                             // get target vertex.
-                            uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Key, currentBinIds, heightBins);
+                            uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Neighbour, currentBinIds, heightBins);
                             // convert edge.
                             var newEdge = new CHEdgeData();
-                            newEdge.Direction = arc.Value.Direction;
-                            if (arc.Value.HasContractedVertex)
+                            newEdge.Direction = arc.EdgeData.Direction;
+                            if (arc.EdgeData.HasContractedVertex)
                             { // contracted info.
-                                newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Value.ContractedVertexId, currentBinIds, heightBins);
+                                newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ContractedVertexId, currentBinIds, heightBins);
                             }
                             else
                             { // no contracted info.
                                 newEdge.ContractedVertexId = 0;
                             }
-                            newEdge.Tags = arc.Value.Tags;
-                            newEdge.Weight = arc.Value.Weight;
+                            newEdge.Tags = arc.EdgeData.Tags;
+                            newEdge.Weight = arc.EdgeData.Weight;
                             sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
                         }
                     }

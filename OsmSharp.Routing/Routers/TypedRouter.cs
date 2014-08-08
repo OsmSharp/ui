@@ -715,7 +715,7 @@ namespace OsmSharp.Routing.Routers
                 // arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
 
                 // check if arcs left.
-                if(arcs.Length == 0)
+                if(arcs.Count == 0)
                 { // no neighbours for sure.
                     return neighbours;
                 }
@@ -740,14 +740,14 @@ namespace OsmSharp.Routing.Routers
                             visitList.GetPathTo(other).Reverse()).Reverse();
 
                         // match path with edge.
-                        for (int idx = 0; idx < arcs.Length; idx++)
+                        for (int idx = 0; idx < arcs.Count; idx++)
                         {
-                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Key);
-                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Key, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Neighbour);
+                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Neighbour, path))
                             { // arc matches, remove from array.
-                                var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
+                                var newArcs = new List<Edge<TEdgeData>>(arcs);
                                 newArcs.RemoveAt(idx);
-                                arcs = newArcs.ToArray();
+                                arcs = newArcs;
                                 break;
                             }
                         }
@@ -771,14 +771,14 @@ namespace OsmSharp.Routing.Routers
                             visitList.GetPathTo(vertex1).Reverse());
 
                         // match path with edge.
-                        for (int idx = 0; idx < arcs.Length; idx++)
+                        for (int idx = 0; idx < arcs.Count; idx++)
                         {
-                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Key);
-                            if(this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Key, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Neighbour);
+                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Neighbour, path))
                             { // arc matches, remove from array.
-                                var newArcs = new List<KeyValuePair<uint, TEdgeData>>(arcs);
+                                var newArcs = new List<Edge<TEdgeData>>(arcs);
                                 newArcs.RemoveAt(idx);
-                                arcs = newArcs.ToArray();
+                                arcs = newArcs;
                                 break;
                             }
                         }
@@ -787,11 +787,11 @@ namespace OsmSharp.Routing.Routers
 
                 foreach (var arc in arcs)
                 {
-                    if (arc.Key == previousVertex)
+                    if (arc.Neighbour == previousVertex)
                     { // this is an arc to the previous point.
                         var distance = 0.0;
                         var previous = vertex1Coordinate;
-                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Neighbour);
                         if (coordinates != null)
                         { // there are intermediates.
                             for (int idx = 0; idx < coordinates.Length; idx++)
@@ -809,11 +809,11 @@ namespace OsmSharp.Routing.Routers
                             indexOfPrevious = neighbours.Count;
                         }
                     }
-                    else if (arc.Key == nextVertex)
+                    else if (arc.Neighbour == nextVertex)
                     { // this is an arc to the next point.
                         var distance = 0.0;
                         var previous = vertex1Coordinate;
-                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Neighbour);
                         if (coordinates != null)
                         { // there are intermediates.
                             for (int idx = 0; idx < coordinates.Length; idx++)
@@ -833,7 +833,7 @@ namespace OsmSharp.Routing.Routers
                     }
                     if (checkIntermediates)
                     { // check all intermeditate coordinates for next/previous.
-                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Key);
+                        var coordinates = this.GetEdgeShape(vehicle, vertex1, arc.Neighbour);
                         if (coordinates != null)
                         { // loop over coordinates.
                             for (int idx = 0; idx < coordinates.Length; idx++)
@@ -851,7 +851,7 @@ namespace OsmSharp.Routing.Routers
                             }
                         }
                     }
-                    neighbours.Add(new KeyValuePair<long, IGraphEdgeData>(arc.Key, arc.Value));
+                    neighbours.Add(new KeyValuePair<long, IGraphEdgeData>(arc.Neighbour, arc.EdgeData));
                 }
             }
 
@@ -919,9 +919,9 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        protected virtual KeyValuePair<uint, TEdgeData>[] GetNeighboursUndirected(long vertex1)
+        protected virtual List<Edge<TEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            return _dataGraph.GetEdges(Convert.ToUInt32(vertex1)).ToKeyValuePairs();
+            return _dataGraph.GetEdges(Convert.ToUInt32(vertex1)).ToList();
         }
 
         /// <summary>

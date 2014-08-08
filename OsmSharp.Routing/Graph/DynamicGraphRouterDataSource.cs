@@ -176,11 +176,11 @@ namespace OsmSharp.Routing.Graph
             var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
             foreach (uint vertex in vertices)
             {
-                var localArcs = this.GetEdges(vertex).ToKeyValuePairs();
+                var localArcs = this.GetEdges(vertex);
                 foreach (var localArc in localArcs)
                 {
                     arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
-                        vertex, localArc));
+                        vertex, new KeyValuePair<uint, TEdgeData>(localArc.Neighbour, localArc.EdgeData)));
                 }
             }
             return arcs.ToArray();

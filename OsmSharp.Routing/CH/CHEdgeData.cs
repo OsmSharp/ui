@@ -429,43 +429,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Removes all contracted edges.
         /// </summary>
         /// <param name="edges"></param>
-        public static KeyValuePair<uint, CHEdgeData>[] KeepUncontracted(this KeyValuePair<uint, CHEdgeData>[] edges)
+        public static List<Edge<CHEdgeData>> KeepUncontracted(this List<Edge<CHEdgeData>> edges)
         {
-            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
-            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
+            var result = new List<Edge<CHEdgeData>>(edges.Count);
+            foreach (var edge in edges)
             {
-                if (!edge.Value.HasContractedVertex)
+                if (!edge.EdgeData.HasContractedVertex)
                 {
                     result.Add(edge);
                 }
             }
-            return result.ToArray();
+            return result;
         }
-
-        ///// <summary>
-        ///// Adds all downward edges.
-        ///// </summary>
-        ///// <param name="graph"></param>
-        //public static void AddDownwardEdges(this IDynamicGraph<CHEdgeData> graph)
-        //{ // add the reverse edges to get a easy depth-first search.
-        //    for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
-        //    {
-        //        List<KeyValuePair<uint, CHEdgeData>> arcs =
-        //            new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
-        //        foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
-        //        {
-        //            if (arc.Value.ToHigher)
-        //            {
-        //                // create severse edge.
-        //                var reverseEdge = new CHEdgeData();
-        //                reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
-        //                reverseEdge.Weight = arc.Value.Weight;
-
-        //                graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Returns the arcs that point to higher vertices.
@@ -473,21 +448,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IGraph<CHEdgeData> graph,
+        public static List<Edge<CHEdgeData>> GetArcsHigher(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            var arcs = graph.GetEdges(vertexId).ToKeyValuePairs();
-            var higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
-            int higherIdx = 0;
-            for (int idx = 0; idx < arcs.Length; idx++)
+            var arcs = graph.GetEdges(vertexId).ToList();
+            var higherArcs = new List<Edge<CHEdgeData>>();
+            for (int idx = 0; idx < arcs.Count; idx++)
             {
-                if (arcs[idx].Value.ToHigher)
+                if (arcs[idx].EdgeData.ToHigher)
                 {
-                    higherArcs[higherIdx] = arcs[idx];
-                    higherIdx++;
+                    higherArcs.Add(arcs[idx]);
                 }
             }
-            Array.Resize(ref higherArcs, higherIdx);
             return higherArcs;
         }
 
@@ -497,21 +469,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IGraph<CHEdgeData> graph,
+        public static List<Edge<CHEdgeData>> GetArcsLower(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            var arcs = graph.GetEdges(vertexId).ToKeyValuePairs();
-            var higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
-            int higherIdx = 0;
-            for (int idx = 0; idx < arcs.Length; idx++)
+            var arcs = graph.GetEdges(vertexId).ToList();
+            var higherArcs = new List<Edge<CHEdgeData>>();
+            for (int idx = 0; idx < arcs.Count; idx++)
             {
-                if (!arcs[idx].Value.ToHigher)
+                if (!arcs[idx].EdgeData.ToHigher)
                 {
-                    higherArcs[higherIdx] = arcs[idx];
-                    higherIdx++;
+                    higherArcs.Add(arcs[idx]);
                 }
             }
-            Array.Resize(ref higherArcs, higherIdx);
             return higherArcs;
         }
     }

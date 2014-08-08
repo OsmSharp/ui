@@ -23,17 +23,21 @@ using System.Collections.Generic;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
-    /// Represents an abstract edge enumerator.
+    /// Represents an abstract edge enumerator, enumerable and edge.
     /// </summary>
-    public interface IEdgeEnumerator<TEdgeData>
+    public interface IEdgeEnumerator<TEdgeData> : IEnumerable<IEdge<TEdgeData>>, IEnumerator<IEdge<TEdgeData>>, IEdge<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
-        /// <summary>
-        /// Move to the next edge.
-        /// </summary>
-        /// <returns></returns>
-        bool MoveNext();
 
+    }
+
+    /// <summary>
+    /// Abstract representation of an edge.
+    /// </summary>
+    /// <typeparam name="TEdgeData"></typeparam>
+    public interface IEdge<TEdgeData> 
+        where TEdgeData : IGraphEdgeData
+    {
         /// <summary>
         /// Returns the current neighbour.
         /// </summary>
@@ -57,16 +61,60 @@ namespace OsmSharp.Routing.Graph
         {
             get;
         }
+    }
+
+    /// <summary>
+    /// Abstract representation of an edge.
+    /// </summary>
+    /// <typeparam name="TEdgeData"></typeparam>
+    public class Edge<TEdgeData>
+        where TEdgeData : IGraphEdgeData
+    {
+        /// <summary>
+        /// Creates a new edge.
+        /// </summary>
+        public Edge()
+        {
+
+        }
 
         /// <summary>
-        /// Returns and calculates the count.
+        /// Creates a new edge by copying the given edge.
         /// </summary>
-        int Count();
+        /// <param name="edge"></param>
+        public Edge(IEdge<TEdgeData> edge)
+        {
+            this.Neighbour = edge.Neighbour;
+            this.EdgeData = edge.EdgeData;
+            this.Intermediates = edge.Intermediates;
+        }
 
         /// <summary>
-        /// Resets this enumerator.
+        /// Returns the current neighbour.
         /// </summary>
-        void Reset();
+        public uint Neighbour
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Returns the edge data.
+        /// </summary>
+        public TEdgeData EdgeData
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Returns the intermediates.
+        /// </summary>
+        public GeoCoordinateSimple[] Intermediates
+        {
+            get;
+            set;
+        }
     }
 
     /// <summary>
@@ -85,11 +133,34 @@ namespace OsmSharp.Routing.Graph
         {
             enumerator.Reset();
             var pairs = new List<KeyValuePair<uint, TEdgeData>>();
-            while(enumerator.MoveNext())
+            while (enumerator.MoveNext())
             {
                 pairs.Add(new KeyValuePair<uint, TEdgeData>(enumerator.Neighbour, enumerator.EdgeData));
             }
             return pairs.ToArray();
+        }
+
+        /// <summary>
+        /// Converts the given edge enumerator ito a list of edge objects.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        public static List<Edge<TEdgeData>> ToList<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
+            where TEdgeData : IGraphEdgeData
+        {
+            enumerator.Reset();
+            var pairs = new List<Edge<TEdgeData>>();
+            while (enumerator.MoveNext())
+            {
+                pairs.Add(new Edge<TEdgeData>()
+                {
+                    EdgeData = enumerator.EdgeData,
+                    Neighbour = enumerator.Neighbour,
+                    Intermediates = enumerator.Intermediates
+                });
+            }
+            return pairs;
         }
     }
 }

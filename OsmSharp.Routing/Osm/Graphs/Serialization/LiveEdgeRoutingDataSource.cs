@@ -623,6 +623,33 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             {
                 _current = -1;
             }
+
+            public IEnumerator<IEdge<LiveEdge>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public IEdge<LiveEdge> Current
+            {
+                get { return this; }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
+            public void Dispose()
+            {
+
+            }
         }
 
 

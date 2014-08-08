@@ -207,31 +207,31 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="edges"></param>
-        void pre_processor_OnAfterContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
+        void pre_processor_OnAfterContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
         {
             // create a new CHRouter
             var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
-            foreach (KeyValuePair<uint, CHEdgeData> from in edges)
+            foreach (var from in edges)
             {
                 // initialize the from-list.
                 var fromList = new PathSegmentVisitList();
-                fromList.UpdateVertex(new PathSegment<long>(from.Key));
+                fromList.UpdateVertex(new PathSegment<long>(from.Neighbour));
 
                 // initalize the from dictionary.
-                Dictionary<uint, PathSegment<long>> fromDic = _pathsBeforeContraction[from.Key];
-                foreach (KeyValuePair<uint, CHEdgeData> to in edges)
+                Dictionary<uint, PathSegment<long>> fromDic = _pathsBeforeContraction[from.Neighbour];
+                foreach (var to in edges)
                 {
                     // initialize the to-list.
                     var toList = new PathSegmentVisitList();
-                    toList.UpdateVertex(new PathSegment<long>(to.Key));
+                    toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
                     PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
-                    if ((fromDic[to.Key] == null && route != null) ||
-                        (fromDic[to.Key] != null && route == null) ||
-                        ((fromDic[to.Key] != null && route != null) && fromDic[to.Key] != route))
+                    if ((fromDic[to.Neighbour] == null && route != null) ||
+                        (fromDic[to.Neighbour] != null && route == null) ||
+                        ((fromDic[to.Neighbour] != null && route != null) && fromDic[to.Neighbour] != route))
                     { // the route match!
                         Assert.Fail("Routes are different before/after contraction!");
                     }
@@ -329,7 +329,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="edges"></param>
-        void pre_processor_OnBeforeContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
+        void pre_processor_OnBeforeContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
         {
             // create a new CHRouter
             var router = new CHRouter();
@@ -337,23 +337,23 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             // calculate all the routes between the neighbours of the contracted vertex.
             _pathsBeforeContraction =
                 new Dictionary<uint, Dictionary<uint, PathSegment<long>>>();
-            foreach (KeyValuePair<uint, CHEdgeData> from in edges)
+            foreach (var from in edges)
             {
                 // initialize the from-list.
                 var fromList = new PathSegmentVisitList();
-                fromList.UpdateVertex(new PathSegment<long>(from.Key));
+                fromList.UpdateVertex(new PathSegment<long>(from.Neighbour));
 
                 // initalize the from dictionary.
                 var fromDic = new Dictionary<uint, PathSegment<long>>();
-                _pathsBeforeContraction[from.Key] = fromDic;
-                foreach (KeyValuePair<uint, CHEdgeData> to in edges)
+                _pathsBeforeContraction[from.Neighbour] = fromDic;
+                foreach (var to in edges)
                 {
                     // initialize the to-list.
                     var toList = new PathSegmentVisitList();
-                    toList.UpdateVertex(new PathSegment<long>(to.Key));
+                    toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    fromDic[to.Key] = router.Calculate(_data, _interpreter,
+                    fromDic[to.Neighbour] = router.Calculate(_data, _interpreter,
                         OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null); ;
                 }
             }

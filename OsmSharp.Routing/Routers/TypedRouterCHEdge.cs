@@ -58,9 +58,9 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        protected override KeyValuePair<uint, CHEdgeData>[] GetNeighboursUndirected(long vertex1)
+        protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1)).ToKeyValuePairs();
+            var arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1)).ToList();
             return arcs.KeepUncontracted();
         }
     }

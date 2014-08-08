@@ -110,7 +110,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int arcCount = 0;
             foreach (uint vertexId in vertices)
             {
-                var vertexArcs = this.GetEdges(vertexId).ToKeyValuePairs();
+                var vertexArcs = this.GetEdges(vertexId);
                 foreach (var arc in vertexArcs)
                 {
                     arcCount++;
@@ -119,7 +119,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         Array.Resize(ref arcs, arcs.Length + 100);
                     }
                     arcs[arcCount - 1] = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                        vertexId, arc);
+                        vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData));
                 }
             }
             Array.Resize(ref arcs, arcCount);
@@ -617,6 +617,33 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             public void Reset()
             {
                 _current = -1;
+            }
+
+            public IEnumerator<IEdge<CHEdgeData>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public IEdge<CHEdgeData> Current
+            {
+                get { return this; }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
+            public void Dispose()
+            {
+
             }
         }
 

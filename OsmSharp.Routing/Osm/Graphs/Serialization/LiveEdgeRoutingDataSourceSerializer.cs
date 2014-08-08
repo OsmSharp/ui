@@ -123,43 +123,43 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
+                    var arcs = graph.GetEdges(vertex).ToList();
 
                     // serialize the arcs.
-                    if (arcs != null && arcs.Length > 0)
+                    if (arcs != null && arcs.Count > 0)
                     {
                         var serializableGraphArcs = new SerializableGraphArcs();
-                        serializableGraphArcs.DestinationId = new uint[arcs.Length];
-                        serializableGraphArcs.Forward = new bool[arcs.Length];
-                        serializableGraphArcs.TileX = new int[arcs.Length];
-                        serializableGraphArcs.TileY = new int[arcs.Length];
-                        serializableGraphArcs.Tags = new SerializableTags[arcs.Length];
-                        serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Length];
-                        serializableGraphArcs.Distances = new float[arcs.Length];
+                        serializableGraphArcs.DestinationId = new uint[arcs.Count];
+                        serializableGraphArcs.Forward = new bool[arcs.Count];
+                        serializableGraphArcs.TileX = new int[arcs.Count];
+                        serializableGraphArcs.TileY = new int[arcs.Count];
+                        serializableGraphArcs.Tags = new SerializableTags[arcs.Count];
+                        serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Count];
+                        serializableGraphArcs.Distances = new float[arcs.Count];
 
-                        for (int idx = 0; idx < arcs.Length; idx++)
+                        for (int idx = 0; idx < arcs.Count; idx++)
                         {
                             var arc = arcs[idx];
                             // get destination tile.
-                            if (graph.GetVertex(arc.Key, out latitude, out longitude))
+                            if (graph.GetVertex(arc.Neighbour, out latitude, out longitude))
                             { // the destionation was found.
                                 GeoCoordinateSimple[] arcValueCoordinates;
-                                if(!graph.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates))
+                                if(!graph.GetEdgeShape(vertex, arc.Neighbour, out arcValueCoordinates))
                                 {
                                     arcValueCoordinates = null;
                                 }
                                 var destinationTile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
-                                serializableGraphArcs.DestinationId[idx] = arc.Key;
+                                serializableGraphArcs.DestinationId[idx] = arc.Neighbour;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
-                                serializableGraphArcs.Forward[idx] = arc.Value.Forward;
+                                serializableGraphArcs.Forward[idx] = arc.EdgeData.Forward;
                                 serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
                                     Coordinates = SerializableCoordinate.FromSimpleArray(arcValueCoordinates)
                                 };
-                                serializableGraphArcs.Distances[idx] = arc.Value.Distance;
+                                serializableGraphArcs.Distances[idx] = arc.EdgeData.Distance;
 
                                 // get the tags.
-                                var tagsCollection = graph.TagsIndex.Get(arc.Value.Tags);
+                                var tagsCollection = graph.TagsIndex.Get(arc.EdgeData.Tags);
                                 if (tagsCollection != null)
                                 {
                                     serializableGraphArcs.Tags[idx] = new SerializableTags();
