@@ -913,7 +913,18 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             public GeoCoordinateSimple[] Intermediates
             {
-                get { return _graph._edgeShapes[_currentEdgeId / 4]; }
+
+                get
+                {
+                    if(_currentEdgeInverted)
+                    {
+                        var intermediates = _graph._edgeShapes[_currentEdgeId / 4];
+                        var reverse = new GeoCoordinateSimple[intermediates.Length];
+                        _graph._edgeShapes[_currentEdgeId / 4].CopyToReverse(reverse, 0);
+                        return reverse;
+                    }
+                    return _graph._edgeShapes[_currentEdgeId / 4];
+                }
             }
 
             /// <summary>
