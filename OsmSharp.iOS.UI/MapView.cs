@@ -972,10 +972,20 @@ namespace OsmSharp.iOS.UI
                 return mapCenter;
 
             View2D view = this.CreateView(_rect);
-            double[] topLeftSceneCoordinates = view.FromViewPort(this.CurrentWidth, this.CurrentHeight, 0, 0);
+
+            double[] mapCenterSceneCoords = this.Map.Projection.ToPixel(mapCenter);
+            double[] mapCenterPixels = view.ToViewPort(this.CurrentWidth, this.CurrentHeight, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
+
+            double[] topLeftSceneCoordinates = view.FromViewPort(this.CurrentWidth, 
+                                                                this.CurrentHeight, 
+                                                                mapCenterPixels[0] - (this.CurrentWidth) / 2.0, 
+                                                                mapCenterPixels[1] - (this.CurrentHeight) / 2.0);
             GeoCoordinate topLeft = this.Map.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
 
-            double[] bottomRightSceneCoordinates = view.FromViewPort(this.CurrentWidth, this.CurrentHeight, this.CurrentWidth, this.CurrentHeight);
+            double[] bottomRightSceneCoordinates = view.FromViewPort(this.CurrentWidth, 
+                                                                this.CurrentHeight, 
+                                                                mapCenterPixels[0] + (this.CurrentWidth) / 2.0, 
+                                                                mapCenterPixels[1] + (this.CurrentHeight) / 2.0);
             GeoCoordinate bottomRight = this.Map.Projection.ToGeoCoordinates(bottomRightSceneCoordinates[0], bottomRightSceneCoordinates[1]);
 
             // Early exit when the view is inside the box.
