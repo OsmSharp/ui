@@ -493,7 +493,14 @@ namespace OsmSharp.Android.UI
             }
             set
             {
-                _mapCenter = value;
+                if (this.Width == 0 || this.MapBoundingBox == null)
+                {
+                    _mapCenter = value;
+                }
+                else
+                {
+                    _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, this.CurrentView);
+                }
 
                 _previouslyRenderedView = null;
                 _previouslyChangedView = null;
@@ -637,7 +644,7 @@ namespace OsmSharp.Android.UI
                 // If the current map center falls outside the bounding box, set the MapCenter to the middle of the box.
                 if (_mapCenter != null && !value.Contains(MapCenter))
                 {
-                    MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
+                    this.MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
                 }
                 _mapBoundingBox = value;
             }
@@ -1034,7 +1041,7 @@ namespace OsmSharp.Android.UI
                                                                       centerXPixels, centerYPixles);
 
                             // convert to the projected center.
-                            _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                            this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
                             movement = true;
                         }
@@ -1110,8 +1117,8 @@ namespace OsmSharp.Android.UI
         /// <param name="mapZoom">Map zoom.</param>
         public void SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
         {
-            _mapCenter = center;
-            _mapTilt = mapTilt;
+            this.MapCenter = center;
+            this.MapTilt = mapTilt;
             this.MapZoom = mapZoom;
 
             (this.Context as Activity).RunOnUiThread(NotifyMovement);

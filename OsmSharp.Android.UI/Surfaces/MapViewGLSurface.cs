@@ -779,9 +779,9 @@ namespace OsmSharp.Android.UI
         /// <param name="mapZoom">Map zoom.</param>
         public void SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
         {
-            _mapCenter = center;
-            _mapTilt = mapTilt;
-            _mapZoomLevel = mapZoom;
+            this.MapCenter = center;
+            this.MapTilt = mapTilt;
+            this.MapZoom = mapZoom;
 
             (this.Context as Activity).RunOnUiThread(Invalidate);
         }
