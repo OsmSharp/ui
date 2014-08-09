@@ -935,7 +935,16 @@ namespace OsmSharp.iOS.UI
             get { return _mapCenter; }
             set
             {
-                _mapCenter = ensureViewInsideBoundingBox(value);
+                if (this.CurrentWidth == 0 || this.MapBoundingBox == null)
+                {
+                    _mapCenter = value;
+                }
+                else
+                {
+                    View2D view = this.CreateView(_rect);
+                    _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, view);
+                }
+                
                 this.NotifyMovementByInvoke();
             }
         }
@@ -964,71 +973,6 @@ namespace OsmSharp.iOS.UI
                 }
                 _mapBoundingBox = value;
             }
-        }
-
-        public GeoCoordinate ensureViewInsideBoundingBox(GeoCoordinate mapCenter)
-        {
-            if (this.CurrentWidth == 0 || this.MapBoundingBox == null) 
-                return mapCenter;
-
-            View2D view = this.CreateView(_rect);
-
-            double[] mapCenterSceneCoords = this.Map.Projection.ToPixel(mapCenter);
-            double[] mapCenterPixels = view.ToViewPort(this.CurrentWidth, this.CurrentHeight, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
-
-            double[] topLeftSceneCoordinates = view.FromViewPort(this.CurrentWidth, 
-                                                                this.CurrentHeight, 
-                                                                mapCenterPixels[0] - (this.CurrentWidth) / 2.0, 
-                                                                mapCenterPixels[1] - (this.CurrentHeight) / 2.0);
-            GeoCoordinate topLeft = this.Map.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
-
-            double[] bottomRightSceneCoordinates = view.FromViewPort(this.CurrentWidth, 
-                                                                this.CurrentHeight, 
-                                                                mapCenterPixels[0] + (this.CurrentWidth) / 2.0, 
-                                                                mapCenterPixels[1] + (this.CurrentHeight) / 2.0);
-            GeoCoordinate bottomRight = this.Map.Projection.ToGeoCoordinates(bottomRightSceneCoordinates[0], bottomRightSceneCoordinates[1]);
-
-            // Early exit when the view is inside the box.
-            if (MapBoundingBox.Contains(topLeft) && MapBoundingBox.Contains(bottomRight)) 
-                return mapCenter;
-
-            double viewNorth = topLeft.Latitude;
-            double viewEast = bottomRight.Longitude;
-            double viewSouth = bottomRight.Latitude;
-            double viewWest = topLeft.Longitude;
-
-            double boxNorth = MapBoundingBox.MaxLat;
-            double boxEast = MapBoundingBox.MaxLon;
-            double boxSouth = MapBoundingBox.MinLat;
-            double boxWest = MapBoundingBox.MinLon;
-
-            //TODO: when north and south OR east and west are outside the bounding box, scale the view to fit the box.
-            // or when the area of the view is larger than the area of the box.
-            
-            // Correct all view bounds if neccecary.
-            if (viewNorth > boxNorth)
-            {
-                viewSouth -= viewNorth - boxNorth;
-                viewNorth = boxNorth;
-            }
-            if (viewEast > boxEast)
-            {
-                viewWest -= viewEast - boxEast;
-                viewEast = boxEast;
-            }
-            if (viewSouth < boxSouth)
-            {
-                viewNorth += boxSouth - viewSouth;
-                viewSouth = boxSouth;
-            }
-            if (viewWest < boxWest)
-            {
-                viewEast += boxWest - viewWest;
-                viewWest = boxWest;
-            }
-
-            // Compute and return corrected map center
-            return new GeoCoordinate(viewSouth + (viewNorth - viewSouth) / 2.0f, viewWest + (viewEast - viewWest) / 2.0f);
         }
 
 		/// <summary>

@@ -463,7 +463,7 @@ namespace OsmSharp.Android.UI
         /// Gets or sets the map minimum zoom level.
         /// </summary>
         /// <value>The map minimum zoom level.</value>
-        public float? MapMinZoomLevel
+        public float MapMinZoomLevel
         {
             get { return _mapView.MapMinZoomLevel; }
             set { _mapView.MapMinZoomLevel = value; }
@@ -473,7 +473,7 @@ namespace OsmSharp.Android.UI
         /// Gets or sets the map max zoom level.
         /// </summary>
         /// <value>The map max zoom level.</value>
-        public float? MapMaxZoomLevel
+        public float MapMaxZoomLevel
         {
             get { return _mapView.MapMaxZoomLevel; }
             set { _mapView.MapMaxZoomLevel = value; }
@@ -525,6 +525,18 @@ namespace OsmSharp.Android.UI
             get { return _mapView.MapCenter; }
             set { _mapView.MapCenter = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the bounding box within which one can pan the map.
+        /// </summary>
+        /// <value>The box.</value>
+        public GeoCoordinateBox MapBoundingBox
+        {
+            get { return _mapView.MapBoundingBox; }
+            set { _mapView.MapBoundingBox = value; }
+        }
+
+
 
         /// <summary>
         /// Gets or sets the map tilt.
