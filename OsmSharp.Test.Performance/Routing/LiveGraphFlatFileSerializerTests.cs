@@ -64,15 +64,15 @@ namespace OsmSharp.Test.Performance.Routing
             var interpreter = new OsmRoutingInterpreter();
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
 
-            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 5000);
-            performanceInfo.Start();
-            performanceInfo.Report("Pulling from {0}...", testFile.Name);
-
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex, 100000000);
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();
+
+            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 5000);
+            performanceInfo.Start();
+            performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
             var metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
@@ -82,8 +82,25 @@ namespace OsmSharp.Test.Performance.Routing
             stream.Dispose();
             writeStream.Dispose();
 
-            OsmSharp.Logging.Log.TraceEvent("CHSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
+            performanceInfo.Stop();
+
+            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 5000);
+            performanceInfo.Start();
+            performanceInfo.Report("Reading file for {0}...", testFile.Name);
+
+            var testInputFile = new FileInfo(@"test.routing");
+            Stream readStream = testInputFile.OpenRead();
+
+            var deserializedGraph = routingSerializer.Deserialize(readStream, false);
+
+            readStream.Dispose();
+
+            OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
+                string.Format("Read: {0}KB", testInputFile.Length / 1024));
+
+            OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", Logging.TraceEventType.Information, deserializedGraph.ToInvariantString());
 
             performanceInfo.Stop();
         }

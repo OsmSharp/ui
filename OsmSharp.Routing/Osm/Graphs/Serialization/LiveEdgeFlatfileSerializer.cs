@@ -57,7 +57,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             typeModel.Add(typeof(SerializableEdge), true);
             typeModel.Add(typeof(GeoCoordinateSimple), true);
 
-            int blockSize = 1000;
+            int blockSize = 10000;
             var arcsQueue = new List<SerializableEdge>(blockSize);
 
             uint vertex = 0;
