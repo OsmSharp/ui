@@ -464,8 +464,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    GeoCoordinateSimple[] referenceArcValueCoordinates;
-                    GeoCoordinateSimple[] arcValueCoordinates;
+                    IShapeEnumerator referenceArcValueCoordinates;
+                    IShapeEnumerator arcValueCoordinates;
                     Assert.AreEqual(network.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates), 
                         referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceArcValueCoordinates));
                     if (referenceArcValueCoordinates == null)
@@ -474,12 +474,14 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     }
                     else
                     { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcValueCoordinates.Length; coordIdx++)
+                        var referenceArcValueCoordinatesArray = referenceArcValueCoordinates.ToArray();
+                        var arcValueCoordinatesArray = arcValueCoordinates.ToArray();
+                        for (int coordIdx = 0; coordIdx < referenceArcValueCoordinatesArray.Length; coordIdx++)
                         {
-                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Latitude,
-                                arcValueCoordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Longitude,
-                                arcValueCoordinates[coordIdx].Longitude);
+                            Assert.AreEqual(referenceArcValueCoordinatesArray[coordIdx].Latitude,
+                                arcValueCoordinatesArray[coordIdx].Latitude);
+                            Assert.AreEqual(referenceArcValueCoordinatesArray[coordIdx].Longitude,
+                                arcValueCoordinatesArray[coordIdx].Longitude);
                         }
                     }
 

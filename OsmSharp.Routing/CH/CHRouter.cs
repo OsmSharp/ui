@@ -1447,7 +1447,7 @@ namespace OsmSharp.Routing.CH
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceEstimate(fromCoordinates).Value;
-                        GeoCoordinateSimple[] coordinates;
+                        IShapeEnumerator coordinates;
                         if(!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
                         {
                             coordinates = null;
@@ -1565,7 +1565,7 @@ namespace OsmSharp.Routing.CH
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinates);
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinates.ToArray());
 
                                     // try and match.
                                     //if(matcher.Match(_

@@ -66,7 +66,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape);
+        bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape);
 
         /// <summary>
         /// Returns the total number of vertices.
