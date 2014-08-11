@@ -60,6 +60,24 @@ namespace OsmSharp.UI
         GeoCoordinate MapCenter { get; set; }
 
         /// <summary>
+        /// Gets or sets the bounding box within which one can pan the map.
+        /// </summary>
+        /// <value>The box.</value>
+        GeoCoordinateBox MapBoundingBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets the map minimum zoom level.
+        /// </summary>
+        /// <value>The map minimum zoom level.</value>
+        float MapMinZoomLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the map maximum zoom level.
+        /// </summary>
+        /// <value>The map maximum zoom level.</value>
+        float MapMaxZoomLevel { get; set; }
+
+        /// <summary>
         /// Gets or sets the tilt interaction flag.
         /// </summary>
         bool MapAllowTilt { get; set; }

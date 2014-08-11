@@ -112,11 +112,21 @@ namespace OsmSharp.Android.UI
 			set;
 		}
 
+        /// <summary>
+        /// Gets or sets the bounding box within which one can pan the map.
+        /// </summary>
+        /// <value>The box.</value>
+        GeoCoordinateBox MapBoundingBox
+        {
+            get;
+            set;
+        }
+
 		/// <summary>
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-		float? MapMinZoomLevel {
+		float MapMinZoomLevel {
 			get;
 			set;
 		}
@@ -125,7 +135,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-		float? MapMaxZoomLevel {
+		float MapMaxZoomLevel {
 			get;
 			set;
         }
