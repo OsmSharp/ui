@@ -1448,9 +1448,14 @@ namespace OsmSharp.Routing.CH
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceEstimate(fromCoordinates).Value;
                         IShapeEnumerator coordinates;
+                        GeoCoordinateSimple[] coordinatesArray = null;
                         if(!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
                         {
                             coordinates = null;
+                        }
+                        if(coordinates != null)
+                        {
+                            coordinatesArray = coordinates.ToArray();
                         }
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
@@ -1565,7 +1570,7 @@ namespace OsmSharp.Routing.CH
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinates.ToArray());
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinatesArray);
 
                                     // try and match.
                                     //if(matcher.Match(_
