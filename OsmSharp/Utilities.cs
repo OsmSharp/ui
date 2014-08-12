@@ -592,7 +592,15 @@ namespace OsmSharp
             model.Serialize(dest, value);
 
             // calculate size.
-            long size = dest.Position - position - 4;
+            long size = dest.Position - position - (long)4;
+            if(size > int.MaxValue)
+            { // data too big.
+                throw new Exception(string.Format("Cannot serialize data, lenght of data that was serialized was bigger than int.MaxValue."));
+            }
+            if(size < 0)
+            { // data too big.
+                throw new OverflowException(string.Format("Cannot serialize data, lenght and position leads to overflow."));
+            }
             dest.Seek(position, System.IO.SeekOrigin.Begin);
             byte[] sizeBytes = BitConverter.GetBytes((int)size);
             dest.Write(sizeBytes, 0, 4);

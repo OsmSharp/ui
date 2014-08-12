@@ -40,7 +40,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
         }
 
         /// <summary>
@@ -51,6 +51,11 @@ namespace OsmSharp.Test.Performance.Routing
         public static void TestSerialization(string name, string pbfFile)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
+
+            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            performanceInfo.Start();
+            performanceInfo.Report("Pulling from {0}...", testFile.Name);
+
             var stream = testFile.OpenRead();
             var source = new PBFOsmStreamSource(stream);
             var progress = new OsmStreamFilterProgress();
@@ -65,12 +70,15 @@ namespace OsmSharp.Test.Performance.Routing
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
 
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, @"c:\temp");
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();
 
-            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 5000);
+            performanceInfo.Stop();
+
+            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
             performanceInfo.Start();
             performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
@@ -86,7 +94,7 @@ namespace OsmSharp.Test.Performance.Routing
                 string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
             performanceInfo.Stop();
 
-            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 5000);
+            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
             performanceInfo.Start();
             performanceInfo.Report("Reading file for {0}...", testFile.Name);
 

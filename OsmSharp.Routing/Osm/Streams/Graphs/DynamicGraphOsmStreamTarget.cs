@@ -282,7 +282,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         var routableWayTags = new TagsCollection(way.Tags);
                         routableWayTags.RemoveAll(x =>
                         {
-                            return _interpreter.IsRelevantRouting(x.Key);
+                            return !_interpreter.IsRelevantRouting(x.Key);
                         });
                         _tagsIndex.Add(routableWayTags);
 

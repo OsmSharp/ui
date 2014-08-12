@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
 
-            int blockSize = 10000;
+            int blockSize = 1000;
             var vertices = new SerializableVertex[blockSize];
             uint vertex = 1;
             float latitude, longitude;
@@ -203,7 +203,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             var countBytes = BitConverter.GetBytes(tagsCollectionIndex.Max);
             stream.Write(countBytes, 0, 4);
 
-            int blockSize = 10000;
+            int blockSize = 1000;
             var tagsQueue = new List<SerializableTag>();
 
             // serialize tags collections one-by-one.
