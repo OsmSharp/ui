@@ -144,7 +144,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             // get destination tile.
                             if (graph.GetVertex(arc.Neighbour, out latitude, out longitude))
                             { // the destionation was found.
-                                GeoCoordinateSimple[] arcValueCoordinates;
+                                IShapeEnumerator arcValueCoordinates;
                                 if(!graph.GetEdgeShape(vertex, arc.Neighbour, out arcValueCoordinates))
                                 {
                                     arcValueCoordinates = null;
@@ -553,12 +553,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             /// <param name="simples"></param>
             /// <returns></returns>
-            public static SerializableCoordinate[] FromSimpleArray(GeoCoordinateSimple[] simples)
+            public static SerializableCoordinate[] FromSimpleArray(IShapeEnumerator shape)
             {
-                if(simples == null)
+                if (shape == null)
                 {
                     return null;
                 }
+                var simples = shape.ToArray();
                 var coordinates = new SerializableCoordinate[simples.Length];
                 for (int idx = 0; idx < simples.Length; idx++)
                 {

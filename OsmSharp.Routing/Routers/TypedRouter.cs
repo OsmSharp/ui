@@ -974,10 +974,14 @@ namespace OsmSharp.Routing.Routers
 
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                GeoCoordinateSimple[] shape;
+                IShapeEnumerator shape;
                 if (_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
                 { // edge was found, yay!
-                    return shape;
+                    if(shape != null)
+                    {
+                        return shape.ToArray();
+                    }
+                    return null;
                 }
             }
             else

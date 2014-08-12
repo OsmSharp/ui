@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                         }
 
                         // don't re-process edges that already have coordinates.
-                        GeoCoordinateSimple[] oldEdgeValueCoordinates;
+                        IShapeEnumerator oldEdgeValueCoordinates;
                         _graph.GetEdgeShape(vertexToProcess, oldEdge.Neighbour, out oldEdgeValueCoordinates);
                         if (oldEdgeValueCoordinates != null)
                         { // this edge has already been processed.
@@ -140,7 +140,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             }
 
                             // check for intermediates.
-                            GeoCoordinateSimple[] nextEdgeValueCoordinates;
+                            IShapeEnumerator nextEdgeValueCoordinates;
                             _graph.GetEdgeShape(current, nextEdge.Neighbour, out nextEdgeValueCoordinates);
                             if (nextEdgeValueCoordinates != null)
                             { // oeps, there are intermediates already, this can occur when two osm-ways are drawn on top of eachother.
@@ -165,15 +165,15 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             var oldEdgeValue = oldEdge.EdgeData;
                             
                             // keep edges that already have intermediates.
-                            GeoCoordinateSimple[] edgeToKeepValueCoordinates = null;
-                            var edgesToKeep = new List<Tuple<uint, LiveEdge, GeoCoordinateSimple[]>>();
+                            IShapeEnumerator edgeToKeepValueCoordinates = null;
+                            var edgesToKeep = new List<Tuple<uint, LiveEdge, IShapeEnumerator>>();
                             foreach (var edgeToKeep in _graph.GetEdges(vertexToProcess).ToList())
                             {
                                 edgeToKeepValueCoordinates = null;
                                 if(edgeToKeep.Neighbour == oldEdge.Neighbour && 
                                    _graph.GetEdgeShape(vertexToProcess, edgeToKeep.Neighbour, out edgeToKeepValueCoordinates))
                                 {
-                                    edgesToKeep.Add(new Tuple<uint, LiveEdge, GeoCoordinateSimple[]>(
+                                    edgesToKeep.Add(new Tuple<uint, LiveEdge, IShapeEnumerator>(
                                         edgeToKeep.Neighbour, edgeToKeep.EdgeData, edgeToKeepValueCoordinates));
                                 }
                             }
@@ -194,7 +194,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                             // add edges to keep.
                             foreach(var edgeToKeep in edgesToKeep)
                             {
-                                _graph.AddEdge(vertexToProcess, edgeToKeep.Item1, edgeToKeep.Item2, edgeToKeep.Item3);
+                                _graph.AddEdge(vertexToProcess, edgeToKeep.Item1, edgeToKeep.Item2, edgeToKeep.Item3.ToArray());
                             }
                         }
                         else
@@ -320,19 +320,24 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                                     { // check each edge for vertex.
                                         if (reverseEdge.Neighbour == vertex)
                                         { // ok, replace this edge.
-                                            GeoCoordinateSimple[] reverseEdgeCoordinates;
+                                            IShapeEnumerator reverseEdgeCoordinates;
                                             if (!_graph.GetEdgeShape(edge.Neighbour, reverseEdge.Neighbour, out reverseEdgeCoordinates))
                                             {
                                                 reverseEdgeCoordinates = null;
                                             }
+                                            GeoCoordinateSimple[] reverseEdgeCoordinatesArray = null;
+                                            if (reverseEdgeCoordinates != null)
+                                            {
+                                                reverseEdgeCoordinatesArray = reverseEdgeCoordinates.ToArray();
+                                            }
                                             _graph.RemoveEdge(edge.Neighbour, vertex);
                                             if (reverseEdge.EdgeData.Forward)
                                             {
-                                                _graph.AddEdge(edge.Neighbour, nextCompressedPosition, reverseEdge.EdgeData, reverseEdgeCoordinates, null);
+                                                _graph.AddEdge(edge.Neighbour, nextCompressedPosition, reverseEdge.EdgeData, reverseEdgeCoordinatesArray, null);
                                             }
                                             else
                                             {
-                                                _graph.AddEdge(edge.Neighbour, nextCompressedPosition, (LiveEdge)reverseEdge.EdgeData.Reverse(), reverseEdgeCoordinates, null);
+                                                _graph.AddEdge(edge.Neighbour, nextCompressedPosition, (LiveEdge)reverseEdge.EdgeData.Reverse(), reverseEdgeCoordinatesArray, null);
                                             }
                                         }
                                     }

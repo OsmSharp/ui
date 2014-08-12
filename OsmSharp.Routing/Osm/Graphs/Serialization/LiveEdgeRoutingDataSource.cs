@@ -311,7 +311,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -332,7 +332,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     {
                         if(vertex.Arcs[idx].Item1 == vertex2)
                         {
-                            shape = vertex.Arcs[idx].Item3;
+                            shape = null;
+                            if (vertex.Arcs[idx].Item3 != null)
+                            {
+                                shape = new ShapeEnumerator(vertex.Arcs[idx].Item3, false);
+                            }
                             return true;
                         }
                     }
@@ -652,6 +656,115 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             }
         }
 
+
+        /// <summary>
+        /// Represents the internal coordinate enumerator.
+        /// </summary>
+        private class ShapeEnumerator : IShapeEnumerator
+        {
+            /// <summary>
+            /// Holds the current idx.
+            /// </summary>
+            private int _currentIdx = -1;
+
+            /// <summary>
+            /// Holds the coordinates.
+            /// </summary>
+            private GeoCoordinateSimple[] _coordinates;
+
+            /// <summary>
+            /// Holds the reversed flag.
+            /// </summary>
+            private bool _reversed;
+
+            /// <summary>
+            /// Creates a new shape enumerator.
+            /// </summary>
+            /// <param name="coordinates"></param>
+            /// <param name="reversed"></param>
+            public ShapeEnumerator(GeoCoordinateSimple[] coordinates, bool reversed)
+            {
+                _coordinates = coordinates;
+                _reversed = reversed;
+
+                this.Reset();
+            }
+
+            /// <summary>
+            /// Gets the current latitude.
+            /// </summary>
+            public float Latitude
+            {
+                get { return _coordinates[_currentIdx].Latitude; }
+            }
+
+            /// <summary>
+            /// Gets the current longitude.
+            /// </summary>
+            public float Longitude
+            {
+                get { return _coordinates[_currentIdx].Longitude; }
+            }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            public int Count
+            {
+                get { return _coordinates.Length; }
+            }
+
+            public IEnumerator<GeoCoordinateSimple> GetEnumerator()
+            {
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return this;
+            }
+
+            public GeoCoordinateSimple Current
+            {
+                get { return _coordinates[_currentIdx]; }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return _coordinates[_currentIdx]; }
+            }
+
+            public bool MoveNext()
+            {
+                if (_reversed)
+                {
+                    _currentIdx--;
+                    return _currentIdx >= 0;
+                }
+                else
+                {
+                    _currentIdx++;
+                    return _currentIdx < _coordinates.Length;
+                }
+            }
+
+            public void Reset()
+            {
+                if (_reversed)
+                {
+                    _currentIdx = _coordinates.Length;
+                }
+                else
+                {
+                    _currentIdx = -1;
+                }
+            }
+
+            public void Dispose()
+            {
+
+            }
+        }
 
         public void AddRestriction(uint[] route)
         {

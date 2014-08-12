@@ -196,7 +196,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
         {
             CHEdgeData data;
             shape = null;

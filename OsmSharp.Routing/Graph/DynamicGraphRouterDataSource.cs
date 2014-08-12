@@ -238,7 +238,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
         {
             return _graph.GetEdgeShape(vertex1, vertex2, out shape);
         }
