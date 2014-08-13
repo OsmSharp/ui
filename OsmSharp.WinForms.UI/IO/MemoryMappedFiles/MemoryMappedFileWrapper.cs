@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.IO.MemoryMappedFiles;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 
 namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
@@ -26,6 +27,11 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
     /// </summary>
     internal class MemoryMappedFileWrapper : IMemoryMappedFile
     {
+        /// <summary>
+        /// Holds fullname.
+        /// </summary>
+        private string _fullname = null;
+
         /// <summary>
         /// Holds the mapped file.
         /// </summary>
@@ -37,6 +43,18 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <param name="file"></param>
         public MemoryMappedFileWrapper(MemoryMappedFile file)
         {
+            _fullname = null;
+            _file = file;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file wrapper.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="fullname"></param>
+        public MemoryMappedFileWrapper(MemoryMappedFile file, string fullname)
+        {
+            _fullname = fullname;
             _file = file;
         }
 
@@ -58,6 +76,11 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         {
             _file.Dispose();
             _file = null;
+
+            if(_fullname != null)
+            {
+                File.Delete(_fullname);
+            }
         }
 
         /// <summary>

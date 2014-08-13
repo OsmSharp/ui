@@ -142,6 +142,7 @@
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedViewAccessor.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileFactory.cs" />
     <Compile Include="IO\MemoryMappedFiles\NativeMemoryMappedFileFactory.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />

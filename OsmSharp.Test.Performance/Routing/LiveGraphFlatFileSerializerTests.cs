@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing;
@@ -40,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen.osm.pbf");
         }
 
         /// <summary>
@@ -68,25 +69,27 @@ namespace OsmSharp.Test.Performance.Routing
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
-            var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, @"c:\temp");
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
-            targetData.RegisterSource(progress);
-            targetData.Pull();
+            using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
+            {
+                var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory);
+                var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+                var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
+                targetData.RegisterSource(progress);
+                targetData.Pull();
 
-            performanceInfo.Stop();
+                performanceInfo.Stop();
 
-            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-            performanceInfo.Start();
-            performanceInfo.Report("Writing file for {0}...", testFile.Name);
+                performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+                performanceInfo.Start();
+                performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
-            var metaData = new TagsCollection();
-            metaData.Add("some_key", "some_value");
-            var routingSerializer = new LiveEdgeFlatfileSerializer();
-            routingSerializer.Serialize(writeStream, memoryData, metaData);
-
+                var metaData = new TagsCollection();
+                metaData.Add("some_key", "some_value");
+                routingSerializer.Serialize(writeStream, memoryData, metaData);
+            }
             stream.Dispose();
             writeStream.Dispose();
 

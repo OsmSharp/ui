@@ -85,13 +85,13 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        /// <param name="path"></param>
-        public MemoryMappedGraph(long estimatedSize, string path)
+        /// <param name="factory"></param>
+        public MemoryMappedGraph(long estimatedSize, MemoryMappedFileFactory factory)
             : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(path, estimatedSize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize),
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
+            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize),
             new HugeArray<GeoCoordinateSimple[]>(estimatedSize))
         {
 
@@ -101,14 +101,14 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        /// <param name="path"></param>
+        /// <param name="factory"></param>
         /// <param name="arraySize"></param>
-        public MemoryMappedGraph(long estimatedSize, int arraySize, string path)
+        public MemoryMappedGraph(long estimatedSize, int arraySize, MemoryMappedFileFactory factory)
             : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize, arraySize),
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize, arraySize),
             new HugeArray<GeoCoordinateSimple[]>(estimatedSize, arraySize))
         {
 
