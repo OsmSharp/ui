@@ -155,9 +155,6 @@ namespace OsmSharp.iOS.UI
 			this.BackgroundColor = UIColor.White;
 			this.UserInteractionEnabled = true;
 
-			_markers = new List<MapMarker>();
-            _controls = new List<MapControl>();
-
 			if (UIDevice.CurrentDevice.CheckSystemVersion(7, 0))
 			{
 				var panGesture = new UIPanGestureRecognizer(Pan);
@@ -563,7 +560,7 @@ namespace OsmSharp.iOS.UI
 		{
 			RectangleF rect = this.Frame;
 			if (this.MapAllowTilt &&
-			    rect.Width > 0)
+                rect.Width > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 				if (rotation.State == UIGestureRecognizerState.Ended)
@@ -641,7 +638,7 @@ namespace OsmSharp.iOS.UI
 		{
 			RectangleF rect = this.Frame;
 			if (this.MapAllowPan &&
-			    rect.Width > 0)
+                rect.Width > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 				PointF offset = pan.TranslationInView(this);
@@ -686,7 +683,7 @@ namespace OsmSharp.iOS.UI
 		private void SingleTap(UITapGestureRecognizer tap)
 		{
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0 && rect.Height > 0)
+            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 
@@ -718,7 +715,7 @@ namespace OsmSharp.iOS.UI
 		{
 			RectangleF rect = this.Frame;
 			if (this.MapAllowZoom &&
-			    rect.Width > 0 && rect.Height > 0)
+                rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 				
@@ -763,7 +760,7 @@ namespace OsmSharp.iOS.UI
 
 			// change the map markers.
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0 && rect.Height > 0)
+            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				// create the current view.
 				View2D view = this.CreateView(rect);
@@ -941,8 +938,15 @@ namespace OsmSharp.iOS.UI
                 }
                 else
                 {
-                    View2D view = this.CreateView(_rect);
-                    _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, view);
+                    if (_rect.Width > 0 && _rect.Height > 0 && this.Map != null)
+                    {
+                        View2D view = this.CreateView(_rect);
+                        _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, view);
+                    }
+                    else
+                    {
+                        _mapCenter = value;
+                    }
                 }
                 
                 this.NotifyMovementByInvoke();
@@ -1101,12 +1105,16 @@ namespace OsmSharp.iOS.UI
 		/// <returns>The view.</returns>
 		public View2D CreateView(System.Drawing.RectangleF rect)
 		{
-			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
-			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+            if (this.Map != null)
+            {
+                double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+                float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
-			return View2D.CreateFrom(sceneCenter[0], sceneCenter[1],
-				rect.Width, rect.Height, sceneZoomFactor,
-				_invertX, _invertY, this.MapTilt);
+                return View2D.CreateFrom(sceneCenter[0], sceneCenter[1],
+                    rect.Width, rect.Height, sceneZoomFactor,
+                    _invertX, _invertY, this.MapTilt);
+            }
+            return null;
 		}
 
 		/// <summary>
@@ -1116,7 +1124,7 @@ namespace OsmSharp.iOS.UI
 		{
 			// change the map markers.
 			RectangleF rect = this.Frame;
-			if (rect.Width > 0 && rect.Height > 0)
+            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				View2D view = this.CreateView(rect);
 
@@ -1180,7 +1188,7 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the controls.
 		/// </summary>
-		private List<MapControl> _controls;
+        private List<MapControl> _controls = new List<MapControl>();
 
 		/// <summary>
 		/// Returns the mapcontrols list.
@@ -1307,7 +1315,7 @@ namespace OsmSharp.iOS.UI
         /// <summary>
         /// Holds the markers.
         /// </summary>
-        private List<MapMarker> _markers;
+        private List<MapMarker> _markers = new List<MapMarker>();
 
         /// <summary>
         /// Returns the mapmarkers list.
