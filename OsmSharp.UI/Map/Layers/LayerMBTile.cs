@@ -70,19 +70,30 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the map projection.
         /// </summary>
         private readonly IProjection _projection;
+            
+        /// <summary>
+        /// Creates a new tiles layer.
+        /// </summary>
+        /// <param name="connection">The SQLite connection to the MBTiles.</param>
+        /// <param name="tileCacheSize">The size of tiles to cache.</param>
+        public LayerMBTile(SQLiteConnectionBase connection, int tileCacheSize)
+        {
+            _nativeImageCache = NativeImageCacheFactory.Create();
+            _connection = connection;
+
+            _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+            _cache.OnRemove += OnRemove;
+            _projection = new WebMercator();
+        }
 
         /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
         /// <param name="connection">The SQLite connection to the MBTiles.</param>
         public LayerMBTile(SQLiteConnectionBase connection)
+            : this(connection, 40)
         {
-            _nativeImageCache = NativeImageCacheFactory.Create();
-            _connection = connection;
 
-            _cache = new LRUCache<Tile, Image2D>(160);
-            _cache.OnRemove += OnRemove;
-            _projection = new WebMercator();
         }
 
         /// <summary>
