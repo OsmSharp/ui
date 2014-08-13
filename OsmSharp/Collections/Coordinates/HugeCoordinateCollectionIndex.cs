@@ -328,6 +328,7 @@ namespace OsmSharp.Collections.Coordinates
             /// <returns></returns>
             public IEnumerator<ICoordinate> GetEnumerator()
             {
+                this.Reset();
                 return this;
             }
 
@@ -337,6 +338,7 @@ namespace OsmSharp.Collections.Coordinates
             /// <returns></returns>
             IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
+                this.Reset();
                 return this;
             }
 
@@ -395,7 +397,7 @@ namespace OsmSharp.Collections.Coordinates
             {
                 if(_reverse)
                 {
-                    _currentIdx = _startIdx + _size + 2;
+                    _currentIdx = _startIdx + _size;
                 }
                 else
                 {

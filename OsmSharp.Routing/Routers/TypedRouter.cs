@@ -1725,7 +1725,8 @@ namespace OsmSharp.Routing.Routers
                         }
                         previousId = currentId;
                     }
-                    path = this.ResolvedShortest(vehicle, previousId, vertex2).ConcatenateAfter(path);
+                    var resolvedShortest = this.ResolvedShortest(vehicle, previousId, vertex2);
+                    path = resolvedShortest.ConcatenateAfter(path);
                 }
             }
             else
@@ -2053,7 +2054,7 @@ namespace OsmSharp.Routing.Routers
         protected PathSegment<long> ResolvedShortest(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
-            TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
+            var graph = this.GetForProfile(vehicle);
 
             var settled = new HashSet<long>();
             var current = new PathSegment<long>(vertex1);
@@ -2081,13 +2082,12 @@ namespace OsmSharp.Routing.Routers
                 settled.Add(current.VertexId);
 
                 // get the neighbours.
-                KeyValuePair<long, OsmSharp.Routing.Routers.TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = 
-                    graph.GetEdges(current.VertexId);
+                var arcs = graph.GetEdges(current.VertexId);
                 float latitudeCurrent, longitudeCurrent;
                 graph.GetVertex(current.VertexId, out latitudeCurrent, out longitudeCurrent);
                 for (int idx = 0; idx < arcs.Length; idx++)
                 {
-                    KeyValuePair<long, OsmSharp.Routing.Routers.TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc = arcs[idx];
+                    var arc = arcs[idx];
                     if (!settled.Contains(arc.Key) && (arc.Key < 0 || arc.Key == vertex2))
                     {
                         float latitudeNeighbour, longitudeNeighbour;
