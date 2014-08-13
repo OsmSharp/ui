@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Math.Geo.Simple;
 using System.Collections.Generic;
 
@@ -66,7 +67,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape);
+        bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape);
 
         /// <summary>
         /// Returns the total number of vertices.

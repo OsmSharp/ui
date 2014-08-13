@@ -30,6 +30,12 @@ namespace OsmSharp.Collections.Coordinates
         /// Returns the count.
         /// </summary>
         int Count { get; }
+
+        /// <summary>
+        /// Returns the reverse collection.
+        /// </summary>
+        /// <returns></returns>
+        ICoordinateCollection Reverse();
     }
 
     /// <summary>
@@ -49,29 +55,73 @@ namespace OsmSharp.Collections.Coordinates
     }
 
     /// <summary>
+    /// Holds extension methods for the ICoordinateCollection.
+    /// </summary>
+    public static class CoordinateCollectionExtentions
+    {
+        /// <summary>
+        /// Returns the simple array.
+        /// </summary>
+        /// <returns></returns>
+        public static GeoCoordinateSimple[] ToSimpleArray(this ICoordinateCollection collection)
+        {
+            var array = new GeoCoordinateSimple[collection.Count];
+            int idx = 0;
+            collection.Reset();
+            while (collection.MoveNext())
+            {
+                array[idx] = new GeoCoordinateSimple()
+                {
+                    Latitude = collection.Latitude,
+                    Longitude = collection.Longitude
+                };
+            }
+            return array;
+        }
+    }
+
+    /// <summary>
     /// A wrapper for a ICoordinate array.
     /// </summary>
-    public class CoordinateArrayCollection : ICoordinateCollection
+    public class CoordinateArrayCollection<CoordinateType> : ICoordinateCollection
+        where CoordinateType : ICoordinate
     {
         /// <summary>
         /// Holds the coordinate array.
         /// </summary>
-        private ICoordinate[] _coordinateArray;
+        private CoordinateType[] _coordinateArray;
+
+        /// <summary>
+        /// Holds the reverse flag.
+        /// </summary>
+        private bool _reverse = false;
 
         /// <summary>
         /// Creates a new ICoordinate array wrapper.
         /// </summary>
         /// <param name="coordinateArray"></param>
-        public CoordinateArrayCollection(ICoordinate[] coordinateArray)
+        public CoordinateArrayCollection(CoordinateType[] coordinateArray)
         {
             _coordinateArray = coordinateArray;
+            _reverse = false;
+        }
+        
+        /// <summary>
+        /// Creates a new ICoordinate array wrapper.
+        /// </summary>
+        /// <param name="coordinateArray"></param>
+        /// <param name="reverse"></param>
+        public CoordinateArrayCollection(CoordinateType[] coordinateArray, bool reverse)
+        {
+            _coordinateArray = coordinateArray;
+            _reverse = reverse;
         }
 
         /// <summary>
         /// Rests this collection an reuses it.
         /// </summary>
         /// <param name="coordinateArray"></param>
-        public void ResetFor(ICoordinate[] coordinateArray)
+        public void ResetFor(CoordinateType[] coordinateArray)
         {
             _coordinateArray = coordinateArray;
             this.Reset();
@@ -179,6 +229,15 @@ namespace OsmSharp.Collections.Coordinates
         public float Longitude
         {
             get { return _coordinateArray[_currentIdx].Longitude; }
+        }
+
+        /// <summary>
+        /// Returns the reverse collection.
+        /// </summary>
+        /// <returns></returns>
+        public ICoordinateCollection Reverse()
+        {
+            return new CoordinateArrayCollection<CoordinateType>(_coordinateArray, !_reverse);
         }
     }
 }

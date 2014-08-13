@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds all shapes associated with edges.
         /// </summary>
-        private IHugeArray<GeoCoordinateSimple[]> _edgeShapes;
+        private HugeCoordinateCollectionIndex _edgeShapes;
 
         /// <summary>
         /// Creates a new in-memory graph.
@@ -118,8 +119,9 @@ namespace OsmSharp.Routing.Graph
             }
             _edgeData = edgeDataArray;
             _edgeData.Resize(sizeEstimate * 3);
-            _edgeShapes = edgeShapeArray;
-            _edgeShapes.Resize(sizeEstimate * 3);
+            _edgeShapes = new HugeCoordinateCollectionIndex(sizeEstimate * 3);
+            //_edgeShapes = edgeShapeArray;
+            //_edgeShapes.Resize(sizeEstimate * 3);
         }
 
         /// <summary>
@@ -247,7 +249,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
             this.AddEdge(vertex1, vertex2, data, coordinates, null);
         }
@@ -260,7 +262,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <param name="comparer">Comparator to compare edges and replace obsolete ones.</param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
             // if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
@@ -631,17 +633,16 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             long edgeDataIdx;
             bool edgeDataForward;
             if (this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
             { // the edge exists.
-                var shapeArray = _edgeShapes[edgeDataIdx];
-                shape = null;
-                if(shapeArray != null)
-                {
-                    shape = new ShapeEnumerator(shapeArray, !edgeDataForward);
+                shape = _edgeShapes[edgeDataIdx];
+                if (shape != null && !edgeDataForward)
+                { // invert shape.
+                    shape = shape.Reverse();
                 }
                 return true;
             }
@@ -907,7 +908,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public GeoCoordinateSimple[] Intermediates
+            public ICoordinateCollection Intermediates
             {
 
                 get
@@ -917,9 +918,7 @@ namespace OsmSharp.Routing.Graph
                         var intermediates = _graph._edgeShapes[_currentEdgeId / 4];
                         if (intermediates != null)
                         {
-                            var reverse = new GeoCoordinateSimple[intermediates.Length];
-                            _graph._edgeShapes[_currentEdgeId / 4].CopyToReverse(reverse, 0);
-                            return reverse;
+                            return _graph._edgeShapes[_currentEdgeId / 4].Reverse();
                         }
                         return null;
                     }
@@ -971,115 +970,6 @@ namespace OsmSharp.Routing.Graph
             object System.Collections.IEnumerator.Current
             {
                 get { return new Edge<TEdgeData>(this); }
-            }
-
-            public void Dispose()
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// Represents the internal coordinate enumerator.
-        /// </summary>
-        class ShapeEnumerator : IShapeEnumerator
-        {
-            /// <summary>
-            /// Holds the current idx.
-            /// </summary>
-            private int _currentIdx = -1;
-
-            /// <summary>
-            /// Holds the coordinates.
-            /// </summary>
-            private GeoCoordinateSimple[] _coordinates;
-
-            /// <summary>
-            /// Holds the reversed flag.
-            /// </summary>
-            private bool _reversed;
-
-            /// <summary>
-            /// Creates a new shape enumerator.
-            /// </summary>
-            /// <param name="coordinates"></param>
-            /// <param name="reversed"></param>
-            public ShapeEnumerator(GeoCoordinateSimple[] coordinates, bool reversed)
-            {
-                _coordinates = coordinates;
-                _reversed = reversed;
-
-                this.Reset();
-            }
-
-            /// <summary>
-            /// Gets the current latitude.
-            /// </summary>
-            public float Latitude
-            {
-                get { return _coordinates[_currentIdx].Latitude; }
-            }
-
-            /// <summary>
-            /// Gets the current longitude.
-            /// </summary>
-            public float Longitude
-            {
-                get { return _coordinates[_currentIdx].Longitude; }
-            }
-
-            /// <summary>
-            /// Returns the count.
-            /// </summary>
-            public int Count
-            {
-                get { return _coordinates.Length; }
-            }
-
-            public IEnumerator<GeoCoordinateSimple> GetEnumerator()
-            {
-                return this;
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return this;
-            }
-
-            public GeoCoordinateSimple Current
-            {
-                get { return _coordinates[_currentIdx]; }
-            }
-
-            object System.Collections.IEnumerator.Current
-            {
-                get { return _coordinates[_currentIdx]; }
-            }
-
-            public bool MoveNext()
-            {
-                if (_reversed)
-                {
-                    _currentIdx--;
-                    return _currentIdx >= 0;
-                }
-                else
-                {
-                    _currentIdx++;
-                    return _currentIdx < _coordinates.Length;
-                }
-            }
-
-            public void Reset()
-            {
-                if(_reversed)
-                {
-                    _currentIdx = _coordinates.Length;
-                }
-                else
-                {
-                    _currentIdx = -1;
-                }
             }
 
             public void Dispose()

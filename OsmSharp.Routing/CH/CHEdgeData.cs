@@ -241,14 +241,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public uint Tags { get; set; }
 
         /// <summary>
-        /// Returns intermediate coordinates (if any).
-        /// </summary>
-        public GeoCoordinateSimple[] Coordinates
-        {
-            get { return null; }
-        }
-
-        /// <summary>
         /// Returns true if this edge represents a neighbour-relation.
         /// </summary>
         public bool RepresentsNeighbourRelations
@@ -322,66 +314,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     otherCH.Tags != this.Tags)
                 { // basic info different.
                     return false;
-                }
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherCH.Coordinates == null;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the other edge represents the same geographical information than this edge.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool EqualsGeometrically(IGraphEdgeData other)
-        {
-            if (other is CHEdgeData)
-            { // ok, type is the same.
-                var otherCH = (CHEdgeData)other;
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherCH.Coordinates == null;
                 }
             }
             return false;

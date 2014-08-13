@@ -31,6 +31,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Logging;
 using OsmSharp.Units.Distance;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.CH
 {
@@ -1447,8 +1448,8 @@ namespace OsmSharp.Routing.CH
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceEstimate(fromCoordinates).Value;
-                        IShapeEnumerator coordinates;
-                        GeoCoordinateSimple[] coordinatesArray = null;
+                        ICoordinateCollection coordinates;
+                        ICoordinate[] coordinatesArray = null;
                         if(!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
                         {
                             coordinates = null;
@@ -1476,9 +1477,6 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
-
-                            // try and match.
-                            //if(matcher.Match(_
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
                         distance = coordinate.DistanceEstimate(toCoordinates).Value;
@@ -1487,9 +1485,6 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Value.Key);
-
-                            // try and match.
-                            //if(matcher.Match(_
                         }
 
                         // get the uncontracted arc from the contracted vertex.
@@ -1539,9 +1534,6 @@ namespace OsmSharp.Routing.CH
                                 { // the distance is smaller.
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                         distance, arc.Key);
-
-                                    // try and match.
-                                    //if(matcher.Match(_
                                 }
                             }
                             else
@@ -1571,9 +1563,6 @@ namespace OsmSharp.Routing.CH
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                         distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinatesArray);
-
-                                    // try and match.
-                                    //if(matcher.Match(_
                                 }
                             }
                         }

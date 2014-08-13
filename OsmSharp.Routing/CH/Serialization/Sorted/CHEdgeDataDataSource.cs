@@ -28,6 +28,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -196,7 +197,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             CHEdgeData data;
             shape = null;
@@ -567,6 +568,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 _edges = edges;
             }
 
+            /// <summary>
+            /// Moves to the next coordinate.
+            /// </summary>
+            /// <returns></returns>
             public bool MoveNext()
             {
                 _current++;
@@ -592,7 +597,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public GeoCoordinateSimple[] Intermediates
+            public ICoordinateCollection Intermediates
             {
                 get { return null; }
             }

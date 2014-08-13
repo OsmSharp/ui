@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
@@ -441,7 +442,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                _dynamicGraph.AddEdge(from, to, edgeData, intermediates.ToArray(), _edgeComparer);
+                _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), _edgeComparer);
             }
         }
 

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Ionic.Zlib;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -144,7 +145,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             // get destination tile.
                             if (graph.GetVertex(arc.Neighbour, out latitude, out longitude))
                             { // the destionation was found.
-                                IShapeEnumerator arcValueCoordinates;
+                                ICoordinateCollection arcValueCoordinates;
                                 if(!graph.GetEdgeShape(vertex, arc.Neighbour, out arcValueCoordinates))
                                 {
                                     arcValueCoordinates = null;
@@ -553,7 +554,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             /// <param name="simples"></param>
             /// <returns></returns>
-            public static SerializableCoordinate[] FromSimpleArray(IShapeEnumerator shape)
+            public static SerializableCoordinate[] FromSimpleArray(ICoordinateCollection shape)
             {
                 if (shape == null)
                 {

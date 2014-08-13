@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
@@ -882,7 +883,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="to"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        protected virtual bool MatchArc(Vehicle vehicle, long from, GeoCoordinateSimple[] along, long to, PathSegment<long> path)
+        protected virtual bool MatchArc(Vehicle vehicle, long from, ICoordinate[] along, long to, PathSegment<long> path)
         {
             var vertices = path.ToArray();
             if(vertices[0] != from)
@@ -967,14 +968,14 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        protected virtual GeoCoordinateSimple[] GetEdgeShape(Vehicle vehicle, long vertex1, long vertex2)
+        protected virtual ICoordinate[] GetEdgeShape(Vehicle vehicle, long vertex1, long vertex2)
         {
             // get the resolved graph for the given profile.
             var graph = this.GetForProfile(vehicle);
 
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                IShapeEnumerator shape;
+                ICoordinateCollection shape;
                 if (_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
                 { // edge was found, yay!
                     if(shape != null)
@@ -992,7 +993,11 @@ namespace OsmSharp.Routing.Routers
                 {
                     if (arc.Key == vertex2)
                     {
-                        return arc.Value.Coordinates;
+                        if(arc.Value.Coordinates == null)
+                        {
+                            return null;
+                        }
+                        return new CoordinateArrayCollection<GeoCoordinateSimple>(arc.Value.Coordinates).ToArray();
                     }
                 }
             }

@@ -19,6 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Coordinates;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Collections.Coordinates
                     coordinatesArray[currentSize - 1] =  box.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
                     currentSize--;
                 }
-                var coordinatesCollection = new CoordinateArrayCollection(coordinatesArray);
+                var coordinatesCollection = new CoordinateArrayCollection<GeoCoordinate>(coordinatesArray);
                 referenceDictionary[idx] = coordinatesCollection;
                 coordinates[idx] = coordinatesCollection;
             }

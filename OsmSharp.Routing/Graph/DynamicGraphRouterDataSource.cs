@@ -25,6 +25,7 @@ using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -238,7 +239,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             return _graph.GetEdgeShape(vertex1, vertex2, out shape);
         }
@@ -289,7 +290,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
             _graph.AddEdge(vertex1, vertex2, data, coordinates);
         }
@@ -297,14 +298,14 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Adds a new edge.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        public void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
-            _graph.AddEdge(from, to, data, coordinates, comparer);
+            _graph.AddEdge(vertex1, vertex2, data, coordinates, comparer);
         }
 
         /// <summary>

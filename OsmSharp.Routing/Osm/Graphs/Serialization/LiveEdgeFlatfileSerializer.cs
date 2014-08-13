@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
@@ -76,7 +77,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             FromId = vertex,
                             ToId = edge.Neighbour,
                             Value = edge.EdgeData.Value,
-                            Coordinates = edge.Intermediates
+                            Coordinates = edge.Intermediates.ToSimpleArray()
                         });
 
                         if (arcsQueue.Count == blockSize)
@@ -121,7 +122,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         {
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, serializableEdges[idx].Coordinates, null);
+                        }, new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates), null);
                 }
             }
         }

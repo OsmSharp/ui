@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -311,7 +312,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -335,7 +336,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             shape = null;
                             if (vertex.Arcs[idx].Item3 != null)
                             {
-                                shape = new ShapeEnumerator(vertex.Arcs[idx].Item3, false);
+                                shape = new CoordinateArrayCollection<GeoCoordinateSimple>(vertex.Arcs[idx].Item3);
                             }
                             return true;
                         }
@@ -601,7 +602,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public GeoCoordinateSimple[] Intermediates
+            public ICoordinateCollection Intermediates
             {
                 get { return null; }
             }
@@ -628,138 +629,45 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 _current = -1;
             }
 
+            /// <summary>
+            /// Returns the enumerator.
+            /// </summary>
+            /// <returns></returns>
             public IEnumerator<Edge<LiveEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
 
+            /// <summary>
+            /// Returns the enumerator.
+            /// </summary>
+            /// <returns></returns>
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
 
+            /// <summary>
+            /// Returns the current edge.
+            /// </summary>
             public Edge<LiveEdge> Current
             {
                 get { return new Edge<LiveEdge>(this); }
             }
 
+            /// <summary>
+            /// Returns the current edge.
+            /// </summary>
             object System.Collections.IEnumerator.Current
             {
                 get { return new Edge<LiveEdge>(this); }
             }
 
-            public void Dispose()
-            {
-
-            }
-        }
-
-
-        /// <summary>
-        /// Represents the internal coordinate enumerator.
-        /// </summary>
-        private class ShapeEnumerator : IShapeEnumerator
-        {
             /// <summary>
-            /// Holds the current idx.
+            /// Dipose of all resources associated with this enumerable.
             /// </summary>
-            private int _currentIdx = -1;
-
-            /// <summary>
-            /// Holds the coordinates.
-            /// </summary>
-            private GeoCoordinateSimple[] _coordinates;
-
-            /// <summary>
-            /// Holds the reversed flag.
-            /// </summary>
-            private bool _reversed;
-
-            /// <summary>
-            /// Creates a new shape enumerator.
-            /// </summary>
-            /// <param name="coordinates"></param>
-            /// <param name="reversed"></param>
-            public ShapeEnumerator(GeoCoordinateSimple[] coordinates, bool reversed)
-            {
-                _coordinates = coordinates;
-                _reversed = reversed;
-
-                this.Reset();
-            }
-
-            /// <summary>
-            /// Gets the current latitude.
-            /// </summary>
-            public float Latitude
-            {
-                get { return _coordinates[_currentIdx].Latitude; }
-            }
-
-            /// <summary>
-            /// Gets the current longitude.
-            /// </summary>
-            public float Longitude
-            {
-                get { return _coordinates[_currentIdx].Longitude; }
-            }
-
-            /// <summary>
-            /// Returns the count.
-            /// </summary>
-            public int Count
-            {
-                get { return _coordinates.Length; }
-            }
-
-            public IEnumerator<GeoCoordinateSimple> GetEnumerator()
-            {
-                return this;
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return this;
-            }
-
-            public GeoCoordinateSimple Current
-            {
-                get { return _coordinates[_currentIdx]; }
-            }
-
-            object System.Collections.IEnumerator.Current
-            {
-                get { return _coordinates[_currentIdx]; }
-            }
-
-            public bool MoveNext()
-            {
-                if (_reversed)
-                {
-                    _currentIdx--;
-                    return _currentIdx >= 0;
-                }
-                else
-                {
-                    _currentIdx++;
-                    return _currentIdx < _coordinates.Length;
-                }
-            }
-
-            public void Reset()
-            {
-                if (_reversed)
-                {
-                    _currentIdx = _coordinates.Length;
-                }
-                else
-                {
-                    _currentIdx = -1;
-                }
-            }
-
             public void Dispose()
             {
 

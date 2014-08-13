@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -112,8 +113,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                         { // return the vertex.
                             var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                             distance = coordinate.DistanceReal(fromCoordinates).Value;
-                            IShapeEnumerator coordinates;
-                            GeoCoordinateSimple[] coordinatesArray = null;
+                            ICoordinateCollection coordinates;
+                            ICoordinate[] coordinatesArray = null;
                             if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
                             {
                                 coordinates = null;
@@ -174,7 +175,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             // search along the line.
                             double distanceTotal = 0;
                             var previous = fromCoordinates;
-                            IShapeEnumerator arcValueValueCoordinates;
+                            ICoordinateCollection arcValueValueCoordinates;
                             if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
                                 arcValueValueCoordinates != null)
                             { // calculate distance along all coordinates.
@@ -321,8 +322,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                 distance, arc.Value.Key);
                         }
 
-                        IShapeEnumerator arcValueValueCoordinates;
-                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates))
+                        ICoordinateCollection arcValueValueCoordinates;
+                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                            arcValueValueCoordinates != null)
                         { // search over intermediate points.
                             var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
                             for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)

@@ -46,7 +46,7 @@ namespace OsmSharp.Collections.Coordinates
         /// <summary>
         /// Holds the coordinates in linked-list form.
         /// </summary>
-        private IHugeArray<float> _linked;
+        private IHugeArray<float> _coordinates;
 
         /// <summary>
         /// Holds the next idx.
@@ -60,16 +60,16 @@ namespace OsmSharp.Collections.Coordinates
         public HugeCoordinateCollectionIndex(long size)
         {
             _index = new HugeArray<ulong>(size);
-            _linked = new HugeArray<float>(size * 2 * ESTIMATED_SIZE);
+            _coordinates = new HugeArray<float>(size * 2 * ESTIMATED_SIZE);
 
             for (long idx = 0; idx < _index.Length; idx++)
             {
                 _index[idx] = 0;
             }
 
-            for (long idx = 0; idx < _linked.Length; idx++)
+            for (long idx = 0; idx < _coordinates.Length; idx++)
             {
-                _linked[idx] = float.MinValue;
+                _coordinates[idx] = float.MinValue;
             }
         }
 
@@ -125,7 +125,7 @@ namespace OsmSharp.Collections.Coordinates
             long index, size;
             if (this.TryGetIndexAndSize(id, out index, out size))
             {
-                coordinates = new HugeCoordinateCollection(_linked, index, size);
+                coordinates = new HugeCoordinateCollection(_coordinates, index, size);
                 return true;
             }
             coordinates = null;
@@ -169,6 +169,22 @@ namespace OsmSharp.Collections.Coordinates
 
         }
 
+        /// <summary>
+        /// Resizes this array.
+        /// </summary>
+        /// <param name="size"></param>
+        public void Resize(long size)
+        {
+            _index.Resize(size);
+
+            long bestSize = size * 2 * ESTIMATED_SIZE;
+            if(bestSize < _nextIdx)
+            { // make sure all coordinate data is saved.
+                bestSize = _nextIdx;
+            }
+            _coordinates.Resize(bestSize);
+        }
+
         #region Helper Methods
 
         /// <summary>
@@ -201,7 +217,7 @@ namespace OsmSharp.Collections.Coordinates
         {
             for(long idx = index; idx < index + (size * 2); idx++)
             {
-                _linked[idx] = float.MinValue; 
+                _coordinates[idx] = float.MinValue; 
             }
         }
 
@@ -215,8 +231,8 @@ namespace OsmSharp.Collections.Coordinates
             long idx = index;
             while(coordinates.MoveNext())
             {
-                _linked[idx] = coordinates.Latitude;
-                _linked[idx + 1] = coordinates.Longitude;
+                _coordinates[idx] = coordinates.Latitude;
+                _coordinates[idx + 1] = coordinates.Longitude;
                 idx = idx + 2;
             }
         }
@@ -232,8 +248,8 @@ namespace OsmSharp.Collections.Coordinates
             coordinates.Reset();
             while(coordinates.MoveNext())
             {
-                _linked[(_nextIdx * 2)] = coordinates.Latitude;
-                _linked[(_nextIdx * 2) + 1] = coordinates.Longitude;
+                _coordinates[(_nextIdx * 2)] = coordinates.Latitude;
+                _coordinates[(_nextIdx * 2) + 1] = coordinates.Longitude;
                 _nextIdx = _nextIdx + 1;
             }
             return newId;
@@ -266,11 +282,36 @@ namespace OsmSharp.Collections.Coordinates
             /// </summary>
             private IHugeArray<float> _coordinates;
 
+            /// <summary>
+            /// Holds the reverse flag.
+            /// </summary>
+            private bool _reverse;
+
+            /// <summary>
+            /// Creates a new huge coordinate collection.
+            /// </summary>
+            /// <param name="coordinates"></param>
+            /// <param name="startIdx"></param>
+            /// <param name="size"></param>
             public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size)
+                : this(coordinates, startIdx, size, false)
+            {
+
+            }
+
+            /// <summary>
+            /// Creates a new huge coordinate collection.
+            /// </summary>
+            /// <param name="coordinates"></param>
+            /// <param name="startIdx"></param>
+            /// <param name="size"></param>
+            /// <param name="reverse"></param>
+            public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size, bool reverse)
             {
                 _startIdx = startIdx;
                 _size = size;
                 _coordinates = coordinates;
+                _reverse = reverse;
             }
 
             /// <summary>
@@ -335,8 +376,16 @@ namespace OsmSharp.Collections.Coordinates
             /// <returns></returns>
             public bool MoveNext()
             {
-                _currentIdx = _currentIdx + 2;
-                return (_currentIdx - _startIdx) < _size;
+                if(_reverse)
+                {
+                    _currentIdx = _currentIdx - 2;
+                    return (_currentIdx - _startIdx) >= 0;
+                }
+                else
+                {
+                    _currentIdx = _currentIdx + 2;
+                    return (_currentIdx - _startIdx) < _size;
+                }
             }
 
             /// <summary>
@@ -344,8 +393,14 @@ namespace OsmSharp.Collections.Coordinates
             /// </summary>
             public void Reset()
             {
-                _currentIdx = _startIdx - 2;
-
+                if(_reverse)
+                {
+                    _currentIdx = _startIdx + _size + 2;
+                }
+                else
+                {
+                    _currentIdx = _startIdx - 2;
+                }
             }
 
             /// <summary>
@@ -370,6 +425,15 @@ namespace OsmSharp.Collections.Coordinates
             public float Longitude
             {
                 get { return _coordinates[_currentIdx + 1]; }
+            }
+
+            /// <summary>
+            /// Returns the reverse collection.
+            /// </summary>
+            /// <returns></returns>
+            public ICoordinateCollection Reverse()
+            {
+                return new HugeCoordinateCollection(_coordinates, _startIdx, _size, !_reverse);
             }
         }
     }

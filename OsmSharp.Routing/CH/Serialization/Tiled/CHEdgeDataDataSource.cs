@@ -31,6 +31,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.CH.Serialization.Tiled
 {
@@ -316,7 +317,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out IShapeEnumerator shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -605,7 +606,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public GeoCoordinateSimple[] Intermediates
+            public ICoordinateCollection Intermediates
             {
                 get { return null; }
             }

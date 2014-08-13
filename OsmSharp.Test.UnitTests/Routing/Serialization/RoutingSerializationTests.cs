@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -464,25 +465,33 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    IShapeEnumerator referenceArcValueCoordinates;
-                    IShapeEnumerator arcValueCoordinates;
-                    Assert.AreEqual(network.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates), 
-                        referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceArcValueCoordinates));
-                    if (referenceArcValueCoordinates == null)
-                    { // other arc coordinates also null?
-                        Assert.IsNull(arcValueCoordinates);
+                    ICoordinateCollection referenceCoordinates;
+                    ICoordinateCollection coordinates;
+                    if (referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        if (referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while (referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
                     }
                     else
-                    { // compare coordinates.
-                        var referenceArcValueCoordinatesArray = referenceArcValueCoordinates.ToArray();
-                        var arcValueCoordinatesArray = arcValueCoordinates.ToArray();
-                        for (int coordIdx = 0; coordIdx < referenceArcValueCoordinatesArray.Length; coordIdx++)
-                        {
-                            Assert.AreEqual(referenceArcValueCoordinatesArray[coordIdx].Latitude,
-                                arcValueCoordinatesArray[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcValueCoordinatesArray[coordIdx].Longitude,
-                                arcValueCoordinatesArray[coordIdx].Longitude);
-                        }
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
                     }
 
                     // check tags.
@@ -557,19 +566,33 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    if (referenceArc.Value.Coordinates == null)
-                    { // other arc coordinates also null?
-                        Assert.IsNull(arc.Value.Coordinates);
+                    ICoordinateCollection referenceCoordinates;
+                    ICoordinateCollection coordinates;
+                    if(referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        if(referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while(referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
                     }
                     else
-                    { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArc.Value.Coordinates.Length; coordIdx++)
-                        {
-                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Latitude,
-                                arc.Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Longitude,
-                                arc.Value.Coordinates[coordIdx].Longitude);
-                        }
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
                     }
 
                     // check tags.
