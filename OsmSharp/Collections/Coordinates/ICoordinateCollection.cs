@@ -80,6 +80,7 @@ namespace OsmSharp.Collections.Coordinates
                     Latitude = collection.Latitude,
                     Longitude = collection.Longitude
                 };
+                idx++;
             }
             return array;
         }
