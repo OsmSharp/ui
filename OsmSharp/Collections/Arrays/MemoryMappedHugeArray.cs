@@ -85,7 +85,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size"></param>
         /// <param name="arraySize"></param>
         public MemoryMappedHugeArray(long size, long arraySize)
-            : this(null, size, arraySize)
+            : this(new MemoryMappedFileFactory(), size, arraySize)
         {
 
         }
