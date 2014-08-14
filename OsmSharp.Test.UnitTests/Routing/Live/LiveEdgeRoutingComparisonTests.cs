@@ -64,7 +64,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
                 // do the data processing.
                 data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
-                    data, interpreter, tagsIndex, new HugeDictionary<long, uint>(), new Vehicle[] { Vehicle.Car }, false);
+                    data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car }, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
                     "OsmSharp.Test.Unittests.{0}", embeddedName)));

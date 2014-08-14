@@ -84,39 +84,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
-            : this(dynamicGraph, interpreter, edgeComparer, new TagsTableCollectionIndex(), new HugeDictionary<long, uint>())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
-        /// <param name="tagsIndex"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
-            HugeDictionary<long, uint> idTransformations)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, false)
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())
         {
 
         }
@@ -130,9 +102,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="collectIntermediates"></param>
+        /// <param name="coordinates"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates)
+            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
         {
             _dynamicGraph = dynamicGraph;
             _interpreter = interpreter;
@@ -146,6 +119,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
+            _coordinates = coordinates;
         }
 
         /// <summary>
