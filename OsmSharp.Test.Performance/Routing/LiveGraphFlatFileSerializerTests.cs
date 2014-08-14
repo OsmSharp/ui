@@ -40,7 +40,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "germany-latest.osm.pbf");
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Performance.Routing
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
+            using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
             {
                 using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
                 {
