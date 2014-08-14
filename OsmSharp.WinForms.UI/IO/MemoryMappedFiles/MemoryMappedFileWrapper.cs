@@ -74,9 +74,12 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// </summary>
         public void Dispose()
         {
-            _file.Dispose();
-            _file = null;
+            if (_file != null)
+            {
+                _file.Dispose();
+                _file = null;
 
+            }
             if(_fullname != null)
             {
                 File.Delete(_fullname);

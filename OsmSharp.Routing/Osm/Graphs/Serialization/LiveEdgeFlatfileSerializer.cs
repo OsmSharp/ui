@@ -117,12 +117,17 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
+                    ICoordinateCollection coordinateCollection = null;
+                    if(serializableEdges[idx].Coordinates != null)
+                    {
+                        coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
+                    }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new LiveEdge()
                         {
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates), null);
+                        }, coordinateCollection, null);
                 }
             }
         }

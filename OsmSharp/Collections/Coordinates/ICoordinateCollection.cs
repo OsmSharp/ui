@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo.Simple;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Collections.Coordinates
@@ -65,6 +66,10 @@ namespace OsmSharp.Collections.Coordinates
         /// <returns></returns>
         public static GeoCoordinateSimple[] ToSimpleArray(this ICoordinateCollection collection)
         {
+            if(collection == null)
+            {
+                return null;
+            }
             var array = new GeoCoordinateSimple[collection.Count];
             int idx = 0;
             collection.Reset();
@@ -102,6 +107,8 @@ namespace OsmSharp.Collections.Coordinates
         /// <param name="coordinateArray"></param>
         public CoordinateArrayCollection(CoordinateType[] coordinateArray)
         {
+            if (coordinateArray == null) { throw new ArgumentNullException("coordinateArray"); }
+
             _coordinateArray = coordinateArray;
             _reverse = false;
         }
@@ -113,6 +120,8 @@ namespace OsmSharp.Collections.Coordinates
         /// <param name="reverse"></param>
         public CoordinateArrayCollection(CoordinateType[] coordinateArray, bool reverse)
         {
+            if (coordinateArray == null) { throw new ArgumentNullException("coordinateArray"); }
+
             _coordinateArray = coordinateArray;
             _reverse = reverse;
         }

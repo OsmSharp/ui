@@ -85,7 +85,7 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryGraph(long sizeEstimate)
-            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeArray<GeoCoordinateSimple[]>(sizeEstimate * 3))
+            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeCoordinateCollectionIndex(sizeEstimate * 3))
         {
 
         }
@@ -99,7 +99,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        protected MemoryGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, IHugeArray<GeoCoordinateSimple[]> edgeShapeArray)
+        protected MemoryGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
@@ -119,9 +119,8 @@ namespace OsmSharp.Routing.Graph
             }
             _edgeData = edgeDataArray;
             _edgeData.Resize(sizeEstimate * 3);
-            _edgeShapes = new HugeCoordinateCollectionIndex(sizeEstimate * 3);
-            //_edgeShapes = edgeShapeArray;
-            //_edgeShapes.Resize(sizeEstimate * 3);
+            _edgeShapes = edgeShapeArray;
+            _edgeShapes.Resize(sizeEstimate * 3);
         }
 
         /// <summary>

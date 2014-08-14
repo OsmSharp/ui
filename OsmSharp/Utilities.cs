@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.IO;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -585,25 +586,17 @@ namespace OsmSharp
             // save position.
             long position = dest.Position;
 
-            // seek until after 4 bytes to store size.
-            dest.Seek(4, System.IO.SeekOrigin.Current);
+            // seek until after 8 bytes to store size.
+            dest.Seek(8, System.IO.SeekOrigin.Current);
 
             // serialize.
             model.Serialize(dest, value);
 
             // calculate size.
-            long size = dest.Position - position - (long)4;
-            if(size > int.MaxValue)
-            { // data too big.
-                throw new Exception(string.Format("Cannot serialize data, lenght of data that was serialized was bigger than int.MaxValue."));
-            }
-            if(size < 0)
-            { // data too big.
-                throw new OverflowException(string.Format("Cannot serialize data, lenght and position leads to overflow."));
-            }
+            long size = dest.Position - position - 8L;
             dest.Seek(position, System.IO.SeekOrigin.Begin);
-            byte[] sizeBytes = BitConverter.GetBytes((int)size);
-            dest.Write(sizeBytes, 0, 4);
+            byte[] sizeBytes = BitConverter.GetBytes(size);
+            dest.Write(sizeBytes, 0, 8);
             dest.Seek(size, System.IO.SeekOrigin.Current);
         }
 
@@ -617,18 +610,27 @@ namespace OsmSharp
         /// <returns></returns>
         public static object DeserializeWithSize(this RuntimeTypeModel model, Stream source, object value, Type type)
         {
-            // read only the relevant data from the stream.
-            var sizeBytes = new byte[4];
-            source.Read(sizeBytes, 0, 4);
-            int size = BitConverter.ToInt32(sizeBytes, 0);
-            var data = new byte[size];
-            source.Read(data, 0, size);
+            // create a cappedstream.
+            var sizeBytes = new byte[8];
+            source.Read(sizeBytes, 0, 8);
+            long size = BitConverter.ToInt64(sizeBytes, 0);
+            var cappedStream = new CappedStream(source, source.Position, size);
 
             // deserialize.
-            var dataStream = new MemoryStream(data);
-            var deserializedValue = model.Deserialize(dataStream, value, type);
-            dataStream.Dispose();
-            return deserializedValue;
+            return model.Deserialize(cappedStream, value, type);
+
+            //// read only the relevant data from the stream.
+            //var sizeBytes = new byte[8];
+            //source.Read(sizeBytes, 0, 8);
+            //long size = BitConverter.ToInt32(sizeBytes, 0);
+            //var data = new byte[size];
+            //source.Read(data, 0, (int)size);
+
+            //// deserialize.
+            //var dataStream = new MemoryStream(data);
+            //var deserializedValue = model.Deserialize(dataStream, value, type);
+            //dataStream.Dispose();
+            //return deserializedValue;
         }
 
         /// <summary>

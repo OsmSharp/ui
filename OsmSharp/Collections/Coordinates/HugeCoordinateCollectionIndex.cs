@@ -17,7 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,7 +28,7 @@ namespace OsmSharp.Collections.Coordinates
     /// <summary>
     /// Represents a write-only large coordinate index.
     /// </summary>
-    public class HugeCoordinateCollectionIndex
+    public class HugeCoordinateCollectionIndex : IDisposable
     {
         /// <summary>
         /// The maximum size of one collection is.
@@ -61,6 +63,27 @@ namespace OsmSharp.Collections.Coordinates
         {
             _index = new HugeArray<ulong>(size);
             _coordinates = new HugeArray<float>(size * 2 * ESTIMATED_SIZE);
+
+            for (long idx = 0; idx < _index.Length; idx++)
+            {
+                _index[idx] = 0;
+            }
+
+            for (long idx = 0; idx < _coordinates.Length; idx++)
+            {
+                _coordinates[idx] = float.MinValue;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new huge coordinate index.
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="size"></param>
+        public HugeCoordinateCollectionIndex(MemoryMappedFileFactory factory, long size)
+        {
+            _index = new MemoryMappedHugeArray<ulong>(factory, size);
+            _coordinates = new MemoryMappedHugeArray<float>(factory, size * 2 * ESTIMATED_SIZE);
 
             for (long idx = 0; idx < _index.Length; idx++)
             {
@@ -437,6 +460,17 @@ namespace OsmSharp.Collections.Coordinates
             {
                 return new HugeCoordinateCollection(_coordinates, _startIdx, _size, !_reverse);
             }
+        }
+
+        /// <summary>
+        /// Disposes of all resources associated with this coordinate collection index.
+        /// </summary>
+        public void Dispose()
+        {
+            _index.Dispose();
+            _index = null;
+            _coordinates.Dispose();
+            _coordinates = null;
         }
     }
 }
