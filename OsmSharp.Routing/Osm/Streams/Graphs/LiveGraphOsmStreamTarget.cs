@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
-using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -28,7 +28,6 @@ using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System;
 using System.Collections.Generic;

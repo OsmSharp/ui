@@ -43,8 +43,11 @@
     <Compile Include="Collections\Arrays\IHugeArray.cs" />
     <Compile Include="Collections\Arrays\MemoryMappedHugeArray.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
-    <Compile Include="Collections\Coordinates\HugeCoordinateCollectionIndex.cs" />
-    <Compile Include="Collections\Coordinates\ICoordinateCollection.cs" />
+    <Compile Include="Collections\Coordinates\Collections\HugeCoordinateCollectionIndex.cs" />
+    <Compile Include="Collections\Coordinates\CoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\HugeCoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\Collections\ICoordinateCollection.cs" />
+    <Compile Include="Collections\Coordinates\ICoordinateIndex.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HashSet.cs" />

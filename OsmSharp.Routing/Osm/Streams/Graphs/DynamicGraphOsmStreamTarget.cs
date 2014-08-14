@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
@@ -185,7 +186,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple> _coordinates;
+        private ICoordinateIndex _coordinates;
 
         /// <summary>
         /// Holds the index of all relevant nodes.
@@ -202,7 +203,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new HugeDictionary<long, GeoCoordinateSimple>();
+            _coordinates = new CoordinateIndex();
         }
 
         /// <summary>
@@ -353,8 +354,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                         var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
                                         for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
                                         {
-                                            GeoCoordinateSimple coordinate;
-                                            if (!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
+                                            ICoordinate coordinate;
+                                            if (!_coordinates.TryGet(intermediates[coordIdx], out coordinate))
                                             {
                                                 break;
                                             }
@@ -397,8 +398,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (!_idTransformations.TryGetValue(nodeId, out id))
             {
                 // get coordinates.
-                GeoCoordinateSimple coordinates;
-                if (_coordinates.TryGetValue(nodeId, out coordinates))
+                ICoordinate coordinates;
+                if (_coordinates.TryGet(nodeId, out coordinates))
                 { // the coordinate is present.
                     id = _dynamicGraph.AddVertex(
                         coordinates.Latitude, coordinates.Longitude);

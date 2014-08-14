@@ -20,7 +20,7 @@ using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Collections.Coordinates
+namespace OsmSharp.Collections.Coordinates.Collections
 {
     /// <summary>
     /// Represents a collection of coordinates.

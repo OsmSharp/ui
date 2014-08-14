@@ -23,7 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace OsmSharp.Collections.Coordinates
+namespace OsmSharp.Collections.Coordinates.Collections
 {
     /// <summary>
     /// Represents a write-only large coordinate index.
