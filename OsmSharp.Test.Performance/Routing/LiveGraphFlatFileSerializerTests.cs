@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
@@ -40,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "germany-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -71,24 +72,27 @@ namespace OsmSharp.Test.Performance.Routing
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
-            using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
+            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
             {
                 using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
                 {
-                    var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
-                    var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
-                    targetData.RegisterSource(progress);
-                    targetData.Pull();
+                    using (var coordinates = new HugeCoordinateIndex(fileFactory, 10000))
+                    {
+                        var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+                        var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
+                        targetData.RegisterSource(progress);
+                        targetData.Pull();
 
-                    performanceInfo.Stop();
+                        performanceInfo.Stop();
 
-                    performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-                    performanceInfo.Start();
-                    performanceInfo.Report("Writing file for {0}...", testFile.Name);
+                        performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+                        performanceInfo.Start();
+                        performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
-                    var metaData = new TagsCollection();
-                    metaData.Add("some_key", "some_value");
-                    routingSerializer.Serialize(writeStream, memoryData, metaData);
+                        var metaData = new TagsCollection();
+                        metaData.Add("some_key", "some_value");
+                        routingSerializer.Serialize(writeStream, memoryData, metaData);
+                    }
                 }
             }
             stream.Dispose();

@@ -27,7 +27,7 @@ namespace OsmSharp.Collections.Coordinates
     /// <summary>
     /// Represents a coordinate index based on a huge array.
     /// </summary>
-    public class HugeCoordinateIndex : ICoordinateIndex
+    public class HugeCoordinateIndex : ICoordinateIndex, IDisposable
     {
         /// <summary>
         /// Holds all coordinates.
@@ -196,6 +196,18 @@ namespace OsmSharp.Collections.Coordinates
         private void IncreaseSize(long idx)
         {
             _coordinates.Resize((idx * 2) + 100000);
+        }
+
+        /// <summary>
+        /// Disposes of all resources associated with this index.
+        /// </summary>
+        public void Dispose()
+        {
+            if(_coordinates != null)
+            {
+                _coordinates.Dispose();
+                _coordinates = null;
+            }
         }
     }
 }
