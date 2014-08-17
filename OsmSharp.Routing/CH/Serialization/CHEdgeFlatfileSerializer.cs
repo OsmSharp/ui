@@ -62,22 +62,22 @@ namespace OsmSharp.Routing.CH.Serialization
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetEdges(vertex);
+                var arcs = graph.GetEdges(vertex).ToList();
                 if (arcs != null)
                 { // serialize the arcs, but serialize them only once. 
                     // choose only those arcs that start at a vertex smaller than the target.
-                    for (int idx = 0; idx < arcs.Length; idx++)
+                    for (int idx = 0; idx < arcs.Count; idx++)
                     {
-                        if (arcs[idx].Key > vertex)
+                        if (arcs[idx].Neighbour > vertex)
                         {
                             arcsQueue.Add(new SerializableEdge()
                             {
                                 FromId = vertex,
-                                ToId = arcs[idx].Key,
-                                ContractedVertexId = arcs[idx].Value.ContractedVertexId,
-                                Direction = arcs[idx].Value.Direction,
-                                Tags = arcs[idx].Value.Tags,
-                                Weight = arcs[idx].Value.Weight
+                                ToId = arcs[idx].Neighbour,
+                                ContractedVertexId = arcs[idx].EdgeData.ContractedVertexId,
+                                Direction = arcs[idx].EdgeData.Direction,
+                                Tags = arcs[idx].EdgeData.Tags,
+                                Weight = arcs[idx].EdgeData.Weight
                             });
 
                             if (arcsQueue.Count == blockSize)

@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new MemoryDynamicGraph<LiveEdge>();
+            var graph = new MemoryGraph<LiveEdge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
@@ -60,10 +60,10 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
             // test resulting graph.
             Assert.AreEqual(2, graph.VertexCount);
-            Assert.AreEqual(1, graph.GetEdges(1).Length);
-            Assert.AreEqual(2, graph.GetEdges(1)[0].Key);
-            Assert.AreEqual(1, graph.GetEdges(2).Length);
-            Assert.AreEqual(1, graph.GetEdges(2)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(1).ToKeyValuePairs().Length);
+            Assert.AreEqual(2, graph.GetEdges(1).ToKeyValuePairs()[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(2).ToKeyValuePairs().Length);
+            Assert.AreEqual(1, graph.GetEdges(2).ToKeyValuePairs()[0].Key);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new MemoryDynamicGraph<LiveEdge>();
+            var graph = new MemoryGraph<LiveEdge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
@@ -108,19 +108,19 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             // test resulting graph.
             Assert.AreEqual(4, graph.VertexCount);
 
-            Assert.AreEqual(1, graph.GetEdges(1).Length);
-            Assert.AreEqual(2, graph.GetEdges(1)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(1).ToKeyValuePairs().Length);
+            Assert.AreEqual(2, graph.GetEdges(1).ToKeyValuePairs()[0].Key);
 
-            Assert.AreEqual(3, graph.GetEdges(2).Length);
-            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 1));
-            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 3));
-            Assert.IsTrue(graph.GetEdges(2).Any(x => x.Key == 4));
+            Assert.AreEqual(3, graph.GetEdges(2).ToKeyValuePairs().Length);
+            Assert.IsTrue(graph.GetEdges(2).ToKeyValuePairs().Any(x => x.Key == 1));
+            Assert.IsTrue(graph.GetEdges(2).ToKeyValuePairs().Any(x => x.Key == 3));
+            Assert.IsTrue(graph.GetEdges(2).ToKeyValuePairs().Any(x => x.Key == 4));
 
-            Assert.AreEqual(1, graph.GetEdges(3).Length);
-            Assert.AreEqual(2, graph.GetEdges(3)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(3).ToKeyValuePairs().Length);
+            Assert.AreEqual(2, graph.GetEdges(3).ToKeyValuePairs()[0].Key);
 
-            Assert.AreEqual(1, graph.GetEdges(4).Length);
-            Assert.AreEqual(2, graph.GetEdges(4)[0].Key);
+            Assert.AreEqual(1, graph.GetEdges(4).ToKeyValuePairs().Length);
+            Assert.AreEqual(2, graph.GetEdges(4).ToKeyValuePairs()[0].Key);
         }
     }
 }

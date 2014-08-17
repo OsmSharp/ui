@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// An abstract serializer to serialize/deserialize a routing data source to a flat-file.
     /// </summary>
     public abstract class FlatfileSerializer<TEdgeData> : RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Does the v1 serialization.
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
 
-            int blockSize = 10;
+            int blockSize = 1000;
             var vertices = new SerializableVertex[blockSize];
             uint vertex = 1;
             float latitude, longitude;

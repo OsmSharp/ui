@@ -66,11 +66,12 @@
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\IDynamicGraph.cs" />
-    <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
-    <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
-    <Compile Include="Graph\IDynamicGraphWriteOnly.cs" />
-    <Compile Include="Graph\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\IEdgeEnumerator.cs" />
+    <Compile Include="Graph\IGraph.cs" />
+    <Compile Include="Graph\IGraphEdgeData.cs" />
+    <Compile Include="Graph\IGraphReadOnly.cs" />
+    <Compile Include="Graph\IGraphWriteOnly.cs" />
+    <Compile Include="Graph\MemoryGraph.cs" />
     <Compile Include="Graph\MemoryMappedFileDynamicGraph.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />

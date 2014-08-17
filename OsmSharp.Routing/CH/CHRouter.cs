@@ -16,21 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Logging;
 using OsmSharp.Units.Distance;
-using OsmSharp.Math.Geo.Simple;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Routing.CH
 {
@@ -361,19 +360,18 @@ namespace OsmSharp.Routing.CH
                     bucket[to.Value] = current.Weight;
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                    var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToList();
 
                     // add the neighbours to the queue.
-                    foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                        a => a.Value.Backward))
+                    foreach (var neighbour in neighbours.Where(
+                        a => a.EdgeData.Backward))
                     {
-                        if (!settledVertices.ContainsKey(neighbour.Key))
+                        if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Key, current.Weight + neighbour.Value.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                            //queue.Push(route_to_neighbour);
                         }
                     }
                 }
@@ -511,17 +509,17 @@ namespace OsmSharp.Routing.CH
                     }
 
                     // get neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                    var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToList();
 
                     // add the neighbours to the queue.
-                    foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                        a => a.Value.Forward))
+                    foreach (var neighbour in neighbours.Where(
+                        a => a.EdgeData.Forward))
                     {
-                        if (!settledVertices.ContainsKey(neighbour.Key))
+                        if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Key, current.Weight + neighbour.Value.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                     }
@@ -1087,35 +1085,33 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+                foreach (var neighbour in neighbours)
                 {
-                    if (neighbour.Value.Forward &&
-                        !settledQueue.Forward.ContainsKey(neighbour.Key) &&
-                        (exception == 0 || (exception != neighbour.Key &&
-                        exception != neighbour.Value.ContractedVertexId)))
+                    if (neighbour.EdgeData.Forward &&
+                        !settledQueue.Forward.ContainsKey(neighbour.Neighbour) &&
+                        (exception == 0 || (exception != neighbour.Neighbour &&
+                        exception != neighbour.EdgeData.ContractedVertexId)))
                     {
                         // if not yet settled.
                         var routeToNeighbour = new PathSegment<long>(
-                            neighbour.Key, current.Weight + neighbour.Value.Weight, current);
-                        //queue.Push(route_to_neighbour);
+                            neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
                         queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                     }
-                    else if (neighbour.Value.Forward &&
-                        (exception == 0 || (exception != neighbour.Key &&
-                        exception != neighbour.Value.ContractedVertexId)))
+                    else if (neighbour.EdgeData.Forward &&
+                        (exception == 0 || (exception != neighbour.Neighbour &&
+                        exception != neighbour.EdgeData.ContractedVertexId)))
                     {
                         // node was settled before: make sure this route is not shorter.
                         var routeToNeighbour = new PathSegment<long>(
-                            neighbour.Key, current.Weight + neighbour.Value.Weight, current);
+                            neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
 
                         // remove from the queue again when there is a shorter route found.
-                        if (settledQueue.Forward[neighbour.Key].Weight > routeToNeighbour.Weight)
+                        if (settledQueue.Forward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
                         {
-                            settledQueue.Forward.Remove(neighbour.Key);
-                            //queue.Push(route_to_neighbour);
+                            settledQueue.Forward.Remove(neighbour.Neighbour);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                     }
@@ -1165,33 +1161,31 @@ namespace OsmSharp.Routing.CH
                 var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+                foreach (var neighbour in neighbours)
                 {
-                    if (neighbour.Value.Backward &&
-                        !settledQueue.Backward.ContainsKey(neighbour.Key)
-                        && (exception == 0 || (exception != neighbour.Key &&
-                        exception != neighbour.Value.ContractedVertexId)))
+                    if (neighbour.EdgeData.Backward &&
+                        !settledQueue.Backward.ContainsKey(neighbour.Neighbour)
+                        && (exception == 0 || (exception != neighbour.Neighbour &&
+                        exception != neighbour.EdgeData.ContractedVertexId)))
                     {
                         // if not yet settled.
                         var routeToNeighbour = new PathSegment<long>(
-                            neighbour.Key, current.Weight + neighbour.Value.Weight, current);
-                        //queue.Push(route_to_neighbour);
+                            neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
                         queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                     }
-                    else if (neighbour.Value.Backward &&
-                        (exception == 0 || (exception != neighbour.Key &&
-                        exception != neighbour.Value.ContractedVertexId)))
+                    else if (neighbour.EdgeData.Backward &&
+                        (exception == 0 || (exception != neighbour.Neighbour &&
+                        exception != neighbour.EdgeData.ContractedVertexId)))
                     {
                         // node was settled before: make sure this route is not shorter.
                         var routeToNeighbour = new PathSegment<long>(
-                            neighbour.Key, current.Weight + neighbour.Value.Weight, current);
+                            neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
 
                         // remove from the queue again when there is a shorter route found.
-                        if (settledQueue.Backward[neighbour.Key].Weight > routeToNeighbour.Weight)
+                        if (settledQueue.Backward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
                         {
-                            settledQueue.Backward.Remove(neighbour.Key);
+                            settledQueue.Backward.Remove(neighbour.Neighbour);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                            //queue.Push(route_to_neighbour);
                         }
                     }
                 }
@@ -1452,10 +1446,15 @@ namespace OsmSharp.Routing.CH
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceEstimate(fromCoordinates).Value;
-                        GeoCoordinateSimple[] coordinates;
+                        ICoordinateCollection coordinates;
+                        ICoordinate[] coordinatesArray = null;
                         if(!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
                         {
                             coordinates = null;
+                        }
+                        if(coordinates != null)
+                        {
+                            coordinatesArray = coordinates.ToArray();
                         }
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
@@ -1476,9 +1475,6 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
-
-                            // try and match.
-                            //if(matcher.Match(_
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
                         distance = coordinate.DistanceEstimate(toCoordinates).Value;
@@ -1487,9 +1483,6 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Value.Key);
-
-                            // try and match.
-                            //if(matcher.Match(_
                         }
 
                         // get the uncontracted arc from the contracted vertex.
@@ -1501,17 +1494,17 @@ namespace OsmSharp.Routing.CH
                             bool found = false;
                             foreach (var contractedArc in contractedArcs)
                             { // loop over all contracted arcs.
-                                if (contractedArc.Key == uncontracted.Key)
+                                if (contractedArc.Neighbour == uncontracted.Key)
                                 { // the edge is and edge to the target.
                                     var data = new CHEdgeData();
-                                    data.Direction = contractedArc.Value.Direction;
-                                    data.ContractedVertexId = contractedArc.Value.ContractedVertexId;
-                                    data.Tags = contractedArc.Value.Tags;
-                                    data.Weight = contractedArc.Value.Weight;
+                                    data.Direction = contractedArc.EdgeData.Direction;
+                                    data.ContractedVertexId = contractedArc.EdgeData.ContractedVertexId;
+                                    data.Tags = contractedArc.EdgeData.Tags;
+                                    data.Weight = contractedArc.EdgeData.Weight;
 
                                     uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
                                         uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
-                                            contractedArc.Key, data));
+                                            contractedArc.Neighbour, data));
                                     found = true;
                                     break;
                                 }
@@ -1539,9 +1532,6 @@ namespace OsmSharp.Routing.CH
                                 { // the distance is smaller.
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                         distance, arc.Key);
-
-                                    // try and match.
-                                    //if(matcher.Match(_
                                 }
                             }
                             else
@@ -1570,10 +1560,7 @@ namespace OsmSharp.Routing.CH
                                     double position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinates);
-
-                                    // try and match.
-                                    //if(matcher.Match(_
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position, uncontracted.Value.Value, coordinatesArray);
                                 }
                             }
                         }

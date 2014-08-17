@@ -21,6 +21,8 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using System;
 using System.Collections.Generic;
+using OsmSharp.Routing.Graph;
+using System.Linq;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -57,9 +59,9 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vertex1"></param>
         /// <returns></returns>
-        protected override KeyValuePair<uint, CHEdgeData>[] GetNeighboursUndirected(long vertex1)
+        protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1));
+            var arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1)).ToList();
             return arcs.KeepUncontracted();
         }
     }

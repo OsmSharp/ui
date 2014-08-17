@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
     public abstract class RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         #region Versioning
 

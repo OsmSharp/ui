@@ -35,9 +35,9 @@ namespace OsmSharp.Collections.Arrays
         private long _length;
 
         /// <summary>
-        /// Holds the path to store the memory mapped files.
+        /// Holds the factory to create the memory mapped files.
         /// </summary>
-        private string _path;
+        private MemoryMappedFileFactory _factory;
 
         /// <summary>
         /// Holds the list of files for each range.
@@ -85,7 +85,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size"></param>
         /// <param name="arraySize"></param>
         public MemoryMappedHugeArray(long size, long arraySize)
-            : this(null, size, arraySize)
+            : this(new MemoryMappedFileFactory(), size, arraySize)
         {
 
         }
@@ -93,10 +93,10 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Creates a memory mapped huge array.
         /// </summary>
-        /// <param name="path">The path to the memory mapped files.</param>
+        /// <param name="factory">The factory to create the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
-        public MemoryMappedHugeArray(string path, long size)
-            : this(path, size, DefaultFileElementSize)
+        public MemoryMappedHugeArray(MemoryMappedFileFactory factory, long size)
+            : this(factory, size, DefaultFileElementSize)
         {
 
         }
@@ -104,12 +104,12 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Creates a memory mapped huge array.
         /// </summary>
-        /// <param name="path">The path to the memory mapped files.</param>
+        /// <param name="factory">The factory to create the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(string path, long size, long arraySize)
+        public MemoryMappedHugeArray(MemoryMappedFileFactory factory, long size, long arraySize)
         {
-            _path = path;
+            _factory = factory;
             _length = size;
             _fileElementSize = arraySize;
             _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
@@ -120,23 +120,10 @@ namespace OsmSharp.Collections.Arrays
             _accessors = new List<IMemoryMappedViewAccessor>(arrayCount);
             for (int arrayIdx = 0; arrayIdx < arrayCount; arrayIdx++)
             {
-                var file = this.CreateNew();
+                var file = _factory.New(_fileSizeBytes);
                 _files.Add(file);
                 _accessors.Add(file.CreateViewAccessor(0, _fileSizeBytes));
             }
-        }
-
-        /// <summary>
-        /// Helper method to create a new memory mapped file.
-        /// </summary>
-        /// <returns></returns>
-        private IMemoryMappedFile CreateNew()
-        {
-            if(!string.IsNullOrEmpty(_path))
-            {
-                return NativeMemoryMappedFileFactory.CreateFromFile(_path + System.Guid.NewGuid().ToString(), _fileSizeBytes);
-            }
-            return NativeMemoryMappedFileFactory.CreateNew(System.Guid.NewGuid().ToString(), _fileSizeBytes);
         }
 
         /// <summary>
@@ -172,7 +159,7 @@ namespace OsmSharp.Collections.Arrays
             { // increase files/accessors.
                 for (int arrayIdx = _files.Count; arrayIdx < arrayCount; arrayIdx++)
                 {
-                    var file = this.CreateNew();
+                    var file = _factory.New(_fileSizeBytes);
                     _files.Add(file);
                     _accessors.Add(file.CreateViewAccessor(0, _fileSizeBytes));
                 }

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
@@ -27,8 +28,8 @@ namespace OsmSharp.Routing.Graph
     /// An implementation of an in-memory dynamic graph using memory mapped files to handle huge graphs.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public class MemoryMappedFileDynamicGraph<TEdgeData> : MemoryDynamicGraph<TEdgeData>, IDisposable
-        where TEdgeData : struct, IDynamicGraphEdgeData
+    public class MemoryMappedGraph<TEdgeData> : MemoryGraph<TEdgeData>, IDisposable
+        where TEdgeData : struct, IGraphEdgeData
     {
         /// <summary>
         /// Holds the coordinates array.
@@ -51,16 +52,21 @@ namespace OsmSharp.Routing.Graph
         private MemoryMappedHugeArray<TEdgeData> _edgeData;
 
         /// <summary>
+        /// Holds the shapes index.
+        /// </summary>
+        private HugeCoordinateCollectionIndex _shapes;
+
+        /// <summary>
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        public MemoryMappedFileDynamicGraph(long estimatedSize)
+        public MemoryMappedGraph(long estimatedSize)
             : this(estimatedSize,
             new MemoryMappedHugeArray<GeoCoordinateSimple>(estimatedSize),
             new MemoryMappedHugeArray<uint>(estimatedSize),
             new MemoryMappedHugeArray<uint>(estimatedSize),
             new MemoryMappedHugeArray<TEdgeData>(estimatedSize),
-            new HugeArray<GeoCoordinateSimple[]>(estimatedSize))
+            new HugeCoordinateCollectionIndex(estimatedSize))
         {
 
         }
@@ -70,13 +76,13 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="estimatedSize"></param>
         /// <param name="arraySize"></param>
-        public MemoryMappedFileDynamicGraph(long estimatedSize, int arraySize)
+        public MemoryMappedGraph(long estimatedSize, int arraySize)
             : this(estimatedSize,
             new MemoryMappedHugeArray<GeoCoordinateSimple>(estimatedSize, arraySize),
             new MemoryMappedHugeArray<uint>(estimatedSize, arraySize),
             new MemoryMappedHugeArray<uint>(estimatedSize, arraySize),
             new MemoryMappedHugeArray<TEdgeData>(estimatedSize, arraySize),
-            new HugeArray<GeoCoordinateSimple[]>(estimatedSize, arraySize))
+            new HugeCoordinateCollectionIndex(estimatedSize))
         {
 
         }
@@ -85,14 +91,14 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        /// <param name="path"></param>
-        public MemoryMappedFileDynamicGraph(long estimatedSize, string path)
+        /// <param name="factory"></param>
+        public MemoryMappedGraph(long estimatedSize, MemoryMappedFileFactory factory)
             : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(path, estimatedSize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize),
-            new HugeArray<GeoCoordinateSimple[]>(estimatedSize))
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
+            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize),
+            new HugeCoordinateCollectionIndex(factory, estimatedSize))
         {
 
         }
@@ -101,15 +107,15 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
         /// <param name="estimatedSize"></param>
-        /// <param name="path"></param>
+        /// <param name="factory"></param>
         /// <param name="arraySize"></param>
-        public MemoryMappedFileDynamicGraph(long estimatedSize, int arraySize, string path)
+        public MemoryMappedGraph(long estimatedSize, int arraySize, MemoryMappedFileFactory factory)
             : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(path, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize, arraySize),
-            new HugeArray<GeoCoordinateSimple[]>(estimatedSize, arraySize))
+            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
+            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize, arraySize),
+            new HugeCoordinateCollectionIndex(factory, estimatedSize))
         {
 
         }
@@ -123,18 +129,19 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edges"></param>
         /// <param name="edgeData"></param>
         /// <param name="edgeShapes"></param>
-        public MemoryMappedFileDynamicGraph(long estimatedSize,
+        public MemoryMappedGraph(long estimatedSize,
             MemoryMappedHugeArray<GeoCoordinateSimple> coordinates,
             MemoryMappedHugeArray<uint> vertices,
             MemoryMappedHugeArray<uint> edges,
             MemoryMappedHugeArray<TEdgeData> edgeData,
-            IHugeArray<GeoCoordinateSimple[]> edgeShapes)
+            HugeCoordinateCollectionIndex edgeShapes)
             : base(estimatedSize, coordinates, vertices, edges, edgeData, edgeShapes)
         {
             _coordinates = coordinates;
             _vertices = vertices;
             _edges = edges;
             _edgeData = edgeData;
+            _shapes = edgeShapes;
         }
 
         /// <summary>
@@ -150,6 +157,8 @@ namespace OsmSharp.Routing.Graph
             _edgeData = null;
             _vertices.Dispose();
             _vertices = null;
+            _shapes.Dispose();
+            _shapes = null;
         }
     }
 }

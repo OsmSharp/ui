@@ -39,7 +39,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the graph to be enumerated.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _graph;
+        private IGraph<CHEdgeData> _graph;
 
         /// <summary>
         /// Holds the index of visited vertices.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Creates depth-first enumerator.
         /// </summary>
         /// <param name="graph"></param>
-        public CHDepthFirstEnumerator(IDynamicGraph<CHEdgeData> graph)
+        public CHDepthFirstEnumerator(IGraph<CHEdgeData> graph)
         {
             _graph = graph;
             _index = new LongIndex();
@@ -76,20 +76,20 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // search for the next arc.
-            KeyValuePair<uint, CHEdgeData>[] edges = _graph.GetEdges(_current.Vertex);
+            var edges = _graph.GetEdges(_current.Vertex).ToList();
             int arcIdx = _current.ArcIdx;
             arcIdx++;
-            while (arcIdx < edges.Length)
+            while (arcIdx < edges.Count)
             { // check if it is 'lower'.
-                if (edges[arcIdx].Value.ToLower && 
-                    !_index.Contains(edges[arcIdx].Key))
+                if (edges[arcIdx].EdgeData.ToLower && 
+                    !_index.Contains(edges[arcIdx].Neighbour))
                 { // yes the arc is 'lower' take it!
                     _current.ArcIdx = arcIdx; // move the arcIdx.
 
                     Position newPosition = new Position();
                     newPosition.Parent = _current;
                     newPosition.ArcIdx = -1;
-                    newPosition.Vertex = edges[arcIdx].Key;
+                    newPosition.Vertex = edges[arcIdx].Neighbour;
                     newPosition.Depth = _current.Depth + 1;
                     _current = newPosition;
 
@@ -140,10 +140,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (_graph.VertexCount > 1)
             {
                 uint highest = 1;
-                KeyValuePair<uint, CHEdgeData>[] arcs = _graph.GetArcsHigher(highest);
-                while (arcs.Length > 0)
+                var arcs = _graph.GetArcsHigher(highest);
+                while (arcs.Count > 0)
                 {
-                    highest = arcs[0].Key;
+                    highest = arcs[0].Neighbour;
                     arcs = _graph.GetArcsHigher(highest);
                 }
                 return new Position() { ArcIdx = -1, Vertex = highest, Parent = null, Depth = 0 };
@@ -163,10 +163,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 {
                     if (!_index.Contains(vertex))
                     { // vertex was not enumerated, it is part of an 'island'.
-                        KeyValuePair<uint, CHEdgeData>[] arcs = _graph.GetArcsHigher(vertex);
-                        while (arcs.Length > 0)
+                        var arcs = _graph.GetArcsHigher(vertex);
+                        while (arcs.Count > 0)
                         {
-                            vertex = arcs[0].Key;
+                            vertex = arcs[0].Neighbour;
                             arcs = _graph.GetArcsHigher(vertex);
                         }
                         _index.Add(vertex);

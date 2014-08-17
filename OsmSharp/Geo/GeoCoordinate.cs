@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
@@ -30,7 +31,7 @@ namespace OsmSharp.Math.Geo
     /// 0: longitude.
     /// 1: latitude.
     /// </summary>
-    public class GeoCoordinate : PointF2D
+    public class GeoCoordinate : PointF2D, ICoordinate
     {
         /// <summary>
         /// Creates a geo coordinate.
@@ -319,6 +320,16 @@ namespace OsmSharp.Math.Geo
                 (obj as GeoCoordinate).Longitude.Equals(this.Longitude);
             }
             return false;
+        }
+
+        float ICoordinate.Latitude
+        {
+            get { return (float)this.Latitude; }
+        }
+
+        float ICoordinate.Longitude
+        {
+            get { return (float)this.Longitude; }
         }
     }
 }

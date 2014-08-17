@@ -21,8 +21,8 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Abstracts a graph implementation.
     /// </summary>
-    public interface IDynamicGraph<TEdgeData> : IDynamicGraphWriteOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IGraph<TEdgeData> : IGraphWriteOnly<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Removes all edges from/to the given vertex.

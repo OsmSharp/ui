@@ -33,13 +33,13 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
         /// <summary>
         /// Holds the data source.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
+        private IGraph<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a new sparse ordering calculator.
         /// </summary>
         /// <param name="data"></param>
-        public SparseOrdering(IDynamicGraph<CHEdgeData> data)
+        public SparseOrdering(IGraph<CHEdgeData> data)
         {
             _data = data;
         }
@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
             var neighbours = _data.GetEdges(vertex);
 
             // check the proper conditions.
-            if (neighbours.Length == 2)
+            if (neighbours.Count() == 2)
             {
                 return -1;
             }

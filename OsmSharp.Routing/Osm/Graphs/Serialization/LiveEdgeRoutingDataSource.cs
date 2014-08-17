@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -24,6 +25,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Osm.Tiles;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
@@ -225,7 +227,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, LiveEdge>[] GetEdges(uint vertexId)
+        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -248,10 +250,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         arcs[idx] = new KeyValuePair<uint, LiveEdge>(
                             vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
                     }
-                    return arcs;
+                    return new EdgeEnumerator(arcs);
                 }
             }
-            return new KeyValuePair<uint, LiveEdge>[0];
+            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
         }
 
         /// <summary>
@@ -310,7 +312,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertex1, out tile))
@@ -331,7 +333,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     {
                         if(vertex.Arcs[idx].Item1 == vertex2)
                         {
-                            shape = vertex.Arcs[idx].Item3;
+                            shape = null;
+                            if (vertex.Arcs[idx].Item3 != null)
+                            {
+                                shape = new CoordinateArrayCollection<GeoCoordinateSimple>(vertex.Arcs[idx].Item3);
+                            }
                             return true;
                         }
                     }
@@ -547,6 +553,126 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
 
         #endregion
 
+        /// <summary>
+        /// An edge enumerator.
+        /// </summary>
+        private class EdgeEnumerator : IEdgeEnumerator<LiveEdge>
+        {
+            /// <summary>
+            /// Holds the edges.
+            /// </summary>
+            private KeyValuePair<uint, LiveEdge>[] _edges;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerator.
+            /// </summary>
+            /// <param name="edges"></param>
+            public EdgeEnumerator(KeyValuePair<uint, LiveEdge>[] edges)
+            {
+                _edges = edges;
+            }
+
+            public bool MoveNext()
+            {
+                _current++;
+                return _edges.Length > _current;
+            }
+
+            /// <summary>
+            /// Returns the current neighbour.
+            /// </summary>
+            public uint Neighbour
+            {
+                get { return _edges[_current].Key; }
+            }
+
+            /// <summary>
+            /// Returns the current edge data.
+            /// </summary>
+            public LiveEdge EdgeData
+            {
+                get { return _edges[_current].Value; }
+            }
+
+            /// <summary>
+            /// Returns the current intermediates.
+            /// </summary>
+            public ICoordinateCollection Intermediates
+            {
+                get { return null; }
+            }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            /// <returns></returns>
+            public int Count()
+            {
+                int count = 0;
+                while (this.MoveNext())
+                {
+                    count++;
+                }
+                return count;
+            }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
+
+            /// <summary>
+            /// Returns the enumerator.
+            /// </summary>
+            /// <returns></returns>
+            public IEnumerator<Edge<LiveEdge>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            /// <summary>
+            /// Returns the enumerator.
+            /// </summary>
+            /// <returns></returns>
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            /// <summary>
+            /// Returns the current edge.
+            /// </summary>
+            public Edge<LiveEdge> Current
+            {
+                get { return new Edge<LiveEdge>(this); }
+            }
+
+            /// <summary>
+            /// Returns the current edge.
+            /// </summary>
+            object System.Collections.IEnumerator.Current
+            {
+                get { return new Edge<LiveEdge>(this); }
+            }
+
+            /// <summary>
+            /// Dipose of all resources associated with this enumerable.
+            /// </summary>
+            public void Dispose()
+            {
+
+            }
+        }
 
         public void AddRestriction(uint[] route)
         {

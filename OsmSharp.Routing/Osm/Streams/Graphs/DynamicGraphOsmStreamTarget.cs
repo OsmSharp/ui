@@ -17,6 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.LongIndex;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
@@ -39,7 +41,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// Data Processor Target to fill a dynamic graph object.
     /// </summary>
     public abstract class DynamicGraphOsmStreamWriter<TEdgeData> : OsmStreamTarget
-        where TEdgeData : IDynamicGraphEdgeData 
+        where TEdgeData : IGraphEdgeData 
     {
         /// <summary>
         /// Holds the dynamic graph.
@@ -82,39 +84,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
-            : this(dynamicGraph, interpreter, edgeComparer, new TagsTableCollectionIndex(), new HugeDictionary<long, uint>())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
-        /// <param name="tagsIndex"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>())
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new processor target.
-        /// </summary>
-        /// <param name="dynamicGraph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
-            HugeDictionary<long, uint> idTransformations)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, false)
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())
         {
 
         }
@@ -128,9 +102,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="collectIntermediates"></param>
+        /// <param name="coordinates"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates)
+            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
         {
             _dynamicGraph = dynamicGraph;
             _interpreter = interpreter;
@@ -144,6 +119,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
+            _coordinates = coordinates;
         }
 
         /// <summary>
@@ -184,7 +160,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private OsmSharp.Collections.HugeDictionary<long, GeoCoordinateSimple> _coordinates;
+        private ICoordinateIndex _coordinates;
 
         /// <summary>
         /// Holds the index of all relevant nodes.
@@ -201,7 +177,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new HugeDictionary<long, GeoCoordinateSimple>();
+            _coordinates = new CoordinateIndex();
         }
 
         /// <summary>
@@ -282,7 +258,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         var routableWayTags = new TagsCollection(way.Tags);
                         routableWayTags.RemoveAll(x =>
                         {
-                            return _interpreter.IsRelevantRouting(x.Key);
+                            return !_interpreter.IsRelevantRouting(x.Key);
                         });
                         _tagsIndex.Add(routableWayTags);
 
@@ -352,8 +328,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                         var intermediateCoordinates = new List<GeoCoordinateSimple>(intermediates.Count);
                                         for (int coordIdx = 0; coordIdx < intermediates.Count; coordIdx++)
                                         {
-                                            GeoCoordinateSimple coordinate;
-                                            if (!_coordinates.TryGetValue(intermediates[coordIdx], out coordinate))
+                                            ICoordinate coordinate;
+                                            if (!_coordinates.TryGet(intermediates[coordIdx], out coordinate))
                                             {
                                                 break;
                                             }
@@ -396,8 +372,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (!_idTransformations.TryGetValue(nodeId, out id))
             {
                 // get coordinates.
-                GeoCoordinateSimple coordinates;
-                if (_coordinates.TryGetValue(nodeId, out coordinates))
+                ICoordinate coordinates;
+                if (_coordinates.TryGet(nodeId, out coordinates))
                 { // the coordinate is present.
                     id = _dynamicGraph.AddVertex(
                         coordinates.Latitude, coordinates.Longitude);
@@ -441,7 +417,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             { // calculate the edge data.
                 TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                _dynamicGraph.AddEdge(from, to, edgeData, intermediates.ToArray(), _edgeComparer);
+                _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), _edgeComparer);
             }
         }
 
