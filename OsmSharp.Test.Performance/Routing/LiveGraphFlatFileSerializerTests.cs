@@ -40,7 +40,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "planet-latest-highways.osm.pbf");
         }
 
         /// <summary>
@@ -52,57 +52,57 @@ namespace OsmSharp.Test.Performance.Routing
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
 
-            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-            performanceInfo.Start();
-            performanceInfo.Report("Pulling from {0}...", testFile.Name);
+            //var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            //performanceInfo.Start();
+            //performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
-            var stream = testFile.OpenRead();
-            var source = new PBFOsmStreamSource(stream);
-            var progress = new OsmStreamFilterProgress();
-            progress.RegisterSource(source);
+            //var stream = testFile.OpenRead();
+            //var source = new PBFOsmStreamSource(stream);
+            //var progress = new OsmStreamFilterProgress();
+            //progress.RegisterSource(source);
 
-            var testOutputFile = new FileInfo(@"test.routing");
-            testOutputFile.Delete();
-            Stream writeStream = testOutputFile.OpenWrite();
+            //var testOutputFile = new FileInfo(@"test.routing");
+            //testOutputFile.Delete();
+            //Stream writeStream = testOutputFile.OpenWrite();
 
-            var tagsIndex = new TagsTableCollectionIndex();
-            var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            //var tagsIndex = new TagsTableCollectionIndex();
+            //var interpreter = new OsmRoutingInterpreter();
+            //var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
-            // read from the OSM-stream.
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
-            {
-                using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
-                {
-                    var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
-                    var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
-                    targetData.RegisterSource(progress);
-                    targetData.Pull();
+            //// read from the OSM-stream.
+            //using (var fileFactory = new MemoryMappedFileFactory(@"c:\temp\"))
+            //{
+            //    using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
+            //    {
+            //        var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+            //        var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
+            //        targetData.RegisterSource(progress);
+            //        targetData.Pull();
 
-                    performanceInfo.Stop();
+            //        performanceInfo.Stop();
 
-                    performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-                    performanceInfo.Start();
-                    performanceInfo.Report("Writing file for {0}...", testFile.Name);
+            //        performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            //        performanceInfo.Start();
+            //        performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
-                    var metaData = new TagsCollection();
-                    metaData.Add("some_key", "some_value");
-                    routingSerializer.Serialize(writeStream, memoryData, metaData);
-                }
-            }
-            stream.Dispose();
-            writeStream.Dispose();
+            //        var metaData = new TagsCollection();
+            //        metaData.Add("some_key", "some_value");
+            //        routingSerializer.Serialize(writeStream, memoryData, metaData);
+            //    }
+            //}
+            //stream.Dispose();
+            //writeStream.Dispose();
 
-            OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
-                string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
-            performanceInfo.Stop();
+            //OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
+            //    string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
+            //performanceInfo.Stop();
 
-            performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
             performanceInfo.Start();
             performanceInfo.Report("Reading file for {0}...", testFile.Name);
 
-            var testInputFile = new FileInfo(@"test.routing");
+            var testInputFile = new FileInfo(@"europe-latest.osm.pbf.routing");
             Stream readStream = testInputFile.OpenRead();
 
             var deserializedGraph = routingSerializer.Deserialize(readStream, false);
