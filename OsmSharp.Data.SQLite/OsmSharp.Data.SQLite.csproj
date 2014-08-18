@@ -3,14 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.Data.SQLite</RootNamespace>
     <AssemblyName>OsmSharp.Data.SQLite</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -97,10 +95,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net40\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -108,6 +102,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -121,13 +118,13 @@
     <Compile Include="Osm\TileCalculations.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
+      <Name>OsmSharp.Osm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
