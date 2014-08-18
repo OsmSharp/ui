@@ -107,6 +107,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             if(this.TryGetIndexAndSize(id, out index, out size))
             {
                 this.DoReset(index, size);
+                _index[id] = 0;
                 return true;
             }
             return false;
