@@ -22,6 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
 
 namespace OsmSharp.Routing.Graph.Router
 {

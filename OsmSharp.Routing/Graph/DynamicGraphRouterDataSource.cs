@@ -16,16 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Collections.Coordinates;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph
 {

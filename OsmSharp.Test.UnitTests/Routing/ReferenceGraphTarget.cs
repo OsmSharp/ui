@@ -45,7 +45,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles"></param>
         public ReferenceGraphTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
-            : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), vehicles, false)
+            : base(dynamicGraph, interpreter, tagsIndex, vehicles, false)
         {
 
         }

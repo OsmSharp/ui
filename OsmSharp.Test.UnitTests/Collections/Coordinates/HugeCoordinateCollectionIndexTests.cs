@@ -17,13 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Simple;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Test.Unittests.Collections.Coordinates
 {

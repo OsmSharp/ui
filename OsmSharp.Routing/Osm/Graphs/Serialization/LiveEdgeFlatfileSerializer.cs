@@ -16,19 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Collections.Coordinates;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
