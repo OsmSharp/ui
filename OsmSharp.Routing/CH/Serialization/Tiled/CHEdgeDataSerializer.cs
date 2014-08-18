@@ -30,6 +30,7 @@ using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Routing.CH.Serialization.Tiled
 {
@@ -123,38 +124,38 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertex);
+                    var arcs = graph.GetEdges(vertex).ToList();
 
                     // serialize the arcs.
                     var serializableGraphArcs = new SerializableGraphArcs();
-                    if (arcs != null && arcs.Length > 0)
+                    if (arcs != null && arcs.Count > 0)
                     {
-                        serializableGraphArcs.DestinationId = new uint[arcs.Length];
-                        serializableGraphArcs.Forward = new bool[arcs.Length];
-                        serializableGraphArcs.Backward = new bool[arcs.Length];
-                        serializableGraphArcs.Weight = new float[arcs.Length];
-                        serializableGraphArcs.TileX = new int[arcs.Length];
-                        serializableGraphArcs.TileY = new int[arcs.Length];
-                        serializableGraphArcs.Tags = new SerializableTags[arcs.Length];
+                        serializableGraphArcs.DestinationId = new uint[arcs.Count];
+                        serializableGraphArcs.Forward = new bool[arcs.Count];
+                        serializableGraphArcs.Backward = new bool[arcs.Count];
+                        serializableGraphArcs.Weight = new float[arcs.Count];
+                        serializableGraphArcs.TileX = new int[arcs.Count];
+                        serializableGraphArcs.TileY = new int[arcs.Count];
+                        serializableGraphArcs.Tags = new SerializableTags[arcs.Count];
 
-                        for (int idx = 0; idx < arcs.Length; idx++)
+                        for (int idx = 0; idx < arcs.Count; idx++)
                         {
-                            KeyValuePair<uint, CHEdgeData> arc = arcs[idx];
+                            var arc = arcs[idx];
                             // get destination tile.
-                            if (graph.GetVertex(arc.Key, out latitude, out longitude))
+                            if (graph.GetVertex(arc.Neighbour, out latitude, out longitude))
                             { // the destionation was found.
                                 Tile destinationTile = Tile.CreateAroundLocation(
                                     new GeoCoordinate(latitude, longitude), Zoom);
-                                serializableGraphArcs.DestinationId[idx] = arc.Key;
+                                serializableGraphArcs.DestinationId[idx] = arc.Neighbour;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
-                                serializableGraphArcs.Forward[idx] = arc.Value.Forward;
-                                serializableGraphArcs.Backward[idx] = arc.Value.Backward;
-                                serializableGraphArcs.Weight[idx] = arc.Value.Weight;
+                                serializableGraphArcs.Forward[idx] = arc.EdgeData.Forward;
+                                serializableGraphArcs.Backward[idx] = arc.EdgeData.Backward;
+                                serializableGraphArcs.Weight[idx] = arc.EdgeData.Weight;
 
                                 // get the tags.
                                 TagsCollectionBase tagsCollection =
-                                    graph.TagsIndex.Get(arc.Value.Tags);
+                                    graph.TagsIndex.Get(arc.EdgeData.Tags);
                                 if (tagsCollection != null)
                                 {
                                     serializableGraphArcs.Tags[idx] = new SerializableTags();

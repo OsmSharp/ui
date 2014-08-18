@@ -16,15 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Math.Geo.Simple;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -33,12 +32,12 @@ namespace OsmSharp.Routing.Graph
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
     public class DynamicGraphRouterDataSource<TEdgeData> : IDynamicGraphRouterDataSource<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Holds the basic graph.
         /// </summary>
-        private readonly IDynamicGraph<TEdgeData> _graph;
+        private readonly IGraph<TEdgeData> _graph;
 
         /// <summary>
         /// Holds the index of vertices per bounding box.
@@ -62,7 +61,7 @@ namespace OsmSharp.Routing.Graph
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
-            _graph = new MemoryDynamicGraph<TEdgeData>();
+            _graph = new MemoryGraph<TEdgeData>();
             _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
@@ -77,7 +76,7 @@ namespace OsmSharp.Routing.Graph
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
-            _graph = new MemoryDynamicGraph<TEdgeData>(initSize);
+            _graph = new MemoryGraph<TEdgeData>(initSize);
             _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
@@ -90,7 +89,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(IDynamicGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
+        public DynamicGraphRouterDataSource(IGraph<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -180,7 +179,7 @@ namespace OsmSharp.Routing.Graph
                 foreach (var localArc in localArcs)
                 {
                     arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
-                        vertex, localArc));
+                        vertex, new KeyValuePair<uint, TEdgeData>(localArc.Neighbour, localArc.EdgeData)));
                 }
             }
             return arcs.ToArray();
@@ -203,7 +202,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertexId)
+        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
         {
             return _graph.GetEdges(vertexId);
         }
@@ -238,7 +237,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             return _graph.GetEdgeShape(vertex1, vertex2, out shape);
         }
@@ -289,7 +288,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
             _graph.AddEdge(vertex1, vertex2, data, coordinates);
         }
@@ -297,14 +296,14 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Adds a new edge.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        public void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
-            _graph.AddEdge(from, to, data, coordinates, comparer);
+            _graph.AddEdge(vertex1, vertex2, data, coordinates, comparer);
         }
 
         /// <summary>

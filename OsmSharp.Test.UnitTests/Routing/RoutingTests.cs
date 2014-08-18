@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Base class with tests around the Router object.
     /// </summary>
     public abstract class SimpleRoutingTests<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Builds the router.
@@ -146,16 +146,15 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestArcTags()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(
-                data, interpreter, basicRouter);
-            RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
+            var source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
-            RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            var target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            Route route = router.Calculate(Vehicle.Car, source, target);
+            var route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Segments.Length);
 

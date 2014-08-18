@@ -202,7 +202,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Represents a resolved edge.
         /// </summary>
-        public class RouterResolvedGraphEdge : IDynamicGraphEdgeData
+        public class RouterResolvedGraphEdge : IGraphEdgeData
         {
             /// <summary>
             /// Creates a new resolved edge.
@@ -273,7 +273,7 @@ namespace OsmSharp.Routing.Routers
             /// Returns the exact reverse edge.
             /// </summary>
             /// <returns></returns>
-            public IDynamicGraphEdgeData Reverse()
+            public IGraphEdgeData Reverse()
             {
                 throw new NotImplementedException();
             }
@@ -283,7 +283,7 @@ namespace OsmSharp.Routing.Routers
             /// </summary>
             /// <param name="other"></param>
             /// <returns></returns>
-            public bool Equals(IDynamicGraphEdgeData other)
+            public bool Equals(IGraphEdgeData other)
             {
                 var otherResolved = (other as RouterResolvedGraphEdge);
                 if(otherResolved != null)
@@ -326,7 +326,7 @@ namespace OsmSharp.Routing.Routers
             /// </summary>
             /// <param name="other"></param>
             /// <returns></returns>
-            public bool EqualsGeometrically(IDynamicGraphEdgeData other)
+            public bool EqualsGeometrically(IGraphEdgeData other)
             {
                 var otherResolved = (other as RouterResolvedGraphEdge);
                 if (otherResolved != null)

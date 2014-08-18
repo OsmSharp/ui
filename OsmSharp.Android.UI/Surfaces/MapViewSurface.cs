@@ -493,7 +493,14 @@ namespace OsmSharp.Android.UI
             }
             set
             {
-                _mapCenter = value;
+                if (this.Width == 0 || this.MapBoundingBox == null)
+                {
+                    _mapCenter = value;
+                }
+                else
+                {
+                    _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, this.CurrentView);
+                }
 
                 _previouslyRenderedView = null;
                 _previouslyChangedView = null;
@@ -598,15 +605,13 @@ namespace OsmSharp.Android.UI
             get { return _mapZoomLevel; }
             set
             {
-                if (this.MapMaxZoomLevel.HasValue &&
-                    value > this.MapMaxZoomLevel)
+                if (value > this.MapMaxZoomLevel)
                 {
-                    _mapZoomLevel = this.MapMaxZoomLevel.Value;
+                    _mapZoomLevel = this.MapMaxZoomLevel;
                 }
-                else if (this.MapMinZoomLevel.HasValue &&
-                  value < this.MapMinZoomLevel)
+                else if (value < this.MapMinZoomLevel)
                 {
-                    _mapZoomLevel = this.MapMinZoomLevel.Value;
+                    _mapZoomLevel = this.MapMinZoomLevel;
                 }
                 else
                 {
@@ -620,10 +625,36 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Box within which one can pan the map
+        /// </summary>
+        private GeoCoordinateBox _mapBoundingBox = null;
+
+        /// <summary>
+        /// Gets or sets the bounding box within which one can pan the map.
+        /// </summary>
+        /// <value>The box.</value>
+        public GeoCoordinateBox MapBoundingBox
+        {
+            get
+            {
+                return _mapBoundingBox;
+            }
+            set
+            {
+                // If the current map center falls outside the bounding box, set the MapCenter to the middle of the box.
+                if (_mapCenter != null && !value.Contains(MapCenter))
+                {
+                    this.MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
+                }
+                _mapBoundingBox = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the map max zoom level.
         /// </summary>
         /// <value>The map max zoom level.</value>
-        public float? MapMaxZoomLevel
+        public float MapMaxZoomLevel
         {
             get;
             set;
@@ -633,7 +664,7 @@ namespace OsmSharp.Android.UI
         /// Gets or sets the map minimum zoom level.
         /// </summary>
         /// <value>The map minimum zoom level.</value>
-        public float? MapMinZoomLevel
+        public float MapMinZoomLevel
         {
             get;
             set;
@@ -1010,7 +1041,7 @@ namespace OsmSharp.Android.UI
                                                                       centerXPixels, centerYPixles);
 
                             // convert to the projected center.
-                            _mapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                            this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
                             movement = true;
                         }
@@ -1086,8 +1117,8 @@ namespace OsmSharp.Android.UI
         /// <param name="mapZoom">Map zoom.</param>
         public void SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
         {
-            _mapCenter = center;
-            _mapTilt = mapTilt;
+            this.MapCenter = center;
+            this.MapTilt = mapTilt;
             this.MapZoom = mapZoom;
 
             (this.Context as Activity).RunOnUiThread(NotifyMovement);

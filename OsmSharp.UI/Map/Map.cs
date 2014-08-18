@@ -101,6 +101,72 @@ namespace OsmSharp.UI.Map
         }
 
         /// <summary>
+        /// Utility method for ensuring a view stays within a bounding box of geo coordinated.
+        /// </summary>
+        /// <param name="center">The map center we want to move to.</param>
+        /// <param name="boundingBox">A GeoCoordinateBox defining the bounding box.</param>
+        /// <param name="view" The current view.</param>
+        /// <returns>Returns a center geo coordinate that is corrected so the view stays within the bounding box.</returns>
+        public GeoCoordinate EnsureViewWithinBoundingBox(GeoCoordinate center, GeoCoordinateBox boundingBox, View2D view)
+        {
+            double[] mapCenterSceneCoords = this.Projection.ToPixel(center);
+            double[] mapCenterPixels = view.ToViewPort(view.Width, view.Height, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
+
+            double[] topLeftSceneCoordinates = view.FromViewPort(view.Width,
+                                                                view.Height,
+                                                                mapCenterPixels[0] - (view.Width) / 2.0,
+                                                                mapCenterPixels[1] - (view.Height) / 2.0);
+            GeoCoordinate topLeft = this.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
+
+            double[] bottomRightSceneCoordinates = view.FromViewPort(view.Width,
+                                                                view.Height,
+                                                                mapCenterPixels[0] + (view.Width) / 2.0,
+                                                                mapCenterPixels[1] + (view.Height) / 2.0);
+            GeoCoordinate bottomRight = this.Projection.ToGeoCoordinates(bottomRightSceneCoordinates[0], bottomRightSceneCoordinates[1]);
+
+            // Early exit when the view is inside the box.
+            if (boundingBox.Contains(topLeft) && boundingBox.Contains(bottomRight))
+                return center;
+
+            double viewNorth = topLeft.Latitude;
+            double viewEast = bottomRight.Longitude;
+            double viewSouth = bottomRight.Latitude;
+            double viewWest = topLeft.Longitude;
+
+            double boxNorth = boundingBox.MaxLat;
+            double boxEast = boundingBox.MaxLon;
+            double boxSouth = boundingBox.MinLat;
+            double boxWest = boundingBox.MinLon;
+
+            //TODO: Check if the view acrually fits the bounding box, if not resize the view.
+
+            // Correct all view bounds if neccecary.
+            if (viewNorth > boxNorth)
+            {
+                viewSouth -= viewNorth - boxNorth;
+                viewNorth = boxNorth;
+            }
+            if (viewEast > boxEast)
+            {
+                viewWest -= viewEast - boxEast;
+                viewEast = boxEast;
+            }
+            if (viewSouth < boxSouth)
+            {
+                viewNorth += boxSouth - viewSouth;
+                viewSouth = boxSouth;
+            }
+            if (viewWest < boxWest)
+            {
+                viewEast += boxWest - viewWest;
+                viewWest = boxWest;
+            }
+
+            // Compute and return corrected map center
+            return new GeoCoordinate(viewSouth + (viewNorth - viewSouth) / 2.0f, viewWest + (viewEast - viewWest) / 2.0f);
+        }
+
+        /// <summary>
         /// Cancels any ongoing map change notification.
         /// </summary>
         public void ViewChangedCancel()

@@ -43,6 +43,11 @@
     <Compile Include="Collections\Arrays\IHugeArray.cs" />
     <Compile Include="Collections\Arrays\MemoryMappedHugeArray.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
+    <Compile Include="Collections\Coordinates\Collections\HugeCoordinateCollectionIndex.cs" />
+    <Compile Include="Collections\Coordinates\CoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\HugeCoordinateIndex.cs" />
+    <Compile Include="Collections\Coordinates\Collections\ICoordinateCollection.cs" />
+    <Compile Include="Collections\Coordinates\ICoordinateIndex.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HashSet.cs" />
@@ -140,6 +145,7 @@
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\IMemoryMappedViewAccessor.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileFactory.cs" />
     <Compile Include="IO\MemoryMappedFiles\NativeMemoryMappedFileFactory.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />

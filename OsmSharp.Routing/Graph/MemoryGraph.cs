@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// An implementation of an in-memory dynamic graph.
     /// </summary>
-    public class MemoryDynamicGraph<TEdgeData> : IDynamicGraph<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public class MemoryGraph<TEdgeData> : IGraph<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         private const int EDGE_SIZE = 4;
         private const uint NO_EDGE = uint.MaxValue;
@@ -69,12 +70,12 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds all shapes associated with edges.
         /// </summary>
-        private IHugeArray<GeoCoordinateSimple[]> _edgeShapes;
+        private HugeCoordinateCollectionIndex _edgeShapes;
 
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public MemoryDynamicGraph()
+        public MemoryGraph()
             : this(1000)
         {
 
@@ -83,8 +84,8 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public MemoryDynamicGraph(long sizeEstimate)
-            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeArray<GeoCoordinateSimple[]>(sizeEstimate * 3))
+        public MemoryGraph(long sizeEstimate)
+            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeCoordinateCollectionIndex(sizeEstimate * 3))
         {
 
         }
@@ -98,7 +99,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        protected MemoryDynamicGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, IHugeArray<GeoCoordinateSimple[]> edgeShapeArray)
+        protected MemoryGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
@@ -247,7 +248,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
             this.AddEdge(vertex1, vertex2, data, coordinates, null);
         }
@@ -260,7 +261,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <param name="comparer">Comparator to compare edges and replace obsolete ones.</param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
         {
             // if (!data.Forward) { throw new ArgumentOutOfRangeException("data", "Edge data has to be forward."); }
 
@@ -390,10 +391,9 @@ namespace OsmSharp.Routing.Graph
         public void RemoveEdges(uint vertex)
         {
             var edges = this.GetEdges(vertex);
-
-            foreach(var edge in edges)
+            while (edges.MoveNext())
             {
-                this.RemoveEdge(vertex, edge.Key);
+                this.RemoveEdge(vertex, edges.Neighbour);
             }
         }
 
@@ -407,7 +407,7 @@ namespace OsmSharp.Routing.Graph
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
-            if(_vertices[vertex1] == NO_EDGE ||
+            if (_vertices[vertex1] == NO_EDGE ||
                 _vertices[vertex2] == NO_EDGE)
             { // no edge to remove here!
                 return;
@@ -504,37 +504,11 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetEdges(uint vertex)
+        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex)
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
-            var edgeId = _vertices[vertex];
-            if (edgeId == NO_EDGE)
-            { // there are no edges.
-                return new KeyValuePair<uint, TEdgeData>[0];
-            }
-
-            // loop over edges until a NO_EDGE is encountered.
-            var edges = new List<KeyValuePair<uint, TEdgeData>>();
-            while (edgeId != NO_EDGE)
-            { // keep looping.
-                if (_edges[edgeId + NODEA] == vertex)
-                {
-                    var otherVertexId = _edges[edgeId + NODEB];
-                    edges.Add(
-                        new KeyValuePair<uint, TEdgeData>(otherVertexId, _edgeData[edgeId / 4]));
-                    edgeId = _edges[edgeId + NEXTNODEA];
-                }
-                else
-                {
-                    var otherVertexId = _edges[edgeId + NODEA];
-                    edges.Add(
-                        new KeyValuePair<uint, TEdgeData>(otherVertexId, (TEdgeData)_edgeData[edgeId / 4].Reverse()));
-                    edgeId = _edges[edgeId + NEXTNODEB];
-                }
-            }
-
-            return edges.ToArray();
+            return new EdgeEnumerator(this, _vertices[vertex], vertex);
         }
 
         /// <summary>
@@ -638,10 +612,10 @@ namespace OsmSharp.Routing.Graph
         {
             long edgeDataIdx;
             bool edgeDataForward;
-            if(this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
+            if (this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
             { // the edge exists.
                 data = _edgeData[edgeDataIdx];
-                if(!edgeDataForward)
+                if (!edgeDataForward)
                 { // edge is backward.
                     data = (TEdgeData)data.Reverse();
                 }
@@ -658,21 +632,16 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out GeoCoordinateSimple[] shape)
+        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             long edgeDataIdx;
             bool edgeDataForward;
             if (this.GetEdgeIdx(vertex1, vertex2, out edgeDataIdx, out edgeDataForward))
             { // the edge exists.
                 shape = _edgeShapes[edgeDataIdx];
-                if (!edgeDataForward && shape != null)
-                { // edge is backward.
-                    var reverse = new GeoCoordinateSimple[shape.Length];
-                    for (int idx = 0; idx < shape.Length; idx++)
-                    {
-                        reverse[idx] = shape[shape.Length - idx - 1];
-                    }
-                    shape = reverse;
+                if (shape != null && !edgeDataForward)
+                { // invert shape.
+                    shape = shape.Reverse();
                 }
                 return true;
             }
@@ -690,7 +659,7 @@ namespace OsmSharp.Routing.Graph
             // Array.Resize<GeoCoordinateSimple>(ref _coordinates, (int)_nextVertexId);
             _vertices.Resize(_nextVertexId);
             // Array.Resize<uint>(ref _vertices, (int)_nextVertexId);
-           
+
             // resize edges.
             _edgeData.Resize(_nextEdgeId / EDGE_SIZE);
             _edgeShapes.Resize(_nextEdgeId / EDGE_SIZE);
@@ -741,9 +710,9 @@ namespace OsmSharp.Routing.Graph
 
             // trim vertices.
             uint minUnAllocatedVertexId = 0;
-            for(uint vertexId = 0; vertexId < _nextVertexId; vertexId++)
+            for (uint vertexId = 0; vertexId < _nextVertexId; vertexId++)
             {
-                if(_vertices[vertexId] != NO_EDGE)
+                if (_vertices[vertexId] != NO_EDGE)
                 {
                     minUnAllocatedVertexId = vertexId;
                 }
@@ -788,8 +757,8 @@ namespace OsmSharp.Routing.Graph
                         break;
                     }
                 }
-            }            
-            
+            }
+
             // loop over all edges of vertex2 and replace the oldEdgeId with the new one.
             uint vertex2 = _edges[oldEdgeId + NODEB];
             edgeId = _vertices[vertex2];
@@ -821,6 +790,191 @@ namespace OsmSharp.Routing.Graph
             _edges[oldEdgeId + NEXTNODEA] = NO_EDGE;
             _edges[oldEdgeId + NEXTNODEB] = NO_EDGE;
             _edgeData[oldEdgeId / EDGE_SIZE] = default(TEdgeData);
+        }
+
+        /// <summary>
+        /// Represents the internal edge enumerator.
+        /// </summary>
+        class EdgeEnumerator : IEdgeEnumerator<TEdgeData>
+        {
+            /// <summary>
+            /// Holds the graph.
+            /// </summary>
+            private MemoryGraph<TEdgeData> _graph;
+
+            /// <summary>
+            /// Holds the next edgeId.
+            /// </summary>
+            private uint _nextEdgeId;
+
+            /// <summary>
+            /// Holds the current edgeId.
+            /// </summary>
+            private uint _currentEdgeId;
+
+            /// <summary>
+            /// Holds the direction flag for the current edge.
+            /// </summary>
+            private bool _currentEdgeInverted = false;
+
+            /// <summary>
+            /// Holds the current vertex.
+            /// </summary>
+            private uint _vertex;
+
+            /// <summary>
+            /// Holds the start vertex.
+            /// </summary>
+            private uint _startVertex;
+
+            /// <summary>
+            /// Holds the start edge.
+            /// </summary>
+            private uint _startEdge;
+
+            /// <summary>
+            /// Creates a new edge enumerator.
+            /// </summary>
+            /// <param name="graph"></param>
+            /// <param name="edgeId"></param>
+            /// <param name="vertex"></param>
+            public EdgeEnumerator(MemoryGraph<TEdgeData> graph, uint edgeId, uint vertex)
+            {
+                _graph = graph;
+                _nextEdgeId = edgeId;
+                _currentEdgeId = 0;
+                _vertex = vertex;
+
+                _startVertex = vertex;
+                _startEdge = edgeId;
+                _currentEdgeInverted = false;
+            }
+
+            /// <summary>
+            /// Move to the next edge.
+            /// </summary>
+            /// <returns></returns>
+            public bool MoveNext()
+            {
+                if(_nextEdgeId != NO_EDGE)
+                { // there is a next edge.
+                    _currentEdgeId = _nextEdgeId;
+                    if (_graph._edges[_nextEdgeId + NODEA] == _vertex)
+                    {
+                        _neighbour = _graph._edges[_nextEdgeId + NODEB];
+                        _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEA];
+                        _currentEdgeInverted = false;
+                    }
+                    else
+                    {
+                        _neighbour = _graph._edges[_nextEdgeId + NODEA];
+                        _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEB];
+                        _currentEdgeInverted = true;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Holds the current neigbour.
+            /// </summary>
+            private uint _neighbour;
+
+            /// <summary>
+            /// Returns the current neighbour.
+            /// </summary>
+            public uint Neighbour
+            {
+                get { return _neighbour; }
+            }
+
+            /// <summary>
+            /// Returns the current edge data.
+            /// </summary>
+            public TEdgeData EdgeData
+            {
+                get
+                {
+                    if (_currentEdgeInverted)
+                    {
+                        return (TEdgeData)_graph._edgeData[_currentEdgeId / 4].Reverse();
+                    }
+                    return _graph._edgeData[_currentEdgeId / 4];
+                }
+            }
+
+            /// <summary>
+            /// Returns the current intermediates.
+            /// </summary>
+            public ICoordinateCollection Intermediates
+            {
+
+                get
+                {
+                    if(_currentEdgeInverted)
+                    {
+                        var intermediates = _graph._edgeShapes[_currentEdgeId / 4];
+                        if (intermediates != null)
+                        {
+                            return _graph._edgeShapes[_currentEdgeId / 4].Reverse();
+                        }
+                        return null;
+                    }
+                    return _graph._edgeShapes[_currentEdgeId / 4];
+                }
+            }
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            /// <returns></returns>
+            public int Count()
+            {
+                int count = 0;
+                while (this.MoveNext())
+                {
+                    count++;
+                }
+                return count;
+            }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _nextEdgeId = _startEdge;
+                _currentEdgeId = 0;
+                _vertex = _startVertex;
+            }
+
+            public IEnumerator<Edge<TEdgeData>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public Edge<TEdgeData> Current
+            {
+                get { return new Edge<TEdgeData>(this); }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return new Edge<TEdgeData>(this); }
+            }
+
+            public void Dispose()
+            {
+
+            }
         }
     }
 }

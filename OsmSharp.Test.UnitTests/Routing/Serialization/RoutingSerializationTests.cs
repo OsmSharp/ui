@@ -16,30 +16,31 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using NUnit.Framework;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Routing.CH.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using OsmSharp.Collections;
-using OsmSharp.Math.Geo.Simple;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.Serialization
 {
@@ -67,7 +68,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
+                original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -157,7 +158,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
+                original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -248,7 +249,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, new HugeDictionary<long, uint>(), null, false);
+                original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             targetData.RegisterSource(dataProcessorSource);
@@ -451,8 +452,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex);
-                var arcs = network.GetEdges(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
@@ -465,23 +466,33 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    GeoCoordinateSimple[] referenceArcValueCoordinates;
-                    GeoCoordinateSimple[] arcValueCoordinates;
-                    Assert.AreEqual(network.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates), 
-                        referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceArcValueCoordinates));
-                    if (referenceArcValueCoordinates == null)
-                    { // other arc coordinates also null?
-                        Assert.IsNull(arcValueCoordinates);
+                    ICoordinateCollection referenceCoordinates;
+                    ICoordinateCollection coordinates;
+                    if (referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        if (referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while (referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
                     }
                     else
-                    { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArcValueCoordinates.Length; coordIdx++)
-                        {
-                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Latitude,
-                                arcValueCoordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArcValueCoordinates[coordIdx].Longitude,
-                                arcValueCoordinates[coordIdx].Longitude);
-                        }
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
                     }
 
                     // check tags.
@@ -542,8 +553,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex);
-                var arcs = network.GetEdges(vertex);
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
@@ -556,19 +567,33 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    if (referenceArc.Value.Coordinates == null)
-                    { // other arc coordinates also null?
-                        Assert.IsNull(arc.Value.Coordinates);
+                    ICoordinateCollection referenceCoordinates;
+                    ICoordinateCollection coordinates;
+                    if(referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        if(referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while(referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
                     }
                     else
-                    { // compare coordinates.
-                        for (int coordIdx = 0; coordIdx < referenceArc.Value.Coordinates.Length; coordIdx++)
-                        {
-                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Latitude,
-                                arc.Value.Coordinates[coordIdx].Latitude);
-                            Assert.AreEqual(referenceArc.Value.Coordinates[coordIdx].Longitude,
-                                arc.Value.Coordinates[coordIdx].Longitude);
-                        }
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
                     }
 
                     // check tags.

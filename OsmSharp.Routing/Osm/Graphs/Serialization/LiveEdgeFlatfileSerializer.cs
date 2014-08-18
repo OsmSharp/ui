@@ -16,18 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
@@ -57,45 +54,38 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             typeModel.Add(typeof(SerializableEdge), true);
             typeModel.Add(typeof(GeoCoordinateSimple), true);
 
-            int blockSize = 1000;
+            int blockSize = 10000;
             var arcsQueue = new List<SerializableEdge>(blockSize);
 
             uint vertex = 0;
             while (vertex < graph.VertexCount)
             { // keep looping and serialize all vertices.
-                var arcs = graph.GetEdges(vertex);
-                if (arcs != null)
-                { // serialize the arcs, but serialize them only once. 
-                    // choose only those arcs that start at a vertex smaller than the target.
-                    for (int idx = 0; idx < arcs.Length; idx++)
+                var edges = graph.GetEdges(vertex);
+                // serialize the arcs, but serialize them only once. 
+                // choose only those arcs that start at a vertex smaller than the target.
+                foreach(var edge in edges)
+                {
+                    if (edge.Neighbour > vertex)
                     {
-                        if (arcs[idx].Key > vertex)
+                        arcsQueue.Add(new SerializableEdge()
                         {
-                            GeoCoordinateSimple[] coordinates;
-                            if(!graph.GetEdgeShape(vertex, arcs[idx].Key, out coordinates))
-                            {
-                                coordinates = null;
-                            }
-                            arcsQueue.Add(new SerializableEdge()
-                            {
-                                Distance = arcs[idx].Value.Distance,
-                                FromId = vertex,
-                                ToId = arcs[idx].Key,
-                                Value = arcs[idx].Value.Value,
-                                Coordinates = coordinates
-                            });
+                            Distance = edge.EdgeData.Distance,
+                            FromId = vertex,
+                            ToId = edge.Neighbour,
+                            Value = edge.EdgeData.Value,
+                            Coordinates = edge.Intermediates.ToSimpleArray()
+                        });
 
-                            if (arcsQueue.Count == blockSize)
-                            { // execute serialization.
-                                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
-                                arcsQueue.Clear();
-                            }
+                        if (arcsQueue.Count == blockSize)
+                        { // execute serialization.
+                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                            arcsQueue.Clear();
                         }
                     }
-
-                    // serialize.
-                    vertex++;
                 }
+
+                // move to next vertex.
+                vertex++;
             }
 
             if (arcsQueue.Count > 0)
@@ -123,12 +113,17 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
+                    ICoordinateCollection coordinateCollection = null;
+                    if(serializableEdges[idx].Coordinates != null)
+                    {
+                        coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
+                    }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new LiveEdge()
                         {
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, serializableEdges[idx].Coordinates, null);
+                        }, coordinateCollection, null);
                 }
             }
         }

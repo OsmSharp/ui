@@ -22,8 +22,8 @@ namespace OsmSharp.Routing.Graph.Router
     /// Interface representing objects that are both and IBasicRouterDataSource and a IDynamicGraph.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IDynamicGraphRouterDataSource<TEdgeData> : IDynamicGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IDynamicGraphRouterDataSource<TEdgeData> : IGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
 
     }

@@ -27,10 +27,12 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Routing
 {
@@ -108,6 +110,24 @@ namespace OsmSharp.Routing
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
                 data, interpreter, basicRouter);
+
+            return new Router(liveEdgeRouter); // create the actual router.
+        }
+
+        /// <summary>
+        /// Creates a new router.
+        /// </summary>
+        /// <param name="flatFile">The flatfile containing the graph.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <returns></returns>
+        public static Router CreateLiveFrom(Stream flatFile, IOsmRoutingInterpreter interpreter)
+        {
+            var serializer = new LiveEdgeFlatfileSerializer();
+            var source = serializer.Deserialize(flatFile, false) as DynamicGraphRouterDataSource<LiveEdge>;
+
+            // creates the live edge router.
+            var liveEdgeRouter = new TypedRouterLiveEdge(
+                source, interpreter, new DykstraRoutingLive());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }

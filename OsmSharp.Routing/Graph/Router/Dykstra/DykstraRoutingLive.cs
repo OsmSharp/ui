@@ -315,6 +315,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
             bool stopAtFirst, bool returnAtWeight, bool forward, Dictionary<string, object> parameters)
         {
+            var speeds = new Dictionary<uint, Speed>();
+
             // make copies of the target and source visitlist.
             var source = sourceList.Clone() as PathSegmentVisitList;
             var targets = new PathSegmentVisitList[targetList.Length];
@@ -482,6 +484,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             chosenVertices.Add(current.VertexId);
 
             // loop until target is found and the route is the shortest!
+            var noSpeed = new Speed() { Direction = null, MeterPerSecond = 0 };
             while (true)
             {
                 // get the current labels list (if needed).
@@ -492,30 +495,46 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     labels.Remove(current.VertexId);
                 }
 
-                //float latitude, longitude;
-                //graph.GetVertex(Convert.ToUInt32(current.VertexId), out latitude, out longitude);
-                //var currentCoordinates = new GeoCoordinate(latitude, longitude);
-
                 // update the visited nodes.
-                foreach (KeyValuePair<uint, LiveEdge> neighbour in arcs)
+                while(arcs.MoveNext())
+                // foreach (var neighbour in arcs)
                 {
+                    var neighbour = arcs;
+                    if(chosenVertices.Contains(neighbour.Neighbour))
+                    {
+                        continue;
+                    }
+
+                    // get the speed from cache or calculate.
+                    Speed speed = noSpeed;
+                    if(!speeds.TryGetValue(neighbour.EdgeData.Tags, out speed))
+                    { // speed not there, calculate speed.
+                        var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
+                        speed = noSpeed;
+                        if (vehicle.CanTraverse(tags))
+                        { // can traverse, speed not null!
+                            speed = new Speed()
+                            {
+                                MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
+                                Direction = vehicle.IsOneWay(tags)
+                            };
+                        }
+                        speeds.Add(neighbour.EdgeData.Tags, speed);
+                    }
+
                     // check the tags against the interpreter.
-                    TagsCollectionBase tags = graph.TagsIndex.Get(neighbour.Value.Tags);
-                    if (vehicle.CanTraverse(tags))
+                    if (speed.MeterPerSecond > 0 && (!speed.Direction.HasValue || speed.Direction.Value == neighbour.EdgeData.Forward))
+                    //if (vehicle.CanTraverse(tags))
                     { // it's ok; the edge can be traversed by the given vehicle.
-                        bool? oneWay = vehicle.IsOneWay(tags);
-                        bool canBeTraversedOneWay = (!oneWay.HasValue || oneWay.Value == neighbour.Value.Forward);
-                        if ((current.From == null || 
-                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
-                            canBeTraversedOneWay &&
-                            !chosenVertices.Contains(neighbour.Key))
+                        if ((current.From == null ||
+                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)))
                         { // the neighbor is forward and is not settled yet!
                             // check the labels (if needed).
                             bool constraintsOk = true;
                             if (interpreter.Constraints != null)
                             { // check if the label is ok.
                                 RoutingLabel neighbourLabel = interpreter.Constraints.GetLabelFor(
-                                    graph.TagsIndex.Get(neighbour.Value.Tags));
+                                    graph.TagsIndex.Get(neighbour.EdgeData.Tags));
 
                                 // only test labels if there is a change.
                                 if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
@@ -528,23 +547,23 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                                         var neighbourLabels = new List<RoutingLabel>(currentLabels);
                                         neighbourLabels.Add(neighbourLabel);
 
-                                        labels[neighbour.Key] = neighbourLabels;
+                                        labels[neighbour.Neighbour] = neighbourLabels;
                                     }
                                 }
                                 else
                                 { // set the same label(s).
-                                    labels[neighbour.Key] = currentLabels;
+                                    labels[neighbour.Neighbour] = currentLabels;
                                 }
                             }
 
                             if (constraintsOk)
                             { // all constraints are validated or there are none.
                                 // calculate neighbors weight.
-                                double totalWeight = current.Weight + vehicle.Weight(tags, neighbour.Value.Distance);
+                                double totalWeight = current.Weight + (neighbour.EdgeData.Distance / speed.MeterPerSecond);
                                 //double totalWeight = current.Weight + neighbour.Value.Distance;
 
                                 // update the visit list;
-                                var neighbourRoute = new PathSegment<long>(neighbour.Key, totalWeight, current);
+                                var neighbourRoute = new PathSegment<long>(neighbour.Neighbour, totalWeight, current);
                                 heap.Push(neighbourRoute, (float)neighbourRoute.Weight);
                             }
                         }
@@ -640,6 +659,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 return segmentsToTarget.ToArray();
             }
             return segmentsAtWeight.ToArray();
+        }
+
+        private struct Speed
+        {
+            public double MeterPerSecond { get; set; }
+
+            public bool? Direction { get; set; }
         }
 
         #endregion

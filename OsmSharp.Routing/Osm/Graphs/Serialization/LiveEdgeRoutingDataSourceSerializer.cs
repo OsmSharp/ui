@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Ionic.Zlib;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -29,6 +30,7 @@ using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
@@ -123,43 +125,43 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
-                    var arcs = graph.GetEdges(vertex);
+                    var arcs = graph.GetEdges(vertex).ToList();
 
                     // serialize the arcs.
-                    if (arcs != null && arcs.Length > 0)
+                    if (arcs != null && arcs.Count > 0)
                     {
                         var serializableGraphArcs = new SerializableGraphArcs();
-                        serializableGraphArcs.DestinationId = new uint[arcs.Length];
-                        serializableGraphArcs.Forward = new bool[arcs.Length];
-                        serializableGraphArcs.TileX = new int[arcs.Length];
-                        serializableGraphArcs.TileY = new int[arcs.Length];
-                        serializableGraphArcs.Tags = new SerializableTags[arcs.Length];
-                        serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Length];
-                        serializableGraphArcs.Distances = new float[arcs.Length];
+                        serializableGraphArcs.DestinationId = new uint[arcs.Count];
+                        serializableGraphArcs.Forward = new bool[arcs.Count];
+                        serializableGraphArcs.TileX = new int[arcs.Count];
+                        serializableGraphArcs.TileY = new int[arcs.Count];
+                        serializableGraphArcs.Tags = new SerializableTags[arcs.Count];
+                        serializableGraphArcs.Intermediates = new SerializableCoordinates[arcs.Count];
+                        serializableGraphArcs.Distances = new float[arcs.Count];
 
-                        for (int idx = 0; idx < arcs.Length; idx++)
+                        for (int idx = 0; idx < arcs.Count; idx++)
                         {
                             var arc = arcs[idx];
                             // get destination tile.
-                            if (graph.GetVertex(arc.Key, out latitude, out longitude))
+                            if (graph.GetVertex(arc.Neighbour, out latitude, out longitude))
                             { // the destionation was found.
-                                GeoCoordinateSimple[] arcValueCoordinates;
-                                if(!graph.GetEdgeShape(vertex, arc.Key, out arcValueCoordinates))
+                                ICoordinateCollection arcValueCoordinates;
+                                if(!graph.GetEdgeShape(vertex, arc.Neighbour, out arcValueCoordinates))
                                 {
                                     arcValueCoordinates = null;
                                 }
                                 var destinationTile = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), Zoom);
-                                serializableGraphArcs.DestinationId[idx] = arc.Key;
+                                serializableGraphArcs.DestinationId[idx] = arc.Neighbour;
                                 serializableGraphArcs.TileX[idx] = destinationTile.X;
                                 serializableGraphArcs.TileY[idx] = destinationTile.Y;
-                                serializableGraphArcs.Forward[idx] = arc.Value.Forward;
+                                serializableGraphArcs.Forward[idx] = arc.EdgeData.Forward;
                                 serializableGraphArcs.Intermediates[idx] = new SerializableCoordinates() {
                                     Coordinates = SerializableCoordinate.FromSimpleArray(arcValueCoordinates)
                                 };
-                                serializableGraphArcs.Distances[idx] = arc.Value.Distance;
+                                serializableGraphArcs.Distances[idx] = arc.EdgeData.Distance;
 
                                 // get the tags.
-                                var tagsCollection = graph.TagsIndex.Get(arc.Value.Tags);
+                                var tagsCollection = graph.TagsIndex.Get(arc.EdgeData.Tags);
                                 if (tagsCollection != null)
                                 {
                                     serializableGraphArcs.Tags[idx] = new SerializableTags();
@@ -552,12 +554,13 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             /// <param name="simples"></param>
             /// <returns></returns>
-            public static SerializableCoordinate[] FromSimpleArray(GeoCoordinateSimple[] simples)
+            public static SerializableCoordinate[] FromSimpleArray(ICoordinateCollection shape)
             {
-                if(simples == null)
+                if (shape == null)
                 {
                     return null;
                 }
+                var simples = shape.ToArray();
                 var coordinates = new SerializableCoordinate[simples.Length];
                 for (int idx = 0; idx < simples.Length; idx++)
                 {

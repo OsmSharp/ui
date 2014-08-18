@@ -20,13 +20,14 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
     /// <summary>
     /// Represents the data on a CH edge.
     /// </summary>
-    public struct CHEdgeData : IDynamicGraphEdgeData
+    public struct CHEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Creates a new CHEdge data class.
@@ -240,14 +241,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public uint Tags { get; set; }
 
         /// <summary>
-        /// Returns intermediate coordinates (if any).
-        /// </summary>
-        public GeoCoordinateSimple[] Coordinates
-        {
-            get { return null; }
-        }
-
-        /// <summary>
         /// Returns true if this edge represents a neighbour-relation.
         /// </summary>
         public bool RepresentsNeighbourRelations
@@ -259,7 +252,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Creates the exact reverse of this edge.
         /// </summary>
         /// <returns></returns>
-        public IDynamicGraphEdgeData Reverse()
+        public IGraphEdgeData Reverse()
         {
             // to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
             // to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
@@ -310,7 +303,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IDynamicGraphEdgeData other)
+        public bool Equals(IGraphEdgeData other)
         {
             if (other is CHEdgeData)
             { // ok, type is the same.
@@ -321,66 +314,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     otherCH.Tags != this.Tags)
                 { // basic info different.
                     return false;
-                }
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherCH.Coordinates == null;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the other edge represents the same geographical information than this edge.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool EqualsGeometrically(IDynamicGraphEdgeData other)
-        {
-            if (other is CHEdgeData)
-            { // ok, type is the same.
-                var otherCH = (CHEdgeData)other;
-
-                // only the coordinates can be different now.
-                if (this.Coordinates != null)
-                { // both have to contain the same coordinates.
-                    if (this.Coordinates.Length != otherCH.Coordinates.Length)
-                    { // impossible, different number of coordinates.
-                        return false;
-                    }
-
-                    for (int idx = 0; idx < otherCH.Coordinates.Length; idx++)
-                    {
-                        if (this.Coordinates[idx].Longitude != otherCH.Coordinates[idx].Longitude ||
-                            this.Coordinates[idx].Latitude != otherCH.Coordinates[idx].Latitude)
-                        { // oeps, coordinates are different!
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                else
-                { // both are null.
-                    return otherCH.Coordinates == null;
                 }
             }
             return false;
@@ -429,43 +362,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Removes all contracted edges.
         /// </summary>
         /// <param name="edges"></param>
-        public static KeyValuePair<uint, CHEdgeData>[] KeepUncontracted(this KeyValuePair<uint, CHEdgeData>[] edges)
+        public static List<Edge<CHEdgeData>> KeepUncontracted(this List<Edge<CHEdgeData>> edges)
         {
-            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
-            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
+            var result = new List<Edge<CHEdgeData>>(edges.Count);
+            foreach (var edge in edges)
             {
-                if (!edge.Value.HasContractedVertex)
+                if (!edge.EdgeData.HasContractedVertex)
                 {
                     result.Add(edge);
                 }
             }
-            return result.ToArray();
+            return result;
         }
-
-        ///// <summary>
-        ///// Adds all downward edges.
-        ///// </summary>
-        ///// <param name="graph"></param>
-        //public static void AddDownwardEdges(this IDynamicGraph<CHEdgeData> graph)
-        //{ // add the reverse edges to get a easy depth-first search.
-        //    for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
-        //    {
-        //        List<KeyValuePair<uint, CHEdgeData>> arcs =
-        //            new List<KeyValuePair<uint, CHEdgeData>>(graph.GetEdges(vertexId));
-        //        foreach (KeyValuePair<uint, CHEdgeData> arc in arcs)
-        //        {
-        //            if (arc.Value.ToHigher)
-        //            {
-        //                // create severse edge.
-        //                var reverseEdge = new CHEdgeData();
-        //                reverseEdge.SetDirection(arc.Value.Backward, arc.Value.Forward, false);
-        //                reverseEdge.Weight = arc.Value.Weight;
-
-        //                graph.AddEdge(arc.Key, vertexId, reverseEdge, null);
-        //            }
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Returns the arcs that point to higher vertices.
@@ -473,21 +381,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsHigher(this IDynamicGraph<CHEdgeData> graph,
+        public static List<Edge<CHEdgeData>> GetArcsHigher(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
-            KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
-            int higherIdx = 0;
-            for (int idx = 0; idx < arcs.Length; idx++)
+            var arcs = graph.GetEdges(vertexId).ToList();
+            var higherArcs = new List<Edge<CHEdgeData>>();
+            for (int idx = 0; idx < arcs.Count; idx++)
             {
-                if (arcs[idx].Value.ToHigher)
+                if (arcs[idx].EdgeData.ToHigher)
                 {
-                    higherArcs[higherIdx] = arcs[idx];
-                    higherIdx++;
+                    higherArcs.Add(arcs[idx]);
                 }
             }
-            Array.Resize(ref higherArcs, higherIdx);
             return higherArcs;
         }
 
@@ -497,21 +402,18 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public static KeyValuePair<uint, CHEdgeData>[] GetArcsLower(this IDynamicGraph<CHEdgeData> graph,
+        public static List<Edge<CHEdgeData>> GetArcsLower(this IGraph<CHEdgeData> graph,
             uint vertexId)
         {
-            KeyValuePair<uint, CHEdgeData>[] arcs = graph.GetEdges(vertexId);
-            KeyValuePair<uint, CHEdgeData>[] higherArcs = new KeyValuePair<uint, CHEdgeData>[arcs.Length];
-            int higherIdx = 0;
-            for (int idx = 0; idx < arcs.Length; idx++)
+            var arcs = graph.GetEdges(vertexId).ToList();
+            var higherArcs = new List<Edge<CHEdgeData>>();
+            for (int idx = 0; idx < arcs.Count; idx++)
             {
-                if (!arcs[idx].Value.ToHigher)
+                if (!arcs[idx].EdgeData.ToHigher)
                 {
-                    higherArcs[higherIdx] = arcs[idx];
-                    higherIdx++;
+                    higherArcs.Add(arcs[idx]);
                 }
             }
-            Array.Resize(ref higherArcs, higherIdx);
             return higherArcs;
         }
     }

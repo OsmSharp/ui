@@ -143,7 +143,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="referenceRouter"></param>
         /// <param name="router"></param>
         protected void TestCompareAll<TEdgeData>(IBasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
-            where TEdgeData : IDynamicGraphEdgeData
+            where TEdgeData : IGraphEdgeData
         {       
             // loop over all nodes and resolve their locations.
             var resolvedReference = new RouterPoint[data.VertexCount - 1];

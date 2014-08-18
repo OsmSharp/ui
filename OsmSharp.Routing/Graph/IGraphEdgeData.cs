@@ -24,7 +24,7 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Abstracts edge information.
     /// </summary>
-    public interface IDynamicGraphEdgeData : IEquatable<IDynamicGraphEdgeData>
+    public interface IGraphEdgeData : IEquatable<IGraphEdgeData>
     {
         /// <summary>
         /// Returns the forward flag relative to the tags.
@@ -48,14 +48,14 @@ namespace OsmSharp.Routing.Graph
         /// Returns the exact reverse edge.
         /// </summary>
         /// <returns></returns>
-        IDynamicGraphEdgeData Reverse();
+        IGraphEdgeData Reverse();
     }
 
     /// <summary>
     /// Abstract a comparer for edges.
     /// </summary>
     public interface IDynamicGraphEdgeComparer<in TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Returns true if the data in the edge2 is useless if the data in edge1 is present.

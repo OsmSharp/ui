@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// An abstract serializer to serialize/deserialize a routing data source to a flat-file.
     /// </summary>
     public abstract class FlatfileSerializer<TEdgeData> : RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Does the v1 serialization.
@@ -95,21 +95,21 @@ namespace OsmSharp.Routing.Graph.Serialization
             var sizeBytes = new byte[8];
             stream.Read(sizeBytes, 0, 8);
             var position = stream.Position;
-            var size = BitConverter.ToInt32(sizeBytes, 0);
+            var size = BitConverter.ToInt64(sizeBytes, 0);
             this.DeserializeVertices(stream, size, graph);
             stream.Seek(position + size, System.IO.SeekOrigin.Begin);
 
             // deserialize edges.
             stream.Read(sizeBytes, 0, 8);
             position = stream.Position;
-            size = BitConverter.ToInt32(sizeBytes, 0);
+            size = BitConverter.ToInt64(sizeBytes, 0);
             this.DeserializeEdges(stream, size, graph);
             stream.Seek(position + size, System.IO.SeekOrigin.Begin);
 
             // deserialize tags.
             stream.Read(sizeBytes, 0, 8);
             position = stream.Position;
-            size = BitConverter.ToInt32(sizeBytes, 0);
+            size = BitConverter.ToInt64(sizeBytes, 0);
             this.DeserializeTags(stream, size, tagsCollectionIndex);
             stream.Seek(position + size, System.IO.SeekOrigin.Begin);
 
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableVertex), true);
 
-            int blockSize = 10;
+            int blockSize = 1000;
             var vertices = new SerializableVertex[blockSize];
             uint vertex = 1;
             float latitude, longitude;

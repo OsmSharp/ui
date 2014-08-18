@@ -732,5 +732,32 @@ namespace OsmSharp.WinForms.UI
         {
             get { return 1; }
         }
+
+        /// <summary>
+        /// Gets or sets the map bounding box.
+        /// </summary>
+        public GeoCoordinateBox MapBoundingBox
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum zoom level.
+        /// </summary>
+        public float MapMinZoomLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum zoom level.
+        /// </summary>
+        public float MapMaxZoomLevel
+        {
+            get;
+            set;
+        }
     }
 }

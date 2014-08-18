@@ -16,14 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Collections.Coordinates.Collections;
+
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
     /// Abstracts a graph implementation that is write-only.
     /// </summary>
-    public interface IDynamicGraphWriteOnly<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    public interface IGraphWriteOnly<TEdgeData> : IGraphReadOnly<TEdgeData>
+        where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Adds a vertex.
@@ -56,7 +57,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
-        void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates);
+        void AddEdge(uint from, uint to, TEdgeData data, ICoordinateCollection coordinates);
 
         /// <summary>
         /// Adds an edge with associated data.
@@ -66,7 +67,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <param name="comparer"></param>
-        void AddEdge(uint from, uint to, TEdgeData data, GeoCoordinateSimple[] coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer);
+        void AddEdge(uint from, uint to, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer);
 
         /// <summary>
         /// Compresses all the data in this graph.

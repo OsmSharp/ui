@@ -45,7 +45,8 @@ namespace OsmSharp.WinForms.UI
                     var file = new FileInfo(path);
                     var fs = file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
                     return new MemoryMappedFileWrapper(
-                        MemoryMappedFile.CreateFromFile(fs, file.Name, capacity, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false));
+                        MemoryMappedFile.CreateFromFile(fs, file.Name, capacity, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false),
+                        file.FullName);
                 },
                 (mapName, capacity) =>
                 {
