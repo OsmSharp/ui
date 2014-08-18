@@ -106,7 +106,7 @@ namespace OsmSharp.Test.Performance.Routing
             performanceInfo.Start();
             performanceInfo.Report("Reading file for {0}...", testFile.Name);
 
-            var testInputFile = new FileInfo(@"test.routing");
+            var testInputFile = new FileInfo(@"europe-latest.osm.pbf.routing");
             Stream readStream = testInputFile.OpenRead();
 
             var deserializedGraph = routingSerializer.Deserialize(readStream, false);
