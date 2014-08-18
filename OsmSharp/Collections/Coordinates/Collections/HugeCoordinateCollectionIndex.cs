@@ -239,7 +239,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <param name="size"></param>
         private void DoReset(long index, long size)
         {
-            for(long idx = index; idx < index + (size * 2); idx++)
+            for(long idx = index; idx < index + (size); idx++)
             {
                 _coordinates[idx] = float.MinValue; 
             }
