@@ -252,6 +252,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         private void DoSet(long index, ICoordinateCollection coordinates)
         {
             long idx = index;
+            coordinates.Reset();
             while(coordinates.MoveNext())
             {
                 _coordinates[idx] = coordinates.Latitude;

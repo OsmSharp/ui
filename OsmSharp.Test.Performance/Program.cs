@@ -18,10 +18,13 @@
 
 using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;
+using OsmSharp.Routing;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Test.Performance
 {
@@ -45,6 +48,15 @@ namespace OsmSharp.Test.Performance
                 // set the seed manually.
                 OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
+                // create router.
+                var router = Router.CreateLiveFrom(new PBFOsmStreamSource(new FileInfo(@"c:\OSM\bin\beerveldsebaan.osm.pbf").OpenRead()),
+                    new OsmRoutingInterpreter());
+
+                // calculate route.
+                var point1 = router.Resolve(Vehicle.Bicycle, new Math.Geo.GeoCoordinate(51.104492, 3.869591));
+                var point2 = router.Resolve(Vehicle.Bicycle, new Math.Geo.GeoCoordinate(51.102916, 3.870363));
+                var route = router.Calculate(Vehicle.Bicycle, point1, point2);
+
                 //// add the to-ignore list.
                 //OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
                 //OsmSharp.Logging.Log.Ignore("CHPreProcessor");
@@ -65,7 +77,7 @@ namespace OsmSharp.Test.Performance
 
                 // test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
-                Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
+                //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
