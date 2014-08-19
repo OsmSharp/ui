@@ -202,9 +202,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
             _index.Resize(size);
 
             long bestSize = size * 2 * ESTIMATED_SIZE;
-            if(bestSize < _nextIdx)
+            if (bestSize < _coordinates.Length)
             { // make sure all coordinate data is saved.
-                bestSize = _nextIdx;
+                bestSize = _coordinates.Length;
             }
             _coordinates.Resize(bestSize);
         }

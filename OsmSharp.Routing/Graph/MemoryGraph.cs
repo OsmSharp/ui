@@ -917,7 +917,7 @@ namespace OsmSharp.Routing.Graph
                         var intermediates = _graph._edgeShapes[_currentEdgeId / 4];
                         if (intermediates != null)
                         {
-                            return _graph._edgeShapes[_currentEdgeId / 4].Reverse();
+                            return intermediates.Reverse();
                         }
                         return null;
                     }
