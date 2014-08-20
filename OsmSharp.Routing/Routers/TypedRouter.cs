@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// The default search delta.
         /// </summary>
-        private const float DefaultSearchDelta = .01f;
+        private const float DefaultSearchDelta = 10f;
 
         /// <summary>
         /// Holds the graph object containing the routable network.
