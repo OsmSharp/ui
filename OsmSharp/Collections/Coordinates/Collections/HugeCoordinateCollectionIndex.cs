@@ -107,6 +107,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             if(this.TryGetIndexAndSize(id, out index, out size))
             {
                 this.DoReset(index, size);
+                _index[id] = 0;
                 return true;
             }
             return false;
@@ -201,9 +202,9 @@ namespace OsmSharp.Collections.Coordinates.Collections
             _index.Resize(size);
 
             long bestSize = size * 2 * ESTIMATED_SIZE;
-            if(bestSize < _nextIdx)
+            if (bestSize < _coordinates.Length)
             { // make sure all coordinate data is saved.
-                bestSize = _nextIdx;
+                bestSize = _coordinates.Length;
             }
             _coordinates.Resize(bestSize);
         }
@@ -238,7 +239,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <param name="size"></param>
         private void DoReset(long index, long size)
         {
-            for(long idx = index; idx < index + (size * 2); idx++)
+            for(long idx = index; idx < index + (size); idx++)
             {
                 _coordinates[idx] = float.MinValue; 
             }
@@ -252,6 +253,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         private void DoSet(long index, ICoordinateCollection coordinates)
         {
             long idx = index;
+            coordinates.Reset();
             while(coordinates.MoveNext())
             {
                 _coordinates[idx] = coordinates.Latitude;
