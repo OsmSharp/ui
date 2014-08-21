@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.TSP
         {
             if (withOptimization == true)
             {
-                return CalculateTSP(vehicle, points, first, last, isRound);
+                return CalculateTSP(vehicle, points, first, last);
             }          
             IRoute tspSolution = new DynamicAsymmetricRoute(points.Length, 0, false);  // _routerTSP.CalculateTSP(weights, locations, first, last);
             for (int y = 1; y < points.Length; y++)
