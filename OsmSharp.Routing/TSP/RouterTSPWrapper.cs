@@ -147,7 +147,7 @@ namespace OsmSharp.Routing.TSP
             }
             
             // call the RouterTSP.
-            IRoute tspSolution = _routerTSP.CalculateTSP(weights, locations);
+            IRoute tspSolution = _routerTSP.CalculateTSP(weights, locations,first,last);
 
             // calculate weight
             double weight = 0;
