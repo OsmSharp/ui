@@ -89,6 +89,10 @@ namespace OsmSharp.Routing.TSP
             {
                 tspSolution.InsertAfter(y - 1, y); // new DynamicAsymmetricRoute(points.Length, y, false);
             }
+            if (isRound)
+            {
+                tspSolution.InsertAfter(points.Length - 1, 0);
+            }
             // concatenate the route(s).
             return this.BuildRoute(vehicle, points, tspSolution, points.Length - 1);
         }
