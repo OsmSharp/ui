@@ -80,19 +80,23 @@ namespace OsmSharp.Routing.TSP
         /// <returns></returns>
         public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, int last, bool isRound, bool withOptimization = true)
         {
+            // Perhaps it will a good Idea to combine all Calculation-Options into Flag-Enum 
             if (withOptimization == true)
             {
-                return CalculateTSP(vehicle, points, first, last);
-            }          
+                if (isRound)
+                {
+                    return CalculateTSP(vehicle, points, first, isRound);
+                }
+                else{
+                    return CalculateTSP(vehicle, points, first, last);
+                }
+            }
             IRoute tspSolution = new DynamicAsymmetricRoute(points.Length, 0, false);  // _routerTSP.CalculateTSP(weights, locations, first, last);
             for (int y = 1; y < points.Length; y++)
             {
                 tspSolution.InsertAfter(y - 1, y); // new DynamicAsymmetricRoute(points.Length, y, false);
             }
-            if (isRound)
-            {
-                tspSolution.InsertAfter(points.Length - 1, 0);
-            }
+
             // concatenate the route(s).
             return this.BuildRoute(vehicle, points, tspSolution, points.Length - 1);
         }
