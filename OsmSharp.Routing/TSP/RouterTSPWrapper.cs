@@ -67,7 +67,31 @@ namespace OsmSharp.Routing.TSP
         {
             return _router.CalculateManyToManyWeight(vehicle, points, points);
         }
-
+        
+        /// <summary>
+        /// Calculates the route along all given points starting and ending at the given points.
+        /// </summary>
+        /// <param name="vehicle">The vehicle type.</param>
+        /// <param name="points">The points to travel along.</param>
+        /// <param name="first">The index of the point to start from.</param>
+        /// <param name="last">The index of the point to end at.</param>
+        /// <param name="isRound">Return back to the first point or not.</param>
+        /// <param name="withOptimization">optimize the route or not.</param>
+        /// <returns></returns>
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, int last, bool isRound, bool withOptimization = true)
+        {
+            if (withOptimization == true)
+            {
+                return CalculateTSP(vehicle, points, first, last, isRound);
+            }          
+            IRoute tspSolution = new DynamicAsymmetricRoute(points.Length, 0, false);  // _routerTSP.CalculateTSP(weights, locations, first, last);
+            for (int y = 1; y < points.Length; y++)
+            {
+                tspSolution.InsertAfter(y - 1, y); // new DynamicAsymmetricRoute(points.Length, y, false);
+            }
+            // concatenate the route(s).
+            return this.BuildRoute(vehicle, points, tspSolution, points.Length - 1);
+        }
         /// <summary>
         /// Calculates the shortest route along all given points starting and ending at the given points.
         /// </summary>
