@@ -86,7 +86,7 @@ namespace OsmSharp.Routing.VRP
                 Route route;
                 for (int idx = 0; idx < solution[routeIdx].Length - 1; idx++)
                 {
-                    route = _router.Calculate(Vehicle.Car, points[solution[routeIdx][idx]],
+                    route = _router.Calculate(vehicle, points[solution[routeIdx][idx]],
                         points[solution[routeIdx][idx + 1]]);
                     if (route != null && route.Segments.Length > 0)
                     {
