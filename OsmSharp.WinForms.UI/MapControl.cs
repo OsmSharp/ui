@@ -285,11 +285,11 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseMove(e);
 
+            var currentCoordinates = new double[] { e.X, e.Y };
             if (this.MapAllowPan && 
                 e.Button == MouseButtons.Left &&
                 _draggingCoordinates != null)
             {
-                var currentCoordinates = new double[] { e.X, e.Y };
                 var delta = new double[] { _draggingCoordinates[0] - currentCoordinates[0],
                         (_draggingCoordinates[1] - currentCoordinates[1])};
 
@@ -309,6 +309,7 @@ namespace OsmSharp.WinForms.UI
                 // notify the map.
                 this.QueueNotifyMapViewChanged();
             }
+            this.RaiseOnMapMouseMove(e);
         }
 
         /// <summary>

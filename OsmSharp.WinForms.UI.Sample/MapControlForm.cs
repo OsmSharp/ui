@@ -100,6 +100,12 @@ namespace OsmSharp.WinForms.UI.Sample
             this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
             this.mapControl1.MapZoom = 14;
             this.mapControl1.MapMouseClick += mapControl1_MapMouseClick;
+            this.mapControl1.MapMouseMove += mapControl1_MapMouseMove;
+        }
+
+        void mapControl1_MapMouseMove(MapControlEventArgs e)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MapControlForm", OsmSharp.Logging.TraceEventType.Information, "Map mouse move");
         }
 
         private Router _router;
