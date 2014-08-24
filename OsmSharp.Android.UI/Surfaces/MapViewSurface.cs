@@ -431,7 +431,7 @@ namespace OsmSharp.Android.UI
                         }
 
                         // does the rendering.
-                        bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
+                        bool complete = _cacheRenderer.Render(canvas, _map.Projection, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
                         long afterRendering = DateTime.Now.Ticks;
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,

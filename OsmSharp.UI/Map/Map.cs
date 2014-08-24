@@ -25,8 +25,6 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Images;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -91,11 +89,15 @@ namespace OsmSharp.UI.Map
         /// <param name="extraView"></param>
         public void ViewChanged(float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
+            var zoomLevel = (float)this.Projection.ToZoomLevel(zoomFactor);
             lock (_layers)
             {
                 foreach (var layer in _layers)
                 {
-                    layer.ViewChanged(this, zoomFactor, center, view, extraView);
+                    if (layer.IsLayerVisibleFor(zoomLevel))
+                    {
+                        layer.ViewChanged(this, zoomFactor, center, view, extraView);
+                    }
                 }
             }
         }

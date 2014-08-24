@@ -84,7 +84,10 @@ namespace OsmSharp.WinForms.UI.Sample
             //var dataSource = MemoryDataSource.CreateFromPBFStream(
             //    new FileInfo(@"kempen-big.osm.pbf").OpenRead());
             //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
-            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200));
+            var layerTile = new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200);
+            layerTile.MinZoom = 12;
+            layerTile.MaxZoom = 13;
+            map.AddLayer(layerTile);
             //map.AddLayer(new LayerScene(
             //    Scene2D.Deserialize(new FileInfo(@"default.map").OpenRead(),
             //        true)));

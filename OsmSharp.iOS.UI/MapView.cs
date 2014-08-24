@@ -489,7 +489,7 @@ namespace OsmSharp.iOS.UI
 							// does the rendering.
 							bool complete = _cacheRenderer.Render(new CGContextWrapper(image,
 								new RectangleF(0, 0, (int)(size * _extra), (int)(size * _extra))),
-								                layers, view, sceneZoomFactor);
+                                                _map.Projection, layers, view, sceneZoomFactor);
 
 							long afterRendering = DateTime.Now.Ticks;
 
