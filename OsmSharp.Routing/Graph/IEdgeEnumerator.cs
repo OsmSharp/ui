@@ -115,6 +115,17 @@ namespace OsmSharp.Routing.Graph
             get;
             set;
         }
+
+        /// <summary>
+        /// Returns a string representing this edge.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0} - {1}",
+                this.Neighbour,
+                this.EdgeData.ToInvariantString());
+        }
     }
 
     /// <summary>

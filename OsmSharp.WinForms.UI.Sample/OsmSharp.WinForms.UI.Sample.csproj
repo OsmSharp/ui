@@ -121,6 +121,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="..\..\..\Users\xivk\Downloads\north-dakota.routing\north-dakota.routing">
+      <Link>north-dakota.routing</Link>
+    </EmbeddedResource>
     <None Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
       <Link>kempen-big.osm.pbf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
