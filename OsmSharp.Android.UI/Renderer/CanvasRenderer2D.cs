@@ -52,11 +52,6 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private global::Android.Graphics.Paint _paint;
 
-        /// <summary>
-        /// Holds the scale factor to enable higher resolution renderings.
-        /// </summary>
-        private float _scaleFactor = 1;
-
 		private double[] _transformed1 = new double[2];
 
         /// <summary>
@@ -71,10 +66,10 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Creates a new canvas renderer.
         /// </summary>
-        /// <param name="scaleFactor"></param>
-		public CanvasRenderer2D(float scaleFactor)
+        /// <param name="density"></param>
+		public CanvasRenderer2D(float density)
 		{
-            _scaleFactor = scaleFactor;
+            this.Density = density;
 
 			_paint = new global::Android.Graphics.Paint();
 			_paint.AntiAlias = true;
@@ -256,7 +251,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="size">Size.</param>
 		protected override void DrawPoint (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, int color, double size)
 		{
-			float sizeInPixels = this.ToPixels(size) * _scaleFactor;
+			float sizeInPixels = this.ToPixels(size) * this.Density;
 			_paint.Color = new global::Android.Graphics.Color(color);
 			_paint.StrokeWidth = 1;
 			_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -313,7 +308,7 @@ namespace OsmSharp.Android.UI
 					if (yT > maxY) { maxY = yT; }
 				}
 				if ((maxX - minX) > 1 || (maxY - minY) > 1) {
-                    float widthInPixels = this.ToPixels(width) * _scaleFactor;
+                    float widthInPixels = this.ToPixels(width) * this.Density;
 					_paint.Color = new global::Android.Graphics.Color (color);
 					_paint.StrokeWidth = widthInPixels;
 					target.Target.DrawPath (_path, _paint);
@@ -331,7 +326,7 @@ namespace OsmSharp.Android.UI
 			if(x.Length > 1)
 			{
 				_paint.Color = new global::Android.Graphics.Color(color);
-                _paint.StrokeWidth = this.ToPixels(width) * _scaleFactor;
+                _paint.StrokeWidth = this.ToPixels(width) * this.Density;
 				if(fill)
 				{
 					_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -465,7 +460,7 @@ namespace OsmSharp.Android.UI
 			this.Transform(x, y, _transformed1);
 			float xPixels = (float)_transformed1[0];
 			float yPixels = (float)_transformed1[1];
-            float textSize = this.ToPixels(size) * _scaleFactor;
+            float textSize = this.ToPixels(size) * this.Density;
 
 			_paint.AntiAlias = true;
 			_paint.SubpixelText = true;
@@ -535,7 +530,7 @@ namespace OsmSharp.Android.UI
 		{
 			if (xa.Length > 1)
 			{
-                float sizeInPixels = this.ToPixels(size) * _scaleFactor;	
+                float sizeInPixels = this.ToPixels(size) * this.Density;	
 				_paint.SubpixelText = true;
 				_paint.TextSize = (float)sizeInPixels;
 				_paint.AntiAlias = true;

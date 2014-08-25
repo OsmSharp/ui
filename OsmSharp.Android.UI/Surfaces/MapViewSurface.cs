@@ -148,6 +148,7 @@ namespace OsmSharp.Android.UI
 
             // gets the system density.
             _density = global::Android.Content.Res.Resources.System.DisplayMetrics.Density;
+            _bufferFactor = _density; // set default scale factor relative to density.
 
             // create the renderer.
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
@@ -431,6 +432,7 @@ namespace OsmSharp.Android.UI
                         }
 
                         // does the rendering.
+                        _cacheRenderer.Density = this.MapScaleFactor;
                         bool complete = _cacheRenderer.Render(canvas, _map.Projection, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
                         long afterRendering = DateTime.Now.Ticks;

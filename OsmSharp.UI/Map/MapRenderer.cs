@@ -172,12 +172,28 @@ namespace OsmSharp.UI.Map
 		/// Gets a value indicating whether this instance is running.
 		/// </summary>
 		/// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
-		public bool IsRunning
-		{
-			get{
-				return _renderer.IsRunning;
-			}
-		}
+        public bool IsRunning
+        {
+            get
+            {
+                return _renderer.IsRunning;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        public float Density
+        {
+            get
+            {
+                return _renderer.Density;
+            }
+            set
+            {
+                _renderer.Density = value;
+            }
+        }
 
 		/// <summary>
 		/// Reset this instance.

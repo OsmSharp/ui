@@ -152,6 +152,11 @@ namespace OsmSharp.UI.Renderer
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        public virtual float Density { get; set; }
+
 		#endregion
 
 	    /// <summary>
@@ -420,5 +425,5 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="text"></param>
         protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
 		                                     double size, int? haloColor, int? haloRadius, string fontName);
-	}
+    }
 }
