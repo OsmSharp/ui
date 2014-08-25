@@ -77,6 +77,12 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\mbtiles\kempen.mbtiles">
       <Link>kempen.mbtiles</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\map\blue.map">
+      <Link>blue.map</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\map\dark_roads.map">
+      <Link>dark_roads.map</Link>
+    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -124,10 +130,5 @@
   <ItemGroup>
     <AndroidEnvironment Include="environment.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\drawable-mdpi\" />
-    <Folder Include="Resources\drawable-hdpi\" />
-    <Folder Include="Resources\drawable-xhdpi\" />
-    <Folder Include="Resources\drawable-xxhdpi\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
