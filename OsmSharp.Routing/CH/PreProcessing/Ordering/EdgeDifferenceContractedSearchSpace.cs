@@ -73,7 +73,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             _contraction_count.TryGetValue(vertex, out contracted);
 
             // get the neighbours.
-            var neighbours = _data.GetEdges(vertex).ToList();
+            var neighbours = _data.GetEdges(vertex).Where(x => !x.EdgeData.ToLower).ToList();
 
             // simulate the construction of new edges.
             int new_edges = 0;
@@ -102,7 +102,6 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             long depth = 0;
             _depth.TryGetValue(vertex, out depth);
             return (((new_edges) - removed)) + (2 * contracted);
-            //return (new_edges - removed) + depth;
         }
 
         /// <summary>

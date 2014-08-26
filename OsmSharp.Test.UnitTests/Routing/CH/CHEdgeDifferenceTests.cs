@@ -358,8 +358,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             processor.Contract(5);
 
-            Assert.AreEqual(1, edgeDifference.Calculate(2));
-            Assert.AreEqual(-2, edgeDifference.Calculate(6));
+            Assert.AreEqual(2, edgeDifference.Calculate(2));
+            Assert.AreEqual(-1, edgeDifference.Calculate(6));
             Assert.AreEqual(2, edgeDifference.Calculate(7));
             Assert.AreEqual(9, edgeDifference.Calculate(8));
             Assert.AreEqual(2, edgeDifference.Calculate(9));
@@ -418,12 +418,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             Assert.AreEqual(9, edgeDifference.Calculate(8));
             Assert.AreEqual(2, edgeDifference.Calculate(9));
-            Assert.AreEqual(1, edgeDifference.Calculate(10));
+            Assert.AreEqual(2, edgeDifference.Calculate(10));
             Assert.AreEqual(2, edgeDifference.Calculate(12));
             Assert.AreEqual(2, edgeDifference.Calculate(13));
             Assert.AreEqual(2, edgeDifference.Calculate(14));
             Assert.AreEqual(2, edgeDifference.Calculate(15));
-            Assert.AreEqual(-2, edgeDifference.Calculate(18));
+            Assert.AreEqual(-1, edgeDifference.Calculate(18));
             Assert.AreEqual(2, edgeDifference.Calculate(19));
 
             processor.Contract(18);
@@ -458,11 +458,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             processor.Contract(10);
 
-            Assert.AreEqual(-2, edgeDifference.Calculate(12));
+            Assert.AreEqual(-1, edgeDifference.Calculate(12));
             Assert.AreEqual(2, edgeDifference.Calculate(13));
             Assert.AreEqual(2, edgeDifference.Calculate(14));
             Assert.AreEqual(2, edgeDifference.Calculate(15));
-            Assert.AreEqual(-2, edgeDifference.Calculate(19));
+            Assert.AreEqual(-1, edgeDifference.Calculate(19));
 
             processor.Contract(12);
 

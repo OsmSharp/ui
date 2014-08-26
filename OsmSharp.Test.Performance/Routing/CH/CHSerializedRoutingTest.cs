@@ -43,7 +43,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
-                "kempen-big.osm.pbf.routing", box, 100);
+                "kempen-big.osm.pbf.routing", box, 1000);
 
             // test instructions.
             //CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         public static void Test(Stream stream)
         {
             CHSerializedRoutingTest.Test(
-                stream, 100);
+                stream, 1000);
         }
 
         /// <summary>
