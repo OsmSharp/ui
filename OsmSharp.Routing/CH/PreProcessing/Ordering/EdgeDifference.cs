@@ -16,12 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 {
@@ -67,7 +63,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>();
             foreach(var neighbour in neighbours)
             {
-                if (!neighbour.EdgeData.ToLower && !neighbour.EdgeData.ToHigher)
+                if (!neighbour.EdgeData.ToLower && neighbour.EdgeData.Forward)
                 {
                     edgesForContractions.Add(new KeyValuePair<uint, CHEdgeData>(neighbour.Neighbour, neighbour.EdgeData));
                     removed++;
@@ -84,7 +80,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witnessCalculator.Exists(_data, from.Key, to.Key, vertex,
-                            (float)from.Value.Weight + (float)to.Value.Weight, 1000))
+                            (float)from.Value.BackwardWeight + (float)to.Value.ForwardWeight, 1000))
                         { // no witness exists.
                             newEdges++;
                         }

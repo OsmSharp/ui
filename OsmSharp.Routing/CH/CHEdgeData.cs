@@ -30,159 +30,44 @@ namespace OsmSharp.Routing.CH.PreProcessing
     public struct CHEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Creates a new CHEdge data class.
+        /// Holds the contracted direction.
         /// </summary>
-        /// <param name="weight"></param>
-        /// <param name="forward"></param>
-        /// <param name="backward"></param>
-        public CHEdgeData(float weight, bool forward, bool backward)
-            : this()
-        {
-            this.Weight = weight;
-            this.SetDirection(forward, backward);
-        }
+        /// <remarks>0: uncontracted, 1: tohigher, 2: tolower</remarks>
+        private byte _contractedDirection;
 
         /// <summary>
-        /// Creates a new CHEdge data class.
+        /// Gets/sets the value.
         /// </summary>
-        /// <param name="weight"></param>
-        /// <param name="forward"></param>
-        /// <param name="backward"></param>
-        /// <param name="toHigher"></param>
-        public CHEdgeData(float weight, bool forward, bool backward, bool toHigher)
-            : this()
-        {
-            this.Weight = weight;
-            this.SetDirection(forward, backward, toHigher);
-        }
-
-        /// <summary>
-        /// Creates a new CHEdge data class.
-        /// </summary>
-        /// <param name="weight"></param>
-        /// <param name="forward"></param>
-        /// <param name="backward"></param>
-        /// <param name="toHigher"></param>
-        /// <param name="contractedVertexId"></param>
-        /// <param name="tags"></param>
-        public CHEdgeData(float weight, bool forward, bool backward, bool toHigher, uint contractedVertexId, uint tags)
-            : this()
-        {
-            this.Weight = weight;
-            this.SetDirection(forward, backward, toHigher);
-            this.ContractedVertexId = contractedVertexId;
-            this.Tags = tags;
-        }
-
-        /// <summary>
-        /// Direction flag to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
-        ///                to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
-        ///                no low/high info: ( 8=bidirectional,  9=forward, 10=backward, 11=not forward and not backward).
-        /// </summary>
-        public byte Direction { get; set; }
-
-        /// <summary>
-        /// Sets the direction without lower/higher info.
-        /// </summary>
-        /// <param name="forward"></param>
-        /// <param name="backward"></param>
-        public void SetDirection(bool forward, bool backward)
-        {
-            if (forward && backward)
-            {
-                this.Direction = 8;
-            }
-            else if (forward)
-            {
-                this.Direction = 9;
-            }
-            else if (backward)
-            {
-                this.Direction = 10;
-            }
-            else
-            {
-                this.Direction = 11;
-            }
-        }
-
-        /// <summary>
-        /// Sets the direction.
-        /// </summary>
-        /// <param name="forward"></param>
-        /// <param name="backward"></param>
-        /// <param name="toHigher"></param>
-        public void SetDirection(bool forward, bool backward, bool toHigher)
-        {
-            if (toHigher)
-            {
-                if (forward && backward)
-                {
-                    this.Direction = 0;
-                }
-                else if (forward)
-                {
-                    this.Direction = 1;
-                }
-                else if (backward)
-                {
-                    this.Direction = 2;
-                }
-                else
-                {
-                    this.Direction = 3;
-                }
-            }
-            else
-            {
-                if (forward && backward)
-                {
-                    this.Direction = 4;
-                }
-                else if (forward)
-                {
-                    this.Direction = 5;
-                }
-                else if (backward)
-                {
-                    this.Direction = 6;
-                }
-                else
-                {
-                    this.Direction = 7;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the forwardflag.
-        /// </summary>
-        public bool Forward
+        internal byte ContractedDirectionValue
         {
             get
             {
-                return this.Direction == 0 
-                    || this.Direction == 1 
-                    || this.Direction == 4
-                    || this.Direction == 5
-                    || this.Direction == 8
-                    || this.Direction == 9;
+                return _contractedDirection;
+            }
+            set
+            {
+                _contractedDirection = value;
             }
         }
 
         /// <summary>
-        /// Gets the backwardflag.
+        /// Sets the contracted direction flags.
         /// </summary>
-        public bool Backward
+        /// <param name="toHigher"></param>
+        /// <param name="toBackward"></param>
+        public void SetContractedDirection(bool toHigher, bool toBackward)
         {
-            get
+            if(!toHigher && !toBackward)
             {
-                return this.Direction == 0 
-                    || this.Direction == 2
-                    || this.Direction == 4
-                    || this.Direction == 6
-                    || this.Direction == 8
-                    || this.Direction == 10;
+                _contractedDirection = 0;
+            }
+            else if(toHigher)
+            {
+                _contractedDirection = 1;
+            }
+            else
+            {
+                _contractedDirection = 2;
             }
         }
 
@@ -193,163 +78,182 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             get
             {
-                return this.Direction == 0 
-                    || this.Direction == 1 
-                    || this.Direction == 2 
-                    || this.Direction == 3;
+                return _contractedDirection == 1;
             }
         }
 
         /// <summary>
-        /// Gets the to lower flag.
+        /// Gets the to higher flag.
         /// </summary>
         public bool ToLower
         {
             get
             {
-                return this.Direction == 4
-                    || this.Direction == 5
-                    || this.Direction == 6
-                    || this.Direction == 7;
+                return _contractedDirection == 2;
             }
         }
 
         /// <summary>
-        /// Weight.
+        /// Gets the forward flag.
         /// </summary>
-        public float Weight { get; set; }
-
-        /// <summary>
-        /// Returns true if this edge is a shortcut.
-        /// </summary>
-        public bool HasContractedVertex
+        public bool Forward
         {
             get
             {
-                return this.ContractedVertexId > 0;
+                return this.ForwardWeight != float.MaxValue;
             }
         }
 
         /// <summary>
-        /// The vertex contracted by this edge.
+        /// Gets the backward flag.
         /// </summary>
-        public uint ContractedVertexId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tags id.
-        /// </summary>
-        public uint Tags { get; set; }
-
-        /// <summary>
-        /// Returns true if this edge represents a neighbour-relation.
-        /// </summary>
-        public bool RepresentsNeighbourRelations
+        public bool Backward
         {
-            get { return !this.HasContractedVertex; }
+            get
+            {
+                return this.BackwardWeight != float.MaxValue;
+            }
         }
 
         /// <summary>
-        /// Creates the exact reverse of this edge.
+        /// Holds the forward weight.
+        /// </summary>
+        public float ForwardWeight { get; set; }
+
+        /// <summary>
+        /// Holds the forward contracted id.
+        /// </summary>
+        public uint ForwardContractedId { get; set; }
+
+        /// <summary>
+        /// Holds the backward weight.
+        /// </summary>
+        public float BackwardWeight { get; set; }
+
+        /// <summary>
+        /// Holds the backward contracted id.
+        /// </summary>
+        public uint BackwardContractedId { get; set; }
+
+        /// <summary>
+        /// Returns true if the backward or forward edge represents a neighbour relation.
+        /// </summary>
+        public bool RepresentsNeighbourRelations
+        {
+            get { return this.BackwardContractedId == 0 ||
+                this.ForwardContractedId == 0; }
+        }
+        /// <summary>
+        /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
+        /// </summary>
+        private uint _value;
+
+        /// <summary>
+        /// Gets/sets the value.
+        /// </summary>
+        internal uint TagsValue
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                _value = value;
+            }
+        }
+
+        /// <summary>
+        /// Flag indicating if the tags are forward relative to this edge or not.
+        /// </summary>
+        public bool TagsForward
+        {
+            get
+            { // true when first bit is 0.
+                return _value % 2 == 0;
+            }
+            set
+            {
+                if (_value % 2 == 0)
+                { // true already.
+                    if (!value) { _value = _value + 1; }
+                }
+                else
+                { // false already.
+                    if (value) { _value = _value - 1; }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The properties of this edge.
+        /// </summary>
+        public uint Tags
+        {
+            get
+            {
+                return _value / 2;
+            }
+            set
+            {
+                if (_value % 2 == 0)
+                { // true already.
+                    _value = value * 2;
+                }
+                else
+                { // false already.
+                    _value = (value * 2) + 1;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Returns the exact inverse of this edge.
         /// </summary>
         /// <returns></returns>
         public IGraphEdgeData Reverse()
         {
-            // to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
-            // to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
-            // no low/high info: ( 8=bidirectional,  9=forward, 10=backward, 11=not forward and not backward).          
-            var data = new CHEdgeData();
-            data.Tags = this.Tags;
-            data.ContractedVertexId = this.ContractedVertexId;
-            data.Weight = this.Weight;
-            data.Direction = this.Direction;
-            switch(this.Direction)
+            var reverse = new CHEdgeData();
+
+            // forward/backward specific info.
+            reverse.BackwardWeight = this.ForwardWeight;
+            reverse.BackwardContractedId = this.ForwardContractedId;
+            reverse.ForwardContractedId = this.BackwardContractedId;
+            reverse.ForwardWeight = this.BackwardWeight;
+
+            // tags.
+            reverse.Tags = this.Tags;
+            reverse.TagsForward = !this.TagsForward;
+
+            // contracted direction info.
+            reverse._contractedDirection = this._contractedDirection;
+            switch(_contractedDirection)
             {
-                case 0: // to higher bidirectional.
-                    data.Direction = 4; // to lower bidirectional.
+                case 1:
+                    reverse._contractedDirection = 2;
                     break;
-                case 1: // to higher forward.
-                    data.Direction = 6; // to lower backward.
-                    break;
-                case 2: // to higher backward.
-                    data.Direction = 5; // to lower forward.
-                    break;
-                case 3: // to higher no directional info.
-                    data.Direction = 7; // to lower no directional info.
-                    break;
-                case 4: // to lower bidirectional.
-                    data.Direction = 0; // to higher bidirectional.
-                    break;
-                case 5: // to lower forward.
-                    data.Direction = 2; // to higher backward.
-                    break;
-                case 6: // to lower backward.
-                    data.Direction = 1; // to higher forward.
-                    break;
-                case 7: // to lower no directional info.
-                    data.Direction = 3; // to higher no directional info.
-                    break;
-                case 9: // no low/high forward.
-                    data.Direction = 10; // no low/high backward.
-                    break;
-                case 10: // no low/high backward.
-                    data.Direction = 9; // no low/high forward.
+                case 2:
+                    reverse._contractedDirection = 1;
                     break;
             }
-            return data;
+            return reverse;
         }
 
         /// <summary>
-        /// Returns true if the other edge represents the same information than this edge.
+        /// Returns true if the given edge equals this edge.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
         public bool Equals(IGraphEdgeData other)
         {
-            if (other is CHEdgeData)
-            { // ok, type is the same.
-                var otherCH = (CHEdgeData)other;
-                if (otherCH.Direction != this.Direction &&
-                    otherCH.ContractedVertexId != this.ContractedVertexId &&
-                    otherCH.Weight != this.Weight &&
-                    otherCH.Tags != this.Tags)
-                { // basic info different.
-                    return false;
-                }
-            }
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Comparer for CH edges.
-    /// </summary>
-    public class CHEdgeDataComparer : IDynamicGraphEdgeComparer<CHEdgeData>
-    {
-        /// <summary>
-        /// Return true if the existence of edge1 makes edge2 useless.
-        /// </summary>
-        /// <param name="edge1"></param>
-        /// <param name="edge2"></param>
-        /// <returns></returns>
-        public bool Overlaps(CHEdgeData edge1, CHEdgeData edge2)
-        {
-            if (edge1.ToHigher != edge2.ToHigher)
-            { // the one is to a higher vertex, the other to a lower: edge1 can never overlap edge2.
-                return false;
-            }
-            if (!edge1.Backward && edge2.Backward)
-            { // the first edge does not have a backward flag: edge1 can never overlap edge2.
-                return false;
-            }
-            if (!edge1.Forward && edge2.Forward)
-            { // the first edge does not have a forward flag: edge1 can never overlap edge2.
-                return false;
-            }
-            if (edge1.Weight > edge2.Weight)
-            { // the first edge eight is larger than the second edge weight: edge1 can never overlap edge2
-                return false;
-            }
-            return true;
+            var otherEdge = (CHEdgeData)other;
+            return (otherEdge._contractedDirection == this._contractedDirection &&
+                otherEdge._value == this._value &&
+                otherEdge.BackwardContractedId == this.BackwardContractedId &&
+                otherEdge.BackwardWeight == this.BackwardWeight &&
+                otherEdge.ForwardWeight == this.ForwardWeight &&
+                otherEdge.ForwardContractedId == this.ForwardContractedId);
         }
     }
 
@@ -367,7 +271,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var result = new List<Edge<CHEdgeData>>(edges.Count);
             foreach (var edge in edges)
             {
-                if (!edge.EdgeData.HasContractedVertex)
+                if ((edge.EdgeData.Backward && edge.EdgeData.BackwardContractedId == 0) || (edge.EdgeData.Forward && edge.EdgeData.ForwardContractedId == 0))
                 {
                     result.Add(edge);
                 }

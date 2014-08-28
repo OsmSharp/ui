@@ -114,25 +114,37 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// The weight of this arc.
         /// </summary>
         [ProtoMember(2)]
-        public float Weight { get; set; }
+        public float ForwardWeight { get; set; }
 
         /// <summary>
-        /// Holds the id of the external shortcut vertex.
+        /// Gets or sets the forward contracted id.
         /// </summary>
         [ProtoMember(3)]
-        public uint ShortcutId { get; set; }
+        public uint ForwardContractedId { get; set; }
 
         /// <summary>
-        /// Holds the direction(s) of this arc (0=bidirectional, 1=forward, 2=backward)
+        /// The weight of this arc.
         /// </summary>
         [ProtoMember(4)]
-        public byte Direction { get; set; }
+        public float BackwardWeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the backward contracted id.
+        /// </summary>
+        [ProtoMember(5)]
+        public uint BackwardContractedId { get; set; }
+
+        /// <summary>
+        /// Holds the contracted direction (0=none, 1=tohigher, 2=tolower).
+        /// </summary>
+        [ProtoMember(6)]
+        public byte ContractedDirectionValue { get; set; }
 
         /// <summary>
         /// Holds the tags id associated with this arc.
         /// </summary>
-        [ProtoMember(5)]
-        public uint TagsId { get; set; }
+        [ProtoMember(7)]
+        public uint TagsValue { get; set; }
     }
 
     /// <summary>

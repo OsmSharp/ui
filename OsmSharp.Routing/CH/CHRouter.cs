@@ -39,25 +39,11 @@ namespace OsmSharp.Routing.CH
     public class CHRouter : IBasicRouter<CHEdgeData>
     {
         /// <summary>
-        /// Holds a flag configuring this route to maybe also move down.
-        /// </summary>
-        private bool _dontCareAboutHiearchy = false;
-
-        /// <summary>
         /// Creates a new CH router on the givend data.
         /// </summary>
         public CHRouter()
         {
 
-        }
-
-        /// <summary>
-        /// Creates a new CH router on the givend data.
-        /// </summary>
-        /// <param name="dontCareAboutHiearchy"></param>
-        public CHRouter(bool dontCareAboutHiearchy)
-        {
-            _dontCareAboutHiearchy = dontCareAboutHiearchy;
         }
 
         /// <summary>
@@ -378,13 +364,13 @@ namespace OsmSharp.Routing.CH
 
                     // add the neighbours to the queue.
                     foreach (var neighbour in neighbours.Where(
-                        a => a.EdgeData.Backward))
+                        a => a.EdgeData.Backward && a.EdgeData.ToHigher))
                     {
                         if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.BackwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                     }
@@ -527,13 +513,13 @@ namespace OsmSharp.Routing.CH
 
                     // add the neighbours to the queue.
                     foreach (var neighbour in neighbours.Where(
-                        a => a.EdgeData.Forward))
+                        a => a.EdgeData.Forward && a.EdgeData.ToHigher))
                     {
                         if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.ForwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                     }
@@ -1104,24 +1090,24 @@ namespace OsmSharp.Routing.CH
                 // add the neighbours to the queue.
                 foreach (var neighbour in neighbours)
                 {
-                    if ((_dontCareAboutHiearchy || neighbour.EdgeData.ToHigher) &&
+                    if ((neighbour.EdgeData.ToHigher || !neighbour.EdgeData.ToLower) &&
                         neighbour.EdgeData.Forward)
-                    {
+                    { // the edge is forward, and is to higher or was not contracted at all.
                         if (!settledQueue.Forward.ContainsKey(neighbour.Neighbour) &&
                             (exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ContractedVertexId)))
+                            exception != neighbour.EdgeData.ForwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.ForwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ContractedVertexId)))
+                            exception != neighbour.EdgeData.ForwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.ForwardWeight, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Forward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
@@ -1179,24 +1165,24 @@ namespace OsmSharp.Routing.CH
                 // add the neighbours to the queue.
                 foreach (var neighbour in neighbours)
                 {
-                    if ((_dontCareAboutHiearchy || neighbour.EdgeData.ToHigher) &&
+                    if ((neighbour.EdgeData.ToHigher || !neighbour.EdgeData.ToLower) &&
                         neighbour.EdgeData.Backward)
-                    {
+                    { // the edge is backward, and is to higher or was not contracted at all.
                         if (!settledQueue.Backward.ContainsKey(neighbour.Neighbour)
                             && (exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ContractedVertexId)))
+                            exception != neighbour.EdgeData.BackwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.BackwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbour.Neighbour &&
-                            exception != neighbour.EdgeData.ContractedVertexId)))
+                            exception != neighbour.EdgeData.BackwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.Weight, current);
+                                neighbour.Neighbour, current.Weight + neighbour.EdgeData.BackwardContractedId, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Backward[neighbour.Neighbour].Weight > routeToNeighbour.Weight)
@@ -1296,7 +1282,7 @@ namespace OsmSharp.Routing.CH
             CHEdgeData data;
             if (graph.GetEdge((uint)path.From.VertexId, (uint)path.VertexId, out data))
             { // there is an edge.
-                uint contractedVertex = data.ContractedVertexId;
+                uint contractedVertex = data.ForwardContractedId;
                 return this.ExpandEdge(graph, path, fromVertex, contractedVertex, toVertex);
             }
             throw new Exception(string.Format("Edge {0} not found!", path.ToInvariantString()));
@@ -1505,35 +1491,35 @@ namespace OsmSharp.Routing.CH
 
                         // get the uncontracted arc from the contracted vertex.
                         var uncontracted = arc;
-                        while (uncontracted.Value.Value.HasContractedVertex)
-                        { // try to inflate the contracted vertex.
-                            var contractedArcs = graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
+                        //while (uncontracted.Value.Value.HasContractedVertex)
+                        //{ // try to inflate the contracted vertex.
+                        //    var contractedArcs = graph.GetEdges(uncontracted.Value.Value.ContractedVertexId);
 
-                            bool found = false;
-                            foreach (var contractedArc in contractedArcs)
-                            { // loop over all contracted arcs.
-                                if (contractedArc.Neighbour == uncontracted.Key)
-                                { // the edge is and edge to the target.
-                                    var data = new CHEdgeData();
-                                    data.Direction = contractedArc.EdgeData.Direction;
-                                    data.ContractedVertexId = contractedArc.EdgeData.ContractedVertexId;
-                                    data.Tags = contractedArc.EdgeData.Tags;
-                                    data.Weight = contractedArc.EdgeData.Weight;
+                        //    bool found = false;
+                        //    foreach (var contractedArc in contractedArcs)
+                        //    { // loop over all contracted arcs.
+                        //        if (contractedArc.Neighbour == uncontracted.Key)
+                        //        { // the edge is and edge to the target.
+                        //            var data = new CHEdgeData();
+                        //            data.Direction = contractedArc.EdgeData.Direction;
+                        //            data.ContractedVertexId = contractedArc.EdgeData.ContractedVertexId;
+                        //            data.Tags = contractedArc.EdgeData.Tags;
+                        //            data.Weight = contractedArc.EdgeData.Weight;
 
-                                    uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                                        uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
-                                            contractedArc.Neighbour, data));
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found)
-                            { // uncontracted not found??
-                                // TODO: figure out how this is possible.
-                                break;
-                            }
-                        }
-                        if (uncontracted.Value.Value.HasContractedVertex)
+                        //            uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
+                        //                uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
+                        //                    contractedArc.Neighbour, data));
+                        //            found = true;
+                        //            break;
+                        //        }
+                        //    }
+                        //    if (!found)
+                        //    { // uncontracted not found??
+                        //        // TODO: figure out how this is possible.
+                        //        break;
+                        //    }
+                        //}
+                        if (!uncontracted.Value.Value.RepresentsNeighbourRelations)
                         { // uncontracted not found??
                             // TODO: figure out how this is possible.
                             continue;

@@ -128,7 +128,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                                 (neighbourEdge.Neighbour == to || !settled.Contains(neighbourEdge.Neighbour)))
                             {
                                 var neighbour = new SettledVertex(neighbourEdge.Neighbour,
-                                    neighbourEdge.EdgeData.Weight + current.Weight, current.Hops + 1);
+                                    neighbourEdge.EdgeData.ForwardWeight + current.Weight, current.Hops + 1);
                                 if (neighbour.Weight < max_weight)
                                 {
                                     if (neighbourEdge.Neighbour == to)

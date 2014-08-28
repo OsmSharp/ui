@@ -430,10 +430,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     if(chArc.TargetId == vertex2)
                     {
                         data = new CHEdgeData();
-                        data.Direction = chArc.Direction;
-                        data.ContractedVertexId = chArc.ShortcutId;
-                        data.Weight = chArc.Weight;
-                        data.Tags = chArc.TagsId;
+                        data.BackwardContractedId = chArc.BackwardContractedId;
+                        data.BackwardWeight = chArc.BackwardWeight;
+                        data.ForwardContractedId = chArc.ForwardContractedId;
+                        data.ForwardWeight = chArc.ForwardWeight;
+                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
+                        data.TagsValue = chArc.TagsValue;
                         return true;
                     }
                 }
@@ -460,10 +462,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     if (chArc.TargetId == vertex1)
                     {
                         data = new CHEdgeData();
-                        data.Direction = chArc.Direction;
-                        data.ContractedVertexId = chArc.ShortcutId;
-                        data.Weight = chArc.Weight;
-                        data.Tags = chArc.TagsId;
+                        data.BackwardContractedId = chArc.BackwardContractedId;
+                        data.BackwardWeight = chArc.BackwardWeight;
+                        data.ForwardContractedId = chArc.ForwardContractedId;
+                        data.ForwardWeight = chArc.ForwardWeight;
+                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
+                        data.TagsValue = chArc.TagsValue;
                         return true;
                     }
                 }
@@ -501,10 +505,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 { // loop over all arcs.
                     var chArc = block.Arcs[arcIdx];
                     var edgeData = new CHEdgeData();
-                    edgeData.Direction = chArc.Direction;
-                    edgeData.ContractedVertexId = chArc.ShortcutId;
-                    edgeData.Weight = chArc.Weight;
-                    edgeData.Tags = chArc.TagsId;
+                    edgeData.BackwardContractedId = chArc.BackwardContractedId;
+                    edgeData.BackwardWeight = chArc.BackwardWeight;
+                    edgeData.ForwardContractedId = chArc.ForwardContractedId;
+                    edgeData.ForwardWeight = chArc.ForwardWeight;
+                    edgeData.ContractedDirectionValue = chArc.ContractedDirectionValue;
+                    edgeData.TagsValue = chArc.TagsValue;
                     arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
                         chArc.TargetId, edgeData);
                 }

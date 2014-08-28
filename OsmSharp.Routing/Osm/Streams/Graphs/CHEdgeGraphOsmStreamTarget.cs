@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
-            :base(dynamicGraph, interpreter, new CHEdgeDataComparer(), tagsIndex)
+            :base(dynamicGraph, interpreter, null, tagsIndex)
         {
             _vehicle = vehicle;
         }
@@ -80,7 +80,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
             TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
-            double weight = _vehicle.Weight(tags, from, to);
             bool? direction = _vehicle.IsOneWay(tags);
             bool forward = false;
             bool backward = false;
@@ -103,11 +102,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // initialize the edge data.
             var edgeData = new CHEdgeData()
             {
-                Weight = (float)weight,
+                TagsForward = true,
                 Tags = tagsId,
-                ContractedVertexId = 0
+                BackwardWeight = backward ? (float)_vehicle.Weight(tags, from, to) : float.MaxValue,
+                BackwardContractedId = 0,
+                ForwardWeight = forward ? (float)_vehicle.Weight(tags, to, from) : float.MaxValue,
+                ForwardContractedId = 0
             };
-            edgeData.SetDirection(forward, backward);
+            edgeData.SetContractedDirection(false, false);
             return edgeData;
         }
 

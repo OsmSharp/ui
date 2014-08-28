@@ -210,7 +210,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         void pre_processor_OnAfterContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
         {
             // create a new CHRouter
-            var router = new CHRouter(true);
+            var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             foreach (var from in edges)
@@ -332,7 +332,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         void pre_processor_OnBeforeContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
         {
             // create a new CHRouter
-            var router = new CHRouter(true);
+            var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             _pathsBeforeContraction =

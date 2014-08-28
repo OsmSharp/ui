@@ -231,6 +231,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
                     if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
                     { // there are way names.
+                        Assert.IsNotNull(routeEntry.SideStreets);
                         Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);
                     }
                     else
