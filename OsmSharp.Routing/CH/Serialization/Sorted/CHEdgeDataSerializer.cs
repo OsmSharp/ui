@@ -196,10 +196,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     {
                         var chArc = new CHArc();
                         chArc.TargetId = sortedArc.Neighbour;
-                        chArc.ShortcutId = sortedArc.EdgeData.ContractedVertexId;
-                        chArc.Weight = sortedArc.EdgeData.Weight;
-                        chArc.Direction = sortedArc.EdgeData.Direction;
-                        chArc.TagsId = sortedArc.EdgeData.Tags;
+                        chArc.ForwardContractedId = sortedArc.EdgeData.ForwardContractedId;
+                        chArc.ForwardWeight = sortedArc.EdgeData.ForwardWeight;
+                        chArc.BackwardContractedId = sortedArc.EdgeData.BackwardContractedId;
+                        chArc.BackwardWeight = sortedArc.EdgeData.BackwardWeight;
+                        chArc.ContractedDirectionValue = sortedArc.EdgeData.ContractedDirectionValue;
+                        chArc.TagsValue = sortedArc.EdgeData.TagsValue;
                         blockArcs.Add(chArc);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
@@ -317,17 +319,26 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                             uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Neighbour, currentBinIds, heightBins);
                             // convert edge.
                             var newEdge = new CHEdgeData();
-                            newEdge.Direction = arc.EdgeData.Direction;
-                            if (arc.EdgeData.HasContractedVertex)
+                            newEdge.ContractedDirectionValue = arc.EdgeData.ContractedDirectionValue;
+                            newEdge.TagsValue = arc.EdgeData.TagsValue;
+                            if (arc.EdgeData.ForwardContractedId != 0)
                             { // contracted info.
-                                newEdge.ContractedVertexId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ContractedVertexId, currentBinIds, heightBins);
+                                newEdge.ForwardContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ForwardContractedId, currentBinIds, heightBins);
                             }
                             else
                             { // no contracted info.
-                                newEdge.ContractedVertexId = 0;
+                                newEdge.ForwardContractedId = 0;
                             }
-                            newEdge.Tags = arc.EdgeData.Tags;
-                            newEdge.Weight = arc.EdgeData.Weight;
+                            if (arc.EdgeData.BackwardContractedId != 0)
+                            { // contracted info.
+                                newEdge.BackwardContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.BackwardContractedId, currentBinIds, heightBins);
+                            }
+                            else
+                            { // no contracted info.
+                                newEdge.BackwardContractedId = 0;
+                            }
+                            newEdge.ForwardWeight = arc.EdgeData.ForwardWeight;
+                            newEdge.BackwardWeight = arc.EdgeData.BackwardWeight;
                             sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
                         }
                     }

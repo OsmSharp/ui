@@ -122,10 +122,13 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         var neighbours = graph.GetEdges(current.VertexId);
                         foreach(var neighbourEdge in neighbours)
                         {
-                            if (neighbourEdge.EdgeData.Forward && (neighbourEdge.Neighbour == to || !settled.Contains(neighbourEdge.Neighbour)))
+                            if (neighbourEdge.EdgeData.Forward && 
+                                !neighbourEdge.EdgeData.ToHigher && 
+                                !neighbourEdge.EdgeData.ToLower && 
+                                (neighbourEdge.Neighbour == to || !settled.Contains(neighbourEdge.Neighbour)))
                             {
                                 var neighbour = new SettledVertex(neighbourEdge.Neighbour,
-                                    neighbourEdge.EdgeData.Weight + current.Weight, current.Hops + 1);
+                                    neighbourEdge.EdgeData.ForwardWeight + current.Weight, current.Hops + 1);
                                 if (neighbour.Weight < max_weight)
                                 {
                                     if (neighbourEdge.Neighbour == to)

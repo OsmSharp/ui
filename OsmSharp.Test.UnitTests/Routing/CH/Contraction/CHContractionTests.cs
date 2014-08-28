@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             Assert.AreEqual(-1, sparseOrdering.Calculate(2));
             var edgeDifferenceOrdering = new EdgeDifference(
                 data, witnessCalculator);
-            Assert.AreEqual(0, edgeDifferenceOrdering.Calculate(2));
+            Assert.AreEqual(-1, edgeDifferenceOrdering.Calculate(2));
 
             // do the actual contraction.
             var preProcessor = new CHPreProcessor(
@@ -192,7 +192,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             Assert.AreEqual(float.MaxValue, sparseOrdering.Calculate(2));
             var edgeDifferenceOrdering = new EdgeDifference(
                 data, witnessCalculator);
-            Assert.AreEqual(3, edgeDifferenceOrdering.Calculate(2));
+            Assert.AreEqual(0, edgeDifferenceOrdering.Calculate(2));
 
             // do the actual contraction.
             var preProcessor = new CHPreProcessor(

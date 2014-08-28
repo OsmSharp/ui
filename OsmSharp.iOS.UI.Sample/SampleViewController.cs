@@ -34,7 +34,6 @@ using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Routing.CH.Serialization.Tiled;
 using OsmSharp.iOS.UI.Controls;
 
 namespace OsmSharp.iOS.UI.Sample

@@ -220,7 +220,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 fromList.UpdateVertex(new PathSegment<long>(from.Neighbour));
 
                 // initalize the from dictionary.
-                Dictionary<uint, PathSegment<long>> fromDic = _pathsBeforeContraction[from.Neighbour];
+                var fromDic = _pathsBeforeContraction[from.Neighbour];
                 foreach (var to in edges)
                 {
                     // initialize the to-list.
@@ -228,7 +228,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
+                    var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
                         (fromDic[to.Neighbour] != null && route == null) ||
                         ((fromDic[to.Neighbour] != null && route != null) && fromDic[to.Neighbour] != route))
@@ -240,7 +240,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             if (_referenceRouter != null)
             { // do crazy verification!
-                Router chRouter = Router.CreateCHFrom(_data, router, new OsmRoutingInterpreter());
+                var chRouter = Router.CreateCHFrom(_data, router, new OsmRoutingInterpreter());
 
                 // loop over all nodes and resolve their locations.
                 var resolvedReference = new RouterPoint[_data.VertexCount - 1];

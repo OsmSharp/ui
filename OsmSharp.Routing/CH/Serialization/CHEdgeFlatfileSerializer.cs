@@ -74,10 +74,12 @@ namespace OsmSharp.Routing.CH.Serialization
                             {
                                 FromId = vertex,
                                 ToId = arcs[idx].Neighbour,
-                                ContractedVertexId = arcs[idx].EdgeData.ContractedVertexId,
-                                Direction = arcs[idx].EdgeData.Direction,
-                                Tags = arcs[idx].EdgeData.Tags,
-                                Weight = arcs[idx].EdgeData.Weight
+                                ContractedDirectionValue = arcs[idx].EdgeData.ContractedDirectionValue,
+                                TagsValue = arcs[idx].EdgeData.TagsValue,
+                                ForwardContractedId = arcs[idx].EdgeData.ForwardContractedId,
+                                ForwardWeight = arcs[idx].EdgeData.ForwardWeight,
+                                BackwardContractedId = arcs[idx].EdgeData.BackwardContractedId,
+                                BackwardWeight = arcs[idx].EdgeData.BackwardWeight
                             });
 
                             if (arcsQueue.Count == blockSize)
@@ -120,10 +122,12 @@ namespace OsmSharp.Routing.CH.Serialization
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new CHEdgeData()
                         {
-                            ContractedVertexId = serializableEdges[idx].ContractedVertexId,
-                            Direction = serializableEdges[idx].Direction,
-                            Tags = serializableEdges[idx].Tags,
-                            Weight = serializableEdges[idx].Weight
+                            ContractedDirectionValue = serializableEdges[idx].ContractedDirectionValue,
+                            TagsValue = serializableEdges[idx].TagsValue,
+                            ForwardContractedId = serializableEdges[idx].ForwardContractedId,
+                            ForwardWeight = serializableEdges[idx].ForwardWeight,
+                            BackwardContractedId = serializableEdges[idx].BackwardContractedId,
+                            BackwardWeight = serializableEdges[idx].BackwardWeight
                         }, null);
                 }
             }
@@ -134,7 +138,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// </summary>
         public override string VersionString
         {
-            get { return "CHedgeFlatfile.v1.0"; }
+            get { return "CHedgeFlatfile.v2.0"; }
         }
 
         /// <summary>
@@ -159,25 +163,37 @@ namespace OsmSharp.Routing.CH.Serialization
             /// Gets or sets the weight.
             /// </summary>
             [ProtoMember(3)]
-            public float Weight { get; set; }
-
-            /// <summary>
-            /// Gets or sets the direction.
-            /// </summary>
-            [ProtoMember(4)]
-            public byte Direction { get; set; }
+            public float ForwardWeight { get; set; }
 
             /// <summary>
             /// The vertex contracted by this edge.
             /// </summary>
-            [ProtoMember(5)]
-            public uint ContractedVertexId { get; set; }
+            [ProtoMember(4)]
+            public uint ForwardContractedId { get; set; }
 
             /// <summary>
-            /// Returns the tags (0 means no tags). 
+            /// Gets or sets the weight.
+            /// </summary>
+            [ProtoMember(5)]
+            public float BackwardWeight { get; set; }
+
+            /// <summary>
+            /// The vertex contracted by this edge.
             /// </summary>
             [ProtoMember(6)]
-            public uint Tags { get; set; }
+            public uint BackwardContractedId { get; set; }
+
+            /// <summary>
+            /// Gets or sets the raw direction value.
+            /// </summary>
+            [ProtoMember(7)]
+            public byte ContractedDirectionValue { get; set; }
+
+            /// <summary>
+            /// Gets or sets the raw tags value (including direction).
+            /// </summary>
+            [ProtoMember(8)]
+            public uint TagsValue { get; set; }
         }
     }
 }

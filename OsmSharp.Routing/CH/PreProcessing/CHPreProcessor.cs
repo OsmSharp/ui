@@ -39,7 +39,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the edge comparer.
         /// </summary>
-        private CHEdgeDataComparer _comparer;
+        private IDynamicGraphEdgeComparer<CHEdgeData> _comparer;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
         {
-            _comparer = new CHEdgeDataComparer();
+            _comparer = null;
 
             _target = target;
 
@@ -158,14 +158,16 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);
             foreach (var edge in edges)
             {
-                if (!edge.EdgeData.ToLower && !edge.EdgeData.ToHigher)
+                if (!edge.EdgeData.ToLower)
                 { // the edge is not to lower or higher.
                     // use this edge for contraction.
                     edgesForContractions.Add(edge);
 
                     // overwrite the old edge making it point 'to higher' only.
-                    _target.AddEdge(vertex, edge.Neighbour,
-                        new CHEdgeData(edge.EdgeData.Weight, edge.EdgeData.Forward, edge.EdgeData.Backward, true, edge.EdgeData.ContractedVertexId, edge.EdgeData.Tags), null);
+                    var toHigherData = edge.EdgeData;
+                    toHigherData.SetContractedDirection(true, false);
+                    neighbours.Add(new KeyValuePair<uint, CHEdgeData>(edge.Neighbour,
+                        toHigherData));
                 }
             }
 
@@ -178,36 +180,77 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 { // loop over all elements.
                     var yEdge = edgesForContractions[y];
 
-                    // calculate the total weight.
-                    var weight = xEdge.EdgeData.Weight + yEdge.EdgeData.Weight;
-
                     // add the combinations of these edges.
                     if (((xEdge.EdgeData.Backward && yEdge.EdgeData.Forward) ||
                         (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward)) &&
                         (xEdge.Neighbour != yEdge.Neighbour))
                     { // there is a connection from x to y and there is no witness path.
+                        // calculate the total weight.
+                        var forwardWeight = xEdge.EdgeData.BackwardWeight + yEdge.EdgeData.ForwardWeight;
+                        var backwardWeight = yEdge.EdgeData.BackwardWeight + xEdge.EdgeData.ForwardWeight;
+
                         var witnessXToY = _contractionWitnessCalculator.Exists(_target, xEdge.Neighbour, 
-                            yEdge.Neighbour, vertex, weight, int.MaxValue);
+                            yEdge.Neighbour, vertex, forwardWeight, int.MaxValue);
                         var witnessYToX = _contractionWitnessCalculator.Exists(_target, yEdge.Neighbour,
-                            xEdge.Neighbour, vertex, weight, int.MaxValue);
+                            xEdge.Neighbour, vertex, backwardWeight, int.MaxValue);
 
                         // create x-to-y data and edge.
-                        var dataXToY = new CHEdgeData();
                         var forward = (xEdge.EdgeData.Backward && yEdge.EdgeData.Forward) &&
                             !witnessXToY;
                         var backward = (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward) &&
                             !witnessYToX;
-                        if ((forward || backward) ||
-                            !_target.ContainsEdge(xEdge.Neighbour, yEdge.Neighbour))
+                        if (forward || backward)
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            dataXToY.SetDirection(forward, backward);
-                            dataXToY.Weight = weight;
-                            dataXToY.ContractedVertexId = vertex;
-
-                            _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, dataXToY, null, _comparer);
+                            CHEdgeData data;
+                            if (_target.GetEdge(xEdge.Neighbour, yEdge.Neighbour, out data))
+                            { // there already is an edge evaluate for each direction.
+                                if(forward && data.ForwardWeight > forwardWeight)
+                                { // replace forward edge.
+                                    data.ForwardWeight = forwardWeight;
+                                    data.ForwardContractedId = vertex;
+                                }
+                                if(backward && data.BackwardWeight > backwardWeight)
+                                { // replace backward edge.
+                                    data.BackwardWeight = backwardWeight;
+                                    data.BackwardContractedId = vertex;
+                                }
+                                _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, data, null, _comparer);
+                            }
+                            else
+                            { // there is no edge, just add the data.
+                                var dataXToY = new CHEdgeData();
+                                dataXToY.SetContractedDirection(false, false);
+                                if(forward)
+                                {
+                                    dataXToY.ForwardWeight = forwardWeight;
+                                    dataXToY.ForwardContractedId = vertex;
+                                }
+                                else
+                                {
+                                    dataXToY.ForwardWeight = float.MaxValue;
+                                    dataXToY.ForwardContractedId = 0;
+                                }
+                                if(backward)
+                                {
+                                    dataXToY.BackwardWeight = backwardWeight;
+                                    dataXToY.BackwardContractedId = vertex;
+                                }
+                                else
+                                {
+                                    dataXToY.BackwardWeight = float.MaxValue;
+                                    dataXToY.BackwardContractedId = 0;
+                                }
+                                _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, dataXToY, null, _comparer);
+                            }
                         }
                     }
                 }
+            }
+
+            // update direct neighbours.
+            foreach (var neighbour in neighbours)
+            {
+                _target.AddEdge(vertex, neighbour.Key, neighbour.Value, null);
             }
 
             // mark the vertex as contracted.
