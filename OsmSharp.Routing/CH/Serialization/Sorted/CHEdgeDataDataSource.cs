@@ -599,6 +599,22 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             /// <summary>
+            /// Returns true if the edge data is inverted by default.
+            /// </summary>
+            public bool isInverted
+            {
+                get { return false; }
+            }
+
+            /// <summary>
+            /// Returns the inverted edge data.
+            /// </summary>
+            public CHEdgeData InvertedEdgeData
+            {
+                get { return (CHEdgeData)this.EdgeData.Reverse(); }
+            }
+
+            /// <summary>
             /// Returns the current intermediates.
             /// </summary>
             public ICoordinateCollection Intermediates

@@ -905,6 +905,29 @@ namespace OsmSharp.Routing.Graph
             }
 
             /// <summary>
+            /// Returns true if the edge data is inverted by default.
+            /// </summary>
+            public bool isInverted
+            {
+                get { return _currentEdgeInverted; }
+            }
+
+            /// <summary>
+            /// Returns the inverted edge data.
+            /// </summary>
+            public TEdgeData InvertedEdgeData
+            {
+                get
+                {
+                    if (!_currentEdgeInverted)
+                    {
+                        return (TEdgeData)_graph._edgeData[_currentEdgeId / 4].Reverse();
+                    }
+                    return _graph._edgeData[_currentEdgeId / 4];
+                }
+            }
+
+            /// <summary>
             /// Returns the current intermediates.
             /// </summary>
             public ICoordinateCollection Intermediates

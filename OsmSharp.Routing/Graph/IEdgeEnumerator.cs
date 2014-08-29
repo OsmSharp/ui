@@ -44,6 +44,19 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// The edge data is inverted by default.
+        /// </summary>
+        bool isInverted
+        {
+            get;
+        }
+
+        TEdgeData InvertedEdgeData
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the intermediates.
         /// </summary>
         ICoordinateCollection Intermediates

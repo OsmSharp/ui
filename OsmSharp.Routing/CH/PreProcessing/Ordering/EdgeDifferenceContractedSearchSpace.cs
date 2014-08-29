@@ -90,17 +90,22 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             }
 
             // loop over all neighbours and check for witnesses.
-            foreach (var from in edgesForContractions)
-            { // loop over all incoming neighbours
-                if (!from.EdgeData.Backward) { continue; }
-                foreach (var to in edgesForContractions)
-                { // loop over all outgoing neighbours
-                    if (to.Neighbour != from.Neighbour &&
-                        to.EdgeData.Forward)
+            // loop over each combination of edges just once.
+            for (int x = 1; x < edgesForContractions.Count; x++)
+            { // loop over all elements first.
+                var xEdge = edgesForContractions[x];
+                if (!xEdge.EdgeData.Backward) { continue; }
+
+                for (int y = 0; y < x; y++)
+                { // loop over all elements.
+                    var yEdge = edgesForContractions[y];
+
+                    if (yEdge.Neighbour != xEdge.Neighbour &&
+                        yEdge.EdgeData.Forward)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witness_calculator.Exists(_data, from.Neighbour, to.Neighbour, vertex,
-                            (float)from.EdgeData.BackwardWeight + (float)to.EdgeData.ForwardWeight, 1000))
+                        if (!_witness_calculator.Exists(_data, xEdge.Neighbour, yEdge.Neighbour, vertex,
+                            (float)xEdge.EdgeData.BackwardWeight + (float)yEdge.EdgeData.ForwardWeight, 1000))
                         { // no witness exists.
                             newEdges++;
                         }
@@ -111,7 +116,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // get the depth.                    
             long depth = 0;
             _depth.TryGetValue(vertex, out depth);
-            return (((newEdges) - removed)) + (2 * contracted);
+            return (newEdges - removed) + (2 * contracted);
         }
 
         /// <summary>
@@ -127,7 +132,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var neighbours = _data.GetEdges(vertex);
             foreach (var neighbour in neighbours)
             {
-                if (!neighbour.EdgeData.ToLower)
+                if (neighbour.EdgeData.ToHigher)
                 {
                     short count;
                     if (!_contraction_count.TryGetValue(neighbour.Neighbour, out count))

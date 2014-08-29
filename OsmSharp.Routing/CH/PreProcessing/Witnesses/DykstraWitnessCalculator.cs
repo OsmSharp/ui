@@ -120,22 +120,46 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 
                         // get the neighbours.
                         var neighbours = graph.GetEdges(current.VertexId);
-                        foreach(var neighbourEdge in neighbours)
+                        while (neighbours.MoveNext())
                         {
-                            if (neighbourEdge.EdgeData.Forward && 
-                                !neighbourEdge.EdgeData.ToHigher && 
-                                !neighbourEdge.EdgeData.ToLower && 
-                                (neighbourEdge.Neighbour == to || !settled.Contains(neighbourEdge.Neighbour)))
+                            if (neighbours.isInverted)
                             {
-                                var neighbour = new SettledVertex(neighbourEdge.Neighbour,
-                                    neighbourEdge.EdgeData.ForwardWeight + current.Weight, current.Hops + 1);
-                                if (neighbour.Weight < max_weight)
+                                var invertedEdgeData = neighbours.InvertedEdgeData;
+                                if ((neighbours.Neighbour == to || !settled.Contains(neighbours.Neighbour) &&
+                                    invertedEdgeData.Backward &&
+                                    !invertedEdgeData.ToHigher &&
+                                    !invertedEdgeData.ToLower))
                                 {
-                                    if (neighbourEdge.Neighbour == to)
+                                    var neighbour = new SettledVertex(neighbours.Neighbour,
+                                        invertedEdgeData.BackwardWeight + current.Weight, current.Hops + 1);
+                                    if (neighbour.Weight < max_weight)
                                     {
-                                        return neighbour.Weight;
+                                        if (neighbours.Neighbour == to)
+                                        {
+                                            return neighbour.Weight;
+                                        }
+                                        heap.Push(neighbour, neighbour.Weight);
                                     }
-                                    heap.Push(neighbour, neighbour.Weight);
+                                }
+                            }
+                            else
+                            {
+                                var edgeData = neighbours.EdgeData;
+                                if ((neighbours.Neighbour == to || !settled.Contains(neighbours.Neighbour) &&
+                                    edgeData.Forward &&
+                                    !edgeData.ToHigher &&
+                                    !edgeData.ToLower))
+                                {
+                                    var neighbour = new SettledVertex(neighbours.Neighbour,
+                                        edgeData.ForwardWeight + current.Weight, current.Hops + 1);
+                                    if (neighbour.Weight < max_weight)
+                                    {
+                                        if (neighbours.Neighbour == to)
+                                        {
+                                            return neighbour.Weight;
+                                        }
+                                        heap.Push(neighbour, neighbour.Weight);
+                                    }
                                 }
                             }
                         }

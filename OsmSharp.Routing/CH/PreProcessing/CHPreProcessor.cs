@@ -185,31 +185,36 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward)) &&
                         (xEdge.Neighbour != yEdge.Neighbour))
                     { // there is a connection from x to y and there is no witness path.
+
+                        // create x-to-y data and edge.
+                        var forward = (xEdge.EdgeData.Backward && yEdge.EdgeData.Forward);
+                        var backward = (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward);
+
                         // calculate the total weight.
                         var forwardWeight = xEdge.EdgeData.BackwardWeight + yEdge.EdgeData.ForwardWeight;
                         var backwardWeight = yEdge.EdgeData.BackwardWeight + xEdge.EdgeData.ForwardWeight;
 
-                        var witnessXToY = _contractionWitnessCalculator.Exists(_target, xEdge.Neighbour, 
-                            yEdge.Neighbour, vertex, forwardWeight, int.MaxValue);
-                        var witnessYToX = _contractionWitnessCalculator.Exists(_target, yEdge.Neighbour,
-                            xEdge.Neighbour, vertex, backwardWeight, int.MaxValue);
-
-                        // create x-to-y data and edge.
-                        var forward = (xEdge.EdgeData.Backward && yEdge.EdgeData.Forward) &&
-                            !witnessXToY;
-                        var backward = (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward) &&
-                            !witnessYToX;
+                        if (forward)
+                        {
+                            forward = !_contractionWitnessCalculator.Exists(_target, xEdge.Neighbour,
+                               yEdge.Neighbour, vertex, forwardWeight, 1000);
+                        }
+                        if (backward)
+                        {
+                            backward = !_contractionWitnessCalculator.Exists(_target, yEdge.Neighbour,
+                                xEdge.Neighbour, vertex, backwardWeight, 1000);
+                        }
                         if (forward || backward)
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
                             CHEdgeData data;
                             if (_target.GetEdge(xEdge.Neighbour, yEdge.Neighbour, out data))
                             { // there already is an edge evaluate for each direction.
-                                if(forward && data.ForwardWeight > forwardWeight)
+                                if (forward && data.ForwardWeight > forwardWeight)
                                 { // replace forward edge.
                                     data.ForwardWeight = forwardWeight;
                                     data.ForwardContractedId = vertex;
                                 }
-                                if(backward && data.BackwardWeight > backwardWeight)
+                                if (backward && data.BackwardWeight > backwardWeight)
                                 { // replace backward edge.
                                     data.BackwardWeight = backwardWeight;
                                     data.BackwardContractedId = vertex;
@@ -220,7 +225,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             { // there is no edge, just add the data.
                                 var dataXToY = new CHEdgeData();
                                 dataXToY.SetContractedDirection(false, false);
-                                if(forward)
+                                if (forward)
                                 {
                                     dataXToY.ForwardWeight = forwardWeight;
                                     dataXToY.ForwardContractedId = vertex;
@@ -230,7 +235,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                     dataXToY.ForwardWeight = float.MaxValue;
                                     dataXToY.ForwardContractedId = 0;
                                 }
-                                if(backward)
+                                if (backward)
                                 {
                                     dataXToY.BackwardWeight = backwardWeight;
                                     dataXToY.BackwardContractedId = vertex;
@@ -311,7 +316,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// The amount of queue 'misses' to recalculated.
         /// </summary>
-        private int _k = 60;
+        private int _k = 30;
 
         /// <summary>
         /// Holds a counter of all misses.
@@ -338,6 +343,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 // the lazy updating part!
                 // calculate priority
                 float priority = _calculator.Calculate(first_queued);
+                //OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                //    "{0} {1}", first_queued, priority);
                 float current_priority = _queue.Weight(first_queued);
                 if (priority != current_priority)
                 { // a succesfull update.
