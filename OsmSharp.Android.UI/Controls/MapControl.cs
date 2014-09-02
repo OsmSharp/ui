@@ -112,6 +112,19 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="location">The location the view has to stay at.</param>
         /// <param name="view">The view being wrapped.</param>
         /// <param name="alignment">The alignment.</param>
+        protected MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment)
+        {
+            _view = view;
+            _location = location;
+            _alignment = alignment;
+        }
+
+        /// <summary>
+        /// Creates a MapControl based on the given view.
+        /// </summary>
+        /// <param name="location">The location the view has to stay at.</param>
+        /// <param name="view">The view being wrapped.</param>
+        /// <param name="alignment">The alignment.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment, int width, int height)
@@ -120,6 +133,16 @@ namespace OsmSharp.Android.UI.Controls
             _location = location;
             _alignment = alignment;
 
+            this.SetSize(width, height);
+        }
+
+        /// <summary>
+        /// Sets the size of this control.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        protected void SetSize(int width, int height)
+        {
             _view.SetMinimumWidth(width);
             _view.SetMinimumHeight(height);
 
@@ -192,7 +215,7 @@ namespace OsmSharp.Android.UI.Controls
         /// <summary>
         /// Gets or sets the alignment.
         /// </summary>
-        public MapControlAlignmentType Alighnment
+        public MapControlAlignmentType Alignment
         {
             get
             {

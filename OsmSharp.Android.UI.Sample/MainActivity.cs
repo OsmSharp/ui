@@ -136,12 +136,12 @@ namespace OsmSharp.Android.UI.Sample
             //_mapView.MapMaxZoomLevel = 20;
             //_mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
-            _mapView.MapCenter = new GeoCoordinate(51.2633951979295, 4.78525400161743);
+            _mapView.MapCenter = new GeoCoordinate(51.261203, 4.780760);
             _mapView.MapZoom = 16;
             _mapView.MapAllowTilt = false;
 
-            // AddMarkers();
-            AddControls();
+            AddMarkers();
+            // AddControls();
 
             // initialize a text view to display routing instructions.
             _textView = new TextView(this);
@@ -172,17 +172,23 @@ namespace OsmSharp.Android.UI.Sample
 
             _mapView.ClearMarkers();
 
-            var img = BitmapFactory.DecodeResource(this.Resources, Resource.Drawable.marker);
-            MapMarker marker1 = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, img);
+            var marker1 = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
+            var textView = new TextView(this.ApplicationContext);
+            textView.Text = "Some popup text here.";
+            textView.TextSize = 10;
+            textView.SetTextColor(global::Android.Graphics.Color.Black);
+
+            marker1.AddPopup(textView, 100, 200, 100, 300);
+            marker1.ShowPopup();
             _mapView.AddMarker(marker1);
 
-            _mapView.AddMarker(to);
+            var marker2 = _mapView.AddMarker(to);
         }
 
         void AddControls()
         {
             var textView = new TextView(this.ApplicationContext);
-            textView.Text = "Some text here, hopefully.";
+            textView.Text = "Some text here.";
             textView.TextSize = 10;
             textView.SetTextColor(global::Android.Graphics.Color.Black);
 

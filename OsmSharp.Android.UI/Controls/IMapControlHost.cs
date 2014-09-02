@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using Android.Views;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
@@ -26,7 +27,22 @@ namespace OsmSharp.Android.UI.Controls
     /// Abstract definition of a map marker host.
     /// </summary>
     public interface IMapControlHost : IMapView
-    {        
+    {
+        /// <summary>
+        /// Adds a view to this host.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <param name="layout"></param>
+        /// <remarks>This allows markers and controls to add subviews.</remarks>
+        void AddView(View view, ViewGroup.LayoutParams layout);
+
+        /// <summary>
+        /// Removes a view from this host.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <remarks>This allows markers and controls to remove subviews.</remarks>
+        void RemoveView(View view);
+
         /// <summary>
         /// Notifies this host that the given marker has changed.
         /// </summary>
