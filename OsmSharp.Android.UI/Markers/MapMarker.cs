@@ -17,10 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Android.Content;
+using Android.Content.Res;
+using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.Android.UI.Controls;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer;
 using System;
 using System.Reflection;
 
@@ -63,6 +67,30 @@ namespace OsmSharp.Android.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
         /// </summary>
+        /// <param name="context"></param>
+        /// <param name="location"></param>
+        /// <param name="alignment"></param>
+        /// <param name="res"></param>
+        /// <param name="id"></param>
+        public MapMarker(Context context, GeoCoordinate location,
+            MapControlAlignmentType alignment, Resources res, int id)
+            : base(new ImageButton(context), location, alignment)
+        {
+            _image = BitmapFactory.DecodeResource(res, id);
+
+            this.SetSize(_image.Width, _image.Height);
+            this.View.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
+
+            this.View.SetPadding(1, 1, 1, 1);
+            this.View.SetImageBitmap(_image);
+            this.View.SetScaleType(global::Android.Widget.ImageView.ScaleType.FitCenter);
+            this.View.Click += View_Click;
+            this.TogglePopupOnClick = true;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
+        /// </summary>
         /// <param name="context">Context.</param>
         /// <param name="location">Coordinate.</param>
         /// <param name="image">Bitmap.</param>
@@ -78,6 +106,8 @@ namespace OsmSharp.Android.UI
             _image = image;
             this.View.SetImageBitmap(image);
             this.View.SetScaleType(global::Android.Widget.ImageView.ScaleType.FitCenter);
+            this.View.Click += View_Click;
+            this.TogglePopupOnClick = true;
         }
 
         /// <summary>
@@ -112,6 +142,180 @@ namespace OsmSharp.Android.UI
             }
         }
 
+        /// <summary>
+        /// Holds the popup view.
+        /// </summary>
+        private View _popupView;
+
+        /// <summary>
+        /// Holds visible flag for the popup.
+        /// </summary>
+        private bool _popupIsVisible;
+
+        /// <summary>
+        /// Adds a popup, showing the given view when the marker is tapped.
+        /// </summary>
+        /// <param name="width">The view height.</param>
+        /// <param name="height">The view width.</param>
+        /// <param name="view">The view that should be used as popup.</param>
+        public void AddPopup(View view, int width, int height)
+        { 
+            // remove previous popup if any.
+            this.RemovePopup();
+
+            // add view as popup.
+            _popupView = view;
+
+            // setup layout parameters.
+            var layoutParams = new FrameLayout.LayoutParams(width, height + 5);
+            layoutParams.LeftMargin = -1;
+            layoutParams.TopMargin = -1;
+            layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
+            _popupView.LayoutParameters = layoutParams;
+
+            // show popup by default.
+            this.ShowPopup();
+        }
+
+        /// <summary>
+        /// Removes the popup.
+        /// </summary>
+        public void RemovePopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+            }
+            _popupView = null;
+            _popupIsVisible = false;
+        }
+
+        /// <summary>
+        /// Make sure this popup is shown.
+        /// </summary>
+        public void ShowPopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+                this.Host.AddView(_popupView, _popupView.LayoutParameters);
+            }
+            _popupIsVisible = true;
+        }
+
+        /// <summary>
+        /// Hide the popup.
+        /// </summary>
+        public void HidePopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+            }
+            _popupIsVisible = false;
+        }
+
+        /// <summary>
+        /// Returns true if this marker has a popup.
+        /// </summary>
+        public bool HasPopup
+        {
+            get
+            {
+                return _popupView != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the toggle popup on click flag.
+        /// </summary>
+        public bool TogglePopupOnClick { get; set; }
+
+        /// <summary>
+        /// Handles the marker click-event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void View_Click(object sender, EventArgs e)
+        {
+            if (this.HasPopup && this.TogglePopupOnClick)
+            { // toggle popup visible.
+                if(_popupIsVisible)
+                {
+                    this.HidePopup();
+                }
+                else
+                {
+                    this.ShowPopup();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attaches this marker to the given host.
+        /// </summary>
+        /// <param name="controlHost"></param>
+        internal override void AttachTo(IMapControlHost controlHost)
+        {
+            base.AttachTo(controlHost);
+
+            // show popup if it is supposed to be visible.
+            if(_popupIsVisible)
+            {
+                this.ShowPopup();
+            }
+        }
+
+        /// <summary>
+        /// Sets the layout.
+        /// </summary>
+        /// <param name="pixelsWidth">Pixels width.</param>
+        /// <param name="pixelsHeight">Pixels height.</param>
+        /// <param name="view">View.</param>
+        /// <param name="projection">Projection.</param>
+        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        {
+            base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
+
+            if (this.Location != null &&
+                _popupView != null)
+            { // only set layout if there is a location set.
+                var projected = projection.ToPixel(this.Location);
+                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+
+                // set the new location depending on the size of the image and the alignment parameter.
+                double leftPopupMargin = locationPixel[0];
+                double topPopupMargin = locationPixel[1];
+
+                leftPopupMargin = locationPixel[0] - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+
+                switch (this.Alignment)
+                {
+                    case MapControlAlignmentType.Center:
+                        topPopupMargin = locationPixel[1]
+                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                        break;
+                    case MapControlAlignmentType.CenterTop:
+                        topPopupMargin = locationPixel[1]
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                        break;
+                    case MapControlAlignmentType.CenterBottom:
+                        topPopupMargin = locationPixel[1]
+                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                        break;
+                }
+
+                (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
+                (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Disposes all resources associated with this marker.
+        /// </summary>
         public override void Dispose()
         {
             if (this._image != null)
