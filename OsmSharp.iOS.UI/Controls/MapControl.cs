@@ -140,7 +140,7 @@ namespace OsmSharp.iOS.UI.Controls
         /// <summary>
         /// Gets or sets the alignment.
         /// </summary>
-        public MapControlAlignmentType Alighnment
+        public MapControlAlignmentType Alignment
         {
             get
             {
@@ -195,6 +195,17 @@ namespace OsmSharp.iOS.UI.Controls
         internal override void DetachFrom(IMapControlHost controlHost)
         {
             _controlHost = null;
+        }
+
+        /// <summary>
+        /// Returns the current control host.
+        /// </summary>
+        protected IMapControlHost Host
+        {
+            get
+            {
+                return _controlHost;
+            }
         }
 
         /// <summary>

@@ -150,7 +150,11 @@ namespace OsmSharp.iOS.UI.Sample
 
 			// add markers.
 			// _mapView.AddMarker (from);
-			_mapView.AddMarker (to);
+            var marker = _mapView.AddMarker (to);
+            var popupTextView = new UITextView();
+            popupTextView.Text = "Hey, this is popup text!";
+            popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
+            marker.AddPopup(popupTextView, 75, 75);
 
             // add control.
             var textView = new UITextView();

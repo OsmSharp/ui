@@ -18,6 +18,7 @@
 
 using System;
 using OsmSharp.UI;
+using MonoTouch.UIKit;
 
 namespace OsmSharp.iOS.UI.Controls
 {
@@ -25,7 +26,21 @@ namespace OsmSharp.iOS.UI.Controls
     /// Abstract definition of a map marker host.
     /// </summary>
     public interface IMapControlHost : IMapView
-    {
+    {        
+        /// <summary>
+        /// Adds a view to this host.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <remarks>This allows markers and controls to add subviews.</remarks>
+        void AddView(UIView view);
+
+        /// <summary>
+        /// Removes a view from this host.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <remarks>This allows markers and controls to remove subviews.</remarks>
+        void RemoveView(UIView view);
+
         /// <summary>
         /// Notifies this host that the given marker has changed.
         /// </summary>

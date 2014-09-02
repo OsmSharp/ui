@@ -87,7 +87,166 @@ namespace OsmSharp.iOS.UI
             this.View.SetImage (image, UIControlState.Normal);
 			this.View.SetImage (image, UIControlState.Highlighted);
 			this.View.SetImage (image, UIControlState.Disabled);
+
+            this.View.TouchUpInside += view_TouchUpInside;
+            this.TogglePopupOnClick = true;
 		}
+
+        /// <summary>
+        /// Holds the popup view.
+        /// </summary>
+        private UIView _popupView;
+
+        /// <summary>
+        /// Holds visible flag for the popup.
+        /// </summary>
+        private bool _popupIsVisible;
+
+        /// <summary>
+        /// Adds a popup, showing the given view when the marker is tapped.
+        /// </summary>
+        /// <param name="width">The view height.</param>
+        /// <param name="height">The view width.</param>
+        /// <param name="view">The view that should be used as popup.</param>
+        public void AddPopup(UIView view, int width, int height)
+        { 
+            // remove previous popup if any.
+            this.RemovePopup();
+
+            // add view as popup.
+            _popupView = view;
+            _popupView.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
+
+            // show popup by default.
+            this.ShowPopup();
+        }
+
+        /// <summary>
+        /// Removes the popup.
+        /// </summary>
+        public void RemovePopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+            }
+            _popupView = null;
+            _popupIsVisible = false;
+        }
+
+        /// <summary>
+        /// Make sure this popup is shown.
+        /// </summary>
+        public void ShowPopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+                this.Host.AddView(_popupView);
+            }
+            _popupIsVisible = true;
+        }
+
+        /// <summary>
+        /// Hide the popup.
+        /// </summary>
+        public void HidePopup()
+        {
+            if (_popupView != null && this.Host != null)
+            {
+                this.Host.RemoveView(_popupView);
+            }
+            _popupIsVisible = false;
+        }
+
+        /// <summary>
+        /// Returns true if this marker has a popup.
+        /// </summary>
+        public bool HasPopup
+        {
+            get
+            {
+                return _popupView != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the toggle popup on click flag.
+        /// </summary>
+        public bool TogglePopupOnClick { get; set; }
+
+        /// <summary>
+        /// Handles the marker click-event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void view_TouchUpInside(object sender, EventArgs e)
+        {
+            if (this.HasPopup && this.TogglePopupOnClick)
+            { // toggle popup visible.
+                if(_popupIsVisible)
+                {
+                    this.HidePopup();
+                }
+                else
+                {
+                    this.ShowPopup();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attaches this marker to the given host.
+        /// </summary>
+        /// <param name="controlHost"></param>
+        internal override void AttachTo(IMapControlHost controlHost)
+        {
+            base.AttachTo(controlHost);
+
+            // show popup if it is supposed to be visible.
+            if(_popupIsVisible)
+            {
+                this.ShowPopup();
+            }
+        }
+
+        /// <summary>
+        /// Sets the layout.
+        /// </summary>
+        /// <param name="pixelsWidth">Pixels width.</param>
+        /// <param name="pixelsHeight">Pixels height.</param>
+        /// <param name="view">View.</param>
+        /// <param name="projection">Projection.</param>
+        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        {
+            base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
+
+            if (this.Location != null &&
+                _popupView != null)
+            { // only set layout if there is a location set.
+                var projected = projection.ToPixel(this.Location);
+                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+
+                // set the new location depending on the size of the image and the alignment parameter.
+                double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0;
+                double topMargin = locationPixel [1];
+                switch (this.Alignment) {
+                    case MapControlAlignmentType.CenterTop:
+                        topMargin = locationPixel [1] - (_popupView.Frame.Height / 2.0);
+                        break;
+                    case MapControlAlignmentType.Center:
+                        topMargin = locationPixel [1] - (this.View.Frame.Height / 2.0) - (_popupView.Frame.Height / 2.0);
+                        break;
+                    case MapControlAlignmentType.CenterBottom:
+                        topMargin = locationPixel [1] - this.View.Frame.Height - (_popupView.Frame.Height / 2.0);
+                        break;
+                }
+                _popupView.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
+
+                return true;
+            }
+            return true;
+        }
 
 		/// <summary>
 		/// Gets the image.

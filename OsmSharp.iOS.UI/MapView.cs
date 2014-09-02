@@ -1308,7 +1308,25 @@ namespace OsmSharp.iOS.UI
 
 				this.NotifyMovementByInvoke();
 			}
-		}
+        }
+
+        /// <summary>
+        /// Adds the view.
+        /// </summary>
+        /// <param name="view">View.</param>
+        void IMapControlHost.AddView(UIView view)
+        {
+            this.Add(view);
+        }
+
+        /// <summary>
+        /// Removes the view.
+        /// </summary>
+        /// <param name="view">View.</param>
+        void IMapControlHost.RemoveView(UIView view)
+        {
+            view.RemoveFromSuperview();
+        }
 
         #region Markers
 
