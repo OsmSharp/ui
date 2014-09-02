@@ -148,6 +148,16 @@ namespace OsmSharp.Android.UI
         private View _popupView;
 
         /// <summary>
+        /// Holds the x-popup-offset.
+        /// </summary>
+        private int _popupXOffset = 0;
+
+        /// <summary>
+        /// Holds the y-popup-offset.
+        /// </summary>
+        private int _popupYOffset = 0;
+
+        /// <summary>
         /// Holds visible flag for the popup.
         /// </summary>
         private bool _popupIsVisible;
@@ -159,12 +169,25 @@ namespace OsmSharp.Android.UI
         /// <param name="height">The view width.</param>
         /// <param name="view">The view that should be used as popup.</param>
         public void AddPopup(View view, int width, int height)
+        {
+            this.AddPopup(view, width, height, 0, 0);
+        }
+
+        /// <summary>
+        /// Adds a popup, showing the given view when the marker is tapped.
+        /// </summary>
+        /// <param name="width">The view height.</param>
+        /// <param name="height">The view width.</param>
+        /// <param name="view">The view that should be used as popup.</param>
+        public void AddPopup(View view, int width, int height, int xOffset, int yOffset)
         { 
             // remove previous popup if any.
             this.RemovePopup();
 
             // add view as popup.
             _popupView = view;
+            _popupXOffset = xOffset;
+            _popupYOffset = yOffset;
 
             // setup layout parameters.
             var layoutParams = new FrameLayout.LayoutParams(width, height + 5);
@@ -306,6 +329,10 @@ namespace OsmSharp.Android.UI
                             - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
                         break;
                 }
+
+                // add offsets.
+                leftPopupMargin = leftPopupMargin + _popupXOffset;
+                topPopupMargin = topPopupMargin + _popupYOffset;
 
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;

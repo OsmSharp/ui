@@ -178,7 +178,7 @@ namespace OsmSharp.Android.UI.Sample
             textView.TextSize = 10;
             textView.SetTextColor(global::Android.Graphics.Color.Black);
 
-            marker1.AddPopup(textView, 100, 200);
+            marker1.AddPopup(textView, 100, 200, 100, 300);
             marker1.ShowPopup();
             _mapView.AddMarker(marker1);
 
