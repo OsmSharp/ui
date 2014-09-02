@@ -415,7 +415,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
-                TEdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+                var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
                 _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), _edgeComparer);
             }

@@ -92,7 +92,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             settled.Add(via);
 
             // creates the priorty queue.
-            BinairyHeap<SettledVertex> heap = new BinairyHeap<SettledVertex>();
+            var heap = new BinairyHeap<SettledVertex>((uint)max_settles);
             heap.Push(new SettledVertex(from, 0, 0), 0);
 
             // keep looping until the queue is empty or the target is found!

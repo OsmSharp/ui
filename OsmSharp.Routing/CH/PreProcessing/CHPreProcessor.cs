@@ -166,12 +166,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     // overwrite the old edge making it point 'to higher' only.
                     var toHigherData = edge.EdgeData;
                     toHigherData.SetContractedDirection(true, false);
-                    neighbours.Add(new KeyValuePair<uint, CHEdgeData>(edge.Neighbour,
-                        toHigherData));
+                    _target.AddEdge(vertex, edge.Neighbour, toHigherData, null);
+                    //neighbours.Add(new KeyValuePair<uint, CHEdgeData>(edge.Neighbour,
+                    //    toHigherData));
                 }
             }
 
             // loop over each combination of edges just once.
+            int newEdge = 0;
             for (int x = 1; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
                 var xEdge = edgesForContractions[x];
@@ -182,10 +184,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                     // add the combinations of these edges.
                     if (((xEdge.EdgeData.Backward && yEdge.EdgeData.Forward) ||
-                        (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward)) &&
-                        (xEdge.Neighbour != yEdge.Neighbour))
+                         (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward)) &&
+                         (xEdge.Neighbour != yEdge.Neighbour))
                     { // there is a connection from x to y and there is no witness path.
-
                         // create x-to-y data and edge.
                         var forward = (xEdge.EdgeData.Backward && yEdge.EdgeData.Forward);
                         var backward = (yEdge.EdgeData.Backward && xEdge.EdgeData.Forward);
@@ -197,12 +198,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         if (forward)
                         {
                             forward = !_contractionWitnessCalculator.Exists(_target, xEdge.Neighbour,
-                               yEdge.Neighbour, vertex, forwardWeight, 1000);
+                               yEdge.Neighbour, vertex, forwardWeight, 10000);
                         }
                         if (backward)
                         {
                             backward = !_contractionWitnessCalculator.Exists(_target, yEdge.Neighbour,
-                                xEdge.Neighbour, vertex, backwardWeight, 1000);
+                                xEdge.Neighbour, vertex, backwardWeight, 10000);
                         }
                         if (forward || backward)
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
@@ -211,11 +212,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             { // there already is an edge evaluate for each direction.
                                 if (forward && data.ForwardWeight > forwardWeight)
                                 { // replace forward edge.
+                                    newEdge++;
                                     data.ForwardWeight = forwardWeight;
                                     data.ForwardContractedId = vertex;
                                 }
                                 if (backward && data.BackwardWeight > backwardWeight)
                                 { // replace backward edge.
+                                    newEdge++;
                                     data.BackwardWeight = backwardWeight;
                                     data.BackwardContractedId = vertex;
                                 }
@@ -227,6 +230,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 dataXToY.SetContractedDirection(false, false);
                                 if (forward)
                                 {
+                                    newEdge++;
                                     dataXToY.ForwardWeight = forwardWeight;
                                     dataXToY.ForwardContractedId = vertex;
                                 }
@@ -237,6 +241,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 }
                                 if (backward)
                                 {
+                                    newEdge++;
                                     dataXToY.BackwardWeight = backwardWeight;
                                     dataXToY.BackwardContractedId = vertex;
                                 }
@@ -252,11 +257,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 }
             }
 
-            // update direct neighbours.
-            foreach (var neighbour in neighbours)
-            {
-                _target.AddEdge(vertex, neighbour.Key, neighbour.Value, null);
-            }
+            //OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+            //    "Contracting... {0} [{1}/{2}]", vertex, edgesForContractions.Count, newEdge);
+
+            //// update direct neighbours.
+            //foreach (var neighbour in neighbours)
+            //{
+            //    _target.AddEdge(vertex, neighbour.Key, neighbour.Value, null);
+            //}
 
             // mark the vertex as contracted.
             this.MarkContracted(vertex);
@@ -343,8 +351,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 // the lazy updating part!
                 // calculate priority
                 float priority = _calculator.Calculate(first_queued);
-                //OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                //    "{0} {1}", first_queued, priority);
                 float current_priority = _queue.Weight(first_queued);
                 if (priority != current_priority)
                 { // a succesfull update.
@@ -369,7 +375,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                         "Recalculating queue...");
 
-                    CHPriorityQueue new_queue = new CHPriorityQueue();
+                    var new_queue = new CHPriorityQueue();
 
                     HashSet<KeyValuePair<uint, float>> recalculated_weights =
                         new HashSet<KeyValuePair<uint, float>>();
@@ -393,6 +399,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     _queue = new_queue;
                     _missesQueue.Clear();
                     _misses = 0;
+
+                    _target.Compress();
                 }
                 else
                 { // no recalculation.

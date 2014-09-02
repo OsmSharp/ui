@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var edgesForContractions = new List<Edge<CHEdgeData>>();
             foreach (var neighbour in neighbours)
             {
-                if (!neighbour.EdgeData.ToLower && neighbour.EdgeData.Forward)
+                if (!neighbour.EdgeData.ToLower)
                 {
                     edgesForContractions.Add(neighbour);
                     removed++;
@@ -113,10 +113,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 }
             }
 
-            // get the depth.                    
-            long depth = 0;
-            _depth.TryGetValue(vertex, out depth);
-            return (newEdges - removed) + (2 * contracted);
+            // get the depth.
+            return (newEdges - removed) + 2 * (contracted);
         }
 
         /// <summary>

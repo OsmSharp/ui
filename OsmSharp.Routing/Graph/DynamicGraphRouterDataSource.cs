@@ -341,7 +341,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public void Compress()
         {
-            _graph.Trim();
+            _graph.Compress();
 
             // rebuild index.
             if (_vertexIndex != null)
