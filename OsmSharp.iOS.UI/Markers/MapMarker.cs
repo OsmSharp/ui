@@ -98,6 +98,16 @@ namespace OsmSharp.iOS.UI
         private UIView _popupView;
 
         /// <summary>
+        /// Holds the x-popup-offset.
+        /// </summary>
+        private int _popupXOffset = 0;
+
+        /// <summary>
+        /// Holds the y-popup-offset.
+        /// </summary>
+        private int _popupYOffset = 0;
+
+        /// <summary>
         /// Holds visible flag for the popup.
         /// </summary>
         private bool _popupIsVisible;
@@ -110,10 +120,23 @@ namespace OsmSharp.iOS.UI
         /// <param name="view">The view that should be used as popup.</param>
         public void AddPopup(UIView view, int width, int height)
         { 
+            this.AddPopup(view, width, height, 0, 0);
+        }
+
+        /// <summary>
+        /// Adds a popup, showing the given view when the marker is tapped.
+        /// </summary>
+        /// <param name="width">The view height.</param>
+        /// <param name="height">The view width.</param>
+        /// <param name="view">The view that should be used as popup.</param>
+        public void AddPopup(UIView view, int width, int height, int xOffset, int yOffset)
+        { 
             // remove previous popup if any.
             this.RemovePopup();
 
             // add view as popup.
+            _popupXOffset = xOffset;
+            _popupYOffset = yOffset;
             _popupView = view;
             _popupView.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
 
@@ -241,6 +264,11 @@ namespace OsmSharp.iOS.UI
                         topMargin = locationPixel [1] - this.View.Frame.Height - (_popupView.Frame.Height / 2.0);
                         break;
                 }
+
+                // add offsets.
+                leftMargin = leftMargin + _popupXOffset;
+                topMargin = topMargin + _popupYOffset;
+
                 _popupView.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
 
                 return true;

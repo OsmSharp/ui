@@ -154,7 +154,7 @@ namespace OsmSharp.iOS.UI.Sample
             var popupTextView = new UITextView();
             popupTextView.Text = "Hey, this is popup text!";
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
-            marker.AddPopup(popupTextView, 75, 75);
+            marker.AddPopup(popupTextView, 75, 75, 50, -50);
 
             // add control.
             var textView = new UITextView();
