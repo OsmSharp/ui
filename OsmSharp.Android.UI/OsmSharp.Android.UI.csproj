@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -54,6 +52,8 @@
     <Compile Include="Controls\MapControl.cs" />
     <Compile Include="Data\SQLite\SQLite.cs" />
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
+    <Compile Include="Images\NinePatchHelpers\Div.cs" />
+    <Compile Include="Images\NinePatchHelpers\NinePatchChunk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Log\LogTraceListener.cs" />
@@ -82,9 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
+    <EmbeddedResource Include="Images\marker_popup.9.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
+    <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\layout\" />
   </ItemGroup>
   <ItemGroup>
