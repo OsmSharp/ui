@@ -91,6 +91,12 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         {
             int maxHops = _hopLimit;
 
+            if (maxHops == 1)
+            {
+                this.ExistsOneHop(graph, from, tos, tosWeights, maxSettles, ref exists);
+                return;
+            }
+
             // creates the settled list.
             var settled = new HashSet<uint>();
             var toSet = new HashSet<uint>();
@@ -206,6 +212,66 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculates witnesses from one source to multiple targets at once but using only one hop.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="tos"></param>
+        /// <param name="tosWeights"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="exists"></param>
+        private void ExistsOneHop(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
+        {
+            var toSet = new HashSet<uint>();
+            float maxWeight = 0;
+            for (int idx = 0; idx < tos.Count; idx++)
+            {
+                if (!exists[idx])
+                {
+                    toSet.Add(tos[idx]);
+                    if (maxWeight < tosWeights[idx])
+                    {
+                        maxWeight = tosWeights[idx];
+                    }
+                }
+            }
+
+            var neighbours = graph.GetEdges(from);
+            while(neighbours.MoveNext())
+            {
+                if(toSet.Contains(neighbours.Neighbour))
+                { // ok, this is a to-edge.
+                    int index = tos.IndexOf(neighbours.Neighbour);
+                    toSet.Remove(neighbours.Neighbour);
+
+                    if(neighbours.isInverted)
+                    {
+                        if (!neighbours.InvertedEdgeData.ToHigher &&
+                            neighbours.InvertedEdgeData.Backward &&
+                            neighbours.InvertedEdgeData.BackwardWeight < tosWeights[index])
+                        {
+                            exists[index] = true;
+                        }
+                    }
+                    else
+                    {
+                        if (!neighbours.EdgeData.ToLower && 
+                            neighbours.EdgeData.Forward &&
+                            neighbours.EdgeData.ForwardWeight < tosWeights[index])
+                        {
+                            exists[index] = true;
+                        }
+                    }
+
+                    if(toSet.Count == 0)
+                    {
+                        break;
                     }
                 }
             }
