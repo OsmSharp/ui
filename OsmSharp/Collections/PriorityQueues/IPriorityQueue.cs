@@ -26,7 +26,7 @@ namespace OsmSharp.Collections.PriorityQueues
     /// <summary>
     /// Represents general functionality of a priority queue.
     /// </summary>
-    public interface IPriorityQueue<T>
+    public interface IPriorityQueue<T> : IEnumerable<T>
     {
         /// <summary>
         /// Returns the number of items in this queue.

@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the sorted vertices.
         /// </summary>
-        private SortedList<float, HashSet<uint>> _sorted_weights;
+        private SortedList<float, List<uint>> _sorted_weights;
 
         /// <summary>
         /// Creates a new queue.
@@ -44,7 +44,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public CHPriorityQueue()
         {
             _weights = new Dictionary<uint, float>();
-            _sorted_weights = new SortedList<float, HashSet<uint>>();
+            _sorted_weights = new SortedList<float, List<uint>>();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="weight"></param>
         public void Enqueue(uint id, float weight)
         {
-            HashSet<uint> queue;
+            List<uint> queue;
             float old_weight;
             if (_weights.TryGetValue(id, out old_weight))
             {
@@ -94,7 +94,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
             if (!_sorted_weights.TryGetValue(weight, out queue))
             {
-                queue = new HashSet<uint>();
+                queue = new List<uint>(1);
                 _sorted_weights.Add(weight, queue);
             }
             queue.Add(id);
@@ -108,8 +108,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public uint Pop()
         {
             float weight = _sorted_weights.Keys[0];
-            HashSet<uint> first_set = _sorted_weights[weight];
-            uint vertex_id = first_set.First();
+            var first_set = _sorted_weights[weight];
+            uint vertex_id = first_set[0];
 
             // remove the vertex.
             first_set.Remove(vertex_id);
@@ -133,7 +133,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             float weight;
             if (_weights.TryGetValue(vertex_id, out weight))
             {
-                HashSet<uint> first_set = _sorted_weights[weight];
+                var first_set = _sorted_weights[weight];
                 first_set.Remove(vertex_id);
                 if (first_set.Count == 0)
                 {
@@ -152,7 +152,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public uint Peek()
         {
             float weight = _sorted_weights.Keys[0];
-            HashSet<uint> first_set = _sorted_weights[weight];
+            var first_set = _sorted_weights[weight];
             uint vertex_id = first_set.First();
 
             return vertex_id;
@@ -162,7 +162,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Peeks to all the vertices with the lowest weight.
         /// </summary>
         /// <returns></returns>
-        public HashSet<uint> PeekAll()
+        public List<uint> PeekAll()
         {
             float weight = _sorted_weights.Keys[0];
             return _sorted_weights[weight];
@@ -184,7 +184,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<uint> PeekAtWeight(float weight)
+        public List<uint> PeekAtWeight(float weight)
         {
             return _sorted_weights[weight];
         }

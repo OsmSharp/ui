@@ -61,29 +61,52 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             int newEdges = 0;
             int removed = 0;
             var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>();
+            var tos = new List<uint>();
             foreach(var neighbour in neighbours)
             {
                 if (!neighbour.EdgeData.ToLower && neighbour.EdgeData.Forward)
                 {
                     edgesForContractions.Add(new KeyValuePair<uint, CHEdgeData>(neighbour.Neighbour, neighbour.EdgeData));
+                    tos.Add(neighbour.Neighbour);
                     removed++;
                 }
             }
 
             // loop over all neighbours and check for witnesses.
+            var witnesses = new bool[edgesForContractions.Count];
+            var tosWeights = new List<float>(edgesForContractions.Count);
             foreach (var from in edgesForContractions)
-            { // loop over all incoming neighbours
-                foreach (var to in edgesForContractions)
+            { // loop over all incoming neighbours.
+                // calculate max weight.
+                tosWeights.Clear();
+                for (int idx = 0; idx < edgesForContractions.Count; idx++)
+                {
+                    // update maxWeight.
+                    var to = edgesForContractions[idx];
+                    if (from.Value.Backward && to.Value.Forward)
+                    {
+                        float weight = (float)from.Value.BackwardWeight + (float)to.Value.ForwardWeight;
+                        witnesses[idx] = false;
+                        tosWeights.Add(weight);
+                    }
+                    else
+                    {
+                        witnesses[idx] = true;
+                        tosWeights.Add(0);
+                    }
+                }
+
+                _witnessCalculator.Exists(_data, from.Key, tos, tosWeights, int.MaxValue, ref witnesses);
+                for (int idx = 0; idx < edgesForContractions.Count; idx++)
                 { // loop over all outgoing neighbours
+                    var to = edgesForContractions[idx];
                     if (to.Key != from.Key &&
-                        to.Value.Forward && from.Value.Backward)
+                        to.Value.Forward && from.Value.Backward &&
+                        !witnesses[idx])
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witnessCalculator.Exists(_data, from.Key, to.Key, vertex,
-                            (float)from.Value.BackwardWeight + (float)to.Value.ForwardWeight, 1000))
-                        { // no witness exists.
-                            newEdges++;
-                        }
+                        // no witness exists.
+                        newEdges++;
                     }
                 }
             }

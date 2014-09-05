@@ -99,7 +99,7 @@ namespace OsmSharp.Routing.CH.Routing
             PathSegment<long> backward;
             if (_backward.TryGetValue(segment.VertexId, out backward))
             {
-                _intersection.Add(segment.VertexId, backward.Weight + segment.Weight);
+                _intersection[segment.VertexId] = backward.Weight + segment.Weight;
             }
         }
 
@@ -114,7 +114,7 @@ namespace OsmSharp.Routing.CH.Routing
             PathSegment<long> forward;
             if (_forward.TryGetValue(segment.VertexId, out forward))
             {
-                _intersection.Add(segment.VertexId, forward.Weight + segment.Weight);
+                _intersection[segment.VertexId] = forward.Weight + segment.Weight;
             }
         }
     }

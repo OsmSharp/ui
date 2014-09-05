@@ -55,7 +55,6 @@
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
-    <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
     <Compile Include="CH\Serialization\CHEdgeFlatfileSerializer.cs" />
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
