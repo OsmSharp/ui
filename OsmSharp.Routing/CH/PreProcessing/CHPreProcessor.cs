@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds a witness calculator just for contraction.
         /// </summary>
-        private INodeWitnessCalculator _contractionWitnessCalculator = new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(100);
+        private INodeWitnessCalculator _contractionWitnessCalculator = new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(20);
 
         /// <summary>
         /// Starts pre-processing all nodes
@@ -117,36 +117,36 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     latestProgress = progress;
                     //if (progress % 1 == 0)
                     //{
-                        int totalCardinality = 0;
-                        int uncontracted = 0;
-                        int maxCardinality = 0;
-                        for (uint v = 0; v < _target.VertexCount; v++)
-                        {
-                            if (!this.IsContracted(v))
-                            {
-                                var edges = _target.GetEdges(v);
-                                if (edges != null)
-                                {
-                                    int edgesCount = 0;
-                                    foreach(var edge in edges)
-                                    {
-                                        if(!edge.EdgeData.ToLower &&
-                                            edge.EdgeData.Forward)
-                                        {
-                                            edgesCount++;
-                                        }
-                                    }
-                                    totalCardinality = edgesCount + totalCardinality;
-                                    if (maxCardinality < edgesCount)
-                                    {
-                                        maxCardinality = edgesCount;
-                                    }
-                                }
-                                uncontracted++;
-                            }
-                        }
-                        OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                            "Average card uncontracted vertices: {0} with max {1}", (double)totalCardinality / (double)uncontracted, maxCardinality);
+                    //    int totalCardinality = 0;
+                    //    int uncontracted = 0;
+                    //    int maxCardinality = 0;
+                    //    for (uint v = 0; v < _target.VertexCount; v++)
+                    //    {
+                    //        if (!this.IsContracted(v))
+                    //        {
+                    //            var edges = _target.GetEdges(v);
+                    //            if (edges != null)
+                    //            {
+                    //                int edgesCount = 0;
+                    //                foreach(var edge in edges)
+                    //                {
+                    //                    if(!edge.EdgeData.ToLower &&
+                    //                        edge.EdgeData.Forward)
+                    //                    {
+                    //                        edgesCount++;
+                    //                    }
+                    //                }
+                    //                totalCardinality = edgesCount + totalCardinality;
+                    //                if (maxCardinality < edgesCount)
+                    //                {
+                    //                    maxCardinality = edgesCount;
+                    //                }
+                    //            }
+                    //            uncontracted++;
+                    //        }
+                    //    }
+                    //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                    //        "Average card uncontracted vertices: {0} with max {1}", (double)totalCardinality / (double)uncontracted, maxCardinality);
                     //}
                 }
                 current++;
@@ -358,7 +358,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// The amount of queue 'misses' to recalculated.
         /// </summary>
-        private int _k = 20;
+        private int _k = 30;
 
         /// <summary>
         /// Holds a counter of all misses.
@@ -412,17 +412,17 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 { // recalculation.
                     this.RecalculateQueue();
 
-                    int totalCadinality = 0;
-                    for (uint vertex = 0; vertex < _target.VertexCount; vertex++)
-                    {
-                        var arcs = _target.GetEdges(vertex);
-                        if (arcs != null)
-                        {
-                            totalCadinality = arcs.Count() + totalCadinality;
-                        }
-                    }
-                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                        "Average card: {0}", (double)totalCadinality / (double)_target.VertexCount);
+                    //int totalCadinality = 0;
+                    //for (uint vertex = 0; vertex < _target.VertexCount; vertex++)
+                    //{
+                    //    var arcs = _target.GetEdges(vertex);
+                    //    if (arcs != null)
+                    //    {
+                    //        totalCadinality = arcs.Count() + totalCadinality;
+                    //    }
+                    //}
+                    //OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                    //    "Average card: {0}", (double)totalCadinality / (double)_target.VertexCount);
 
                     _missesQueue.Clear();
                     _misses = 0;

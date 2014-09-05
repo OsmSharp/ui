@@ -49,7 +49,6 @@
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
-    <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
     <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />

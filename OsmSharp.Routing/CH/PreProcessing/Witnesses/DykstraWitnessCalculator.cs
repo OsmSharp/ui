@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// </summary>
         public DykstraWitnessCalculator()
         {
-            _hopLimit = 5;
+            _hopLimit = 1;
         }
 
         /// <summary>
