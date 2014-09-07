@@ -173,13 +173,17 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.ClearMarkers();
 
             var marker1 = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
+
+
+            var popupView = marker1.AddNewPopup(300, 300);
             var textView = new TextView(this.ApplicationContext);
             textView.Text = "Some popup text here.";
             textView.TextSize = 10;
             textView.SetTextColor(global::Android.Graphics.Color.Black);
+            popupView.AddView(textView);
 
-            marker1.AddPopup(textView, 100, 200, 100, 300);
-            marker1.ShowPopup();
+            //marker1.AddPopup(textView, 100, 200, 100, 300);
+            //marker1.ShowPopup();
             _mapView.AddMarker(marker1);
 
             var marker2 = _mapView.AddMarker(to);
