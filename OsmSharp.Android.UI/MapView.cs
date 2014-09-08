@@ -49,6 +49,11 @@ namespace OsmSharp.Android.UI
         public event MapViewDelegates.MapMoveDelegate MapMove;
 
         /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
+
+        /// <summary>
         /// Occurs when the map was tapped at a certain location.
         /// </summary>
         public event MapViewEvents.MapTapEventDelegate MapTapEvent;
@@ -116,6 +121,17 @@ namespace OsmSharp.Android.UI
             if (this.MapMove != null)
             {
                 this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map initialized event.
+        /// </summary>
+        internal void RaiseMapInitialized()
+        {
+            if (this.MapInitialized != null)
+            {
+                this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 
