@@ -68,6 +68,11 @@ namespace OsmSharp.iOS.UI.Sample
 		/// </summary>
 		private IEnumerator<GeoCoordinate> _enumerator;
 
+        /// <summary>
+        /// Holds the center marker.
+        /// </summary>
+        private MapMarker _centerMarker;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.Sample.SampleViewController"/> class.
 		/// </summary>
@@ -147,6 +152,7 @@ namespace OsmSharp.iOS.UI.Sample
 			_mapView.MapTilt = 0;
 			_mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
 			_mapView.MapZoom = 18;
+            _mapView.MapInitialized += _mapView_MapInitialized;
 
             // add markers.
             var marker = _mapView.AddMarker (from);
@@ -160,9 +166,8 @@ namespace OsmSharp.iOS.UI.Sample
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
             marker.AddPopup(popupTextView, 100, 100);
 
-            // add fixed marker.
-            var fixedMarker = new MapMarker(new System.Drawing.PointF(100, 100), MapControlAlignmentType.CenterBottom);
-            _mapView.AddMarker(fixedMarker);
+            // add center marker.
+            _centerMarker = _mapView.AddMarker(_mapView.MapCenter);
 
 			// create the route tracker animator.
             // _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
@@ -174,6 +179,19 @@ namespace OsmSharp.iOS.UI.Sample
 
 			View = _mapView;
 		}
+
+        /// <summary>
+        /// Called when the map was first initialized.
+        /// </summary>
+        /// <param name="mapView">Map view.</param>
+        /// <param name="newZoom">New zoom.</param>
+        /// <param name="newTilt">New tilt.</param>
+        /// <param name="newCenter">New center.</param>
+        private void _mapView_MapInitialized(OsmSharp.UI.IMapView mapView, float newZoom, OsmSharp.Units.Angle.Degree newTilt, GeoCoordinate newCenter)
+        { 
+            // make sure the center marker stays in place from now on.
+            _centerMarker.MoveWithMap = false;
+        }
 
 		/// <summary>
 		/// Handles the timer event from the timer.
