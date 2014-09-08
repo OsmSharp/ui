@@ -567,7 +567,10 @@ namespace OsmSharp.iOS.UI
 				{
 					this.NotifyMovementByInvoke();;
 
-					_mapViewBefore = null;
+                    _mapViewBefore = null;
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
 				}
 				else if (rotation.State == UIGestureRecognizerState.Began)
 				{
@@ -607,7 +610,10 @@ namespace OsmSharp.iOS.UI
 				{
 					this.NotifyMovementByInvoke();
 
-					_mapZoomLevelBefore = null;
+                    _mapZoomLevelBefore = null;
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
 				}
 				else if (pinch.State == UIGestureRecognizerState.Began)
 				{
@@ -645,6 +651,9 @@ namespace OsmSharp.iOS.UI
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
 					this.NotifyMovementByInvoke();
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
@@ -694,6 +703,9 @@ namespace OsmSharp.iOS.UI
 					double[] sceneCoordinates = view.FromViewPort(rect.Width, rect.Height, location.X, location.Y);
 					this.MapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCoordinates[0], sceneCoordinates[1]));
 				}
+
+                // notify controls map was tapped.
+                this.NotifyMapTapToControls();
 			}
 		}
 
@@ -733,7 +745,10 @@ namespace OsmSharp.iOS.UI
                     // Clamp the zoom level between the configured maximum and minimum.
                     float tapRequestZoom = MapZoom + 0.5f;
 					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 0, 0, 500));
-				}
+                }
+
+                // notify controls map was tapped.
+                this.NotifyMapTapToControls();
 			}
 		}
 
@@ -1527,6 +1542,44 @@ namespace OsmSharp.iOS.UI
 				mapMarker.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 			}
 		}
+
+        /// <summary>
+        /// Notifies controls that there was a map tap.
+        /// </summary>
+        /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
+        internal void NotifyMapTapToControls() 
+        {
+            foreach (var marker in _markers)
+            {
+                marker.NotifyMapTap();
+            }
+            foreach (var control in _controls)
+            {
+                control.NotifyMapTap();
+            }
+        }
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="clickedControl">Control.</param>
+        public void NotifyControlClicked(MapControl clickedControl)
+        { // make sure to close all other popups.
+            foreach (var marker in _markers)
+            {
+                if (marker != clickedControl)
+                {
+                    marker.NotifyOtherControlClicked();
+                }
+            }
+            foreach (var control in _controls)
+            {
+                if (control != clickedControl)
+                {
+                    control.NotifyOtherControlClicked();
+                }
+            }
+        }
 
 		#endregion
 

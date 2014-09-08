@@ -139,9 +139,6 @@ namespace OsmSharp.iOS.UI
             _popupYOffset = yOffset;
             _popupView = view;
             _popupView.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
-
-            // show popup by default.
-            this.ShowPopup();
         }
 
         /// <summary>
@@ -216,6 +213,11 @@ namespace OsmSharp.iOS.UI
                     this.ShowPopup();
                 }
             }
+
+            if (this.Host != null)
+            {
+                this.Host.NotifyControlClicked(this);
+            }
         }
 
         /// <summary>
@@ -240,7 +242,7 @@ namespace OsmSharp.iOS.UI
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        protected internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
             base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 
@@ -274,6 +276,22 @@ namespace OsmSharp.iOS.UI
                 return true;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Notifies the map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+            this.HidePopup();
+        }
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+            this.HidePopup();
         }
 
 		/// <summary>

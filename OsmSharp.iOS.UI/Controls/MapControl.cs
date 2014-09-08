@@ -72,8 +72,26 @@ namespace OsmSharp.iOS.UI.Controls
         /// <param name="view"></param>
         /// <param name="projection"></param>
         /// <returns></returns>
-        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+        protected internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
 
+        /// <summary>
+        /// Notifies this control there was a map tap.
+        /// </summary>
+        protected internal abstract void NotifyMapTap();
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal abstract void NotifyOtherControlClicked();
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> object.
+        /// </summary>
+        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl"/>. The <see cref="Dispose"/> method leaves the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> in an unusable state. After calling <see cref="Dispose"/>,
+        /// you must release all references to the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> so the garbage
+        /// collector can reclaim the memory that the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> was occupying.</remarks>
         public abstract void Dispose();
     }
 
@@ -215,7 +233,7 @@ namespace OsmSharp.iOS.UI.Controls
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        protected internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
             double[] projected = projection.ToPixel (this.Location);
             double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
@@ -236,6 +254,32 @@ namespace OsmSharp.iOS.UI.Controls
             return true;
         }
 
+        /// <summary>
+        /// Notifies this control there was a map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+
+        }
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+
+        }
+
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> object.
+        /// </summary>
+        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/>. The <see cref="Dispose"/> method leaves the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> in an unusable state. After calling
+        /// <see cref="Dispose"/>, you must release all references to the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> so the garbage collector can reclaim the memory that the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> was occupying.</remarks>
         public override void Dispose()
         {
 
