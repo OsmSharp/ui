@@ -160,6 +160,10 @@ namespace OsmSharp.iOS.UI.Sample
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
             marker.AddPopup(popupTextView, 100, 100);
 
+            // add fixed marker.
+            var fixedMarker = new MapMarker(new System.Drawing.PointF(100, 100), MapControlAlignmentType.CenterBottom);
+            _mapView.AddMarker(fixedMarker);
+
 			// create the route tracker animator.
             // _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
