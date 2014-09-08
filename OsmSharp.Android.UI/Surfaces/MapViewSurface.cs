@@ -1070,6 +1070,7 @@ namespace OsmSharp.Android.UI
                         if (movement)
                         {
                             _mapView.RaiseMapTouched();
+                            _mapView.RaiseMapMove();
 
                             this.NotifyMovement();
                         }

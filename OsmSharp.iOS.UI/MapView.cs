@@ -56,6 +56,11 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
+        /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
 		/// </summary>
@@ -586,6 +591,9 @@ namespace OsmSharp.iOS.UI
 						sceneCenter[0], sceneCenter[1]);
 
 					this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -627,7 +635,10 @@ namespace OsmSharp.iOS.UI
 					zoomFactor = zoomFactor * pinch.Scale;
                     MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-					this.NotifyMovementByInvoke();
+                    this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -673,7 +684,10 @@ namespace OsmSharp.iOS.UI
                     this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.NotifyMovementByInvoke();
+                    this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -1623,7 +1637,18 @@ namespace OsmSharp.iOS.UI
 			{
 				this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
 			}
-		}
+        }
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        private void RaiseMapMove()
+        {
+            if (this.MapMove != null)
+            {
+                this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
 
 		/// <summary>
 		/// Dispose the specified disposing.

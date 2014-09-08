@@ -44,6 +44,11 @@ namespace OsmSharp.Android.UI
         public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
         /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
         /// Occurs when the map was tapped at a certain location.
         /// </summary>
         public event MapViewEvents.MapTapEventDelegate MapTapEvent;
@@ -100,6 +105,17 @@ namespace OsmSharp.Android.UI
             if (this.MapTouched != null)
             {
                 this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map move event.
+        /// </summary>
+        internal void RaiseMapMove()
+        {
+            if (this.MapMove != null)
+            {
+                this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 
