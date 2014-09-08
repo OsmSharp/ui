@@ -153,12 +153,12 @@ namespace OsmSharp.iOS.UI.Sample
             var popupTextView = new UITextView();
             popupTextView.Text = "Hey, this is popup text!";
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
-            marker.AddPopup(popupTextView, 75, 75, 50, -50);
+            marker.AddPopup(popupTextView, 100, 100);
             marker = _mapView.AddMarker (to);
             popupTextView = new UITextView();
             popupTextView.Text = "Hey, this is another popup text!";
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
-            marker.AddPopup(popupTextView, 75, 75, 50, -50);
+            marker.AddPopup(popupTextView, 100, 100);
 
 			// create the route tracker animator.
             // _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
