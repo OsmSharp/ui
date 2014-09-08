@@ -1032,13 +1032,19 @@ namespace OsmSharp.iOS.UI
             }
         }
 
-        
         /// <summary>
         /// Gets the current view.
         /// </summary>
         public View2D CurrentView
         {
-            get { return this.CreateView(this.Frame); }
+            get
+            {
+                if (_rect.Width != 0)
+                {
+                    return this.CreateView(_rect);
+                }
+                return null;
+            }
         }
 
         /// <summary>
