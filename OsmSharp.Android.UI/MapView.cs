@@ -88,6 +88,8 @@ namespace OsmSharp.Android.UI
             {
                 this.MapTapEvent(coordinate);
             }
+
+            this.NotifyMapTapToControls();
         }
 
         /// <summary>
@@ -435,6 +437,44 @@ namespace OsmSharp.Android.UI
                     {
                         this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notifies controls that there was a map tap.
+        /// </summary>
+        /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
+        internal void NotifyMapTapToControls() 
+        {
+            foreach (var marker in _markers)
+            {
+                marker.NotifyMapTap();
+            }
+            foreach (var control in _controls)
+            {
+                control.NotifyMapTap();
+            }
+        }
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="clickedControl">Control.</param>
+        public void NotifyControlClicked(MapControl clickedControl)
+        { // make sure to close all other popups.
+            foreach (var marker in _markers)
+            {
+                if (marker != clickedControl)
+                {
+                    marker.NotifyOtherControlClicked();
+                }
+            }
+            foreach (var control in _controls)
+            {
+                if (control != clickedControl)
+                {
+                    control.NotifyOtherControlClicked();
                 }
             }
         }

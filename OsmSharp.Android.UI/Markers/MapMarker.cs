@@ -233,9 +233,6 @@ namespace OsmSharp.Android.UI
             layoutParams.TopMargin = -1;
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
             _popupView.LayoutParameters = layoutParams;
-
-            // show popup by default.
-            this.ShowPopup();
         }
 
         /// <summary>
@@ -310,6 +307,11 @@ namespace OsmSharp.Android.UI
                     this.ShowPopup();
                 }
             }
+
+            if (this.Host != null)
+            {
+                this.Host.NotifyControlClicked(this);
+            }
         }
 
         /// <summary>
@@ -376,6 +378,22 @@ namespace OsmSharp.Android.UI
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Notifies the map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+            this.HidePopup();
+        }
+
+        /// <summary>
+        /// Notifies the other control clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+            this.HidePopup();
         }
 
         /// <summary>

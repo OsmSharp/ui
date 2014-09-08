@@ -48,5 +48,11 @@ namespace OsmSharp.Android.UI.Controls
         /// </summary>
         /// <param name="marker">Marker.</param>
         void NotifyControlChange(MapControl marker);
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="control">Control.</param>
+        void NotifyControlClicked(MapControl control);
     }
 }
