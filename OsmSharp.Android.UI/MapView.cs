@@ -212,6 +212,7 @@ namespace OsmSharp.Android.UI
                 {
                     foreach (MapMarker marker in _markers)
                     {
+                        marker.DetachFrom(this);
                         this.RemoveView(marker.View);
                         marker.Dispose();
                     }
@@ -231,6 +232,7 @@ namespace OsmSharp.Android.UI
             {
                 if (marker != null)
                 {
+                    marker.DetachFrom(this);
                     this.RemoveView(marker.View);
                     return _markers.Remove(marker);
                 }

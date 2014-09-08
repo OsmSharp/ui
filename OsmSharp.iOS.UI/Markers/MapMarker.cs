@@ -230,20 +230,6 @@ namespace OsmSharp.iOS.UI
         }
 
         /// <summary>
-        /// Detaches this control from the given control host.
-        /// </summary>
-        /// <param name="controlHost">The control host.</param>
-        internal override void DetachFrom(IMapControlHost controlHost)
-        {
-            if (this.Host != null && this.HasPopup)
-            { // remove popup.
-                this.RemovePopup();
-            }
-
-            base.DetachFrom();
-        }
-
-        /// <summary>
         /// Gets or sets the toggle popup on click flag.
         /// </summary>
         public bool TogglePopupOnClick { get; set; }
@@ -286,6 +272,20 @@ namespace OsmSharp.iOS.UI
             {
                 this.ShowPopup();
             }
+        }
+
+        /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">The control host.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
+        {
+            if (this.Host != null && this.HasPopup)
+            { // remove popup.
+                this.RemovePopup();
+            }
+
+            base.DetachFrom(controlHost);
         }
 
         /// <summary>

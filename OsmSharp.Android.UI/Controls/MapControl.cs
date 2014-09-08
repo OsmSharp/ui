@@ -69,6 +69,12 @@ namespace OsmSharp.Android.UI.Controls
         internal abstract void AttachTo(IMapControlHost controlHost);
 
         /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">Map view.</param>
+        internal abstract void DetachFrom(IMapControlHost controlHost);
+
+        /// <summary>
         /// Sets layout.
         /// </summary>
         /// <param name="pixelsWidth"></param>
@@ -255,6 +261,15 @@ namespace OsmSharp.Android.UI.Controls
         internal override void AttachTo(IMapControlHost controlHost)
         {
             _controlHost = controlHost;
+        }
+
+        /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">Map view.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
+        {
+            _controlHost = null;
         }
 
         /// <summary>
