@@ -120,7 +120,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", osmPbfFile));
             var stream = testFile.OpenRead();
 
-            LiveRoutingTest.TestSerializedRouting(name, stream, box, testCount);
+            CHRoutingTest.TestSerializedRouting(name, stream, box, testCount);
 
             stream.Dispose();
         }
