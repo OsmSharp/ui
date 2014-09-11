@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System.Collections.Generic;
 
@@ -60,49 +61,56 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // simulate the construction of new edges.
             int newEdges = 0;
             int removed = 0;
-            var edgesForContractions = new List<KeyValuePair<uint, CHEdgeData>>();
+            var edgesForContractions = new List<Edge<CHEdgeData>>();
             var tos = new List<uint>();
-            foreach(var neighbour in neighbours)
+            foreach (var neighbour in neighbours)
             {
-                if (!neighbour.EdgeData.ToLower && neighbour.EdgeData.Forward)
+                if (!neighbour.EdgeData.ToLower)
                 {
-                    edgesForContractions.Add(new KeyValuePair<uint, CHEdgeData>(neighbour.Neighbour, neighbour.EdgeData));
+                    edgesForContractions.Add(neighbour);
                     tos.Add(neighbour.Neighbour);
                     removed++;
                 }
             }
 
             // loop over all neighbours and check for witnesses.
+            // loop over each combination of edges just once.
             var witnesses = new bool[edgesForContractions.Count];
             var tosWeights = new List<float>(edgesForContractions.Count);
-            foreach (var from in edgesForContractions)
-            { // loop over all incoming neighbours.
+            for (int x = 0; x < edgesForContractions.Count; x++)
+            { // loop over all elements first.
+                var xEdge = edgesForContractions[x];
+                if (!xEdge.EdgeData.Backward) { continue; }
+
                 // calculate max weight.
                 tosWeights.Clear();
                 for (int idx = 0; idx < edgesForContractions.Count; idx++)
                 {
                     // update maxWeight.
-                    var to = edgesForContractions[idx];
-                    if (from.Value.Backward && to.Value.Forward)
+                    var yEdge = edgesForContractions[idx];
+                    if (xEdge.Neighbour != yEdge.Neighbour &&
+                        yEdge.EdgeData.Forward)
                     {
-                        float weight = (float)from.Value.BackwardWeight + (float)to.Value.ForwardWeight;
+                        // reset witnesses.
+                        float weight = (float)xEdge.EdgeData.BackwardWeight + (float)yEdge.EdgeData.ForwardWeight;
                         witnesses[idx] = false;
                         tosWeights.Add(weight);
                     }
                     else
-                    {
+                    { // already set this to true, not use calculating it's witness.
                         witnesses[idx] = true;
                         tosWeights.Add(0);
                     }
                 }
 
-                _witnessCalculator.Exists(_data, from.Key, tos, tosWeights, int.MaxValue, ref witnesses);
-                for (int idx = 0; idx < edgesForContractions.Count; idx++)
-                { // loop over all outgoing neighbours
-                    var to = edgesForContractions[idx];
-                    if (to.Key != from.Key &&
-                        to.Value.Forward && from.Value.Backward &&
-                        !witnesses[idx])
+                _witnessCalculator.Exists(_data, xEdge.Neighbour, tos, tosWeights, int.MaxValue, ref witnesses);
+                for (int y = 0; y < edgesForContractions.Count; y++)
+                { // loop over all elements.
+                    var yEdge = edgesForContractions[y];
+
+                    if (yEdge.Neighbour != xEdge.Neighbour &&
+                        yEdge.EdgeData.Forward &&
+                        !witnesses[y])
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         // no witness exists.
@@ -110,7 +118,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     }
                 }
             }
-            return (2 * newEdges) - removed;
+
+            return (2 * newEdges) + removed;
         }
 
         /// <summary>
