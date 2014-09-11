@@ -748,6 +748,9 @@ namespace OsmSharp.Android.UI
 
                     // trigger rendering.
                     this.TriggerRendering();
+
+                    // raise map initialized.
+                    _mapView.RaiseMapInitialized();
                 }
 
                 if (_onScreenBuffer != null)
@@ -1070,6 +1073,7 @@ namespace OsmSharp.Android.UI
                         if (movement)
                         {
                             _mapView.RaiseMapTouched();
+                            _mapView.RaiseMapMove();
 
                             this.NotifyMovement();
                         }

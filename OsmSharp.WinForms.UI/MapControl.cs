@@ -40,6 +40,16 @@ namespace OsmSharp.WinForms.UI
 		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
         /// <summary>
+        /// Raised when the map is moved.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
+
+        /// <summary>
         /// Creates a new map control.
         /// </summary>
         public MapControl()

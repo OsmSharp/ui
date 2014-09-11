@@ -42,10 +42,16 @@ namespace OsmSharp.iOS.UI.Controls
         void RemoveView(UIView view);
 
         /// <summary>
-        /// Notifies this host that the given marker has changed.
+        /// Notifies this host that the given control has changed.
         /// </summary>
-        /// <param name="marker">Marker.</param>
-        void NotifyControlChange(MapControl marker);
+        /// <param name="control">Control.</param>
+        void NotifyControlChange(MapControl control);
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="control">Control.</param>
+        void NotifyControlClicked(MapControl control);
     }
 }
 

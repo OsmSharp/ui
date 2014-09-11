@@ -53,6 +53,23 @@ namespace OsmSharp.iOS.UI.Controls
         }
 
         /// <summary>
+        /// Gets or sets the move with map flag.
+        /// </summary>
+        /// <value><c>true</c> if move with map; otherwise, <c>false</c>.</value>
+        /// <remarks>When false, this control will not move along with the map.</remarks>
+        public bool MoveWithMap
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Returns the left margin.
+        /// </summary>
+        /// <value>The left.</value>
+        public abstract System.Drawing.PointF Center { get; set; }
+
+        /// <summary>
         /// Attaches this control to the given control host.
         /// </summary>
         /// <param name="controlHost">Map view.</param>
@@ -72,8 +89,26 @@ namespace OsmSharp.iOS.UI.Controls
         /// <param name="view"></param>
         /// <param name="projection"></param>
         /// <returns></returns>
-        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+        protected internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
 
+        /// <summary>
+        /// Notifies this control there was a map tap.
+        /// </summary>
+        protected internal abstract void NotifyMapTap();
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal abstract void NotifyOtherControlClicked();
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> object.
+        /// </summary>
+        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl"/>. The <see cref="Dispose"/> method leaves the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> in an unusable state. After calling <see cref="Dispose"/>,
+        /// you must release all references to the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> so the garbage
+        /// collector can reclaim the memory that the <see cref="OsmSharp.iOS.UI.Controls.MapControl"/> was occupying.</remarks>
         public abstract void Dispose();
     }
 
@@ -111,8 +146,40 @@ namespace OsmSharp.iOS.UI.Controls
             _view = view;
             _location = location;
             _alignment = alignment;
+            this.MoveWithMap = true;
 
             _view.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
+        }
+
+        /// <summary>
+        /// Creates a MapControl based on the given view.
+        /// </summary>
+        /// <param name="center">The location the view has to stay at.</param>
+        /// <param name="view">The view being wrapped.</param>
+        /// <param name="alignment">The alignment.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        public MapControl(TView view, System.Drawing.PointF location, MapControlAlignmentType alignment, int width, int height)
+        {
+            _view = view;
+            _location = null;
+            _alignment = alignment;
+            this.MoveWithMap = false;
+
+            switch(alignment) {
+                case MapControlAlignmentType.Center:
+                    _view.Frame = new System.Drawing.RectangleF(
+                        new System.Drawing.PointF(location.X - width / 2.0f, location.Y - height / 2.0f), new System.Drawing.SizeF(width, height));
+                    break;
+                case MapControlAlignmentType.CenterBottom:
+                    _view.Frame = new System.Drawing.RectangleF(
+                        new System.Drawing.PointF(location.X - width / 2.0f, location.Y - height), new System.Drawing.SizeF(width, height));
+                    break;
+                case MapControlAlignmentType.CenterTop:
+                    _view.Frame = new System.Drawing.RectangleF(
+                        new System.Drawing.PointF(location.X - width / 2.0f, location.Y), new System.Drawing.SizeF(width, height));
+                    break;
+            }
         }
 
         /// <summary>
@@ -130,6 +197,7 @@ namespace OsmSharp.iOS.UI.Controls
             }
             set {
                 _location = value;
+                this.MoveWithMap = true;
 
                 if (_controlHost != null) {
                     _controlHost.NotifyControlChange (this);
@@ -154,6 +222,23 @@ namespace OsmSharp.iOS.UI.Controls
                 {
                     _controlHost.NotifyControlChange(this);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Returns the left margin.
+        /// </summary>
+        /// <value>The left.</value>
+        public override System.Drawing.PointF Center
+        {
+            get
+            {
+                return this.View.Center;
+            }
+            set
+            {
+                this.View.Center = value;
+                this.MoveWithMap = false;
             }
         }
 
@@ -215,27 +300,61 @@ namespace OsmSharp.iOS.UI.Controls
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        protected internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
-            double[] projected = projection.ToPixel (this.Location);
-            double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
+            if (this.MoveWithMap)
+            { // keep location the same and move with map.
+                var projected = projection.ToPixel(this.Location);
+                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
 
-            // set the new location depending on the size of the image and the alignment parameter.
-            double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0;
-            double topMargin = locationPixel [1];
-            switch (_alignment) {
-                case MapControlAlignmentType.CenterTop:
-                    topMargin = locationPixel [1] + this.View.Frame.Height / 2.0;
-                    break;
-                case MapControlAlignmentType.CenterBottom:
-                    topMargin = locationPixel [1] - this.View.Frame.Height / 2.0;
-                    break;
+                // set the new location depending on the size of the image and the alignment parameter.
+                var leftMargin = locationPixel[0];// - this.Bitmap.Size.Width / 2.0;
+                var topMargin = locationPixel[1];
+                switch (_alignment)
+                {
+                    case MapControlAlignmentType.CenterTop:
+                        topMargin = locationPixel[1] + this.View.Frame.Height / 2.0;
+                        break;
+                    case MapControlAlignmentType.CenterBottom:
+                        topMargin = locationPixel[1] - this.View.Frame.Height / 2.0;
+                        break;
+                }
+                this.View.Center = new System.Drawing.PointF((float)leftMargin, (float)topMargin);
             }
-            this.View.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
-
+            else
+            { // do not move with map but change the location.
+                var locationProjected = view.FromViewPort(pixelsWidth, pixelsHeight, this.View.Center.X, this.View.Center.X);
+                _location = projection.ToGeoCoordinates(locationProjected[0], locationProjected[1]);
+            }
             return true;
         }
 
+        /// <summary>
+        /// Notifies this control there was a map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+
+        }
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+
+        }
+
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> object.
+        /// </summary>
+        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/>. The <see cref="Dispose"/> method leaves the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> in an unusable state. After calling
+        /// <see cref="Dispose"/>, you must release all references to the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> so the garbage collector can reclaim the memory that the
+        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> was occupying.</remarks>
         public override void Dispose()
         {
 

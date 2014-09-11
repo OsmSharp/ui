@@ -90,7 +90,46 @@ namespace OsmSharp.iOS.UI
 
             this.View.TouchUpInside += view_TouchUpInside;
             this.TogglePopupOnClick = true;
-		}
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
+        /// </summary>
+        /// <param name="point">Point.</param>
+        public MapMarker (System.Drawing.PointF point)
+            : this(point, MapControlAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
+        /// </summary>
+        /// <param name="point">Point.</param>
+        /// <param name="marker">Alignment.</param>
+        public MapMarker (System.Drawing.PointF point, MapControlAlignmentType alignment)
+            : this(point, alignment, MapMarker.GetDefaultImage())
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
+        /// </summary>
+        /// <param name="point">Point.</param>
+        /// <param name="image">Bitmap.</param>
+        /// <param name="alignment">Alignment.</param>
+        public MapMarker(System.Drawing.PointF point, MapControlAlignmentType alignment, UIImage image)
+            : base(new UIButton(UIButtonType.Custom), point, alignment, (int)image.Size.Width, (int)image.Size.Height) {
+            _image = image;
+
+            this.View.SetImage (image, UIControlState.Normal);
+            this.View.SetImage (image, UIControlState.Highlighted);
+            this.View.SetImage (image, UIControlState.Disabled);
+
+            this.View.TouchUpInside += view_TouchUpInside;
+            this.TogglePopupOnClick = true;
+        }
 
         /// <summary>
         /// Holds the popup view.
@@ -139,9 +178,6 @@ namespace OsmSharp.iOS.UI
             _popupYOffset = yOffset;
             _popupView = view;
             _popupView.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), new System.Drawing.SizeF(width, height));
-
-            // show popup by default.
-            this.ShowPopup();
         }
 
         /// <summary>
@@ -216,6 +252,11 @@ namespace OsmSharp.iOS.UI
                     this.ShowPopup();
                 }
             }
+
+            if (this.Host != null)
+            {
+                this.Host.NotifyControlClicked(this);
+            }
         }
 
         /// <summary>
@@ -234,13 +275,27 @@ namespace OsmSharp.iOS.UI
         }
 
         /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">The control host.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
+        {
+            if (this.Host != null && this.HasPopup)
+            { // remove popup.
+                this.RemovePopup();
+            }
+
+            base.DetachFrom(controlHost);
+        }
+
+        /// <summary>
         /// Sets the layout.
         /// </summary>
         /// <param name="pixelsWidth">Pixels width.</param>
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        protected internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
             base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 
@@ -274,6 +329,22 @@ namespace OsmSharp.iOS.UI
                 return true;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Notifies the map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+            this.HidePopup();
+        }
+
+        /// <summary>
+        /// Notifies this control another control was clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+            this.HidePopup();
         }
 
 		/// <summary>

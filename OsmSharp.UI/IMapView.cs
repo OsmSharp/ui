@@ -31,9 +31,19 @@ namespace OsmSharp.UI
     public interface IMapView
     {
 		/// <summary>
-		/// Occurs when map was touched and things have been moved around.
+		/// Raised after the map was touched.
 		/// </summary>
-		event MapViewDelegates.MapTouchedDelegate MapTouched;
+        event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        event MapViewDelegates.MapInitialized MapInitialized;
 
 		/// <summary>
 		/// Invalidates this instance.
@@ -158,5 +168,23 @@ namespace OsmSharp.UI
         /// <param name="newTilt"></param>
         /// <param name="newCenter"></param>
 		public delegate void MapTouchedDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
+
+        /// <summary>
+        /// Delegate used for map touches.
+        /// </summary>
+        /// <param name="mapView"></param>
+        /// <param name="newZoom"></param>
+        /// <param name="newTilt"></param>
+        /// <param name="newCenter"></param>
+        public delegate void MapMoveDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
+
+        /// <summary>
+        /// Delegate used for map touches.
+        /// </summary>
+        /// <param name="mapView"></param>
+        /// <param name="newZoom"></param>
+        /// <param name="newTilt"></param>
+        /// <param name="newCenter"></param>
+        public delegate void MapInitialized(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
 	}
 }

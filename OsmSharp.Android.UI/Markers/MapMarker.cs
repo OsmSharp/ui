@@ -19,9 +19,11 @@
 using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.Android.UI.Controls;
+using OsmSharp.Android.UI.Images.NinePatchHelpers;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
@@ -39,6 +41,11 @@ namespace OsmSharp.Android.UI
         /// Holds the image for this marker.
         /// </summary>
         private global::Android.Graphics.Bitmap _image;
+
+        /// <summary>
+        /// Holds the context.
+        /// </summary>
+        private Context _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
@@ -77,6 +84,7 @@ namespace OsmSharp.Android.UI
             : base(new ImageButton(context), location, alignment)
         {
             _image = BitmapFactory.DecodeResource(res, id);
+            _context = context;
 
             this.SetSize(_image.Width, _image.Height);
             this.View.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
@@ -99,6 +107,7 @@ namespace OsmSharp.Android.UI
             MapControlAlignmentType alignment, global::Android.Graphics.Bitmap image)
             : base(new ImageButton(context), location, alignment, image.Width, image.Height)
         {
+            _context = context;
             this.View.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
 
             this.View.SetPadding(1, 1, 1, 1);
@@ -163,6 +172,33 @@ namespace OsmSharp.Android.UI
         private bool _popupIsVisible;
 
         /// <summary>
+        /// Adds a default popup and returns the new view.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns>The view representing the popup.</returns>
+        /// <remarks>Add subviews to the view to show stuff on the marker.</remarks>
+        public LinearLayout AddNewPopup(int width, int height)
+        {
+            var layout = new LinearLayout(_context);
+
+            // create default ninepatch.
+            var ninepatchImage = global::Android.Graphics.BitmapFactory.DecodeStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.Android.UI.Images.marker_popup.9.png"));
+            var ninepatchDrawable = NinePatchChunk.createNinePatchDrawable(this.View.Resources, ninepatchImage, "marker_popup");
+            layout.SetBackgroundDrawable(ninepatchDrawable);
+
+            // calculate offset.
+            var xOffset = -(width / 2) + 47;
+            var yOffset = 0;
+
+            this.AddPopup(layout, width, height, xOffset, yOffset);
+
+            return layout;
+        }
+
+        /// <summary>
         /// Adds a popup, showing the given view when the marker is tapped.
         /// </summary>
         /// <param name="width">The view height.</param>
@@ -178,6 +214,8 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="width">The view height.</param>
         /// <param name="height">The view width.</param>
+        /// <param name="xOffset">The x-offset.</param>
+        /// <param name="yOffset">The y-offset.</param>
         /// <param name="view">The view that should be used as popup.</param>
         public void AddPopup(View view, int width, int height, int xOffset, int yOffset)
         { 
@@ -195,9 +233,6 @@ namespace OsmSharp.Android.UI
             layoutParams.TopMargin = -1;
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
             _popupView.LayoutParameters = layoutParams;
-
-            // show popup by default.
-            this.ShowPopup();
         }
 
         /// <summary>
@@ -272,6 +307,11 @@ namespace OsmSharp.Android.UI
                     this.ShowPopup();
                 }
             }
+
+            if (this.Host != null)
+            {
+                this.Host.NotifyControlClicked(this);
+            }
         }
 
         /// <summary>
@@ -287,6 +327,20 @@ namespace OsmSharp.Android.UI
             {
                 this.ShowPopup();
             }
+        }
+
+        /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">The control host.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
+        {     
+            if (this.Host != null && this.HasPopup)
+            { // remove popup.
+                this.RemovePopup();
+            }
+
+            base.DetachFrom(controlHost);
         }
 
         /// <summary>
@@ -338,6 +392,22 @@ namespace OsmSharp.Android.UI
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Notifies the map tap.
+        /// </summary>
+        protected internal override void NotifyMapTap()
+        {
+            this.HidePopup();
+        }
+
+        /// <summary>
+        /// Notifies the other control clicked.
+        /// </summary>
+        protected internal override void NotifyOtherControlClicked()
+        {
+            this.HidePopup();
         }
 
         /// <summary>
