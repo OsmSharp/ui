@@ -288,6 +288,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             else
                             { // there is no edge, just add the data.
                                 var dataXToY = new CHEdgeData();
+                                dataXToY.BackwardWeight = float.MaxValue;
+
                                 dataXToY.SetContractedDirection(false, false);
 
                                 toRequeue.Add(xEdge.Neighbour);
@@ -295,7 +297,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 dataXToY.ForwardWeight = forwardWeight;
                                 dataXToY.ForwardContractedId = vertex;
                                 _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, dataXToY, null, _comparer);
-
                             }
                         }
                     }
