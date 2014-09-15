@@ -748,6 +748,9 @@ namespace OsmSharp.Android.UI
 
                     // trigger rendering.
                     this.TriggerRendering();
+
+                    // raise map initialized.
+                    _mapView.RaiseMapInitialized();
                 }
 
                 if (_onScreenBuffer != null)

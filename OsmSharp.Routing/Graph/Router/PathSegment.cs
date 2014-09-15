@@ -54,17 +54,17 @@ namespace OsmSharp.Routing.Graph.Router
         /// <summary>
         /// The id of this vertex.
         /// </summary>
-        public TIdType VertexId { get; private set; }
+        public TIdType VertexId { get; set; }
 
         /// <summary>
         /// The weight from the source vertex.
         /// </summary>
-        public double Weight { get; private set; }
+        public double Weight { get; set; }
 
         /// <summary>
         /// The vertex that came before this one.
         /// </summary>
-        public PathSegment<TIdType> From { get; private set; }
+        public PathSegment<TIdType> From { get; set; }
 
         /// <summary>
         /// Returns the reverse of this path segment.
@@ -192,10 +192,10 @@ namespace OsmSharp.Routing.Graph.Router
             PathSegment<TIdType> next = this;
             while (next.From != null)
             {
-                builder.Insert(0, string.Format("-> {0}", next.VertexId));
+                builder.Insert(0, string.Format("-> {0}[{1}]", next.VertexId, next.Weight));
                 next = next.From;
             }
-            builder.Insert(0, string.Format("{0}", next.VertexId));
+            builder.Insert(0, string.Format("{0}[{1}]", next.VertexId, next.Weight));
             return builder.ToString();
         }
 

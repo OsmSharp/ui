@@ -330,6 +330,20 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Detaches this control from the given control host.
+        /// </summary>
+        /// <param name="controlHost">The control host.</param>
+        internal override void DetachFrom(IMapControlHost controlHost)
+        {     
+            if (this.Host != null && this.HasPopup)
+            { // remove popup.
+                this.RemovePopup();
+            }
+
+            base.DetachFrom(controlHost);
+        }
+
+        /// <summary>
         /// Sets the layout.
         /// </summary>
         /// <param name="pixelsWidth">Pixels width.</param>

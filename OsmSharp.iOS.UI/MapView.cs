@@ -57,6 +57,11 @@ namespace OsmSharp.iOS.UI
 		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
         /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
+
+        /// <summary>
         /// Raised when the map moves.
         /// </summary>
         public event MapViewDelegates.MapMoveDelegate MapMove;
@@ -1152,6 +1157,11 @@ namespace OsmSharp.iOS.UI
             return null;
 		}
 
+        /// <summary>
+        /// Holds the initialized flag.
+        /// </summary>
+        private bool _initialized = false;
+
 		/// <summary>
 		/// Invalidates the map.
 		/// </summary>
@@ -1164,6 +1174,12 @@ namespace OsmSharp.iOS.UI
 				View2D view = this.CreateView(rect);
 
 				this.NotifyMapChangeToControls(rect.Width, rect.Height, view, this.Map.Projection);
+
+                if (!_initialized)
+                { // map has a size, markers and controls have been place, map is officially initialized there!
+                    _initialized = true;
+                    this.RaiseMapInitialized();
+                }
 			}
 
 			// tell this view it needs to refresh.
@@ -1647,6 +1663,17 @@ namespace OsmSharp.iOS.UI
             if (this.MapMove != null)
             {
                 this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        private void RaiseMapInitialized()
+        {
+            if (this.MapInitialized != null)
+            {
+                this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 

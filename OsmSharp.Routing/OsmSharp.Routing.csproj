@@ -49,13 +49,11 @@
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
-    <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
     <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
-    <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
     <Compile Include="CH\Serialization\CHEdgeFlatfileSerializer.cs" />
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
