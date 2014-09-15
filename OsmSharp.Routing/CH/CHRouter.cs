@@ -1464,15 +1464,17 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
-                            TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
-                            if (matcher == null ||
-                                (pointTags == null || pointTags.Count == 0) ||
-                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                            {
-                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arc.Key);
-                                break;
-                            }
+                            //if (matcher != null)
+                            //{ // only do matching when requested and load tags in this event.
+                                var arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                                if ((pointTags == null || pointTags.Count == 0) ||
+                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                {
+                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
+                                        distance, arc.Key);
+                                    break;
+                                }
+                            //}
                         }
 
                         if (distance < closestWithoutMatch.Distance)

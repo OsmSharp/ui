@@ -159,7 +159,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public virtual Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public virtual Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -176,7 +176,7 @@ namespace OsmSharp.Routing.Routers
             var target = targets.First(x => x.Id == route.VertexId);
 
             // convert to an OsmSharpRoute.
-            return this.ConstructRoute(vehicle, route, source, target);
+            return this.ConstructRoute(vehicle, route, source, target, geometryOnly);
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public virtual Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public virtual Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
-            return this.CalculateManyToMany(vehicle, new[] { source }, targets)[0];
+            return this.CalculateManyToMany(vehicle, new[] { source }, targets, max, geometryOnly)[0];
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public virtual Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public virtual Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -208,7 +208,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             var routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
+                this.RouteResolvedGraph(vehicle, targets, true), max, null);
 
             var constructedRoutes = new Route[sources.Length][];
             for (int x = 0; x < sources.Length; x++)
@@ -217,7 +217,7 @@ namespace OsmSharp.Routing.Routers
                 for (int y = 0; y < targets.Length; y++)
                 {
                     constructedRoutes[x][y] =
-                        this.ConstructRoute(vehicle, routes[x][y], sources[x], targets[y]);
+                        this.ConstructRoute(vehicle, routes[x][y], sources[x], targets[y], geometryOnly);
                 }
             }
 
