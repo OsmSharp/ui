@@ -1500,8 +1500,8 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
                                 distance, arc.Key);
-                            //if (matcher != null)
-                            //{ // only do matching when requested and load tags in this event.
+                            if (matcher != null)
+                            { // only do matching when requested and load tags in this event.
                                 var arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                                 if ((pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
@@ -1510,7 +1510,7 @@ namespace OsmSharp.Routing.CH
                                         distance, arc.Key);
                                     break;
                                 }
-                            //}
+                            }
                         }
 
                         if (distance < closestWithoutMatch.Distance)
