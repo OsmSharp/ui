@@ -140,9 +140,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         public bool RepresentsNeighbourRelations
         {
-            get { return this.BackwardContractedId == 0 ||
-                this.ForwardContractedId == 0; }
+            get
+            {
+                return (this.Backward && this.BackwardContractedId == 0) ||
+                       (this.Forward && this.ForwardContractedId == 0);
+            }
         }
+
         /// <summary>
         /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
         /// </summary>

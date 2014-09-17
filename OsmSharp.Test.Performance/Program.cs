@@ -25,6 +25,8 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.CH;
 
 namespace OsmSharp.Test.Performance
 {
@@ -99,6 +101,21 @@ namespace OsmSharp.Test.Performance
                 //    {
                 //        return new GraphicsRenderer2D();
                 //    });
+
+                var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer();
+                var graphDeserialized = routingSerializer.Deserialize(
+                    new FileInfo(@"C:\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\leie\v4.3\leiestreek.routing").OpenRead());
+                var router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
+
+                var fromLocation = new Math.Geo.GeoCoordinate(50.94054, 3.119985);
+                var from = router.Resolve(Vehicle.Car, fromLocation);
+
+                var toLocation = new Math.Geo.GeoCoordinate(50.9418235605739, 3.12083322214633);
+                var to = router.Resolve(Vehicle.Car, toLocation);
+
+                var route = router.Calculate(Vehicle.Car, from, to);
+
+                route.SaveAsGpx(new FileInfo(@"C:\temp\output.gpx").OpenWrite());
 
                 // wait for an exit.
                 OsmSharp.Logging.Log.TraceEvent("Program", OsmSharp.Logging.TraceEventType.Information,
