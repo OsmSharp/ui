@@ -230,10 +230,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     // calculate the route.
                     var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
-                        (fromDic[to.Neighbour] != null && route == null) ||
-                        ((fromDic[to.Neighbour] != null && route != null) && fromDic[to.Neighbour] != route))
+                        (fromDic[to.Neighbour] != null && route == null))
                     { // the route match!
                         Assert.Fail("Routes are different before/after contraction!");
+                    }
+                    else if (fromDic[to.Neighbour] != null && route != null)
+                    {
+                        this.ComparePaths(fromDic[to.Neighbour], route);
                     }
                 }
             }
@@ -322,6 +325,25 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                         route.Segments[idx].Name);
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares the two paths.
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        protected void ComparePaths(PathSegment<long> expected, PathSegment<long> actual)
+        {
+            Assert.AreEqual(expected.VertexId, actual.VertexId);
+            Assert.AreEqual(expected.Weight, actual.Weight, 0.001);
+
+            if(expected.From != null)
+            {
+                Assert.IsNotNull(actual.From);
+                this.ComparePaths(expected.From, actual.From);
+                return;
+            }
+            Assert.IsNull(actual.From);
         }
 
         /// <summary>

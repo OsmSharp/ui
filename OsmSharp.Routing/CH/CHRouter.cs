@@ -1236,14 +1236,20 @@ namespace OsmSharp.Routing.CH
         private PathSegment<long> ExpandBestResult(IBasicRouterDataSource<CHEdgeData> graph, CHResult result)
         {
             // construct the route.
-            PathSegment<long> route = result.Forward;
-            PathSegment<long> next = result.Backward;
-            while (next != null && next.From != null)
-            {
-                route = new PathSegment<long>(next.From.VertexId,
-                                          next.Weight + route.Weight, route);
-                next = next.From;
+            var forward = result.Forward;
+            var backward = result.Backward;
+
+            // check null.
+            if(forward == null && backward == null)
+            { // both null, should be no other possibilities.
+                return null;
             }
+
+            // invert backward.
+            var invertedBackward = backward.Reverse();
+
+            // concatenate.
+            var route = invertedBackward.ConcatenateAfter(forward);
 
             // expand the CH path to a regular path.
             return this.ExpandPath(graph, route);
