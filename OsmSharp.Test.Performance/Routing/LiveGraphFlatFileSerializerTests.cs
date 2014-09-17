@@ -71,12 +71,13 @@ namespace OsmSharp.Test.Performance.Routing
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
-            // read from the OSM-stream.
-            using (var fileFactory = new MemoryMappedFileFactory(@"d:\temp\"))
-            {
-                using (var memoryMappedGraph = new MemoryMappedGraph<LiveEdge>(10000, fileFactory))
+            //// read from the OSM-stream.
+            //using (var fileFactory = new OsmSharp.IO.MemoryMappedFiles.Native.NativeMemoryMappedFileFactory(@"d:\temp\"))
+            //{
+                var memoryMappedFileParameter = MemoryMappedFileParameters.NativeDirectory(@"d:\temp\");
+                using (var memoryMappedGraph = new LiveEdgeMemoryMappedGraph(10000, memoryMappedFileParameter))
                 {
-                    using (var coordinates = new HugeCoordinateIndex(fileFactory, 10000))
+                    using (var coordinates = new HugeCoordinateIndex(MemoryMappedFileFactories.SingleFile(memoryMappedFileParameter), 10000))
                     {
                         var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
                         var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
@@ -94,7 +95,7 @@ namespace OsmSharp.Test.Performance.Routing
                         routingSerializer.Serialize(writeStream, memoryData, metaData);
                     }
                 }
-            }
+            //}
             stream.Dispose();
             writeStream.Dispose();
 

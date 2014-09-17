@@ -18,21 +18,43 @@
 
 using System;
 
-namespace OsmSharp.IO.MemoryMappedFiles
+namespace OsmSharp.IO.MemoryMappedFiles.Native
 {
     /// <summary>
     /// Native image cache factory.
     /// 
     /// Uses dependency injection to build native images.
     /// </summary>
-    public static class NativeMemoryMappedFileFactory
+    public class NativeMemoryMappedFileFactory
     {
+        /// <summary>
+        /// Holds the path.
+        /// </summary>
+        private string _path;
+
+        /// <summary>
+        /// Creates a new memory mapped file factory.
+        /// </summary>
+        public NativeMemoryMappedFileFactory()
+        {
+            _path = null;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file factory.
+        /// </summary>
+        /// <param name="path"></param>
+        public NativeMemoryMappedFileFactory(string path)
+        {
+            _path = path;
+        }
+
         /// <summary>
         /// Delegate to create a native MemoryMappedFile.
         /// </summary>
         /// <param name="path">The path to file to map.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public delegate IMemoryMappedFile NativeMemoryMappedFileCreate(string path, long capacity);
+        public delegate INativeMemoryMappedFile NativeMemoryMappedFileCreate(string path, long capacity);
 
         /// <summary>
         /// The native MemoryMappedFile create delegate.
@@ -44,7 +66,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="path">The path to file to map.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public static IMemoryMappedFile CreateFromFile(string path, long capacity)
+        public static INativeMemoryMappedFile CreateFromFile(string path, long capacity)
         {
             if (_nativeMemoryMappedFileDelegate == null)
             { // oeps, not initialized.
@@ -58,7 +80,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="mapName">A name to assign to the memory-mapped file.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public delegate IMemoryMappedFile NativeMemoryMappedFileSharedCreate(string mapName, long capacity);
+        public delegate INativeMemoryMappedFile NativeMemoryMappedFileSharedCreate(string mapName, long capacity);
 
         /// <summary>
         /// The native MemoryMappedFile shared create delegate.
@@ -70,7 +92,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="mapName">A name to assign to the memory-mapped file.</param>
         /// <param name="capacity">The maximum size, in bytes, to allocate to the memory-mapped file.</param>
-        public static IMemoryMappedFile CreateNew(string mapName, long capacity)
+        public static INativeMemoryMappedFile CreateNew(string mapName, long capacity)
         {
             if (_nativeMemoryMappedFileSharedDelegate == null)
             { // oeps, not initialized.
@@ -114,6 +136,40 @@ namespace OsmSharp.IO.MemoryMappedFiles
             _nativeMemoryMappedFileDelegate = createMemoryMappedFile;
             _nativeMemoryMappedFileSharedDelegate = createMemoryMappedSharedFile;
             _getSizeDelegate = getSizeDelegate;
+        }
+
+        /// <summary>
+        /// Returns the size of the given structure on disk.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public int SizeOf<T>()
+            where T : struct
+        {
+            return NativeMemoryMappedFileFactory.GetSize(typeof(T));
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sizeInBytes"></param>
+        /// <returns></returns>
+        public IMemoryMappedFile<T> DoCreateNew<T>(long sizeInBytes)
+            where T : struct
+        {
+            IMemoryMappedFile<T> newFile = null;
+            if (!string.IsNullOrEmpty(_path))
+            {
+                newFile = new NativeMemoryMappedFileWrapper<T>(
+                    NativeMemoryMappedFileFactory.CreateFromFile(_path + System.Guid.NewGuid().ToString(), sizeInBytes));
+            }
+            else
+            {
+                newFile = new NativeMemoryMappedFileWrapper<T>(
+                    NativeMemoryMappedFileFactory.CreateNew(System.Guid.NewGuid().ToString(), sizeInBytes));
+            }
+            return newFile;
         }
     }
 }

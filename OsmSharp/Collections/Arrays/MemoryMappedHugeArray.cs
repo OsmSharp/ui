@@ -37,17 +37,17 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Holds the factory to create the memory mapped files.
         /// </summary>
-        private MemoryMappedFileFactory _factory;
+        private MemoryMappedFileFactory<T> _factory;
 
         /// <summary>
         /// Holds the list of files for each range.
         /// </summary>
-        private List<IMemoryMappedFile> _files;
+        private List<IMemoryMappedFile<T>> _files;
 
         /// <summary>
         /// Holds the list of accessors for each file.
         /// </summary>
-        private List<IMemoryMappedViewAccessor> _accessors;
+        private List<IMemoryMappedViewAccessor<T>> _accessors;
 
         /// <summary>
         /// Holds the default file element size.
@@ -72,30 +72,9 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Creates a memory mapped huge array.
         /// </summary>
-        /// <param name="size">The size of the array.</param>
-        public MemoryMappedHugeArray(long size)
-            : this(size, DefaultFileElementSize)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a memory mapped huge array.
-        /// </summary>
-        /// <param name="size"></param>
-        /// <param name="arraySize"></param>
-        public MemoryMappedHugeArray(long size, long arraySize)
-            : this(new MemoryMappedFileFactory(), size, arraySize)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a memory mapped huge array.
-        /// </summary>
         /// <param name="factory">The factory to create the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
-        public MemoryMappedHugeArray(MemoryMappedFileFactory factory, long size)
+        public MemoryMappedHugeArray(MemoryMappedFileFactory<T> factory, long size)
             : this(factory, size, DefaultFileElementSize)
         {
 
@@ -107,17 +86,17 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="factory">The factory to create the memory mapped files.</param>
         /// <param name="size">The size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(MemoryMappedFileFactory factory, long size, long arraySize)
+        public MemoryMappedHugeArray(MemoryMappedFileFactory<T> factory, long size, long arraySize)
         {
             _factory = factory;
             _length = size;
             _fileElementSize = arraySize;
-            _elementSize = NativeMemoryMappedFileFactory.GetSize(typeof(T));
+            _elementSize = factory.SizeOf();
             _fileSizeBytes = arraySize * _elementSize;
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
-            _files = new List<IMemoryMappedFile>(arrayCount);
-            _accessors = new List<IMemoryMappedViewAccessor>(arrayCount);
+            _files = new List<IMemoryMappedFile<T>>(arrayCount);
+            _accessors = new List<IMemoryMappedViewAccessor<T>>(arrayCount);
             for (int arrayIdx = 0; arrayIdx < arrayCount; arrayIdx++)
             {
                 var file = _factory.New(_fileSizeBytes);
@@ -143,7 +122,7 @@ namespace OsmSharp.Collections.Arrays
             _length = size;
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
-            _files = new List<IMemoryMappedFile>(arrayCount);
+            _files = new List<IMemoryMappedFile<T>>(arrayCount);
             if (arrayCount < _files.Count)
             { // decrease files/accessors.
                 for (int arrayIdx = (int)arrayCount; arrayIdx < _files.Count; arrayIdx++)
@@ -179,7 +158,7 @@ namespace OsmSharp.Collections.Arrays
                 long localIdx = idx % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
                 T structure;
-                _accessors[(int)arrayIdx].Read<T>(localPosition, out structure);
+                _accessors[(int)arrayIdx].Read(localPosition, out structure);
                 return structure;
             }
             set
@@ -187,7 +166,7 @@ namespace OsmSharp.Collections.Arrays
                 long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
                 long localIdx = idx % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
-                _accessors[(int)arrayIdx].Write<T>(localPosition, ref value);
+                _accessors[(int)arrayIdx].Write(localPosition, ref value);
             }
         }
 

@@ -53,7 +53,7 @@ namespace OsmSharp.Collections.Coordinates
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="size"></param>
-        public HugeCoordinateIndex(MemoryMappedFileFactory factory, long size)
+        public HugeCoordinateIndex(MemoryMappedFileFactory<float> factory, long size)
             : this(new MemoryMappedHugeArray<float>(factory, size * 2))
         {
 

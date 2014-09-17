@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Collections.Arrays;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Random;
 using OsmSharp.WinForms.UI;
 using System;
@@ -39,7 +40,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
-            using (var intArray = new MemoryMappedHugeArray<int>(1000, 1024))
+            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 1024))
             {
                 var intArrayRef = new int[1000];
 
@@ -76,7 +77,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
 
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
-            using (var intArray = new MemoryMappedHugeArray<int>(1000, 300))
+            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 300))
             {
                 var intArrayRef = new int[1000];
 
@@ -104,7 +105,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 }
             }
 
-            using (var intArray = new MemoryMappedHugeArray<int>(1000, 300))
+            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 300))
             {
                 var intArrayRef = new int[1000];
 

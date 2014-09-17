@@ -24,35 +24,39 @@ namespace OsmSharp.IO.MemoryMappedFiles
     /// <summary>
     /// Represents a memory mapped file factory.
     /// </summary>
-    public class MemoryMappedFileFactory : IDisposable
+    public abstract class MemoryMappedFileFactory<T> : IDisposable
+        where T : struct
     {
-        /// <summary>
-        /// Holds the base-path if any.
-        /// </summary>
-        private string _path;
-
         /// <summary>
         /// Holds all files generated using this factory.
         /// </summary>
-        private List<IMemoryMappedFile> _files;
+        private List<IDisposable> _files;
 
         /// <summary>
         /// Creates a new memory mapped file factory.
         /// </summary>
         public MemoryMappedFileFactory()
         {
-            _path = null;
-            _files = new List<IMemoryMappedFile>();
+            _files = new List<IDisposable>();
         }
 
         /// <summary>
-        /// Creates a new memory mapped file factory.
+        /// Returns the size of the given struct on disk.
         /// </summary>
-        /// <param name="path"></param>
-        public MemoryMappedFileFactory(string path)
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public abstract int SizeOf();
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the settings in this factory.
+        /// </summary>
+        /// <param name="sizeInBytes">The size in bytes.</param>
+        /// <returns></returns>
+        public IMemoryMappedFile<T> New(long sizeInBytes)
         {
-            _path = path;
-            _files = new List<IMemoryMappedFile>();
+            var newFile = this.DoCreateNew(sizeInBytes);
+            _files.Add(newFile);
+            return newFile;
         }
 
         /// <summary>
@@ -60,20 +64,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="sizeInBytes">The size in bytes.</param>
         /// <returns></returns>
-        public IMemoryMappedFile New(long sizeInBytes)
-        {
-            IMemoryMappedFile newFile = null;
-            if (!string.IsNullOrEmpty(_path))
-            {
-                newFile =  NativeMemoryMappedFileFactory.CreateFromFile(_path + System.Guid.NewGuid().ToString(), sizeInBytes);
-            }
-            else
-            {
-                newFile =  NativeMemoryMappedFileFactory.CreateNew(System.Guid.NewGuid().ToString(), sizeInBytes);
-            }
-            _files.Add(newFile);
-            return newFile;
-        }
+        public abstract IMemoryMappedFile<T> DoCreateNew(long sizeInBytes);
 
         /// <summary>
         /// Disposes of all resources associated with this files.

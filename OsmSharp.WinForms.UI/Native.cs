@@ -39,7 +39,7 @@ namespace OsmSharp.WinForms.UI
                 {
                     return new NativeImageCache();
                 });
-            OsmSharp.IO.MemoryMappedFiles.NativeMemoryMappedFileFactory.SetDelegates(
+            OsmSharp.IO.MemoryMappedFiles.Native.NativeMemoryMappedFileFactory.SetDelegates(
                 (path, capacity) =>
                 {
                     var file = new FileInfo(path);

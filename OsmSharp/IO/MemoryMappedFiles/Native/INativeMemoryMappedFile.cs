@@ -17,13 +17,12 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-namespace OsmSharp.IO.MemoryMappedFiles
+namespace OsmSharp.IO.MemoryMappedFiles.Native
 {
     /// <summary>
     /// Abstract representation of a memory mapped file.
     /// </summary>
-    public interface IMemoryMappedFile<T> : IDisposable
-        where T : struct
+    public interface INativeMemoryMappedFile : IDisposable
     {
         /// <summary>
         /// Creates a MemoryMappedViewAccessor that maps to a view of the memory-mapped file, and that has the specified offset and size.
@@ -31,13 +30,13 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        IMemoryMappedViewAccessor<T> CreateViewAccessor(long offset, long size);
+        INativeMemoryMappedViewAccessor CreateViewAccessor(long offset, long size);
 
         /// <summary>
         /// Returns the size of the structure represented by T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        long GetSizeOf();
+        long GetSizeOf<T>() where T : struct;
     }
 }

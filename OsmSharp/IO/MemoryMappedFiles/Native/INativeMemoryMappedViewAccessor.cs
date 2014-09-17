@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,53 +16,29 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.IO.MemoryMappedFiles;
-using System.IO.MemoryMappedFiles;
+using System;
 
-namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
+namespace OsmSharp.IO.MemoryMappedFiles
 {
     /// <summary>
-    /// A wrapper around the MemoryMappedViewAccessor
+    /// Abstract representation of a memory-mapped accessor: Provides random access to unmanaged blocks of memory from managed code.
     /// </summary>
-    internal class MemoryMappedViewAccessorWrapper : INativeMemoryMappedViewAccessor
+    public interface INativeMemoryMappedViewAccessor : IDisposable
     {
-        /// <summary>
-        /// Holds the accessor.
-        /// </summary>
-        private MemoryMappedViewAccessor _accessor;
-
-        /// <summary>
-        /// Creates a new memory mapped view accessor wrapper.
-        /// </summary>
-        /// <param name="accessor"></param>
-        public MemoryMappedViewAccessorWrapper(MemoryMappedViewAccessor accessor)
-        {
-            _accessor = accessor;
-        }
-
         /// <summary>
         /// Determines whether the accessor is readable.
         /// </summary>
-        public bool CanRead
-        {
-            get { return _accessor.CanRead; }
-        }
+        bool CanRead { get; }
 
         /// <summary>
         /// Determines whether the accessory is writable.
         /// </summary>
-        public bool CanWrite
-        {
-            get { return _accessor.CanWrite; }
-        }
+        bool CanWrite { get; }
 
         /// <summary>
         /// Gets the capacity of the accessor.
         /// </summary>
-        public long Capacity
-        {
-            get { return _accessor.Capacity; }
-        }
+        long Capacity { get; }
 
         /// <summary>
         /// Reads a structure of type T from the accessor into a provided reference.
@@ -70,10 +46,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <typeparam name="T"></typeparam>
         /// <param name="position"></param>
         /// <param name="structure"></param>
-        public void Read<T>(long position, out T structure) where T : struct
-        {
-            _accessor.Read<T>(position, out structure);
-        }
+        void Read<T>(long position, out T structure) where T : struct;
 
         /// <summary>
         /// Reads structures of type T from the accessor into an array of type T.
@@ -84,10 +57,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public int ReadArray<T>(long position, T[] array, int offset, int count) where T : struct
-        {
-            return _accessor.ReadArray<T>(position, array, offset, count);
-        }
+        int ReadArray<T>(long position, T[] array, int offset, int count) where T : struct;
 
         /// <summary>
         /// Writes a structure into the accessor.
@@ -95,10 +65,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <typeparam name="T"></typeparam>
         /// <param name="position"></param>
         /// <param name="structure"></param>
-        public void Write<T>(long position, ref T structure) where T : struct
-        {
-            _accessor.Write<T>(position, ref structure);
-        }
+        void Write<T>(long position, ref T structure) where T : struct;
 
         /// <summary>
         /// Writes structures from an array of type T into the accessor.
@@ -108,15 +75,6 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <param name="array"></param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        public void WriteArray<T>(long position, T[] array, int offset, int count) where T : struct
-        {
-            _accessor.WriteArray<T>(position, array, offset, count);
-        }
-
-        public void Dispose()
-        {
-            _accessor.Dispose();
-            _accessor = null;
-        }
+        void WriteArray<T>(long position, T[] array, int offset, int count) where T : struct;
     }
 }

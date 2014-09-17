@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.IO.MemoryMappedFiles;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 
@@ -25,7 +24,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
     /// <summary>
     /// A wrapper around the native memory mapped file.
     /// </summary>
-    internal class MemoryMappedFileWrapper : IMemoryMappedFile
+    internal class MemoryMappedFileWrapper : OsmSharp.IO.MemoryMappedFiles.Native.INativeMemoryMappedFile
     {
         /// <summary>
         /// Holds fullname.
@@ -64,7 +63,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public IMemoryMappedViewAccessor CreateViewAccessor(long offset, long size)
+        public OsmSharp.IO.MemoryMappedFiles.INativeMemoryMappedViewAccessor CreateViewAccessor(long offset, long size)
         {
             return new MemoryMappedViewAccessorWrapper(_file.CreateViewAccessor(offset, size, MemoryMappedFileAccess.ReadWrite));
         }

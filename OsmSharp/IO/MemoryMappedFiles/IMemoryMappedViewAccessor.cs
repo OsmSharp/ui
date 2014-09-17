@@ -23,7 +23,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
     /// <summary>
     /// Abstract representation of a memory-mapped accessor: Provides random access to unmanaged blocks of memory from managed code.
     /// </summary>
-    public interface IMemoryMappedViewAccessor : IDisposable
+    public interface IMemoryMappedViewAccessor<T> : IDisposable
     {
         /// <summary>
         /// Determines whether the accessor is readable.
@@ -46,7 +46,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <typeparam name="T"></typeparam>
         /// <param name="position"></param>
         /// <param name="structure"></param>
-        void Read<T>(long position, out T structure) where T : struct;
+        void Read(long position, out T structure);
 
         /// <summary>
         /// Reads structures of type T from the accessor into an array of type T.
@@ -57,7 +57,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        int ReadArray<T>(long position, T[] array, int offset, int count) where T : struct;
+        int ReadArray(long position, T[] array, int offset, int count);
 
         /// <summary>
         /// Writes a structure into the accessor.
@@ -65,7 +65,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <typeparam name="T"></typeparam>
         /// <param name="position"></param>
         /// <param name="structure"></param>
-        void Write<T>(long position, ref T structure) where T : struct;
+        void Write(long position, ref T structure);
 
         /// <summary>
         /// Writes structures from an array of type T into the accessor.
@@ -75,6 +75,6 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="array"></param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        void WriteArray<T>(long position, T[] array, int offset, int count) where T : struct;
+        void WriteArray(long position, T[] array, int offset, int count);
     }
 }

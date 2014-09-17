@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Graph
     /// An implementation of an in-memory dynamic graph using memory mapped files to handle huge graphs.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public class MemoryMappedGraph<TEdgeData> : MemoryGraph<TEdgeData>, IDisposable
+    public abstract class MemoryMappedGraph<TEdgeData> : MemoryGraph<TEdgeData>, IDisposable
         where TEdgeData : struct, IGraphEdgeData
     {
         /// <summary>
@@ -55,70 +55,6 @@ namespace OsmSharp.Routing.Graph
         /// Holds the shapes index.
         /// </summary>
         private HugeCoordinateCollectionIndex _shapes;
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        public MemoryMappedGraph(long estimatedSize)
-            : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(estimatedSize),
-            new MemoryMappedHugeArray<uint>(estimatedSize),
-            new MemoryMappedHugeArray<uint>(estimatedSize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize),
-            new HugeCoordinateCollectionIndex(estimatedSize))
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="arraySize"></param>
-        public MemoryMappedGraph(long estimatedSize, int arraySize)
-            : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(estimatedSize, arraySize),
-            new MemoryMappedHugeArray<TEdgeData>(estimatedSize, arraySize),
-            new HugeCoordinateCollectionIndex(estimatedSize))
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="factory"></param>
-        public MemoryMappedGraph(long estimatedSize, MemoryMappedFileFactory factory)
-            : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize),
-            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
-            new MemoryMappedHugeArray<uint>(factory, estimatedSize),
-            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize),
-            new HugeCoordinateCollectionIndex(factory, estimatedSize))
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="factory"></param>
-        /// <param name="arraySize"></param>
-        public MemoryMappedGraph(long estimatedSize, int arraySize, MemoryMappedFileFactory factory)
-            : this(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(factory, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(factory, estimatedSize, arraySize),
-            new MemoryMappedHugeArray<TEdgeData>(factory, estimatedSize, arraySize),
-            new HugeCoordinateCollectionIndex(factory, estimatedSize))
-        {
-
-        }
 
         /// <summary>
         /// Creates a new memory mapped file dynamic graph.

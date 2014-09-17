@@ -78,12 +78,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Creates a new huge coordinate index.
         /// </summary>
-        /// <param name="factory"></param>
+        /// <param name="parameters"></param>
         /// <param name="size"></param>
-        public HugeCoordinateCollectionIndex(MemoryMappedFileFactory factory, long size)
+        public HugeCoordinateCollectionIndex(MemoryMappedFileParameters parameters, long size)
         {
-            _index = new MemoryMappedHugeArray<ulong>(factory, size);
-            _coordinates = new MemoryMappedHugeArray<float>(factory, size * 2 * ESTIMATED_SIZE);
+            _index = new MemoryMappedHugeArray<ulong>(MemoryMappedFileFactories.UInt64File(parameters), size);
+            _coordinates = new MemoryMappedHugeArray<float>(MemoryMappedFileFactories.SingleFile(parameters), size * 2 * ESTIMATED_SIZE);
 
             for (long idx = 0; idx < _index.Length; idx++)
             {
