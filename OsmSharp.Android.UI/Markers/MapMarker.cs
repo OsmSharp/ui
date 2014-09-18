@@ -172,6 +172,11 @@ namespace OsmSharp.Android.UI
         private bool _popupIsVisible;
 
         /// <summary>
+        /// Holds the flag keeping layout status.
+        /// </summary>
+        private bool _popupLayoutSet = false;
+
+        /// <summary>
         /// Adds a default popup and returns the new view.
         /// </summary>
         /// <param name="width"></param>
@@ -233,6 +238,8 @@ namespace OsmSharp.Android.UI
             layoutParams.TopMargin = -1;
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
             _popupView.LayoutParameters = layoutParams;
+
+            _popupLayoutSet = false;
         }
 
         /// <summary>
@@ -255,6 +262,10 @@ namespace OsmSharp.Android.UI
         {
             if (_popupView != null && this.Host != null)
             {
+                if (!_popupLayoutSet)
+                {
+                    this.Host.NotifyControlChange(this);
+                }
                 this.Host.RemoveView(_popupView);
                 this.Host.AddView(_popupView, _popupView.LayoutParameters);
             }
@@ -390,6 +401,8 @@ namespace OsmSharp.Android.UI
 
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
+
+                _popupLayoutSet = true;
             }
             return true;
         }
