@@ -211,6 +211,7 @@
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
     <Compile Include="Math\Primitives\LineF2D.cs" />
+    <Compile Include="Math\Primitives\Matrix2D.cs" />
     <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
     <Compile Include="Math\Primitives\Polyline2D.cs" />
