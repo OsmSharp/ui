@@ -495,7 +495,7 @@ namespace OsmSharp.Math.Primitives
 		/// <param name="x">The x-coordinates to transform.</param>
 		/// <param name="y">The y-coordinates to transform.</param>
 		public double[] TransformFrom(double width, double height, bool reverseX, bool reverseY,
-		                          	  double x, double y){
+		                          	  double x, double y) {
 			PointF2D reference = _bottomLeft;
 			VectorF2D vectorX = _vectorX;
 			VectorF2D vectorY = _vectorY;

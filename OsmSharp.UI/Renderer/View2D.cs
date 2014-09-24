@@ -398,25 +398,6 @@ namespace OsmSharp.UI.Renderer
                 return true;
             }
             return false;
-
-            //double minX;
-            //if (right < _minX)
-            //{ // completely to the left of this view.
-            //    return false;
-            //}
-            ////if (top < _maxY)
-            ////{ // completely below this view.
-            ////    return false;
-            ////}
-            ////if (bottom > _minY)
-            ////{ // completely above this view.
-            ////    return false;
-            ////}
-            //if (left > _maxX)
-            //{ // completely to the right of this view.
-            //    return false;
-            //}
-            //return true;
 		}
 
         /// <summary>
@@ -428,7 +409,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
         public double[] FromViewPort(double pixelsWidth, double pixelsHeight, double pixelX, double pixelY)
-        { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner and increases to 
+        { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner. 
 			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
         }
 
