@@ -17,7 +17,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Android.App;
-using Android.Graphics;
 using Android.OS;
 using Android.Widget;
 using OsmSharp.Android.UI.Controls;
@@ -88,16 +87,16 @@ namespace OsmSharp.Android.UI.Sample
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
 
-            var layer = new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png");
-            map.AddLayer(layer);
-            layer.IsVisible = false;
+            //var layer = new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png");
+            //map.AddLayer(layer);
+            //layer.IsVisible = false;
             //map.AddLayer(new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png"));
             //map.AddLayerGpx(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.regression1.gpx"));
             // 
             // add an on-line osm-data->mapCSS translation layer.
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.dark_roads.map");
+            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
             map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.

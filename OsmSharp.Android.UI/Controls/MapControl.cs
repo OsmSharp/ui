@@ -295,23 +295,21 @@ namespace OsmSharp.Android.UI.Controls
             if (this.Location != null)
             { // only set layout if there is a location set.
                 var projected = projection.ToPixel(this.Location);
-                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+                double leftMargin, topMargin;
+                var fromMatrix = view.CreateFromViewPort(pixelsWidth, pixelsHeight);
+                fromMatrix.Apply(projected[0], projected[1], out leftMargin, out topMargin);
 
-                // set the new location depending on the size of the image and the alignment parameter.
-                double leftMargin = locationPixel[0];
-                double topMargin = locationPixel[1];
-
-                leftMargin = locationPixel[0] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                leftMargin = leftMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
 
                 switch (_alignment)
                 {
                     case MapControlAlignmentType.Center:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+                        topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
                         break;
                     case MapControlAlignmentType.CenterTop:
                         break;
                     case MapControlAlignmentType.CenterBottom:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
+                        topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
                         break;
                 }
 
@@ -339,14 +337,8 @@ namespace OsmSharp.Android.UI.Controls
 
 
         /// <summary>
-        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> object.
+        /// Releases all resource used by the MapControl object.
         /// </summary>
-        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/>. The <see cref="Dispose"/> method leaves the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> in an unusable state. After calling
-        /// <see cref="Dispose"/>, you must release all references to the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> so the garbage collector can reclaim the memory that the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> was occupying.</remarks>
         public override void Dispose()
         {
 

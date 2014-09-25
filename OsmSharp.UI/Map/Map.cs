@@ -113,13 +113,13 @@ namespace OsmSharp.UI.Map
         {
             double[] mapCenterSceneCoords = this.Projection.ToPixel(center);
 
-            var toViewPort = view.CreateTransformationMatrixToViewPort(view.Width, view.Height);
+            var toViewPort = view.CreateToViewPort(view.Width, view.Height);
             double mapCenterPixelsX, mapCenterPixelsY;
             toViewPort.Apply(mapCenterSceneCoords[0], mapCenterSceneCoords[1], out mapCenterPixelsX, out mapCenterPixelsY);
 
             //double[] mapCenterPixels = view.ToViewPort(view.Width, view.Height, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
 
-            var fromViewPort = view.CreateTransformationMatrixFromViewPort(view.Height, view.Width);
+            var fromViewPort = view.CreateFromViewPort(view.Height, view.Width);
             double leftScene, topScene, rightScene, bottomScene;
             fromViewPort.Apply(mapCenterPixelsX - (view.Width) / 2.0, mapCenterPixelsY - (view.Height) / 2.0, out leftScene, out topScene);
 

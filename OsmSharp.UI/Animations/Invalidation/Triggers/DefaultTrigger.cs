@@ -128,7 +128,7 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
                 }
 
                 // detect changes by % of view pan.
-                var toView = _latestTriggeredView.CreateTransformationMatrixToViewPort(100, 100);
+                var toView = _latestTriggeredView.CreateToViewPort(100, 100);
                 double newCenterX, newCenterY;
                 toView.Apply(view.Center[0], view.Center[1], out newCenterX, out newCenterY);
                 //double[] newCenter = _latestTriggeredView.ToViewPort(100, 100, view.Center[0], view.Center[1]);

@@ -118,7 +118,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	        _view = view;
 	        _target = target;
 
-            _toView = _view.CreateTransformationMatrixToViewPort(target.Width, target.Height);
+            _toView = _view.CreateToViewPort(target.Width, target.Height);
 	    }
 
         /// <summary>

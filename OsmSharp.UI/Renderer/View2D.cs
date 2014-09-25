@@ -406,7 +406,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
-        public Matrix2D CreateTransformationMatrixFromViewPort(double pixelsWidth, double pixelsHeight)
+        public Matrix2D CreateFromViewPort(double pixelsWidth, double pixelsHeight)
         {
             // from viewport means to rectangle.
             return Matrix2D.ToRectangle(_rectangle, pixelsWidth, pixelsHeight, _invertX, _invertY);
@@ -424,7 +424,7 @@ namespace OsmSharp.UI.Renderer
         { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner. 
             // return _rectangle.TransformFrom(pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
             double x, y;
-            var fromViewport = this.CreateTransformationMatrixFromViewPort(pixelsWidth, pixelsHeight);
+            var fromViewport = this.CreateFromViewPort(pixelsWidth, pixelsHeight);
             fromViewport.Apply(pixelX, pixelY, out x, out y);
             return new double[] { x, y };
         }
@@ -441,7 +441,7 @@ namespace OsmSharp.UI.Renderer
         {
             //return _rectangle.TransformFrom(pixelsWidth, pixelsHeight, _invertX, _invertY, pixelsX, pixelsY);
             double[][] result = new double[pixelsX.Length][];
-            var fromView = this.CreateTransformationMatrixFromViewPort(pixelsWidth, pixelsHeight);
+            var fromView = this.CreateFromViewPort(pixelsWidth, pixelsHeight);
             for (int idx = 0; idx < pixelsX.Length; idx++)
             {
                 double x, y;
@@ -457,7 +457,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
-        public Matrix2D CreateTransformationMatrixToViewPort(double pixelsWidth, double pixelsHeight)
+        public Matrix2D CreateToViewPort(double pixelsWidth, double pixelsHeight)
         {
             // to viewport means from rectangle.
             return Matrix2D.FromRectangle(_rectangle, pixelsWidth, pixelsHeight, _invertX, _invertY);
@@ -475,7 +475,7 @@ namespace OsmSharp.UI.Renderer
         { // the right and going down.
             //return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
             double[][] result = new double[sceneX.Length][];
-            var toView = this.CreateTransformationMatrixToViewPort(pixelsWidth, pixelsHeight);
+            var toView = this.CreateToViewPort(pixelsWidth, pixelsHeight);
             for (int idx = 0; idx < sceneX.Length; idx++)
             {
                 double x, y;
@@ -497,7 +497,7 @@ namespace OsmSharp.UI.Renderer
         { // the right and going down.
             //return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
             double x, y;
-            var toViewport = this.CreateTransformationMatrixToViewPort(pixelsWidth, pixelsHeight);
+            var toViewport = this.CreateToViewPort(pixelsWidth, pixelsHeight);
             toViewport.Apply(sceneX, sceneY, out x, out y);
             return new double[] { x, y };
         }
@@ -513,7 +513,7 @@ namespace OsmSharp.UI.Renderer
         public void ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY, double[] transformed)
         { // the right and going down.
             double x, y;
-            this.CreateTransformationMatrixToViewPort(pixelsWidth, pixelsHeight).Apply(sceneX, sceneY, out x, out y);
+            this.CreateToViewPort(pixelsWidth, pixelsHeight).Apply(sceneX, sceneY, out x, out y);
             transformed[0] = x;
             transformed[1] = y;
         }
