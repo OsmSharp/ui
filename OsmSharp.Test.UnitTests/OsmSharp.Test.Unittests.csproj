@@ -166,7 +166,6 @@
     <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
-    <Compile Include="UI\Renderer\Matix2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />

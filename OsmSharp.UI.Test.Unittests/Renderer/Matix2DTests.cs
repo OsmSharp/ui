@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.UI.Renderer;
 
-namespace OsmSharp.Test.UI.Renderer
+namespace OsmSharp.UI.Test.Renderer
 {
     /// <summary>
     /// Contains tests for the Matrix2D graphics transformations.
@@ -159,6 +159,7 @@ namespace OsmSharp.Test.UI.Renderer
         /// <summary>
         /// Tests a tranformation matrix that has a combination of scale, translate and rotate.
         /// </summary>
+        [Test]
         public void TestMatrix2DScaleRotateAndTranslate()
         {
             double delta = 0.00001;
@@ -179,6 +180,27 @@ namespace OsmSharp.Test.UI.Renderer
 
             Assert.AreEqual(2, x, delta);
             Assert.AreEqual(-3, y, delta);
+        }
+
+        /// <summary>
+        /// Tests a transformation matrix that has a mirror.
+        /// </summary>
+        [Test]
+        public void TestMatrix2DMirror()
+        {
+            var mirror = Matrix2D.Scale(1, -1);
+
+            double x, y;
+            mirror.Apply(1, 1, out x, out y);
+
+            Assert.AreEqual(1, x);
+            Assert.AreEqual(-1, y);
+
+            mirror = Matrix2D.Scale(-1, 1);
+            mirror.Apply(1, 1, out x, out y);
+
+            Assert.AreEqual(-1, x);
+            Assert.AreEqual(1, y);
         }
     }
 }

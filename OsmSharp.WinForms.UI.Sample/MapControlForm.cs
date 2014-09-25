@@ -71,25 +71,25 @@ namespace OsmSharp.WinForms.UI.Sample
             //_router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
             //    new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
 
-            var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-                16, 14, 12, 10 }));
-            var target = new StyleOsmStreamSceneTarget(
-                mapCSSInterpreter, scene, new WebMercator());
-            var testFile = new FileInfo(@"kempen-big.osm.pbf");
-            var stream = testFile.OpenRead();
-            var source = new PBFOsmStreamSource(stream);
-            var progress = new OsmStreamFilterProgress();
-            progress.RegisterSource(source);
-            target.RegisterSource(progress);
-            target.Pull();
+            //var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
+            //    16, 14, 12, 10 }));
+            //var target = new StyleOsmStreamSceneTarget(
+            //    mapCSSInterpreter, scene, new WebMercator());
+            //var testFile = new FileInfo(@"kempen-big.osm.pbf");
+            //var stream = testFile.OpenRead();
+            //var source = new PBFOsmStreamSource(stream);
+            //var progress = new OsmStreamFilterProgress();
+            //progress.RegisterSource(source);
+            //target.RegisterSource(progress);
+            //target.Pull();
 
-            var merger = new Scene2DObjectMerger();
-            scene = merger.BuildMergedScene(scene);
+            //var merger = new Scene2DObjectMerger();
+            //scene = merger.BuildMergedScene(scene);
 
-            map.AddLayer(new LayerScene(scene));
-            //var dataSource = MemoryDataSource.CreateFromPBFStream(
-            //    new FileInfo(@"kempen-big.osm.pbf").OpenRead());
-            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            //map.AddLayer(new LayerScene(scene));
+            var dataSource = MemoryDataSource.CreateFromPBFStream(
+                new FileInfo(@"kempen.osm.pbf").OpenRead());
+            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //var layerTile = new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200);
             //layerTile.MinZoom = 12;
             //layerTile.MaxZoom = 13;

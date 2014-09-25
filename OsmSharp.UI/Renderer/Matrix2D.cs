@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OsmSharp.Math.Primitives;
+using OsmSharp.Units.Angle;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -66,6 +68,112 @@ namespace OsmSharp.UI.Renderer
         }
 
         /// <summary>
+        /// Creates a tranformation matrix that transforms coordinates from inside the given rectangle to a viewport of given size. The bottom-left of the rectangle is assumed to be the origin.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static Matrix2D FromRectangle(RectangleF2D rectangle, double width, double height)
+        {
+            return Matrix2D.FromRectangle(rectangle, width, height, false, false);
+        }
+
+        /// <summary>
+        /// Creates a tranformation matrix that transforms coordinates from inside the given rectangle to a viewport of given size. The bottom-left of the rectangle is assumed to be the origin.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="invertX"></param>
+        /// <param name="invertY"></param>
+        /// <returns></returns>
+        public static Matrix2D FromRectangle(RectangleF2D rectangle, double width, double height, bool invertX, bool invertY)
+        {
+            Matrix2D invert;
+            if (!invertX && !invertY)
+            { // everything normal.
+                invert = Matrix2D.Scale(1, 1);
+            }
+            else if (!invertX && invertY)
+            { // only y inverted.
+                invert = Matrix2D.Scale(1, -1);
+            }
+            else if (invertX && !invertY)
+            { // only x inverted.
+                invert = Matrix2D.Scale(-1, 1);
+            }
+            else
+            { // both inverted.
+                invert = Matrix2D.Scale(-1, -1);
+            }
+
+            // translate the bottom-left of the rectangle to the origin.
+            var translate = Matrix2D.Translate(-rectangle.BottomLeft[0], -rectangle.BottomLeft[1]);
+
+            // rotate the rectangle to align with x-y axis.
+            var rotate = Matrix2D.Rotate(-((Radian)rectangle.Angle).Value);
+
+            // scale to match the width/height that was given.
+            var scale = Matrix2D.Scale(width / rectangle.Width, height / rectangle.Height);
+
+            return invert * translate * rotate * scale;
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix that transforms coordinates the viewport of given size to inside the given rectangle. The bottom-left of the rectangle is assumed to be the origin.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static Matrix2D ToRectangle(RectangleF2D rectangle, double width, double height)
+        {
+            return Matrix2D.ToRectangle(rectangle, width, height, false, false);
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix that transforms coordinates the viewport of given size to inside the given rectangle. The bottom-left of the rectangle is assumed to be the origin.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="invertX"></param>
+        /// <param name="invertY"></param>
+        /// <returns></returns>
+        public static Matrix2D ToRectangle(RectangleF2D rectangle, double width, double height, bool invertX, bool invertY)
+        {
+            // scale to match the width/height that was given.
+            var scale = Matrix2D.Scale(rectangle.Width / width, rectangle.Height / height);
+
+            // rotate to align with rectangle.
+            var rotate = Matrix2D.Rotate(((Radian)rectangle.Angle).Value);
+
+            // translate to the bottom-left of the rectangle.
+            var translate = Matrix2D.Translate(rectangle.BottomLeft[0], rectangle.BottomLeft[1]);
+
+            Matrix2D invert;
+            if (!invertX && !invertY)
+            { // everything normal.
+                invert = Matrix2D.Scale(1, 1);
+            }
+            else if (!invertX && invertY)
+            { // only y inverted.
+                invert = Matrix2D.Scale(1, -1);
+            }
+            else if (invertX && !invertY)
+            { // only x inverted.
+                invert = Matrix2D.Scale(-1, 1);
+            }
+            else
+            { // both inverted.
+                invert = Matrix2D.Scale(-1, -1);
+            }
+
+            return scale * rotate * translate * invert;
+        }
+
+        /// <summary>
         /// Multiplies the two given matrices.
         /// </summary>
         /// <param name="a"></param>
@@ -91,13 +199,24 @@ namespace OsmSharp.UI.Renderer
         /// <returns></returns>
         public static Matrix2D Scale(double factor)
         {
+            return Matrix2D.Scale(factor, factor);
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix for a scaling operation.
+        /// </summary>
+        /// <param name="factorX"></param>
+        /// <param name="factorY"></param>
+        /// <returns></returns>
+        public static Matrix2D Scale(double factorX, double factorY)
+        {
             return new Matrix2D()
             {
-                E00 = factor,
+                E00 = factorX,
                 E01 = 0,
                 E02 = 0,
                 E10 = 0,
-                E11 = factor,
+                E11 = factorY,
                 E12 = 0
             };
         }

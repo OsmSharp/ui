@@ -128,10 +128,13 @@ namespace OsmSharp.UI.Animations.Invalidation.Triggers
                 }
 
                 // detect changes by % of view pan.
-                double[] newCenter = _latestTriggeredView.ToViewPort(100, 100, view.Center[0], view.Center[1]);
-                newCenter[0] = System.Math.Abs(newCenter[0] - 50.0);
-                newCenter[1] = System.Math.Abs(newCenter[1] - 50.0);
-                if (newCenter[0] > PanPercentage || newCenter[1] > PanPercentage)
+                var toView = _latestTriggeredView.CreateTransformationMatrixToViewPort(100, 100);
+                double newCenterX, newCenterY;
+                toView.Apply(view.Center[0], view.Center[1], out newCenterX, out newCenterY);
+                //double[] newCenter = _latestTriggeredView.ToViewPort(100, 100, view.Center[0], view.Center[1]);
+                newCenterX = System.Math.Abs(newCenterX - 50.0);
+                newCenterY = System.Math.Abs(newCenterY - 50.0);
+                if (newCenterX > PanPercentage || newCenterY > PanPercentage)
                 { // the pan percentage change was detected.
                     if (this.LatestRenderingFinished ||
                     !_latestTriggeredView.Rectangle.Overlaps(view.Rectangle))

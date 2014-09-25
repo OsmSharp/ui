@@ -34,7 +34,7 @@ namespace OsmSharp.UI.Test.Unittests.UI
         [Test]
         public void View2DTestCreateFrom()
         {
-            View2D view = View2D.CreateFrom(0, 0, 200, 200, 1, false, false);
+            var view = View2D.CreateFrom(0, 0, 200, 200, 1, false, false);
 
             // test result.
             Assert.AreEqual(view.LeftTop[0], -100);
@@ -42,17 +42,17 @@ namespace OsmSharp.UI.Test.Unittests.UI
             Assert.AreEqual(view.RightBottom[1], -100);
             Assert.AreEqual(view.RightTop[1], 100);
             Assert.IsTrue(view.Contains(0, 0));
-            double[] topLeft = view.FromViewPort(1000, 1000, 0, 0);
+            var topLeft = view.FromViewPort(1000, 1000, 0, 0);
             Assert.AreEqual(topLeft[0], -100);
             Assert.AreEqual(topLeft[1], -100);
-            double[] bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
+            var bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
             Assert.AreEqual(bottomRight[0], 100);
             Assert.AreEqual(bottomRight[1], 100);
 
-            double[] viewTopLeft = view.ToViewPort(1000, 1000, view.LeftTop[0], view.RightTop[1]);
+            var viewTopLeft = view.ToViewPort(1000, 1000, view.LeftTop[0], view.RightTop[1]);
             Assert.AreEqual(0, viewTopLeft[0]);
             Assert.AreEqual(1000, viewTopLeft[1]);
-            double[] viewBottomRight = view.ToViewPort(1000, 1000, view.RightBottom[0], view.RightBottom[1]);
+            var viewBottomRight = view.ToViewPort(1000, 1000, view.RightBottom[0], view.RightBottom[1]);
             Assert.AreEqual(1000, viewBottomRight[0]);
             Assert.AreEqual(0, viewBottomRight[1]);
 
@@ -194,5 +194,119 @@ namespace OsmSharp.UI.Test.Unittests.UI
             Assert.AreEqual(view.RightTop[0], view.FromViewPort(1000, 1000, viewTopRight[0], viewTopRight[1])[0], delta);
             Assert.AreEqual(view.RightTop[1], view.FromViewPort(1000, 1000, viewTopRight[0], viewTopRight[1])[1], delta);
         }
+
+        /// <summary>
+        /// Tests CreateFrom with a x-y size difference.
+        /// </summary>
+        [Test]
+        public void View2DTestCreateFromXYDifference()
+        {
+            var view = View2D.CreateFrom(0, 0, 400, 200, 1, false, false);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], -200);
+            Assert.AreEqual(view.RightTop[0], 200);
+            Assert.AreEqual(view.RightBottom[1], -100);
+            Assert.AreEqual(view.RightTop[1], 100);
+            Assert.IsTrue(view.Contains(0, 0));
+            var topLeft = view.FromViewPort(2000, 1000, 0, 0);
+            Assert.AreEqual(topLeft[0], -200);
+            Assert.AreEqual(topLeft[1], -100);
+            var bottomRight = view.FromViewPort(2000, 1000, 2000, 1000);
+            Assert.AreEqual(bottomRight[0], 200);
+            Assert.AreEqual(bottomRight[1], 100);
+
+            var viewTopLeft = view.ToViewPort(2000, 1000, view.LeftTop[0], view.RightTop[1]);
+            Assert.AreEqual(0, viewTopLeft[0]);
+            Assert.AreEqual(1000, viewTopLeft[1]);
+            var viewBottomRight = view.ToViewPort(2000, 1000, view.RightBottom[0], view.RightBottom[1]);
+            Assert.AreEqual(2000, viewBottomRight[0]);
+            Assert.AreEqual(0, viewBottomRight[1]);
+
+            view = View2D.CreateFrom(0, 0, 200, 200, 1, true, false);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], 100);
+            Assert.AreEqual(view.RightTop[0], -100);
+            Assert.AreEqual(view.RightBottom[1], -100);
+            Assert.AreEqual(view.RightTop[1], 100);
+            Assert.IsTrue(view.Contains(0, 0));
+            topLeft = view.FromViewPort(1000, 1000, 0, 0);
+            Assert.AreEqual(topLeft[0], 100);
+            Assert.AreEqual(topLeft[1], -100);
+            bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
+            Assert.AreEqual(bottomRight[0], -100);
+            Assert.AreEqual(bottomRight[1], 100);
+
+            viewTopLeft = view.ToViewPort(1000, 1000, view.LeftTop[0], view.LeftTop[1]);
+            Assert.AreEqual(0, viewTopLeft[0]);
+            Assert.AreEqual(1000, viewTopLeft[1]);
+            viewBottomRight = view.ToViewPort(1000, 1000, view.RightBottom[0], view.RightBottom[1]);
+            Assert.AreEqual(1000, viewBottomRight[0]);
+            Assert.AreEqual(0, viewBottomRight[1]);
+
+            view = View2D.CreateFrom(0, 0, 200, 200, 1, false, true);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], -100);
+            Assert.AreEqual(view.RightTop[0], 100);
+            Assert.AreEqual(view.RightBottom[1], 100);
+            Assert.AreEqual(view.RightTop[1], -100);
+            Assert.IsTrue(view.Contains(0, 0));
+            topLeft = view.FromViewPort(1000, 1000, 0, 0);
+            Assert.AreEqual(topLeft[0], -100);
+            Assert.AreEqual(topLeft[1], 100);
+            bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
+            Assert.AreEqual(bottomRight[0], 100);
+            Assert.AreEqual(bottomRight[1], -100);
+
+            viewTopLeft = view.ToViewPort(1000, 1000, view.LeftTop[0], view.LeftTop[1]);
+            Assert.AreEqual(0, viewTopLeft[0]);
+            Assert.AreEqual(1000, viewTopLeft[1]);
+            viewBottomRight = view.ToViewPort(1000, 1000, view.RightBottom[0], view.RightBottom[1]);
+            Assert.AreEqual(1000, viewBottomRight[0]);
+            Assert.AreEqual(0, viewBottomRight[1]);
+
+            view = View2D.CreateFrom(0, 0, 200, 200, 1, true, true);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], 100);
+            Assert.AreEqual(view.RightTop[0], -100);
+            Assert.AreEqual(view.RightBottom[1], 100);
+            Assert.AreEqual(view.RightTop[1], -100);
+            Assert.IsTrue(view.Contains(0, 0));
+            topLeft = view.FromViewPort(1000, 1000, 0, 0);
+            Assert.AreEqual(topLeft[0], 100);
+            Assert.AreEqual(topLeft[1], 100);
+            bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
+            Assert.AreEqual(bottomRight[0], -100);
+            Assert.AreEqual(bottomRight[1], -100);
+
+            viewTopLeft = view.ToViewPort(1000, 1000, view.LeftTop[0], view.LeftTop[1]);
+            Assert.AreEqual(0, viewTopLeft[0]);
+            Assert.AreEqual(1000, viewTopLeft[1]);
+            viewBottomRight = view.ToViewPort(1000, 1000, view.RightBottom[0], view.RightBottom[1]);
+            Assert.AreEqual(1000, viewBottomRight[0]);
+            Assert.AreEqual(0, viewBottomRight[1]);
+
+            view = View2D.CreateFromBounds(100, -100, -100, 100);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], -100);
+            Assert.AreEqual(view.RightTop[0], 100);
+            Assert.AreEqual(view.RightBottom[1], -100);
+            Assert.AreEqual(view.RightTop[1], 100);
+            Assert.IsTrue(view.Contains(0, 0));
+
+            view = View2D.CreateFromBounds(-100, 100, 100, -100);
+
+            // test result.
+            Assert.AreEqual(view.LeftTop[0], 100);
+            Assert.AreEqual(view.RightTop[0], -100);
+            Assert.AreEqual(view.RightBottom[1], 100);
+            Assert.AreEqual(view.RightTop[1], -100);
+            Assert.IsTrue(view.Contains(0, 0));
+        }
+
     }
 }
