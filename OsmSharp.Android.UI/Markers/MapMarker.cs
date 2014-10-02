@@ -405,6 +405,8 @@ namespace OsmSharp.Android.UI
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
 
+                // make sure popups are on top.
+                _popupView.BringToFront();
                 _popupLayoutSet = true;
             }
             return true;
