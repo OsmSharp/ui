@@ -98,21 +98,21 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-//            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
 //            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
 //                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
 
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			// add a pre-processed vector data file.
-			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-				"OsmSharp.iOS.UI.Sample.default.map");
-			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+//			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+//				"OsmSharp.iOS.UI.Sample.default.map");
+//			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
-            var primitivesLayer = new LayerPrimitives(map.Projection);
-            primitivesLayer.AddPoint(new GeoCoordinate(51.26371, 4.78601), 10,
-                SimpleColor.FromKnownColor(KnownColor.Blue).Value);
-            map.AddLayer(primitivesLayer);
+//            var primitivesLayer = new LayerPrimitives(map.Projection);
+//            primitivesLayer.AddPoint(new GeoCoordinate(51.26371, 4.78601), 10,
+//                SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+//            map.AddLayer(primitivesLayer);
 
 //			// define dummy from and to points.
 			var from = new GeoCoordinate(51.261203, 4.780760);
@@ -166,6 +166,8 @@ namespace OsmSharp.iOS.UI.Sample
             popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
             marker.AddPopup(popupTextView, 100, 100);
 
+            this.AddMarkers();
+
             // add center marker.
             _centerMarker = _mapView.AddMarker(_mapView.MapCenter);
 
@@ -179,6 +181,28 @@ namespace OsmSharp.iOS.UI.Sample
 
 			View = _mapView;
 		}
+
+        void AddMarkers()
+        {
+            var from = new GeoCoordinate(51.261203, 4.780760);
+            var to = new GeoCoordinate(51.267797, 4.801362);
+
+            var box = new GeoCoordinateBox(from, to);
+
+            _mapView.ClearMarkers();
+
+            MapMarker marker;
+            for (int idx = 0; idx < 20; idx++)
+            {
+                var pos = box.GenerateRandomIn();
+                marker = _mapView.AddMarker(pos);
+                var popupTextView = new UITextView();
+                popupTextView.Text = "Hey, this is popup text!";
+                popupTextView.BackgroundColor = UIColor.FromWhiteAlpha(0.5f, 0.5f);
+                marker.AddPopup(popupTextView, 100, 100);
+            }
+        }
+
 
         /// <summary>
         /// Called when the map was first initialized.

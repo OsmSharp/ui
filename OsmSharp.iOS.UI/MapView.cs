@@ -1259,8 +1259,10 @@ namespace OsmSharp.iOS.UI
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
-				View2D view = this.CreateView(rect);
+                View2D view = this.CreateView(rect);
+                this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
+                this.NotifyOnAfterSetLayout();
 			}
 		}
 
@@ -1405,7 +1407,9 @@ namespace OsmSharp.iOS.UI
             if (rect.Width > 0 && rect.Height > 0)
             {
                 View2D view = this.CreateView(rect);
+                this.NotifyOnBeforeSetLayout();
                 this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, marker);
+                this.NotifyOnAfterSetLayout();
             }
         }
 
@@ -1536,6 +1540,7 @@ namespace OsmSharp.iOS.UI
 		internal void NotifyMapChangeToControls(double pixelsWidth, double pixelsHeight, View2D view, 
 		                                       IProjection projection)
 		{
+            this.NotifyOnBeforeSetLayout();
 			foreach (var marker in _markers)
 			{
 				this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
@@ -1544,7 +1549,63 @@ namespace OsmSharp.iOS.UI
             {
                 this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
             }
+            this.NotifyOnAfterSetLayout();
 		}
+
+        /// <summary>
+        /// Calls OnBeforeLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnBeforeSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnBeforeSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnBeforeSetLayout();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls OnAfterLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnAfterSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnAfterSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnAfterSetLayout();
+                    }
+                }
+            }
+        }
+
 
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.
@@ -1557,8 +1618,9 @@ namespace OsmSharp.iOS.UI
 			if (rect.Width > 0 && rect.Height > 0)
 			{
 				View2D view = this.CreateView(rect);
-
+                this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
+                this.NotifyOnAfterSetLayout();
 			}
 		}
 
