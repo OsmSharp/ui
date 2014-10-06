@@ -336,7 +336,8 @@ namespace OsmSharp.iOS.UI
         /// </summary>
         internal override void OnAfterSetLayout()
         {
-            if (_popupView != null)
+            if (_popupView != null &&
+                _popupView.Superview != null)
             {
                 _popupView.Superview.BringSubviewToFront(_popupView);
             }
