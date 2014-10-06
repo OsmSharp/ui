@@ -81,8 +81,9 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="pixelsHeight"></param>
         /// <param name="view"></param>
         /// <param name="projection"></param>
+        /// <param name="afterLayout"></param>
         /// <returns></returns>
-        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, out Action afterLayout);
 
         /// <summary>
         /// Notifies this control there was a map tap.
@@ -290,13 +291,14 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+        /// <pparam name="afterLayout">Action to execute right after layout.</pparam>
+        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, out Action afterLayout)
         {
             if (this.Location != null)
             { // only set layout if there is a location set.
                 var projected = projection.ToPixel(this.Location);
                 double leftMargin, topMargin;
-                var fromMatrix = view.CreateFromViewPort(pixelsWidth, pixelsHeight);
+                var fromMatrix = view.CreateToViewPort(pixelsWidth, pixelsHeight);
                 fromMatrix.Apply(projected[0], projected[1], out leftMargin, out topMargin);
 
                 leftMargin = leftMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
@@ -316,6 +318,7 @@ namespace OsmSharp.Android.UI.Controls
                 (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
                 (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
             }
+            afterLayout = null;
             return true;
         }
 

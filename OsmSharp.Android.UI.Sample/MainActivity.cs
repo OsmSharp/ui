@@ -83,8 +83,8 @@ namespace OsmSharp.Android.UI.Sample
 
             // initialize map.
             var map = new Map();
-            //map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
-            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
+            map.AddLayer(new LayerMBTile(OsmSharp.Android.UI.Data.SQLite.SQLiteConnection.CreateFrom(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.mbtiles"), "map")));
             // add a tile layer.
 
             //var layer = new LayerTile(@"http://a.tiles.mapbox.com/v3/osmsharp.i8ckml0l/{0}/{1}/{2}.png");
@@ -96,8 +96,8 @@ namespace OsmSharp.Android.UI.Sample
             // add an on-line osm-data->mapCSS translation layer.
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             // add a preprocessed vector data file.
-            var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+            //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
+            //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
             // define dummy from and to points.
             //var from = new GeoCoordinate(51.261203, 4.780760);
@@ -156,10 +156,10 @@ namespace OsmSharp.Android.UI.Sample
             // create the route tracker animator.
             //_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            // simulate a mapzoom change every 5 seconds.
-            Timer timer = new Timer(2000);
-            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            timer.Start();
+            //// simulate a mapzoom change every 5 seconds.
+            //Timer timer = new Timer(2000);
+            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            //timer.Start();
 
             _mapView.MapInitialized += _mapView_MapInitialized;
 
@@ -173,41 +173,60 @@ namespace OsmSharp.Android.UI.Sample
 
         void AddMarkers()
         {
-            //var from = new GeoCoordinate(51.261203, 4.780760);
-            //var to = new GeoCoordinate(51.267797, 4.801362);
+            var from = new GeoCoordinate(51.261203, 4.780760);
+            var to = new GeoCoordinate(51.267797, 4.801362);
 
-            //_mapView.ClearMarkers();
+            var box = new GeoCoordinateBox(from, to);
 
-            //var marker = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-            //var popupView = marker.AddNewPopup(300, 300);
-            //var textView = new TextView(this.ApplicationContext);
-            //textView.Text = "Some popup text here.";
-            //textView.TextSize = 10;
-            //textView.SetTextColor(global::Android.Graphics.Color.Black);
-            //popupView.AddView(textView);
-            //_mapView.AddMarker(marker);
+            _mapView.ClearMarkers();
 
-            //marker = new MapMarker(this, to, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-            //popupView = marker.AddNewPopup(300, 300);
-            //textView = new TextView(this.ApplicationContext);
-            //textView.Text = "Some popup other text here.";
-            //textView.TextSize = 10;
-            //textView.SetTextColor(global::Android.Graphics.Color.Black);
-            //popupView.AddView(textView);
-            //_mapView.AddMarker(marker);
-        }
+            MapMarker marker;
+            LinearLayout popupView;
+            TextView textView;
+            for (int idx = 0; idx < 20; idx++)
+            {
+                var pos = box.GenerateRandomIn();
 
-        void AddControls()
-        {
-            var textView = new TextView(this.ApplicationContext);
-            textView.Text = "Some text here.";
+                marker = new MapMarker(this, pos, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
+                popupView = marker.AddNewPopup(300, 300);
+                textView = new TextView(this.ApplicationContext);
+                textView.Text = string.Format("Some popup text here. #{0}", idx.ToInvariantString());
+                textView.TextSize = 10;
+                textView.SetTextColor(global::Android.Graphics.Color.Black);
+                popupView.AddView(textView);
+                _mapView.AddMarker(marker);
+            }
+
+            marker = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
+            popupView = marker.AddNewPopup(300, 300);
+            textView = new TextView(this.ApplicationContext);
+            textView.Text = "Some popup text here.";
             textView.TextSize = 10;
             textView.SetTextColor(global::Android.Graphics.Color.Black);
+            popupView.AddView(textView);
+            _mapView.AddMarker(marker);
 
-            var textViewControl = new MapControl<TextView>(textView, new GeoCoordinate(51.261203, 4.780760), MapControlAlignmentType.CenterBottom,
-                100, 200);
-            _mapView.AddControl(textViewControl);
+            marker = new MapMarker(this, to, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
+            popupView = marker.AddNewPopup(300, 300);
+            textView = new TextView(this.ApplicationContext);
+            textView.Text = "Some popup other text here.";
+            textView.TextSize = 10;
+            textView.SetTextColor(global::Android.Graphics.Color.Black);
+            popupView.AddView(textView);
+            _mapView.AddMarker(marker);
         }
+
+        //void AddControls()
+        //{
+        //    var textView = new TextView(this.ApplicationContext);
+        //    textView.Text = "Some text here.";
+        //    textView.TextSize = 10;
+        //    textView.SetTextColor(global::Android.Graphics.Color.Black);
+
+        //    var textViewControl = new MapControl<TextView>(textView, new GeoCoordinate(51.261203, 4.780760), MapControlAlignmentType.CenterBottom,
+        //        100, 200);
+        //    _mapView.AddControl(textViewControl);
+        //}
 
         void _mapView_MapTapEvent(GeoCoordinate coordinate)
         {
@@ -242,34 +261,6 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.Dispose();
 
             GC.Collect();
-        }
-
-        /// <summary>
-        /// Handles the timer event from the timer.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TimerHandler(object sender, ElapsedEventArgs e)
-        {
-            (sender as Timer).Stop();
-            var from = new GeoCoordinate(51.261203, 4.780760);
-
-            var marker = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-            this.RunOnUiThread(() =>
-            {
-                _mapView.AddMarker(marker);
-            });
-
-            var popupView = marker.AddNewPopup(300, 300);
-            var textView = new TextView(this.ApplicationContext);
-            textView.Text = "Some popup text here.";
-            textView.TextSize = 10;
-            textView.SetTextColor(global::Android.Graphics.Color.Black);
-            popupView.AddView(textView);
-            this.RunOnUiThread(() =>
-            {
-                marker.ShowPopup();
-            });
         }
     }
 }

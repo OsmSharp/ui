@@ -419,7 +419,8 @@ namespace OsmSharp.Android.UI
             {
                 View2D view = _mapView.CreateView();
 
-                this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl);
+                Action afterLayout;
+                this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl, out afterLayout);
             }
         }
 
@@ -431,13 +432,15 @@ namespace OsmSharp.Android.UI
         /// <param name="view"></param>
         /// <param name="projection"></param>
         /// <param name="mapControl"></param>
-        internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl)
+        /// <param name="afterLayout"></param>
+        internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl, out Action afterLayout)
         {
+            afterLayout = null;
             if (mapControl != null &&
                 mapControl.Handle != IntPtr.Zero)
             {
                 this.RemoveView(mapControl.BaseView);
-                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
+                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection, out afterLayout))
                 {
                     this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
                 }
@@ -453,13 +456,19 @@ namespace OsmSharp.Android.UI
         /// <param name="projection">Projection.</param>
         public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
+            var afterLayouts = new List<Action>();
+            Action afterLayout;
             lock (_markers)
             {
                 if (_markers != null)
                 {
                     foreach (var marker in _markers)
                     {
-                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker, out afterLayout);
+                        if(afterLayout != null)
+                        {
+                            afterLayouts.Add(afterLayout);
+                        }
                     }
                 }
             }
@@ -469,9 +478,17 @@ namespace OsmSharp.Android.UI
                 {
                     foreach (var control in _controls)
                     {
-                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control, out afterLayout);
+                        if(afterLayout != null)
+                        {
+                            afterLayouts.Add(afterLayout);
+                        }
                     }
                 }
+            }
+            foreach(var afterLayoutToInvokde in afterLayouts)
+            {
+                afterLayoutToInvokde.Invoke();
             }
         }
 
