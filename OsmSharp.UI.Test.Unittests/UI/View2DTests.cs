@@ -48,7 +48,7 @@ namespace OsmSharp.UI.Test.Unittests.UI
             // var topLeft = view.FromViewPort(1000, 1000, 0, 0);
             Assert.AreEqual(x, -100);
             Assert.AreEqual(y, -100);
-            fromMatrix.Apply(100, 100, out x, out y);
+            fromMatrix.Apply(1000, 1000, out x, out y);
             // var bottomRight = view.FromViewPort(1000, 1000, 1000, 1000);
             Assert.AreEqual(x, 100);
             Assert.AreEqual(y, 100);
