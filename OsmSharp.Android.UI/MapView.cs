@@ -419,8 +419,9 @@ namespace OsmSharp.Android.UI
             {
                 View2D view = _mapView.CreateView();
 
-                Action afterLayout;
-                this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl, out afterLayout);
+                this.NotifyOnBeforeSetLayout();
+                this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl);
+                this.NotifyOnAfterSetLayout();
             }
         }
 
@@ -432,15 +433,13 @@ namespace OsmSharp.Android.UI
         /// <param name="view"></param>
         /// <param name="projection"></param>
         /// <param name="mapControl"></param>
-        /// <param name="afterLayout"></param>
-        internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl, out Action afterLayout)
+        internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl)
         {
-            afterLayout = null;
             if (mapControl != null &&
                 mapControl.Handle != IntPtr.Zero)
             {
                 this.RemoveView(mapControl.BaseView);
-                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection, out afterLayout))
+                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
                 {
                     this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
                 }
@@ -456,19 +455,14 @@ namespace OsmSharp.Android.UI
         /// <param name="projection">Projection.</param>
         public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
-            var afterLayouts = new List<Action>();
-            Action afterLayout;
+            this.NotifyOnBeforeSetLayout();
             lock (_markers)
             {
                 if (_markers != null)
                 {
                     foreach (var marker in _markers)
                     {
-                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker, out afterLayout);
-                        if(afterLayout != null)
-                        {
-                            afterLayouts.Add(afterLayout);
-                        }
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
                     }
                 }
             }
@@ -478,17 +472,64 @@ namespace OsmSharp.Android.UI
                 {
                     foreach (var control in _controls)
                     {
-                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control, out afterLayout);
-                        if(afterLayout != null)
-                        {
-                            afterLayouts.Add(afterLayout);
-                        }
+                        this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
                     }
                 }
             }
-            foreach(var afterLayoutToInvokde in afterLayouts)
+            this.NotifyOnAfterSetLayout();
+        }
+
+        /// <summary>
+        /// Calls OnBeforeLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnBeforeSetLayout()
+        {
+            lock (_markers)
             {
-                afterLayoutToInvokde.Invoke();
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnBeforeSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnBeforeSetLayout();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls OnAfterLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnAfterSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnAfterSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnAfterSetLayout();
+                    }
+                }
             }
         }
 

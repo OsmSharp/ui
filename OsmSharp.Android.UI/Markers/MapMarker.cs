@@ -361,10 +361,9 @@ namespace OsmSharp.Android.UI
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        ///^<param name="afterLayout">Action to execute right after layout.</param>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, out Action afterLayout)
+        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
-            base.SetLayout(pixelsWidth, pixelsHeight, view, projection, out afterLayout);
+            base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 
             if (this.Location != null &&
                 _popupView != null)
@@ -406,11 +405,21 @@ namespace OsmSharp.Android.UI
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
                 (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
 
-                // make sure popups are on top.
-                afterLayout = () => { _popupView.BringToFront(); };
                 _popupLayoutSet = true;
             }
             return true;
+        }
+        
+        /// <summary>
+        /// Called after one of the markers/controls has been changed.
+        /// </summary>
+        internal override void OnAfterSetLayout()
+        {
+            // make sure popups are on top.
+            if (_popupView != null)
+            {
+                _popupView.BringToFront();
+            }
         }
 
         /// <summary>

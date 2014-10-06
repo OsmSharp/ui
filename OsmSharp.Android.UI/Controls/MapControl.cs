@@ -75,6 +75,14 @@ namespace OsmSharp.Android.UI.Controls
         internal abstract void DetachFrom(IMapControlHost controlHost);
 
         /// <summary>
+        /// Called when any map control has changed and is about to be reposition if needed.
+        /// </summary>
+        internal virtual void OnBeforeSetLayout()
+        {
+
+        }
+
+        /// <summary>
         /// Sets layout.
         /// </summary>
         /// <param name="pixelsWidth"></param>
@@ -83,7 +91,15 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="projection"></param>
         /// <param name="afterLayout"></param>
         /// <returns></returns>
-        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, out Action afterLayout);
+        internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+
+        /// <summary>
+        /// Called when any map control has changed and was repositioned if needed.
+        /// </summary>
+        internal virtual void OnAfterSetLayout()
+        {
+
+        }
 
         /// <summary>
         /// Notifies this control there was a map tap.
@@ -291,8 +307,7 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="pixelsHeight">Pixels height.</param>
         /// <param name="view">View.</param>
         /// <param name="projection">Projection.</param>
-        /// <pparam name="afterLayout">Action to execute right after layout.</pparam>
-        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, out Action afterLayout)
+        internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
             if (this.Location != null)
             { // only set layout if there is a location set.
@@ -318,7 +333,6 @@ namespace OsmSharp.Android.UI.Controls
                 (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
                 (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
             }
-            afterLayout = null;
             return true;
         }
 

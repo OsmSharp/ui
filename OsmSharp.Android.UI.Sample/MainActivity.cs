@@ -156,8 +156,8 @@ namespace OsmSharp.Android.UI.Sample
             // create the route tracker animator.
             //_routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
-            //// simulate a mapzoom change every 5 seconds.
-            //Timer timer = new Timer(2000);
+            // simulate a mapzoom change every 5 seconds.
+            //Timer timer = new Timer(5000);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
@@ -181,39 +181,24 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.ClearMarkers();
 
             MapMarker marker;
-            LinearLayout popupView;
-            TextView textView;
             for (int idx = 0; idx < 20; idx++)
             {
                 var pos = box.GenerateRandomIn();
 
                 marker = new MapMarker(this, pos, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-                popupView = marker.AddNewPopup(300, 300);
-                textView = new TextView(this.ApplicationContext);
-                textView.Text = string.Format("Some popup text here. #{0}", idx.ToInvariantString());
+                var popupView = marker.AddNewPopup(300, 300);
+                var textView = new TextView(this.ApplicationContext);
+                textView.Text = "Some popup text here.";
                 textView.TextSize = 10;
                 textView.SetTextColor(global::Android.Graphics.Color.Black);
                 popupView.AddView(textView);
                 _mapView.AddMarker(marker);
             }
+        }
 
-            marker = new MapMarker(this, from, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-            popupView = marker.AddNewPopup(300, 300);
-            textView = new TextView(this.ApplicationContext);
-            textView.Text = "Some popup text here.";
-            textView.TextSize = 10;
-            textView.SetTextColor(global::Android.Graphics.Color.Black);
-            popupView.AddView(textView);
-            _mapView.AddMarker(marker);
-
-            marker = new MapMarker(this, to, MapControlAlignmentType.CenterBottom, this.Resources, Resource.Drawable.marker);
-            popupView = marker.AddNewPopup(300, 300);
-            textView = new TextView(this.ApplicationContext);
-            textView.Text = "Some popup other text here.";
-            textView.TextSize = 10;
-            textView.SetTextColor(global::Android.Graphics.Color.Black);
-            popupView.AddView(textView);
-            _mapView.AddMarker(marker);
+        void View_Click(object sender, EventArgs e)
+        {
+            var marker = (sender as MapMarker);
         }
 
         //void AddControls()
@@ -252,6 +237,13 @@ namespace OsmSharp.Android.UI.Sample
             {
                 _mapView.Invalidate();
             }
+        }
+
+        void TimerHandler(object sender, EventArgs args)
+        {
+            this.RunOnUiThread(() => {
+                this.AddMarkers();
+            });
         }
 
         protected override void OnDestroy()
