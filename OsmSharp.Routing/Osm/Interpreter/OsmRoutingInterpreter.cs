@@ -117,7 +117,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
                 switch(key)
                 {
                     case "oneway":
-                        return value == "yes" || value == "reverse";
+                        return value == "yes" || value == "reverse" || value == "-1";
                     case "maxspeed":
                         return TagExtensions.TryParseSpeed(value, out speed);
                 }
