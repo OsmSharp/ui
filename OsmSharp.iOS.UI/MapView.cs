@@ -1761,4 +1761,3 @@ namespace OsmSharp.iOS.UI
 		}
     }
 }
-
