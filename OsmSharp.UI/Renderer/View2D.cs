@@ -479,7 +479,7 @@ namespace OsmSharp.UI.Renderer
             for (int idx = 0; idx < sceneX.Length; idx++)
             {
                 double x, y;
-                toView.Apply(sceneX[idx], sceneX[idx], out x, out y);
+                toView.Apply(sceneX[idx], sceneY[idx], out x, out y);
                 result[idx] = new double[] { x, y };
             }
             return result;
