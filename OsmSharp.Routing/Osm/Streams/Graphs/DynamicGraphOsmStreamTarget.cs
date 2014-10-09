@@ -116,6 +116,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _preIndexMode = true;
             _preIndex = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
             _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
+            _restricedWays = new HashSet<long>();
+            _collapsedNodes = new Dictionary<long, KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>>();
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
@@ -207,12 +209,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     // add the node as a possible restriction.
                     if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
                     { // tests quickly if a given node is possibly a restriction.
-                        List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
+                        var vehicles = _interpreter.CalculateRestrictions(node);
                         if (vehicles != null &&
                             vehicles.Count > 0)
                         { // add all the restrictions.
-                            uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
-                            uint[] restriction = new uint[] { vertexId };
+                            var vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
+                            var restriction = new uint[] { vertexId };
                             if (vehicles.Contains(null))
                             { // restriction is valid for all vehicles.
                                 _dynamicGraph.AddRestriction(restriction);
@@ -234,6 +236,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Holds a list of nodes used twice or more.
         /// </summary>
         private ILongIndex _relevantNodes;
+
+        /// <summary>
+        /// Holds all ways that have at least one restrictions.
+        /// </summary>
+        private HashSet<long> _restricedWays;
+
+        /// <summary>
+        /// Holds nodes that have been collapsed because they are considered irrelevant.
+        /// </summary>
+        private Dictionary<long, KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>> _collapsedNodes;
 
         /// <summary>
         /// Adds a given way.
@@ -294,6 +306,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             way.Tags))
                         { // the edge is traversable, add the edges.
                             uint? from = this.AddRoadNode(way.Nodes[0]);
+                            long fromNodeId = way.Nodes[0];
                             List<long> intermediates = new List<long>();
                             for (int idx = 1; idx < way.Nodes.Count; idx++)
                             { // the to-node.
@@ -303,6 +316,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     idx == way.Nodes.Count - 1)
                                 { // node is an important node.
                                     uint? to = this.AddRoadNode(currentNodeId);
+                                    long toNodeId = currentNodeId;
 
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
@@ -346,6 +360,18 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                             this.AddRoadEdge(way.Tags, true, from.Value, to.Value, intermediateCoordinates);
                                         }
                                     }
+
+                                    // if this way has a restriction save the collapsed nodes information.
+                                    if(_restricedWays.Contains(way.Id.Value))
+                                    { // loop over all intermediates and save.
+                                        var collapsedInfo = new KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>(
+                                            new KeyValuePair<long, uint>(fromNodeId, from.Value), new KeyValuePair<long, uint>(toNodeId, to.Value));
+                                        foreach(var intermedidate in intermediates)
+                                        {
+                                            _collapsedNodes[intermedidate] = collapsedInfo;
+                                        }
+                                    }
+
                                     from = to; // the to node becomes the from.
                                     intermediates.Clear();
                                 }
@@ -358,6 +384,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns true if the given node has an actual road node, meaning a relevant vertex, and outputs the vertex id.
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        private bool TryGetRoadNode(long nodeId, out uint id)
+        {
+            return _idTransformations.TryGetValue(nodeId, out id);
         }
 
         /// <summary>
@@ -454,38 +490,91 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
+            OsmSharp.Logging.Log.TraceEvent("", Logging.TraceEventType.Information, relation.Tags.ToInvariantString());
             if (_interpreter.IsRestriction(OsmGeoType.Relation, relation.Tags))
             {
                 // add the node as a possible restriction.
                 if (!_preIndexMode)
                 { // tests quickly if a given node is possibly a restriction.
-                    // this relation is a relation that represents a restriction all members should have been cached.
-                    CompleteRelation completeRelation = CompleteRelation.CreateFrom(relation, _dataCache);
-                    if (completeRelation == null) 
-                    {
-                        return;
-                    }
-
                     // interpret the restriction using the complete object.
-                    List<KeyValuePair<Vehicle, long[]>> vehicleRestrictions = _interpreter.CalculateRestrictions(completeRelation);
+                    var vehicleRestrictions = _interpreter.CalculateRestrictions(relation, _dataCache);
                     if (vehicleRestrictions != null &&
                         vehicleRestrictions.Count > 0)
                     { // add all the restrictions.
-                        foreach (KeyValuePair<Vehicle, long[]> vehicleRestriction in vehicleRestrictions)
-                        {
-                            // build the restricted route.
-                            uint[] restriction = new uint[vehicleRestriction.Value.Length];
+                        foreach (var vehicleRestriction in vehicleRestrictions)
+                        { // translated the restricted route in terms of node-id's to vertex ids.
+                            var restriction = new List<uint>(vehicleRestriction.Value.Length);
+                            KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>? firstCollapsedInfo = null;
+                            uint? previousRelevantId = null;
                             for (int idx = 0; idx < vehicleRestriction.Value.Length; idx++)
                             {
-                                restriction[idx] = this.AddRoadNode(vehicleRestriction.Value[idx]).Value;
+                                // check if relevant node.
+                                uint relevantId;
+                                if (this.TryGetRoadNode(vehicleRestriction.Value[idx], out relevantId))
+                                { // ok, is relevant.
+                                    if (firstCollapsedInfo.HasValue)
+                                    { // there was an irrelevant node before this one.
+                                        if (firstCollapsedInfo.Value.Key.Value == relevantId)
+                                        { // ok, take the other relevant one.
+                                            restriction.Add(firstCollapsedInfo.Value.Value.Value);
+                                        }
+                                        else if (firstCollapsedInfo.Value.Value.Value == relevantId)
+                                        { // ok, take the other relevant one.
+                                            restriction.Add(firstCollapsedInfo.Value.Key.Value);
+                                        }
+                                        else
+                                        { // oeps, invalid info here.
+                                            restriction = null;
+                                            break;
+                                        }
+                                        firstCollapsedInfo = null;
+                                    }
+                                    if (!previousRelevantId.HasValue || previousRelevantId.Value != relevantId)
+                                    { // ok, this one is new.
+                                        previousRelevantId = relevantId;
+                                        restriction.Add(relevantId);
+                                    }
+                                }
+                                else
+                                { // ok, not relevant, should be in the collapsed nodes.
+                                    KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>> collapsedInfo;
+                                    if(!_collapsedNodes.TryGetValue(vehicleRestriction.Value[idx], out collapsedInfo))
+                                    { // one of the nodes was not found, this restriction is incomplete or invalid, skip it.
+                                        restriction = null;
+                                        break;
+                                    }
+                                    if(previousRelevantId.HasValue)
+                                    { // ok, there is a previous relevant id, one of them should match collapsedInfo.
+                                        if (collapsedInfo.Key.Value == previousRelevantId.Value)
+                                        { // ok, take the other relevant one.
+                                            restriction.Add(collapsedInfo.Value.Value);
+                                        }
+                                        else if (collapsedInfo.Value.Value == previousRelevantId.Value)
+                                        { // ok, take the other relevant one.
+                                            restriction.Add(collapsedInfo.Key.Value);
+                                        }
+                                        else
+                                        { // oeps, invalid info here.
+                                            restriction = null;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    { // save the collapsedInfo for the first relevant node.
+                                        firstCollapsedInfo = collapsedInfo;
+                                    }
+                                }
                             }
-                            if (vehicleRestriction.Key == null)
-                            { // this restriction is for all vehicles.
-                                _dynamicGraph.AddRestriction(restriction);
-                            }
-                            else
-                            { // this restriction is just for the given vehicle.
-                                _dynamicGraph.AddRestriction(vehicleRestriction.Key, restriction);
+                            if (restriction != null)
+                            { // restriction exists.
+                                if (vehicleRestriction.Key == null)
+                                { // this restriction is for all vehicles.
+                                    _dynamicGraph.AddRestriction(restriction.ToArray());
+                                }
+                                else
+                                { // this restriction is just for the given vehicle.
+                                    _dynamicGraph.AddRestriction(vehicleRestriction.Key, restriction.ToArray());
+                                }
                             }
                         }
                     }
@@ -494,7 +583,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // pre-index mode.
                     if (relation.Members != null && relation.Members.Count > 0)
                     { // there are members, keep them!
-                        foreach (RelationMember member in relation.Members)
+                        foreach (var member in relation.Members)
                         {
                             switch (member.MemberType.Value)
                             {
@@ -503,6 +592,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     {
                                         _nodesToCache = new HashSet<long>();
                                     }
+                                    _relevantNodes.Add(member.MemberId.Value);
                                     _nodesToCache.Add(member.MemberId.Value);
                                     break;
                                 case OsmGeoType.Way:
@@ -511,6 +601,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                         _waysToCache = new HashSet<long>();
                                     }
                                     _waysToCache.Add(member.MemberId.Value);
+                                    _restricedWays.Add(member.MemberId.Value);
                                     break;
                             }
                         }
@@ -612,6 +703,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             {
                 _waysToCache.Clear();
             }
+            _restricedWays = null;
+            _collapsedNodes = null;
             _preIndex = null;
             _relevantNodes = null;
             _tagsIndex = null;

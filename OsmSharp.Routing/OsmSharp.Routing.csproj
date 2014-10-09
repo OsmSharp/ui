@@ -71,6 +71,7 @@
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraVisitList.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
