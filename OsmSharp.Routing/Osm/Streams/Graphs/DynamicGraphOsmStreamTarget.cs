@@ -490,7 +490,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
-            OsmSharp.Logging.Log.TraceEvent("", Logging.TraceEventType.Information, relation.Tags.ToInvariantString());
             if (_interpreter.IsRestriction(OsmGeoType.Relation, relation.Tags))
             {
                 // add the node as a possible restriction.
