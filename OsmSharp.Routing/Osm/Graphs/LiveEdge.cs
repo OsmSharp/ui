@@ -165,6 +165,11 @@ namespace OsmSharp.Routing.Osm.Graphs
                 // only the coordinates can be different now.
                 if (this.Coordinates != null)
                 { // both have to contain the same coordinates.
+                    if(otherLive.Coordinates == null &&
+                        this.Coordinates.Length > 0)
+                    { // impossible, one coordinate array is null another has coordinates.
+                        return false;
+                    }
                     if (this.Coordinates.Length != otherLive.Coordinates.Length)
                     { // impossible, different number of coordinates.
                         return false;
