@@ -332,6 +332,18 @@ namespace OsmSharp.iOS.UI
         }
 
         /// <summary>
+        /// Called when any map control has changed and was repositioned if needed.
+        /// </summary>
+        internal override void OnAfterSetLayout()
+        {
+            if (_popupView != null &&
+                _popupView.Superview != null)
+            {
+                _popupView.Superview.BringSubviewToFront(_popupView);
+            }
+        }
+
+        /// <summary>
         /// Notifies the map tap.
         /// </summary>
         protected internal override void NotifyMapTap()

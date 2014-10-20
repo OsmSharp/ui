@@ -82,6 +82,14 @@ namespace OsmSharp.iOS.UI.Controls
         internal abstract void DetachFrom(IMapControlHost controlHost);
 
         /// <summary>
+        /// Called when any map control has changed and is about to be reposition if needed.
+        /// </summary>
+        internal virtual void OnBeforeSetLayout()
+        {
+
+        }
+
+        /// <summary>
         /// Sets layout.
         /// </summary>
         /// <param name="pixelsWidth"></param>
@@ -90,6 +98,14 @@ namespace OsmSharp.iOS.UI.Controls
         /// <param name="projection"></param>
         /// <returns></returns>
         protected internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+
+        /// <summary>
+        /// Called when any map control has changed and was repositioned if needed.
+        /// </summary>
+        internal virtual void OnAfterSetLayout()
+        {
+
+        }
 
         /// <summary>
         /// Notifies this control there was a map tap.

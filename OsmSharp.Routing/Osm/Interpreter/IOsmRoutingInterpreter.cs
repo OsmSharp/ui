@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Routing.Osm.Interpreter
 {
@@ -44,10 +45,11 @@ namespace OsmSharp.Routing.Osm.Interpreter
         List<Vehicle> CalculateRestrictions(Node node);
 
         /// <summary>
-        /// Calculates all restrictions for a given relation.
+        /// Returns all restrictions that are represented by the given node.
         /// </summary>
-        /// <param name="completeRelation"></param>
+        /// <param name="relation"></param>
+        /// <param name="source"></param>
         /// <returns></returns>
-        List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(CompleteRelation completeRelation);
+        List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source);
     }
 }
