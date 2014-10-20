@@ -362,7 +362,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     }
 
                                     // if this way has a restriction save the collapsed nodes information.
-                                    if(_restricedWays.Contains(way.Id.Value))
+                                    if(_restricedWays.Contains(way.Id.Value) && to.HasValue && from.HasValue)
                                     { // loop over all intermediates and save.
                                         var collapsedInfo = new KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>(
                                             new KeyValuePair<long, uint>(fromNodeId, from.Value), new KeyValuePair<long, uint>(toNodeId, to.Value));
