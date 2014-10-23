@@ -88,8 +88,8 @@ namespace OsmSharp.Routing.Graph.Serialization
         protected override IBasicRouterDataSource<TEdgeData> DoDeserialize(
             LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            ITagsCollectionIndex tagsCollectionIndex = this.CreateTagsCollectionIndex();
-            DynamicGraphRouterDataSource<TEdgeData> graph = this.CreateGraph(tagsCollectionIndex);
+            var tagsCollectionIndex = this.CreateTagsCollectionIndex();
+            var graph = this.CreateGraph(tagsCollectionIndex);
 
             // deserialize vertices.
             var sizeBytes = new byte[8];
@@ -126,10 +126,9 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// Creates the tags collection index.
         /// </summary>
         /// <returns></returns>
-        protected virtual ITagsCollectionIndex CreateTagsCollectionIndex()
+        protected virtual TagsTableCollectionIndex CreateTagsCollectionIndex()
         {
             var tagsTable =  new TagsTableCollectionIndex(false);
-            // tagsTable.DropReverseIndexex();
             return tagsTable;
         }
 
@@ -279,7 +278,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="tagsCollectionIndex"></param>
         /// <param name="size"></param>
-        protected virtual void DeserializeTags(LimitedStream stream, long size, ITagsCollectionIndex tagsCollectionIndex)
+        protected virtual void DeserializeTags(LimitedStream stream, long size, TagsTableCollectionIndex tagsCollectionIndex)
         {           
             RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
             typeModel.Add(typeof(SerializableTag), true);

@@ -54,7 +54,7 @@ namespace OsmSharp.Collections
         /// </summary>
         /// <param name="reverseIndex">The reverse index is enable if true.</param>
         public ObjectTable(bool reverseIndex)
-            :this(reverseIndex, 1000)
+            :this(reverseIndex, 100000)
         {
 
         }
