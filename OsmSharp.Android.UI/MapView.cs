@@ -39,9 +39,19 @@ namespace OsmSharp.Android.UI
     public class MapView : FrameLayout, IMapControlHost, IMapView
     {
         /// <summary>
-        /// Map touched events.
+        /// Map touched down event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
+        /// Map touched event.
         /// </summary>
         public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Map touched up event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
 
         /// <summary>
         /// Raised when the map moves.
@@ -103,6 +113,17 @@ namespace OsmSharp.Android.UI
         }
 
         /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        internal void RaiseMapTouchedDown()
+        {
+            if (this.MapTouchedDown != null)
+            {
+                this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
         /// Raises the map touched event.
         /// </summary>
         internal void RaiseMapTouched()
@@ -110,6 +131,17 @@ namespace OsmSharp.Android.UI
             if (this.MapTouched != null)
             {
                 this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        internal void RaiseMapTouchedUp()
+        {
+            if (this.MapTouchedUp != null)
+            {
+                this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 

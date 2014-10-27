@@ -49,12 +49,22 @@ namespace OsmSharp.iOS.UI
 	{
         private const float MAX_ZOOM_LEVEL = 22;
 		private bool _invertX = false;
-		private bool _invertY = false;
+        private bool _invertY = false;
 
-		/// <summary>
-		/// Raised when the map changes because of a touch.
-		/// </summary>
-		public event MapViewDelegates.MapTouchedDelegate MapTouched;
+        /// <summary>
+        /// Map touched down event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
+        /// Map touched event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Map touched up event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
 
         /// <summary>
         /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
@@ -581,9 +591,11 @@ namespace OsmSharp.iOS.UI
 
                     // raise map touched event.
                     this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (rotation.State == UIGestureRecognizerState.Began)
-				{
+                {
+                    this.RaiseMapTouchedDown();
 					_mapViewBefore = this.CreateView(rect);
 				}
 				else
@@ -627,9 +639,11 @@ namespace OsmSharp.iOS.UI
 
                     // raise map touched event.
                     this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (pinch.State == UIGestureRecognizerState.Began)
-				{
+                {
+                    this.RaiseMapTouchedDown();
                     _mapZoomLevelBefore = MapZoom;
 				}
 				else
@@ -670,10 +684,12 @@ namespace OsmSharp.iOS.UI
 
                     // raise map touched event.
                     this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
                     _prevOffset = new PointF(0, 0);
+                    this.RaiseMapTouchedDown();
 				}
 				else if (pan.State == UIGestureRecognizerState.Changed)
 				{
@@ -1706,6 +1722,17 @@ namespace OsmSharp.iOS.UI
             this.NotifyMovementByInvoke();
         }
 
+        /// <summary>
+        /// Raises the map touched up event.
+        /// </summary>
+        private void RaiseMapTouchedUp()
+        {
+            if (this.MapTouchedUp != null)
+            {
+                this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
 		/// <summary>
 		/// Raises the map touched event.
 		/// </summary>
@@ -1715,6 +1742,17 @@ namespace OsmSharp.iOS.UI
 			{
 				this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
 			}
+        }
+
+        /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        private void RaiseMapTouchedDown()
+        {
+            if (this.MapTouchedDown != null)
+            {
+                this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
         }
 
         /// <summary>

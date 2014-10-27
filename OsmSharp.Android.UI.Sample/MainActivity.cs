@@ -139,6 +139,10 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapZoom = 16;
             _mapView.MapAllowTilt = false;
 
+            _mapView.MapTouchedUp += _mapView_MapTouchedUp;
+            _mapView.MapTouched += _mapView_MapTouched;
+            _mapView.MapTouchedDown += _mapView_MapTouchedDown;
+
             AddMarkers();
             // AddControls();
 
@@ -164,6 +168,21 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapInitialized += _mapView_MapInitialized;
 
             SetContentView(layout);
+        }
+
+        void _mapView_MapTouchedUp(OsmSharp.UI.IMapView mapView, float newZoom, Units.Angle.Degree newTilt, GeoCoordinate newCenter)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MainActivity", Logging.TraceEventType.Information, "MapTouchedUp");
+        }
+
+        void _mapView_MapTouchedDown(OsmSharp.UI.IMapView mapView, float newZoom, Units.Angle.Degree newTilt, GeoCoordinate newCenter)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MainActivity", Logging.TraceEventType.Information, "MapTouchedDown");
+        }
+
+        void _mapView_MapTouched(OsmSharp.UI.IMapView mapView, float newZoom, Units.Angle.Degree newTilt, GeoCoordinate newCenter)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MainActivity", Logging.TraceEventType.Information, "MapTouched");
         }
 
         void _mapView_MapInitialized(OsmSharp.UI.IMapView mapView, float newZoom, Units.Angle.Degree newTilt, GeoCoordinate newCenter)
@@ -225,8 +244,8 @@ namespace OsmSharp.Android.UI.Sample
             //    _mapView.Pause();
             //    _mapView.Map.Pause();
             //}
-            _mapView.Map[0].IsVisible = !_mapView.Map[0].IsVisible;
-            _mapView.Map[1].IsVisible = !_mapView.Map[1].IsVisible;
+            //_mapView.Map[0].IsVisible = !_mapView.Map[0].IsVisible;
+            //_mapView.Map[1].IsVisible = !_mapView.Map[1].IsVisible;
         }
 
         public override void OnConfigurationChanged(global::Android.Content.Res.Configuration newConfig)

@@ -1008,6 +1008,17 @@ namespace OsmSharp.Android.UI
             {
                 if (!_renderingSuspended && this.Map != null && this.Map.Projection != null && this.MapCenter != null)
                 {
+                    var actionCode = e.Action & MotionEventActions.Mask;
+                    switch (actionCode)
+                    {
+                        case MotionEventActions.Down:
+                            _mapView.RaiseMapTouchedDown();
+                            break;
+                        case MotionEventActions.Up:
+                            _mapView.RaiseMapTouchedUp();
+                            break;
+                    }
+
                     _tagGestureDetector.OnTouchEvent(e);
                     _scaleGestureDetector.OnTouchEvent(e);
                     _rotateGestureDetector.OnTouchEvent(e);
