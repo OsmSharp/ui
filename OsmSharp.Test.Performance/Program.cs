@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Performance
                 //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
                 // tests the mapcss interpretation.
-                //Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+                //var serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
                 //// test some rendering implementations.
                 //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(serializedScene,
                 //    (width, height) =>
