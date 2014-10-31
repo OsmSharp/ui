@@ -34,6 +34,7 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the scene primitives source.
         /// </summary>
         private IPrimitives2DSource _index;
+
         /// <summary>
         /// Holds the primitives.
         /// </summary>
@@ -76,6 +77,7 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the last box.
         /// </summary>
         private GeoCoordinateBox _lastBox;
+
         /// <summary>
         /// Holds the last zoom level.
         /// </summary>
