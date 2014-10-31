@@ -45,6 +45,8 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
+    <Compile Include="Vehicles\Bicycle.cs" />
+    <Compile Include="Vehicles\BigTruck.cs" />
     <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
@@ -140,7 +142,14 @@
     <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
     <Compile Include="TSP\RouterTSP.cs" />
     <Compile Include="TSP\RouterTSPWrapper.cs" />
-    <Compile Include="Vehicle.cs" />
+    <Compile Include="Vehicles\Bus.cs" />
+    <Compile Include="Vehicles\Car.cs" />
+    <Compile Include="Vehicles\Moped.cs" />
+    <Compile Include="Vehicles\MotorCycle.cs" />
+    <Compile Include="Vehicles\MotorVehicle.cs" />
+    <Compile Include="Vehicles\Pedestrian.cs" />
+    <Compile Include="Vehicles\SmallTruck.cs" />
+    <Compile Include="Vehicles\Vehicle.cs" />
     <Compile Include="VRP\MTSP\RouterMTSP.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />

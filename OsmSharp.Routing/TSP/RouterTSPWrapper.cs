@@ -8,6 +8,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.Routing.TSP
 {
@@ -101,6 +102,39 @@ namespace OsmSharp.Routing.TSP
             // concatenate the route(s).
             return this.BuildRoute(vehicle, points, tspSolution, weight);
         }
+        /// <summary>
+        /// Calculates the route along all given points starting and ending at the given points.
+        /// </summary>
+        /// <param name="vehicle">The vehicle type.</param>
+        /// <param name="points">The points to travel along.</param>
+        /// <param name="first">The index of the point to start from.</param>
+        /// <param name="last">The index of the point to end at.</param>
+        /// <param name="isRound">Return back to the first point or not.</param>
+        /// <param name="withOptimization">optimize the route or not.</param>
+        /// <returns></returns>
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, int last, bool isRound, bool withOptimization = true)
+        {
+            // Perhaps it will a good Idea to combine all Calculation-Options into Flag-Enum 
+            if (withOptimization == true)
+            {
+                if (isRound)
+                {
+                    return CalculateTSP(vehicle, points, first, isRound);
+                }
+                else
+                {
+                    return CalculateTSP(vehicle, points, first, last);
+                }
+            }
+            IRoute tspSolution = new DynamicAsymmetricRoute(points.Length, 0, false);  // _routerTSP.CalculateTSP(weights, locations, first, last);
+            for (int y = 1; y < points.Length; y++)
+            {
+                tspSolution.InsertAfter(y - 1, y); // new DynamicAsymmetricRoute(points.Length, y, false);
+            }
+
+            // concatenate the route(s).
+            return this.BuildRoute(vehicle, points, tspSolution, points.Length - 1);
+        }
 
         /// <summary>
         /// Calculates the shortest route along all given points starting and ending at the given points.
@@ -123,7 +157,7 @@ namespace OsmSharp.Routing.TSP
             }
             
             // call the RouterTSP.
-            IRoute tspSolution = _routerTSP.CalculateTSP(weights, locations);
+            IRoute tspSolution = _routerTSP.CalculateTSP(weights, locations,first, last);
 
             // calculate weight
             double weight = 0;
