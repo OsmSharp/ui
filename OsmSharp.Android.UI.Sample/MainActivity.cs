@@ -71,6 +71,11 @@ namespace OsmSharp.Android.UI.Sample
         private IEnumerator<GeoCoordinate> _enumerator;
 
         /// <summary>
+        /// Holds the center marker.
+        /// </summary>
+        private MapMarker _centerMarker;
+
+        /// <summary>
         /// Raises the create event.
         /// </summary>
         /// <param name="bundle">Bundle.</param>
@@ -165,6 +170,8 @@ namespace OsmSharp.Android.UI.Sample
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
+            _centerMarker = _mapView.AddMarker(_mapView.MapCenter);
+
             _mapView.MapInitialized += _mapView_MapInitialized;
 
             SetContentView(layout);
@@ -187,7 +194,7 @@ namespace OsmSharp.Android.UI.Sample
 
         void _mapView_MapInitialized(OsmSharp.UI.IMapView mapView, float newZoom, Units.Angle.Degree newTilt, GeoCoordinate newCenter)
         {
-
+            _centerMarker.MoveWithMap = false;
         }
 
         void AddMarkers()
