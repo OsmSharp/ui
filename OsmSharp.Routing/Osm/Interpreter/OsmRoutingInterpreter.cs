@@ -179,12 +179,13 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <returns></returns>
         public bool IsRestriction(OsmGeoType type, TagsCollectionBase tags)
         { // at least there need to be some tags.
-            if(type == OsmGeoType.Relation)
+            if (type == OsmGeoType.Relation)
             { // filter out relation-based turn-restrictions.
-                 if(tags.ContainsKeyValue("type", "restriction"))
-                 { // yep, there's a restriction here!
-                     return true;
-                 }
+                if (tags != null &&
+                    tags.ContainsKeyValue("type", "restriction"))
+                { // yep, there's a restriction here!
+                    return true;
+                }
             }
             return type == OsmGeoType.Node && tags != null && tags.Count > 0;
         }
