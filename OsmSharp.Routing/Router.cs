@@ -231,8 +231,9 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <param name="geometryOnly">Flag to return .</param>
         /// <returns></returns>
-        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
             return _router.CalculateToClosest(vehicle, source, targets, max);
         }
@@ -243,10 +244,12 @@ namespace OsmSharp.Routing
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
+        /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <param name="geometryOnly">Flag to return .</param>
         /// <returns></returns>
-        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
-            return _router.CalculateOneToMany(vehicle, source, targets);
+            return _router.CalculateOneToMany(vehicle, source, targets, max, geometryOnly);
         }
 
         /// <summary>
@@ -255,10 +258,12 @@ namespace OsmSharp.Routing
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
+        /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <param name="geometryOnly">Flag to return .</param>
         /// <returns></returns>
-        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
-            return _router.CalculateManyToMany(vehicle, sources, targets);
+            return _router.CalculateManyToMany(vehicle, sources, targets, max, geometryOnly);
         }
 
         /// <summary>

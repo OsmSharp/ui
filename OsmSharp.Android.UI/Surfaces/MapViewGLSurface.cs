@@ -194,6 +194,7 @@ namespace OsmSharp.Android.UI
                 }
 
                 _renderer.Render(_target,
+                    _map.Projection,
                      layers,
                      view,
                      (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
@@ -456,7 +457,8 @@ namespace OsmSharp.Android.UI
                 }
             }
 
-            _renderer.Render(_target,
+            _renderer.Render(_target, 
+                _map.Projection,
                  layers,
                  view,
                  (float)this.Map.Projection.ToZoomFactor(this.MapZoom));

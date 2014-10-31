@@ -1,28 +1,59 @@
-Enhancements:
+Enhancements to UI/MapView:
 
-- Improved MapCSS performance: Only check objects with at least on relevant tag. 11956d6e20d47f82833492112bf180de4f931416
-- Improved MapCSS performance: Keep rules for similar objects around. cc4aa3f23654b0a731855b3811131ddcd83abab3
-- Added a cross-plaform SQLite connection. f7d9e49156887417f94285b3da1b106729d5fdfd ba1231c3c07b5e04274a2bffa00da8d79997ce03
-- Added an MBTiles layer. 02603f9908cd7ec440d9f285f69a729edc5fc1d7 
-- Added platform initialization code to inject platform specific code. 3e7b9d0caa4a08483ad2a2840db4c941b7e0178b 8036fa8eef56a05853cd3c7ddc365ea6399cde42 
-- Added radian normalization. a5fbe938408e45f26aa0b0818a7dbf87cad4113d
-- Added OffsetWithDirection to GeoCoordinate. f7eed75892a825fa776d379ccb71b54fdf0fc44d
-- Improved Layer implementation to allow for external development of custom layers. 6419595e0aa9c77e090386b7a8715538ed47b21f
-- Improved rendering performance and memory usage by injecting native images. 1958f80c2efacb97fbcf9d9e70fb8be5473efdb1 35f2ab47279970ae86ac9f4ea379b2e38ae77acd 7f0b9642a5666d3e983ddcbfda0ccda46c4297eb
-- Improved memory usage on Android by recovering not destroying native images. 936be7185bfceb12042eaadc0bde6905bd541b28
-- Improved maintenance of changes. Fixes #115. 09e88682454aea3ab65276037f59a43a0a3cbfe2
-- Do not destroy and recreate Path-objects on every rendering cycle on Android. 50ed31f8d3eeaf118637636b0d822c61c814527b
-- Removed OsmSharp.Data.* assemblies from default Nuget packages and moved them to seperate packages. 
+This release has several fixed to the MapView on both Android and iOS. Mostly fixes related to stability on Android and extra functionality to make it easier to implement custom functionality on top of the MapView or markers.
+
+- Improved Android version by recycling images instead of destroy and recreate.
+- Added a ScaleFactor to manually control the MapView density settings.
+- Added extra properties to the MapView to get current state.
+- Added a Native platform-specific initialization process to enable some platform-specific functionality to be injected into OsmSharp.
+- Added better Pause() and Resume() functionality on Android.
+- Added missing polygon functionality to LayerPrimitive. #122.
+- Refactored markers. Allow any custom view on top of the MapView for both iOS and Android.
+- Improved MapViewAnimator with CubicBezier algorithm.
+- Added Tag property to MapView.
+- Added ability to limit MapView to bounding box. #55
+- Added cachesize option to LayerMBTile constructor. #158
+- Fixed density scaling and of MapViewSurface and Makers on Android.
+- Added IsVisible to Layer. #123.
+
+Enhancements & optimization of routing:
+
+Routing optimizations are focused on memory optimizations and flexibility in adding extra options to the routing algorithm(s). One part of the effort was getting the graph preprocessor to process using less RAM and thus enabling OsmSharp to preprocess bigger areas of raw OSM-data and even the entire planet. The extra routing options are focused on an upcoming release of https://github.com/OsmSharp/OsmSharp.Transit.
+
+- Added extra options to some IBasicRouter calls to better support customized routing.
+- Changed Arc to Edge in all Graph related teminology to remove inconsistent naming.
+- Added the option to calculate only route stats. #125
+- Performance improvements in GraphStreamTargets, building routing graphs from raw OSM-data now a lot faster.
+- Performance improvments to the PBFReader, reading raw OSM-data now a lot faster.
+- Implemented memorymapped arrays to store part of the routing graph on disk while processing huge amounts of raw OSM-data.
+- Removed obsolete graph serialization options and removed v2 namespace.
+- Improved flatfile tags deserialization. #133
+
+Improving instruction generation:
+
+Several issues releated to the instruction generation and using the routing functionality as a webservice. The routing object is now easy to serialize/deserialize and contains more information about distance and time. Generated instuctions now also contain more information and easier to consume.
+
+- Improvements to ArcAggregator to again allow for better support for customized routing.
+- Enhanced and changed Route object to allow for easier serialization/deserialization. #147
+- Added DistanceToEnd to RouteTracker. #143
+- Refactored Route object to make sense and added timings to route output. #143
+- Added extra flexibility to instruction generation. #142, #141
+- Better controle over instructions. #145
+- Vehicle names are now case-insensitive. #135
 
 Bugfixes:
 
-- Fixed ZoomToMarkers that keeps getting called on each refresh. cb5d42df2999b6869ab64c16d72319885b47dbc5
-- Fixed bug in Equals() in Tile. Thanks @langsweirdt 8e216f27778dad5c09d17f5b3c9588ee521cabb0
-- Fixed access to map layers and MapChanged even handling on Android. Fixes #105, #65 and #87. 178a45f4032cad2216e2cfa95296fdc4138ec306
-- Fixed PostgreSQL provider string encoding. Fixed #113. b90336e5bca4cb84724f0f29c25e3feda8039162
-- Implemented IPreProcessor on CHPreProcessor. Fixed #112. 92efa5ad9396daeac4b4948517e76f7a32177bdb
-- Checked sorting of zoom levels. Fixed #81. b7eb7b9be6ebceeb742e2e241139b157dc0da6b8
-- Fixed memory leak. Fixed #90. aa6f164d0879cccba7bd87387c65f4164bfcf196
-- Fixed blocking issue on CHRouter. 9d56bfa9e75d970cdf82c04e2dbcbd75f500e4d5
-- Fixed dependeny definition in Nuget packages.
+- Fixed polygon width on Android. #85.
+- Fixed progress filter to follow normal OsmStreamFilter-pattern.
+- Fix for frequent crashes on Android when using native cache. #126
+- Fixed NullPointerException in MapViewSurface. #130
+- Fixed MapView checks on Min/MaxZoom.
+- Fix double-tap zoom issue for iOS. #134
+- Fixed missing change event on adding a route to LayerRoute. Fixes #120.
+- Fixed iOS initial rendering issue. Fixes #121.
+- Fixed rotation and panning/pinch bug reported by @TomQv.
+- Updated the LayerRoute with invalidation event after clearing data. #150.
+- Fixed pinched zoom not respecting Min/MaxZoom on iOS.
+- Fixed MapView initialization from XIB. #154
 
+This release was made possible by 209 commits, 9 pull requests by @xivk, @txsmith, @langsweirdt, @kochizufan

@@ -341,7 +341,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public void Compress()
         {
-            _graph.Trim();
+            _graph.Compress();
 
             // rebuild index.
             if (_vertexIndex != null)
@@ -458,8 +458,27 @@ namespace OsmSharp.Routing.Graph
         {
             Dictionary<uint, List<uint[]>> restrictedRoutes;
             routes = null;
-            return _restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes) &&
-                restrictedRoutes.TryGetValue(vertex, out routes);
+            List<uint[]> routesPerVehicle;
+            if (_restricedRoutesPerVehicle != null && 
+                _restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes) &&
+                restrictedRoutes.TryGetValue(vertex, out routesPerVehicle))
+            {
+                routes = routesPerVehicle;
+            }
+            List<uint[]> routesAll;
+            if (_restrictedRoutes != null && 
+                _restrictedRoutes.TryGetValue(vertex, out routesAll))
+            {
+                if(routes == null)
+                {
+                    routes = routesAll;
+                }
+                else
+                {
+                    routes.AddRange(routesAll);
+                }
+            }
+            return routes != null;
         }
 
         /// <summary>

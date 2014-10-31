@@ -100,6 +100,11 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// </summary>
         private Target2DWrapper<Graphics> _target;
 
+        /// <summary>
+        /// Holds the to-view transformation matrix.
+        /// </summary>
+        private Matrix2D _toView;
+
 	    /// <summary>
 	    /// Transforms the target using the specified view.
 	    /// </summary>
@@ -109,6 +114,8 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    {
 	        _view = view;
 	        _target = target;
+
+            _toView = _view.CreateToViewPort(target.Width, target.Height);
 	    }
 
         /// <summary>
@@ -119,7 +126,9 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <returns></returns>
         private double[] Tranform(double x, double y)
         {
-            return _view.ToViewPort(_target.Width, _target.Height, x, y);
+            double newX, newY;
+            _toView.Apply(x, y, out newX, out newY);
+            return new double[] { newX, newY };
         }
 
         /// <summary>

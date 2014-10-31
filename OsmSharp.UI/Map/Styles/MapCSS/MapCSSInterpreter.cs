@@ -727,6 +727,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 width = 1;
                             }
                             uint? pointsId = scene.AddPoints(x, y);
+                            success = true;
                             if (pointsId.HasValue)
                             {
                                 if (casingWidth > 0)

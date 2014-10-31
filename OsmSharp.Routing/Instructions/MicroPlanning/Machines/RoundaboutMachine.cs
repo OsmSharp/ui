@@ -172,7 +172,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
             // let the scentence planner generate the correct information.
             var metaData = new Dictionary<string, object>();
-            metaData["count"] = count - 1;
+            metaData["count"] = count + 1;
             metaData["street"] = latestPoint.Next.Tags;
             metaData["pois"] = latestPoint.Points;
             metaData["type"] = "roundabout";

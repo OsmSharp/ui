@@ -50,20 +50,24 @@ namespace OsmSharp.UI.Map
 		/// <summary>
 		/// Render the specified target, projection, layers, zoomFactor and coordinate.
 		/// </summary>
-		/// <param name="target">Target.</param>
-		/// <param name="layers">Layers.</param>
-        /// <param name="view">View</param>
-        /// <param name="zoomFactor">View</param>
-		public bool Render(TTarget target, List<Layer> layers, View2D view, float zoomFactor)
+        /// <param name="target">The target to render on.</param>
+        /// <param name="projection">The projection being used to render.</param>
+		/// <param name="layers">The layers to rendering in the given order.</param>
+        /// <param name="view">The view to determine what to render.</param>
+        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
+		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, float zoomFactor)
 		{	
 			// create and concatenate primitives from all layers.
             IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
+
+            // calculate zoom level.
+            var zoomLevel = (float)projection.ToZoomLevel(zoomFactor);
 
 			// draw all layers seperatly but in the correct order.
 			var scenes = new List<Scene2D>();
 			for (int layerIdx = 0; layerIdx < layers.Count; layerIdx++)
 			{
-                if (layers[layerIdx].IsVisible)
+                if (layers[layerIdx].IsLayerVisibleFor(zoomLevel))
                 {
                     primitives = primitives.Concat(
                         layers[layerIdx].Get(zoomFactor, view));
@@ -77,24 +81,28 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Renders the given map on the target using the given view.
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="map"></param>
-        /// <param name="view"></param>
-        /// <param name="zoomFactor"></param>
+        /// <param name="target">The target to render on.</param>
+        /// <param name="map">The map as a collection of layers and projection to render.</param>
+        /// <param name="view">The view to determine what to render.</param>
+        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
         public bool Render(TTarget target, Map map, View2D view, float zoomFactor)
         {
             // create and concatenate primitives from all layers.
             IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
 
+            // calculate zoom level.
+            var zoomLevel = map.Projection.ToZoomLevel(zoomFactor);
+
             // draw all layers seperatly but in the correct order.
             var scenes = new List<Scene2D>();
             for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
             {
-                if (map[layerIdx].IsVisible)
+                if (map[layerIdx].IsVisible &&
+                    (!map[layerIdx].MinZoom.HasValue || map[layerIdx].MinZoom < zoomLevel) &&
+                    (!map[layerIdx].MaxZoom.HasValue || map[layerIdx].MaxZoom >= zoomLevel))
                 {
                     primitives = primitives.Concat(
                         map[layerIdx].Get(zoomFactor, view));
-
                 }
             }
 
@@ -164,12 +172,28 @@ namespace OsmSharp.UI.Map
 		/// Gets a value indicating whether this instance is running.
 		/// </summary>
 		/// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
-		public bool IsRunning
-		{
-			get{
-				return _renderer.IsRunning;
-			}
-		}
+        public bool IsRunning
+        {
+            get
+            {
+                return _renderer.IsRunning;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        public float Density
+        {
+            get
+            {
+                return _renderer.Density;
+            }
+            set
+            {
+                _renderer.Density = value;
+            }
+        }
 
 		/// <summary>
 		/// Reset this instance.

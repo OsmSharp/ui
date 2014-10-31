@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -30,10 +30,30 @@ namespace OsmSharp.UI
     /// </summary>
     public interface IMapView
     {
+        /// <summary>
+        /// Raised when a pressure gesture on the map was started.
+        /// </summary>
+        event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
 		/// <summary>
-		/// Occurs when map was touched and things have been moved around.
+		/// Raised when the map is being touched.
 		/// </summary>
-		event MapViewDelegates.MapTouchedDelegate MapTouched;
+        event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Raised when a pressure gesture on the map was finished.
+        /// </summary>
+        event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+
+        /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        event MapViewDelegates.MapInitialized MapInitialized;
 
 		/// <summary>
 		/// Invalidates this instance.
@@ -158,5 +178,23 @@ namespace OsmSharp.UI
         /// <param name="newTilt"></param>
         /// <param name="newCenter"></param>
 		public delegate void MapTouchedDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
+
+        /// <summary>
+        /// Delegate used for map touches.
+        /// </summary>
+        /// <param name="mapView"></param>
+        /// <param name="newZoom"></param>
+        /// <param name="newTilt"></param>
+        /// <param name="newCenter"></param>
+        public delegate void MapMoveDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
+
+        /// <summary>
+        /// Delegate used for map touches.
+        /// </summary>
+        /// <param name="mapView"></param>
+        /// <param name="newZoom"></param>
+        /// <param name="newTilt"></param>
+        /// <param name="newCenter"></param>
+        public delegate void MapInitialized(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
 	}
 }

@@ -34,10 +34,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="via"></param>
-        /// <param name="weight"></param>
-        /// <param name="max_settles"></param>
+        /// <param name="maxWeight"></param>
+        /// <param name="maxSettles"></param>
         /// <returns></returns>
-        bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float weight, int max_settles);
+        bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles);
+
+        /// <summary>
+        /// Calculates all witnesses from one source to multiple targets.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="maxWeight"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="exists"></param>
+        void Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
     }
 }

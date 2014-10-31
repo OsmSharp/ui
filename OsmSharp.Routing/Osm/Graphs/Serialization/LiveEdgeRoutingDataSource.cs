@@ -600,6 +600,22 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             }
 
             /// <summary>
+            /// Returns true if the edge data is inverted by default.
+            /// </summary>
+            public bool isInverted
+            {
+                get { return false; }
+            }
+
+            /// <summary>
+            /// Returns the inverted edge data.
+            /// </summary>
+            public LiveEdge InvertedEdgeData
+            {
+                get { return (LiveEdge)this.EdgeData.Reverse(); }
+            }
+
+            /// <summary>
             /// Returns the current intermediates.
             /// </summary>
             public ICoordinateCollection Intermediates
@@ -676,22 +692,24 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
 
         public void AddRestriction(uint[] route)
         {
-            throw new NotImplementedException();
+
         }
 
         public void AddRestriction(Vehicle vehicle, uint[] route)
         {
-            throw new NotImplementedException();
+
         }
 
         public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
-            throw new NotImplementedException();
+            routes = null;
+            return false;
         }
 
         public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
-            throw new NotImplementedException();
+            routes = null;
+            return false;
         }
     }
 }

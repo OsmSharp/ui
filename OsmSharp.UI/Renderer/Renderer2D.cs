@@ -152,6 +152,11 @@ namespace OsmSharp.UI.Renderer
 			}
 		}
 
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        public virtual float Density { get; set; }
+
 		#endregion
 
 	    /// <summary>

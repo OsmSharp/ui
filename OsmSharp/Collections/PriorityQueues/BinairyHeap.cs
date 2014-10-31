@@ -195,5 +195,30 @@ namespace OsmSharp.Collections.PriorityQueues
             }
             return default(T);
         }
+
+        /// <summary>
+        /// Clears this priority queue.
+        /// </summary>
+        public void Clear()
+        {
+            //for (int idx = 0; idx < _heap.Length; idx++)
+            //{
+            //    _heap[idx] = default(T);
+            //    _priorities[idx] = 0;
+            //}
+
+            _count = 0;
+            _latest_index = 1;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

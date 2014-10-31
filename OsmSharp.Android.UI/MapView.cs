@@ -39,9 +39,29 @@ namespace OsmSharp.Android.UI
     public class MapView : FrameLayout, IMapControlHost, IMapView
     {
         /// <summary>
-        /// Map touched events.
+        /// Map touched down event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
+        /// Map touched event.
         /// </summary>
         public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Map touched up event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+
+        /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
 
         /// <summary>
         /// Occurs when the map was tapped at a certain location.
@@ -88,6 +108,19 @@ namespace OsmSharp.Android.UI
             {
                 this.MapTapEvent(coordinate);
             }
+
+            this.NotifyMapTapToControls();
+        }
+
+        /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        internal void RaiseMapTouchedDown()
+        {
+            if (this.MapTouchedDown != null)
+            {
+                this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
         }
 
         /// <summary>
@@ -98,6 +131,39 @@ namespace OsmSharp.Android.UI
             if (this.MapTouched != null)
             {
                 this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        internal void RaiseMapTouchedUp()
+        {
+            if (this.MapTouchedUp != null)
+            {
+                this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map move event.
+        /// </summary>
+        internal void RaiseMapMove()
+        {
+            if (this.MapMove != null)
+            {
+                this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map initialized event.
+        /// </summary>
+        internal void RaiseMapInitialized()
+        {
+            if (this.MapInitialized != null)
+            {
+                this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
             }
         }
 
@@ -178,6 +244,7 @@ namespace OsmSharp.Android.UI
                 {
                     foreach (MapMarker marker in _markers)
                     {
+                        marker.DetachFrom(this);
                         this.RemoveView(marker.View);
                         marker.Dispose();
                     }
@@ -197,6 +264,7 @@ namespace OsmSharp.Android.UI
             {
                 if (marker != null)
                 {
+                    marker.DetachFrom(this);
                     this.RemoveView(marker.View);
                     return _markers.Remove(marker);
                 }
@@ -383,7 +451,9 @@ namespace OsmSharp.Android.UI
             {
                 View2D view = _mapView.CreateView();
 
+                this.NotifyOnBeforeSetLayout();
                 this.NotifyMapChangeToControl(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapControl);
+                this.NotifyOnAfterSetLayout();
             }
         }
 
@@ -417,6 +487,7 @@ namespace OsmSharp.Android.UI
         /// <param name="projection">Projection.</param>
         public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
+            this.NotifyOnBeforeSetLayout();
             lock (_markers)
             {
                 if (_markers != null)
@@ -435,6 +506,99 @@ namespace OsmSharp.Android.UI
                     {
                         this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
                     }
+                }
+            }
+            this.NotifyOnAfterSetLayout();
+        }
+
+        /// <summary>
+        /// Calls OnBeforeLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnBeforeSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnBeforeSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnBeforeSetLayout();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls OnAfterLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnAfterSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnAfterSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnAfterSetLayout();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notifies controls that there was a map tap.
+        /// </summary>
+        /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
+        internal void NotifyMapTapToControls() 
+        {
+            foreach (var marker in _markers)
+            {
+                marker.NotifyMapTap();
+            }
+            foreach (var control in _controls)
+            {
+                control.NotifyMapTap();
+            }
+        }
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="clickedControl">Control.</param>
+        public void NotifyControlClicked(MapControl clickedControl)
+        { // make sure to close all other popups.
+            foreach (var marker in _markers)
+            {
+                if (marker != clickedControl)
+                {
+                    marker.NotifyOtherControlClicked();
+                }
+            }
+            foreach (var control in _controls)
+            {
+                if (control != clickedControl)
+                {
+                    control.NotifyOtherControlClicked();
                 }
             }
         }

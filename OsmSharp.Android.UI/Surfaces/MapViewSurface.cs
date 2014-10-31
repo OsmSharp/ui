@@ -148,6 +148,7 @@ namespace OsmSharp.Android.UI
 
             // gets the system density.
             _density = global::Android.Content.Res.Resources.System.DisplayMetrics.Density;
+            _bufferFactor = _density; // set default scale factor relative to density.
 
             // create the renderer.
             _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
@@ -431,7 +432,8 @@ namespace OsmSharp.Android.UI
                         }
 
                         // does the rendering.
-                        bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
+                        _cacheRenderer.Density = this.MapScaleFactor;
+                        bool complete = _cacheRenderer.Render(canvas, _map.Projection, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
                         long afterRendering = DateTime.Now.Ticks;
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
@@ -746,6 +748,9 @@ namespace OsmSharp.Android.UI
 
                     // trigger rendering.
                     this.TriggerRendering();
+
+                    // raise map initialized.
+                    _mapView.RaiseMapInitialized();
                 }
 
                 if (_onScreenBuffer != null)
@@ -1003,6 +1008,17 @@ namespace OsmSharp.Android.UI
             {
                 if (!_renderingSuspended && this.Map != null && this.Map.Projection != null && this.MapCenter != null)
                 {
+                    var actionCode = e.Action & MotionEventActions.Mask;
+                    switch (actionCode)
+                    {
+                        case MotionEventActions.Down:
+                            _mapView.RaiseMapTouchedDown();
+                            break;
+                        case MotionEventActions.Up:
+                            _mapView.RaiseMapTouchedUp();
+                            break;
+                    }
+
                     _tagGestureDetector.OnTouchEvent(e);
                     _scaleGestureDetector.OnTouchEvent(e);
                     _rotateGestureDetector.OnTouchEvent(e);
@@ -1068,6 +1084,7 @@ namespace OsmSharp.Android.UI
                         if (movement)
                         {
                             _mapView.RaiseMapTouched();
+                            _mapView.RaiseMapMove();
 
                             this.NotifyMovement();
                         }

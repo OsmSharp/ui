@@ -49,12 +49,32 @@ namespace OsmSharp.iOS.UI
 	{
         private const float MAX_ZOOM_LEVEL = 22;
 		private bool _invertX = false;
-		private bool _invertY = false;
+        private bool _invertY = false;
 
-		/// <summary>
-		/// Raised when the map changes because of a touch.
-		/// </summary>
-		public event MapViewDelegates.MapTouchedDelegate MapTouched;
+        /// <summary>
+        /// Map touched down event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
+        /// Map touched event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Map touched up event.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
+
+        /// <summary>
+        /// Raised when the map moves.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
@@ -489,7 +509,7 @@ namespace OsmSharp.iOS.UI
 							// does the rendering.
 							bool complete = _cacheRenderer.Render(new CGContextWrapper(image,
 								new RectangleF(0, 0, (int)(size * _extra), (int)(size * _extra))),
-								                layers, view, sceneZoomFactor);
+                                                _map.Projection, layers, view, sceneZoomFactor);
 
 							long afterRendering = DateTime.Now.Ticks;
 
@@ -567,10 +587,15 @@ namespace OsmSharp.iOS.UI
 				{
 					this.NotifyMovementByInvoke();;
 
-					_mapViewBefore = null;
+                    _mapViewBefore = null;
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (rotation.State == UIGestureRecognizerState.Began)
-				{
+                {
+                    this.RaiseMapTouchedDown();
 					_mapViewBefore = this.CreateView(rect);
 				}
 				else
@@ -583,6 +608,9 @@ namespace OsmSharp.iOS.UI
 						sceneCenter[0], sceneCenter[1]);
 
 					this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -607,10 +635,15 @@ namespace OsmSharp.iOS.UI
 				{
 					this.NotifyMovementByInvoke();
 
-					_mapZoomLevelBefore = null;
+                    _mapZoomLevelBefore = null;
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (pinch.State == UIGestureRecognizerState.Began)
-				{
+                {
+                    this.RaiseMapTouchedDown();
                     _mapZoomLevelBefore = MapZoom;
 				}
 				else
@@ -621,7 +654,10 @@ namespace OsmSharp.iOS.UI
 					zoomFactor = zoomFactor * pinch.Scale;
                     MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-					this.NotifyMovementByInvoke();
+                    this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -645,10 +681,15 @@ namespace OsmSharp.iOS.UI
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
 					this.NotifyMovementByInvoke();
+
+                    // raise map touched event.
+                    this.RaiseMapTouched();
+                    this.RaiseMapTouchedUp();
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
                     _prevOffset = new PointF(0, 0);
+                    this.RaiseMapTouchedDown();
 				}
 				else if (pan.State == UIGestureRecognizerState.Changed)
 				{
@@ -664,7 +705,10 @@ namespace OsmSharp.iOS.UI
                     this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.NotifyMovementByInvoke();
+                    this.NotifyMovementByInvoke();
+
+                    // raise map move event.
+                    this.RaiseMapMove();
 				}
 			}
 		}
@@ -694,6 +738,9 @@ namespace OsmSharp.iOS.UI
 					double[] sceneCoordinates = view.FromViewPort(rect.Width, rect.Height, location.X, location.Y);
 					this.MapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCoordinates[0], sceneCoordinates[1]));
 				}
+
+                // notify controls map was tapped.
+                this.NotifyMapTapToControls();
 			}
 		}
 
@@ -733,7 +780,10 @@ namespace OsmSharp.iOS.UI
                     // Clamp the zoom level between the configured maximum and minimum.
                     float tapRequestZoom = MapZoom + 0.5f;
 					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 0, 0, 500));
-				}
+                }
+
+                // notify controls map was tapped.
+                this.NotifyMapTapToControls();
 			}
 		}
 
@@ -1017,13 +1067,19 @@ namespace OsmSharp.iOS.UI
             }
         }
 
-        
         /// <summary>
         /// Gets the current view.
         /// </summary>
         public View2D CurrentView
         {
-            get { return this.CreateView(this.Frame); }
+            get
+            {
+                if (_rect.Width != 0)
+                {
+                    return this.CreateView(_rect);
+                }
+                return null;
+            }
         }
 
         /// <summary>
@@ -1117,6 +1173,11 @@ namespace OsmSharp.iOS.UI
             return null;
 		}
 
+        /// <summary>
+        /// Holds the initialized flag.
+        /// </summary>
+        private bool _initialized = false;
+
 		/// <summary>
 		/// Invalidates the map.
 		/// </summary>
@@ -1129,6 +1190,12 @@ namespace OsmSharp.iOS.UI
 				View2D view = this.CreateView(rect);
 
 				this.NotifyMapChangeToControls(rect.Width, rect.Height, view, this.Map.Projection);
+
+                if (!_initialized)
+                { // map has a size, markers and controls have been place, map is officially initialized there!
+                    _initialized = true;
+                    this.RaiseMapInitialized();
+                }
 			}
 
 			// tell this view it needs to refresh.
@@ -1208,8 +1275,10 @@ namespace OsmSharp.iOS.UI
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
-				View2D view = this.CreateView(rect);
+                View2D view = this.CreateView(rect);
+                this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
+                this.NotifyOnAfterSetLayout();
 			}
 		}
 
@@ -1308,7 +1377,25 @@ namespace OsmSharp.iOS.UI
 
 				this.NotifyMovementByInvoke();
 			}
-		}
+        }
+
+        /// <summary>
+        /// Adds the view.
+        /// </summary>
+        /// <param name="view">View.</param>
+        void IMapControlHost.AddView(UIView view)
+        {
+            this.Add(view);
+        }
+
+        /// <summary>
+        /// Removes the view.
+        /// </summary>
+        /// <param name="view">View.</param>
+        void IMapControlHost.RemoveView(UIView view)
+        {
+            view.RemoveFromSuperview();
+        }
 
         #region Markers
 
@@ -1336,7 +1423,9 @@ namespace OsmSharp.iOS.UI
             if (rect.Width > 0 && rect.Height > 0)
             {
                 View2D view = this.CreateView(rect);
+                this.NotifyOnBeforeSetLayout();
                 this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, marker);
+                this.NotifyOnAfterSetLayout();
             }
         }
 
@@ -1467,6 +1556,7 @@ namespace OsmSharp.iOS.UI
 		internal void NotifyMapChangeToControls(double pixelsWidth, double pixelsHeight, View2D view, 
 		                                       IProjection projection)
 		{
+            this.NotifyOnBeforeSetLayout();
 			foreach (var marker in _markers)
 			{
 				this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
@@ -1475,7 +1565,63 @@ namespace OsmSharp.iOS.UI
             {
                 this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
             }
+            this.NotifyOnAfterSetLayout();
 		}
+
+        /// <summary>
+        /// Calls OnBeforeLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnBeforeSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnBeforeSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnBeforeSetLayout();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls OnAfterLayout on all controls/markers.
+        /// </summary>
+        internal void NotifyOnAfterSetLayout()
+        {
+            lock (_markers)
+            {
+                if (_markers != null)
+                {
+                    foreach (var marker in _markers)
+                    {
+                        marker.OnAfterSetLayout();
+                    }
+                }
+            }
+            lock (_controls)
+            {
+                if (_controls != null)
+                {
+                    foreach (var control in _controls)
+                    {
+                        control.OnAfterSetLayout();
+                    }
+                }
+            }
+        }
+
 
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.
@@ -1488,8 +1634,9 @@ namespace OsmSharp.iOS.UI
 			if (rect.Width > 0 && rect.Height > 0)
 			{
 				View2D view = this.CreateView(rect);
-
+                this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
+                this.NotifyOnAfterSetLayout();
 			}
 		}
 
@@ -1509,6 +1656,44 @@ namespace OsmSharp.iOS.UI
 				mapMarker.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 			}
 		}
+
+        /// <summary>
+        /// Notifies controls that there was a map tap.
+        /// </summary>
+        /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
+        internal void NotifyMapTapToControls() 
+        {
+            foreach (var marker in _markers)
+            {
+                marker.NotifyMapTap();
+            }
+            foreach (var control in _controls)
+            {
+                control.NotifyMapTap();
+            }
+        }
+
+        /// <summary>
+        /// Notifies this host that the control was clicked.
+        /// </summary>
+        /// <param name="clickedControl">Control.</param>
+        public void NotifyControlClicked(MapControl clickedControl)
+        { // make sure to close all other popups.
+            foreach (var marker in _markers)
+            {
+                if (marker != clickedControl)
+                {
+                    marker.NotifyOtherControlClicked();
+                }
+            }
+            foreach (var control in _controls)
+            {
+                if (control != clickedControl)
+                {
+                    control.NotifyOtherControlClicked();
+                }
+            }
+        }
 
 		#endregion
 
@@ -1537,6 +1722,17 @@ namespace OsmSharp.iOS.UI
             this.NotifyMovementByInvoke();
         }
 
+        /// <summary>
+        /// Raises the map touched up event.
+        /// </summary>
+        private void RaiseMapTouchedUp()
+        {
+            if (this.MapTouchedUp != null)
+            {
+                this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
 		/// <summary>
 		/// Raises the map touched event.
 		/// </summary>
@@ -1546,7 +1742,40 @@ namespace OsmSharp.iOS.UI
 			{
 				this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
 			}
-		}
+        }
+
+        /// <summary>
+        /// Raises the map touched down event.
+        /// </summary>
+        private void RaiseMapTouchedDown()
+        {
+            if (this.MapTouchedDown != null)
+            {
+                this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        private void RaiseMapMove()
+        {
+            if (this.MapMove != null)
+            {
+                this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        private void RaiseMapInitialized()
+        {
+            if (this.MapInitialized != null)
+            {
+                this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
 
 		/// <summary>
 		/// Dispose the specified disposing.
@@ -1570,4 +1799,3 @@ namespace OsmSharp.iOS.UI
 		}
     }
 }
-

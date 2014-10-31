@@ -25,6 +25,9 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.CH;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.Test.Performance
 {
@@ -73,14 +76,14 @@ namespace OsmSharp.Test.Performance
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
+                //Routing.CH.CHRoutingTest.Test();
 
                 //// test serializer/deseriazation routing performance.
                 //Stream serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
-
                 // tests the mapcss interpretation.
-                //Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+                //var serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
                 //// test some rendering implementations.
                 //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(serializedScene,
                 //    (width, height) =>

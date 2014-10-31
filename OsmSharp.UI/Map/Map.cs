@@ -25,8 +25,6 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Images;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -91,11 +89,15 @@ namespace OsmSharp.UI.Map
         /// <param name="extraView"></param>
         public void ViewChanged(float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
+            var zoomLevel = (float)this.Projection.ToZoomLevel(zoomFactor);
             lock (_layers)
             {
                 foreach (var layer in _layers)
                 {
-                    layer.ViewChanged(this, zoomFactor, center, view, extraView);
+                    if (layer.IsLayerVisibleFor(zoomLevel))
+                    {
+                        layer.ViewChanged(this, zoomFactor, center, view, extraView);
+                    }
                 }
             }
         }
@@ -110,19 +112,30 @@ namespace OsmSharp.UI.Map
         public GeoCoordinate EnsureViewWithinBoundingBox(GeoCoordinate center, GeoCoordinateBox boundingBox, View2D view)
         {
             double[] mapCenterSceneCoords = this.Projection.ToPixel(center);
-            double[] mapCenterPixels = view.ToViewPort(view.Width, view.Height, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
 
-            double[] topLeftSceneCoordinates = view.FromViewPort(view.Width,
-                                                                view.Height,
-                                                                mapCenterPixels[0] - (view.Width) / 2.0,
-                                                                mapCenterPixels[1] - (view.Height) / 2.0);
-            GeoCoordinate topLeft = this.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
+            var toViewPort = view.CreateToViewPort(view.Width, view.Height);
+            double mapCenterPixelsX, mapCenterPixelsY;
+            toViewPort.Apply(mapCenterSceneCoords[0], mapCenterSceneCoords[1], out mapCenterPixelsX, out mapCenterPixelsY);
 
-            double[] bottomRightSceneCoordinates = view.FromViewPort(view.Width,
-                                                                view.Height,
-                                                                mapCenterPixels[0] + (view.Width) / 2.0,
-                                                                mapCenterPixels[1] + (view.Height) / 2.0);
-            GeoCoordinate bottomRight = this.Projection.ToGeoCoordinates(bottomRightSceneCoordinates[0], bottomRightSceneCoordinates[1]);
+            //double[] mapCenterPixels = view.ToViewPort(view.Width, view.Height, mapCenterSceneCoords[0], mapCenterSceneCoords[1]);
+
+            var fromViewPort = view.CreateFromViewPort(view.Height, view.Width);
+            double leftScene, topScene, rightScene, bottomScene;
+            fromViewPort.Apply(mapCenterPixelsX - (view.Width) / 2.0, mapCenterPixelsY - (view.Height) / 2.0, out leftScene, out topScene);
+
+            //double[] topLeftSceneCoordinates = view.FromViewPort(view.Width,
+            //                                                    view.Height,
+            //                                                    mapCenterPixels[0] - (view.Width) / 2.0,
+            //                                                    mapCenterPixels[1] - (view.Height) / 2.0);
+            GeoCoordinate topLeft = this.Projection.ToGeoCoordinates(leftScene, topScene);
+            //GeoCoordinate topLeft = this.Projection.ToGeoCoordinates(topLeftSceneCoordinates[0], topLeftSceneCoordinates[1]);
+
+            fromViewPort.Apply(mapCenterPixelsX + (view.Width) / 2.0, mapCenterPixelsY + (view.Height) / 2.0, out rightScene, out bottomScene);
+            //double[] bottomRightSceneCoordinates = view.FromViewPort(view.Width,
+            //                                                    view.Height,
+            //                                                    mapCenterPixels[0] + (view.Width) / 2.0,
+            //                                                    mapCenterPixels[1] + (view.Height) / 2.0);
+            GeoCoordinate bottomRight = this.Projection.ToGeoCoordinates(rightScene, bottomScene);
 
             // Early exit when the view is inside the box.
             if (boundingBox.Contains(topLeft) && boundingBox.Contains(bottomRight))

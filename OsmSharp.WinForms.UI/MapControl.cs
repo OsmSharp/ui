@@ -35,9 +35,29 @@ namespace OsmSharp.WinForms.UI
     public partial class MapControl : UserControl, IMapView
     {
         /// <summary>
+        /// Event raised when the map was first touched.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
         /// Event raised when the map is touched.
         /// </summary>
-		public event MapViewDelegates.MapTouchedDelegate MapTouched;
+        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Event raised after the map was touched.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+
+        /// <summary>
+        /// Raised when the map is moved.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
 
         /// <summary>
         /// Creates a new map control.
@@ -285,11 +305,11 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseMove(e);
 
+            var currentCoordinates = new double[] { e.X, e.Y };
             if (this.MapAllowPan && 
                 e.Button == MouseButtons.Left &&
                 _draggingCoordinates != null)
             {
-                var currentCoordinates = new double[] { e.X, e.Y };
                 var delta = new double[] { _draggingCoordinates[0] - currentCoordinates[0],
                         (_draggingCoordinates[1] - currentCoordinates[1])};
 
@@ -300,15 +320,17 @@ namespace OsmSharp.WinForms.UI
                 View2D view = _renderer.Create(this.Width, this.Height, this.Map, 
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
-                double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
-                                                       newCenter[0], newCenter[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(newCenter[0], newCenter[1], out x, out y);
                 
                 // project to new center.
-                this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+                this.MapCenter = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // notify the map.
                 this.QueueNotifyMapViewChanged();
             }
+            this.RaiseOnMapMouseMove(e);
         }
 
         /// <summary>
@@ -420,18 +442,17 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseUp(args);
                 if (MapMouseUp != null)
                 {
@@ -470,14 +491,13 @@ namespace OsmSharp.WinForms.UI
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseDown(args);
                 if (MapMouseDown != null)
                 {
@@ -511,18 +531,17 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseMove(args);
                 if (MapMouseMove != null)
                 {
@@ -561,14 +580,13 @@ namespace OsmSharp.WinForms.UI
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseWheel(args);
                 if (MapMouseWheel != null)
                 {
@@ -606,14 +624,13 @@ namespace OsmSharp.WinForms.UI
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseDoubleClick(args);
                 if (MapMouseDoubleClick != null)
                 {
@@ -657,18 +674,17 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
-                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
-                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
-                    scenCoordinates[1]);
+                double x, y;
+                var fromMatrix = view.CreateFromViewPort(this.Width, this.Height);
+                fromMatrix.Apply(e.X, e.Y, out x, out y);
+                var geoCoordinates = this.Map.Projection.ToGeoCoordinates(x, y);
 
                 // create map user control event args.
-                MapControlEventArgs args
-                    = new MapControlEventArgs(e, geoCoordinates);
-
+                var args = new MapControlEventArgs(e, geoCoordinates);
                 this.OnMapMouseClick(args);
                 if (MapMouseClick != null)
                 {

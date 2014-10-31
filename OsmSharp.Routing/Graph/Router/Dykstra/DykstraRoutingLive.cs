@@ -332,8 +332,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
 
             // intialize dykstra data structures.
-            IPriorityQueue<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>(100);
-            var chosenVertices = new HashSet<long>();
+            var heap = new BinairyHeap<PathSegment<long>>(100);
+            var visitList = new DykstraVisitList();
             var labels = new Dictionary<long, IList<RoutingLabel>>();
             foreach (long vertex in source.GetVertices())
             {
@@ -347,7 +347,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             // initialize the source's neighbors.
             PathSegment<long> current = heap.Pop();
             while (current != null &&
-                chosenVertices.Contains(current.VertexId))
+                visitList.HasBeenVisited(current))
             { // keep dequeuing.
                 current = heap.Pop();
             }
@@ -481,7 +481,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
 
             // start OsmSharp.Routing.
             var arcs = graph.GetEdges(Convert.ToUInt32(current.VertexId));
-            chosenVertices.Add(current.VertexId);
+            // chosenVertices.Add(current.VertexId);
+            visitList.SetVisited(current);
 
             // loop until target is found and the route is the shortest!
             var noSpeed = new Speed() { Direction = null, MeterPerSecond = 0 };
@@ -495,76 +496,127 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     labels.Remove(current.VertexId);
                 }
 
-                // update the visited nodes.
-                while(arcs.MoveNext())
-                // foreach (var neighbour in arcs)
-                {
-                    var neighbour = arcs;
-                    if(chosenVertices.Contains(neighbour.Neighbour))
+                // check turn-restrictions.
+                List<uint[]> restrictions = null;
+                bool isRestricted = false;
+                if (current.From != null &&
+                    graph.TryGetRestrictionAsStart(vehicle, (uint)current.From.VertexId, out restrictions))
+                { // there are restrictions!
+                    // search for a restriction that ends in the currently selected vertex.
+                    for(int idx = 0; idx < restrictions.Count; idx++)
                     {
-                        continue;
-                    }
-
-                    // get the speed from cache or calculate.
-                    Speed speed = noSpeed;
-                    if(!speeds.TryGetValue(neighbour.EdgeData.Tags, out speed))
-                    { // speed not there, calculate speed.
-                        var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
-                        speed = noSpeed;
-                        if (vehicle.CanTraverse(tags))
-                        { // can traverse, speed not null!
-                            speed = new Speed()
-                            {
-                                MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
-                                Direction = vehicle.IsOneWay(tags)
-                            };
+                        var restriction = restrictions[idx];
+                        if(restriction[restriction.Length - 1] == current.VertexId)
+                        { // oeps, do not consider the neighbours of this vertex.
+                            isRestricted = true;
+                            break;
                         }
-                        speeds.Add(neighbour.EdgeData.Tags, speed);
+
+                        for(int restrictedIdx = 0; restrictedIdx < restriction.Length; restrictedIdx++)
+                        { // make sure the restricted vertices can be choosen multiple times.
+                            // restrictedVertices.Add(restriction[restrictedIdx]);
+                            visitList.SetRestricted(restriction[restrictedIdx]);
+                        }
                     }
+                }
+                if (!isRestricted)
+                {
+                    // update the visited nodes.
+                    while (arcs.MoveNext())
+                    {
+                        var neighbour = arcs;
+                        if(visitList.HasBeenVisited(neighbour.Neighbour, current.VertexId))
+                        { // has areadly been choosen.
+                            continue;
+                        }
 
-                    // check the tags against the interpreter.
-                    if (speed.MeterPerSecond > 0 && (!speed.Direction.HasValue || speed.Direction.Value == neighbour.EdgeData.Forward))
-                    //if (vehicle.CanTraverse(tags))
-                    { // it's ok; the edge can be traversed by the given vehicle.
-                        if ((current.From == null ||
-                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)))
-                        { // the neighbor is forward and is not settled yet!
-                            // check the labels (if needed).
-                            bool constraintsOk = true;
-                            if (interpreter.Constraints != null)
-                            { // check if the label is ok.
-                                RoutingLabel neighbourLabel = interpreter.Constraints.GetLabelFor(
-                                    graph.TagsIndex.Get(neighbour.EdgeData.Tags));
+                        // prevent u-turns.
+                        if(current.From != null)
+                        { // a possible u-turn.
+                            if(current.From.VertexId == neighbour.Neighbour)
+                            { // a u-turn, don't do this please!
+                                continue;
+                            }
+                        }
 
-                                // only test labels if there is a change.
-                                if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
-                                { // labels are different, test them!
-                                    constraintsOk = interpreter.Constraints.ForwardSequenceAllowed(currentLabels,
-                                        neighbourLabel);
+                        // get the speed from cache or calculate.
+                        Speed speed = noSpeed;
+                        if (!speeds.TryGetValue(neighbour.EdgeData.Tags, out speed))
+                        { // speed not there, calculate speed.
+                            var tags = graph.TagsIndex.Get(neighbour.EdgeData.Tags);
+                            speed = noSpeed;
+                            if (vehicle.CanTraverse(tags))
+                            { // can traverse, speed not null!
+                                speed = new Speed()
+                                {
+                                    MeterPerSecond = ((OsmSharp.Units.Speed.MeterPerSecond)vehicle.ProbableSpeed(tags)).Value,
+                                    Direction = vehicle.IsOneWay(tags)
+                                };
+                            }
+                            speeds.Add(neighbour.EdgeData.Tags, speed);
+                        }
 
-                                    if (constraintsOk)
-                                    { // update the labels.
-                                        var neighbourLabels = new List<RoutingLabel>(currentLabels);
-                                        neighbourLabels.Add(neighbourLabel);
-
-                                        labels[neighbour.Neighbour] = neighbourLabels;
+                        // check the tags against the interpreter.
+                        if (speed.MeterPerSecond > 0 && (!speed.Direction.HasValue || speed.Direction.Value == neighbour.EdgeData.Forward))
+                        //if (vehicle.CanTraverse(tags))
+                        { // it's ok; the edge can be traversed by the given vehicle.
+                            if ((current.From == null ||
+                                interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Neighbour)))
+                            { // the neighbour is forward and is not settled yet!
+                                bool restrictionsOk = true;
+                                if (restrictions != null)
+                                { // search for a restriction that ends in the currently selected neighbour and check if it's via-vertex matches.
+                                    for (int idx = 0; idx < restrictions.Count; idx++)
+                                    {
+                                        var restriction = restrictions[idx];
+                                        if (restriction[restriction.Length - 1] == neighbour.Neighbour)
+                                        { // oeps, do not consider the neighbours of this vertex.
+                                            if (restriction[restriction.Length - 2] == current.VertexId)
+                                            { // damn this route-part is restricted!
+                                                restrictionsOk = false;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-                                else
-                                { // set the same label(s).
-                                    labels[neighbour.Neighbour] = currentLabels;
+
+                                // check the labels (if needed).
+                                bool constraintsOk = true;
+                                if (restrictionsOk && interpreter.Constraints != null)
+                                { // check if the label is ok.
+                                    var neighbourLabel = interpreter.Constraints.GetLabelFor(
+                                        graph.TagsIndex.Get(neighbour.EdgeData.Tags));
+
+                                    // only test labels if there is a change.
+                                    if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
+                                    { // labels are different, test them!
+                                        constraintsOk = interpreter.Constraints.ForwardSequenceAllowed(currentLabels,
+                                            neighbourLabel);
+
+                                        if (constraintsOk)
+                                        { // update the labels.
+                                            var neighbourLabels = new List<RoutingLabel>(currentLabels);
+                                            neighbourLabels.Add(neighbourLabel);
+
+                                            labels[neighbour.Neighbour] = neighbourLabels;
+                                        }
+                                    }
+                                    else
+                                    { // set the same label(s).
+                                        labels[neighbour.Neighbour] = currentLabels;
+                                    }
                                 }
-                            }
 
-                            if (constraintsOk)
-                            { // all constraints are validated or there are none.
-                                // calculate neighbors weight.
-                                double totalWeight = current.Weight + (neighbour.EdgeData.Distance / speed.MeterPerSecond);
-                                //double totalWeight = current.Weight + neighbour.Value.Distance;
+                                if (constraintsOk && restrictionsOk)
+                                { // all constraints are validated or there are none.
+                                    // calculate neighbors weight.
+                                    double totalWeight = current.Weight + (neighbour.EdgeData.Distance / speed.MeterPerSecond);
+                                    //double totalWeight = current.Weight + neighbour.Value.Distance;
 
-                                // update the visit list;
-                                var neighbourRoute = new PathSegment<long>(neighbour.Neighbour, totalWeight, current);
-                                heap.Push(neighbourRoute, (float)neighbourRoute.Weight);
+                                    // update the visit list;
+                                    var neighbourRoute = new PathSegment<long>(neighbour.Neighbour, totalWeight, current);
+                                    heap.Push(neighbourRoute, (float)neighbourRoute.Weight);
+                                }
                             }
                         }
                     }
@@ -576,13 +628,15 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 { // choose the next vertex.
                     current = heap.Pop();
                     while (current != null &&
-                        chosenVertices.Contains(current.VertexId))
+                        // chosenVertices.Contains(current.VertexId))
+                        visitList.HasBeenVisited(current))
                     { // keep dequeuing.
                         current = heap.Pop();
                     }
                     if (current != null)
                     {
-                        chosenVertices.Add(current.VertexId);
+                        // chosenVertices.Add(current.VertexId);
+                        visitList.SetVisited(current);
                     }
                 }
                 while (current != null && current.Weight > weight)
@@ -595,7 +649,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     // choose the next vertex.
                     current = heap.Pop();
                     while (current != null &&
-                        chosenVertices.Contains(current.VertexId))
+                        // chosenVertices.Contains(current.VertexId))
+                        visitList.HasBeenVisited(current))
                     { // keep dequeuing.
                         current = heap.Pop();
                     }

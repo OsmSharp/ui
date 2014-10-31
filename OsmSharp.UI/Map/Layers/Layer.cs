@@ -21,6 +21,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
 using System.Collections.Generic;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -43,7 +44,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <remarks>
         /// The minimum zoom is the 'highest'.
         /// </remarks>
-        public float? MinZoom { get; protected set; }
+        public virtual float? MinZoom { get; set; }
 
         /// <summary>
         /// The maximum zoom.
@@ -51,7 +52,30 @@ namespace OsmSharp.UI.Map.Layers
         /// <remarks>
         /// The maximum zoom is the 'lowest' or most detailed view.
         /// </remarks>
-        public float? MaxZoom { get; protected set; }
+        public virtual float? MaxZoom { get; set; }
+
+        /// <summary>
+        /// Returns true if this layer is visible for the given project and relative zoom factor.
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <param name="zoomFactor"></param>
+        /// <returns></returns>
+        public bool IsLayerVisibleFor(IProjection projection, float zoomFactor)
+        {
+            return this.IsLayerVisibleFor((float)projection.ToZoomLevel(zoomFactor));
+        }
+
+        /// <summary>
+        /// Returns true if this layer is visible for the given zoom level.
+        /// </summary>
+        /// <param name="zoomLevel"></param>
+        /// <returns></returns>
+        public bool IsLayerVisibleFor(float zoomLevel)
+        {
+            return this.IsVisible &&
+                    (!this.MinZoom.HasValue || this.MinZoom < zoomLevel) &&
+                    (!this.MaxZoom.HasValue || this.MaxZoom >= zoomLevel);
+        }
 
         /// <summary>
         /// Returns all primitives from this layer that exist for the given zoom factor and inside the given view.

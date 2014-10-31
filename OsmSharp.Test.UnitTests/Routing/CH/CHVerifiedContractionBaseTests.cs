@@ -220,7 +220,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 fromList.UpdateVertex(new PathSegment<long>(from.Neighbour));
 
                 // initalize the from dictionary.
-                Dictionary<uint, PathSegment<long>> fromDic = _pathsBeforeContraction[from.Neighbour];
+                var fromDic = _pathsBeforeContraction[from.Neighbour];
                 foreach (var to in edges)
                 {
                     // initialize the to-list.
@@ -228,19 +228,22 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
+                    var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
-                        (fromDic[to.Neighbour] != null && route == null) ||
-                        ((fromDic[to.Neighbour] != null && route != null) && fromDic[to.Neighbour] != route))
+                        (fromDic[to.Neighbour] != null && route == null))
                     { // the route match!
                         Assert.Fail("Routes are different before/after contraction!");
+                    }
+                    else if (fromDic[to.Neighbour] != null && route != null)
+                    {
+                        this.ComparePaths(fromDic[to.Neighbour], route);
                     }
                 }
             }
 
             if (_referenceRouter != null)
             { // do crazy verification!
-                Router chRouter = Router.CreateCHFrom(_data, router, new OsmRoutingInterpreter());
+                var chRouter = Router.CreateCHFrom(_data, router, new OsmRoutingInterpreter());
 
                 // loop over all nodes and resolve their locations.
                 var resolvedReference = new RouterPoint[_data.VertexCount - 1];
@@ -322,6 +325,25 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                         route.Segments[idx].Name);
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares the two paths.
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        protected void ComparePaths(PathSegment<long> expected, PathSegment<long> actual)
+        {
+            Assert.AreEqual(expected.VertexId, actual.VertexId);
+            Assert.AreEqual(expected.Weight, actual.Weight, 0.001);
+
+            if(expected.From != null)
+            {
+                Assert.IsNotNull(actual.From);
+                this.ComparePaths(expected.From, actual.From);
+                return;
+            }
+            Assert.IsNull(actual.From);
         }
 
         /// <summary>
