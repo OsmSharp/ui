@@ -44,6 +44,7 @@ namespace OsmSharp.Routing
         {
             _id = id;
             this.Location = location;
+            this.Vehicle = vehicle;
             this.Tags = new List<KeyValuePair<string, string>>();
         }
 
