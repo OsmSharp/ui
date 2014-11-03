@@ -35,6 +35,7 @@ namespace OsmSharp.UI.Map.Layers
         /// Holds the source of the OSM raw data.
         /// </summary>
         private readonly IDataSourceReadOnly _dataSource;
+
         /// <summary>
         /// Holds the style scene manager.
         /// </summary>
@@ -103,6 +104,18 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the bounding rectangle of this layer (if available).
+        /// </summary>
+        /// <remarks>Not all layers, formats support getting an envolope. Property can return null even on some types of bounded data.</remarks>
+        public override GeoCoordinateBox Envelope
+        {
+            get
+            {
+                return _dataSource.BoundingBox;
+            }
+        }
 
         /// <summary>
         /// Closes this layer.
