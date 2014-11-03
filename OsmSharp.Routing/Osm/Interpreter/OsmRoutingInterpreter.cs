@@ -195,9 +195,9 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<Vehicle> CalculateRestrictions(Node node)
+        public List<string> CalculateRestrictions(Node node)
         {
-            return new List<Vehicle>();
+            return new List<string>();
         }
 
         /// <summary>
@@ -206,9 +206,9 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="relation"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
+        public List<KeyValuePair<string, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
         {
-            var restrictions = new List<KeyValuePair<Vehicle, long[]>>();
+            var restrictions = new List<KeyValuePair<string, long[]>>();
             if(relation.Tags.ContainsKeyValue("type", "restriction"))
             { // regular restriction.
                 Way fromWay = null, toWay = null, viaWay = null;
@@ -275,7 +275,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
                         { // not found!
                             return restrictions;
                         }
-                        restrictions.Add(new KeyValuePair<Vehicle, long[]>(null, restriction));
+                        restrictions.Add(new KeyValuePair<string, long[]>(VehicleType.Vehicle, restriction));
                     }
                 }
             }

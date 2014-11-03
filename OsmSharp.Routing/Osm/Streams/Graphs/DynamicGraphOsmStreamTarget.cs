@@ -209,19 +209,19 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     // add the node as a possible restriction.
                     if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
                     { // tests quickly if a given node is possibly a restriction.
-                        var vehicles = _interpreter.CalculateRestrictions(node);
-                        if (vehicles != null &&
-                            vehicles.Count > 0)
+                        var vehicleTypes = _interpreter.CalculateRestrictions(node);
+                        if (vehicleTypes != null &&
+                            vehicleTypes.Count > 0)
                         { // add all the restrictions.
                             var vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
                             var restriction = new uint[] { vertexId };
-                            if (vehicles.Contains(null))
+                            if (vehicleTypes.Contains(null))
                             { // restriction is valid for all vehicles.
                                 _dynamicGraph.AddRestriction(restriction);
                             }
                             else
                             { // restriction is restricted to some vehicles only.
-                                foreach (Vehicle vehicle in vehicles)
+                                foreach (string vehicle in vehicleTypes)
                                 {
                                     _dynamicGraph.AddRestriction(vehicle, restriction);
                                 }
@@ -270,7 +270,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         var routableWayTags = new TagsCollection(way.Tags);
                         routableWayTags.RemoveAll(x =>
                         {
-                            return !_interpreter.IsRelevantRouting(x.Key);
+                            return !_interpreter.IsRelevantRouting(x.Key) &&
+                                !Vehicle.IsRelevantForOneOrMore(x.Key);
                         });
                         _tagsIndex.Add(routableWayTags);
 
@@ -389,7 +390,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Returns true if the given node has an actual road node, meaning a relevant vertex, and outputs the vertex id.
         /// </summary>
-        /// <param name="nodeId"></param>
+        /// <param name="nodeId">The node id.</param>
+        /// <param name="id">The vertex id.</param>
         /// <returns></returns>
         private bool TryGetRoadNode(long nodeId, out uint id)
         {

@@ -141,6 +141,7 @@
     <Compile Include="TSP\RouterTSP.cs" />
     <Compile Include="TSP\RouterTSPWrapper.cs" />
     <Compile Include="Vehicle.cs" />
+    <Compile Include="VehicleType.cs" />
     <Compile Include="VRP\MTSP\RouterMTSP.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />
