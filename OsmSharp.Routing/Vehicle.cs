@@ -222,13 +222,13 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected abstract KilometerPerHour MaxSpeedAllowed(string highwayType);
+        public abstract KilometerPerHour MaxSpeedAllowed(string highwayType);
 
         /// <summary>
         /// Returns the max speed this vehicle can handle.
         /// </summary>
         /// <returns></returns>
-        protected abstract KilometerPerHour MaxSpeed();
+        public abstract KilometerPerHour MaxSpeed();
 
         /// <summary>
         /// Returns the maximum speed.
@@ -487,7 +487,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -533,7 +533,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 5;
         }
@@ -608,7 +608,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -620,7 +620,7 @@ namespace OsmSharp.Routing
                 case "path":
                 case "footway":
                 case "living_street":
-                    return 5;
+                    return this.MaxSpeed();
                 case "track":
                 case "road":
                     return 30;
@@ -654,7 +654,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 15;
         }
@@ -722,7 +722,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -758,7 +758,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 200;
         }
@@ -784,7 +784,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 40;
         }
