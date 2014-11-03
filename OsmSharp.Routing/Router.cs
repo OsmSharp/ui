@@ -31,6 +31,7 @@ using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -195,6 +196,17 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
+            if(source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                    source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+            if(vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                    vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+
             return _router.Calculate(vehicle, source, target);
         }
 
@@ -209,6 +221,17 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false)
         {
+            if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                    source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+            if (vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                    vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+
             return _router.Calculate(vehicle, source, target, max, geometryOnly);
         }
 
@@ -221,6 +244,20 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
+            foreach (var target in targets)
+            {
+                if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                        source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+                if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                        vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+            }
+
             return _router.CalculateToClosest(vehicle, source, targets);
         }
 
@@ -235,6 +272,20 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            foreach (var target in targets)
+            {
+                if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                        source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+                if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                        vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+            }
+
             return _router.CalculateToClosest(vehicle, source, targets, max);
         }
 
@@ -249,6 +300,20 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            foreach (var target in targets)
+            {
+                if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                        source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+                if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                        vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+            }
+
             return _router.CalculateOneToMany(vehicle, source, targets, max, geometryOnly);
         }
 
@@ -263,6 +328,23 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            foreach (var source in sources)
+            {
+                foreach (var target in targets)
+                {
+                    if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                    { // vehicles are different.
+                        throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                            source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                    }
+                    if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                    { // vehicles are different.
+                        throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                            vehicle.UniqueName, target.Vehicle.UniqueName));
+                    }
+                }
+            }
+
             return _router.CalculateManyToMany(vehicle, sources, targets, max, geometryOnly);
         }
 
@@ -275,6 +357,17 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
+            if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                    source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+            if (vehicle.UniqueName != target.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                    vehicle.UniqueName, target.Vehicle.UniqueName));
+            }
+
             return _router.CalculateWeight(vehicle, source, target);
         }
 
@@ -287,6 +380,20 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
+            foreach (var target in targets)
+            {
+                if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                        source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+                if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                        vehicle.UniqueName, target.Vehicle.UniqueName));
+                }
+            }
+
             return _router.CalculateOneToManyWeight(vehicle, source, targets);
         }
 
@@ -299,6 +406,23 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
+            foreach (var source in sources)
+            {
+                foreach (var target in targets)
+                {
+                    if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
+                    { // vehicles are different.
+                        throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
+                            source.Vehicle.UniqueName, target.Vehicle.UniqueName));
+                    }
+                    if (vehicle.UniqueName != target.Vehicle.UniqueName)
+                    { // vehicles are different.
+                        throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                            vehicle.UniqueName, target.Vehicle.UniqueName));
+                    }
+                }
+            }
+
             return _router.CalculateManyToManyWeight(vehicle, sources, targets);
         }
 
@@ -319,6 +443,12 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgine, float weight)
         {
+            if (vehicle.UniqueName != orgine.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                    vehicle.UniqueName, orgine.Vehicle.UniqueName));
+            }
+
             return _router.CalculateRange(vehicle, orgine, weight);
         }
 
@@ -331,6 +461,12 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
         {
+            if (vehicle.UniqueName != point.Vehicle.UniqueName)
+            { // vehicles are different.
+                throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                    vehicle.UniqueName, point.Vehicle.UniqueName));
+            }
+
             return _router.CheckConnectivity(vehicle, point, weight);
         }
 
@@ -338,12 +474,21 @@ namespace OsmSharp.Routing
         /// Returns true if the given point is connected for a radius of at least the given weight.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="point"></param>
+        /// <param name="points"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight)
+        public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] points, float weight)
         {
-            return _router.CheckConnectivity(vehicle, point, weight);
+            foreach (var point in points)
+            {
+                if (vehicle.UniqueName != point.Vehicle.UniqueName)
+                { // vehicles are different.
+                    throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
+                        vehicle.UniqueName, point.Vehicle.UniqueName));
+                }
+            }
+
+            return _router.CheckConnectivity(vehicle, points, weight);
         }
 
         /// <summary>
