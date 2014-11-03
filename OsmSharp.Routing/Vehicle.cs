@@ -353,6 +353,7 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);
             AccessibleTags.Add("road", string.Empty);
+            AccessibleTags.Add("track", string.Empty);
             AccessibleTags.Add("pedestrian", string.Empty);
             AccessibleTags.Add("living_street", string.Empty);
             AccessibleTags.Add("residential", string.Empty);
@@ -472,6 +473,8 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);
             AccessibleTags.Add("road", string.Empty);
+            AccessibleTags.Add("track", string.Empty);
+            AccessibleTags.Add("pedestrian", string.Empty);
             AccessibleTags.Add("living_street", string.Empty);
             AccessibleTags.Add("residential", string.Empty);
             AccessibleTags.Add("unclassified", string.Empty);
@@ -481,7 +484,6 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
             AccessibleTags.Add("tertiary_link", string.Empty);
-            //AccessibleTags.Add("trunk", string.Empty);
         }
 
         /// <summary>
