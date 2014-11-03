@@ -243,5 +243,35 @@ namespace OsmSharp.Test.Unittests.Routing
                 }
             }
         }
+
+        /// <summary>
+        /// Issue with resolved points with different routing profiles.
+        /// https://github.com/OsmSharp/OsmSharp/issues/194
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest4()
+        {
+            var interpreter = new OsmRoutingInterpreter();
+            var tagsIndex = new TagsTableCollectionIndex();
+
+            // do the data processing.
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var dataProcessorSource = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
+
+            var basicRouter = new DykstraRoutingLive();
+            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+
+            // resolve the three points in question.
+            var point35 = new GeoCoordinate(51.01257, 4.000753);
+            var point35ResolvedCar = router.Resolve(Vehicle.Car, point35);
+            var point35ResolvedBicycle = router.Resolve(Vehicle.Bicycle, point35);
+        }
+
     }
 }
