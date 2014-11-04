@@ -312,6 +312,7 @@
     <EmbeddedResource Include="tsp_real.osm" />
     <EmbeddedResource Include="test_routing_regression1.osm" />
     <EmbeddedResource Include="test_routing_regression2.osm" />
+    <EmbeddedResource Include="test_routing_regression4.osm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">

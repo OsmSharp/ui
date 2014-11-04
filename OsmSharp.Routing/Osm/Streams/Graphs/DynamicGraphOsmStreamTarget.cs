@@ -454,9 +454,62 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
-                var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+                TEdgeData existingData;
+                if(_dynamicGraph.GetEdge(from, to, out existingData))
+                { // oeps, an edge already exists!
+                    if (intermediates != null && intermediates.Count > 0)
+                    { // add one of the intermediates as new vertex.
+                        var newVertex = _dynamicGraph.AddVertex(intermediates[0].Latitude, intermediates[0].Longitude);
+                        var newEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, 
+                            forward, new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude), toCoordinate, intermediates);
+                        _dynamicGraph.AddEdge(from, newVertex, newEdgeData, null, _edgeComparer);
 
-                _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), _edgeComparer);
+                        from = newVertex;
+                        fromCoordinate = new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude);
+                        intermediates = intermediates.GetRange(1, intermediates.Count - 1);
+                    }
+                    else
+                    { // hmm, no intermediates, the other edge should have them.
+                        ICoordinateCollection shape;
+                        if (_dynamicGraph.GetEdgeShape(from, to, out shape) &&
+                            shape != null && shape.Count > 0)
+                        { // there is a shape, add one of the intermediates as a new vertex.
+                            var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
+                            var newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
+
+                            // add edge before.
+                            var beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
+                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), new List<GeoCoordinateSimple>());
+                            _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null, _edgeComparer);
+
+                            // add edge after.
+                            var afterIntermediates = existingIntermediates.GetRange(1, existingIntermediates.Count - 1);
+                            var afterEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
+                                forward, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), toCoordinate, afterIntermediates);
+                            _dynamicGraph.AddEdge(newVertex, to, afterEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(afterIntermediates.ToArray()), _edgeComparer);
+                        }
+                        else
+                        { 
+                            // do nothing just overwrite what is there, probably a bug in OSM, two overlapping ways, sharing nodes.
+                        }
+                    }
+
+                    // edge was there already but was removed,split or needs to be replaced.
+                    var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+                    _dynamicGraph.AddEdge(from, to, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()), null);
+                }
+                else
+                { // edge is not there yet, just add it.
+                    ICoordinateCollection intermediatesCollection = null;
+                    if (intermediates != null)
+                    {
+                        intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
+                    }
+
+                    // add new edge.
+                    var edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+                    _dynamicGraph.AddEdge(from, to, edgeData, intermediatesCollection, _edgeComparer);
+                }
             }
         }
 
