@@ -297,6 +297,7 @@
     <EmbeddedResource Include="regression1.gpx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="test_routing_regression3.osm" />
     <None Include="test_network.svg" />
     <EmbeddedResource Include="test.v1.0.gpx" />
     <EmbeddedResource Include="test.v1.1.gpx" />
