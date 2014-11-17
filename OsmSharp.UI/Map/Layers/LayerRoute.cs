@@ -22,6 +22,7 @@ using OsmSharp.Routing;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -47,6 +48,11 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #region Scene Building
+
+        /// <summary>
+        /// Holds the envelope of the current data.
+        /// </summary>
+        private GeoCoordinateBox _envelope;
 
         /// <summary>
         /// Holds the scene.
@@ -96,6 +102,16 @@ namespace OsmSharp.UI.Map.Layers
                         route.Segments[idx].Longitude);
                     y[idx] = _projection.LatitudeToY(
                         route.Segments[idx].Latitude);
+
+                    // update envelope.
+                    if(_envelope == null)
+                    { // create initial envelope.
+                        _envelope = new GeoCoordinateBox(
+                            new GeoCoordinate(route.Segments[idx].Latitude, route.Segments[idx].Longitude),
+                            new GeoCoordinate(route.Segments[idx].Latitude, route.Segments[idx].Longitude));
+                    }
+                    // also include the current point.
+                    _envelope.ExpandWith(new GeoCoordinate(route.Segments[idx].Latitude, route.Segments[idx].Longitude));
                 }
 
                 // set the default color if none is given.
@@ -112,6 +128,18 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the bounding rectangle of this layer (if available).
+        /// </summary>
+        /// <remarks>Not all layers, formats support getting an envolope. Property can return null even on some types of bounded data.</remarks>
+        public override GeoCoordinateBox Envelope
+        {
+            get
+            {
+                return _envelope;
+            }
+        }
 
         /// <summary>
         /// Returns all objects in this layer visible for the given parameters.

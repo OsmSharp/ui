@@ -394,7 +394,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the restricted routes that apply to one vehicle profile.
         /// </summary>
-        private Dictionary<Vehicle, Dictionary<uint, List<uint[]>>> _restricedRoutesPerVehicle;
+        private Dictionary<string, Dictionary<uint, List<uint[]>>> _restricedRoutesPerVehicle;
 
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route.
@@ -421,22 +421,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
         /// </summary>
-        /// <param name="vehicle"></param>
+        /// <param name="vehicleType"></param>
         /// <param name="route"></param>
-        public void AddRestriction(Vehicle vehicle, uint[] route)
+        public void AddRestriction(string vehicleType, uint[] route)
         {
             if (route == null) { throw new ArgumentNullException(); }
             if (route.Length == 0) { throw new ArgumentOutOfRangeException("Restricted route has to contain at least one vertex."); }
 
             if (_restricedRoutesPerVehicle == null)
             { // create dictionary.
-                _restricedRoutesPerVehicle = new Dictionary<Vehicle, Dictionary<uint, List<uint[]>>>();
+                _restricedRoutesPerVehicle = new Dictionary<string, Dictionary<uint, List<uint[]>>>();
             }
             Dictionary<uint, List<uint[]>> restrictedRoutes;
-            if (!_restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes))
+            if (!_restricedRoutesPerVehicle.TryGetValue(vehicleType, out restrictedRoutes))
             { // the vehicle does not have any restrictions yet.
                 restrictedRoutes = new Dictionary<uint, List<uint[]>>();
-                _restricedRoutesPerVehicle.Add(vehicle, restrictedRoutes);
+                _restricedRoutesPerVehicle.Add(vehicleType, restrictedRoutes);
             }
             List<uint[]> routes;
             if (!restrictedRoutes.TryGetValue(route[0], out routes))
@@ -458,27 +458,34 @@ namespace OsmSharp.Routing.Graph
         {
             Dictionary<uint, List<uint[]>> restrictedRoutes;
             routes = null;
-            List<uint[]> routesPerVehicle;
-            if (_restricedRoutesPerVehicle != null && 
-                _restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes) &&
-                restrictedRoutes.TryGetValue(vertex, out routesPerVehicle))
+            foreach (var vehicleType in vehicle.VehicleTypes)
             {
-                routes = routesPerVehicle;
-            }
-            List<uint[]> routesAll;
-            if (_restrictedRoutes != null && 
-                _restrictedRoutes.TryGetValue(vertex, out routesAll))
-            {
-                if(routes == null)
+                List<uint[]> routesPerVehicle;
+                if (_restricedRoutesPerVehicle != null &&
+                    _restricedRoutesPerVehicle.TryGetValue(vehicleType, out restrictedRoutes) &&
+                    restrictedRoutes.TryGetValue(vertex, out routesPerVehicle))
                 {
-                    routes = routesAll;
+                    routes = routesPerVehicle;
                 }
-                else
+                List<uint[]> routesAll;
+                if (_restrictedRoutes != null &&
+                    _restrictedRoutes.TryGetValue(vertex, out routesAll))
                 {
-                    routes.AddRange(routesAll);
+                    if (routes == null)
+                    {
+                        routes = routesAll;
+                    }
+                    else
+                    {
+                        routes.AddRange(routesAll);
+                    }
+                }
+                if(routes != null)
+                {
+                    return true;
                 }
             }
-            return routes != null;
+            return false;
         }
 
         /// <summary>

@@ -85,7 +85,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                     { // the type is way way. now check for a line.
                         var way = (osmGeo as CompleteWay);
                         if (way != null &&
-                            way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
+                            way.Nodes != null &&
+                            (way.Nodes.Count > 2 && (way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])))
                         { // first node is the same as the last one.
                             return true;
                         }

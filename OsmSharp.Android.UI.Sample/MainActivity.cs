@@ -20,8 +20,13 @@ using Android.App;
 using Android.OS;
 using Android.Widget;
 using OsmSharp.Android.UI.Controls;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
@@ -104,15 +109,14 @@ namespace OsmSharp.Android.UI.Sample
             //var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.default.map");
             //map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
-            // define dummy from and to points.
+            //// define dummy from and to points.
             //var from = new GeoCoordinate(51.261203, 4.780760);
             //var to = new GeoCoordinate(51.267797, 4.801362);
 
             //// deserialize the preprocessed graph.
-            //var routingSerializer = new CHEdgeDataDataSourceSerializer(false);
-            //TagsCollectionBase metaData = null;
+            //var routingSerializer = new CHEdgeDataDataSourceSerializer();
             //var graphStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing");
-            //var graphDeserialized = routingSerializer.Deserialize(graphStream, out metaData, true);
+            //var graphDeserialized = routingSerializer.Deserialize(graphStream, true);
 
             //// initialize router.
             //_router = Router.CreateCHFrom(graphDeserialized, new CHRouter(), new OsmRoutingInterpreter());
@@ -120,15 +124,13 @@ namespace OsmSharp.Android.UI.Sample
             //// resolve points.
             //var routerPoint1 = _router.Resolve(Vehicle.Car, from);
             //var routerPoint2 = _router.Resolve(Vehicle.Car, to);
-            
+
             //// calculate route.
             //var route = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-            //var routeTracker = new RouteTracker(route, new OsmRoutingInterpreter());
-            //_enumerator = route.GetRouteEnumerable(10).GetEnumerator();
 
             //// add a router layer.
             //_routeLayer = new LayerRoute(map.Projection);
-            //_routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
+            //_routeLayer.AddRoute(route, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
             //map.AddLayer(_routeLayer);
 
             // define the mapview.
@@ -148,7 +150,7 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapTouched += _mapView_MapTouched;
             _mapView.MapTouchedDown += _mapView_MapTouchedDown;
 
-            AddMarkers();
+            // AddMarkers();
             // AddControls();
 
             // initialize a text view to display routing instructions.

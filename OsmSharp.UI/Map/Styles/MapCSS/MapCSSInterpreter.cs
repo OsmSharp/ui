@@ -656,7 +656,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 }
 
                 // interpret the results.
-                if (x != null)
+                if (x != null &&
+                    x.Length > 1)
                 { // there is a valid interpretation of this way.
                     int color;
                     bool renderAsLine = true;

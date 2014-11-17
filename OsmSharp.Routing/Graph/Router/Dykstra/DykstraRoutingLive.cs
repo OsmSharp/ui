@@ -500,6 +500,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 List<uint[]> restrictions = null;
                 bool isRestricted = false;
                 if (current.From != null &&
+                    current.From.VertexId > 0 &&
                     graph.TryGetRestrictionAsStart(vehicle, (uint)current.From.VertexId, out restrictions))
                 { // there are restrictions!
                     // search for a restriction that ends in the currently selected vertex.

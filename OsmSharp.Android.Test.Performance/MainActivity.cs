@@ -64,7 +64,7 @@ namespace OsmSharp.Android.Test.Performance
         /// </summary>
         private void Test()
         {
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 

@@ -38,11 +38,13 @@ namespace OsmSharp.Routing
         /// Creates a new router point.
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="vehicle"></param>
         /// <param name="location"></param>
-        public RouterPoint(long id, GeoCoordinate location)
+        public RouterPoint(long id, Vehicle vehicle, GeoCoordinate location)
         {
             _id = id;
             this.Location = location;
+            this.Vehicle = vehicle;
             this.Tags = new List<KeyValuePair<string, string>>();
         }
 
@@ -61,6 +63,15 @@ namespace OsmSharp.Routing
         /// Returns the location of this router point.
         /// </summary>
         public GeoCoordinate Location
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Returns the vehicle profile this point is valid for.
+        /// </summary>
+        public Vehicle Vehicle
         {
             get;
             private set;

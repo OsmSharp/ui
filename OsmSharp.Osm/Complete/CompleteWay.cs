@@ -256,22 +256,25 @@ namespace OsmSharp.Osm
                     way.Tags.Add(pair);
                 }
             }
-            for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
+            if (simpleWay.Nodes != null)
             {
-                long nodeId = simpleWay.Nodes[idx];
-                Node node = nodeSource.GetNode(nodeId);
-                if (node == null)
+                for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
                 {
-                    return null;
-                }
-                Node completeNode = node;
-                if (completeNode != null)
-                {
-                    way.Nodes.Add(completeNode);
-                }
-                else
-                {
-                    return null;
+                    long nodeId = simpleWay.Nodes[idx];
+                    Node node = nodeSource.GetNode(nodeId);
+                    if (node == null)
+                    {
+                        return null;
+                    }
+                    Node completeNode = node;
+                    if (completeNode != null)
+                    {
+                        way.Nodes.Add(completeNode);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             way.TimeStamp = simpleWay.TimeStamp;
