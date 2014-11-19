@@ -135,8 +135,8 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
             // create node bulk objects.
             _nodeTable = new DataTable();
             _nodeTable.Columns.Add(new DataColumn("id", typeof (long)));
-            _nodeTable.Columns.Add(new DataColumn("latitude", typeof(int)));
-            _nodeTable.Columns.Add(new DataColumn("longitude", typeof(int)));
+            _nodeTable.Columns.Add(new DataColumn("latitude", typeof(double)));
+            _nodeTable.Columns.Add(new DataColumn("longitude", typeof(double)));
             _nodeTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
             _nodeTable.Columns.Add(new DataColumn("visible", typeof(bool)));
             _nodeTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
@@ -259,9 +259,9 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
             DataRow nodeRow = _nodeTable.NewRow();
             // format data and create parameters.
             nodeRow["id"] = node.Id.Value;
-            var latitude = (int)(node.Latitude.Value * 10000000); // latitude should always contain a value.
+            var latitude = (double)(node.Latitude.Value ); // latitude should always contain a value.
             nodeRow["latitude"] = latitude;
-            var longitude = (int)(node.Longitude.Value * 10000000); // longitude should always containt a value.
+            var longitude = (double)(node.Longitude.Value); // longitude should always containt a value.
             nodeRow["longitude"] = longitude;
             nodeRow["changeset_id"] = node.ChangeSetId.ConvertToDBValue();
             nodeRow["visible"] = node.Visible.HasValue ? (object)(node.Visible.Value ? 1 : 0) : DBNull.Value;
