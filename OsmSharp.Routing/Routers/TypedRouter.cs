@@ -1125,7 +1125,17 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, null, null, verticesOnly);
+            float delta = TypedRouter<TEdgeData>.DefaultSearchDelta;
+            RouterPoint point = null;
+            const int TIMEOUT_COUNT = 10;
+            int timeoutCounter = 0;
+            while( ( null == point  ) && ( timeoutCounter < TIMEOUT_COUNT ) )
+            {
+                point = this.Resolve(vehicle, delta, coordinate, null, null, verticesOnly);
+                delta *= 2f;
+                ++timeoutCounter;
+            }
+            return point;
         }
 
         /// <summary>
@@ -1175,7 +1185,17 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
+            float delta = TypedRouter<TEdgeData>.DefaultSearchDelta;
+            RouterPoint point = null;
+            const int TIMEOUT_COUNT = 10;
+            int timeoutCounter = 0;
+            while( ( null == point  ) && ( timeoutCounter < TIMEOUT_COUNT ) )
+            {
+                point = this.Resolve(vehicle, delta, coordinate, pointTags, verticesOnly);
+                delta *= 2f;
+                ++timeoutCounter;
+            }
+            return point;
         }
 
         /// <summary>
@@ -1231,8 +1251,17 @@ namespace OsmSharp.Routing.Routers
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollectionBase matchingTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
-                                matcher, matchingTags, verticesOnly);
+            float delta = TypedRouter<TEdgeData>.DefaultSearchDelta;
+            RouterPoint point = null;
+            const int TIMEOUT_COUNT = 10;
+            int timeoutCounter = 0;
+            while( ( null == point  ) && ( timeoutCounter < TIMEOUT_COUNT ) )
+            {
+                point = this.Resolve(vehicle, delta, coordinate, matcher, matchingTags, verticesOnly);
+                delta *= 2f;
+                ++timeoutCounter;
+            }
+            return point;
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// <summary>
     /// Strongly typed MapCSS v0.2 Declaration class.
     /// </summary>
-    public class DeclarationLineCap : Declaration<QualifierLineCapEnum, LineCapEnum>
+    public class DeclarationTextAnchor : Declaration<DeclarationTextAnchorEnum, TextAnchorEnum>
     {
 
     }
@@ -17,19 +17,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// <summary>
     /// Strongly typed MapCSS v0.2 Declaration class.
     /// </summary>
-    public enum QualifierLineCapEnum
+    public enum DeclarationTextAnchorEnum
     {
-        LineCap,
-        CasingLineCap
+        Horizontal,
+        Vertical
     }
 
     /// <summary>
     /// Strongly typed MapCSS v0.2 Declaration class.
     /// </summary>
-    public enum LineCapEnum
+    public enum TextAnchorEnum
     {
-        None,
-        Round,
-        Square
+        Left,
+        Center,
+        Right,
+        Above,
+        Top,
+        Bottom,
+        Below
     }
 }

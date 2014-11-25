@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
@@ -30,6 +31,7 @@ using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Units;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -156,18 +158,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (selector.Type)
                             {
                                 case SelectorTypeEnum.Node:
+                                    if (_keysForNodes == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForNodes);
                                     break;
                                 case SelectorTypeEnum.Way:
+                                    if (_keysForWays == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForWays);
                                     break;
                                 case SelectorTypeEnum.Relation:
+                                    if (_keysForRelations == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForRelations);
                                     break;
                                 case SelectorTypeEnum.Line:
+                                    if (_keysForLines == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForLines);
                                     break;
                                 case SelectorTypeEnum.Area:
+                                    if (_keysForAreas == null) _keysForAreas = new HashSet<string>();
                                     selector.SelectorRule.AddRelevantKeysTo(_keysForAreas);
                                     break;
                             }
@@ -409,7 +416,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     if (points.HasValue)
                     {
                         scene.AddStyleLine(points.Value, this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue,
-                            SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                            SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, LineCap.None, null);
                     }
                 }
             }
@@ -499,18 +506,90 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
 						fontFamily = "Arial"; // just some default font.
 					}
+                    FontStyle fontStyle;
+                    if (!rule.TryGetProperty("fontStyle", out fontStyle))
+                    {
+                        fontStyle = FontStyle.Normal;
+                    }
+                    FontWeight fontWeight;
+                    if (!rule.TryGetProperty("fontWeight", out fontWeight))
+                    {
+                        fontWeight = FontWeight.Normal;
+                    }
+                    int maxWidth;
+                    if (!rule.TryGetProperty("maxWidth", out maxWidth))
+                    {
+                        maxWidth = 30;
+                    }
+                    int offsetX, offsetY;
+                    if (!rule.TryGetProperty("textOffsetX", out offsetX))
+                    {
+                        offsetX = 0;
+                    }
+                    if (!rule.TryGetProperty("textOffsetY", out offsetY))
+                    {
+                        offsetY = 0;
+                    }
+                    TextAnchorEnum horizontalAnchor, verticalAnchor; // TODO: make use of horizontal anchor
+                    if (!rule.TryGetProperty("textAnchorHorizontal", out horizontalAnchor))
+                    {
+                        horizontalAnchor = TextAnchorEnum.Right;
+                    }
+                    if (!rule.TryGetProperty("textAnchorVertical", out verticalAnchor))
+                    {
+                        verticalAnchor = TextAnchorEnum.Bottom;
+                    }
+
+                    // hack-ish way of supporting vertical anchor
+                    switch (verticalAnchor)
+                    {
+                        case TextAnchorEnum.Center:
+                            // leave as is
+                            break;
+                        case TextAnchorEnum.Above:
+                        case TextAnchorEnum.Top:
+                            offsetY -= 8;
+                            break;
+                        case TextAnchorEnum.Bottom:
+                        case TextAnchorEnum.Below:
+                            offsetY += 8;
+                            break;
+                    }
 
                     // a text is to be drawn.
                     string value;
                     if (node.Tags.TryGetValue(text, out value))
                     {
+                        if (value.Length > maxWidth)
+                        {
+                            var valueBuilder = new StringBuilder();
+                            var splitValue = value.Split(' ');
+                            valueBuilder.Append(splitValue[0]);
+                            for (int i = 1; i < splitValue.Length; i++)
+                            {
+                                var part = splitValue[i];
+
+                                if (valueBuilder.Length + part.Length > maxWidth)
+                                {
+                                    valueBuilder.AppendLine();
+                                }
+                                else
+                                {
+                                    valueBuilder.Append(" ");
+                                }
+
+                                valueBuilder.Append(part);
+                            }
+                            value = valueBuilder.ToString();
+                        }
+
                         if (!pointId.HasValue)
                         {
                             pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
                                            projection.LatitudeToY(node.Coordinate.Latitude));
                         }
                         scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
-						              haloColorNullable, haloRadiusNullable, fontFamily);
+						              haloColorNullable, haloRadiusNullable, fontFamily, fontStyle, fontWeight, offsetX, offsetY);
                     }
                 }
             }
@@ -570,7 +649,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
-                int zIndex ;
+                int zIndex;
                 if (!rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
                     zIndex = 0;
@@ -590,11 +669,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             uint? pointsId = scene.AddPoints(x, y);
                             if (pointsId.HasValue)
                             {
-                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                                scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                                 success = true;
                                 if (rule.TryGetProperty("color", out color))
                                 {
-                                    scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                    scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                                     success = true;
                                 }
                             }
@@ -603,12 +682,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
 
                     if (renderAsLine)
-                    { // was not rendered as an area.
+                    { 
+                        // was not rendered as an area.
                         // the way has to rendered as a line.
                         LineJoin lineJoin;
+                        LineCap lineCap;
                         if (!rule.TryGetProperty("lineJoin", out lineJoin))
                         {
                             lineJoin = LineJoin.Miter;
+                        }
+                        if (!rule.TryGetProperty("lineCap", out lineCap))
+                        {
+                            lineCap = LineCap.Round;
                         }
                         int[] dashes;
                         if (!rule.TryGetProperty("dashes", out dashes))
@@ -619,6 +704,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             float casingWidth;
                             int casingColor;
+                            LineJoin casingLineJoin;
+                            LineCap casingLineCap;
                             if (!rule.TryGetProperty("casingWidth", out casingWidth))
                             {
                                 casingWidth = 0;
@@ -626,6 +713,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             if (!rule.TryGetProperty("casingColor", out casingColor))
                             { // casing: use the casing layer.
                                 casingColor = -1;
+                            }
+                            if (!rule.TryGetProperty("casingLineJoin", out casingLineJoin))
+                            { 
+                                casingLineJoin = LineJoin.Miter;
+                            }
+                            if (!rule.TryGetProperty("casingLineCap", out casingLineCap))
+                            {
+                                casingLineCap = LineCap.Round;
                             }
                             float width;
                             if (!rule.TryGetProperty("width", out width))
@@ -639,17 +734,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 if (casingWidth > 0)
                                 { // adds the casing
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), casingLineJoin, casingLineCap, dashes);
+                                    success = true;
                                 }
                                 if (dashes == null)
                                 { // dashes not set, use line offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
-                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                        minZoom, maxZoom, color, width, lineJoin, lineCap, dashes);
+                                    success = true;
                                 }
                                 else
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                        minZoom, maxZoom, color, width, lineJoin, lineCap, dashes);
+                                    success = true;
                                 }
 
                                 int textColor;
@@ -679,11 +777,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     {
                                         fontFamily = "Arial"; // just some default font.
                                     }
+                                    FontStyle fontStyle;
+                                    if (!rule.TryGetProperty("fontStyle", out fontStyle))
+                                    {
+                                        fontStyle = FontStyle.Normal;
+                                    }
+                                    FontWeight fontWeight;
+                                    if (!rule.TryGetProperty("fontWeight", out fontWeight))
+                                    {
+                                        fontWeight = FontWeight.Normal;
+                                    }
+
                                     string name;
                                     if (way.Tags.TryGetValue(nameTag, out name))
                                     {
                                         scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, fontStyle, fontWeight, haloColorNullable, haloRadiusNullable);
+                                        success = true;
                                     }
                                 }
                             }
@@ -736,15 +846,124 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         {
             polygon.Ring.Attributes = polygon.Attributes;
             this.TranslateLineairRing(scene, projection, polygon.Ring);
-            //// build the rules.
-            //List<MapCSSRuleProperties> rules =
-            //    this.BuildRules(new MapCSSObject(polygon));
+            // build the rules.
+            List<MapCSSRuleProperties> rules =
+                this.BuildRules(new MapCSSObject(polygon.Ring));
 
-            //// validate what's there.
-            //if (rules.Count == 0)
-            //{
-            //    return;
-            //}
+            // validate what's there.
+            if (rules.Count == 0)
+            {
+                return;
+            }
+
+            // get x/y.
+            double[] outerX = null, outerY = null;
+            var innerXList = new List<double[]>();
+            var innerYList = new List<double[]>();
+            if (polygon.Ring.Coordinates != null &&
+                polygon.Ring.Coordinates.Count > 0)
+            { // pre-calculate x/y.
+                outerX = new double[polygon.Ring.Coordinates.Count];
+                outerY = new double[polygon.Ring.Coordinates.Count];
+                for (int idx = 0; idx < polygon.Ring.Coordinates.Count; idx++)
+                {
+                    outerX[idx] = projection.LongitudeToX(
+                        polygon.Ring.Coordinates[idx].Longitude);
+                    outerY[idx] = projection.LatitudeToY(
+                        polygon.Ring.Coordinates[idx].Latitude);
+                }
+
+                // simplify.
+                if (outerX.Length > 2)
+                {
+                    double[][] simplified = SimplifyCurve.Simplify(new double[][] { outerX, outerY }, 0.0001);
+                    outerX = simplified[0];
+                    outerY = simplified[1];
+                }
+            }
+
+            foreach (var ring in polygon.Holes)
+            {
+                if (ring.Coordinates != null &&
+                ring.Coordinates.Count > 0)
+                { // pre-calculate x/y.
+                    double[] innerX = new double[ring.Coordinates.Count];
+                    double[] innerY = new double[ring.Coordinates.Count];
+                    for (int idx = 0; idx < ring.Coordinates.Count; idx++)
+                    {
+                        innerX[idx] = projection.LongitudeToX(
+                            ring.Coordinates[idx].Longitude);
+                        innerY[idx] = projection.LatitudeToY(
+                            ring.Coordinates[idx].Latitude);
+                    }
+
+                    // simplify.
+                    if (innerX.Length > 2)
+                    {
+                        double[][] simplified = SimplifyCurve.Simplify(new double[][] { innerX, innerY }, 0.0001);
+                        innerX = simplified[0];
+                        innerY = simplified[1];
+                    }
+
+                    innerXList.Add(innerX);
+                    innerYList.Add(innerY);
+                }
+            }
+
+            foreach (var rule in rules)
+            {
+                float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
+                float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
+
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                {
+                    zIndex = 0;
+                }
+
+                // interpret the results.
+                if (outerX != null)
+                { // there is a valid interpretation of this way.
+                    int color;
+                    int fillColor;
+                    if (rule.TryGetProperty("fillColor", out fillColor))
+                    { // render as an area.
+                        float fillOpacity;
+                        if (rule.TryGetProperty("fillOpacity", out fillOpacity))
+                        {
+                            SimpleColor simpleFillColor = new SimpleColor() { Value = fillColor };
+                            fillColor = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                        }
+                        uint? outerPointsId = scene.AddPoints(outerX, outerY);
+                        uint[] innerPointsIds = new uint[innerXList.Count];
+                        for (int i = 0; i < innerXList.Count; i++)
+                        {
+                            uint? id = scene.AddPoints(innerXList[i], innerYList[i]);
+                            if (id.HasValue)
+                            {
+                                innerPointsIds[i] = id.Value;
+                            }
+                        }
+
+                        if (outerPointsId.HasValue)
+                        {
+                            scene.AddStylePolygon(outerPointsId.Value, innerPointsIds, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                            if (rule.TryGetProperty("color", out color))
+                            {
+                                if (rule.TryGetProperty("opacity", out fillOpacity))
+                                {
+                                    SimpleColor simpleFillColor = new SimpleColor() { Value = color };
+                                    color = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                        simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                                }
+
+                                scene.AddStylePolygon(outerPointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -817,10 +1036,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         uint? pointsId = scene.AddPoints(x, y);
                         if (pointsId.HasValue)
                         {
-                            scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                            scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                             if (rule.TryGetProperty("color", out color))
                             {
-                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                if (rule.TryGetProperty("opacity", out fillOpacity))
+                                {
+                                    SimpleColor simpleFillColor = new SimpleColor() { Value = color };
+                                    color = SimpleColor.FromArgb((int)(255 * fillOpacity),
+                                        simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
+                                }
+
+                                scene.AddStylePolygon(pointsId.Value, null, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
                     }
@@ -905,8 +1131,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 case DeclarationIntEnum.TextColor:
                                     properties.AddProperty("textColor", declarationInt.Eval(mapCSSObject));
                                     break;
-                                case DeclarationIntEnum.TextOffset:
-                                    properties.AddProperty("textOffset", declarationInt.Eval(mapCSSObject));
+                                case DeclarationIntEnum.TextOffsetY:
+                                    properties.AddProperty("textOffsetY", declarationInt.Eval(mapCSSObject));
+                                    break;
+                                case DeclarationIntEnum.TextOffsetX:
+                                    properties.AddProperty("textOffsetX", declarationInt.Eval(mapCSSObject));
                                     break;
                                 case DeclarationIntEnum.MaxWidth:
                                     properties.AddProperty("maxWidth", declarationInt.Eval(mapCSSObject));
@@ -1012,14 +1241,65 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         else if (declaration is DeclarationLineJoin)
                         {
                             var declarationLineJoin = (declaration as DeclarationLineJoin);
-                            properties.AddProperty("lineJoin", declarationLineJoin.Eval(
-                                mapCSSObject));
+
+                            if (declarationLineJoin.Qualifier == QualifierLineJoinEnum.LineJoin)
+                            {
+                                properties.AddProperty("lineJoin", declarationLineJoin.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationLineJoin.Qualifier == QualifierLineJoinEnum.CasingLineJoin)
+                            {
+                                properties.AddProperty("casingLineJoin", declarationLineJoin.Eval(
+                                    mapCSSObject));
+                            }
+                        }
+                        else if (declaration is DeclarationLineCap)
+                        {
+                            var declarationLineCap = (declaration as DeclarationLineCap);
+
+                            if (declarationLineCap.Qualifier == QualifierLineCapEnum.LineCap)
+                            {
+                                properties.AddProperty("lineCap", declarationLineCap.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationLineCap.Qualifier == QualifierLineCapEnum.CasingLineCap)
+                            {
+                                properties.AddProperty("casingLineCap", declarationLineCap.Eval(
+                                    mapCSSObject));
+                            }
                         }
                         else if (declaration is DeclarationDashes)
                         {
                             var declarationDashes = (declaration as DeclarationDashes);
                             properties.AddProperty("dashes", declarationDashes.Eval(
                                 mapCSSObject));
+                        }
+                        else if (declaration is DeclarationFontWeight)
+                        {
+                            var declarationFontWeight = (declaration as DeclarationFontWeight);
+                            properties.AddProperty("fontWeight", declarationFontWeight.Eval(
+                                mapCSSObject));
+                        } 
+                        else if (declaration is DeclarationFontStyle)
+                        {
+                            var declarationFontStyle = (declaration as DeclarationFontStyle);
+                            properties.AddProperty("fontStyle", declarationFontStyle.Eval(
+                                mapCSSObject));
+                        }
+                        else if (declaration is DeclarationTextAnchor)
+                        {
+                            var declarationTextAnchor = (declaration as DeclarationTextAnchor);
+
+                            if (declarationTextAnchor.Qualifier == DeclarationTextAnchorEnum.Horizontal)
+                            {
+                                properties.AddProperty("textAnchorHorizontal", declarationTextAnchor.Eval(
+                                    mapCSSObject));
+                            }
+                            else if (declarationTextAnchor.Qualifier == DeclarationTextAnchorEnum.Vertical)
+                            {
+                                properties.AddProperty("textAnchorVertical", declarationTextAnchor.Eval(
+                                    mapCSSObject));
+                            }
                         }
                     }
 

@@ -119,8 +119,8 @@ namespace OsmSharp.UI.Map.Layers
                 var pointsId = _scene.AddPoints(x, y);
                 if (pointsId.HasValue)
                 {
-                    _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, 
-                        color.Value, (float)width, Renderer.Primitives.LineJoin.Round, null);
+                    _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue,
+                        color.Value, (float)width, Renderer.Primitives.LineJoin.Round, Renderer.Primitives.LineCap.Round, null);
                 }
             }
 

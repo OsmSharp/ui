@@ -78,13 +78,13 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius,
-            float minZoom, float maxZoom)
+        public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius, float minZoom, float maxZoom)
         {
             this.X = x;
             this.Y = y;
@@ -217,6 +217,18 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// Gets or sets the font name.
         /// </summary>
         public string Font { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font style.
+        /// </summary>
+        /// <value>The font.</value>
+        public FontStyle FontStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font weight.
+        /// </summary>
+        /// <value>The font.</value>
+        public FontWeight FontWeight { get; set; }
 
         /// <summary>
         /// The minimum zoom.

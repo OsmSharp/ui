@@ -243,7 +243,7 @@ namespace OsmSharp.Android.UI
 		/// Draws a line on the target. The coordinates given are scene coordinates.
 		/// </summary>
 		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
-		                                  int color, double width, LineJoin lineJoine, int[] dashes)
+		                                  int color, double width, LineJoin lineJoine, LineCap lineCap, int[] dashes)
 		{
             double transformed1_0, transformed1_1;
             if(x.Length > 1)
@@ -443,8 +443,9 @@ namespace OsmSharp.Android.UI
 		/// <param name="y"></param>
 		/// <param name="text"></param>
 		/// <param name="size"></param>
-		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
-		                                  string text, int color, double size, int? haloColor, int? haloRadius, string fontName)
+		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y,
+                                          string text, int color, double size, int? haloColor, int? haloRadius, string fontName, 
+                                          FontStyle fontStyle, FontWeight fontWeight)
 		{
             double transformed1_0, transformed1_1;
 			// this.Transform(x, y, _transformed1);
@@ -516,8 +517,8 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws text along a given line.
 		/// </summary>
-		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xa, double[] ya, string text, int color, 
-		                                      double size, int? haloColor, int? haloRadius, string fontName)
+		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xa, double[] ya, string text, int color,
+                                              double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight)
 		{
             double transformed1_0, transformed1_1;
 			if (xa.Length > 1)

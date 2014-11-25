@@ -70,6 +70,12 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public float MaxZoom { get; set; }
 
         /// <summary>
+        /// Gets or set the line cap.
+        /// </summary>
+        [ProtoMember(9)]
+        public LineCap LineCap { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -82,14 +88,16 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.LineJoin.GetHashCode() ^
                     this.Layer.GetHashCode() ^
                     this.MinZoom.GetHashCode() ^
-                    this.MaxZoom.GetHashCode();
+                    this.MaxZoom.GetHashCode() ^
+                    this.LineCap.GetHashCode();
             }
             int hashcode = this.Color.GetHashCode() ^
-                this.Width.GetHashCode() ^
-                this.LineJoin.GetHashCode() ^
-                this.Layer.GetHashCode() ^
-                this.MinZoom.GetHashCode() ^
-                this.MaxZoom.GetHashCode();
+                           this.Width.GetHashCode() ^
+                           this.LineJoin.GetHashCode() ^
+                           this.Layer.GetHashCode() ^
+                           this.MinZoom.GetHashCode() ^
+                           this.MaxZoom.GetHashCode() ^
+                           this.LineCap.GetHashCode();
             foreach (int dash in this.Dashes)
             {
                 hashcode = hashcode ^ dash.GetHashCode();
@@ -110,7 +118,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     (obj as StyleLine).LineJoin == this.LineJoin &&
                     (obj as StyleLine).Layer == this.Layer &&
                     (obj as StyleLine).MinZoom == this.MinZoom &&
-                    (obj as StyleLine).MaxZoom == this.MaxZoom)
+                    (obj as StyleLine).MaxZoom == this.MaxZoom &&
+                    (obj as StyleLine).LineCap == this.LineCap)
                 {
                     if (this.Dashes != null)
                     {

@@ -463,6 +463,7 @@ namespace OsmSharp.Osm.Interpreter
                     if (!role.HasValue || wayEntry.Key == role.Value)
                     { // only try matching roles if the role has been set.
                         List<Node> nextNodes = null;
+                        bool insertAtStart = false;
                         if (nodes[nodes.Count - 1].Id == nextWay.Nodes[0].Id)
                         { // last node of the previous way is the first node of the next way.
                             nextNodes = nextWay.Nodes.GetRange(1, nextWay.Nodes.Count - 1);
@@ -474,11 +475,31 @@ namespace OsmSharp.Osm.Interpreter
                             nextNodes.Reverse();
                             assignedFlags[idx] = true;
                         }
+                        else if (nodes[0].Id == nextWay.Nodes[0].Id)
+                        { // first node of the previous way is the first node of the next way.
+                            nextNodes = nextWay.Nodes.GetRange(0, nextWay.Nodes.Count - 1);
+                            nextNodes.Reverse();
+                            assignedFlags[idx] = true;
+                            insertAtStart = true;
+                        }
+                        else if (nodes[0].Id == nextWay.Nodes[nextWay.Nodes.Count - 1].Id)
+                        { // first node of the previous way is the last node of the next way.
+                            nextNodes = nextWay.Nodes.GetRange(0, nextWay.Nodes.Count - 1);
+                            assignedFlags[idx] = true;
+                            insertAtStart = true;
+                        }
 
                         // add the next nodes if any.
                         if (assignedFlags[idx])
                         { // yep, way was assigned!
-                            nodes.AddRange(nextNodes);
+                            if (insertAtStart)
+                            {
+                                nodes.InsertRange(0, nextNodes);
+                            }
+                            else
+                            {
+                                nodes.AddRange(nextNodes);
+                            }
                             if (nodes[nodes.Count - 1].Id == nodes[0].Id)
                             { // yes! a closed ring was found!
                                 return true;
@@ -492,7 +513,15 @@ namespace OsmSharp.Osm.Interpreter
                                 else
                                 { // damn complete ring not found. backtrack people!
                                     assignedFlags[idx] = false;
-                                    nodes.RemoveRange(nodes.Count - nextNodes.Count, nextNodes.Count);
+
+                                    if (insertAtStart)
+                                    {
+                                        nodes.RemoveRange(0, nextNodes.Count);
+                                    }
+                                    else
+                                    {
+                                        nodes.RemoveRange(nodes.Count - nextNodes.Count, nextNodes.Count);
+                                    }
                                 }
                             }
                         }

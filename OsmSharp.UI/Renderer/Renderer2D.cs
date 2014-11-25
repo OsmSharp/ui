@@ -218,7 +218,7 @@ namespace OsmSharp.UI.Renderer
                                 }
                             }
                             this.DrawLine(target, x, y, line.Color,
-                                this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                                this.FromPixels(target, view, line.Width), line.LineJoin, line.LineCap, line.Dashes);
                             break;
                         case Primitive2DType.Polygon2D:
                             Polygon2D polygon = (Polygon2D)primitive;
@@ -248,13 +248,13 @@ namespace OsmSharp.UI.Renderer
                             //    //    continue;
                             //    //}
                             //}
-                            this.DrawPolygon(target, x, y, polygon.Color,
+                            this.DrawPolygon(target, x, y, polygon.HoleXCoords, polygon.HoleYCoords, polygon.Color,
                                 this.FromPixels(target, view, polygon.Width), polygon.Fill);
                             break;
                         case Primitive2DType.LineText2D:
                             LineText2D lineText = (LineText2D)primitive;
                             this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
-                                this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
+                                this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font, lineText.FontStyle, lineText.FontWeight);
                             break;
                         case Primitive2DType.Point2D:
                             Point2D point = (Point2D)primitive;
@@ -276,7 +276,7 @@ namespace OsmSharp.UI.Renderer
                         case Primitive2DType.Text2D:
                             Text2D text = (Text2D)primitive;
                             this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
+                                this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font, text.FontStyle, text.FontWeight, text.XOffset, text.YOffset);
                             break;
                     }
                 }
@@ -357,10 +357,11 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
-	    /// <param name="lineJoin"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="dashes"></param>
-		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
-            LineJoin lineJoin, int[] dashes);
+		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width,
+            LineJoin lineJoin, LineCap lineCap, int[] dashes);
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
@@ -371,7 +372,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
+        protected abstract void DrawPolygon(Target2DWrapper<TTarget> target2DWrapper, double[] x, double[] y, double[][] holeX, double[][] holeY, int color, double width, bool fill);
 
 	    /// <summary>
 	    /// Draws an icon on the target unscaled but centered at the given scene coordinates.
@@ -411,8 +412,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
-		                                 int? haloColor, int? haloRadius, string fontName);
+        protected abstract void DrawText(Target2DWrapper<TTarget> target2DWrapper, double x, double y, string text, int color, double size,
+                                         int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight, int xOffset, int yOffset);
 
         /// <summary>
         /// Draws text along a given line.
@@ -423,7 +424,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text"></param>
-        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
-		                                     double size, int? haloColor, int? haloRadius, string fontName);
-    }
+        protected abstract void DrawLineText(Target2DWrapper<TTarget> target2DWrapper, double[] x, double[] y, string text, int color, 
+		                                     double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight);
+	}
 }

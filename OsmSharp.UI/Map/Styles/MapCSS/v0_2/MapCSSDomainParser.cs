@@ -319,29 +319,67 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     selector.SelectorRule = selector.SelectorRule & opExistsRule;
                                 }
                             }
-                            else if (attributeSelector.Children[0].Text == "<" ||
-                                attributeSelector.Children[0].Text == ">" ||
-                                attributeSelector.Children[0].Text == "=" ||
-                                attributeSelector.Children[0].Text == "!=")
+                            else if (attributeSelector.Children[0].Text == "OP_NOT_EXIST")
                             {
-                                // the exists selector.
+                                // the not exists selector.
+                                var opNotExistsRule = new SelectorRuleTag();
+                                opNotExistsRule.Invert = true;
+
+                                if (attributeSelector.ChildCount < 2)
+                                {
+                                    // oeps, this is not possible.
+                                    throw new MapCSSDomainParserException(attributeSelector,
+                                                                          "OP_NOT_EXIST without tag value!");
+                                }
+                                opNotExistsRule.Tag = attributeSelector.Children[1].Text;
+
+                                // add the tags.
+                                if (selector.SelectorRule == null)
+                                {
+                                    selector.SelectorRule = opNotExistsRule;
+                                }
+                                else
+                                {
+                                    selector.SelectorRule = selector.SelectorRule & opNotExistsRule;
+                                }
+                            }
+                            else if (attributeSelector.Children[0].Text == "<" ||
+                                     attributeSelector.Children[0].Text == ">" ||
+                                     attributeSelector.Children[0].Text == "<=" ||
+                                     attributeSelector.Children[0].Text == ">=" ||
+                                     attributeSelector.Children[0].Text == "=" ||
+                                     attributeSelector.Children[0].Text == "!=")
+                            {
+                                // the comparison selector.
                                 var selectorRuleTagValueComparison = new SelectorRuleTagValueComparison();
 
                                 if (attributeSelector.ChildCount < 3)
                                 {
                                     // oeps, this is not possible.
                                     throw new MapCSSDomainParserException(attributeSelector,
-                                                                          "Tag selector without tag/key value!");
+                                        "Tag selector without tag/key value!");
                                 }
                                 switch (attributeSelector.Children[0].Text)
                                 {
                                     case ">":
-                                        selectorRuleTagValueComparison.Comparator = 
-                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.GreaterThan;
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .GreaterThan;
                                         break;
                                     case "<":
                                         selectorRuleTagValueComparison.Comparator =
-                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum.GreaterThan;
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .SmallerThan;
+                                        break;
+                                    case ">=":
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .GreaterThanOrEqual;
+                                        break;
+                                    case "<=":
+                                        selectorRuleTagValueComparison.Comparator =
+                                            SelectorRuleTagValueComparison.SelectorRuleTagValueComparisonEnum
+                                                .SmallerThanOrEqual;
                                         break;
                                     case "=":
                                         selectorRuleTagValueComparison.Comparator =
@@ -354,8 +392,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     default:
                                         // oeps, this is not possible.
                                         throw new MapCSSDomainParserException(attributeSelector,
-                                                                              string.Format("{0} not found as comparator",
-                                                                                attributeSelector.Children[0].Text));
+                                            string.Format("{0} not found as comparator",
+                                                attributeSelector.Children[0].Text));
                                 }
                                 selectorRuleTagValueComparison.Tag = attributeSelector.Children[1].Text;
                                 selectorRuleTagValueComparison.Value = attributeSelector.Children[2].Text;
@@ -374,7 +412,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             {
                                 // oeps, this is not possible.
                                 throw new MapCSSDomainParserException(attributeSelector,
-                                                                      "Attibute selector not found!");
+                                    "Attibute selector not found!");
                             }
                         }
                     }
@@ -517,9 +555,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     case "square":
                                         linecap.Value = LineCapEnum.Square;
                                         break;
-                                    case "butt":
-                                        linecap.Value = LineCapEnum.Butt;
-                                        break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
                                                                                 string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
@@ -548,9 +583,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                         break;
                                     case "square":
                                         casingLinecap.Value = LineCapEnum.Square;
-                                        break;
-                                    case "butt":
-                                        casingLinecap.Value = LineCapEnum.Butt;
                                         break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
@@ -746,6 +778,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     case "bevel":
                                         casingLinejoin.Value = LineJoinEnum.Bevel;
                                         break;
+                                    case "none":
+                                        casingLinejoin.Value = LineJoinEnum.None;
+                                        break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
                                                                                 string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
@@ -811,8 +846,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(fontSize);
                             break;
                         case "text-offset":
+                        case "text-offset-y":
                             var textOffset = new DeclarationInt();
-                            textOffset.Qualifier = DeclarationIntEnum.TextOffset;
+                            textOffset.Qualifier = DeclarationIntEnum.TextOffsetY;
                             if (evalCall != null)
                             {
                                 textOffset.EvalFunction = evalCall;
@@ -1362,6 +1398,93 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
 
                             // add declaration.
                             rule.Declarations.Add(text);
+                            break;
+                        case "text-anchor-horizontal":
+                            var textAnchorHorizontal = new DeclarationTextAnchor();
+                            textAnchorHorizontal.Qualifier = DeclarationTextAnchorEnum.Horizontal;
+                            if (evalCall != null)
+                            {
+                                textAnchorHorizontal.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "left":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Left;
+                                        break;
+                                    case "center":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Center;
+                                        break;
+                                    case "right":
+                                        textAnchorHorizontal.Value = TextAnchorEnum.Right;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textAnchorHorizontal);
+                            break;
+                        case "text-anchor-vertical":
+                            var textAnchorVertical = new DeclarationTextAnchor();
+                            textAnchorVertical.Qualifier = DeclarationTextAnchorEnum.Vertical;
+                            if (evalCall != null)
+                            {
+                                textAnchorVertical.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "above":
+                                        textAnchorVertical.Value = TextAnchorEnum.Above;
+                                        break;
+                                    case "top":
+                                        textAnchorVertical.Value = TextAnchorEnum.Top;
+                                        break;
+                                    case "center":
+                                        textAnchorVertical.Value = TextAnchorEnum.Center;
+                                        break;
+                                    case "bottom":
+                                        textAnchorVertical.Value = TextAnchorEnum.Bottom;
+                                        break;
+                                    case "below":
+                                        textAnchorVertical.Value = TextAnchorEnum.Below;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textAnchorVertical);
+                            break;
+                        case "text-offset-x":
+                            var textOffsetX = new DeclarationInt();
+                            textOffsetX.Qualifier = DeclarationIntEnum.TextOffsetX;
+                            if (evalCall != null)
+                            {
+                                textOffsetX.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    textOffsetX.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(textOffsetX);
                             break;
                         default:
                             var declarationCustom = new DeclarationCustom();

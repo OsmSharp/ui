@@ -137,12 +137,12 @@ way|z15-16[highway=path]
 {width:eval(max(2, prop("width"))); color:#655; casing-dashes: 3,1; z-index:3;casing-width: 1;}
 
 way|z15-[highway=steps]{}
-//{z-index:5;  width:eval(max(2, prop("width"))); color:#655; casing-dashes: 1,0;  linecap: butt;casing-width: 1;}
+//{z-index:5;  width:eval(max(2, prop("width"))); color:#655; casing-dashes: 1,0;  linecap: square;casing-width: 1;}
 //TODo:{z-index:6; width:eval(max(2, prop("width"))); dashes: eval("1," + str( max(num(any(num(metric(tag("step:length")))/100, num(metric("0.3m"))))- 1, 1) ) ); color: black;casing-width: 1;}
 
 
 
-way[bridge=yes] {casing-width:eval(min(3, num(prop("width"))/2 ));casing-linecap:butt}
+way[bridge=yes] {casing-width:eval(min(3, num(prop("width"))/2 ));casing-linecap:square}
 
 
 area[highway][area=yes] {fill-color: eval(any(prop("fill-color"),prop("color"))); fill-image: eval(any(prop("fill-image"), prop("image")));}

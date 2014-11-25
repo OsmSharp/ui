@@ -79,6 +79,11 @@ namespace OsmSharp.UI.Renderer.Scene
         private ObjectTable<StylePolygon> _polygonStyles;
 
         /// <summary>
+        /// Holds the icon styles.
+        /// </summary>
+        private ObjectTable<StyleIcon> _iconStyles;
+
+        /// <summary>
         /// Holds the next id.
         /// </summary>
         private uint _nextId = 0;
@@ -152,6 +157,7 @@ namespace OsmSharp.UI.Renderer.Scene
             _textStyles = new ObjectTable<StyleText>(true);
             _lineStyles = new ObjectTable<StyleLine>(true);
             _polygonStyles = new ObjectTable<StylePolygon>(true);
+            _iconStyles = new ObjectTable<StyleIcon>(true);
 
             // geo indexes.
             _pointIndex = new ObjectTable<ScenePoint>(true);
@@ -509,16 +515,16 @@ namespace OsmSharp.UI.Renderer.Scene
                         {
                             case SceneObjectType.IconObject:
                                 SceneIconObject icon = sceneObject as SceneIconObject;
-                                byte[] iconStyle = _imageIndex[(int)icon.StyleId];
-                                //if (Scene2DZoomRange.Contains(zoom))
-                                //{
-                                point = _pointIndex.Get(icon.GeoId);
-                                if (view.Contains(point.X, point.Y))
+                                StyleIcon iconStyle = _iconStyles.Get(icon.StyleId);
+                                if (Scene2DZoomRange.Contains(iconStyle.MinZoom, iconStyle.MaxZoom, zoom))
                                 {
-                                    primitives.Add(
-                                        this.ConvertToPrimitive(id, icon, iconStyle));
+                                    point = _pointIndex.Get(icon.GeoId);
+                                    if (view.Contains(point.X, point.Y))
+                                    {
+                                        primitives.Add(
+                                            this.ConvertToPrimitive(id, icon, iconStyle));
+                                    }
                                 }
-                                //}
                                 break;
                             case SceneObjectType.LineObject:
                                 SceneLineObject line = sceneObject as SceneLineObject;
@@ -612,7 +618,7 @@ namespace OsmSharp.UI.Renderer.Scene
             switch (sceneObject.Enum)
             {
                 case SceneObjectType.IconObject:
-                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject, _imageIndex[(int)sceneObject.StyleId]);
+                    return this.ConvertToPrimitive(id, sceneObject as SceneIconObject, _iconStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.LineObject:
                     return this.ConvertToPrimitive(id, sceneObject as SceneLineObject, _lineStyles.Get(sceneObject.StyleId));
                 case SceneObjectType.LineTextObject:
@@ -885,20 +891,22 @@ namespace OsmSharp.UI.Renderer.Scene
                 // check the current object's zoom range against the current min/max zoom factor.
                 if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
                 { // ok this object does existing inside the current range.
+                    
                     // add to the scene.
                     // build the zoom range.
-                    // TODO: zoom and layer for icon.
-                    //Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                    //{
-                    //    MinZoom = minimumZoomFactor,
-                    //    MaxZoom = maximumZoomFactor
-                    //};
-                    //ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
+                    StyleIcon style = new StyleIcon()
+                    {
+                        ImageId = imageId,
+                        Layer = layer,
+                        MinZoom = minimumZoomFactor,
+                        MaxZoom = maximumZoomFactor
+                    };
+                    ushort styleId = (ushort)_iconStyles.Add(style);
 
                     // add the scene object.
                     uint id = _nextId;
-                    _sceneObjects[idx].Add(id, 
-                        new SceneIconObject() { StyleId = imageId, GeoId = pointId });
+                    _sceneObjects[idx].Add(id,
+                        new SceneIconObject() { StyleId = styleId, GeoId = pointId });
                     _nextId++;
                     newIds.Add(id);
                 }
@@ -931,15 +939,16 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, byte[] style)
+        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, StyleIcon style)
         {
             Icon2D primitive = new Icon2D();
             primitive.Id = id;
 
             // convert image.
-            primitive.Image = style;
-            primitive.Layer = 0; // TODO: image layers!!!
-            // TODO: zoom levels.
+            primitive.Image = _imageIndex[(int)style.ImageId];
+            primitive.Layer = style.Layer;
+            primitive.MinZoom = style.MinZoom;
+            primitive.MaxZoom = style.MaxZoom;
 
             // get the geo.
             ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
@@ -962,9 +971,13 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="font"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         /// <returns></returns>
         public List<uint> AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
-            int? haloColor, int? haloRadius, string font)
+            int? haloColor, int? haloRadius, string font, FontStyle fontStyle, FontWeight fontWeight, int xOffset, int yOffset)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -986,11 +999,15 @@ namespace OsmSharp.UI.Renderer.Scene
                         Color = color,
                         Size = size,
                         Font = font,
+                        FontStyle = fontStyle,
+                        FontWeight = fontWeight,
                         HaloColor = haloColor,
                         HaloRadius = haloRadius,
                         Layer = layer,
                         MinZoom = minimumZoomFactor,
-                        MaxZoom = maximumZoomFactor
+                        MaxZoom = maximumZoomFactor,
+                        XOffset = xOffset,
+                        YOffset = yOffset
                     };
                     ushort styleId = (ushort)_textStyles.Add(style);
 
@@ -1038,12 +1055,16 @@ namespace OsmSharp.UI.Renderer.Scene
             // convert image.
             primitive.Color = style.Color;
             primitive.Font = style.Font;
+            primitive.FontStyle = style.FontStyle;
+            primitive.FontWeight = style.FontWeight;
             primitive.HaloColor = style.HaloColor;
             primitive.HaloRadius = style.HaloRadius;
             primitive.Size = style.Size;
             primitive.Layer = style.Layer;
             primitive.MaxZoom = style.MaxZoom;
             primitive.MinZoom = style.MinZoom;
+            primitive.XOffset = style.XOffset;
+            primitive.YOffset = style.YOffset;
 
             // get the text.
             primitive.Text = _stringTable.Get(sceneObject.TextId);
@@ -1066,8 +1087,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
         /// <param name="dashes"></param>
-        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
+        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, LineCap lineCap,
+            int[] dashes)
         {// add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1108,6 +1131,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             Color = color,
                             Dashes = dashes,
                             LineJoin = lineJoin,
+                            LineCap = lineCap,
                             Width = width,
                             Layer = layer,
                             MinZoom = minimumZoomFactor,
@@ -1203,7 +1227,7 @@ namespace OsmSharp.UI.Renderer.Scene
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
-            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.Dashes, style.MinZoom, style.MaxZoom);
+            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.LineCap, style.Dashes, style.MinZoom, style.MaxZoom);
             primitive.Id = id;
             primitive.Layer = style.Layer;
 
@@ -1221,10 +1245,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="size"></param>
         /// <param name="text"></param>
         /// <param name="font"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
-        public List<uint> AddStyleLineText(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font,
-            int? haloColor, int? haloRadius)
+        public List<uint> AddStyleLineText(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font, FontStyle fontStyle, 
+            FontWeight fontWeight, int? haloColor, int? haloRadius)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1270,6 +1296,8 @@ namespace OsmSharp.UI.Renderer.Scene
                             Color = color,
                             Size = size,
                             Font = font,
+                            FontStyle = fontStyle,
+                            FontWeight = fontWeight,
                             HaloColor = haloColor,
                             HaloRadius = haloRadius,
                             Layer = layer,
@@ -1325,8 +1353,10 @@ namespace OsmSharp.UI.Renderer.Scene
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
             var primitive = new LineText2D(geo.X, geo.Y, style.Color, style.Size, text, style.HaloColor, style.HaloRadius, style.MinZoom, style.MaxZoom);
-            primitive.Id = id;
             primitive.Font = style.Font;
+            primitive.FontStyle = style.FontStyle;
+            primitive.FontWeight = style.FontWeight;
+            primitive.Id = id;
             primitive.Layer = style.Layer;
 
             return primitive;
@@ -1336,13 +1366,14 @@ namespace OsmSharp.UI.Renderer.Scene
         /// Adds a polygon with the given points and style.
         /// </summary>
         /// <param name="pointsId"></param>
+        /// <param name="innerPointsIds"></param>
         /// <param name="layer"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="fill"></param>
-        public List<uint> AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
+        public List<uint> AddStylePolygon(uint pointsId, uint[] innerPointsIds, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
         { // add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1378,6 +1409,35 @@ namespace OsmSharp.UI.Renderer.Scene
                             geometryId = _pointsIndex.Add(new ScenePoints(simplified[0], simplified[1]));
                         }
 
+                        uint[] holeGeoIds = null;
+                        if (innerPointsIds != null)
+                        {
+                            holeGeoIds = new uint[innerPointsIds.Length];
+                            if (innerPointsIds != null && innerPointsIds.Length > 0)
+                            {
+                                for (int i = 0; i < innerPointsIds.Length; i++)
+                                {
+                                    var innerId = innerPointsIds[i];
+
+                                    ScenePoints innerPointsPair = _pointsIndex.Get(innerId);
+                                    double[][] innerPoints = new double[][] {innerPointsPair.X, innerPointsPair.Y};
+                                    double[][] simplifiedInner =
+                                        OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(innerPoints, epsilon);
+
+                                    uint innerRingId = innerId;
+
+                                    if (simplifiedInner[0].Length < innerPoints[0].Length)
+                                    {
+                                        // add a new simplified geometry.
+                                        innerRingId =
+                                            _pointsIndex.Add(new ScenePoints(simplifiedInner[0], simplifiedInner[1]));
+                                    }
+
+                                    holeGeoIds[i] = innerRingId;
+                                }
+                            }
+                        }
+
                         // add to the scene.
                         // build the style.
                         StylePolygon style = new StylePolygon()
@@ -1393,8 +1453,8 @@ namespace OsmSharp.UI.Renderer.Scene
 
                         // add the scene object.
                         uint id = _nextId;
-                        _sceneObjects[idx].Add(id, 
-                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId });
+                        _sceneObjects[idx].Add(id,
+                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId, HoleGeoIds = holeGeoIds });
                         _nextId++;
                         newIds.Add(id);
                     }
@@ -1434,9 +1494,23 @@ namespace OsmSharp.UI.Renderer.Scene
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
 
+            var listOfHoleXCoords = new List<double[]>();
+            var listOfHoleYCoords = new List<double[]>();
+            if (sceneObject.HoleGeoIds != null)
+            {
+                foreach (var geoId in sceneObject.HoleGeoIds)
+                {
+                    ScenePoints holePoints = _pointsIndex.Get(geoId);
+                    listOfHoleXCoords.Add(holePoints.X);
+                    listOfHoleYCoords.Add(holePoints.Y);
+                }
+            }
+
             var primitive = new Polygon2D(geo.X, geo.Y, style.Color, style.Width, style.Fill, style.MinZoom, style.MaxZoom);
             primitive.Layer = style.Layer;
             primitive.Id = id;
+            primitive.HoleXCoords = listOfHoleXCoords.ToArray();
+            primitive.HoleYCoords = listOfHoleYCoords.ToArray();
 
             return primitive;
         }

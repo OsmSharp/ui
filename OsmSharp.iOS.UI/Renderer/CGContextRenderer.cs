@@ -239,10 +239,11 @@ namespace OsmSharp.iOS.UI
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
-		/// <param name="lineJoin"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
 		/// <param name="dashes"></param>
 		protected override void DrawLine(Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
-		                                  LineJoin lineJoin, int[] dashes)
+		                                  LineJoin lineJoin, LineCap lineCap, int[] dashes)
 		{
 			float widthInPixels = this.ToPixels(width) * _scaleFactor;
 
@@ -431,7 +432,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="size"></param>
 		/// <param name="color">Color.</param>
 		protected override void DrawText(Target2DWrapper<CGContextWrapper> target, double x, double y, string text, int color, double size,
-		                                  int? haloColor, int? haloRadius, string fontName)
+		                                  int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight)
 		{
 			double[] transformed = this.Transform(x, y);
 			float xPixels = (float)transformed[0];
@@ -503,7 +504,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
 		protected override void DrawLineText(Target2DWrapper<CGContextWrapper> target, double[] xa, double[] ya, string text, int color, 
-		                                      double size, int? haloColor, int? haloRadius, string fontName)
+		                                      double size, int? haloColor, int? haloRadius, string fontName, FontStyle fontStyle, FontWeight fontWeight)
 		{
 			float textSize = this.ToPixels(size) * _scaleFactor;
 			

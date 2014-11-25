@@ -20,14 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 using OsmSharp.Units.Angle;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.WinForms.UI.Renderer.Images;
 
@@ -38,8 +36,6 @@ namespace OsmSharp.WinForms.UI.Renderer
 	/// </summary>
     public class GraphicsRenderer2D : Renderer2D<Graphics>
 	{
-        private Pen _pen = new Pen(Color.Black);
-
         #region Caching Implementation
 
         /// <summary>
@@ -56,6 +52,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             target.Target = Graphics.FromImage(bitmap);
             target.Target.CompositingMode = CompositingMode.SourceOver;
             target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
+            target.Target.TextRenderingHint = target.BackTarget.TextRenderingHint;
             target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
             target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
 
@@ -181,8 +178,11 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    {
             double[] transformed = this.Tranform(x, y);
 	        float sizeInPixels = this.ToPixels(size);
-            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), (float)transformed[0] - (sizeInPixels / 2.0f), (float)transformed[1] - (sizeInPixels / 2.0f),
-                sizeInPixels, sizeInPixels);
+            using (var brush = new SolidBrush(Color.FromArgb(color)))
+            {
+                target.Target.FillEllipse(brush, (float)transformed[0] - (sizeInPixels / 2.0f), (float)transformed[1] - (sizeInPixels / 2.0f), 
+                    sizeInPixels, sizeInPixels);
+            }
         }
 
 	    /// <summary>
@@ -193,91 +193,153 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
-	    /// <param name="lineJoin"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="lineCap"></param>
 	    /// <param name="dashes"></param>
-	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, int[] dashes)
+	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width,
+            OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, OsmSharp.UI.Renderer.Primitives.LineCap lineCap, int[] dashes)
 	    {
-//	        float widthInPixels = this.ToPixels(width);
+            using (var pen = new Pen(Color.FromArgb(color)))
+	        {
+                pen.DashStyle = DashStyle.Solid;
+	            if (dashes != null)
+	            {
+	                var penDashes = new float[dashes.Length];
+	                for (int idx = 0; idx < dashes.Length; idx++)
+	                {
+	                    penDashes[idx] = dashes[idx];
+	                }
+                    pen.DashPattern = penDashes;
+                    pen.DashStyle = DashStyle.Custom;
+	            }
+	            switch (lineJoin)
+	            {
+	                case OsmSharp.UI.Renderer.Primitives.LineJoin.Round:
+                        pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+	                    break;
+	                case OsmSharp.UI.Renderer.Primitives.LineJoin.Miter:
+                        pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
+	                    break;
+	                case OsmSharp.UI.Renderer.Primitives.LineJoin.Bevel:
+                        pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
+	                    break;
+	                case OsmSharp.UI.Renderer.Primitives.LineJoin.None:
+	                    // just keep the default.
+                        pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+	                    break;
+	                default:
+	                    throw new ArgumentOutOfRangeException("lineJoin");
+	            }
+	            switch (lineCap)
+	            {
+	                case OsmSharp.UI.Renderer.Primitives.LineCap.Round:
+	                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+	                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+	                    break;
+	                case OsmSharp.UI.Renderer.Primitives.LineCap.Square:
+	                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Square;
+	                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Square;
+	                    break;
+	                case OsmSharp.UI.Renderer.Primitives.LineCap.None:
+	                    // just keep the default.
+	                    pen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+	                    pen.EndCap = System.Drawing.Drawing2D.LineCap.Flat;
+	                    break;
+	                default:
+	                    throw new ArgumentOutOfRangeException("lineCap");
+	            }
+	            var points = new PointF[x.Length];
+	            for (int idx = 0; idx < x.Length; idx++)
+	            {
+	                double[] transformed = this.Tranform(x[idx], y[idx]);
+	                points[idx] = new PointF((float) transformed[0], (float) transformed[1]);
+	            }
 
-            _pen.DashStyle = DashStyle.Solid;
-            if (dashes != null)
-            {
-                var penDashes = new float[dashes.Length];
-                for (int idx = 0; idx < dashes.Length; idx++)
-                {
-                    penDashes[idx] = dashes[idx];
-                }
-                _pen.DashPattern = penDashes;
-                _pen.DashStyle = DashStyle.Custom;
-            }
-		    switch (lineJoin)
-		    {
-                case OsmSharp.UI.Renderer.Primitives.LineJoin.Round:
-                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
-		            break;
-                case OsmSharp.UI.Renderer.Primitives.LineJoin.Miter:
-                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
-		            break;
-                case OsmSharp.UI.Renderer.Primitives.LineJoin.Bevel:
-                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
-		            break;
-                case OsmSharp.UI.Renderer.Primitives.LineJoin.None:
-		            // just keep the default.
-                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
-		            break;
-		        default:
-		            throw new ArgumentOutOfRangeException("lineJoin");
-		    }
-            _pen.StartCap = LineCap.Round;
-            _pen.EndCap = LineCap.Round;
-		    var points = new PointF[x.Length];
-		    for (int idx = 0; idx < x.Length; idx++)
-		    {
-                double[] transformed = this.Tranform(x[idx], y[idx]);
-                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
-		    }
-            //if (casingWidth > 0)
-            //{ // draw casing.
-            //    _pen.Color = Color.FromArgb(casingColor);
-            //    _pen.Width = this.ToPixels(casingWidth + width);
-            //    target.Target.DrawLines(_pen, points);
-            //}
-            // set color/width.
-            _pen.Color = Color.FromArgb(color);
-            _pen.Width = this.ToPixels(width);
-            target.Target.DrawLines(_pen, points);
-		}
+	            // set width.
+	            pen.Width = this.ToPixels(width);
+	            target.Target.DrawLines(pen, points);
+	        }
+	    }
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The x coordinate.</param>
+        /// <param name="holeX">The x coordinates for holes.</param>
+	    /// <param name="holeY">The y coordinates for holes.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-	    protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
+        protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, double[][] holeX, double[][] holeY, int color,
             double width, bool fill)
         {
             float widthInPixels = this.ToPixels(width);
 
-            var points = new PointF[x.Length];
+            var outerPoints = new PointF[x.Length];
             for (int idx = 0; idx < x.Length; idx++)
             {
                 double[] transformed = this.Tranform(x[idx], y[idx]);
-                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
+                outerPoints[idx] = new PointF((float)transformed[0], (float)transformed[1]);
             }
+
+	        var innerPointSets = new List<PointF[]>();
+            for (int i = 0; i < holeX.GetLength(0); i++)
+            {
+                var innerPoints = new PointF[holeX[i].Length];
+                for (int j = 0; j < holeX[i].Length; j++)
+                {
+                    double[] transformed = this.Tranform(holeX[i][j], holeY[i][j]);
+                    innerPoints[j] = new PointF((float) transformed[0], (float) transformed[1]);
+                }
+                innerPointSets.Add(innerPoints);
+            }
+
             if (fill)
             {
-//                var pen = new Pen(Color.FromArgb(color), widthInPixels);
-                target.Target.FillPolygon(new SolidBrush(Color.FromArgb(color)), points);
+                using (var brush = new SolidBrush(Color.FromArgb(color)))
+                {
+                    
+                    using (var outerPath = new GraphicsPath())
+                    using (var innerPath = new GraphicsPath())
+                    {
+                        if (outerPoints.Length > 2)
+                        {
+                            outerPath.AddPolygon(outerPoints);
+                        }
+                        else if (outerPoints.Length > 1)
+                        {
+                            outerPath.AddLine(outerPoints[0], outerPoints[1]);
+                        }
+
+
+                        foreach (var innerPoints in innerPointSets)
+                        {
+                            if (innerPoints.Length > 2)
+                            {
+                                innerPath.AddPolygon(innerPoints);
+                            }
+                            else if (innerPoints.Length > 1)
+                            {
+                                innerPath.AddLine(innerPoints[0], innerPoints[1]);
+                            }
+                        }
+
+                        var region = new Region(outerPath);
+                        region.Exclude(innerPath);
+
+                        target.Target.FillRegion(brush, region);
+                    }
+                }
             }
             else
             {
-                var pen = new Pen(Color.FromArgb(color), widthInPixels);
-                target.Target.DrawPolygon(pen, points);
+                // TODO: handle holes for non-filled?
+                using (var pen = new Pen(Color.FromArgb(color), widthInPixels))
+                {
+                    target.Target.DrawPolygon(pen, outerPoints);
+                }
             }
 		}
 
@@ -290,12 +352,17 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="imageData"></param>
 	    protected override void DrawIcon(Target2DWrapper<Graphics> target, double x, double y, byte[] imageData)
         {
-            // get the image.
-            Image image = Image.FromStream(new MemoryStream(imageData));
+	        using (var ms = new MemoryStream(imageData))
+	        {
+	            // get the image.
+                Image image = Image.FromStream(ms);
 
-            // draw the image.
-            double[] transformed = this.Tranform(x, y);
-            target.Target.DrawImage(image, (float)transformed[0], (float)transformed[1]);
+	            // draw the image.
+	            double[] transformed = this.Tranform(x, y);
+	            transformed[0] = transformed[0] - (image.Width / 2.0);
+                transformed[1] = transformed[1] - (image.Height / 2.0);
+	            target.Target.DrawImage(image, (float)transformed[0], (float)transformed[1]);
+	        }
         }
 
 	    /// <summary>
@@ -355,35 +422,60 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="fontName"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
+        /// <param name="xOffset"></param>
+        /// <param name="yOffset"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
-            int? haloColor, int? haloRadius, string fontName)
+            int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, FontWeight fontWeight,
+            int xOffset, int yOffset)
         {
             float sizeInPixels = this.ToPixels(size);
-            Color textColor = Color.FromArgb(color);
-            Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
-            SolidBrush brush = new SolidBrush(textColor);
+            Color textColor = Color.FromArgb(color); 
             double[] transformed = this.Tranform(x, y);
-            float transformedX = (float)transformed[0];
-            float transformedY = (float)transformed[1];
-            Brush haloBrush = null;
-            GraphicsPath characterPath = new GraphicsPath();
-            characterPath.AddString(text, font.FontFamily, (int)font.Style, font.Size, new PointF(transformedX, transformedY),
-                                            StringFormat.GenericTypographic);
-            if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+            float transformedX = (float)transformed[0] + xOffset;
+            float transformedY = (float)transformed[1] + yOffset;
+
+            var targetFontStyle = System.Drawing.FontStyle.Regular;
+
+            if (fontStyle == OsmSharp.UI.Renderer.Primitives.FontStyle.Italic)
+                targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Italic;
+
+            if (fontWeight == FontWeight.Bold)
+                targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Bold;
+
+            using (var font = new Font(fontName, sizeInPixels, targetFontStyle))
             {
-                haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
-
-                GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
-                using (haloPath)
+                using (var brush = new SolidBrush(textColor))
                 {
-                    haloPath.Widen(new Pen(haloBrush, haloRadius.Value * 2));
+                    using (var characterPath = new GraphicsPath())
+                    {
+                        var textWidth = target.Target.MeasureString(text, font).Width;
+                        transformedX = transformedX - (textWidth/2f); // center the text
 
-                    // Draw the character
-                    target.Target.FillPath(haloBrush, haloPath);
+                        characterPath.AddString(text, font.FontFamily, (int) font.Style, font.Size, new PointF(transformedX, transformedY), 
+                            StringFormat.GenericTypographic);
+                        if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+                        {
+                            using (var haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value)))
+                            {
+                                using (var haloPath = characterPath.Clone() as GraphicsPath)
+                                {
+                                    using (var pen = new Pen(haloBrush, haloRadius.Value*2))
+                                    {
+                                        haloPath.Widen(pen);
+
+                                        // Draw the character
+                                        target.Target.FillPath(haloBrush, haloPath);
+                                    }
+                                }
+                            }
+                        }
+                        // Draw the character
+                        target.Target.FillPath(brush, characterPath);
+                    }
                 }
             }
-            // Draw the character
-            target.Target.FillPath(brush, characterPath);
         }
 
         /// <summary>
@@ -398,46 +490,66 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <param name="fontName"></param>
-        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
-            double size, int? haloColor, int? haloRadius, string fontName)
+        /// <param name="fontStyle"></param>
+        /// <param name="fontWeight"></param>
+        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color,
+            double size, int? haloColor, int? haloRadius, string fontName, OsmSharp.UI.Renderer.Primitives.FontStyle fontStyle, 
+            FontWeight fontWeight)
         {
             if (x.Length > 1)
             {
                 float sizeInPixels = this.ToPixels(size);
                 Color textColor = Color.FromArgb(color);
-                Brush brush = new SolidBrush(textColor);
-                Brush haloBrush = null;
-                if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
-                {
-                    haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
-                }
-                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
 
-                // get some metrics on the texts.
-                var characterWidths = GetCharacterWidths(target.Target, text, font);
-                for (int idx = 0; idx < characterWidths.Length; idx++)
+                var targetFontStyle = System.Drawing.FontStyle.Regular;
+
+                if (fontStyle == OsmSharp.UI.Renderer.Primitives.FontStyle.Italic)
+                    targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Italic;
+
+                if (fontWeight == FontWeight.Bold)
+                    targetFontStyle = targetFontStyle | System.Drawing.FontStyle.Bold;
+
+                using (var font = new Font(fontName, sizeInPixels, targetFontStyle))
                 {
-                    characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
-                }
-                var characterHeight = target.Target.MeasureString(text, font).Height;
-                var textLength = characterWidths.Sum();
+                    // get some metrics on the texts.
+                    var characterWidths = GetCharacterWidths(target.Target, text, font);
+                    for (int idx = 0; idx < characterWidths.Length; idx++)
+                    {
+                        characterWidths[idx] = (float) this.FromPixels(_target, _view, characterWidths[idx]);
+                    }
+                    var characterHeight = target.Target.MeasureString(text, font).Height;
+                    var textLength = characterWidths.Sum();
 //                var avgCharacterWidth = textLength / characterWidths.Length;
 
-                // calculate line length.
-                var lineLength = Polyline2D.Length(x, y);
-                if (lineLength > textLength * 1.1f)
-                {
-                    // calculate the number of labels.
-                    int labelCount = (int)System.Math.Floor(lineLength / (textLength * 10)) + 1;
-
-                    // calculate positions of label(s).
-                    double positionGap = lineLength / (labelCount + 1);
-
-                    // draw each label.
-                    for (double position = positionGap; position < lineLength; position = position + positionGap)
+                    // calculate line length.
+                    var lineLength = Polyline2D.Length(x, y);
+                    if (lineLength > textLength*1.1f)
                     {
-                        this.DrawLineTextSegment(target, x, y, text, color, size, haloColor, haloRadius, position, characterWidths,
-                            textLength, font, characterHeight, haloBrush, brush);
+                        // calculate the number of labels.
+                        int labelCount = (int) System.Math.Floor(lineLength/(textLength*10)) + 1;
+
+                        // calculate positions of label(s).
+                        double positionGap = lineLength/(labelCount + 1);
+
+                        using (var brush = new SolidBrush(textColor))
+                        {
+                            Brush haloBrush = null;
+                            if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+                            {
+                                haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
+                            }
+                            // draw each label.
+                            for (double position = positionGap; position < lineLength; position = position + positionGap)
+                            {
+                                this.DrawLineTextSegment(target, x, y, text, color, size, haloColor, haloRadius,
+                                    position, characterWidths, textLength, font, characterHeight, haloBrush, brush);
+                            }
+
+                            if (haloBrush != null)
+                            {
+                                haloBrush.Dispose();
+                            }
+                        }
                     }
                 }
             }
@@ -505,7 +617,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 //double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
                 PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition2);
                 char currentChar = text[idx];
-                using (GraphicsPath characterPath = new GraphicsPath())
+                using (var characterPath = new GraphicsPath())
                 {
                     characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
                                             StringFormat.GenericTypographic);
@@ -514,36 +626,38 @@ namespace OsmSharp.WinForms.UI.Renderer
 
                     // Transformation matrix to move the character to the correct location. 
                     // Note that all actions on the Matrix class are prepended, so we apply them in reverse.
-                    var transform = new Matrix();
+                    using (var transform = new Matrix())
+                    {
+                        // Translate to the final position, the center of line-segment between 'current' and 'next'
+                        PointF2D position = current;
+                        //PointF2D position = current + ((next - current) / 2.0);
+                        double[] transformed = this.Tranform(position[0], position[1]);
+                        transform.Translate((float) transformed[0], (float) transformed[1]);
 
-                    // Translate to the final position, the center of line-segment between 'current' and 'next'
-                    PointF2D position = current;
-                    //PointF2D position = current + ((next - current) / 2.0);
-                    double[] transformed = this.Tranform(position[0], position[1]);
-                    transform.Translate((float)transformed[0], (float)transformed[1]);
+                        // calculate the angle.
+                        VectorF2D vector = next - current;
+                        VectorF2D horizontal = new VectorF2D(1, 0);
+                        double angleDegrees = ((Degree) horizontal.Angle(vector)).Value;
 
-                    // calculate the angle.
-                    VectorF2D vector = next - current;
-                    VectorF2D horizontal = new VectorF2D(1, 0);
-                    double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+                        // Rotate the character
+                        transform.Rotate((float) angleDegrees);
 
-                    // Rotate the character
-                    transform.Rotate((float)angleDegrees);
+                        // Translate the character so the centre of its base is over the origin
+                        transform.Translate(0, -characterHeight/2.5f);
 
-                    // Translate the character so the centre of its base is over the origin
-                    transform.Translate(0, -characterHeight / 2.5f);
-
-                    //transform.Scale((float)this.FromPixels(_target, _view, 1), 
-                    //    (float)this.FromPixels(_target, _view, 1));
-                    characterPath.Transform(transform);
+                        //transform.Scale((float)this.FromPixels(_target, _view, 1), 
+                        //    (float)this.FromPixels(_target, _view, 1));
+                        characterPath.Transform(transform);
+                    }
 
                     if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
                     {
-                        GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
-                        using (haloPath)
+                        using (var haloPath = characterPath.Clone() as GraphicsPath)
                         {
-                            haloPath.Widen(new Pen(haloBrush, haloRadius.Value * 2));
-
+                            using (var pen = new Pen(haloBrush, haloRadius.Value*2))
+                            {
+                                haloPath.Widen(pen);
+                            }
                             // Draw the character
                             target.Target.FillPath(haloBrush, haloPath);
                         }

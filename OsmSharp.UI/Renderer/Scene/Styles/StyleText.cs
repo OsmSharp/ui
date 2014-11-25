@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.UI.Renderer.Primitives;
 using ProtoBuf;
 
 namespace OsmSharp.UI.Renderer.Scene.Styles
@@ -75,6 +76,30 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public float MaxZoom { get; set; }
 
         /// <summary>
+        /// Gets or sets the font style.
+        /// </summary>
+        [ProtoMember(9)]
+        public FontStyle FontStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the font weight.
+        /// </summary>
+        [ProtoMember(10)]
+        public FontWeight FontWeight { get; set; }
+
+        /// <summary>
+        /// Gets or sets the x-offset of the text.
+        /// </summary>
+        [ProtoMember(11)]
+        public int XOffset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the y-offset of the text.
+        /// </summary>
+        [ProtoMember(12)]
+        public int YOffset { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -88,7 +113,11 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.HaloRadius.GetHashCode() ^
                     this.Layer.GetHashCode() ^
                     this.MinZoom.GetHashCode() ^
-                    this.MaxZoom.GetHashCode();
+                    this.MaxZoom.GetHashCode() ^
+                    this.FontStyle.GetHashCode() ^
+                    this.FontWeight.GetHashCode() ^
+                    this.XOffset.GetHashCode() ^
+                    this.YOffset.GetHashCode();
             }
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
@@ -97,7 +126,11 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 this.Font.GetHashCode() ^
                 this.Layer.GetHashCode() ^
                 this.MinZoom.GetHashCode() ^
-                this.MaxZoom.GetHashCode();
+                this.MaxZoom.GetHashCode() ^
+                this.FontStyle.GetHashCode() ^
+                this.FontWeight.GetHashCode() ^
+                this.XOffset.GetHashCode() ^
+                this.YOffset.GetHashCode();
         }
 
         /// <summary>
@@ -110,13 +143,17 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             if (obj is StyleText)
             {
                 return (obj as StyleText).Size == this.Size &&
-                    (obj as StyleText).Color == this.Color &&
-                    (obj as StyleText).HaloRadius == this.HaloRadius &&
-                    (obj as StyleText).HaloColor == this.HaloColor &&
-                    (obj as StyleText).Font == this.Font &&
-                    (obj as StyleText).Layer == this.Layer &&
-                    (obj as StyleText).MinZoom == this.MinZoom &&
-                    (obj as StyleText).MaxZoom == this.MaxZoom;
+                       (obj as StyleText).Color == this.Color &&
+                       (obj as StyleText).HaloRadius == this.HaloRadius &&
+                       (obj as StyleText).HaloColor == this.HaloColor &&
+                       (obj as StyleText).Font == this.Font &&
+                       (obj as StyleText).Layer == this.Layer &&
+                       (obj as StyleText).MinZoom == this.MinZoom &&
+                       (obj as StyleText).MaxZoom == this.MaxZoom &&
+                       (obj as StyleText).FontStyle == this.FontStyle &&
+                       (obj as StyleText).FontWeight == this.FontWeight &&
+                       (obj as StyleText).XOffset == this.XOffset &&
+                       (obj as StyleText).YOffset == this.YOffset;
             }
             return false;
         }
