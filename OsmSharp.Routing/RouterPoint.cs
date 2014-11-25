@@ -100,5 +100,23 @@ namespace OsmSharp.Routing
             return string.Format("{0} {1}",
                                  this.Id, this.Location.ToString());
         }
+
+        /// <summary>
+        /// Function for checking whether a RouterPoint contains a given tag
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns>
+        /// true if the point contains a tag with Key=="tag" and Value==parameter, else returns false
+        /// </returns>
+        public bool ContainsTag( string tag )
+        {
+            foreach( KeyValuePair<string, string> pair in Tags )
+            {
+                if( ( "tag" == pair.Key ) && ( tag == pair.Value ) )
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

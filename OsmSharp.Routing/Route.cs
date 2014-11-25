@@ -23,6 +23,7 @@ using OsmSharp.Units.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace OsmSharp.Routing
@@ -549,6 +550,31 @@ namespace OsmSharp.Routing
                 return (this.Tags != null || this.Tags.Length == 0);
             }
             return false;
+        }
+
+        /// <summary>
+        /// Function for pulling out all associated integer tags where the tag key is equal to "tag" and tags with multiple values are separated by "separator"
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <returns>
+        /// all the integers contained in tag with Key "tag", separated by "separator"
+        /// </returns>
+        public List<int> GetTags( string separator )
+        {
+            List<int> retval = new List<int>();
+            foreach( RouteTags tag in Tags )
+            {
+                if( "tag" == tag.Key )
+                {
+                    foreach( string tagStr in Regex.Split( tag.Value, separator ) ) // separator: Constants.SCHEDULERREQUEST_ARGUMENT_LIST_SEPERATOR
+                    {
+                        int inspectionID;
+                        if( int.TryParse( tagStr, out inspectionID ) )
+                            retval.Add( inspectionID );
+                    }
+                }
+            }
+            return retval;
         }
     }
 
