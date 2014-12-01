@@ -71,6 +71,17 @@ namespace OsmSharp.UI.Map.Layers
             _index.GetCancel();
         }
 
+        /// <summary>
+        /// Returns the backcolor.
+        /// </summary>
+        public override int? BackColor
+        {
+            get
+            {
+                return _index.BackColor;
+            }
+        }
+
         #region Scene Building
 
         /// <summary>

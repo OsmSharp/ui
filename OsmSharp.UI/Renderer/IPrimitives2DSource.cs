@@ -28,6 +28,11 @@ namespace OsmSharp.UI.Renderer
     public interface IPrimitives2DSource
     {
         /// <summary>
+        /// Returns the backcolor if any.
+        /// </summary>
+        int? BackColor { get; } 
+
+        /// <summary>
         /// Adds all primitives inside the given box for the given zoom.
         /// </summary>
         /// <param name="view"></param>
