@@ -46,7 +46,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="primitives">The primitives to render.</param>
 	    /// <param name="view">The current view.</param>
 	    /// <param name="zoomFactor">The current zoom factor.</param>
-        public bool Render(TTarget orginalTarget, View2D view, float zoomFactor, IEnumerable<Primitive2D> primitives)
+        /// <param name="backcolor">The backcolor.</param>
+        public bool Render(TTarget orginalTarget, View2D view, float zoomFactor, IEnumerable<Primitive2D> primitives, int? backcolor)
 		{
 			try {
 				this.SetRunning (true);
@@ -67,6 +68,12 @@ namespace OsmSharp.UI.Renderer
 				// transform the target coordinates or notify the target of the
 				// view coordinate system.
 	            this.Transform(target, view);
+
+                // render the backcolor.
+                if(backcolor.HasValue)
+                {
+                    this.DrawBackColor(target, backcolor.Value);
+                }
 
                 // render the primitives.
                 bool complete = this.RenderPrimitives(target, view, zoomFactor, primitives);

@@ -84,6 +84,17 @@ namespace OsmSharp.UI.Map.Layers
             return _styleSceneManager.Scene.Get(view, zoomFactor);
         }
 
+        /// <summary>
+        /// Returns the backcolor of this layer.
+        /// </summary>
+        public override int? BackColor
+        {
+            get
+            {
+                return _styleSceneManager.Scene.BackColor;
+            }
+        }
+
         #region Scene Building
 
         /// <summary>

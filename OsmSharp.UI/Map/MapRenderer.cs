@@ -73,9 +73,16 @@ namespace OsmSharp.UI.Map
                         layers[layerIdx].Get(zoomFactor, view));
                 }
 			}
+
+            // get the backcolor.
+            int? backcolor = null;
+            if(layers.Count > 0)
+            { // use the backcolor of the first layer.
+                backcolor = layers[0].BackColor;
+            }
 			
 			// render the scenes.
-            return _renderer.Render(target, view, zoomFactor, primitives);
+            return _renderer.Render(target, view, zoomFactor, primitives, backcolor);
 		}
 
         /// <summary>
@@ -107,7 +114,7 @@ namespace OsmSharp.UI.Map
             }
 
             // render the scenes.
-            return _renderer.Render(target, view, zoomFactor, primitives);
+            return _renderer.Render(target, view, zoomFactor, primitives, map.BackColor);
         }
 
         /// <summary>

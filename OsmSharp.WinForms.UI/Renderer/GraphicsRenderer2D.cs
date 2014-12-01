@@ -49,17 +49,17 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="view"></param>
         protected override void OnBeforeRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            // create a bitmap and render there.
-            var bitmap = new Bitmap((int)target.Width, (int)target.Height);
-            target.BackTarget = target.Target;
-            target.BackTarget.CompositingMode = CompositingMode.SourceOver;
-            target.Target = Graphics.FromImage(bitmap);
-            target.Target.CompositingMode = CompositingMode.SourceOver;
-            target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
-            target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
-            target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
+            //// create a bitmap and render there.
+            //var bitmap = new Bitmap((int)target.Width, (int)target.Height);
+            //target.BackTarget = target.Target;
+            //target.BackTarget.CompositingMode = CompositingMode.SourceOver;
+            //target.Target = Graphics.FromImage(bitmap);
+            //target.Target.CompositingMode = CompositingMode.SourceOver;
+            //target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
+            //target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
+            //target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
 
-            target.Tag = bitmap;
+            //target.Tag = bitmap;
         }
 
         /// <summary>
@@ -69,13 +69,13 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="view"></param>
         protected override void OnAfterRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            target.Target.Flush();
-            target.Target = target.BackTarget;
-            var bitmap = target.Tag as Bitmap;
-            if (bitmap != null)
-            {
-                target.Target.DrawImageUnscaled(bitmap, 0, 0);
-            }
+            //target.Target.Flush();
+            //target.Target = target.BackTarget;
+            //var bitmap = target.Tag as Bitmap;
+            //if (bitmap != null)
+            //{
+            //    target.Target.DrawImageUnscaled(bitmap, 0, 0);
+            //}
         }
 
         #endregion

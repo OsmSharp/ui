@@ -81,6 +81,21 @@ namespace OsmSharp.UI.Map
         public IProjection Projection { get; private set; }
 
         /// <summary>
+        /// Returns the backcolor of this map.
+        /// </summary>
+        public int? BackColor
+        {
+            get
+            {
+                if (_layers != null && _layers.Count > 0 && _layers[0] != null)
+                {
+                    return _layers[0].BackColor;
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
         /// The view on this map has changed. Maybe the layers need to load new data, they need to be notified.
         /// </summary>
         /// <param name="zoomFactor"></param>
