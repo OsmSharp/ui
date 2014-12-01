@@ -62,7 +62,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize mapcss interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\static\eurostation.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
@@ -88,7 +88,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             //map.AddLayer(new LayerScene(scene));
             var dataSource = MemoryDataSource.CreateFromXmlStream(
-                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen.osm").OpenRead());
             map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //var layerTile = new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200);
             //layerTile.MinZoom = 12;

@@ -496,7 +496,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         fontSize = 10;
                     }
 					string fontFamily;
-					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
+					if (!rule.TryGetProperty ("fontFamily", out fontFamily))
+                    {
 						fontFamily = "Arial"; // just some default font.
 					}
 

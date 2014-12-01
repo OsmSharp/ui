@@ -359,9 +359,9 @@ namespace OsmSharp.WinForms.UI.Renderer
             int? haloColor, int? haloRadius, string fontName)
         {
             float sizeInPixels = this.ToPixels(size);
-            Color textColor = Color.FromArgb(color);
-            Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
-            SolidBrush brush = new SolidBrush(textColor);
+            var textColor = Color.FromArgb(color);
+            var font = new Font(fontName, sizeInPixels);
+            var brush = new SolidBrush(textColor);
             double[] transformed = this.Tranform(x, y);
             float transformedX = (float)transformed[0];
             float transformedY = (float)transformed[1];
@@ -411,7 +411,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 {
                     haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
                 }
-                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
+                var font = new Font(fontName, sizeInPixels);
 
                 // get some metrics on the texts.
                 var characterWidths = GetCharacterWidths(target.Target, text, font);
