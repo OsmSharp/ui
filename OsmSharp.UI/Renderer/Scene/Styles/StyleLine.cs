@@ -114,6 +114,10 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 {
                     if (this.Dashes != null)
                     {
+                        if ((obj as StyleLine).Dashes == null)
+                        {
+                            return false;
+                        }
                         if (this.Dashes.Length == (obj as StyleLine).Dashes.Length)
                         {
                             for (int idx = 0; idx < this.Dashes.Length; idx++)
