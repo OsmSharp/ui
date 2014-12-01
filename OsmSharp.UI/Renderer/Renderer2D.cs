@@ -46,6 +46,18 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="primitives">The primitives to render.</param>
 	    /// <param name="view">The current view.</param>
 	    /// <param name="zoomFactor">The current zoom factor.</param>
+        public bool Render(TTarget orginalTarget, View2D view, float zoomFactor, IEnumerable<Primitive2D> primitives)
+        {
+            return this.Render(orginalTarget, view, zoomFactor, primitives, null);
+        }
+
+	    /// <summary>
+	    /// Renders the given scene on the given target for the given view.
+	    /// </summary>
+        /// <param name="orginalTarget">The target to render to.</param>
+	    /// <param name="primitives">The primitives to render.</param>
+	    /// <param name="view">The current view.</param>
+	    /// <param name="zoomFactor">The current zoom factor.</param>
         /// <param name="backcolor">The backcolor.</param>
         public bool Render(TTarget orginalTarget, View2D view, float zoomFactor, IEnumerable<Primitive2D> primitives, int? backcolor)
 		{
