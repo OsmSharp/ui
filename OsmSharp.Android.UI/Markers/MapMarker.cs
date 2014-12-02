@@ -52,8 +52,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="context"></param>
         /// <param name="location"></param>
-        public MapMarker(Context context, GeoCoordinate location)
-            : this(context, location, MapControlAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+        public MapMarker(Context context, GeoCoordinate location) : this(context, location, MapControlAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
         {
 
         }
@@ -65,8 +64,7 @@ namespace OsmSharp.Android.UI
         /// <param name="location">Coordinate.</param>
         /// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
-            MapControlAlignmentType alignment)
-            : this(context, location, alignment, MapMarker.GetDefaultImage())
+                         MapControlAlignmentType alignment) : this(context, location, alignment, MapMarker.GetDefaultImage())
         {
 
         }
@@ -80,8 +78,7 @@ namespace OsmSharp.Android.UI
         /// <param name="res"></param>
         /// <param name="id"></param>
         public MapMarker(Context context, GeoCoordinate location,
-            MapControlAlignmentType alignment, Resources res, int id)
-            : base(new ImageButton(context), location, alignment)
+                         MapControlAlignmentType alignment, Resources res, int id) : base(new ImageButton(context), location, alignment)
         {
             _image = BitmapFactory.DecodeResource(res, id);
             _context = context;
@@ -104,8 +101,7 @@ namespace OsmSharp.Android.UI
         /// <param name="image">Bitmap.</param>
         /// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
-            MapControlAlignmentType alignment, global::Android.Graphics.Bitmap image)
-            : base(new ImageButton(context), location, alignment, image.Width, image.Height)
+                         MapControlAlignmentType alignment, global::Android.Graphics.Bitmap image) : base(new ImageButton(context), location, alignment, ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
         {
             _context = context;
             this.View.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
@@ -189,8 +185,8 @@ namespace OsmSharp.Android.UI
 
             // create default ninepatch.
             var ninepatchImage = global::Android.Graphics.BitmapFactory.DecodeStream(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Android.UI.Images.marker_popup.9.png"));
+                                     Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                         "OsmSharp.Android.UI.Images.marker_popup.9.png"));
             var ninepatchDrawable = NinePatchChunk.createNinePatchDrawable(this.View.Resources, ninepatchImage, "marker_popup");
             layout.SetBackgroundDrawable(ninepatchDrawable);
 
@@ -309,7 +305,7 @@ namespace OsmSharp.Android.UI
         {
             if (this.HasPopup && this.TogglePopupOnClick)
             { // toggle popup visible.
-                if(_popupIsVisible)
+                if (_popupIsVisible)
                 {
                     this.HidePopup();
                 }
@@ -334,7 +330,7 @@ namespace OsmSharp.Android.UI
             base.AttachTo(controlHost);
 
             // show popup if it is supposed to be visible.
-            if(_popupIsVisible)
+            if (_popupIsVisible)
             {
                 this.ShowPopup();
             }
@@ -386,17 +382,17 @@ namespace OsmSharp.Android.UI
                     {
                         case MapControlAlignmentType.Center:
                             topPopupMargin = locationPixelY
-                                - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
-                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
                             break;
                         case MapControlAlignmentType.CenterTop:
                             topPopupMargin = locationPixelY
-                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
                             break;
                         case MapControlAlignmentType.CenterBottom:
                             topPopupMargin = locationPixelY
-                                - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
-                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
+                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
                             break;
                     }
 
@@ -412,7 +408,7 @@ namespace OsmSharp.Android.UI
             }
             return true;
         }
-        
+
         /// <summary>
         /// Called after one of the markers/controls has been changed.
         /// </summary>
