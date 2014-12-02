@@ -78,6 +78,11 @@ namespace OsmSharp.UI.Map.Layers
         #region Scene Building
 
         /// <summary>
+        /// Holds the envelope of the current data.
+        /// </summary>
+        private GeoCoordinateBox _envelope;
+
+        /// <summary>
         /// Holds the scene.
         /// </summary>
         private Scene2D _scene;
@@ -101,8 +106,8 @@ namespace OsmSharp.UI.Map.Layers
                     var y = _projection.LatitudeToY(point.Coordinate.Latitude);
 
                     // set the default color if none is given.
-                    SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-                    SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+                    var blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+                    var transparantBlue = SimpleColor.FromArgb(128,
                                                       blue.R, blue.G, blue.B);
 
                     uint pointId = _scene.AddPoint(x, y);
@@ -133,8 +138,8 @@ namespace OsmSharp.UI.Map.Layers
                     }
 
                     // set the default color if none is given.
-                    SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-                    SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+                    var blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+                    var transparantBlue = SimpleColor.FromArgb(128,
                                                       blue.R, blue.G, blue.B);
 
                     uint? pointsId = _scene.AddPoints(x, y);
@@ -149,15 +154,37 @@ namespace OsmSharp.UI.Map.Layers
                         else
                         { // add to the current box.
                             bounds = bounds + lineString.Box;
-
                         }
                     }
                 }
             }
+
+            // update envelope.
+            if (_envelope == null)
+            { // create initial envelope.
+                _envelope = bounds;
+            }
+            if (bounds != null)
+            {  // also include the current bounds.
+                _envelope = _envelope + bounds;
+            }
+
             return bounds;
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the bounding rectangle of this layer (if available).
+        /// </summary>
+        /// <remarks>Not all layers, formats support getting an envolope. Property can return null even on some types of bounded data.</remarks>
+        public override GeoCoordinateBox Envelope
+        {
+            get
+            {
+                return _envelope;
+            }
+        }
 
         /// <summary>
         /// Closes this layer.

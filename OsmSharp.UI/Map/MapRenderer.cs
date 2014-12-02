@@ -47,15 +47,29 @@ namespace OsmSharp.UI.Map
 		    _renderer = renderer;
 		}
 
+        /// <summary>
+        /// Render the specified target, projection, layers, zoomFactor and coordinate.
+        /// </summary>
+        /// <param name="target">The target to render on.</param>
+        /// <param name="projection">The projection being used to render.</param>
+        /// <param name="layers">The layers to rendering in the given order.</param>
+        /// <param name="viewRender">The view to determine what to render and to show.</param>
+        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
+		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, float zoomFactor)
+        {
+            return this.Render(target, projection, layers, view, view, zoomFactor);
+        }
+
 		/// <summary>
 		/// Render the specified target, projection, layers, zoomFactor and coordinate.
 		/// </summary>
         /// <param name="target">The target to render on.</param>
         /// <param name="projection">The projection being used to render.</param>
-		/// <param name="layers">The layers to rendering in the given order.</param>
-        /// <param name="view">The view to determine what to render.</param>
+        /// <param name="layers">The layers to rendering in the given order.</param>
+        /// <param name="view">The view to show.</param>
+        /// <param name="viewRender">The view to determine what to render. It may be needed to render a bit more along the edges.</param>
         /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
-		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, float zoomFactor)
+		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, View2D viewRender, float zoomFactor)
 		{	
 			// create and concatenate primitives from all layers.
             IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
@@ -70,12 +84,19 @@ namespace OsmSharp.UI.Map
                 if (layers[layerIdx].IsLayerVisibleFor(zoomLevel))
                 {
                     primitives = primitives.Concat(
-                        layers[layerIdx].Get(zoomFactor, view));
+                        layers[layerIdx].Get(zoomFactor, viewRender));
                 }
 			}
+
+            // get the backcolor.
+            int? backcolor = null;
+            if(layers.Count > 0)
+            { // use the backcolor of the first layer.
+                backcolor = layers[0].BackColor;
+            }
 			
 			// render the scenes.
-            return _renderer.Render(target, view, zoomFactor, primitives);
+            return _renderer.Render(target, view, zoomFactor, primitives, backcolor);
 		}
 
         /// <summary>
@@ -86,6 +107,19 @@ namespace OsmSharp.UI.Map
         /// <param name="view">The view to determine what to render.</param>
         /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
         public bool Render(TTarget target, Map map, View2D view, float zoomFactor)
+        {
+            return this.Render(target, map, view, view, zoomFactor);
+        }
+
+        /// <summary>
+        /// Renders the given map on the target using the given view.
+        /// </summary>
+        /// <param name="target">The target to render on.</param>
+        /// <param name="map">The map as a collection of layers and projection to render.</param>
+        /// <param name="view">The view to determine what to render.</param>
+        /// <param name="viewRender">The view to determine what to render. It may be needed to render a bit more along the edges.</param>
+        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
+        public bool Render(TTarget target, Map map, View2D view, View2D viewRender, float zoomFactor)
         {
             // create and concatenate primitives from all layers.
             IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
@@ -102,12 +136,12 @@ namespace OsmSharp.UI.Map
                     (!map[layerIdx].MaxZoom.HasValue || map[layerIdx].MaxZoom >= zoomLevel))
                 {
                     primitives = primitives.Concat(
-                        map[layerIdx].Get(zoomFactor, view));
+                        map[layerIdx].Get(zoomFactor, viewRender));
                 }
             }
 
             // render the scenes.
-            return _renderer.Render(target, view, zoomFactor, primitives);
+            return _renderer.Render(target, view, zoomFactor, primitives, map.BackColor);
         }
 
         /// <summary>

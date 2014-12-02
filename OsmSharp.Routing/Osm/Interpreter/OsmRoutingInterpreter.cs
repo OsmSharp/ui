@@ -89,7 +89,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         private void FillRelevantTags()
         {
-            _relevantRoutingKeys = new HashSet<string> { "oneway", "highway", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction", "type" }; 
+            _relevantRoutingKeys = new HashSet<string> { "oneway", "highway", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction", "type", "barrier" }; 
             _relevantKeys = new HashSet<string> { "name" };
         }
 
@@ -187,7 +187,14 @@ namespace OsmSharp.Routing.Osm.Interpreter
                     return true;
                 }
             }
-            return type == OsmGeoType.Node && tags != null && tags.Count > 0;
+            else if(type == OsmGeoType.Node)
+            { // a node is possibly a restriction too.
+                if(tags != null)
+                {
+                    return tags.ContainsKey("barrier");
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -195,9 +202,35 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<Vehicle> CalculateRestrictions(Node node)
+        public List<string> CalculateRestrictions(Node node)
         {
-            return new List<Vehicle>();
+            var restrictedVehicles = new List<string>(2);
+            if(node != null &&
+                node.Tags != null)
+            {
+                string barrierValue;
+                if (node.Tags.TryGetValue("barrier", out barrierValue))
+                { // there is a barrier: http://wiki.openstreetmap.org/wiki/Key:barrier
+                    if(barrierValue == "bollard")
+                    { // there is a bollard, implies a restriction for all motor vehicles.
+                        // http://wiki.openstreetmap.org/wiki/Tag:barrier%3Dbollard
+                        restrictedVehicles.Add(VehicleType.MotorVehicle); // all motor vehicles are restricted.
+                    }
+                }
+                string bicyleValue;
+                if (node.Tags.TryGetValue("bicycle", out bicyleValue) &&
+                    bicyleValue == "no")
+                {
+                    restrictedVehicles.Add(VehicleType.Bicycle);
+                }
+                string pedestrianValue;
+                if (node.Tags.TryGetValue("foot", out pedestrianValue) &&
+                    bicyleValue == "no")
+                {
+                    restrictedVehicles.Add(VehicleType.Bicycle);
+                }
+            }
+            return restrictedVehicles;
         }
 
         /// <summary>
@@ -206,9 +239,9 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="relation"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
+        public List<KeyValuePair<string, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
         {
-            var restrictions = new List<KeyValuePair<Vehicle, long[]>>();
+            var restrictions = new List<KeyValuePair<string, long[]>>();
             if(relation.Tags.ContainsKeyValue("type", "restriction"))
             { // regular restriction.
                 Way fromWay = null, toWay = null, viaWay = null;
@@ -275,7 +308,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
                         { // not found!
                             return restrictions;
                         }
-                        restrictions.Add(new KeyValuePair<Vehicle, long[]>(null, restriction));
+                        restrictions.Add(new KeyValuePair<string, long[]>(VehicleType.Vehicle, restriction));
                     }
                 }
             }

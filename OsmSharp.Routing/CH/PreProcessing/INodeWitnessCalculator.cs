@@ -44,8 +44,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="maxWeight"></param>
+        /// <param name="tos"></param>
+        /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
         void Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);

@@ -496,7 +496,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         fontSize = 10;
                     }
 					string fontFamily;
-					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
+					if (!rule.TryGetProperty ("fontFamily", out fontFamily))
+                    {
 						fontFamily = "Arial"; // just some default font.
 					}
 
@@ -577,7 +578,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 }
 
                 // interpret the results.
-                if (x != null)
+                if (x != null &&
+                    x.Length > 1)
                 { // there is a valid interpretation of this way.
                     int color;
                     bool renderAsLine = true;
@@ -632,25 +634,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 width = 1;
                             }
                             uint? pointsId = scene.AddPoints(x, y);
+                            success = true;
                             if (pointsId.HasValue)
                             {
                                 if (casingWidth > 0)
                                 { // adds the casing
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
                                         minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
-                                    success = true;
                                 }
                                 if (dashes == null)
                                 { // dashes not set, use line offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
-                                    success = true;
                                 }
                                 else
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
-                                    success = true;
                                 }
 
                                 int textColor;
@@ -685,7 +685,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     {
                                         scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
                                             minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
-                                        success = true;
                                     }
                                 }
                             }

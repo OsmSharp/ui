@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        List<Vehicle> CalculateRestrictions(Node node);
+        List<string> CalculateRestrictions(Node node);
 
         /// <summary>
         /// Returns all restrictions that are represented by the given node.
@@ -50,6 +50,6 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="relation"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source);
+        List<KeyValuePair<string, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source);
     }
 }

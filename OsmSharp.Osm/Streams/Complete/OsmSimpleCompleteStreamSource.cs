@@ -237,28 +237,36 @@ namespace OsmSharp.Osm.Streams.Complete
                 switch (osmGeo.Type)
                 {
                     case OsmGeoType.Way:
-                        foreach (long nodeId in (osmGeo as Way).Nodes)
+                        var way = (osmGeo as Way);
+                        if (way.Nodes != null)
                         {
-                            this.MarkNodeAsChild(nodeId);
+                            foreach (long nodeId in way.Nodes)
+                            {
+                                this.MarkNodeAsChild(nodeId);
+                            }
                         }
                         break;
                     case OsmGeoType.Relation:
-                        foreach (RelationMember member in (osmGeo as Relation).Members)
+                        var relation = (osmGeo as Relation);
+                        if (relation.Members != null)
                         {
-                            switch (member.MemberType.Value)
+                            foreach (RelationMember member in relation.Members)
                             {
-                                case OsmGeoType.Node:
-                                    this.MarkNodeAsChild(member.MemberId.Value);
-                                    break;
-                                case OsmGeoType.Way:
-                                    this.MarkWayAsChild(member.MemberId.Value);
-                                    break;
-                                case OsmGeoType.Relation:
-                                    this.MarkRelationAsChild(member.MemberId.Value);
-                                    break;
+                                switch (member.MemberType.Value)
+                                {
+                                    case OsmGeoType.Node:
+                                        this.MarkNodeAsChild(member.MemberId.Value);
+                                        break;
+                                    case OsmGeoType.Way:
+                                        this.MarkWayAsChild(member.MemberId.Value);
+                                        break;
+                                    case OsmGeoType.Relation:
+                                        this.MarkRelationAsChild(member.MemberId.Value);
+                                        break;
+                                }
                             }
                         }
-                        relations.Add(osmGeo as Relation);
+                        relations.Add(relation);
                         break;
                 }
             }

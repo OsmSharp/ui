@@ -365,47 +365,50 @@ namespace OsmSharp.Android.UI
         {
             base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 
-            if (this.Location != null &&
-                _popupView != null)
-            { // only set layout if there is a location set.
-                var projected = projection.ToPixel(this.Location);
-                var toView = view.CreateToViewPort(pixelsWidth, pixelsHeight);
-                double locationPixelX, locationPixelY;
-                // var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
-                toView.Apply(projected[0], projected[1], out locationPixelX, out locationPixelY);
+            if (this.MoveWithMap)
+            { // keep location the same and move with map.
+                if (this.Location != null &&
+                    _popupView != null)
+                { // only set layout if there is a location set.
+                    var projected = projection.ToPixel(this.Location);
+                    var toView = view.CreateToViewPort(pixelsWidth, pixelsHeight);
+                    double locationPixelX, locationPixelY;
+                    // var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+                    toView.Apply(projected[0], projected[1], out locationPixelX, out locationPixelY);
 
-                // set the new location depending on the size of the image and the alignment parameter.
-                double leftPopupMargin = locationPixelX;
-                double topPopupMargin = locationPixelY;
+                    // set the new location depending on the size of the image and the alignment parameter.
+                    double leftPopupMargin = locationPixelX;
+                    double topPopupMargin = locationPixelY;
 
-                leftPopupMargin = locationPixelX - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                    leftPopupMargin = locationPixelX - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
 
-                switch (this.Alignment)
-                {
-                    case MapControlAlignmentType.Center:
-                        topPopupMargin = locationPixelY
-                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
-                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
-                    case MapControlAlignmentType.CenterTop:
-                        topPopupMargin = locationPixelY
-                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
-                    case MapControlAlignmentType.CenterBottom:
-                        topPopupMargin = locationPixelY
-                            - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
-                            - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
+                    switch (this.Alignment)
+                    {
+                        case MapControlAlignmentType.Center:
+                            topPopupMargin = locationPixelY
+                                - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
+                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            break;
+                        case MapControlAlignmentType.CenterTop:
+                            topPopupMargin = locationPixelY
+                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            break;
+                        case MapControlAlignmentType.CenterBottom:
+                            topPopupMargin = locationPixelY
+                                - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
+                                - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            break;
+                    }
+
+                    // add offsets.
+                    leftPopupMargin = leftPopupMargin + _popupXOffset;
+                    topPopupMargin = topPopupMargin + _popupYOffset;
+
+                    (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
+                    (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
+
+                    _popupLayoutSet = true;
                 }
-
-                // add offsets.
-                leftPopupMargin = leftPopupMargin + _popupXOffset;
-                topPopupMargin = topPopupMargin + _popupYOffset;
-
-                (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
-                (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
-
-                _popupLayoutSet = true;
             }
             return true;
         }

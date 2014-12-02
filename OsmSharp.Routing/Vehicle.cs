@@ -131,9 +131,65 @@ namespace OsmSharp.Routing
         }
 
         /// <summary>
+        /// Returns true if the given tag is relevant for any registered vehicle, false otherwise.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool IsRelevantForOneOrMore(string key)
+        {
+            // register at least the default vehicles.
+            if (VehiclesByName == null)
+            { // no vehicles have been registered.
+                Vehicle.RegisterVehicles();
+            }
+
+            foreach(var vehicle in VehiclesByName)
+            {
+                if(vehicle.Value.IsRelevant(key))
+                { // ok, key is relevant.
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given key-value pair is relevant for any registered vehicle, false otherwise.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsRelevantForOneOrMore(string key, string value)
+        {
+            // register at least the default vehicles.
+            if (VehiclesByName == null)
+            { // no vehicles have been registered.
+                Vehicle.RegisterVehicles();
+            }
+
+            foreach (var vehicle in VehiclesByName)
+            {
+                if (vehicle.Value.IsRelevant(key, value))
+                { // ok, key is relevant.
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Holds names of generic vehicle types like 'pedestrian', 'horse', 'carriage',...
+        /// </summary>
+        /// <remarks>This is used to interpret restrictions.
+        /// See issue: https://github.com/OsmSharp/OsmSharp/issues/192
+        /// And OpenStreetMap-wiki: http://wiki.openstreetmap.org/wiki/Key:access#Transport_mode_restrictions</remarks>
+        public readonly HashSet<string> VehicleTypes = new HashSet<string>();
+
+        /// <summary>
         /// Contains Accessiblity Rules
         /// </summary>
         protected readonly Dictionary<string, string> AccessibleTags = new Dictionary<string, string>();
+
         /// <summary>
         /// Trys to return the highwaytype from the tags
         /// </summary>
@@ -166,13 +222,13 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected abstract KilometerPerHour MaxSpeedAllowed(string highwayType);
+        public abstract KilometerPerHour MaxSpeedAllowed(string highwayType);
 
         /// <summary>
         /// Returns the max speed this vehicle can handle.
         /// </summary>
         /// <returns></returns>
-        protected abstract KilometerPerHour MaxSpeed();
+        public abstract KilometerPerHour MaxSpeed();
 
         /// <summary>
         /// Returns the maximum speed.
@@ -337,6 +393,36 @@ namespace OsmSharp.Routing
         {
             get;
         }
+
+        /// <summary>
+        /// Returns true if the key is relevant for this vehicle profile.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual bool IsRelevant(string key)
+        {
+            if(AccessibleTags != null &&
+                AccessibleTags.ContainsKey(key))
+            { // definetly relevant!
+                return true;
+            }
+            if(VehicleTypes.Contains(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the key-value pair is relevant for this vehicle profile.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual bool IsRelevant(string key, string value)
+        { // keep all values, override in specific profiles to keep only relevant values.
+            return this.IsRelevant(key); 
+        }
     }
 
     /// <summary>
@@ -353,6 +439,7 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);
             AccessibleTags.Add("road", string.Empty);
+            AccessibleTags.Add("track", string.Empty);
             AccessibleTags.Add("pedestrian", string.Empty);
             AccessibleTags.Add("living_street", string.Empty);
             AccessibleTags.Add("residential", string.Empty);
@@ -363,7 +450,8 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
             AccessibleTags.Add("tertiary_link", string.Empty);
-            //AccessibleTags.Add("trunk", string.Empty);
+
+            VehicleTypes.Add("pedestrian");
         }
 
         /// <summary>
@@ -399,7 +487,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -445,7 +533,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 5;
         }
@@ -472,6 +560,7 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);
             AccessibleTags.Add("road", string.Empty);
+            AccessibleTags.Add("track", string.Empty);
             AccessibleTags.Add("living_street", string.Empty);
             AccessibleTags.Add("residential", string.Empty);
             AccessibleTags.Add("unclassified", string.Empty);
@@ -481,7 +570,8 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
             AccessibleTags.Add("tertiary_link", string.Empty);
-            //AccessibleTags.Add("trunk", string.Empty);
+
+            VehicleTypes.Add("bicycle");
         }
 
         /// <summary>
@@ -518,7 +608,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -530,7 +620,7 @@ namespace OsmSharp.Routing
                 case "path":
                 case "footway":
                 case "living_street":
-                    return 5;
+                    return this.MaxSpeed();
                 case "track":
                 case "road":
                     return 30;
@@ -564,7 +654,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 15;
         }
@@ -602,6 +692,9 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("trunk_link", string.Empty);
             AccessibleTags.Add("motorway", string.Empty);
             AccessibleTags.Add("motorway_link", string.Empty);
+
+            VehicleTypes.Add("vehicle"); // a motor vehicle is a generic vehicle.
+            VehicleTypes.Add("motor_vehicle"); // ... and also a generic motor vehicle.
         }
 
         /// <summary>
@@ -629,7 +722,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
+        public override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -665,7 +758,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 200;
         }
@@ -683,13 +776,15 @@ namespace OsmSharp.Routing
         {
             AccessibleTags.Remove("motorway");
             AccessibleTags.Remove("motorway_link");
+
+            VehicleTypes.Add("moped");
         }
 
         /// <summary>
         /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed()
+        public override KilometerPerHour MaxSpeed()
         {
             return 40;
         }
@@ -709,6 +804,14 @@ namespace OsmSharp.Routing
     public class MotorCycle : MotorVehicle
     {
         /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public MotorCycle()
+        {
+            VehicleTypes.Add("motorcycle");
+        }
+
+        /// <summary>
         /// Returns a unique name this vehicle type.
         /// </summary>
         public override string UniqueName
@@ -722,6 +825,14 @@ namespace OsmSharp.Routing
     /// </summary>
     public class Car : MotorVehicle
     {
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public Car()
+        {
+            VehicleTypes.Add("motorcar");
+        }
+
         /// <summary>
         /// Returns a unique name this vehicle type.
         /// </summary>
@@ -737,6 +848,15 @@ namespace OsmSharp.Routing
     public class SmallTruck : MotorVehicle
     {
         /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public SmallTruck()
+        {
+            // http://wiki.openstreetmap.org/wiki/Key:goods
+            VehicleTypes.Add("goods");
+        }
+
+        /// <summary>
         /// Returns a unique name this vehicle type.
         /// </summary>
         public override string UniqueName
@@ -751,6 +871,15 @@ namespace OsmSharp.Routing
     public class BigTruck : MotorVehicle
     {
         /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public BigTruck()
+        {
+            // http://wiki.openstreetmap.org/wiki/Key:hgv#Land-based_transportation
+            VehicleTypes.Add("hgv");
+        }
+
+        /// <summary>
         /// Returns a unique name this vehicle type.
         /// </summary>
         public override string UniqueName
@@ -760,10 +889,20 @@ namespace OsmSharp.Routing
     }
 
     /// <summary>
-    /// Represents a Bus
+    /// Represents a bus that is not acting as a public service.
     /// </summary>
+    /// <remarks>http://wiki.openstreetmap.org/wiki/Key:tourist_bus</remarks>
     public class Bus : MotorVehicle
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public Bus()
+        {
+            // http://wiki.openstreetmap.org/wiki/Key:tourist_bus
+            VehicleTypes.Add("tourist_bus");
+        }
+
         /// <summary>
         /// Returns a unique name this vehicle type.
         /// </summary>

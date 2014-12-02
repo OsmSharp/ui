@@ -70,9 +70,9 @@ namespace OsmSharp.Routing.Graph.Router
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
         /// </summary>
-        /// <param name="vehicle"></param>
+        /// <param name="vehicleType"></param>
         /// <param name="route"></param>
-        void AddRestriction(Vehicle vehicle, uint[] route);
+        void AddRestriction(string vehicleType, uint[] route);
 
         /// <summary>
         /// Returns all restricted routes that start in the given vertex.

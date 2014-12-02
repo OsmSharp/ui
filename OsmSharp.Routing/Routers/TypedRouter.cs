@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.Routers
             _interpreter = interpreter;
             _router = router;
 
-            _routerPoints = new Dictionary<GeoCoordinate, RouterPoint>();
+            _routerPoints = new Dictionary<string, Dictionary<GeoCoordinate, RouterPoint>>();
             _resolvedGraphs = new Dictionary<Vehicle, TypedRouterResolvedGraph>();
         }
 
@@ -727,7 +727,7 @@ namespace OsmSharp.Routing.Routers
                 { // get the real neighbour.
                     checkIntermediates = true;
                     RouterPoint resolvedPoint;
-                    if (!this.GetRouterPoint(previousVertex, out resolvedPoint))
+                    if (!this.GetRouterPoint(vehicle, previousVertex, out resolvedPoint))
                     { // oeps, point not found!
                         throw new Exception("Resolved point detected but not found as a router point!");
                     }
@@ -758,7 +758,7 @@ namespace OsmSharp.Routing.Routers
                 { // get the real neighbour.
                     checkIntermediates = true;
                     RouterPoint resolvedPoint;
-                    if (!this.GetRouterPoint(nextVertex, out resolvedPoint))
+                    if (!this.GetRouterPoint(vehicle, nextVertex, out resolvedPoint))
                     { // oeps, point not found!
                         throw new Exception("Resolved point detected but not found as a router point!");
                     }
@@ -1044,44 +1044,64 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds all resolved points.
         /// </summary>
-        private readonly Dictionary<GeoCoordinate, RouterPoint> _routerPoints;
+        private readonly Dictionary<string, Dictionary<GeoCoordinate, RouterPoint>> _routerPoints;
 
         /// <summary>
         /// Normalizes the router point.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected RouterPoint Normalize(RouterPoint point)
+        protected RouterPoint Normalize(Vehicle vehicle, RouterPoint point)
         {
-            RouterPoint normalize;
-            if (!_routerPoints.TryGetValue(point.Location, out normalize))
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            if(!_routerPoints.TryGetValue(vehicle.UniqueName, out perLocation))
             {
-                _routerPoints.Add(point.Location, point);
+                perLocation = new Dictionary<GeoCoordinate, RouterPoint>();
+                perLocation.Add(point.Location, point);
+                _routerPoints.Add(vehicle.UniqueName, perLocation);
+                return point;
+            }
+            RouterPoint normalize;
+            if (!perLocation.TryGetValue(point.Location, out normalize))
+            {
+                perLocation.Add(point.Location, point);
                 normalize = point;
             }
             return normalize;
         }
 
         /// <summary>
-        /// Returns a routerpoint for the given location.
+        /// Returns a routerpoint for the given location and vehicle profile.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="location"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
+        protected bool GetRouterPoint(Vehicle vehicle, GeoCoordinate location, out RouterPoint point)
         {
-            return _routerPoints.TryGetValue(location, out point);
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            point = null;
+            return _routerPoints.TryGetValue(vehicle.UniqueName, out perLocation) &&
+                perLocation != null &&
+                perLocation.TryGetValue(location, out point);
         }
 
         /// <summary>
         /// Returns a routerpoint for the given resolvedId.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="resolvedId"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected bool GetRouterPoint(long resolvedId, out RouterPoint point)
+        protected bool GetRouterPoint(Vehicle vehicle, long resolvedId, out RouterPoint point)
         {
-            point = _routerPoints.Values.First(x => x.Id == resolvedId);
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            point = null;
+            if (_routerPoints.TryGetValue(vehicle.UniqueName, out perLocation))
+            {
+                point = perLocation.Values.First(x => x.Id == resolvedId);
+            }
             return point != null;
         }
 
@@ -1262,7 +1282,7 @@ namespace OsmSharp.Routing.Routers
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
                     }
-                    return this.Normalize(new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
+                    return this.Normalize(vehicle, new RouterPoint(result.Vertex1.Value, vehicle, new GeoCoordinate(latitude, longitude)));
                 }
                 else if(result.IntermediateIndex.HasValue)
                 { // an exact match with an intermediate coordinate.
@@ -1517,7 +1537,7 @@ namespace OsmSharp.Routing.Routers
                 RouterPoint intermediaRouterpoint;
                 for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude),
+                    if (this.GetRouterPoint(vehicle, new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude),
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1635,7 +1655,7 @@ namespace OsmSharp.Routing.Routers
                         vertices[idx + 1] = intermediateId;
 
                         // add as a resolved point.
-                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                        this.Normalize(vehicle, new RouterPoint(intermediateId, vehicle, new GeoCoordinate(
                             edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
@@ -1669,7 +1689,7 @@ namespace OsmSharp.Routing.Routers
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
                 if (new GeoCoordinate(latitude, longitude).DistanceReal(resolvedCoordinate).Value < epsilon.Value)
                 { // distance to this vertex is small enough to consider the equal.
-                    return new RouterPoint(vertices[idx], new GeoCoordinate(latitude, longitude));
+                    return new RouterPoint(vertices[idx], vehicle, new GeoCoordinate(latitude, longitude));
                 }
             }
             throw new Exception("Intermediate point not in graph!");
@@ -1700,7 +1720,7 @@ namespace OsmSharp.Routing.Routers
                 RouterPoint intermediaRouterpoint;
                 for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude), 
+                    if (this.GetRouterPoint(vehicle, new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude), 
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1805,7 +1825,7 @@ namespace OsmSharp.Routing.Routers
                         vertices[idx + 1] = intermediateId;
 
                         // add as a resolved point.
-                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                        this.Normalize(vehicle, new RouterPoint(intermediateId, vehicle, new GeoCoordinate(
                             edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
@@ -1878,7 +1898,7 @@ namespace OsmSharp.Routing.Routers
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
                 if(new GeoCoordinate(latitude, longitude).DistanceReal(resolvedCoordinate).Value < epsilon.Value)
                 { // distance to this vertex is small enough to consider the equal.
-                    return new RouterPoint(vertices[idx], new GeoCoordinate(latitude, longitude));
+                    return new RouterPoint(vertices[idx], vehicle, new GeoCoordinate(latitude, longitude));
                 }
             }
 
@@ -1913,8 +1933,8 @@ namespace OsmSharp.Routing.Routers
                                       edgeData.Tags,
                                       !edgeData.Forward));
 
-            return this.Normalize(
-                        new RouterPoint(resolvedVertex, resolvedCoordinate));
+            return this.Normalize(vehicle,
+                        new RouterPoint(resolvedVertex, vehicle, resolvedCoordinate));
         }
 
         #region Resolved Graph Routing

@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <returns>A stream to the file that was serialized.</returns>
         public static Stream Test()
         {
-            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf");
+            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "namibia.osm.pbf");
         }
 
         /// <summary>

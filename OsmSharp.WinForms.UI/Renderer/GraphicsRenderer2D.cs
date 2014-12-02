@@ -49,17 +49,17 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="view"></param>
         protected override void OnBeforeRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            // create a bitmap and render there.
-            var bitmap = new Bitmap((int)target.Width, (int)target.Height);
-            target.BackTarget = target.Target;
-            target.BackTarget.CompositingMode = CompositingMode.SourceOver;
-            target.Target = Graphics.FromImage(bitmap);
-            target.Target.CompositingMode = CompositingMode.SourceOver;
-            target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
-            target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
-            target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
+            //// create a bitmap and render there.
+            //var bitmap = new Bitmap((int)target.Width, (int)target.Height);
+            //target.BackTarget = target.Target;
+            //target.BackTarget.CompositingMode = CompositingMode.SourceOver;
+            //target.Target = Graphics.FromImage(bitmap);
+            //target.Target.CompositingMode = CompositingMode.SourceOver;
+            //target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
+            //target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
+            //target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
 
-            target.Tag = bitmap;
+            //target.Tag = bitmap;
         }
 
         /// <summary>
@@ -69,13 +69,13 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="view"></param>
         protected override void OnAfterRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            target.Target.Flush();
-            target.Target = target.BackTarget;
-            var bitmap = target.Tag as Bitmap;
-            if (bitmap != null)
-            {
-                target.Target.DrawImageUnscaled(bitmap, 0, 0);
-            }
+            //target.Target.Flush();
+            //target.Target = target.BackTarget;
+            //var bitmap = target.Tag as Bitmap;
+            //if (bitmap != null)
+            //{
+            //    target.Target.DrawImageUnscaled(bitmap, 0, 0);
+            //}
         }
 
         #endregion
@@ -359,9 +359,9 @@ namespace OsmSharp.WinForms.UI.Renderer
             int? haloColor, int? haloRadius, string fontName)
         {
             float sizeInPixels = this.ToPixels(size);
-            Color textColor = Color.FromArgb(color);
-            Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
-            SolidBrush brush = new SolidBrush(textColor);
+            var textColor = Color.FromArgb(color);
+            var font = new Font(fontName, sizeInPixels);
+            var brush = new SolidBrush(textColor);
             double[] transformed = this.Tranform(x, y);
             float transformedX = (float)transformed[0];
             float transformedY = (float)transformed[1];
@@ -411,7 +411,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 {
                     haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
                 }
-                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
+                var font = new Font(fontName, sizeInPixels);
 
                 // get some metrics on the texts.
                 var characterWidths = GetCharacterWidths(target.Target, text, font);
