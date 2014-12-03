@@ -62,6 +62,18 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="context">Context.</param>
         /// <param name="location">Coordinate.</param>
+        /// <param name="resId">Drawable.</param>
+        public MapMarker(Context context, GeoCoordinate location, 
+                         int resId) : this(context, location, MapControlAlignmentType.CenterBottom, context.Resources, resId)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="location">Coordinate.</param>
         /// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
                          MapControlAlignmentType alignment) : this(context, location, alignment, MapMarker.GetDefaultImage())
