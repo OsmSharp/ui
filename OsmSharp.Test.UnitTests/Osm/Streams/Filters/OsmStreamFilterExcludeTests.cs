@@ -20,10 +20,8 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams.Filters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
 {
@@ -149,13 +147,13 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
                     new OsmGeo[] {
                 Relation.Create(1, new TagsCollection(
                     Tag.Create("tag1", "value1"))),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) },
+                Relation.Create(2, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                Relation.Create(3, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) },
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0) });
+                Relation.Create(1, new TagsCollection(
+                    Tag.Create("tag1", "value1"))) });
 
             // verify.
             Assert.IsNotNull(filtered);
@@ -169,16 +167,16 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
 
             filtered = this.Filter(
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new TagsCollection(
-                    Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new TagsCollection(
-                    Tag.Create("tag3", "value3")), 0, 1) },
+                Relation.Create(1, new TagsCollection(
+                    Tag.Create("tag1", "value1"))),
+                Relation.Create(2, new TagsCollection(
+                    Tag.Create("tag2", "value2"))),
+                Relation.Create(3, new TagsCollection(
+                    Tag.Create("tag3", "value3"))) },
                     new OsmGeo[] {
-                Node.Create(1, new TagsCollection(
-                    Tag.Create("tag1", "value1")), 0, 0) },
-                    false, true, true);
+                Relation.Create(1, new TagsCollection(
+                    Tag.Create("tag1", "value1"))) },
+                    true, true, false);
 
             // verify.
             Assert.IsNotNull(filtered);

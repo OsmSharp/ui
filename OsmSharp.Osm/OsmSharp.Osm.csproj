@@ -118,6 +118,8 @@
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterExclude.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterMerge.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
