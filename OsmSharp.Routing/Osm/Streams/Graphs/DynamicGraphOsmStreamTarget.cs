@@ -681,13 +681,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public override void RegisterSource(OsmStreamSource source)
         {
             // add filter to remove all irrelevant tags.
-            OsmStreamFilterTagsFilter tagsFilter = new OsmStreamFilterTagsFilter((TagsCollectionBase tags) =>
+            var tagsFilter = new OsmStreamFilterTagsFilter((TagsCollectionBase tags) =>
             {
-                List<Tag> tagsToRemove = new List<Tag>();
-                foreach (Tag tag in tags)
+                var tagsToRemove = new List<Tag>();
+                foreach (var tag in tags)
                 {
-                    if (!_interpreter.IsRelevant(tag.Key, tag.Value))
-                    {
+                    if (!_interpreter.IsRelevant(tag.Key, tag.Value) &&
+                        !Vehicle.IsRelevantForOneOrMore(tag.Key, tag.Value))
+                    { // not relevant for both interpreter and all registered vehicle profiles.
                         tagsToRemove.Add(tag);
                     }
                 }
