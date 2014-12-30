@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
-            :base(dynamicGraph, interpreter, null, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
+            :base(dynamicGraph, interpreter, null, tagsIndex)
         {
             _vehicle = vehicle;
         }
