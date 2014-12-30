@@ -204,6 +204,9 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
         /// </summary>
         /// <param name="osmGeos"></param>
         /// <param name="toExclude"></param>
+        /// <param name="excludeNodes"></param>
+        /// <param name="excludeWays"></param>
+        /// <param name="excludeRelations"></param>
         private List<OsmGeo> Filter(OsmGeo[] osmGeos, OsmGeo[] toExclude, bool excludeNodes, bool excludeWays, bool excludeRelations)
         {
             var excludeFilter = new OsmStreamFilterExclude(excludeNodes, excludeWays, excludeRelations);

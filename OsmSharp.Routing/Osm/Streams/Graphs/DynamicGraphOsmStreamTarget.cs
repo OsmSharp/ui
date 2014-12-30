@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -85,7 +85,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
-        /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())

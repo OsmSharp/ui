@@ -18,7 +18,6 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Collections.Coordinates;
-using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -184,12 +183,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (to == null) throw new ArgumentNullException("to");
 
             uint tagsId = tagsIndex.Add(tags);
-
-            GeoCoordinateSimple[] coordinates = null;
-            if (intermediates != null && intermediates.Count > 0)
-            { // only instiate if needed.
-                coordinates = intermediates.ToArray();
-            }
 
             return new LiveEdge()
             {

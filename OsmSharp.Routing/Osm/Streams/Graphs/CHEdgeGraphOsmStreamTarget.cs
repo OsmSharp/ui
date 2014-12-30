@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections;
+using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -51,7 +53,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
-            :base(dynamicGraph, interpreter, null, tagsIndex)
+            :base(dynamicGraph, interpreter, null, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
             _vehicle = vehicle;
         }
