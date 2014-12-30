@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using OsmSharp.Routing.Graph;
 using System.Linq;
 using OsmSharp.Collections.PriorityQueues;
+using OsmSharp.Collections.Coordinates.Collections;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -220,7 +221,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     // overwrite the old edge making it point 'to higher' only.
                     var toHigherData = edge.EdgeData;
                     toHigherData.SetContractedDirection(true, false);
-                    _target.AddEdge(vertex, edge.Neighbour, toHigherData, null);
+                    ICoordinateCollection shape = null;
+                    if (!_target.GetEdgeShape(vertex, edge.Neighbour, out shape))
+                    {
+                        shape = null;
+                    }
+                    _target.AddEdge(vertex, edge.Neighbour, toHigherData, shape);
                 }
             }
 
