@@ -26,6 +26,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Serialization;
+using OsmSharp.Collections.Coordinates.Collections;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -202,6 +203,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         chArc.BackwardWeight = sortedArc.EdgeData.BackwardWeight;
                         chArc.ContractedDirectionValue = sortedArc.EdgeData.ContractedDirectionValue;
                         chArc.TagsValue = sortedArc.EdgeData.TagsValue;
+                        chArc.Coordinates = sortedArc.Intermediates.ToSimpleArray();
                         blockArcs.Add(chArc);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
@@ -339,7 +341,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                             }
                             newEdge.ForwardWeight = arc.EdgeData.ForwardWeight;
                             newEdge.BackwardWeight = arc.EdgeData.BackwardWeight;
-                            sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, null);
+                            sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, arc.Intermediates);
                         }
                     }
                 }

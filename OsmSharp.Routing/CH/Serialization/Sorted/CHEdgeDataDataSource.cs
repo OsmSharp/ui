@@ -20,6 +20,7 @@ using OsmSharp.Collections.Cache;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
@@ -231,7 +232,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        private KeyValuePair<uint, CHEdgeData>[] GetEdgePairs(uint vertexId)
+        private KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[] GetEdgePairs(uint vertexId)
         {
             return this.LoadArcs(vertexId);
         }
@@ -481,7 +482,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        private KeyValuePair<uint, CHEdgeData>[] LoadArcs(uint vertexId)
+        private KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[] LoadArcs(uint vertexId)
         {
             uint blockId = CHBlock.CalculateId(vertexId, _blockSize);
             CHBlock block;
@@ -490,7 +491,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 block = this.DeserializeBlock(blockId);
                 if (block == null)
                 { // oops even now the block is not found!
-                    return new KeyValuePair<uint, CHEdgeData>[0];
+                    return new KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[0];
                 }
                 _blocks.Add(blockId, block);
             }
@@ -498,7 +499,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             if (block.Vertices != null &&
                 blockIdx < block.Vertices.Length)
             { // block is found and the vertex is there!
-                var arcs = new KeyValuePair<uint, CHEdgeData>[
+                var arcs = new KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[
                     block.Vertices[blockIdx].ArcCount];
                 for (int arcIdx = block.Vertices[blockIdx].ArcIndex;
                     arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
@@ -511,13 +512,18 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     edgeData.ForwardWeight = chArc.ForwardWeight;
                     edgeData.ContractedDirectionValue = chArc.ContractedDirectionValue;
                     edgeData.TagsValue = chArc.TagsValue;
-                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, CHEdgeData>(
-                        chArc.TargetId, edgeData);
+                    ICoordinateCollection coordinateCollection = null;
+                    if (chArc.Coordinates != null)
+                    {
+                        coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(chArc.Coordinates);
+                    }
+                    arcs[arcIdx - block.Vertices[blockIdx].ArcIndex] = new KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>(
+                        chArc.TargetId, new KeyValuePair<CHEdgeData, ICoordinateCollection>(edgeData, coordinateCollection));
                 }
                 return arcs;
             }
             // oops even now the block is not found!
-            return new KeyValuePair<uint, CHEdgeData>[0];
+            return new KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[0];
         }
 
         /// <summary>
@@ -556,7 +562,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Holds the edges.
             /// </summary>
-            private KeyValuePair<uint, CHEdgeData>[] _edges;
+            private KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[] _edges;
 
             /// <summary>
             /// Holds the current position.
@@ -567,7 +573,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// Creates a new enumerator.
             /// </summary>
             /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, CHEdgeData>[] edges)
+            public EdgeEnumerator(KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[] edges)
             {
                 _edges = edges;
             }
@@ -595,7 +601,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             public CHEdgeData EdgeData
             {
-                get { return _edges[_current].Value; }
+                get { return _edges[_current].Value.Key; }
             }
 
             /// <summary>
@@ -619,7 +625,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             public ICoordinateCollection Intermediates
             {
-                get { return null; }
+                get { return _edges[_current].Value.Value; }
             }
 
             /// <summary>
