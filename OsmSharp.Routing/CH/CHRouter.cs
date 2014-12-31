@@ -1439,13 +1439,13 @@ namespace OsmSharp.Routing.CH
         public SearchClosestResult<CHEdgeData> SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
-            // first try a very small area.
-            var result = this.DoSearchClosest(graph, interpreter,
-                vehicle, coordinate, delta / 10, matcher, pointTags, verticesOnly);
-            if (result.Distance < double.MaxValue)
-            { // success!
-                return result;
-            }
+            //// first try a very small area.
+            //var result = this.DoSearchClosest(graph, interpreter,
+            //    vehicle, coordinate, delta / 10, matcher, pointTags, verticesOnly);
+            //if (result.Distance < double.MaxValue)
+            //{ // success!
+            //    return result;
+            //}
             return this.DoSearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, verticesOnly);
         }
 
