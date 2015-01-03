@@ -287,7 +287,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                     _target.GetEdgeShape(xEdge.Neighbour, yEdge.Neighbour, out shape) &&
                                     shape !=null && shape.Count > 0)
                                 { // an edge that represents a relation between two neighbours and has shapes should never be replaced.
-                                    System.Diagnostics.Debug.WriteLine("");
+                                    // TODO: keep existing edge by inserting a dummy vertex for one of the shapes.
+                                    // TODO: check if this is still needed because these case are supposed to be remove in osm->graph conversions.
                                 }
                                 else if (forward && data.ForwardWeight > forwardWeight)
                                 { // replace forward edge.

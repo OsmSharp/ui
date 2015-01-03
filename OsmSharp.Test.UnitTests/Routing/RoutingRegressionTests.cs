@@ -651,9 +651,9 @@ namespace OsmSharp.Test.Unittests.Routing
             double e = 0.2; // 10 cm
 
             // network: (a/b) a=vertexX, b=contractedVertexId
-            //                x(6/x)--------x(8/x)-x(4/2)---x(5/3)
+            //                x(6/5)--------x(8/x)-x(4/2)---x(5/3)
             //               /                    /
-            // x(1/4)--x(2/1)-x(7/5)--------x(3/x)
+            // x(1/4)--x(2/1)-x(7/6)--------x(3/x)
 
             // x(7/5) is one of the shapepoints converted to an actual vertex to prevent two edges 1<->2.
             // this regression test has everything to do with x(7/5).
