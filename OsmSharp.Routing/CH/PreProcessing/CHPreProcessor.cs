@@ -281,8 +281,15 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                             CHEdgeData data;
                             if (_target.GetEdge(xEdge.Neighbour, yEdge.Neighbour, out data))
-                            { // there already is an edge evaluate for each direction.
-                                if (forward && data.ForwardWeight > forwardWeight)
+                            { // there already is an edge; evaluate for each direction.
+                                ICoordinateCollection shape;
+                                if (data.RepresentsNeighbourRelations &&
+                                    _target.GetEdgeShape(xEdge.Neighbour, yEdge.Neighbour, out shape) &&
+                                    shape !=null && shape.Count > 0)
+                                { // an edge that represents a relation between two neighbours and has shapes should never be replaced.
+                                    System.Diagnostics.Debug.WriteLine("");
+                                }
+                                else if (forward && data.ForwardWeight > forwardWeight)
                                 { // replace forward edge.
                                     toRequeue.Add(xEdge.Neighbour);
                                     newEdge++;

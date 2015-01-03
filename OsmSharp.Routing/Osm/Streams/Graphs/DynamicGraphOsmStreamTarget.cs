@@ -478,7 +478,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                             // add edge before.
                             var beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
-                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), new List<GeoCoordinateSimple>());
+                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), null);
                             _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null, _edgeComparer);
 
                             // add edge after.
