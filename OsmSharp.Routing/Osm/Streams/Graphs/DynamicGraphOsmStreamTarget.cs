@@ -464,8 +464,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         _dynamicGraph.AddEdge(from, newVertex, newEdgeData, null, _edgeComparer);
 
                         from = newVertex;
-                        intermediates = intermediates.GetRange(1, intermediates.Count - 1);
                         fromCoordinate = new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude);
+                        intermediates = intermediates.GetRange(1, intermediates.Count - 1);
                     }
                     else
                     { // hmm, no intermediates, the other edge should have them.
