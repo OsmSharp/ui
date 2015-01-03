@@ -25,6 +25,8 @@ using OsmSharp.Routing.Graph;
 using System.Linq;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -60,8 +62,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _calculator = calculator;
             _witnessCalculator = witnessCalculator;
 
-            _queue = new BinairyHeap<uint>(target.VertexCount + 1);
-            _lowestPriorities = new float[target.VertexCount + 1];
+            _queue = new BinairyHeap<uint>(target.VertexCount + (uint)(target.VertexCount * 0.1));
+            _lowestPriorities = new float[target.VertexCount + (uint)(target.VertexCount * 0.1)];
             for(int idx = 0; idx < _lowestPriorities.Length; idx++)
             { // uncontracted = priority != float.MinValue.
                 _lowestPriorities[idx] = float.MaxValue;
@@ -282,16 +284,81 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             CHEdgeData data;
                             if (_target.GetEdge(xEdge.Neighbour, yEdge.Neighbour, out data))
                             { // there already is an edge; evaluate for each direction.
-                                ICoordinateCollection shape;
-                                if (data.RepresentsNeighbourRelations &&
-                                    _target.GetEdgeShape(xEdge.Neighbour, yEdge.Neighbour, out shape) &&
-                                    shape !=null && shape.Count > 0)
-                                { // an edge that represents a relation between two neighbours and has shapes should never be replaced.
-                                    // TODO: keep existing edge by inserting a dummy vertex for one of the shapes.
-                                    // TODO: check if this is still needed because these case are supposed to be remove in osm->graph conversions.
-                                }
-                                else if (forward && data.ForwardWeight > forwardWeight)
+                                if (forward && data.ForwardWeight > forwardWeight)
                                 { // replace forward edge.
+                                    ICoordinateCollection shape;
+                                    if (data.RepresentsNeighbourRelations &&
+                                        _target.GetEdgeShape(xEdge.Neighbour, yEdge.Neighbour, out shape) &&
+                                        shape != null && shape.Count > 0)
+                                    { // an edge that represents a relation between two neighbours and has shapes should never be replaced.
+                                        // TODO: keep existing edge by inserting a dummy vertex for one of the shapes.
+                                        // TODO: check if this is still needed because these case are supposed to be remove in osm->graph conversions.
+                                        // WARNING: The assumption here is that the weight is in direct relation with the distance.
+                                        var shapeCoordinates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
+                                        float latitude, longitude;
+                                        _target.GetVertex(xEdge.Neighbour, out latitude, out longitude);
+                                        var previousCoordinate = new GeoCoordinate(shapeCoordinates[0]);
+                                        var distanceFirst = (new GeoCoordinate(latitude, longitude)).DistanceEstimate(previousCoordinate).Value;
+                                        var totalDistance = distanceFirst;
+                                        for(int idx = 1; idx < shapeCoordinates.Count; idx++)
+                                        {
+                                            var currentCoordinate = new GeoCoordinate(shapeCoordinates[idx]);
+                                            totalDistance = totalDistance + currentCoordinate.DistanceEstimate(previousCoordinate).Value;
+
+                                            previousCoordinate = currentCoordinate;
+                                        }
+                                        _target.GetVertex(yEdge.Neighbour, out latitude, out longitude);
+                                        totalDistance = totalDistance + previousCoordinate.DistanceEstimate(new GeoCoordinate(latitude, longitude)).Value;
+
+                                        // calculate the new edge data's.
+                                        float firstPartRatio = (float)(distanceFirst / totalDistance);
+                                        float secondPartRatio = 1 - firstPartRatio;
+                                        // REMARK: the edge being split can never have contracted id's because it would not have a shape.
+                                        var firstPartEdgeData = new CHEdgeData()
+                                        {
+                                            BackwardContractedId = data.BackwardContractedId,
+                                            BackwardWeight = data.BackwardWeight,
+                                            ForwardContractedId = data.ForwardContractedId,
+                                            ForwardWeight = data.ForwardWeight,
+                                            Tags = data.Tags,
+                                            TagsForward = data.TagsForward
+                                        };
+                                        var secondPartEdgeData = new CHEdgeData()
+                                        {
+                                            BackwardContractedId = data.BackwardContractedId,
+                                            BackwardWeight = data.BackwardWeight,
+                                            ForwardContractedId = data.ForwardContractedId,
+                                            ForwardWeight = data.ForwardWeight,
+                                            Tags = data.Tags,
+                                            TagsForward = data.TagsForward
+                                        };
+                                        // calculate firstpart weights.
+                                        if(data.Backward)
+                                        {
+                                            firstPartEdgeData.BackwardWeight = firstPartEdgeData.BackwardWeight * firstPartRatio;
+                                            secondPartEdgeData.BackwardWeight = secondPartEdgeData.BackwardWeight * secondPartRatio;
+                                        }
+                                        if (data.Forward)
+                                        {
+                                            firstPartEdgeData.ForwardWeight = firstPartEdgeData.ForwardWeight * firstPartRatio;
+                                            secondPartEdgeData.ForwardWeight = secondPartEdgeData.ForwardWeight * secondPartRatio;
+                                        }
+
+                                        // add intermediate vertex.
+                                        var newVertex = _target.AddVertex(shapeCoordinates[0].Latitude, shapeCoordinates[0].Longitude);
+                                        toRequeue.Add(newVertex); // immidiately queue for contraction.
+
+                                        // add edge before.
+                                        _target.AddEdge(xEdge.Neighbour, newVertex, firstPartEdgeData, null);
+
+                                        // add edge after.
+                                        var secondPartShape = shapeCoordinates.GetRange(1, shapeCoordinates.Count - 1);
+                                        _target.AddEdge(newVertex, yEdge.Neighbour, secondPartEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(secondPartShape.ToArray()));
+
+                                        // remove original edge.
+                                        _target.RemoveEdge(xEdge.Neighbour, yEdge.Neighbour);
+                                    }
+
                                     toRequeue.Add(xEdge.Neighbour);
                                     newEdge++;
                                     data.ForwardWeight = forwardWeight;
