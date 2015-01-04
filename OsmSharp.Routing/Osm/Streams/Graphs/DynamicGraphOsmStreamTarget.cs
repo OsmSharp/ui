@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
 
         }

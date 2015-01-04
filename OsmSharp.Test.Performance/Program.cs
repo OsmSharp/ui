@@ -76,7 +76,7 @@ namespace OsmSharp.Test.Performance
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
-                //Routing.CH.CHRoutingTest.Test();
+                Routing.CH.CHRoutingTest.Test();
 
                 // test serializer/deseriazation routing performance.
                 // var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
