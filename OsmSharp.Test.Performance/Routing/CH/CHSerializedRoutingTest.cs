@@ -39,11 +39,11 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            var box = new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
-                "kempen-big.osm.pbf.routing", box, 1000);
+                "kempen-big.osm.pbf.contracted.mobile.routing", box, 100);
 
             // test instructions.
             //CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
