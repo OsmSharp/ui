@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// The default search delta.
         /// </summary>
-        private const float DefaultSearchDelta = .01f;
+        private const float DefaultSearchDelta = .0075f;
 
         /// <summary>
         /// Holds the graph object containing the routable network.
