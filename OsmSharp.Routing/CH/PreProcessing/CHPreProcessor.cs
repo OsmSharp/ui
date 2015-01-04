@@ -62,8 +62,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _calculator = calculator;
             _witnessCalculator = witnessCalculator;
 
-            _queue = new BinairyHeap<uint>(target.VertexCount + (uint)(target.VertexCount * 0.1));
-            _lowestPriorities = new float[target.VertexCount + (uint)(target.VertexCount * 0.1)];
+            _queue = new BinairyHeap<uint>(target.VertexCount + (uint)System.Math.Max(target.VertexCount * 0.1, 5));
+            _lowestPriorities = new float[target.VertexCount + (uint)System.Math.Max(target.VertexCount * 0.1, 5)];
             for(int idx = 0; idx < _lowestPriorities.Length; idx++)
             { // uncontracted = priority != float.MinValue.
                 _lowestPriorities[idx] = float.MaxValue;
