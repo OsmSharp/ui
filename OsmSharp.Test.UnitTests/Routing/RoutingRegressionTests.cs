@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -327,6 +327,59 @@ namespace OsmSharp.Test.Unittests.Routing
         }
 
         /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest5Contracted()
+        {
+            double e = 0.1; // 10 cm
+
+            // network:
+            //        x(1)------x(2)
+            //       /           \
+            // x(3)--x(4)---------x(5)--x(6)
+
+            // 1: 50.98508962508, 4.82958530756
+            // 2: 50.98509255957, 4.83009340615
+            // 3: 50.98496931078, 4.82889075077
+            // 4: 50.98496931078, 4.82939884936
+            // 5: 50.98496931078, 4.83025189562
+            // 6: 50.98496931078, 4.83079728585
+
+            var vertex1 = new GeoCoordinate(50.98508962508, 4.82958530756);
+            var vertex2 = new GeoCoordinate(50.98509255957, 4.83009340615);
+            var vertex3 = new GeoCoordinate(50.98496931078, 4.82889075077);
+            var vertex4 = new GeoCoordinate(50.98496931078, 4.82939884936);
+            var vertex5 = new GeoCoordinate(50.98496931078, 4.83025189562);
+            var vertex6 = new GeoCoordinate(50.98496931078, 4.83079728585);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression3.osm"));
+            var router = Router.CreateCHFrom(source, new OsmRoutingInterpreter(), Vehicle.Car);
+
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
+
+            var route = router.Calculate(Vehicle.Car, resolved3, resolved6);
+            var points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(4, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex3).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[2].DistanceReal(vertex5).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex6).Value, e);
+
+            route = router.Calculate(Vehicle.Car, resolved6, resolved3);
+            points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(4, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex6).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex5).Value, e);
+            Assert.AreEqual(0, points[2].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex3).Value, e);
+        }
+
+        /// <summary>
         /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
         /// </summary>
         [Test]
@@ -377,6 +430,263 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(0, points[1].DistanceReal(vertex5).Value, e);
             Assert.AreEqual(0, points[2].DistanceReal(vertex4).Value, e);
             Assert.AreEqual(0, points[3].DistanceReal(vertex3).Value, e);
+        }
+
+        /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest6Contracted()
+        {
+            double e = 0.1; // 10 cm
+
+            // network:
+            //        x(1)------x(2)
+            //       /           \
+            // x(3)--x(4)---------x(5)--x(6)
+
+            // 1: 50.98508962508, 4.82958530756
+            // 2: 50.98509255957, 4.83009340615
+            // 3: 50.98496931078, 4.82889075077
+            // 4: 50.98496931078, 4.82939884936
+            // 5: 50.98496931078, 4.83025189562
+            // 6: 50.98496931078, 4.83079728585
+
+            var vertex1 = new GeoCoordinate(50.98508962508, 4.82958530756);
+            var vertex2 = new GeoCoordinate(50.98509255957, 4.83009340615);
+            var vertex3 = new GeoCoordinate(50.98496931078, 4.82889075077);
+            var vertex4 = new GeoCoordinate(50.98496931078, 4.82939884936);
+            var vertex5 = new GeoCoordinate(50.98496931078, 4.83025189562);
+            var vertex6 = new GeoCoordinate(50.98496931078, 4.83079728585);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression4.osm"));
+            var router = Router.CreateCHFrom(source, new OsmRoutingInterpreter(), Vehicle.Car);
+
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
+
+            var route = router.Calculate(Vehicle.Car, resolved3, resolved6);
+            var points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(4, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex3).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[2].DistanceReal(vertex5).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex6).Value, e);
+
+            route = router.Calculate(Vehicle.Car, resolved6, resolved3);
+            points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(4, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex6).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex5).Value, e);
+            Assert.AreEqual(0, points[2].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex3).Value, e);
+        }
+
+        /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest7()
+        {
+            double e = 0.2; // 10 cm
+
+            // network:
+            //        x(6)-----------x(4)---x(5)
+            //        /              /
+            // x(1)--x(2)---------x(3)
+
+            var vertex1 = new GeoCoordinate(50.984988723456084, 4.828170772332617);
+            var vertex2 = new GeoCoordinate(50.984987035397620, 4.828346366914291);
+            var vertex3 = new GeoCoordinate(50.984985823202960, 4.828728258663133);
+            var vertex4 = new GeoCoordinate(50.985013303511700, 4.828792771883094);
+            var vertex5 = new GeoCoordinate(50.985012880931120, 4.828949650265730);
+            var vertex6 = new GeoCoordinate(50.985017593072016, 4.828410262241598);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression5.osm"));
+            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+
+            var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
+            Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);
+            var resolved2 = router.Resolve(Vehicle.Car, vertex2, true);
+            Assert.AreEqual(0, resolved2.Location.DistanceReal(vertex2).Value, e);
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            Assert.AreEqual(0, resolved3.Location.DistanceReal(vertex3).Value, e);
+            var resolved4 = router.Resolve(Vehicle.Car, vertex4, true);
+            Assert.AreEqual(0, resolved4.Location.DistanceReal(vertex4).Value, e);
+            var resolved5 = router.Resolve(Vehicle.Car, vertex5, true);
+            Assert.AreEqual(0, resolved5.Location.DistanceReal(vertex5).Value, e);
+
+            var route = router.Calculate(Vehicle.Car, resolved1, resolved5);
+            var points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(5, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex1).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex2).Value, e);
+            Assert.AreEqual(0, System.Math.Min(points[2].DistanceReal(vertex6).Value,points[2].DistanceReal(vertex3).Value), e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[4].DistanceReal(vertex5).Value, e);
+
+            route = router.Calculate(Vehicle.Car, resolved5, resolved1);
+            points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(5, points.Count);
+            Assert.AreEqual(0, points[4].DistanceReal(vertex1).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex2).Value, e);
+            Assert.AreEqual(0, System.Math.Min(points[2].DistanceReal(vertex6).Value, points[2].DistanceReal(vertex3).Value), e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex5).Value, e);
+        }
+
+        /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
+        /// </summary>
+        /// <remarks>Contracted version.</remarks>
+        [Test]
+        public void RoutingRegressionTest7Contracted()
+        {
+            double e = 0.2; // 10 cm
+
+            // network:
+            //        x(6)-----------x(4)---x(5)
+            //        /              /
+            // x(1)--x(2)---------x(3)
+
+            var vertex1 = new GeoCoordinate(50.984988723456084, 4.828170772332617);
+            var vertex2 = new GeoCoordinate(50.984987035397620, 4.828346366914291);
+            var vertex3 = new GeoCoordinate(50.984985823202960, 4.828728258663133);
+            var vertex4 = new GeoCoordinate(50.985013303511700, 4.828792771883094);
+            var vertex5 = new GeoCoordinate(50.985012880931120, 4.828949650265730);
+            var vertex6 = new GeoCoordinate(50.985017593072016, 4.828410262241598);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression5.osm"));
+            var router = Router.CreateCHFrom(source, new OsmRoutingInterpreter(), Vehicle.Car);
+
+            var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
+            Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);
+            var resolved2 = router.Resolve(Vehicle.Car, vertex2, true);
+            Assert.AreEqual(0, resolved2.Location.DistanceReal(vertex2).Value, e);
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            Assert.AreEqual(0, resolved3.Location.DistanceReal(vertex3).Value, e);
+            var resolved4 = router.Resolve(Vehicle.Car, vertex4, true);
+            Assert.AreEqual(0, resolved4.Location.DistanceReal(vertex4).Value, e);
+            var resolved5 = router.Resolve(Vehicle.Car, vertex5, true);
+            Assert.AreEqual(0, resolved5.Location.DistanceReal(vertex5).Value, e);
+
+            var route = router.Calculate(Vehicle.Car, resolved1, resolved5);
+            var points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(5, points.Count);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex1).Value, e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex2).Value, e);
+            Assert.AreEqual(0, System.Math.Min(points[2].DistanceReal(vertex6).Value, points[2].DistanceReal(vertex3).Value), e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[4].DistanceReal(vertex5).Value, e);
+
+            route = router.Calculate(Vehicle.Car, resolved5, resolved1);
+            points = new List<GeoCoordinate>(route.GetPoints());
+
+            Assert.AreEqual(5, points.Count);
+            Assert.AreEqual(0, points[4].DistanceReal(vertex1).Value, e);
+            Assert.AreEqual(0, points[3].DistanceReal(vertex2).Value, e);
+            Assert.AreEqual(0, System.Math.Min(points[2].DistanceReal(vertex6).Value, points[2].DistanceReal(vertex3).Value), e);
+            Assert.AreEqual(0, points[1].DistanceReal(vertex4).Value, e);
+            Assert.AreEqual(0, points[0].DistanceReal(vertex5).Value, e);
+        }
+
+        /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest8()
+        {
+            double e = 0.2; // 10 cm
+
+            // network:
+            //            x(6)--------x(8)-x(4)---x(5)
+            //           /                /
+            // x(1)--x(2)-x(7)--------x(3)
+
+            var vertex1 = new GeoCoordinate(50.984988723456084, 4.828170772332617);
+            var vertex2 = new GeoCoordinate(50.984987035397620, 4.828346366914291);
+            var vertex3 = new GeoCoordinate(50.984985823202960, 4.828728258663133);
+            var vertex4 = new GeoCoordinate(50.985013303511700, 4.828792771883094);
+            var vertex5 = new GeoCoordinate(50.985012880931120, 4.828949650265730);
+            var vertex6 = new GeoCoordinate(50.985017593072016, 4.828410262241598);
+            var vertex7 = new GeoCoordinate(50.984986416884716, 4.828409529435097);
+            var vertex8 = new GeoCoordinate(50.985013738270930 ,4.828723851247985);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression6.osm"));
+            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+
+            var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
+            Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);
+            var resolved2 = router.Resolve(Vehicle.Car, vertex2, true);
+            Assert.AreEqual(0, resolved2.Location.DistanceReal(vertex2).Value, e);
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            Assert.AreEqual(0, resolved3.Location.DistanceReal(vertex3).Value, e);
+            var resolved4 = router.Resolve(Vehicle.Car, vertex4, true);
+            Assert.AreEqual(0, resolved4.Location.DistanceReal(vertex4).Value, e);
+            var resolved5 = router.Resolve(Vehicle.Car, vertex5, true);
+            Assert.AreEqual(0, resolved5.Location.DistanceReal(vertex5).Value, e);
+            var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
+            Assert.AreEqual(0, resolved6.Location.DistanceReal(vertex6).Value, e);
+            var resolved7 = router.Resolve(Vehicle.Car, vertex7, true);
+            Assert.AreEqual(0, resolved7.Location.DistanceReal(vertex7).Value, e);
+            var resolved8 = router.Resolve(Vehicle.Car, vertex8, true);
+            Assert.AreEqual(0, resolved8.Location.DistanceReal(vertex8).Value, e);
+        }
+
+        /// <summary>
+        /// Issue with multiple edges between the same two vertices and with a different shape but was sorted differently in source.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest8Contracted()
+        {
+            double e = 0.2; // 10 cm
+
+            // network: (a/b) a=vertexX, b=contractedVertexId
+            //                x(6/5)--------x(8/x)-x(4/2)---x(5/3)
+            //               /                    /
+            // x(1/4)--x(2/1)-x(7/6)--------x(3/x)
+
+            // x(7/5) is one of the shapepoints converted to an actual vertex to prevent two edges 1<->2.
+            // this regression test has everything to do with x(7/5).
+
+            var vertex1 = new GeoCoordinate(50.984988723456084, 4.828170772332617);
+            var vertex2 = new GeoCoordinate(50.984987035397620, 4.828346366914291);
+            var vertex3 = new GeoCoordinate(50.984985823202960, 4.828728258663133);
+            var vertex4 = new GeoCoordinate(50.985013303511700, 4.828792771883094);
+            var vertex5 = new GeoCoordinate(50.985012880931120, 4.828949650265730);
+            var vertex6 = new GeoCoordinate(50.985017593072016, 4.828410262241598);
+            var vertex7 = new GeoCoordinate(50.984986416884716, 4.828409529435097);
+            var vertex8 = new GeoCoordinate(50.985013738270930, 4.828723851247985);
+
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression6.osm"));
+            var router = Router.CreateCHFrom(source, new OsmRoutingInterpreter(), Vehicle.Car);
+
+            var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
+            Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);
+            var resolved2 = router.Resolve(Vehicle.Car, vertex2, true);
+            Assert.AreEqual(0, resolved2.Location.DistanceReal(vertex2).Value, e);
+            var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
+            Assert.AreEqual(0, resolved3.Location.DistanceReal(vertex3).Value, e);
+            var resolved4 = router.Resolve(Vehicle.Car, vertex4, true);
+            Assert.AreEqual(0, resolved4.Location.DistanceReal(vertex4).Value, e);
+            var resolved5 = router.Resolve(Vehicle.Car, vertex5, true);
+            Assert.AreEqual(0, resolved5.Location.DistanceReal(vertex5).Value, e);
+            var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
+            Assert.AreEqual(0, resolved6.Location.DistanceReal(vertex6).Value, e);
+            var resolved7 = router.Resolve(Vehicle.Car, vertex7, true);
+            Assert.AreEqual(0, resolved7.Location.DistanceReal(vertex7).Value, e);
+            var resolved8 = router.Resolve(Vehicle.Car, vertex8, true);
+            Assert.AreEqual(0, resolved8.Location.DistanceReal(vertex8).Value, e);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -88,7 +88,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                     interpreter, Vehicle.Car);
 
             // create serializer.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer();
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -111,26 +111,21 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                 }
             }
 
-            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
-                routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
+            var deserializedVersion = routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
             Assert.IsTrue(deserializedVersion.SupportsProfile(Vehicle.Car));
             Assert.IsFalse(deserializedVersion.SupportsProfile(Vehicle.Bicycle));
 
             // create reference router.
             original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                                                                   Assembly.GetExecutingAssembly()
-                                                                           .GetManifestResourceStream(embeddedString)),
-                                                               interpreter,
-                                                               Vehicle.Car);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)),
+                    interpreter, Vehicle.Car);
             var basicRouterOriginal = new CHRouter();
-            Router referenceRouter = Router.CreateCHFrom(
-                original, basicRouterOriginal, interpreter);
+            var referenceRouter = Router.CreateCHFrom(original, basicRouterOriginal, interpreter);
 
             // try to do some routing on the deserialized version.
             var basicRouter = new CHRouter();
-            Router router = Router.CreateCHFrom(
-                deserializedVersion, basicRouter, interpreter);
+            var router = Router.CreateCHFrom(deserializedVersion, basicRouter, interpreter);
 
             this.TestCompareAll(original, referenceRouter, router);
         }

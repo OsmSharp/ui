@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ProtoBuf;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -145,6 +146,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         [ProtoMember(7)]
         public uint TagsValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coordinates.
+        /// </summary>
+        [ProtoMember(8)]
+        public GeoCoordinateSimple[] Coordinates { get; set; }
     }
 
     /// <summary>

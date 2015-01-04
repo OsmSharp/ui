@@ -618,5 +618,118 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 }
             }
         }
+
+        /// <summary>
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the datasource blocked serializer for CHEdge data.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationCHEdgeData()
+        {
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
+
+            // load the network.
+            var referenceNetwork = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter(), Vehicle.Car);
+
+            // serialize network.
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            // serialize/deserialize.
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                try
+                {
+                    routingSerializer.Serialize(stream, referenceNetwork, metaData);
+                    byteArray = stream.ToArray();
+                }
+                catch (Exception)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Debugger.Break();
+                    }
+                    throw;
+                }
+            }
+            var network = routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
+
+            // compare networks.
+            Assert.IsNotNull(network);
+            // Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
+            for (uint vertex = 1; vertex < referenceNetwork.VertexCount; vertex++)
+            {
+                float referenceLatitude, referenceLongitude, latitude, longitude;
+                Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));
+                Assert.IsTrue(network.GetVertex(vertex, out latitude, out longitude));
+                Assert.AreEqual(referenceLatitude, latitude);
+                Assert.AreEqual(referenceLongitude, longitude);
+
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
+                Assert.AreEqual(referenceArcs.Length, arcs.Length);
+                for (int idx = 0; idx < referenceArcs.Length; idx++)
+                {
+                    var referenceArc = referenceArcs[idx];
+                    // find the same edge in the new arcs.
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+
+                    Assert.AreEqual(referenceArc.Key, arc.Key);
+                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
+                    Assert.AreEqual(referenceArc.Value.ForwardWeight, arc.Value.ForwardWeight);
+                    Assert.AreEqual(referenceArc.Value.ForwardContractedId, arc.Value.ForwardContractedId);
+                    Assert.AreEqual(referenceArc.Value.Backward, arc.Value.Backward);
+                    Assert.AreEqual(referenceArc.Value.BackwardWeight, arc.Value.BackwardWeight);
+                    Assert.AreEqual(referenceArc.Value.BackwardContractedId, arc.Value.BackwardContractedId);
+                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    ICoordinateCollection referenceCoordinates;
+                    ICoordinateCollection coordinates;
+                    if (referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        if (referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while (referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
+                    }
+                    else
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                    }
+
+                    // check tags.
+                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
+                    var tags = network.TagsIndex.Get(arc.Value.Tags);
+                    if (referenceTags == null)
+                    { // other tags also have to be null.
+                        Assert.IsNull(tags);
+                    }
+                    else
+                    { // contents need to be the same.
+                        Assert.AreEqual(referenceTags.Count, tags.Count);
+                        foreach (var referenceTag in referenceTags)
+                        {
+                            Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

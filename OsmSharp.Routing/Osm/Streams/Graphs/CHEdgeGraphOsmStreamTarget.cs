@@ -101,14 +101,31 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // add tags.
             var tagsId = tagsIndex.Add(tags);
 
+            // calculate weight including intermediates.
+            float weightBackward = 0;
+            float weightForward = 0;
+            var previous = from;
+            if (intermediates != null)
+            {
+                for (int idx = 0; idx < intermediates.Count; idx++)
+                {
+                    var current = new GeoCoordinate(intermediates[idx].Latitude, intermediates[idx].Longitude);
+                    weightForward = weightForward + (float)_vehicle.Weight(tags, previous, current);
+                    weightBackward = weightBackward + (float)_vehicle.Weight(tags, current, previous);
+                    previous = current;
+                }
+            }
+            weightForward = weightForward + (float)_vehicle.Weight(tags, previous, to);
+            weightBackward = weightBackward + (float)_vehicle.Weight(tags, to, previous);
+
             // initialize the edge data.
             var edgeData = new CHEdgeData()
             {
                 TagsForward = true,
                 Tags = tagsId,
-                BackwardWeight = backward ? (float)_vehicle.Weight(tags, from, to) : float.MaxValue,
+                BackwardWeight = backward ? weightBackward : float.MaxValue,
                 BackwardContractedId = 0,
-                ForwardWeight = forward ? (float)_vehicle.Weight(tags, to, from) : float.MaxValue,
+                ForwardWeight = forward ? weightForward : float.MaxValue,
                 ForwardContractedId = 0
             };
             edgeData.SetContractedDirection(false, false);

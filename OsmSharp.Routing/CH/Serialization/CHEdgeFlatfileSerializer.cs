@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -23,11 +25,8 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Collections.Tags.Index;
 
 namespace OsmSharp.Routing.CH.Serialization
 {
@@ -79,7 +78,8 @@ namespace OsmSharp.Routing.CH.Serialization
                                 ForwardContractedId = arcs[idx].EdgeData.ForwardContractedId,
                                 ForwardWeight = arcs[idx].EdgeData.ForwardWeight,
                                 BackwardContractedId = arcs[idx].EdgeData.BackwardContractedId,
-                                BackwardWeight = arcs[idx].EdgeData.BackwardWeight
+                                BackwardWeight = arcs[idx].EdgeData.BackwardWeight,
+                                Coordinates = arcs[idx].Intermediates.ToSimpleArray()
                             });
 
                             if (arcsQueue.Count == blockSize)
@@ -119,6 +119,11 @@ namespace OsmSharp.Routing.CH.Serialization
                 var serializableEdges = typeModel.DeserializeWithSize(stream, null, typeof(SerializableEdge[])) as SerializableEdge[];
                 for (int idx = 0; idx < serializableEdges.Length; idx++)
                 {
+                    ICoordinateCollection coordinateCollection = null;
+                    if (serializableEdges[idx].Coordinates != null)
+                    {
+                        coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
+                    }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
                         new CHEdgeData()
                         {
@@ -128,7 +133,7 @@ namespace OsmSharp.Routing.CH.Serialization
                             ForwardWeight = serializableEdges[idx].ForwardWeight,
                             BackwardContractedId = serializableEdges[idx].BackwardContractedId,
                             BackwardWeight = serializableEdges[idx].BackwardWeight
-                        }, null);
+                        }, coordinateCollection);
                 }
             }
         }
@@ -194,6 +199,12 @@ namespace OsmSharp.Routing.CH.Serialization
             /// </summary>
             [ProtoMember(8)]
             public uint TagsValue { get; set; }
+
+            /// <summary>
+            /// Gets or sets the coordinates.
+            /// </summary>
+            [ProtoMember(9)]
+            public GeoCoordinateSimple[] Coordinates { get; set; }
         }
     }
 }

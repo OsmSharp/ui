@@ -298,6 +298,10 @@ namespace OsmSharp.Routing.Graph
                         if (!forward)
                         {
                             data = (TEdgeData)data.Reverse();
+                            if (coordinates != null)
+                            { // also reverse coordinates!
+                                coordinates = coordinates.Reverse();
+                            }
                         }
                         if (comparer != null)
                         { // there is a comparer.
