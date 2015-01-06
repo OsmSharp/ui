@@ -16,15 +16,15 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.IO;
-using System.Linq;
-using OsmSharp.IO;
-using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
-using System.Collections.Generic;
+using OsmSharp.IO;
+using OsmSharp.Routing.Graph.Router;
 using ProtoBuf.Meta;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Routing.Graph.Serialization
 {

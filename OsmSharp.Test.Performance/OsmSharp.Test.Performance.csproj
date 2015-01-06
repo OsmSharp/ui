@@ -186,6 +186,12 @@
     </None>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="TestFiles\routing\kempen-big.osm.pbf.contracted.flat.routing">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\routing\kempen-big.osm.pbf.contracted.mobile.routing">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\OsmSharpTestFiles\kempen-big.osm.pbf.txt">

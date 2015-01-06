@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -85,10 +85,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
-        /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), false, new CoordinateIndex())
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
 
         }
@@ -459,9 +458,32 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 { // oeps, an edge already exists!
                     if (intermediates != null && intermediates.Count > 0)
                     { // add one of the intermediates as new vertex.
-                        var newVertex = _dynamicGraph.AddVertex(intermediates[0].Latitude, intermediates[0].Longitude);
-                        var newEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, 
-                            forward, new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude), toCoordinate, intermediates);
+                        ICoordinateCollection shape;
+                        uint newVertex;
+                        if (_dynamicGraph.GetEdgeShape(from, to, out shape) &&
+                            shape != null && shape.Count > 0)
+                        { // the other edge also has a shape, make sure to also split it.
+                            var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
+                            newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
+
+                            // add edge before.
+                            var beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
+                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), null);
+                            _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null, _edgeComparer);
+
+                            // add edge after.
+                            var afterIntermediates = existingIntermediates.GetRange(1, existingIntermediates.Count - 1);
+                            var afterEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
+                                forward, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), toCoordinate, afterIntermediates);
+                            _dynamicGraph.AddEdge(newVertex, to, afterEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(afterIntermediates.ToArray()), _edgeComparer);
+
+                            // remove original edge.
+                            _dynamicGraph.RemoveEdge(from, to);
+                        }
+                        
+                        newVertex = _dynamicGraph.AddVertex(intermediates[0].Latitude, intermediates[0].Longitude);
+                        var newEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
+                            forward, fromCoordinate, new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude), null);
                         _dynamicGraph.AddEdge(from, newVertex, newEdgeData, null, _edgeComparer);
 
                         from = newVertex;
@@ -479,7 +501,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
                             // add edge before.
                             var beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags,
-                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), new List<GeoCoordinateSimple>());
+                                forward, fromCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), null);
                             _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null, _edgeComparer);
 
                             // add edge after.
