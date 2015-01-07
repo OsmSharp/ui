@@ -68,8 +68,8 @@ if object_id('dbo.node', 'U') is null
   CREATE TABLE dbo.node
   (
     id            bigint   not null,
-    latitude      integer,
-    longitude     integer,
+    latitude      float,
+    longitude     float,
     changeset_id  bigint   null,
     visible       bit      null,
     [timestamp]   datetime null,

@@ -21,20 +21,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Data.SQLServer.XML</DocumentationFile>
+    <DocumentationFile>..\Output\OsmSharp.Data.SQLServer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Data.SQLServer.XML</DocumentationFile>
+    <DocumentationFile>..\Output\OsmSharp.Data.SQLServer.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Osm\SchemaTools\SQLServerSchemaConstants.cs" />
+    <Compile Include="Osm\Streams\SQLServerOsmStreamSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Osm\SchemaTools\SQLServerSchemaTools.cs" />
     <Compile Include="Osm\Streams\SQLServerOsmStreamTarget.cs" />
