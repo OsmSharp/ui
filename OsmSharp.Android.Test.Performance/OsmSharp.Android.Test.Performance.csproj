@@ -72,6 +72,9 @@
     <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.contracted.mobile.routing">
       <Link>kempen-big.osm.pbf.contracted.mobile.routing</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\kempen.osm.pbf">
+      <Link>kempen.osm.pbf</Link>
+    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

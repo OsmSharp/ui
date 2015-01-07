@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -184,9 +184,9 @@ namespace OsmSharp.Collections.Cache
                 { // oops: too much data.
                     // remove the 'oldest' item.
                     // TODO: remove multiple items at once!
-                    TKey minKey = default(TKey);
-                    long minId = long.MaxValue;
-                    foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
+                    var minKey = default(TKey);
+                    var minId = long.MaxValue;
+                    foreach (var pair in _data)
                     {
                         if (pair.Value.Id < minId)
                         {

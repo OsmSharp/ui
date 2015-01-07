@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -69,18 +69,18 @@ namespace OsmSharp.Test.Performance
                 //Tags.Collections.TagsTableCollectionIndexTests.Test();
                 //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-                // test the routing preprocessor.
+                //// test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
                 //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
-                //Routing.CH.CHSerializedRoutingTest.Test();
+                Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();
 
-                // test serializer/deseriazation routing performance.
-                // var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
-                // Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
+                //// test serializer/deseriazation routing performance.
+                //var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+                //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
                 // tests the mapcss interpretation.
                 //var serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();

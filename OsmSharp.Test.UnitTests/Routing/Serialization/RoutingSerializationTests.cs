@@ -713,6 +713,33 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                         Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
                     }
 
+                    if (referenceNetwork.GetEdgeShape(referenceArc.Key, vertex, out referenceCoordinates))
+                    { // there is a shape.
+                        Assert.IsTrue(network.GetEdgeShape(arc.Key, vertex, out coordinates));
+                        if (referenceCoordinates == null)
+                        { // reference shape is null, shape is null.
+                            Assert.IsNull(coordinates);
+                        }
+                        else
+                        { // reference shape is not null compare them.
+                            Assert.IsNotNull(coordinates);
+                            referenceCoordinates.Reset();
+                            coordinates.Reset();
+                            while (referenceCoordinates.MoveNext())
+                            {
+                                Assert.IsTrue(coordinates.MoveNext());
+
+                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                            }
+                            Assert.IsFalse(coordinates.MoveNext());
+                        }
+                    }
+                    else
+                    { // there is no shape.
+                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                    }
+
                     // check tags.
                     var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
                     var tags = network.TagsIndex.Get(arc.Value.Tags);

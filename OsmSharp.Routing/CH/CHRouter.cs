@@ -1498,10 +1498,14 @@ namespace OsmSharp.Routing.CH
                     { // skip this edge, no valid tags found.
                         continue;
                     }
-                    var arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
-                    bool canBeTraversed = vehicle.CanTraverse(arcTags);
-                    if (canBeTraversed)
-                    { // the edge can be traversed.
+                    TagsCollectionBase arcTags = null;
+                    if(matcher != null)
+                    {
+                        arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                    }
+                    //bool canBeTraversed = vehicle.CanTraverse(arcTags);
+                    //if (canBeTraversed)
+                    //{ // the edge can be traversed.
                         // test the two points.
                         float fromLatitude, fromLongitude;
                         float toLatitude, toLongitude;
@@ -1691,7 +1695,7 @@ namespace OsmSharp.Routing.CH
                                 }
                             }
                         }
-                    }
+                    // }
                 }
             }
             else

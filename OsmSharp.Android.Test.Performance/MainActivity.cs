@@ -26,6 +26,9 @@ using OsmSharp.Android.UI.Log;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Test.Performance.UI.Rendering;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing;
 
 namespace OsmSharp.Android.Test.Performance
 {
@@ -64,6 +67,19 @@ namespace OsmSharp.Android.Test.Performance
         /// </summary>
         private void Test()
         {
+            //using (var pbfStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            //        "OsmSharp.Android.Test.Performance.kempen.osm.pbf"))
+            //{
+            //    var router = OsmSharp.Routing.Router.CreateCHFrom(
+            //        new PBFOsmStreamSource(pbfStream), new OsmRoutingInterpreter(), Vehicle.Car);
+
+            //    OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.TestRouting(
+            //        router, new GeoCoordinateBox(
+            //    new GeoCoordinate(51.20190, 4.66540),
+            //    new GeoCoordinate(51.30720, 4.89820)), 1);
+            //}
+
+
             this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
@@ -88,6 +104,12 @@ namespace OsmSharp.Android.Test.Performance
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     embeddedResource),
                     2);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 10 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                    10);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 100 routes.");
             OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(

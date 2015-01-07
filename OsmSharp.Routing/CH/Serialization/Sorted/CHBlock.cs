@@ -35,7 +35,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Holds all relative block locations in the file.
         /// </summary>
         [ProtoMember(1)]
-        public int[] LocationIndex { get; set; }
+        public int[] BlockLocationIndex { get; set; }
     }
 
     /// <summary>
@@ -66,6 +66,32 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             return (((vertexId - 1) / blockSize) * (uint)blockSize) + 1;
         }
+    }
+
+    /// <summary>
+    /// Represents a block containing arc shapes in the same position compared to the regular blocks.
+    /// </summary>
+    [ProtoContract]
+    public class CHBlockCoordinates
+    {
+        /// <summary>
+        /// Holds the array of arcs shapes for all nodes in this block.
+        /// </summary>
+        [ProtoMember(1)]
+        public CHArcCoordinates[] Arcs { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a block containing arc shapes.
+    /// </summary>
+    [ProtoContract]
+    public struct CHArcCoordinates
+    {
+        /// <summary>
+        /// Gets or sets the coordinates.
+        /// </summary>
+        [ProtoMember(1)]
+        public GeoCoordinateSimple[] Coordinates { get; set; }
     }
 
     /// <summary>
@@ -146,12 +172,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         [ProtoMember(7)]
         public uint TagsValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the coordinates.
-        /// </summary>
-        [ProtoMember(8)]
-        public GeoCoordinateSimple[] Coordinates { get; set; }
     }
 
     /// <summary>

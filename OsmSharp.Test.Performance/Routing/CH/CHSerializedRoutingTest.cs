@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -43,7 +43,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
-                "kempen-big.osm.pbf.contracted.mobile.routing", box, 100);
+                "kempen-big.osm.pbf.contracted.mobile.routing", box, 2000);
 
             // test instructions.
             //CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
@@ -63,9 +63,9 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void TestInstructions(string name)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}",
+            var testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}",
                 "kempen-big.osm.pbf.routing"));
-            Stream stream = testFile.OpenRead();
+            var stream = testFile.OpenRead();
 
             CHSerializedRoutingTest.TestSerializeRoutingInstrictions(
                 name, stream,
@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test(Stream stream, int testCount)
         {
-            GeoCoordinateBox box = new GeoCoordinateBox(
+            var box = new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
@@ -95,10 +95,6 @@ namespace OsmSharp.Test.Performance.Routing.CH
         public static void TestSerializedRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
-            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
-            performanceInfo.Start();
-            performanceInfo.Report("Routing {0} routes...", testCount);
-
             TagsCollectionBase metaData = null;
             var routingSerializer = new CHEdgeDataDataSourceSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
@@ -108,28 +104,54 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 graphDeserialized, new CHRouter(),
                 new OsmRoutingInterpreter());
 
+            CHSerializedRoutingTest.TestRouting(router, box, testCount);
+        }
+
+        /// <summary>
+        /// Tests routing within a bounding box.
+        /// </summary>
+        /// <param name="router"></param>
+        /// <param name="box"></param>
+        /// <param name="testCount"></param>
+        public static void TestRouting(Router router, GeoCoordinateBox box, int testCount)
+        {
+            var performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
+            performanceInfo.Start();
+            performanceInfo.Report("Routing {0} routes: Resolving...", testCount);
             int successCount = 0;
             int totalCount = testCount;
+            var resolvedPoints = new List<RouterPoint>();
             while (testCount > 0)
             {
-                GeoCoordinate from = box.GenerateRandomIn();
-                GeoCoordinate to = box.GenerateRandomIn();
+                var from = box.GenerateRandomIn();
+                var to = box.GenerateRandomIn();
 
-                RouterPoint fromPoint = router.Resolve(Vehicle.Car, from);
-                RouterPoint toPoint = router.Resolve(Vehicle.Car, to);
+                var fromPoint = router.Resolve(Vehicle.Car, from);
+                var toPoint = router.Resolve(Vehicle.Car, to);
 
+                resolvedPoints.Add(fromPoint);
+                resolvedPoints.Add(toPoint);
+
+                testCount--;
+            }
+            performanceInfo.Stop();
+
+            performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
+            performanceInfo.Start();
+            performanceInfo.Report("Routing {0} routes: Routing...", testCount);
+            for (int idx = 0; idx < resolvedPoints.Count; idx = idx + 2)
+            {
+                var fromPoint = resolvedPoints[idx];
+                var toPoint = resolvedPoints[idx + 1];
                 if (fromPoint != null && toPoint != null)
                 {
-                    Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint, float.MaxValue, true);
+                    var route = router.Calculate(Vehicle.Car, fromPoint, toPoint, float.MaxValue, true);
                     if (route != null)
                     {
                         successCount++;
                     }
                 }
-
-                testCount--;
             }
-
             performanceInfo.Stop();
 
             OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", OsmSharp.Logging.TraceEventType.Information,
@@ -174,10 +196,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 graphDeserialized, new CHRouter(),
                 interpreter);
 
-            RouterPoint fromPoint = router.Resolve(Vehicle.Car, from);
-            RouterPoint toPoint = router.Resolve(Vehicle.Car, to);
+            var fromPoint = router.Resolve(Vehicle.Car, from);
+            var toPoint = router.Resolve(Vehicle.Car, to);
 
-            List<Instruction> instructions = new List<Instruction>();
+            var instructions = new List<Instruction>();
             if (fromPoint != null && toPoint != null)
             {
                 Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint);

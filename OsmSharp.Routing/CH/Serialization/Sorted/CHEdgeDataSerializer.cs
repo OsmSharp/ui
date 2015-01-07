@@ -43,7 +43,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the zoom-level of the regions.
         /// </summary>
-        private int _regionZoom = 15;
+        private int _regionZoom = 18;
 
         /// <summary>
         /// Holds the size of the height-bins to be sorted in.
@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the maximum number of vertices in a block.
         /// </summary>
-        private int _blockVertexSize = 100;
+        private int _blockVertexSize = 2;
 
         /// <summary>
         /// Holds the runtime type model.
@@ -83,8 +83,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.
             typeModel.Add(typeof(CHBlock), true); // the block definition.
+            typeModel.Add(typeof(CHBlockCoordinates), true);
             typeModel.Add(typeof(CHVertex), true); // a vertex definition.
             typeModel.Add(typeof(CHArc), true); // an arc definition.
+            typeModel.Add(typeof(CHArcCoordinates), true);
 
             typeModel.Add(typeof(CHVertexRegionIndex), true); // the index containing all regions.
             typeModel.Add(typeof(CHVertexRegion), true); // the region definition.
@@ -121,8 +123,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.
             typeModel.Add(typeof(CHBlock), true); // the block definition.
+            typeModel.Add(typeof(CHBlockCoordinates), true);
             typeModel.Add(typeof(CHVertex), true); // a vertex definition.
             typeModel.Add(typeof(CHArc), true); // an arc definition.
+            typeModel.Add(typeof(CHArcCoordinates), true);
 
             typeModel.Add(typeof(CHVertexRegionIndex), true); // the index containing all regions.
             typeModel.Add(typeof(CHVertexRegion), true); // the region definition.
@@ -174,8 +178,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             // serialize the sorted graph.
-            // [START_OF_BLOCKS][START_OF_TAGS][[SIZE_OF_REGION_INDEX][REGION_INDEX][REGIONS]][[SIZE_OF_BLOCK_INDEX][BLOCK_INDEX][BLOCKS]][TAGS]
-            // STRART_OF_BLOCKS:        4bytes
+            // [START_OF_BLOCKS][START_OF_SHAPES][START_OF_TAGS][[SIZE_OF_REGION_INDEX][REGION_INDEX][REGIONS]][[SIZE_OF_BLOCK_INDEX][BLOCK_INDEX][BLOCKS]][[SIZE_OF_SHAPE_INDEX][SHAPE_INDEX][SHAPES]][TAGS]
+            // START_OF_BLOCKS:         4bytes
+            // START_OF_SHAPES:         4bytes
             // START_OF_STAGS:          4bytes
 
             // SIZE_OF_REGION_INDEX:    4bytes
@@ -204,9 +209,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 chRegionIndex.RegionIds[regionIdx] = region.Key;
                 regionIdx++;
             }
-            stream.Seek(12, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
+            stream.Seek(16, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
             _runtimeTypeModel.Serialize(stream, chRegionIndex); // write region index.
-            var sizeRegionIndex = (int)(stream.Position - 12); // now at beginning of [REGIONS]
+            var sizeRegionIndex = (int)(stream.Position - 16); // now at beginning of [REGIONS]
             memoryStream.Seek(0, SeekOrigin.Begin);
             memoryStream.WriteTo(stream); // write regions.
             memoryStream.Dispose();
@@ -215,11 +220,14 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             // serialize the blocks and build their index.
             memoryStream = new MemoryStream();
             var blockLocations = new List<int>();
+            var blockShapeLocations = new List<int>();
+            var blockShapes = new List<CHBlockCoordinates>();
             uint vertexId = 1;
             while (vertexId < sortedGraph.VertexCount)
             {
                 uint blockId = vertexId;
                 var blockArcs = new List<CHArc>();
+                var blockArcCoordinates = new List<CHArcCoordinates>();
                 var blockVertices = new List<CHVertex>();
                 while (vertexId < blockId + _blockVertexSize &&
                     vertexId < sortedGraph.VertexCount + 1)
@@ -240,8 +248,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         chArc.BackwardWeight = sortedArc.EdgeData.BackwardWeight;
                         chArc.ContractedDirectionValue = sortedArc.EdgeData.ContractedDirectionValue;
                         chArc.TagsValue = sortedArc.EdgeData.TagsValue;
-                        chArc.Coordinates = sortedArc.Intermediates.ToSimpleArray();
                         blockArcs.Add(chArc);
+
+                        var chArcCoordinates = new CHArcCoordinates();
+                        chArcCoordinates.Coordinates = sortedArc.Intermediates.ToSimpleArray();
+                        blockArcCoordinates.Add(chArcCoordinates);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
                     blockVertices.Add(chVertex);
@@ -250,21 +261,25 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
 
                 // create block.
-                CHBlock block = new CHBlock();
+                var block = new CHBlock();
                 block.Arcs = blockArcs.ToArray();
                 block.Vertices = blockVertices.ToArray(); // TODO: get rid of the list and create an array to begin with.
+                var blockCoordinates = new CHBlockCoordinates();
+                blockCoordinates.Arcs = blockArcCoordinates.ToArray();
 
                 // write blocks.
-                MemoryStream blockStream = new MemoryStream();
+                var blockStream = new MemoryStream();
                 _runtimeTypeModel.Serialize(blockStream, block);
-                byte[] compressed = GZipStream.CompressBuffer(blockStream.ToArray());
+                var compressed = GZipStream.CompressBuffer(blockStream.ToArray());
                 blockStream.Dispose();
 
                 memoryStream.Write(compressed, 0, compressed.Length);
                 blockLocations.Add((int)memoryStream.Position);
+
+                blockShapes.Add(blockCoordinates);
             }
-            CHBlockIndex blockIndex = new CHBlockIndex();
-            blockIndex.LocationIndex = blockLocations.ToArray();
+            var blockIndex = new CHBlockIndex();
+            blockIndex.BlockLocationIndex = blockLocations.ToArray();
 
             stream.Seek(startOfBlocks + 4, SeekOrigin.Begin); // move to beginning of [BLOCK_INDEX]
             _runtimeTypeModel.Serialize(stream, blockIndex); // write region index.
@@ -273,16 +288,43 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             memoryStream.WriteTo(stream); // write blocks.
             memoryStream.Dispose();
 
+            // write shapes and index.
+            memoryStream = new MemoryStream();
+            var startOfShapes = stream.Position;
+            foreach (var blockCoordinates in blockShapes)
+            {
+                // write shape blocks.
+                var blockShapeStream = new MemoryStream();
+                _runtimeTypeModel.Serialize(blockShapeStream, blockCoordinates);
+                var compressed = GZipStream.CompressBuffer(blockShapeStream.ToArray());
+                blockShapeStream.Dispose();
+
+                memoryStream.Write(compressed, 0, compressed.Length);
+                blockShapeLocations.Add((int)memoryStream.Position);
+            }
+            blockIndex = new CHBlockIndex();
+            blockIndex.BlockLocationIndex = blockShapeLocations.ToArray();
+
+            stream.Seek(startOfShapes + 4, SeekOrigin.Begin); // move to beginning of [SHAPE_INDEX]
+            _runtimeTypeModel.Serialize(stream, blockIndex); // write shape index.
+            int sizeShapeIndex = (int)(stream.Position - (startOfShapes + 4)); // now at beginning of [SHAPE]
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            memoryStream.WriteTo(stream); // write shapes.
+            memoryStream.Dispose();
+
             // write tags after blocks.
             int tagsPosition = (int)stream.Position;
-            TagIndexSerializer.SerializeBlocks(stream, graph.TagsIndex, 1000);
+            TagIndexSerializer.SerializeBlocks(stream, graph.TagsIndex, 10);
 
             stream.Seek(startOfBlocks, SeekOrigin.Begin); // move to [SIZE_OF_BLOCK_INDEX]
-            stream.Write(BitConverter.GetBytes(sizeBlockIndex), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
+            stream.Write(BitConverter.GetBytes(sizeBlockIndex), 0, 4); // write start position of blocks.
+            stream.Seek(startOfShapes, SeekOrigin.Begin); // move to [SIZE_OF_BLOCK_INDEX]
+            stream.Write(BitConverter.GetBytes(sizeShapeIndex), 0, 4); // write start position of blocks.
 
             // write index.
             stream.Seek(0, SeekOrigin.Begin); // move to beginning
-            stream.Write(BitConverter.GetBytes(startOfBlocks), 0, 4); // write start position of blocks. Now at [SIZE_OF_REGION_INDEX]
+            stream.Write(BitConverter.GetBytes(startOfBlocks), 0, 4); // write start position of blocks. 
+            stream.Write(BitConverter.GetBytes(startOfShapes), 0, 4); // write start position of shapes. 
             stream.Write(BitConverter.GetBytes(tagsPosition), 0, 4);
             stream.Write(BitConverter.GetBytes(sizeRegionIndex), 0, 4); // write size of region index.
             stream.Flush();
@@ -431,6 +473,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Read(intBytes, 0, 4);
             int startOfBlocks = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
+            int startOfShapes = BitConverter.ToInt32(intBytes, 0); 
+            stream.Read(intBytes, 0, 4);
             int startOfTags = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
             int sizeRegionIndex = BitConverter.ToInt32(intBytes, 0);
@@ -444,16 +488,26 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Seek(startOfBlocks, SeekOrigin.Begin);
             stream.Read(intBytes, 0, 4);
             int sizeBlockIndex = BitConverter.ToInt32(intBytes, 0);
-            var chBlockIndex = (CHBlockIndex)_runtimeTypeModel.Deserialize(
+            var blockIndex = (CHBlockIndex)_runtimeTypeModel.Deserialize(
                 new CappedStream(stream, stream.Position, sizeBlockIndex), null,
+                    typeof(CHBlockIndex));
+
+            // deserialize shapes index.
+            stream.Seek(startOfShapes, SeekOrigin.Begin);
+            stream.Read(intBytes, 0, 4);
+            int sizeShapesIndex = BitConverter.ToInt32(intBytes, 0);
+            var shapesIndex = (CHBlockIndex)_runtimeTypeModel.Deserialize(
+                new CappedStream(stream, stream.Position, sizeShapesIndex), null,
                     typeof(CHBlockIndex));
 
             // deserialize tags.
             stream.Seek(startOfTags, SeekOrigin.Begin);
             ITagsCollectionIndexReadonly tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
 
-            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 12,
-                chVertexRegionIndex, _regionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, (uint)_blockVertexSize,
+            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 16,
+                chVertexRegionIndex, _regionZoom,
+                startOfBlocks + sizeBlockIndex + 4, blockIndex, (uint)_blockVertexSize,
+                startOfShapes + sizeShapesIndex + 4, shapesIndex, 
                 tagsIndex);
         }
 
@@ -467,19 +521,60 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         internal CHBlock DeserializeBlock(Stream stream, long offset, int length, bool decompress)
         {
-            if (decompress)
-            { // decompress the data.
-                var buffer = new byte[length];
-                stream.Seek(offset, SeekOrigin.Begin);
-                stream.Read(buffer, 0, length);
+            CHBlock value = null;
+            //for (int idx = 0; idx < 10; idx++)
+            //{
+                if (decompress)
+                { // decompress the data.
+                    var buffer = new byte[length];
+                    stream.Seek(offset, SeekOrigin.Begin);
+                    stream.Read(buffer, 0, length);
 
-                var memoryStream = new MemoryStream(buffer);
-                var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-                return (CHBlock)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlock));
-            }
-            return (CHBlock)_runtimeTypeModel.Deserialize(
-                new CappedStream(stream, offset, length), null,
-                    typeof(CHBlock));
+                    var memoryStream = new MemoryStream(buffer);
+                    var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                    value = (CHBlock)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlock));
+                }
+                else
+                {
+                    value = (CHBlock)_runtimeTypeModel.Deserialize(
+                        new CappedStream(stream, offset, length), null,
+                            typeof(CHBlock));
+                }
+            //}
+            return value;
+        }
+
+        /// <summary>
+        /// Deserializes the given block shape of data.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <param name="decompress"></param>
+        /// <returns></returns>
+        internal CHBlockCoordinates DeserializeBlockShape(Stream stream, long offset, int length, bool decompress)
+        {
+            CHBlockCoordinates value = null;
+            //for (int idx = 0; idx < 10; idx++)
+            //{
+                if (decompress)
+                { // decompress the data.
+                    var buffer = new byte[length];
+                    stream.Seek(offset, SeekOrigin.Begin);
+                    stream.Read(buffer, 0, length);
+
+                    var memoryStream = new MemoryStream(buffer);
+                    var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                    value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlockCoordinates));
+                }
+                else
+                {
+                    value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(
+                            new CappedStream(stream, offset, length), null,
+                                typeof(CHBlockCoordinates));
+                }
+            //}
+            return value;
         }
 
         /// <summary>

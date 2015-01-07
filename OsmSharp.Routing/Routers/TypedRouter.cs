@@ -980,6 +980,7 @@ namespace OsmSharp.Routing.Routers
                 { // edge was found, yay!
                     if(shape != null)
                     {
+                        shape.Reset();
                         return shape.ToArray();
                     }
                     return null;

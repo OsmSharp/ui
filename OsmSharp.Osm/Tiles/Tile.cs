@@ -13,11 +13,18 @@ namespace OsmSharp.Osm.Tiles
     public class Tile
     {
         /// <summary>
+        /// Holds the id.
+        /// </summary>
+        private ulong _id;
+
+        /// <summary>
         /// Creates a new tile from a given id.
         /// </summary>
         /// <param name="id"></param>
         public Tile(ulong id)
         {
+            _id = id;
+
             Tile tile = Tile.CalculateTile(id);
             this.X = tile.X;
             this.Y = tile.Y;
@@ -34,8 +41,9 @@ namespace OsmSharp.Osm.Tiles
         {
             this.X = x;
             this.Y = y;
-
             this.Zoom = zoom;
+
+            _id = Tile.CalculateTileId(zoom, x, y);
         }
 
         /// <summary>
@@ -51,7 +59,7 @@ namespace OsmSharp.Osm.Tiles
         /// <summary>
         /// The zoom level for this tile.
         /// </summary>
-        public int Zoom { get; set; }
+        public int Zoom { get; private set; }
 
         /// <summary>
         /// Returns a hashcode for this tile position.
@@ -97,10 +105,10 @@ namespace OsmSharp.Osm.Tiles
         {
             get
             {
-                double n = System.Math.PI - ((2.0 * System.Math.PI * (double)this.Y) / System.Math.Pow(2.0, (double)this.Zoom));
+                var n = System.Math.PI - ((2.0 * System.Math.PI * (double)this.Y) / System.Math.Pow(2.0, (double)this.Zoom));
 
-                double longitude = (double)(((double)this.X / System.Math.Pow(2.0, (double)this.Zoom) * 360.0) - 180.0);
-                double latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
+                var longitude = (double)(((double)this.X / System.Math.Pow(2.0, (double)this.Zoom) * 360.0) - 180.0);
+                var latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
 
                 return new GeoCoordinate(latitude, longitude);
             }
@@ -113,10 +121,10 @@ namespace OsmSharp.Osm.Tiles
         {
             get
             {
-                double n = System.Math.PI - ((2.0 * System.Math.PI * (this.Y + 1)) / System.Math.Pow(2.0, this.Zoom));
+                var n = System.Math.PI - ((2.0 * System.Math.PI * (this.Y + 1)) / System.Math.Pow(2.0, this.Zoom));
 
-                double longitude = (double)(((this.X + 1) / System.Math.Pow(2.0, this.Zoom) * 360.0) - 180.0);
-                double latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
+                var longitude = (double)(((this.X + 1) / System.Math.Pow(2.0, this.Zoom) * 360.0) - 180.0);
+                var latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
 
                 return new GeoCoordinate(latitude, longitude);
             }
@@ -130,8 +138,8 @@ namespace OsmSharp.Osm.Tiles
             get
             {
                 // calculate the tiles bounding box and set its properties.
-                GeoCoordinate topLeft = this.TopLeft;
-                GeoCoordinate bottomRight = this.BottomRight;
+                var topLeft = this.TopLeft;
+                var bottomRight = this.BottomRight;
 
                 return new GeoCoordinateBox(topLeft, bottomRight);
             }
@@ -258,17 +266,82 @@ namespace OsmSharp.Osm.Tiles
             { // zoom level 0: {0}.
                 return 0;
             }
-            //else if (zoom == 1)
-            //{ // zoom level 1: {1, 2, 3, 4}.
-            //    return 1;
-            //}
-            //else if (zoom == 2)
-            //{ // zoom level 2: {5, 6, 7, 8, 9, 10, 11, 12}.
-            //    return 5;
-            //}
+            else if (zoom == 1)
+            {
+                return 1;
+            }
+            else if (zoom == 2)
+            {
+                return 5;
+            }
+            else if(zoom == 3)
+            {
+                return 21;
+            }
+            else if (zoom == 4)
+            {
+                return 85;
+            }
+            else if (zoom == 5)
+            {
+                return 341;
+            }
+            else if (zoom == 6)
+            {
+                return 1365;
+            }
+            else if (zoom == 7)
+            {
+                return 5461;
+            }
+            else if (zoom == 8)
+            {
+                return 21845;
+            }
+            else if (zoom == 9)
+            {
+                return 87381;
+            }
+            else if (zoom == 10)
+            {
+                return 349525;
+            }
+            else if (zoom == 11)
+            {
+                return 1398101;
+            }
+            else if (zoom == 12)
+            {
+                return 5592405;
+            }
+            else if (zoom == 13)
+            {
+                return 22369621;
+            }
+            else if (zoom == 14)
+            {
+                return 89478485;
+            }
+            else if (zoom == 15)
+            {
+                return 357913941;
+            }
+            else if (zoom == 16)
+            {
+                return 1431655765;
+            }
+            else if (zoom == 17)
+            {
+                return 5726623061;
+            }
+            else if (zoom == 18)
+            {
+                return 22906492245;
+            }
 
             ulong size = (ulong)System.Math.Pow(2, 2 * (zoom - 1));
-            return Tile.CalculateTileId(zoom - 1) + size;
+            var tileId = Tile.CalculateTileId(zoom - 1) + size;
+            return tileId;
         }
 
         /// <summary>
@@ -318,7 +391,7 @@ namespace OsmSharp.Osm.Tiles
         /// </summary>
         public ulong Id
         {
-            get { return Tile.CalculateTileId(this.Zoom, this.X, this.Y); }
+            get { return _id; }
         }
 
         /// <summary>
