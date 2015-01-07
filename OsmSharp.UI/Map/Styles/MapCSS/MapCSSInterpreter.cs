@@ -324,7 +324,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
                     if (!_unsuccesfullWays.Contains(relevantWayTags))
                     { // way has some potential.
-                        if (!this.TranslateWay(scene, projection, osmGeo as CompleteWay, relevantWayTags))
+                        var completeWay = osmGeo as CompleteWay;
+                        if (completeWay.Nodes.Count > 0 && !this.TranslateWay(scene, projection, completeWay, relevantWayTags))
                         { // ... but translate was unsuccesfull.
                             _unsuccesfullWays.Add(relevantWayTags);
                         }
@@ -690,6 +691,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             }
                         }
                     }
+                }
+                else
+                { // don't report as an error when no nodes.
+                    success = true;
                 }
             }
 

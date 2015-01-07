@@ -21,6 +21,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.TSP;
@@ -62,7 +63,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize mapcss interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\static\eurostation.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\static\default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
@@ -71,25 +72,24 @@ namespace OsmSharp.WinForms.UI.Sample
             //_router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
             //    new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
 
-            //var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-            //    16, 14, 12, 10 }));
-            //var target = new StyleOsmStreamSceneTarget(
-            //    mapCSSInterpreter, scene, new WebMercator());
-            //var testFile = new FileInfo(@"kempen-big.osm.pbf");
-            //var stream = testFile.OpenRead();
-            //var source = new PBFOsmStreamSource(stream);
-            //var progress = new OsmStreamFilterProgress();
-            //progress.RegisterSource(source);
-            //target.RegisterSource(progress);
-            //target.Pull();
+            var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
+                16, 14, 12, 10 }));
+            var target = new StyleOsmStreamSceneTarget(
+                mapCSSInterpreter, scene, new WebMercator());
+            var source = new XmlOsmStreamSource(
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
+            var progress = new OsmStreamFilterProgress();
+            progress.RegisterSource(source);
+            target.RegisterSource(progress);
+            target.Pull();
 
             //var merger = new Scene2DObjectMerger();
             //scene = merger.BuildMergedScene(scene);
 
-            //map.AddLayer(new LayerScene(scene));
-            var dataSource = MemoryDataSource.CreateFromXmlStream(
-                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen.osm").OpenRead());
-            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            map.AddLayer(new LayerScene(scene));
+            //var dataSource = MemoryDataSource.CreateFromXmlStream(
+            //    new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
+            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //var layerTile = new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200);
             //layerTile.MinZoom = 12;
             //layerTile.MaxZoom = 13;
