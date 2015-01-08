@@ -223,7 +223,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             var blockShapeLocations = new List<int>();
             var blockShapes = new List<CHBlockCoordinates>();
             uint vertexId = 1;
-            while (vertexId < sortedGraph.VertexCount)
+            while (vertexId < sortedGraph.VertexCount + 1)
             {
                 uint blockId = vertexId;
                 var blockArcs = new List<CHArc>();
