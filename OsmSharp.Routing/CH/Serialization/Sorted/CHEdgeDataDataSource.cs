@@ -108,24 +108,21 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             GeoCoordinateBox box)
         {
             var vertices = this.LoadVerticesIn(box);
-            var arcs = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>[vertices.Count * 3];
-            int arcCount = 0;
+            var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>>(vertices.Count * 3);
             foreach (uint vertexId in vertices)
             {
                 var vertexArcs = this.GetEdges(vertexId);
                 foreach (var arc in vertexArcs)
                 {
-                    arcCount++;
-                    if (arcs.Length <= arcCount)
-                    { // resize array.
-                        Array.Resize(ref arcs, arcs.Length + 100);
+                    if (vertexId < arc.Neighbour ||
+                        !vertices.Contains(arc.Neighbour))
+                    {
+                        arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
+                            vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData)));
                     }
-                    arcs[arcCount - 1] = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                        vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData));
                 }
             }
-            Array.Resize(ref arcs, arcCount);
-            return arcs;
+            return arcs.ToArray();
         }
 
         /// <summary>
@@ -288,9 +285,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        private List<uint> LoadVerticesIn(GeoCoordinateBox box)
+        private HashSet<uint> LoadVerticesIn(GeoCoordinateBox box)
         {
-            var vertices = new List<uint>();
+            var vertices = new HashSet<uint>();
             var range = TileRange.CreateAroundBoundingBox(box, _zoom);
             foreach (Tile tile in range)
             {
@@ -305,7 +302,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
                 if (region != null)
                 {
-                    vertices.AddRange(region.Vertices);
+                    for (int idx = 0; idx < region.Vertices.Length; idx++)
+                    {
+                        vertices.Add(region.Vertices[idx]);
+                    }
                 }
             }
             return vertices;
@@ -459,7 +459,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
                 { // loop over all arcs.
                     var chArc = block.Arcs[arcIdx];
-                    if(chArc.TargetId == vertex2)
+                    if (chArc.TargetId == vertex2)
                     {
                         data = new CHEdgeData();
                         data.BackwardContractedId = chArc.BackwardContractedId;
@@ -715,7 +715,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         #endregion
-        
+
         /// <summary>
         /// An edge enumerator.
         /// </summary>
@@ -797,7 +797,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             public int Count()
             {
                 int count = 0;
-                while(this.MoveNext())
+                while (this.MoveNext())
                 {
                     count++;
                 }
