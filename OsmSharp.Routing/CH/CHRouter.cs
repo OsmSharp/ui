@@ -709,6 +709,9 @@ namespace OsmSharp.Routing.CH
                 // construct the existing route.
                 result.Forward = settledVertices.Forward[best.VertexId];
                 result.Backward = settledVertices.Backward[best.VertexId];
+
+                //OsmSharp.Logging.Log.TraceEvent("CHRouter.DoCalculate", TraceEventType.Information, "Settled vertices: f:{0} b:{1} t:{2}",
+                //    settledVertices.Forward.Count, settledVertices.Backward.Count, settledVertices.Forward.Count + settledVertices.Backward.Count);
             }
             return result;
         }
@@ -1118,26 +1121,51 @@ namespace OsmSharp.Routing.CH
                 while(neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourEdgeData = neighbours.EdgeData;
-                    if ((neighbourEdgeData.ToHigher || !neighbourEdgeData.ToLower) &&
-                        neighbourEdgeData.Forward)
+                    bool isInverted = neighbours.isInverted;
+                    CHEdgeData neighbourEdgeData1;
+                    bool considerEdge = false;
+                    if (!isInverted)
+                    { // get the regular data.
+                        neighbourEdgeData1 = neighbours.EdgeData;
+                        considerEdge = ((neighbourEdgeData1.ToHigher || !neighbourEdgeData1.ToLower) &&
+                            neighbourEdgeData1.Forward);
+                    }
+                    else
+                    { // get the inverted data.
+                        neighbourEdgeData1 = neighbours.InvertedEdgeData;
+                        considerEdge = ((neighbourEdgeData1.ToLower || !neighbourEdgeData1.ToHigher) &&
+                            neighbourEdgeData1.Backward);
+                    }
+                    if (considerEdge)
                     { // the edge is forward, and is to higher or was not contracted at all.
+                        uint neighbourEdgeDataForwardContractedId;
+                        float neighbourEdgeDataForwardWeight;
+                        if (!isInverted)
+                        { // get the regular data.
+                            neighbourEdgeDataForwardContractedId = neighbourEdgeData1.ForwardContractedId;
+                            neighbourEdgeDataForwardWeight = neighbourEdgeData1.ForwardWeight;
+                        }
+                        else
+                        { // get the inverted data.
+                            neighbourEdgeDataForwardContractedId = neighbourEdgeData1.BackwardContractedId;
+                            neighbourEdgeDataForwardWeight = neighbourEdgeData1.BackwardWeight;
+                        }
                         var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Forward.ContainsKey(neighbourNeighbour) &&
                             (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeData.ForwardContractedId)))
+                            exception != neighbourEdgeDataForwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeData.ForwardContractedId)))
+                            exception != neighbourEdgeDataForwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Forward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
@@ -1196,26 +1224,51 @@ namespace OsmSharp.Routing.CH
                 while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourEdgeData = neighbours.EdgeData;
-                    if ((neighbourEdgeData.ToHigher || !neighbourEdgeData.ToLower) &&
-                        neighbourEdgeData.Backward)
+                    bool isInverted = neighbours.isInverted;
+                    CHEdgeData neighbourEdgeData1;
+                    bool considerEdge = false;
+                    if (!isInverted)
+                    { // get the regular data.
+                        neighbourEdgeData1 = neighbours.EdgeData;
+                        considerEdge = ((neighbourEdgeData1.ToHigher || !neighbourEdgeData1.ToLower) &&
+                            neighbourEdgeData1.Backward);
+                    }
+                    else
+                    { // get the inverted data.
+                        neighbourEdgeData1 = neighbours.InvertedEdgeData;
+                        considerEdge = ((neighbourEdgeData1.ToLower || !neighbourEdgeData1.ToHigher) &&
+                            neighbourEdgeData1.Backward);
+                    }
+                    if (considerEdge)
                     { // the edge is backward, and is to higher or was not contracted at all.
+                        uint neighbourEdgeDataBackwardContractedId;
+                        float neighbourEdgeDataBackwardWeight;
+                        if (!isInverted)
+                        { // get the regular data.
+                            neighbourEdgeDataBackwardContractedId = neighbourEdgeData1.BackwardContractedId;
+                            neighbourEdgeDataBackwardWeight = neighbourEdgeData1.BackwardWeight;
+                        }
+                        else
+                        { // get the inverted data.
+                            neighbourEdgeDataBackwardContractedId = neighbourEdgeData1.ForwardContractedId;
+                            neighbourEdgeDataBackwardWeight = neighbourEdgeData1.ForwardWeight;
+                        }
                         var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Backward.ContainsKey(neighbourNeighbour)
                             && (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeData.BackwardContractedId)))
+                            exception != neighbourEdgeDataBackwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeData.BackwardContractedId)))
+                            exception != neighbourEdgeDataBackwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardContractedId, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardContractedId, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Backward[neighbourNeighbour].Weight > routeToNeighbour.Weight)

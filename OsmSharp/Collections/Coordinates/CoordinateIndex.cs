@@ -29,14 +29,14 @@ namespace OsmSharp.Collections.Coordinates
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private Dictionary<long, ICoordinate> _coordinates;
+        private HugeDictionary<long, ICoordinate> _coordinates;
 
         /// <summary>
         /// Creates the coordinate index.
         /// </summary>
         public CoordinateIndex()
         {
-            _coordinates = new Dictionary<long, ICoordinate>();
+            _coordinates = new HugeDictionary<long, ICoordinate>();
         }
 
         /// <summary>

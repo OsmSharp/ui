@@ -165,6 +165,7 @@
     <Compile Include="Geo\Streams\Gpx\GpxGeometryTests.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />

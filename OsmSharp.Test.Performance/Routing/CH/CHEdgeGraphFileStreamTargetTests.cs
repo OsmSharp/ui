@@ -51,22 +51,23 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <param name="pbfFile"></param>
         public static Stream TestSerialization(string name, string pbfFile)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
-            Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
+            var stream = testFile.OpenRead();
+            var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
+            source.RegisterSource(new PBFOsmStreamSource(stream));
 
-            FileInfo testOutputFile = new FileInfo(@"test.routing");
+            var testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();
-            Stream writeStream = testOutputFile.OpenWrite();
+            var writeStream = testOutputFile.OpenWrite();
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
             var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            CHEdgeGraphFileStreamTarget target = new CHEdgeGraphFileStreamTarget(writeStream, graph, interpreter, tagsIndex,
-                Vehicle.Car);
-            target.RegisterSource(source);
+            //CHEdgeGraphFileStreamTarget target = new CHEdgeGraphFileStreamTarget(writeStream, graph, interpreter, tagsIndex,
+            //    Vehicle.Car);
+            //target.RegisterSource(source);
 
-            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializer");
+            var performanceInfo = new PerformanceInfoConsumer("CHSerializer");
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 

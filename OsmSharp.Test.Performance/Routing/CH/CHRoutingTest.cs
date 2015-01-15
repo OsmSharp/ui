@@ -16,15 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing;
-using System.IO;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Instructions;
-using System.Collections.Generic;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Logging;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Streams.Graphs;
+using System.IO;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -53,7 +54,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var box = new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
-            CHRoutingTest.TestSerializedRouting("CHRouting",
+            CHRoutingTest.TestRouting("CHRouting",
                 stream, box, testCount);
         }
 
@@ -64,11 +65,19 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <param name="stream"></param>
         /// <param name="box"></param>
         /// <param name="testCount"></param>
-        public static void TestSerializedRouting(string name, Stream stream,
+        public static void TestRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
-            var router = Router.CreateCHFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
-                new OsmRoutingInterpreter(), Vehicle.Car);
+            var vehicle = Vehicle.Car;
+
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            var data = CHEdgeGraphOsmStreamTarget.Preprocess(
+                new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
+                new OsmRoutingInterpreter(), vehicle);
+
+            var router = Router.CreateCHFrom(data, new CHRouter(), new OsmRoutingInterpreter());
 
             var performanceInfo = new PerformanceInfoConsumer("CHRouting");
             performanceInfo.Start();
@@ -82,12 +91,20 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 var from = box.GenerateRandomIn();
                 var to = box.GenerateRandomIn();
 
-                var fromPoint = router.Resolve(Vehicle.Car, from);
-                var toPoint = router.Resolve(Vehicle.Car, to);
+                var fromPoint = router.Resolve(vehicle, from);
+                var toPoint = router.Resolve(vehicle, to);
 
                 if (fromPoint != null && toPoint != null)
                 {
-                    var route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
+                    Route route = null;
+                    try
+                    {
+                        route = router.Calculate(vehicle, fromPoint, toPoint);
+                    }
+                    catch
+                    {
+
+                    }
                     if (route != null)
                     {
                         successCount++;
@@ -120,7 +137,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", osmPbfFile));
             var stream = testFile.OpenRead();
 
-            CHRoutingTest.TestSerializedRouting(name, stream, box, testCount);
+            CHRoutingTest.TestRouting(name, stream, box, testCount);
 
             stream.Dispose();
         }

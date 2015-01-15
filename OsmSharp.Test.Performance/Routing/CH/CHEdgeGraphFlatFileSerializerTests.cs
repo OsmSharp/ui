@@ -51,9 +51,10 @@ namespace OsmSharp.Test.Performance.Routing.CH
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             var stream = testFile.OpenRead();
-            var source = new PBFOsmStreamSource(stream);
+            var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
+            source.RegisterSource(new PBFOsmStreamSource(stream));
 
-            var testOutputFile = new FileInfo(@"test.routing");
+            var testOutputFile = new FileInfo(@"test.pedestrian.routing");
             testOutputFile.Delete();
             Stream writeStream = testOutputFile.OpenWrite();
 
@@ -90,7 +91,6 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var deserializedGraph = routingSerializer.Deserialize(writeStream);
 
             performanceInfo.Stop();
-
         }
     }
 }

@@ -78,8 +78,9 @@ namespace OsmSharp.Collections.Arrays
         {
             get
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _arraySize);
+                //long arrayIdx = (long)System.Math.(idx / _arraySize);
                 long localIdx = idx % _arraySize;
+                long arrayIdx = (idx - localIdx) / _arraySize;
                 return _arrays[arrayIdx][localIdx];
             }
             set

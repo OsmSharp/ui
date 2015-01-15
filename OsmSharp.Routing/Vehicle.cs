@@ -502,20 +502,20 @@ namespace OsmSharp.Routing
                     return 5;
                 case "track":
                 case "road":
-                    return 30;
+                    return 4.5;
                 case "residential":
                 case "unclassified":
-                    return 50;
+                    return 4.4;
                 case "motorway":
                 case "motorway_link":
-                    return 120;
+                    return 4.3;
                 case "trunk":
                 case "trunk_link":
                 case "primary":
                 case "primary_link":
-                    return 90;
+                    return 4.2;
                 default:
-                    return 70;
+                    return 4;
             }
         }
 

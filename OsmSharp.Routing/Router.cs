@@ -163,7 +163,7 @@ namespace OsmSharp.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            DynamicGraphRouterDataSource<CHEdgeData> data = CHEdgeGraphOsmStreamTarget.Preprocess(
+            var data = CHEdgeGraphOsmStreamTarget.Preprocess(
                 reader, interpreter, vehicle);
 
             // creates the live edge router.
