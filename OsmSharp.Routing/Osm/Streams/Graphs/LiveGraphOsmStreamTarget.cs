@@ -174,7 +174,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="intermediates"></param>
         /// <returns></returns>
         protected override LiveEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
-            TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
+            TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             if (edgeInterpreter == null) throw new ArgumentNullException("edgeInterpreter");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -186,7 +186,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             return new LiveEdge()
             {
-                Forward = directionForward,
+                Forward = tagsForward,
                 Tags = tagsId,
                 Distance = (float)from.DistanceEstimate(to).Value
             };

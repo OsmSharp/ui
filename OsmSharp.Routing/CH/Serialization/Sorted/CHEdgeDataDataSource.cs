@@ -461,13 +461,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     var chArc = block.Arcs[arcIdx];
                     if (chArc.TargetId == vertex2)
                     {
-                        data = new CHEdgeData();
-                        data.BackwardContractedId = chArc.BackwardContractedId;
-                        data.BackwardWeight = chArc.BackwardWeight;
-                        data.ForwardContractedId = chArc.ForwardContractedId;
-                        data.ForwardWeight = chArc.ForwardWeight;
-                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                        data.TagsValue = chArc.TagsValue;
+                        data = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
                         return true;
                     }
                 }
@@ -493,13 +487,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     var chArc = block.Arcs[arcIdx];
                     if (chArc.TargetId == vertex1)
                     {
-                        data = new CHEdgeData();
-                        data.BackwardContractedId = chArc.BackwardContractedId;
-                        data.BackwardWeight = chArc.BackwardWeight;
-                        data.ForwardContractedId = chArc.ForwardContractedId;
-                        data.ForwardWeight = chArc.ForwardWeight;
-                        data.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                        data.TagsValue = chArc.TagsValue;
+                        data = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
                         return true;
                     }
                 }
@@ -643,13 +631,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     arcIdx < block.Vertices[blockIdx].ArcIndex + block.Vertices[blockIdx].ArcCount; arcIdx++)
                 { // loop over all arcs.
                     var chArc = block.Arcs[arcIdx];
-                    var edgeData = new CHEdgeData();
-                    edgeData.BackwardContractedId = chArc.BackwardContractedId;
-                    edgeData.BackwardWeight = chArc.BackwardWeight;
-                    edgeData.ForwardContractedId = chArc.ForwardContractedId;
-                    edgeData.ForwardWeight = chArc.ForwardWeight;
-                    edgeData.ContractedDirectionValue = chArc.ContractedDirectionValue;
-                    edgeData.TagsValue = chArc.TagsValue;
+                    var edgeData = new CHEdgeData(chArc.Value, chArc.Weight, chArc.Meta);
 
                     var chArcCoordinates = blockCoordinates.Arcs[arcIdx];
                     ICoordinateCollection coordinateCollection = null;
@@ -859,6 +841,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
             throw new NotImplementedException();
+        }
+
+        public bool IsDirected
+        {
+            get { return true; }
         }
     }
 }

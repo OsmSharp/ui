@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
@@ -55,6 +56,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, null, tagsIndex)
         {
+            if (!dynamicGraph.IsDirected) { throw new ArgumentOutOfRangeException("Only directed graphs can be used for contraction hiearchies."); }
+
             _vehicle = vehicle;
         }
         
@@ -74,17 +77,17 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeInterpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="directionForward"></param>
+        /// <param name="tagsForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="intermediates"></param>
         /// <returns></returns>
         protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
-            TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
+            TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
-            bool? direction = _vehicle.IsOneWay(tags);
-            bool forward = false;
-            bool backward = false;
+            var direction = _vehicle.IsOneWay(tags);
+            var forward = false;
+            var backward = false;
             if (!direction.HasValue)
             { // both directions.
                 forward = true;
@@ -92,44 +95,37 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             }
             else
             { // define back/forward.
-                forward = (directionForward && direction.Value) ||
-                    (!directionForward && !direction.Value);
-                backward = (directionForward && !direction.Value) ||
-                    (!directionForward && direction.Value);
+                if (tagsForward)
+                { // relatively same direction.
+                    forward = direction.Value;
+                    backward = !direction.Value;
+                }
+                else
+                { // relatively opposite direction.
+                    forward = !direction.Value;
+                    backward = direction.Value;
+                }
             }
 
             // add tags.
             var tagsId = tagsIndex.Add(tags);
 
             // calculate weight including intermediates.
-            float weightBackward = 0;
-            float weightForward = 0;
+            float weight = 0;
             var previous = from;
             if (intermediates != null)
             {
                 for (int idx = 0; idx < intermediates.Count; idx++)
                 {
                     var current = new GeoCoordinate(intermediates[idx].Latitude, intermediates[idx].Longitude);
-                    weightForward = weightForward + (float)_vehicle.Weight(tags, previous, current);
-                    weightBackward = weightBackward + (float)_vehicle.Weight(tags, current, previous);
+                    weight = weight + (float)_vehicle.Weight(tags, previous, current);
                     previous = current;
                 }
             }
-            weightForward = weightForward + (float)_vehicle.Weight(tags, previous, to);
-            weightBackward = weightBackward + (float)_vehicle.Weight(tags, to, previous);
+            weight = weight + (float)_vehicle.Weight(tags, previous, to);
 
             // initialize the edge data.
-            var edgeData = new CHEdgeData()
-            {
-                TagsForward = true,
-                Tags = tagsId,
-                BackwardWeight = backward ? weightBackward : float.MaxValue,
-                BackwardContractedId = 0,
-                ForwardWeight = forward ? weightForward : float.MaxValue,
-                ForwardContractedId = 0
-            };
-            edgeData.SetContractedDirection(false, false);
-            return edgeData;
+            return new CHEdgeData(tagsId, tagsForward, forward, backward, weight);
         }
 
         /// <summary>
@@ -159,7 +155,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);

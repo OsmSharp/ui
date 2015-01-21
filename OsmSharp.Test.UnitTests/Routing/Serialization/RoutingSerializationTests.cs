@@ -563,14 +563,9 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
 
                     Assert.AreEqual(referenceArc.Key, arc.Key);
-                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
-                    Assert.AreEqual(referenceArc.Value.ForwardWeight, arc.Value.ForwardWeight);
-                    Assert.AreEqual(referenceArc.Value.ForwardContractedId, arc.Value.ForwardContractedId);
-                    Assert.AreEqual(referenceArc.Value.Backward, arc.Value.Backward);
-                    Assert.AreEqual(referenceArc.Value.BackwardWeight, arc.Value.BackwardWeight);
-                    Assert.AreEqual(referenceArc.Value.BackwardContractedId, arc.Value.BackwardContractedId);
-                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
+                    Assert.AreEqual(referenceArc.Value.Meta, arc.Value.Meta);
+                    Assert.AreEqual(referenceArc.Value.Value, arc.Value.Value);
+                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
                     ICoordinateCollection referenceCoordinates;
                     ICoordinateCollection coordinates;
                     if(referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
@@ -676,12 +671,9 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                     var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
 
                     Assert.AreEqual(referenceArc.Key, arc.Key);
-                    Assert.AreEqual(referenceArc.Value.Forward, arc.Value.Forward);
-                    Assert.AreEqual(referenceArc.Value.ForwardWeight, arc.Value.ForwardWeight);
-                    Assert.AreEqual(referenceArc.Value.ForwardContractedId, arc.Value.ForwardContractedId);
-                    Assert.AreEqual(referenceArc.Value.Backward, arc.Value.Backward);
-                    Assert.AreEqual(referenceArc.Value.BackwardWeight, arc.Value.BackwardWeight);
-                    Assert.AreEqual(referenceArc.Value.BackwardContractedId, arc.Value.BackwardContractedId);
+                    Assert.AreEqual(referenceArc.Value.Meta, arc.Value.Meta);
+                    Assert.AreEqual(referenceArc.Value.Value, arc.Value.Value);
+                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
                     Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
                     Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
                     ICoordinateCollection referenceCoordinates;

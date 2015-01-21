@@ -43,11 +43,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Calculates all witnesses from one source to multiple targets.
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="searchForward"></param>
         /// <param name="from"></param>
         /// <param name="tos"></param>
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
-        void Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
+        void Exists(IBasicRouterDataSource<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
     }
 }

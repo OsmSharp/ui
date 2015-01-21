@@ -711,5 +711,10 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             routes = null;
             return false;
         }
+
+        public bool IsDirected
+        {
+            get { return false; }
+        }
     }
 }

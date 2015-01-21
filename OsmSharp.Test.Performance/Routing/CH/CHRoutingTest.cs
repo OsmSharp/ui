@@ -99,7 +99,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
                     Route route = null;
                     try
                     {
-                        route = router.Calculate(vehicle, fromPoint, toPoint);
+                        route = router.Calculate(vehicle, fromPoint, toPoint, float.MaxValue, true);
                     }
                     catch
                     {

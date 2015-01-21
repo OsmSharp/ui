@@ -73,12 +73,9 @@ namespace OsmSharp.Routing.CH.Serialization
                             {
                                 FromId = vertex,
                                 ToId = arcs[idx].Neighbour,
-                                ContractedDirectionValue = arcs[idx].EdgeData.ContractedDirectionValue,
-                                TagsValue = arcs[idx].EdgeData.TagsValue,
-                                ForwardContractedId = arcs[idx].EdgeData.ForwardContractedId,
-                                ForwardWeight = arcs[idx].EdgeData.ForwardWeight,
-                                BackwardContractedId = arcs[idx].EdgeData.BackwardContractedId,
-                                BackwardWeight = arcs[idx].EdgeData.BackwardWeight,
+                                Meta = arcs[idx].EdgeData.Meta,
+                                Value = arcs[idx].EdgeData.Value,
+                                Weight = arcs[idx].EdgeData.Weight,
                                 Coordinates = arcs[idx].Intermediates.ToSimpleArray()
                             });
 
@@ -125,15 +122,8 @@ namespace OsmSharp.Routing.CH.Serialization
                         coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
                     }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
-                        new CHEdgeData()
-                        {
-                            ContractedDirectionValue = serializableEdges[idx].ContractedDirectionValue,
-                            TagsValue = serializableEdges[idx].TagsValue,
-                            ForwardContractedId = serializableEdges[idx].ForwardContractedId,
-                            ForwardWeight = serializableEdges[idx].ForwardWeight,
-                            BackwardContractedId = serializableEdges[idx].BackwardContractedId,
-                            BackwardWeight = serializableEdges[idx].BackwardWeight
-                        }, coordinateCollection);
+                        new CHEdgeData(serializableEdges[idx].Value, serializableEdges[idx].Weight, serializableEdges[idx].Meta), 
+                            coordinateCollection);
                 }
             }
         }
@@ -168,42 +158,24 @@ namespace OsmSharp.Routing.CH.Serialization
             /// Gets or sets the weight.
             /// </summary>
             [ProtoMember(3)]
-            public float ForwardWeight { get; set; }
+            public float Weight { get; set; }
 
             /// <summary>
-            /// The vertex contracted by this edge.
+            /// Gets or sets the value representing the contracted vertext or tags id.
             /// </summary>
             [ProtoMember(4)]
-            public uint ForwardContractedId { get; set; }
+            public uint Value { get; set; }
 
             /// <summary>
-            /// Gets or sets the weight.
+            /// Gets or sets the mask.
             /// </summary>
             [ProtoMember(5)]
-            public float BackwardWeight { get; set; }
-
-            /// <summary>
-            /// The vertex contracted by this edge.
-            /// </summary>
-            [ProtoMember(6)]
-            public uint BackwardContractedId { get; set; }
-
-            /// <summary>
-            /// Gets or sets the raw direction value.
-            /// </summary>
-            [ProtoMember(7)]
-            public byte ContractedDirectionValue { get; set; }
-
-            /// <summary>
-            /// Gets or sets the raw tags value (including direction).
-            /// </summary>
-            [ProtoMember(8)]
-            public uint TagsValue { get; set; }
+            public byte Meta { get; set; }
 
             /// <summary>
             /// Gets or sets the coordinates.
             /// </summary>
-            [ProtoMember(9)]
+            [ProtoMember(6)]
             public GeoCoordinateSimple[] Coordinates { get; set; }
         }
     }

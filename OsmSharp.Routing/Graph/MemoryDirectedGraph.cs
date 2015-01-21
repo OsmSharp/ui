@@ -426,11 +426,11 @@ namespace OsmSharp.Routing.Graph
             { // keep looping.
                 uint otherVertexId = _edges[edgeId + NODEA];
                 nextEdgeSlot = edgeId + NEXTNODEA;
-                edgeId = _edges[nextEdgeSlot];
                 if (otherVertexId == vertex2)
                 { // this is the edge we need.
                     return true;
                 }
+                edgeId = _edges[nextEdgeSlot];
             }
             return false;
         }
@@ -463,12 +463,12 @@ namespace OsmSharp.Routing.Graph
                 edgeDataForward = true;
                 otherVertexId = _edges[edgeId + NODEA];
                 nextEdgeSlot = edgeId + NEXTNODEA;
-                edgeId = _edges[nextEdgeSlot];
                 if (otherVertexId == vertex2)
                 { // this is the edge we need.
                     edgeDataIdx = currentEdgeId / EDGE_SIZE;
                     return true;
                 }
+                edgeId = _edges[nextEdgeSlot];
             }
             edgeDataForward = false;
             edgeDataIdx = -1;
@@ -821,6 +821,11 @@ namespace OsmSharp.Routing.Graph
             {
 
             }
+        }
+
+        public bool IsDirected
+        {
+            get { return true; }
         }
     }
 }

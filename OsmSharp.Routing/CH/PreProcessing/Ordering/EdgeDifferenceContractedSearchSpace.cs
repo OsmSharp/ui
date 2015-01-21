@@ -83,52 +83,56 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var tos = new List<uint>();
             foreach (var neighbour in neighbours)
             {
-                if (!neighbour.EdgeData.ToLower)
-                {
-                    edgesForContractions.Add(neighbour);
-                    tos.Add(neighbour.Neighbour);
-                    removed++;
-                }
+                edgesForContractions.Add(neighbour);
+                tos.Add(neighbour.Neighbour);
+                removed++;
             }
 
             // loop over all neighbours and check for witnesses.
             // loop over each combination of edges just once.
-            var witnesses = new bool[edgesForContractions.Count];
-            var tosWeights = new List<float>(edgesForContractions.Count);
+            var forwardWitnesses = new bool[edgesForContractions.Count];
+            var weights = new List<float>(edgesForContractions.Count);
+            var backwardWitnesses = new bool[edgesForContractions.Count];
             for (int x = 0; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
                 var xEdge = edgesForContractions[x];
-                if (!xEdge.EdgeData.Backward) { continue; }
 
                 // calculate max weight.
-                tosWeights.Clear();
-                for (int idx = 0; idx < edgesForContractions.Count; idx++)
+                weights.Clear();
+                for (int y = 0; y < x; y++)
                 {
                     // update maxWeight.
-                    var yEdge = edgesForContractions[idx];
-                    if (xEdge.Neighbour != yEdge.Neighbour &&
-                        yEdge.EdgeData.Forward)
+                    var yEdge = edgesForContractions[y];
+                    if (yEdge.EdgeData.CanMoveForward &&
+                        xEdge.Neighbour != yEdge.Neighbour)
                     {
                         // reset witnesses.
-                        float weight = (float)xEdge.EdgeData.BackwardWeight + (float)yEdge.EdgeData.ForwardWeight;
-                        witnesses[idx] = false;
-                        tosWeights.Add(weight);
+                        float weight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
+                        forwardWitnesses[y] = false;
+                        backwardWitnesses[y] = false;
+                        weights.Add(weight);
                     }
                     else
                     { // already set this to true, not use calculating it's witness.
-                        witnesses[idx] = true;
-                        tosWeights.Add(0);
+                        forwardWitnesses[y] = true;
+                        backwardWitnesses[y] = true;
+                        weights.Add(0);
                     }
                 }
 
-                _witness_calculator.Exists(_data, xEdge.Neighbour, tos, tosWeights, int.MaxValue, ref witnesses);
+                // calculate witnesses.
+                _witness_calculator.Exists(_data, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
+                _witness_calculator.Exists(_data, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
+
                 for (int y = 0; y < edgesForContractions.Count; y++)
                 { // loop over all elements.
                     var yEdge = edgesForContractions[y];
 
+                    var canMoveForward = !forwardWitnesses[y] && (xEdge.EdgeData.CanMoveBackward && yEdge.EdgeData.CanMoveForward);
+                    var canMoveBackward = !backwardWitnesses[y] && (xEdge.EdgeData.CanMoveForward && yEdge.EdgeData.CanMoveBackward);
+
                     if (yEdge.Neighbour != xEdge.Neighbour &&
-                        yEdge.EdgeData.Forward &&
-                        !witnesses[y])
+                        (canMoveForward || canMoveBackward))
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         // no witness exists.
@@ -156,17 +160,14 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var neighbours = _data.GetEdges(vertex);
             foreach (var neighbour in neighbours)
             {
-                if (neighbour.EdgeData.ToHigher)
+                short count;
+                if (!_contraction_count.TryGetValue(neighbour.Neighbour, out count))
                 {
-                    short count;
-                    if (!_contraction_count.TryGetValue(neighbour.Neighbour, out count))
-                    {
-                        _contraction_count[neighbour.Neighbour] = 1;
-                    }
-                    else
-                    {
-                        _contraction_count[neighbour.Neighbour] = count++;
-                    }
+                    _contraction_count[neighbour.Neighbour] = 1;
+                }
+                else
+                {
+                    _contraction_count[neighbour.Neighbour] = count++;
                 }
             }
 

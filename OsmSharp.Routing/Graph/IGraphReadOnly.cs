@@ -27,6 +27,11 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
+        /// Returns true if an edge is only as an outgoing edge. When false, edges are added both from and to.
+        /// </summary>
+        bool IsDirected { get; }
+
+        /// <summary>
         /// Gets an existing vertex.
         /// </summary>
         /// <param name="id"></param>

@@ -502,5 +502,10 @@ namespace OsmSharp.Routing.Graph
         }
 
         #endregion
+
+        public bool IsDirected
+        {
+            get { return _graph.IsDirected; }
+        }
     }
 }

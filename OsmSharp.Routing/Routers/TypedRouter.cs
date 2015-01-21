@@ -940,10 +940,17 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 TEdgeData data;
-                if(_dataGraph.GetEdge((uint)vertex1, (uint)vertex2, out data))
-                { // edge was found, yay!
-                    return data;
+                if(!_dataGraph.GetEdge((uint)vertex1, (uint)vertex2, out data))
+                { // try reverse edge.
+                    TEdgeData reverse = default(TEdgeData);
+                    if(!_dataGraph.GetEdge((uint)vertex2, (uint)vertex1, out reverse))
+                    {
+                        throw new Exception(string.Format("Edge {0}->{1} not found!",
+                            vertex1, vertex2));
+                    }
+                    return (TEdgeData)reverse.Reverse();
                 }
+                return data;
             }
             else
             { // one of the vertices was a resolved vertex.
@@ -976,15 +983,27 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 ICoordinateCollection shape;
-                if (_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
-                { // edge was found, yay!
-                    if(shape != null)
+                if (!_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
+                { // try the reverse.
+                    if (!_dataGraph.GetEdgeShape((uint)vertex2, (uint)vertex1, out shape))
+                    { // hmm information is missing! 
+                        throw new Exception(string.Format("Edge {0}->{1} not found!",
+                            vertex1, vertex2));
+                    }
+                    if (shape != null)
                     {
                         shape.Reset();
-                        return shape.ToArray();
+                        var list = shape.ToList();
+                        list.Reverse();
+                        return list.ToArray();
                     }
-                    return null;
                 }
+                if (shape != null)
+                {
+                    shape.Reset();
+                    return shape.ToArray();
+                }
+                return null;
             }
             else
             { // one of the vertices was a resolved vertex.
@@ -994,7 +1013,7 @@ namespace OsmSharp.Routing.Routers
                 {
                     if (arc.Key == vertex2)
                     {
-                        if(arc.Value.Coordinates == null)
+                        if (arc.Value.Coordinates == null)
                         {
                             return null;
                         }

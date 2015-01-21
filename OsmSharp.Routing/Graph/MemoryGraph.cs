@@ -1003,5 +1003,10 @@ namespace OsmSharp.Routing.Graph
 
             }
         }
+
+        public bool IsDirected
+        {
+            get { return false; }
+        }
     }
 }

@@ -154,10 +154,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             // sort the graph.
             IGraph<CHEdgeData> sortedGraph = graph;
-            if (_sort)
-            { // sort the graph.
-                sortedGraph = this.SortGraph(graph);
-            }
+            //if (_sort)
+            //{ // sort the graph.
+            //    sortedGraph = this.SortGraph(graph);
+            //}
 
             // create the regions.
             var regions = new SortedDictionary<ulong, List<uint>>();
@@ -242,12 +242,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     {
                         var chArc = new CHArc();
                         chArc.TargetId = sortedArc.Neighbour;
-                        chArc.ForwardContractedId = sortedArc.EdgeData.ForwardContractedId;
-                        chArc.ForwardWeight = sortedArc.EdgeData.ForwardWeight;
-                        chArc.BackwardContractedId = sortedArc.EdgeData.BackwardContractedId;
-                        chArc.BackwardWeight = sortedArc.EdgeData.BackwardWeight;
-                        chArc.ContractedDirectionValue = sortedArc.EdgeData.ContractedDirectionValue;
-                        chArc.TagsValue = sortedArc.EdgeData.TagsValue;
+                        chArc.Meta = sortedArc.EdgeData.Meta;
+                        chArc.Value = sortedArc.EdgeData.Value;
+                        chArc.Weight = sortedArc.EdgeData.Weight;
                         blockArcs.Add(chArc);
 
                         var chArcCoordinates = new CHArcCoordinates();
@@ -330,103 +327,96 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Flush();
         }
 
-        /// <summary>
-        /// Returns a topologically sorted version of the given graph.
-        /// </summary>
-        /// <param name="graph"></param>
-        /// <returns></returns>
-        public IGraph<CHEdgeData> SortGraph(IGraph<CHEdgeData> graph)
-        {
-            //// also add all downward edges.
-            //graph.AddDownwardEdges();
+        ///// <summary>
+        ///// Returns a topologically sorted version of the given graph.
+        ///// </summary>
+        ///// <param name="graph"></param>
+        ///// <returns></returns>
+        //public IGraph<CHEdgeData> SortGraph(IGraph<CHEdgeData> graph)
+        //{
+        //    //// also add all downward edges.
+        //    //graph.AddDownwardEdges();
 
-            // sort the topologically ordered vertices into bins representing a certain height range.
-            var heightBins = new List<uint>[1000];
-            foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
-            { // enumerates all vertixes depth-first.
-                int binIdx = (int)(vertexDepth.Depth / _heightBinSize);
-                if (heightBins.Length < binIdx)
-                { // resize bin array if needed.
-                    Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
-                }
+        //    // sort the topologically ordered vertices into bins representing a certain height range.
+        //    var heightBins = new List<uint>[1000];
+        //    foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
+        //    { // enumerates all vertixes depth-first.
+        //        int binIdx = (int)(vertexDepth.Depth / _heightBinSize);
+        //        if (heightBins.Length < binIdx)
+        //        { // resize bin array if needed.
+        //            Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
+        //        }
 
-                // add to the current bin.
-                var bin = heightBins[binIdx];
-                if (bin == null)
-                { // create new bin.
-                    bin = new List<uint>();
-                    heightBins[binIdx] = bin;
-                }
-                bin.Add(vertexDepth.VertexId);
-            }
+        //        // add to the current bin.
+        //        var bin = heightBins[binIdx];
+        //        if (bin == null)
+        //        { // create new bin.
+        //            bin = new List<uint>();
+        //            heightBins[binIdx] = bin;
+        //        }
+        //        bin.Add(vertexDepth.VertexId);
+        //    }
 
-            // temp test.
-            var sortedGraph = new MemoryGraph<CHEdgeData>();
-            var currentBinIds = new Dictionary<uint, uint>();
-            uint newVertexId;
-            for (int idx = 0; idx < heightBins.Length; idx++)
-            {
-                var bin = heightBins[idx];
-                if (bin != null)
-                { // translate ids.
-                    // fill current bin ids and add vertices to the new graph.
-                    foreach (uint binVertexId in bin)
-                    {
-                        float latitude, longitude;
-                        graph.GetVertex(binVertexId, out latitude, out longitude);
-                        newVertexId = sortedGraph.AddVertex(latitude, longitude);
+        //    // temp test.
+        //    var sortedGraph = new MemoryGraph<CHEdgeData>();
+        //    var currentBinIds = new Dictionary<uint, uint>();
+        //    uint newVertexId;
+        //    for (int idx = 0; idx < heightBins.Length; idx++)
+        //    {
+        //        var bin = heightBins[idx];
+        //        if (bin != null)
+        //        { // translate ids.
+        //            // fill current bin ids and add vertices to the new graph.
+        //            foreach (uint binVertexId in bin)
+        //            {
+        //                float latitude, longitude;
+        //                graph.GetVertex(binVertexId, out latitude, out longitude);
+        //                newVertexId = sortedGraph.AddVertex(latitude, longitude);
 
-                        currentBinIds.Add(binVertexId, newVertexId); // add to the current bin index.
-                    }
-                }
-            }
+        //                currentBinIds.Add(binVertexId, newVertexId); // add to the current bin index.
+        //            }
+        //        }
+        //    }
 
-            // rebuild the CH graph based on the new ordering and build the CHRegions.
-            newVertexId = 0;
-            for (int idx = 0; idx < heightBins.Length; idx++)
-            {
-                var bin = heightBins[idx];
-                if (bin != null)
-                { // translate ids.
-                    foreach (uint binVertexId in bin)
-                    {
-                        currentBinIds.TryGetValue(binVertexId, out newVertexId);
+        //    // rebuild the CH graph based on the new ordering and build the CHRegions.
+        //    newVertexId = 0;
+        //    for (int idx = 0; idx < heightBins.Length; idx++)
+        //    {
+        //        var bin = heightBins[idx];
+        //        if (bin != null)
+        //        { // translate ids.
+        //            foreach (uint binVertexId in bin)
+        //            {
+        //                currentBinIds.TryGetValue(binVertexId, out newVertexId);
 
-                        // get the higher arcs and convert their ids.
-                        var arcs = graph.GetEdges(binVertexId);
-                        foreach (var arc in arcs)
-                        {
-                            // get target vertex.
-                            uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Neighbour, currentBinIds, heightBins);
-                            // convert edge.
-                            var newEdge = new CHEdgeData();
-                            newEdge.ContractedDirectionValue = arc.EdgeData.ContractedDirectionValue;
-                            newEdge.TagsValue = arc.EdgeData.TagsValue;
-                            if (arc.EdgeData.ForwardContractedId != 0)
-                            { // contracted info.
-                                newEdge.ForwardContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ForwardContractedId, currentBinIds, heightBins);
-                            }
-                            else
-                            { // no contracted info.
-                                newEdge.ForwardContractedId = 0;
-                            }
-                            if (arc.EdgeData.BackwardContractedId != 0)
-                            { // contracted info.
-                                newEdge.BackwardContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.BackwardContractedId, currentBinIds, heightBins);
-                            }
-                            else
-                            { // no contracted info.
-                                newEdge.BackwardContractedId = 0;
-                            }
-                            newEdge.ForwardWeight = arc.EdgeData.ForwardWeight;
-                            newEdge.BackwardWeight = arc.EdgeData.BackwardWeight;
-                            sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, arc.Intermediates);
-                        }
-                    }
-                }
-            }
-            return sortedGraph;
-        }
+        //                // get the higher arcs and convert their ids.
+        //                var arcs = graph.GetEdges(binVertexId);
+        //                foreach (var arc in arcs)
+        //                {
+        //                    // get target vertex.
+        //                    uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Neighbour, currentBinIds, heightBins);
+        //                    // convert edge.
+        //                    var newEdge = new CHEdgeData();
+        //                    newEdge.CanMoveBackward = arc.EdgeData.CanMoveBackward;
+        //                    newEdge.CanMoveForward = arc.EdgeData.CanMoveForward;
+        //                    newEdge.Forward = arc.EdgeData.Forward;
+        //                    if (arc.EdgeData.ContractedId != 0)
+        //                    { // contracted info.
+        //                        newEdge.ContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ContractedId, currentBinIds, heightBins);
+        //                    }
+        //                    else
+        //                    { // no contracted info.
+        //                        newEdge.ContractedId = 0;
+        //                        newEdge.Tags = arc.EdgeData.Tags;
+        //                    }
+        //                    newEdge.Weight = arc.EdgeData.Weight;
+        //                    sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, arc.Intermediates);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return sortedGraph;
+        //}
 
         /// <summary>
         /// Searches for a vertex and returns it's new id.

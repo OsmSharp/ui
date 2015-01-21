@@ -25,6 +25,7 @@ using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using System;
 using System.IO;
 
 namespace OsmSharp.Routing.Osm.Streams
@@ -69,7 +70,7 @@ namespace OsmSharp.Routing.Osm.Streams
             
             // compress the graph.
             INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
-            var edgeDifference = new EdgeDifference(
+            var edgeDifference = new EdgeDifferenceContractedSearchSpace(
                 _graph, witnessCalculator);
             var preProcessor = new CHPreProcessor(
                 _graph, edgeDifference, witnessCalculator);
