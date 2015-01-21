@@ -278,65 +278,68 @@ namespace OsmSharp.Osm
                     relation.Tags.Add(pair);
                 }
             }
-            for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+            if (simpleRelation.Members != null)
             {
-                long memberId = simpleRelation.Members[idx].MemberId.Value;
-                string role = simpleRelation.Members[idx].MemberRole;
-
-                var member = new CompleteRelationMember();
-                member.Role = role;
-                switch (simpleRelation.Members[idx].MemberType.Value)
+                for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
                 {
-                    case OsmGeoType.Node:
-                        Node simpleNode = osmGeoSource.GetNode(memberId);
-                        if(simpleNode == null)
-                        {
-                            return null;
-                        }
-                        Node completeNode = simpleNode;
-                        if (completeNode != null)
-                        {
-                            member.Member = completeNode;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                        break;
-                    case OsmGeoType.Way:
-                        Way simpleWay = osmGeoSource.GetWay(memberId);
-                        if(simpleWay == null)
-                        {
-                            return null;
-                        }
-                        CompleteWay completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
-                        if (completeWay != null)
-                        {
-                            member.Member = completeWay;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                        break;
-                    case OsmGeoType.Relation:
-                        Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
-                        if(simpleRelationMember == null)
-                        {
-                            return null;
-                        }
-                        CompleteRelation completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
-                        if (completeRelation != null)
-                        {
-                            member.Member = completeRelation;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                        break;
+                    long memberId = simpleRelation.Members[idx].MemberId.Value;
+                    string role = simpleRelation.Members[idx].MemberRole;
+
+                    var member = new CompleteRelationMember();
+                    member.Role = role;
+                    switch (simpleRelation.Members[idx].MemberType.Value)
+                    {
+                        case OsmGeoType.Node:
+                            Node simpleNode = osmGeoSource.GetNode(memberId);
+                            if (simpleNode == null)
+                            {
+                                return null;
+                            }
+                            Node completeNode = simpleNode;
+                            if (completeNode != null)
+                            {
+                                member.Member = completeNode;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                            break;
+                        case OsmGeoType.Way:
+                            Way simpleWay = osmGeoSource.GetWay(memberId);
+                            if (simpleWay == null)
+                            {
+                                return null;
+                            }
+                            CompleteWay completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
+                            if (completeWay != null)
+                            {
+                                member.Member = completeWay;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                            break;
+                        case OsmGeoType.Relation:
+                            Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
+                            if (simpleRelationMember == null)
+                            {
+                                return null;
+                            }
+                            CompleteRelation completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
+                            if (completeRelation != null)
+                            {
+                                member.Member = completeRelation;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                            break;
+                    }
+                    relation.Members.Add(member);
                 }
-                relation.Members.Add(member);
             }
             relation.TimeStamp = simpleRelation.TimeStamp;
             relation.User = simpleRelation.UserName;
