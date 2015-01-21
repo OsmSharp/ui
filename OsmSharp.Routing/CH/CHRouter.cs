@@ -709,9 +709,6 @@ namespace OsmSharp.Routing.CH
                 // construct the existing route.
                 result.Forward = settledVertices.Forward[best.VertexId];
                 result.Backward = settledVertices.Backward[best.VertexId];
-
-                //OsmSharp.Logging.Log.TraceEvent("CHRouter.DoCalculate", TraceEventType.Information, "Settled vertices: f:{0} b:{1} t:{2}",
-                //    settledVertices.Forward.Count, settledVertices.Backward.Count, settledVertices.Forward.Count + settledVertices.Backward.Count);
             }
             return result;
         }
@@ -1118,54 +1115,29 @@ namespace OsmSharp.Routing.CH
                 var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                while(neighbours.MoveNext())
+                while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    bool isInverted = neighbours.isInverted;
-                    CHEdgeData neighbourEdgeData1;
-                    bool considerEdge = false;
-                    if (!isInverted)
-                    { // get the regular data.
-                        neighbourEdgeData1 = neighbours.EdgeData;
-                        considerEdge = ((neighbourEdgeData1.ToHigher || !neighbourEdgeData1.ToLower) &&
-                            neighbourEdgeData1.Forward);
-                    }
-                    else
-                    { // get the inverted data.
-                        neighbourEdgeData1 = neighbours.InvertedEdgeData;
-                        considerEdge = ((neighbourEdgeData1.ToLower || !neighbourEdgeData1.ToHigher) &&
-                            neighbourEdgeData1.Backward);
-                    }
-                    if (considerEdge)
+                    var neighbourEdgeData = neighbours.EdgeData;
+                    if ((neighbourEdgeData.ToHigher || !neighbourEdgeData.ToLower) &&
+                        neighbourEdgeData.Forward)
                     { // the edge is forward, and is to higher or was not contracted at all.
-                        uint neighbourEdgeDataForwardContractedId;
-                        float neighbourEdgeDataForwardWeight;
-                        if (!isInverted)
-                        { // get the regular data.
-                            neighbourEdgeDataForwardContractedId = neighbourEdgeData1.ForwardContractedId;
-                            neighbourEdgeDataForwardWeight = neighbourEdgeData1.ForwardWeight;
-                        }
-                        else
-                        { // get the inverted data.
-                            neighbourEdgeDataForwardContractedId = neighbourEdgeData1.BackwardContractedId;
-                            neighbourEdgeDataForwardWeight = neighbourEdgeData1.BackwardWeight;
-                        }
                         var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Forward.ContainsKey(neighbourNeighbour) &&
                             (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataForwardContractedId)))
+                            exception != neighbourEdgeData.ForwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataForwardContractedId)))
+                            exception != neighbourEdgeData.ForwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Forward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
@@ -1224,51 +1196,26 @@ namespace OsmSharp.Routing.CH
                 while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    bool isInverted = neighbours.isInverted;
-                    CHEdgeData neighbourEdgeData1;
-                    bool considerEdge = false;
-                    if (!isInverted)
-                    { // get the regular data.
-                        neighbourEdgeData1 = neighbours.EdgeData;
-                        considerEdge = ((neighbourEdgeData1.ToHigher || !neighbourEdgeData1.ToLower) &&
-                            neighbourEdgeData1.Backward);
-                    }
-                    else
-                    { // get the inverted data.
-                        neighbourEdgeData1 = neighbours.InvertedEdgeData;
-                        considerEdge = ((neighbourEdgeData1.ToLower || !neighbourEdgeData1.ToHigher) &&
-                            neighbourEdgeData1.Backward);
-                    }
-                    if (considerEdge)
+                    var neighbourEdgeData = neighbours.EdgeData;
+                    if ((neighbourEdgeData.ToHigher || !neighbourEdgeData.ToLower) &&
+                        neighbourEdgeData.Backward)
                     { // the edge is backward, and is to higher or was not contracted at all.
-                        uint neighbourEdgeDataBackwardContractedId;
-                        float neighbourEdgeDataBackwardWeight;
-                        if (!isInverted)
-                        { // get the regular data.
-                            neighbourEdgeDataBackwardContractedId = neighbourEdgeData1.BackwardContractedId;
-                            neighbourEdgeDataBackwardWeight = neighbourEdgeData1.BackwardWeight;
-                        }
-                        else
-                        { // get the inverted data.
-                            neighbourEdgeDataBackwardContractedId = neighbourEdgeData1.ForwardContractedId;
-                            neighbourEdgeDataBackwardWeight = neighbourEdgeData1.ForwardWeight;
-                        }
                         var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Backward.ContainsKey(neighbourNeighbour)
                             && (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataBackwardContractedId)))
+                            exception != neighbourEdgeData.BackwardContractedId)))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardWeight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
                         else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataBackwardContractedId)))
+                            exception != neighbourEdgeData.BackwardContractedId)))
                         {
                             // node was settled before: make sure this route is not shorter.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardContractedId, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardContractedId, current);
 
                             // remove from the queue again when there is a shorter route found.
                             if (settledQueue.Backward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
@@ -1299,7 +1246,7 @@ namespace OsmSharp.Routing.CH
             var backward = result.Backward;
 
             // check null.
-            if(forward == null && backward == null)
+            if (forward == null && backward == null)
             { // both null, should be no other possibilities.
                 return null;
             }
@@ -1334,7 +1281,7 @@ namespace OsmSharp.Routing.CH
             { // path containts at least two points or none at all.
                 while (current != null && current.From != null)
                 { // convert edges on-by-one.
-                    var localPath = new PathSegment<long>(current.VertexId, current.Weight - current.From.Weight, 
+                    var localPath = new PathSegment<long>(current.VertexId, current.Weight - current.From.Weight,
                         new PathSegment<long>(current.From.VertexId));
 
                     // expand edge recursively.
@@ -1543,7 +1490,7 @@ namespace OsmSharp.Routing.CH
                 // loop over all.
                 foreach (var arc in arcs)
                 {
-                    if(!arc.Value.Value.RepresentsNeighbourRelations)
+                    if (!arc.Value.Value.RepresentsNeighbourRelations)
                     { // skip this edge, does not represent neighbours.
                         continue;
                     }
@@ -1552,202 +1499,202 @@ namespace OsmSharp.Routing.CH
                         continue;
                     }
                     TagsCollectionBase arcTags = null;
-                    if(matcher != null)
+                    if (matcher != null)
                     {
                         arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     }
                     //bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     //if (canBeTraversed)
                     //{ // the edge can be traversed.
-                        // test the two points.
-                        float fromLatitude, fromLongitude;
-                        float toLatitude, toLongitude;
-                        double distance;
-                        if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
-                            graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
-                        { // return the vertex.
-                            var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                            distance = coordinate.DistanceReal(fromCoordinates).Value;
-                            ICoordinateCollection coordinates;
-                            ICoordinate[] coordinatesArray = null;
-                            if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                    // test the two points.
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
+                    double distance;
+                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                    { // return the vertex.
+                        var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
+                        distance = coordinate.DistanceReal(fromCoordinates).Value;
+                        ICoordinateCollection coordinates;
+                        ICoordinate[] coordinatesArray = null;
+                        if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                        {
+                            coordinates = null;
+                        }
+                        if (coordinates != null)
+                        {
+                            coordinatesArray = coordinates.ToArray();
+                        }
+
+                        if (distance < distanceEpsilon.Value)
+                        { // the distance is smaller than the tolerance value.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Key);
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
-                                coordinates = null;
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
+                                    distance, arc.Key);
+                                break;
                             }
-                            if (coordinates != null)
+                        }
+
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance is smaller for the without match.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Key);
+                        }
+                        if (distance < closestWithMatch.Distance)
+                        { // the distance is smaller for the with match.
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
                             {
-                                coordinatesArray = coordinates.ToArray();
-                            }
-
-                            if (distance < distanceEpsilon.Value)
-                            { // the distance is smaller than the tolerance value.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arc.Key);
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Key);
-                                    break;
-                                }
-                            }
-
-                            if (distance < closestWithoutMatch.Distance)
-                            { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                     distance, arc.Key);
                             }
-                            if (distance < closestWithMatch.Distance)
-                            { // the distance is smaller for the with match.
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Key);
-                                }
-                            }
-                            var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                            distance = coordinate.DistanceReal(toCoordinates).Value;
+                        }
+                        var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                        distance = coordinate.DistanceReal(toCoordinates).Value;
 
-                            if (distance < closestWithoutMatch.Distance)
-                            { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance is smaller for the without match.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Value.Key);
+                        }
+                        if (distance < closestWithMatch.Distance)
+                        { // the distance is smaller for the with match.
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                            {
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                     distance, arc.Value.Key);
                             }
-                            if (distance < closestWithMatch.Distance)
-                            { // the distance is smaller for the with match.
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Value.Key);
-                                }
-                            }
+                        }
 
-                            // search along the line.
-                            double distanceTotal = 0;
-                            var previous = fromCoordinates;
-                            ICoordinateCollection arcValueValueCoordinates;
-                            if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
-                                arcValueValueCoordinates != null)
-                            { // calculate distance along all coordinates.
+                        // search along the line.
+                        double distanceTotal = 0;
+                        var previous = fromCoordinates;
+                        ICoordinateCollection arcValueValueCoordinates;
+                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                            arcValueValueCoordinates != null)
+                        { // calculate distance along all coordinates.
+                            var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
+                            for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                            {
+                                var current = new GeoCoordinate(arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
+                                distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
+                                previous = current;
+                            }
+                        }
+                        distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
+                        if (distanceTotal > 0)
+                        { // the from/to are not the same location.
+                            // loop over all edges that are represented by this arc (counting intermediate coordinates).
+                            previous = fromCoordinates;
+                            GeoCoordinateLine line;
+                            double distanceToSegment = 0;
+                            if (arcValueValueCoordinates != null)
+                            {
                                 var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
                                 for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
                                 {
-                                    var current = new GeoCoordinate(arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                    distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
-                                    previous = current;
-                                }
-                            }
-                            distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
-                            if (distanceTotal > 0)
-                            { // the from/to are not the same location.
-                                // loop over all edges that are represented by this arc (counting intermediate coordinates).
-                                previous = fromCoordinates;
-                                GeoCoordinateLine line;
-                                double distanceToSegment = 0;
-                                if (arcValueValueCoordinates != null)
-                                {
-                                    var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
-                                    for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                                    var current = new GeoCoordinate(
+                                        arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
+                                    line = new GeoCoordinateLine(previous, current, true, true);
+
+                                    distance = line.DistanceReal(coordinate).Value;
+
+                                    if (distance < closestWithoutMatch.Distance)
+                                    { // the distance is smaller.
+                                        PointF2D projectedPoint =
+                                            line.ProjectOn(coordinate);
+
+                                        // calculate the position.
+                                        if (projectedPoint != null)
+                                        { // calculate the distance
+                                            double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                            double position = distancePoint / distanceTotal;
+
+                                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
+                                        }
+                                    }
+                                    if (distance < closestWithMatch.Distance)
                                     {
-                                        var current = new GeoCoordinate(
-                                            arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                        line = new GeoCoordinateLine(previous, current, true, true);
+                                        PointF2D projectedPoint =
+                                            line.ProjectOn(coordinate);
 
-                                        distance = line.DistanceReal(coordinate).Value;
+                                        // calculate the position.
+                                        if (projectedPoint != null)
+                                        { // calculate the distance
+                                            double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                            double position = distancePoint / distanceTotal;
 
-                                        if (distance < closestWithoutMatch.Distance)
-                                        { // the distance is smaller.
-                                            PointF2D projectedPoint =
-                                                line.ProjectOn(coordinate);
+                                            if (matcher == null ||
+                                                (pointTags == null || pointTags.Count == 0) ||
+                                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                            {
 
-                                            // calculate the position.
-                                            if (projectedPoint != null)
-                                            { // calculate the distance
-                                                double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                                double position = distancePoint / distanceTotal;
-
-                                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                                     distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
                                             }
                                         }
-                                        if (distance < closestWithMatch.Distance)
-                                        {
-                                            PointF2D projectedPoint =
-                                                line.ProjectOn(coordinate);
-
-                                            // calculate the position.
-                                            if (projectedPoint != null)
-                                            { // calculate the distance
-                                                double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                                double position = distancePoint / distanceTotal;
-
-                                                if (matcher == null ||
-                                                    (pointTags == null || pointTags.Count == 0) ||
-                                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                                {
-
-                                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                                }
-                                            }
-                                        }
-
-                                        // add current segment distance to distanceToSegment for the next segment.
-                                        distanceToSegment = distanceToSegment + line.LengthReal.Value;
-
-                                        // set previous.
-                                        previous = current;
                                     }
+
+                                    // add current segment distance to distanceToSegment for the next segment.
+                                    distanceToSegment = distanceToSegment + line.LengthReal.Value;
+
+                                    // set previous.
+                                    previous = current;
                                 }
+                            }
 
-                                // check the last segment.
-                                line = new GeoCoordinateLine(previous, toCoordinates, true, true);
+                            // check the last segment.
+                            line = new GeoCoordinateLine(previous, toCoordinates, true, true);
 
-                                distance = line.DistanceReal(coordinate).Value;
+                            distance = line.DistanceReal(coordinate).Value;
 
-                                if (distance < closestWithoutMatch.Distance)
-                                { // the distance is smaller.
-                                    PointF2D projectedPoint =
-                                        line.ProjectOn(coordinate);
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance is smaller.
+                                PointF2D projectedPoint =
+                                    line.ProjectOn(coordinate);
 
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
 
-                                        closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                    closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
+                                }
+                            }
+                            if (distance < closestWithMatch.Distance)
+                            {
+                                PointF2D projectedPoint =
+                                    line.ProjectOn(coordinate);
+
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
+
+                                    if (matcher == null ||
+                                        (pointTags == null || pointTags.Count == 0) ||
+                                        matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                    {
+
+                                        closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                             distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                    }
-                                }
-                                if (distance < closestWithMatch.Distance)
-                                {
-                                    PointF2D projectedPoint =
-                                        line.ProjectOn(coordinate);
-
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
-
-                                        if (matcher == null ||
-                                            (pointTags == null || pointTags.Count == 0) ||
-                                            matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                        {
-
-                                            closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                        }
                                     }
                                 }
                             }
                         }
+                    }
                     // }
                 }
             }
