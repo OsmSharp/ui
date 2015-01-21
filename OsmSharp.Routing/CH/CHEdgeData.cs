@@ -217,7 +217,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
             private set
             {
-                if(value)
+                if (value)
                 {
                     _meta = (byte)(_meta | 4);
                 }
@@ -235,7 +235,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             get
             {
-                if(this.IsContracted)
+                if (this.IsContracted)
                 {
                     return uint.MaxValue;
                 }
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         public IGraphEdgeData Reverse()
         {
-            if(this.IsContracted)
+            if (this.IsContracted)
             {
                 return new CHEdgeData(this.ContractedId, this.CanMoveBackward, this.CanMoveBackward, this.Weight);
             }

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IDynamicGraphRouterDataSource<CHEdgeData> _data;
+        private IGraph<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the contracted count.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// </summary>
         /// <param name="data"></param>
         /// <param name="witness_calculator"></param>
-        public EdgeDifferenceContractedSearchSpace(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
+        public EdgeDifferenceContractedSearchSpace(IGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
         {
             _data = data;
             _witness_calculator = witness_calculator;
@@ -91,8 +91,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // loop over all neighbours and check for witnesses.
             // loop over each combination of edges just once.
             var forwardWitnesses = new bool[edgesForContractions.Count];
-            var weights = new List<float>(edgesForContractions.Count);
             var backwardWitnesses = new bool[edgesForContractions.Count];
+            var weights = new List<float>(edgesForContractions.Count);
             for (int x = 0; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
                 var xEdge = edgesForContractions[x];
@@ -103,14 +103,12 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 {
                     // update maxWeight.
                     var yEdge = edgesForContractions[y];
-                    if (yEdge.EdgeData.CanMoveForward &&
-                        xEdge.Neighbour != yEdge.Neighbour)
+                    if (xEdge.Neighbour != yEdge.Neighbour)
                     {
                         // reset witnesses.
-                        float weight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
-                        forwardWitnesses[y] = false;
-                        backwardWitnesses[y] = false;
-                        weights.Add(weight);
+                        forwardWitnesses[y] = !xEdge.EdgeData.CanMoveBackward || !yEdge.EdgeData.CanMoveForward;
+                        backwardWitnesses[y] = !xEdge.EdgeData.CanMoveForward || !yEdge.EdgeData.CanMoveBackward;
+                        weights.Add((float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight);
                     }
                     else
                     { // already set this to true, not use calculating it's witness.

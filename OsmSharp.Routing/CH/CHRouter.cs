@@ -24,6 +24,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
@@ -61,6 +62,34 @@ namespace OsmSharp.Routing.CH
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public PathSegment<long> Calculate(IGraph<CHEdgeData> graph, uint from, uint to)
+        {
+            var source = new PathSegmentVisitList();
+            source.UpdateVertex(new PathSegment<long>(from));
+            var target = new PathSegmentVisitList();
+            target.UpdateVertex(new PathSegment<long>(to));
+
+            // do the basic CH calculations.
+            var result = this.DoCalculate(graph, source, target, float.MaxValue, int.MaxValue);
+
+            // expand path.
+            var expandedResult = this.ExpandBestResult(graph, result);
+
+            // calculate weights along the path.
+            if (expandedResult != null)
+            { // expand path.
+                expandedResult = this.AugmentWithWeights(graph, expandedResult);
+            }
+            return expandedResult;
+        }
+
+        /// <summary>
+        /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
+        /// </summary>
+        /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <param name="source"></param>
@@ -72,7 +101,7 @@ namespace OsmSharp.Routing.CH
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
-            var result = this.DoCalculate(graph, interpreter, source, target, max, int.MaxValue, long.MaxValue);
+            var result = this.DoCalculate(graph, source, target, max, int.MaxValue);
 
             // expand path.
             var expandedResult = this.ExpandBestResult(graph, result);
@@ -80,7 +109,7 @@ namespace OsmSharp.Routing.CH
             // calculate weights along the path.
             if (expandedResult != null)
             { // expand path.
-                expandedResult = this.AugmentWithWeights(graph, expandedResult, vehicle);
+                expandedResult = this.AugmentWithWeights(graph, expandedResult);
             }
             return expandedResult;
         }
@@ -92,7 +121,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="expandedResult"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        private PathSegment<long> AugmentWithWeights(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> expandedResult, Vehicle vehicle)
+        private PathSegment<long> AugmentWithWeights(IGraphReadOnly<CHEdgeData> graph, PathSegment<long> expandedResult)
         {
             CHEdgeData edge;
             var current = expandedResult;
@@ -101,13 +130,53 @@ namespace OsmSharp.Routing.CH
                 if (current.From.Weight == 0 &&
                     current.VertexId > 0 && current.From.VertexId > 0)
                 { // this edge is in the graph and needs to be re-calculated.
-                    if (graph.GetEdge(Convert.ToUInt32(current.From.VertexId), Convert.ToUInt32(current.VertexId), out edge))
+                    if (!graph.GetEdge(Convert.ToUInt32(current.From.VertexId), Convert.ToUInt32(current.VertexId), out edge))
                     { // ok, an edge was found.
-                        current.From.Weight = current.Weight - edge.Weight;
+                        if(!graph.GetEdge(Convert.ToUInt32(current.VertexId), Convert.ToUInt32(current.From.VertexId), out edge))
+                        {
+                            throw new Exception(string.Format("Edge {0}->{1} or reverse not found!", current.From.VertexId, current.VertexId));
+                        }
+                        edge = (CHEdgeData)edge.Reverse();
+                    }
+                    current.From.Weight = System.Math.Max(current.Weight - edge.Weight, 0);
+                }
+                current = current.From;
+            }
+
+            // remove segments with length 0.
+            current = expandedResult;
+            while (current.From != null &&
+                current.Weight == current.From.Weight)
+            { // check the first one.                    
+                if (current.From.VertexId > current.VertexId)
+                { // choose the vertex with the lowest id.
+                    current = current.From;
+                }
+                else
+                { // choose the vertex with the lowest id.
+                    var vertex = current.From.VertexId;
+                    current = current.From;
+                    current.VertexId = vertex;
+                }
+            }
+            while (current.From != null && current.From.From != null)
+            {
+                if (current.From.Weight == current.From.From.Weight)
+                {
+                    if (current.From.VertexId > current.From.From.VertexId)
+                    { // choose the vertex with the lowest id.
+                        current.From = current.From.From;
+                    }
+                    else
+                    { // choose the vertex with the lowest id.
+                        var vertex = current.From.VertexId;
+                        current.From = current.From.From;
+                        current.From.VertexId = vertex;
                     }
                 }
                 current = current.From;
             }
+
             return expandedResult;
         }
 
@@ -155,7 +224,7 @@ namespace OsmSharp.Routing.CH
             PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
-            CHResult result = this.DoCalculate(graph, interpreter, source, target, max, int.MaxValue, long.MaxValue);
+            var result = this.DoCalculate(graph, source, target, max, int.MaxValue);
 
             if (result.Backward != null && result.Forward != null)
             {
@@ -397,7 +466,8 @@ namespace OsmSharp.Routing.CH
                     var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToList();
 
                     // add the neighbours to the queue.
-                    foreach (var neighbour in neighbours)
+                    foreach (var neighbour in neighbours.Where(
+                        a => a.EdgeData.CanMoveBackward))
                     {
                         if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
@@ -545,7 +615,8 @@ namespace OsmSharp.Routing.CH
                     var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId)).ToList();
 
                     // add the neighbours to the queue.
-                    foreach (var neighbour in neighbours)
+                    foreach (var neighbour in neighbours.Where(
+                        a => a.EdgeData.CanMoveForward))
                     {
                         if (!settledVertices.ContainsKey(neighbour.Neighbour))
                         {
@@ -577,15 +648,14 @@ namespace OsmSharp.Routing.CH
         /// Calculates a shortest path between the two given vertices.
         /// </summary>
         /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <param name="max_settles"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        private CHResult DoCalculate(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
-            PathSegmentVisitList source, PathSegmentVisitList target, double max, int max_settles, long exception)
+        private CHResult DoCalculate(IGraphReadOnly<CHEdgeData> graph,
+            PathSegmentVisitList source, PathSegmentVisitList target, double max, int max_settles)
         {
             // keep settled vertices.
             var settledVertices = new CHQueue();
@@ -673,13 +743,13 @@ namespace OsmSharp.Routing.CH
                 // do a forward search.
                 if (queueForward.Count > 0)
                 {
-                    this.SearchForward(graph, settledVertices, queueForward, exception);
+                    this.SearchForward(graph, settledVertices, queueForward);
                 }
 
                 // do a backward search.
                 if (queueBackward.Count > 0)
                 {
-                    this.SearchBackward(graph, settledVertices, queueBackward, exception);
+                    this.SearchBackward(graph, settledVertices, queueBackward);
                 }
 
                 // calculate the new best if any.
@@ -707,9 +777,6 @@ namespace OsmSharp.Routing.CH
                 // construct the existing route.
                 result.Forward = settledVertices.Forward[best.VertexId];
                 result.Backward = settledVertices.Backward[best.VertexId];
-
-                //OsmSharp.Logging.Log.TraceEvent("CHRouter.DoCalculate", TraceEventType.Information, "Settled vertices: f:{0} b:{1} t:{2}",
-                //    settledVertices.Forward.Count, settledVertices.Backward.Count, settledVertices.Forward.Count + settledVertices.Backward.Count);
             }
             return result;
         }
@@ -872,7 +939,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private CHResult CalculateInternal(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint exception, double max, int maxSettles)
+        private CHResult CalculateInternal(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, uint exception, double max, int maxSettles)
         {
             // keep settled vertices.
             var settledVertices = new CHQueue();
@@ -915,13 +982,13 @@ namespace OsmSharp.Routing.CH
                 // do a forward search.
                 if (queueForward.Count > 0)
                 {
-                    this.SearchForward(graph, settledVertices, queueForward, exception);
+                    this.SearchForward(graph, settledVertices, queueForward);
                 }
 
                 // do a backward search.
                 if (queueBackward.Count > 0)
                 {
-                    this.SearchBackward(graph, settledVertices, queueBackward, exception);
+                    this.SearchBackward(graph, settledVertices, queueBackward);
                 }
 
                 // calculate the new best if any.
@@ -961,7 +1028,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private bool DoCheckConnectivity(IBasicRouterDataSource<CHEdgeData> graph, PathSegmentVisitList source, double max, int maxSettles)
+        private bool DoCheckConnectivity(IGraphReadOnly<CHEdgeData> graph, PathSegmentVisitList source, double max, int maxSettles)
         {
             // keep settled vertices.
             var settledVertices = new CHQueue();
@@ -1005,13 +1072,13 @@ namespace OsmSharp.Routing.CH
                 // do a forward search.
                 if (queueForward.Count > 0)
                 {
-                    this.SearchForward(graph, settledVertices, queueForward, -1);
+                    this.SearchForward(graph, settledVertices, queueForward);
                 }
 
                 // do a backward search.
                 if (queueBackward.Count > 0)
                 {
-                    this.SearchBackward(graph, settledVertices, queueBackward, -1);
+                    this.SearchBackward(graph, settledVertices, queueBackward);
                 }
 
                 // calculate stopping conditions.
@@ -1081,10 +1148,8 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
-        /// <param name="exception"></param>
         /// <returns></returns>
-        private void SearchForward(IBasicRouterDataSource<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue,
-                                   long exception)
+        private void SearchForward(IGraphReadOnly<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
             PathSegment<long> current = queue.Pop();
@@ -1116,40 +1181,34 @@ namespace OsmSharp.Routing.CH
                 var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                while(neighbours.MoveNext())
+                while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourEdgeData1 = neighbours.EdgeData;
-                    if (neighbourEdgeData1.CanMoveForward)
+                    var neighbourEdgeData = neighbours.EdgeData;
+                    if (neighbourEdgeData.CanMoveForward)
                     { // the edge is forward, and is to higher or was not contracted at all.
-                        uint neighbourEdgeDataForwardContractedId;
-                        float neighbourEdgeDataForwardWeight;
-                        neighbourEdgeDataForwardContractedId = neighbourEdgeData1.ContractedId;
-                        neighbourEdgeDataForwardWeight = neighbourEdgeData1.Weight;
                         var neighbourNeighbour = neighbours.Neighbour;
-                        if (!settledQueue.Forward.ContainsKey(neighbourNeighbour) &&
-                            (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataForwardContractedId)))
+                        if (!settledQueue.Forward.ContainsKey(neighbourNeighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataForwardContractedId)))
-                        {
-                            // node was settled before: make sure this route is not shorter.
-                            var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataForwardWeight, current);
+                        //else if ((exception == 0 || (exception != neighbourNeighbour &&
+                        //    exception != neighbourEdgeData.ForwardContractedId)))
+                        //{
+                        //    // node was settled before: make sure this route is not shorter.
+                        //    var routeToNeighbour = new PathSegment<long>(
+                        //        neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
 
-                            // remove from the queue again when there is a shorter route found.
-                            if (settledQueue.Forward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
-                            {
-                                settledQueue.Forward.Remove(neighbourNeighbour);
-                                queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                            }
-                        }
+                        //    // remove from the queue again when there is a shorter route found.
+                        //    if (settledQueue.Forward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
+                        //    {
+                        //        settledQueue.Forward.Remove(neighbourNeighbour);
+                        //        queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
+                        //    }
+                        //}
                     }
                 }
             }
@@ -1161,10 +1220,8 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
-        /// <param name="exception"></param>
         /// <returns></returns>
-        private void SearchBackward(IBasicRouterDataSource<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue,
-                                    long exception)
+        private void SearchBackward(IGraphReadOnly<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
             //PathSegment<long> current = queue.Pop();
@@ -1200,37 +1257,31 @@ namespace OsmSharp.Routing.CH
                 while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourEdgeData1 = neighbours.EdgeData;
-                    if (neighbourEdgeData1.CanMoveBackward)
+                    var neighbourEdgeData = neighbours.EdgeData;
+                    if (neighbourEdgeData.CanMoveBackward)
                     { // the edge is backward, and is to higher or was not contracted at all.
-                        uint neighbourEdgeDataBackwardContractedId;
-                        float neighbourEdgeDataBackwardWeight;
-                        neighbourEdgeDataBackwardContractedId = neighbourEdgeData1.ContractedId;
-                        neighbourEdgeDataBackwardWeight = neighbourEdgeData1.Weight;
                         var neighbourNeighbour = neighbours.Neighbour;
-                        if (!settledQueue.Backward.ContainsKey(neighbourNeighbour)
-                            && (exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataBackwardContractedId)))
+                        if (!settledQueue.Backward.ContainsKey(neighbourNeighbour))
                         {
                             // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardWeight, current);
+                                neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        else if ((exception == 0 || (exception != neighbourNeighbour &&
-                            exception != neighbourEdgeDataBackwardContractedId)))
-                        {
-                            // node was settled before: make sure this route is not shorter.
-                            var routeToNeighbour = new PathSegment<long>(
-                                neighbourNeighbour, current.Weight + neighbourEdgeDataBackwardContractedId, current);
+                        //else if ((exception == 0 || (exception != neighbourNeighbour &&
+                        //    exception != neighbourEdgeData.BackwardContractedId)))
+                        //{
+                        //    // node was settled before: make sure this route is not shorter.
+                        //    var routeToNeighbour = new PathSegment<long>(
+                        //        neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardContractedId, current);
 
-                            // remove from the queue again when there is a shorter route found.
-                            if (settledQueue.Backward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
-                            {
-                                settledQueue.Backward.Remove(neighbourNeighbour);
-                                queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                            }
-                        }
+                        //    // remove from the queue again when there is a shorter route found.
+                        //    if (settledQueue.Backward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
+                        //    {
+                        //        settledQueue.Backward.Remove(neighbourNeighbour);
+                        //        queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
+                        //    }
+                        //}
                     }
                 }
             }
@@ -1246,14 +1297,14 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandBestResult(IBasicRouterDataSource<CHEdgeData> graph, CHResult result)
+        private PathSegment<long> ExpandBestResult(IGraphReadOnly<CHEdgeData> graph, CHResult result)
         {
             // construct the route.
             var forward = result.Forward;
             var backward = result.Backward;
 
             // check null.
-            if(forward == null && backward == null)
+            if (forward == null && backward == null)
             { // both null, should be no other possibilities.
                 return null;
             }
@@ -1265,7 +1316,8 @@ namespace OsmSharp.Routing.CH
             var route = invertedBackward.ConcatenateAfter(forward);
 
             // expand the CH path to a regular path.
-            return this.ExpandPath(graph, route);
+            route = this.ExpandPath(graph, route);
+            return route;
         }
 
         /// <summary>
@@ -1274,7 +1326,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandPath(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> path)
+        private PathSegment<long> ExpandPath(IGraphReadOnly<CHEdgeData> graph, PathSegment<long> path)
         {
             // construct the full CH path.
             PathSegment<long> current = path;
@@ -1288,7 +1340,7 @@ namespace OsmSharp.Routing.CH
             { // path containts at least two points or none at all.
                 while (current != null && current.From != null)
                 { // convert edges on-by-one.
-                    var localPath = new PathSegment<long>(current.VertexId, current.Weight - current.From.Weight, 
+                    var localPath = new PathSegment<long>(current.VertexId, current.Weight - current.From.Weight,
                         new PathSegment<long>(current.From.VertexId));
 
                     // expand edge recursively.
@@ -1336,7 +1388,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private PathSegment<long> ExpandEdge(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> path)
+        private PathSegment<long> ExpandEdge(IGraphReadOnly<CHEdgeData> graph, PathSegment<long> path)
         {
             if (path.VertexId < 0 || path.From.VertexId < 0)
             { // these edges are not part of the regular network!
@@ -1344,26 +1396,23 @@ namespace OsmSharp.Routing.CH
             }
 
             // the from/to vertex.
-            uint fromVertex = (uint)path.From.VertexId;
-            uint toVertex = (uint)path.VertexId;
+            var fromVertex = (uint)path.From.VertexId;
+            var toVertex = (uint)path.VertexId;
 
             // get the edge.
             CHEdgeData data;
             if (!graph.GetEdge((uint)path.From.VertexId, (uint)path.VertexId, out data))
-            { // check the resverse edge.
-                var reverse = new CHEdgeData();
-                if (!graph.GetEdge((uint)path.VertexId, (uint)path.From.VertexId, out reverse))
-                { // oeps, the reverse is also not here!
+            { // there is an edge.
+                if (!graph.GetEdge((uint)path.VertexId, (uint)path.From.VertexId, out data))
+                {
                     throw new Exception(string.Format("Edge {0} not found!", path.ToInvariantString()));
                 }
-                data = (CHEdgeData)reverse.Reverse();
+                data = (CHEdgeData)data.Reverse();
             }
-
             var expandedEdge = path;
             if (data.IsContracted)
-            {
-                uint contractedVertex = data.ContractedId;
-
+            { // there is nothing to expand.
+                var contractedVertex = data.ContractedId;
                 // arc is a shortcut.
                 var firstPath = new PathSegment<long>(toVertex, path.Weight, new PathSegment<long>(contractedVertex));
                 var firstPathExpanded = this.ExpandEdge(graph, firstPath);
@@ -1504,7 +1553,7 @@ namespace OsmSharp.Routing.CH
                 // loop over all.
                 foreach (var arc in arcs)
                 {
-                    if(!arc.Value.Value.RepresentsNeighbourRelations)
+                    if (!arc.Value.Value.RepresentsNeighbourRelations)
                     { // skip this edge, does not represent neighbours.
                         continue;
                     }
@@ -1513,202 +1562,202 @@ namespace OsmSharp.Routing.CH
                         continue;
                     }
                     TagsCollectionBase arcTags = null;
-                    if(matcher != null)
+                    if (matcher != null)
                     {
                         arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     }
                     //bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     //if (canBeTraversed)
                     //{ // the edge can be traversed.
-                        // test the two points.
-                        float fromLatitude, fromLongitude;
-                        float toLatitude, toLongitude;
-                        double distance;
-                        if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
-                            graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
-                        { // return the vertex.
-                            var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                            distance = coordinate.DistanceEstimate(fromCoordinates).Value;
-                            ICoordinateCollection coordinates;
-                            ICoordinate[] coordinatesArray = null;
-                            if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                    // test the two points.
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
+                    double distance;
+                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                    { // return the vertex.
+                        var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
+                        distance = coordinate.DistanceReal(fromCoordinates).Value;
+                        ICoordinateCollection coordinates;
+                        ICoordinate[] coordinatesArray = null;
+                        if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                        {
+                            coordinates = null;
+                        }
+                        if (coordinates != null)
+                        {
+                            coordinatesArray = coordinates.ToArray();
+                        }
+
+                        if (distance < distanceEpsilon.Value)
+                        { // the distance is smaller than the tolerance value.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Key);
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
-                                coordinates = null;
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
+                                    distance, arc.Key);
+                                break;
                             }
-                            if (coordinates != null)
+                        }
+
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance is smaller for the without match.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Key);
+                        }
+                        if (distance < closestWithMatch.Distance)
+                        { // the distance is smaller for the with match.
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
                             {
-                                coordinatesArray = coordinates.ToArray();
-                            }
-
-                            if (distance < distanceEpsilon.Value)
-                            { // the distance is smaller than the tolerance value.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arc.Key);
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Key);
-                                    break;
-                                }
-                            }
-
-                            if (distance < closestWithoutMatch.Distance)
-                            { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                     distance, arc.Key);
                             }
-                            if (distance < closestWithMatch.Distance)
-                            { // the distance is smaller for the with match.
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Key);
-                                }
-                            }
-                            var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                            distance = coordinate.DistanceEstimate(toCoordinates).Value;
+                        }
+                        var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                        distance = coordinate.DistanceReal(toCoordinates).Value;
 
-                            if (distance < closestWithoutMatch.Distance)
-                            { // the distance is smaller for the without match.
-                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance is smaller for the without match.
+                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                distance, arc.Value.Key);
+                        }
+                        if (distance < closestWithMatch.Distance)
+                        { // the distance is smaller for the with match.
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                            {
+                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                     distance, arc.Value.Key);
                             }
-                            if (distance < closestWithMatch.Distance)
-                            { // the distance is smaller for the with match.
-                                if (matcher == null ||
-                                    (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                {
-                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Value.Key);
-                                }
-                            }
+                        }
 
-                            // search along the line.
-                            double distanceTotal = 0;
-                            var previous = fromCoordinates;
-                            ICoordinateCollection arcValueValueCoordinates;
-                            if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
-                                arcValueValueCoordinates != null)
-                            { // calculate distance along all coordinates.
+                        // search along the line.
+                        double distanceTotal = 0;
+                        var previous = fromCoordinates;
+                        ICoordinateCollection arcValueValueCoordinates;
+                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                            arcValueValueCoordinates != null)
+                        { // calculate distance along all coordinates.
+                            var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
+                            for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                            {
+                                var current = new GeoCoordinate(arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
+                                distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
+                                previous = current;
+                            }
+                        }
+                        distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
+                        if (distanceTotal > 0)
+                        { // the from/to are not the same location.
+                            // loop over all edges that are represented by this arc (counting intermediate coordinates).
+                            previous = fromCoordinates;
+                            GeoCoordinateLine line;
+                            double distanceToSegment = 0;
+                            if (arcValueValueCoordinates != null)
+                            {
                                 var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
                                 for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
                                 {
-                                    var current = new GeoCoordinate(arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                    distanceTotal = distanceTotal + current.DistanceEstimate(previous).Value;
-                                    previous = current;
-                                }
-                            }
-                            distanceTotal = distanceTotal + toCoordinates.DistanceEstimate(previous).Value;
-                            if (distanceTotal > 0)
-                            { // the from/to are not the same location.
-                                // loop over all edges that are represented by this arc (counting intermediate coordinates).
-                                previous = fromCoordinates;
-                                GeoCoordinateLine line;
-                                double distanceToSegment = 0;
-                                if (arcValueValueCoordinates != null)
-                                {
-                                    var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
-                                    for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                                    var current = new GeoCoordinate(
+                                        arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
+                                    line = new GeoCoordinateLine(previous, current, true, true);
+
+                                    distance = line.DistanceReal(coordinate).Value;
+
+                                    if (distance < closestWithoutMatch.Distance)
+                                    { // the distance is smaller.
+                                        PointF2D projectedPoint =
+                                            line.ProjectOn(coordinate);
+
+                                        // calculate the position.
+                                        if (projectedPoint != null)
+                                        { // calculate the distance
+                                            double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                            double position = distancePoint / distanceTotal;
+
+                                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
+                                        }
+                                    }
+                                    if (distance < closestWithMatch.Distance)
                                     {
-                                        var current = new GeoCoordinate(
-                                            arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                        line = new GeoCoordinateLine(previous, current, true, true);
+                                        PointF2D projectedPoint =
+                                            line.ProjectOn(coordinate);
 
-                                        distance = line.DistanceReal(coordinate).Value;
+                                        // calculate the position.
+                                        if (projectedPoint != null)
+                                        { // calculate the distance
+                                            double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                            double position = distancePoint / distanceTotal;
 
-                                        if (distance < closestWithoutMatch.Distance)
-                                        { // the distance is smaller.
-                                            PointF2D projectedPoint =
-                                                line.ProjectOn(coordinate);
+                                            if (matcher == null ||
+                                                (pointTags == null || pointTags.Count == 0) ||
+                                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                            {
 
-                                            // calculate the position.
-                                            if (projectedPoint != null)
-                                            { // calculate the distance
-                                                double distancePoint = previous.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                                double position = distancePoint / distanceTotal;
-
-                                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                                closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                                     distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
                                             }
                                         }
-                                        if (distance < closestWithMatch.Distance)
-                                        {
-                                            PointF2D projectedPoint =
-                                                line.ProjectOn(coordinate);
-
-                                            // calculate the position.
-                                            if (projectedPoint != null)
-                                            { // calculate the distance
-                                                double distancePoint = previous.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                                double position = distancePoint / distanceTotal;
-
-                                                if (matcher == null ||
-                                                    (pointTags == null || pointTags.Count == 0) ||
-                                                    matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                                {
-
-                                                    closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                                }
-                                            }
-                                        }
-
-                                        // add current segment distance to distanceToSegment for the next segment.
-                                        distanceToSegment = distanceToSegment + line.LengthReal.Value;
-
-                                        // set previous.
-                                        previous = current;
                                     }
+
+                                    // add current segment distance to distanceToSegment for the next segment.
+                                    distanceToSegment = distanceToSegment + line.LengthReal.Value;
+
+                                    // set previous.
+                                    previous = current;
                                 }
+                            }
 
-                                // check the last segment.
-                                line = new GeoCoordinateLine(previous, toCoordinates, true, true);
+                            // check the last segment.
+                            line = new GeoCoordinateLine(previous, toCoordinates, true, true);
 
-                                distance = line.DistanceReal(coordinate).Value;
+                            distance = line.DistanceReal(coordinate).Value;
 
-                                if (distance < closestWithoutMatch.Distance)
-                                { // the distance is smaller.
-                                    PointF2D projectedPoint =
-                                        line.ProjectOn(coordinate);
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance is smaller.
+                                PointF2D projectedPoint =
+                                    line.ProjectOn(coordinate);
 
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
 
-                                        closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                    closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
+                                }
+                            }
+                            if (distance < closestWithMatch.Distance)
+                            {
+                                PointF2D projectedPoint =
+                                    line.ProjectOn(coordinate);
+
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
+
+                                    if (matcher == null ||
+                                        (pointTags == null || pointTags.Count == 0) ||
+                                        matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                    {
+
+                                        closestWithMatch = new SearchClosestResult<CHEdgeData>(
                                             distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                    }
-                                }
-                                if (distance < closestWithMatch.Distance)
-                                {
-                                    PointF2D projectedPoint =
-                                        line.ProjectOn(coordinate);
-
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceEstimate(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
-
-                                        if (matcher == null ||
-                                            (pointTags == null || pointTags.Count == 0) ||
-                                            matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                        {
-
-                                            closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                distance, arc.Key, arc.Value.Key, position, arc.Value.Value, coordinatesArray);
-                                        }
                                     }
                                 }
                             }
                         }
+                    }
                     // }
                 }
             }
@@ -1723,7 +1772,7 @@ namespace OsmSharp.Routing.CH
                         graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     {
                         var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
-                        double distance = coordinate.DistanceEstimate(vertexCoordinate).Value;
+                        double distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
@@ -1731,7 +1780,7 @@ namespace OsmSharp.Routing.CH
                         }
 
                         vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.DistanceEstimate(vertexCoordinate).Value;
+                        distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
@@ -1748,7 +1797,7 @@ namespace OsmSharp.Routing.CH
                                 vertexCoordinate = new GeoCoordinate(
                                     arcValueValueCoordinatesArray[idx].Latitude,
                                     arcValueValueCoordinatesArray[idx].Longitude);
-                                distance = coordinate.DistanceEstimate(vertexCoordinate).Value;
+                                distance = coordinate.DistanceReal(vertexCoordinate).Value;
                                 if (distance < closestWithoutMatch.Distance)
                                 { // the distance found is closer.
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(

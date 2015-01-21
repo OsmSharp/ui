@@ -463,7 +463,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Read(intBytes, 0, 4);
             int startOfBlocks = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
-            int startOfShapes = BitConverter.ToInt32(intBytes, 0); 
+            int startOfShapes = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
             int startOfTags = BitConverter.ToInt32(intBytes, 0);
             stream.Read(intBytes, 0, 4);
@@ -497,7 +497,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 16,
                 chVertexRegionIndex, _regionZoom,
                 startOfBlocks + sizeBlockIndex + 4, blockIndex, (uint)_blockVertexSize,
-                startOfShapes + sizeShapesIndex + 4, shapesIndex, 
+                startOfShapes + sizeShapesIndex + 4, shapesIndex,
                 tagsIndex);
         }
 
@@ -514,22 +514,22 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             CHBlock value = null;
             //for (int idx = 0; idx < 10; idx++)
             //{
-                if (decompress)
-                { // decompress the data.
-                    var buffer = new byte[length];
-                    stream.Seek(offset, SeekOrigin.Begin);
-                    stream.Read(buffer, 0, length);
+            if (decompress)
+            { // decompress the data.
+                var buffer = new byte[length];
+                stream.Seek(offset, SeekOrigin.Begin);
+                stream.Read(buffer, 0, length);
 
-                    var memoryStream = new MemoryStream(buffer);
-                    var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-                    value = (CHBlock)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlock));
-                }
-                else
-                {
-                    value = (CHBlock)_runtimeTypeModel.Deserialize(
-                        new CappedStream(stream, offset, length), null,
-                            typeof(CHBlock));
-                }
+                var memoryStream = new MemoryStream(buffer);
+                var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                value = (CHBlock)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlock));
+            }
+            else
+            {
+                value = (CHBlock)_runtimeTypeModel.Deserialize(
+                    new CappedStream(stream, offset, length), null,
+                        typeof(CHBlock));
+            }
             //}
             return value;
         }
@@ -547,22 +547,22 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             CHBlockCoordinates value = null;
             //for (int idx = 0; idx < 10; idx++)
             //{
-                if (decompress)
-                { // decompress the data.
-                    var buffer = new byte[length];
-                    stream.Seek(offset, SeekOrigin.Begin);
-                    stream.Read(buffer, 0, length);
+            if (decompress)
+            { // decompress the data.
+                var buffer = new byte[length];
+                stream.Seek(offset, SeekOrigin.Begin);
+                stream.Read(buffer, 0, length);
 
-                    var memoryStream = new MemoryStream(buffer);
-                    var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-                    value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlockCoordinates));
-                }
-                else
-                {
-                    value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(
-                            new CappedStream(stream, offset, length), null,
-                                typeof(CHBlockCoordinates));
-                }
+                var memoryStream = new MemoryStream(buffer);
+                var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlockCoordinates));
+            }
+            else
+            {
+                value = (CHBlockCoordinates)_runtimeTypeModel.Deserialize(
+                        new CappedStream(stream, offset, length), null,
+                            typeof(CHBlockCoordinates));
+            }
             //}
             return value;
         }

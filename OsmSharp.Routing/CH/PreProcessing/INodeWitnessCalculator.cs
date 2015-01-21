@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -37,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles);
+        bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles);
 
         /// <summary>
         /// Calculates all witnesses from one source to multiple targets.
@@ -49,6 +50,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
-        void Exists(IBasicRouterDataSource<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
+        void Exists(IGraph<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
     }
 }

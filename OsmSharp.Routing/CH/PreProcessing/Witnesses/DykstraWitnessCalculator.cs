@@ -67,7 +67,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        public bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles)
+        public bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles)
         {
             var tos = new List<uint>(1);
             tos.Add(to);
@@ -88,7 +88,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
-        public void Exists(IBasicRouterDataSource<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
+        public void Exists(IGraph<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
         {
             int maxHops = _hopLimit;
 
@@ -112,6 +112,10 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         maxWeight = tosWeights[idx];
                     }
                 }
+            }
+            if(maxWeight == 0)
+            { // no need to search!
+                return;
             }
 
             // creates the priorty queue.
@@ -153,14 +157,28 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         if (!settled.Contains(neighbours.Neighbour))
                         { // neighbour not yet settled, good!
                             var edgeData = neighbours.EdgeData;
-                            if ((searchForward && edgeData.CanMoveForward) ||
-                                (!searchForward && edgeData.CanMoveBackward))
-                            { // direction is ok.
-                                var neighbour = new SettledVertex(neighbours.Neighbour,
-                                    edgeData.Weight + current.Weight, current.Hops + 1);
-                                if (neighbour.Weight <= maxWeight && neighbour.Hops < maxHops)
-                                { // push to heap.
-                                    heap.Push(neighbour, neighbour.Weight);
+                            if(searchForward)
+                            { // search forward.
+                                if(edgeData.CanMoveForward)
+                                {
+                                    var neighbour = new SettledVertex(neighbours.Neighbour,
+                                        edgeData.Weight + current.Weight, current.Hops + 1);
+                                    if (neighbour.Weight <= maxWeight && neighbour.Hops < maxHops)
+                                    { // push to heap.
+                                        heap.Push(neighbour, neighbour.Weight);
+                                    }
+                                }
+                            }
+                            else
+                            { // search backward.
+                                if (edgeData.CanMoveBackward)
+                                {
+                                    var neighbour = new SettledVertex(neighbours.Neighbour,
+                                        edgeData.Weight + current.Weight, current.Hops + 1);
+                                    if (neighbour.Weight <= maxWeight && neighbour.Hops < maxHops)
+                                    { // push to heap.
+                                        heap.Push(neighbour, neighbour.Weight);
+                                    }
                                 }
                             }
                         }
@@ -178,7 +196,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
-        private void ExistsOneHop(IBasicRouterDataSource<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
+        private void ExistsOneHop(IGraph<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
         {
             var toSet = new HashSet<uint>();
             float maxWeight = 0;
@@ -195,7 +213,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             }
 
             var neighbours = graph.GetEdges(from);
-            while(neighbours.MoveNext())
+            while (neighbours.MoveNext())
             {
                 if (toSet.Contains(neighbours.Neighbour))
                 { // ok, this is a to-edge.
@@ -203,11 +221,21 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                     toSet.Remove(neighbours.Neighbour);
 
                     var edgeData = neighbours.EdgeData;
-                    if (((searchForward && edgeData.CanMoveForward) || 
-                        (!searchForward && edgeData.CanMoveBackward)) &&
-                        edgeData.Weight < tosWeights[index])
-                    { // direction ok and weight smaller.
-                        exists[index] = true;
+                    if (searchForward)
+                    {
+                        if (edgeData.CanMoveForward &&
+                            edgeData.Weight < tosWeights[index])
+                        {
+                            exists[index] = true;
+                        }
+                    }
+                    else
+                    {
+                        if (edgeData.CanMoveBackward &&
+                            edgeData.Weight < tosWeights[index])
+                        {
+                            exists[index] = true;
+                        }
                     }
 
                     if (toSet.Count == 0)

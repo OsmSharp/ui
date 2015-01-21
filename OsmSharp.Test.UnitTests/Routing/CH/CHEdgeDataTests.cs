@@ -61,8 +61,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.AreEqual(uint.MaxValue, edge.ContractedId);
 
             Assert.IsFalse(edge.IsContracted);
-            Assert.IsTrue(edge.RepresentsNeighbourRelations); 
-            
+            Assert.IsTrue(edge.RepresentsNeighbourRelations);
+
             edge = new CHEdgeData(123, true, false, true, 123.45f);
 
             Assert.AreEqual(6, edge.Meta);

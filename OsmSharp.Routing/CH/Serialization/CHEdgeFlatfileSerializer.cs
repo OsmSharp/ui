@@ -122,7 +122,7 @@ namespace OsmSharp.Routing.CH.Serialization
                         coordinateCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(serializableEdges[idx].Coordinates);
                     }
                     graph.AddEdge(serializableEdges[idx].FromId, serializableEdges[idx].ToId,
-                        new CHEdgeData(serializableEdges[idx].Value, serializableEdges[idx].Weight, serializableEdges[idx].Meta), 
+                        new CHEdgeData(serializableEdges[idx].Value, serializableEdges[idx].Weight, serializableEdges[idx].Meta),
                             coordinateCollection);
                 }
             }

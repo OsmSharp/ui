@@ -112,6 +112,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="crazyVerification"></param>
         private void DoTestCHSparseVerifiedContraction(string xml, bool crazyVerification)
         {
+            _pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, Dictionary<uint, PathSegment<long>>>>();
             _referenceRouter = null;
             if (crazyVerification)
             {
@@ -127,6 +128,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="stream"></param>
         public void DoTestCHSparseVerifiedContraction(Stream stream)
         {
+            _pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, Dictionary<uint, PathSegment<long>>>>();
             _interpreter = new OsmRoutingInterpreter();
 
             var tagsIndex = new TagsTableCollectionIndex();
@@ -200,7 +202,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Holds the paths calculate before contraction.
         /// </summary>
-        private Dictionary<uint, Dictionary<uint, PathSegment<long>>> _pathsBeforeContraction;
+        private Dictionary<uint, Dictionary<uint, Dictionary<uint, PathSegment<long>>>> _pathsBeforeContraction;
 
         /// <summary>
         /// Called right after the contraction.
@@ -209,6 +211,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="edges"></param>
         void pre_processor_OnAfterContractionEvent(uint vertex, List<Edge<CHEdgeData>> edges)
         {
+            // get dictionary for vertex.
+            var pathsBeforeContraction = _pathsBeforeContraction[vertex];            
+
             // create a new CHRouter
             var router = new CHRouter();
 
@@ -220,7 +225,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 fromList.UpdateVertex(new PathSegment<long>(from.Neighbour));
 
                 // initalize the from dictionary.
-                var fromDic = _pathsBeforeContraction[from.Neighbour];
+                var fromDic = pathsBeforeContraction[from.Neighbour];
                 foreach (var to in edges)
                 {
                     // initialize the to-list.
@@ -294,6 +299,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     }
                 }
             }
+
+            _pathsBeforeContraction.Remove(vertex);
         }
         /// <summary>
         /// Compares the two given routes.
@@ -357,8 +364,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
-            _pathsBeforeContraction =
-                new Dictionary<uint, Dictionary<uint, PathSegment<long>>>();
+            var pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, PathSegment<long>>>();
+            _pathsBeforeContraction.Add(vertex, pathsBeforeContraction);
             foreach (var from in edges)
             {
                 // initialize the from-list.
@@ -367,7 +374,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                 // initalize the from dictionary.
                 var fromDic = new Dictionary<uint, PathSegment<long>>();
-                _pathsBeforeContraction[from.Neighbour] = fromDic;
+                pathsBeforeContraction[from.Neighbour] = fromDic;
                 foreach (var to in edges)
                 {
                     // initialize the to-list.
