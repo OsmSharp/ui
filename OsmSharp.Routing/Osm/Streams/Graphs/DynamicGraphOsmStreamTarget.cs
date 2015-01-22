@@ -199,6 +199,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             vehicleTypes.Count > 0)
                         { // add all the restrictions.
                             this._relevantNodes.Add(node.Id.Value);
+                            
                             var vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
                             var restriction = new uint[] { vertexId };
                             if (vehicleTypes.Contains(null))

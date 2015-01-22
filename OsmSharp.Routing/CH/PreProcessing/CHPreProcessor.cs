@@ -374,6 +374,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(vertex, canMoveForward, canMoveBackward, weight));
                                 _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(vertex, canMoveBackward, canMoveForward, weight));
                             }
+
+                            toRequeue.Add(xEdge.Neighbour);
+                            toRequeue.Add(yEdge.Neighbour);
                         }
                     }
                 }
@@ -554,17 +557,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         private void ReQueue(uint vertex)
         {
-            var priority = _calculator.Calculate(vertex);
+            if (!this.IsContracted(vertex))
+            { // refuse to re-queue.
+                var priority = _calculator.Calculate(vertex);
 
-            // enqueue the vertex.
-            if (_lowestPriorities[vertex] < priority)
-            { // only queue again when lower, vertex must be moved forward in the queue.
-                _queue.Push(vertex, priority);
-                _lowestPriorities[vertex] = priority;
-            }
-            else
-            { // priority is higher, will be detected by lazy-updating.
+                // enqueue the vertex.
+                if (_lowestPriorities[vertex] < priority)
+                { // only queue again when lower, vertex must be moved forward in the queue.
+                    _queue.Push(vertex, priority);
+                    _lowestPriorities[vertex] = priority;
+                }
+                else
+                { // priority is higher, will be detected by lazy-updating.
 
+                }
             }
         }
 
