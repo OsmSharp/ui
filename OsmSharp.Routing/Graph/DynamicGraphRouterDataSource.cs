@@ -343,7 +343,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         public void RemoveEdge(uint from, uint to, TEdgeData data)
         {
-            _graph.RemoveEdge(from, to);
+            _graph.RemoveEdge(from, to, data);
         }
 
         /// <summary>

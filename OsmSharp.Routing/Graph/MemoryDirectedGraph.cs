@@ -414,10 +414,6 @@ namespace OsmSharp.Routing.Graph
                 { // this is the edge we need.
                     if (_edgeData[currentEdgeId / EDGE_SIZE].Equals(data))
                     {
-                        if(_edgeShapes[currentEdgeId / EDGE_SIZE] != null)
-                        {
-                            throw new Exception();
-                        }
                         if (_vertices[vertex1] == currentEdgeId)
                         { // the edge being remove if the 'first' edge.
                             // point to the next edge.

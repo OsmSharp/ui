@@ -1845,44 +1845,47 @@ namespace OsmSharp.Routing.CH
             else
             { // only find closest vertices.
                 // loop over all.
-                foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
+                foreach (var arc in arcs)
                 {
-                    float fromLatitude, fromLongitude;
-                    float toLatitude, toLongitude;
-                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
-                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                    if (!arc.Value.Value.IsContracted)
                     {
-                        var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
-                        double distance = coordinate.DistanceReal(vertexCoordinate).Value;
-                        if (distance < closestWithoutMatch.Distance)
-                        { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                distance, arc.Key);
-                        }
+                        float fromLatitude, fromLongitude;
+                        float toLatitude, toLongitude;
+                        if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                            graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                        {
+                            var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
+                            double distance = coordinate.DistanceReal(vertexCoordinate).Value;
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance found is closer.
+                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                    distance, arc.Key);
+                            }
 
-                        vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
-                        distance = coordinate.DistanceReal(vertexCoordinate).Value;
-                        if (distance < closestWithoutMatch.Distance)
-                        { // the distance found is closer.
-                            closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                distance, arc.Value.Key);
-                        }
+                            vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
+                            distance = coordinate.DistanceReal(vertexCoordinate).Value;
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance found is closer.
+                                closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                    distance, arc.Value.Key);
+                            }
 
-                        ICoordinateCollection arcValueValueCoordinates;
-                        if (this.GetEdgeShape(graph, arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
-                            arcValueValueCoordinates != null)
-                        { // search over intermediate points.
-                            var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
-                            for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
-                            {
-                                vertexCoordinate = new GeoCoordinate(
-                                    arcValueValueCoordinatesArray[idx].Latitude,
-                                    arcValueValueCoordinatesArray[idx].Longitude);
-                                distance = coordinate.DistanceReal(vertexCoordinate).Value;
-                                if (distance < closestWithoutMatch.Distance)
-                                { // the distance found is closer.
-                                    closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arc.Key, arc.Value.Key, idx, arc.Value.Value, arcValueValueCoordinatesArray);
+                            ICoordinateCollection arcValueValueCoordinates;
+                            if (this.GetEdgeShape(graph, arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                                arcValueValueCoordinates != null)
+                            { // search over intermediate points.
+                                var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
+                                for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                                {
+                                    vertexCoordinate = new GeoCoordinate(
+                                        arcValueValueCoordinatesArray[idx].Latitude,
+                                        arcValueValueCoordinatesArray[idx].Longitude);
+                                    distance = coordinate.DistanceReal(vertexCoordinate).Value;
+                                    if (distance < closestWithoutMatch.Distance)
+                                    { // the distance found is closer.
+                                        closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                            distance, arc.Key, arc.Value.Key, idx, arc.Value.Value, arcValueValueCoordinatesArray);
+                                    }
                                 }
                             }
                         }
