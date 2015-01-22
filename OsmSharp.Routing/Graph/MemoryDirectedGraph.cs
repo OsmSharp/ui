@@ -794,7 +794,7 @@ namespace OsmSharp.Routing.Graph
                         _neighbour = _graph._edges[_nextEdgeId + NODEA];
                         _nextEdgeId = _graph._edges[_nextEdgeId + NEXTNODEA];
                     } while (_nextEdgeId != NO_EDGE && _startVertex2 != 0 && _neighbour != _startVertex2);
-                    return true;
+                    return _startVertex2 == 0 || _neighbour == _startVertex2;
                 }
                 return false;
             }

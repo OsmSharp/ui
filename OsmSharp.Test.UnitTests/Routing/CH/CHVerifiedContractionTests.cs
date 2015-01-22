@@ -67,6 +67,10 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(3);
 
+            // there should be no edge from 1->3 and from 2->3.
+            Assert.IsFalse(graph.ContainsEdges(1, 3));
+            Assert.IsFalse(graph.ContainsEdges(2, 3));
+
             var router = new CHRouter();
             // expected: (1)-10s-(3)-10s-(2) (20s in total).
             var path = router.Calculate(graph, 1, 2);
@@ -103,7 +107,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         }
 
         /// <summary>
-        /// Tests the simplest contraction possible without any witnesses.
+        /// Tests the simplest contraction possible with a witness.
         /// </summary>
         /// <remarks>
         /// Network: 
@@ -256,7 +260,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         }
 
         /// <summary>
-        /// Tests a tiny network with a contraction that is supposed to replace a one-way edge in only oneway.
+        /// Tests a tiny network with a contraction that is supposed to replace an edge upon contraction.
         /// </summary>
         /// <remarks>
         /// Network: 
@@ -295,37 +299,181 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(4);
 
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, true, true, 30)));
+
             // add edges later to prevent witnesses from being found!
             graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
             graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
             graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
             graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
 
-            CHEdgeData data;
-            Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out data));
-            Assert.IsTrue(data.CanMoveBackward);
-            Assert.IsTrue(data.CanMoveForward);
-            Assert.AreEqual(4, data.ContractedId);
-            Assert.AreEqual(30, data.Weight);
+            preProcessor.Contract(3);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
+        }
 
-            Assert.IsTrue(graph.GetEdge(vertex2, vertex1, out data));
-            Assert.IsTrue(data.CanMoveBackward);
-            Assert.IsTrue(data.CanMoveForward);
-            Assert.AreEqual(4, data.ContractedId);
-            Assert.AreEqual(30, data.Weight);
+        /// <summary>
+        /// Tests a tiny network with a contraction that is supposed to keep an edge.
+        /// </summary>
+        /// <remarks>
+        /// Network: 
+        ///                   (4)
+        ///                   /  \
+        ///                  /    \
+        ///                15s    15s
+        ///                /        \
+        ///               (1)       (2)
+        ///                \        /
+        ///                10s    10s
+        ///                  \    /
+        ///                   \  /
+        ///                   (3)
+        ///                   
+        /// To test: 
+        ///  - After contraction of vertex 3 there should be a new edge (1)-(2) with a weight of 20 and this edge should have replace the previous one.
+        ///  - After contraction of vertex 4 there should no new edges.
+        /// </remarks>
+        [Test]
+        public void TestVerifiedContraction5KeepPrevious()
+        {
+            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var preProcessor = new CHPreProcessor(graph,
+                new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
+
+            var vertex1 = graph.AddVertex(1, 0);
+            var vertex2 = graph.AddVertex(2, 0);
+            var vertex3 = graph.AddVertex(3, 0);
+            var vertex4 = graph.AddVertex(4, 0);
+
+            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, true, 10));
+            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, true, 10));
+            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
 
             preProcessor.Contract(3);
-            Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out data));
-            Assert.IsTrue(data.CanMoveBackward);
-            Assert.IsTrue(data.CanMoveForward);
-            Assert.AreEqual(3, data.ContractedId);
-            Assert.AreEqual(20, data.Weight);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
 
-            Assert.IsTrue(graph.GetEdge(vertex2, vertex1, out data));
-            Assert.IsTrue(data.CanMoveBackward);
-            Assert.IsTrue(data.CanMoveForward);
-            Assert.AreEqual(3, data.ContractedId);
-            Assert.AreEqual(20, data.Weight);
+            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, true, true, 15));
+            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, true, true, 15));
+            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, true, 15));
+
+            preProcessor.Contract(4);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, true, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, true, 20)));
+        }
+
+        /// <summary>
+        /// Tests a tiny network with a contraction that supposed to insert two edges between two vertices with different weights and directional information.
+        /// </summary>
+        /// <remarks>
+        /// Network: 
+        ///                   (4)
+        ///                   /  \
+        ///                 (up) (down)
+        ///                15s    15s
+        ///                /        \
+        ///               (1)       (2)
+        ///                \        /
+        ///                10s    10s
+        ///               (up) (down)
+        ///                   \  /
+        ///                   (3)
+        ///                   
+        /// To test: 
+        ///  - After contraction of vertex 4 there should be a new edge (1)-(2) with a weight of 30 and with forward direction only.
+        ///  - After contraction of vertex 3 there should be a new edge (1)-(2) with a weight of 20 and with backward direction only.
+        /// </remarks>
+        [Test]
+        public void TestVerifiedContraction6DuplicateBackward()
+        {
+            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var preProcessor = new CHPreProcessor(graph,
+                new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
+
+            var vertex1 = graph.AddVertex(1, 0);
+            var vertex2 = graph.AddVertex(2, 0);
+            var vertex3 = graph.AddVertex(3, 0);
+            var vertex4 = graph.AddVertex(4, 0);
+
+            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, false, true, 10));
+            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, false, 10));
+            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, false, 10));
+            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, false, true, 10));
+
+            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, false, 15));
+            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, false, true, 15));
+            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, false, true, 15));
+            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, false, 15));
+
+            preProcessor.Contract(4);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
+
+            preProcessor.Contract(3);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
+        }
+
+        /// <summary>
+        /// Tests a tiny network with a contraction that supposed to insert two edges between two vertices with different weights and directional information.
+        /// </summary>
+        /// <remarks>
+        /// Network: 
+        ///                   (4)
+        ///                   /  \
+        ///                 (up) (down)
+        ///                15s    15s
+        ///                /        \
+        ///               (1)       (2)
+        ///                \        /
+        ///                10s    10s
+        ///               (up) (down)
+        ///                   \  /
+        ///                   (3)
+        ///                   
+        /// To test: 
+        ///  - After contraction of vertex 3 there should be a new edge (1)-(2) with a weight of 20 and with backward direction only.
+        ///  - After contraction of vertex 4 there should be a new edge (1)-(2) with a weight of 30 and with forward direction only.
+        /// </remarks>
+        [Test]
+        public void TestVerifiedContraction6DuplicateForward()
+        {
+            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var preProcessor = new CHPreProcessor(graph,
+                new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
+
+            var vertex1 = graph.AddVertex(1, 0);
+            var vertex2 = graph.AddVertex(2, 0);
+            var vertex3 = graph.AddVertex(3, 0);
+            var vertex4 = graph.AddVertex(4, 0);
+
+            graph.AddEdge(vertex1, vertex3, new CHEdgeData(1, true, false, true, 10));
+            graph.AddEdge(vertex3, vertex1, new CHEdgeData(1, false, true, false, 10));
+            graph.AddEdge(vertex2, vertex3, new CHEdgeData(1, true, true, false, 10));
+            graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, false, true, 10));
+
+            graph.AddEdge(vertex1, vertex4, new CHEdgeData(1, true, true, false, 15));
+            graph.AddEdge(vertex4, vertex1, new CHEdgeData(1, false, false, true, 15));
+            graph.AddEdge(vertex2, vertex4, new CHEdgeData(1, true, false, true, 15));
+            graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, false, 15));
+
+            preProcessor.Contract(3);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
+
+            preProcessor.Contract(4);
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(4, true, false, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(4, false, true, 30)));
+            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2, new CHEdgeData(3, false, true, 20)));
+            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1, new CHEdgeData(3, true, false, 20)));
         }
 
         /// <summary>
@@ -348,14 +496,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network_real1.osm"));
         }
 
-        ///// <summary>
-        ///// Executes the CH contractions while verifying each step.
-        ///// </summary>
-        //[Test]
-        //public void TestCHVerifiedContractionTestNetworkOneWay()
-        //{
-        //    this.DoTestCHSparseVerifiedContraction(
-        //        Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network_oneway.osm"));
-        //}
+        /// <summary>
+        /// Executes the CH contractions while verifying each step.
+        /// </summary>
+        [Test]
+        public void TestCHVerifiedContractionTestNetworkOneWay()
+        {
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network_oneway.osm"));
+        }
     }
 }

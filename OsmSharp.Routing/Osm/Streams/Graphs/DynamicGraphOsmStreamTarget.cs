@@ -440,14 +440,13 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
                 TEdgeData existingData;
-                if(_dynamicGraph.GetEdge(from, to, out existingData))
+                ICoordinateCollection shape;
+                if (this.GetEdge(_dynamicGraph, from, to, out existingData, out shape))
                 { // oeps, an edge already exists!
                     if (intermediates != null && intermediates.Count > 0)
                     { // add one of the intermediates as new vertex.
-                        ICoordinateCollection shape;
                         uint newVertex;
-                        if (_dynamicGraph.GetEdgeShape(from, to, out shape) &&
-                            shape != null && shape.Count > 0)
+                        if (shape != null && shape.Count > 0)
                         { // the other edge also has a shape, make sure to also split it.
                             var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
                             newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
@@ -497,9 +496,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                     else
                     { // hmm, no intermediates, the other edge should have them.
-                        ICoordinateCollection shape;
-                        if (_dynamicGraph.GetEdgeShape(from, to, out shape) &&
-                            shape != null && shape.Count > 0)
+                        if (shape != null && shape.Count > 0)
                         { // there is a shape, add one of the intermediates as a new vertex.
                             var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
                             var newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
@@ -570,6 +567,40 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         _dynamicGraph.AddEdge(to, from, edgeData, intermediatesCollection);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets an edge from the given graph taking into account 'can have duplicates'.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="existingData"></param>
+        /// <param name="shape"></param>
+        /// <returns></returns>
+        private bool GetEdge(IGraph<TEdgeData> graph, uint from, uint to, out TEdgeData existingData, out ICoordinateCollection shape)
+        {
+            if(!graph.CanHaveDuplicates)
+            {
+                graph.GetEdgeShape(from, to, out shape);
+                return graph.GetEdge(from, to, out existingData);
+            }
+            else
+            {
+                var edges = graph.GetEdges(from, to);
+                while(edges.MoveNext())
+                {
+                    if(edges.Neighbour == to)
+                    {
+                        existingData = edges.EdgeData;
+                        shape = edges.Intermediates;
+                        return true;
+                    }
+                }
+                existingData = default(TEdgeData);
+                shape = null;
+                return false;
             }
         }
 

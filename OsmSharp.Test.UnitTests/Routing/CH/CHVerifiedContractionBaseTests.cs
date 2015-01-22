@@ -191,7 +191,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(_data,
-                new EdgeDifference(_data, witnessCalculator), witnessCalculator);
+                new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += 
                 new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
             preProcessor.OnAfterContractionEvent += 

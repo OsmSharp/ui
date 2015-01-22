@@ -130,9 +130,9 @@ namespace OsmSharp.Routing.CH
                 if (current.From.Weight == 0 &&
                     current.VertexId > 0 && current.From.VertexId > 0)
                 { // this edge is in the graph and needs to be re-calculated.
-                    if (!graph.GetEdge(Convert.ToUInt32(current.From.VertexId), Convert.ToUInt32(current.VertexId), out edge))
+                    if (!this.GetEdge(graph, Convert.ToUInt32(current.From.VertexId), Convert.ToUInt32(current.VertexId), out edge))
                     { // ok, an edge was found.
-                        if(!graph.GetEdge(Convert.ToUInt32(current.VertexId), Convert.ToUInt32(current.From.VertexId), out edge))
+                        if (!this.GetEdge(graph, Convert.ToUInt32(current.VertexId), Convert.ToUInt32(current.From.VertexId), out edge))
                         {
                             throw new Exception(string.Format("Edge {0}->{1} or reverse not found!", current.From.VertexId, current.VertexId));
                         }
@@ -1401,9 +1401,9 @@ namespace OsmSharp.Routing.CH
 
             // get the edge.
             CHEdgeData data;
-            if (!graph.GetEdge((uint)path.From.VertexId, (uint)path.VertexId, out data))
+            if (!this.GetEdge(graph, (uint)path.From.VertexId, (uint)path.VertexId, out data))
             { // there is an edge.
-                if (!graph.GetEdge((uint)path.VertexId, (uint)path.From.VertexId, out data))
+                if (!this.GetEdge(graph, (uint)path.VertexId, (uint)path.From.VertexId, out data))
                 {
                     throw new Exception(string.Format("Edge {0} not found!", path.ToInvariantString()));
                 }
@@ -1425,6 +1425,43 @@ namespace OsmSharp.Routing.CH
                 return firstPathExpanded;
             }
             return expandedEdge;
+        }
+
+        /// <summary>
+        /// Returns an edge with a forward weight.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private bool GetEdge(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out CHEdgeData data)
+        {
+            var lowestWeight = float.MaxValue;
+            data = new CHEdgeData();
+            var edges = graph.GetEdges(from, to);
+            while(edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveForward &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edgeData;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            edges = graph.GetEdges(to, from);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveBackward &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edgeData;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            return lowestWeight < float.MaxValue;
         }
 
         #endregion

@@ -70,30 +70,31 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <returns></returns>
         public float Calculate(uint vertex)
         {
+            int newEdges = 0, removed = 0;
             short contracted = 0;
             _contraction_count.TryGetValue(vertex, out contracted);
 
-            // get the neighbours.
-            var neighbours = _data.GetEdges(vertex);
+            // get all information from the source.
+            var edges = _data.GetEdges(vertex).ToList();
 
-            // simulate the construction of new edges.
-            int newEdges = 0;
-            int removed = 0;
-            var edgesForContractions = new List<Edge<CHEdgeData>>();
-            var tos = new List<uint>();
-            foreach (var neighbour in neighbours)
+            // build the list of edges to replace.
+            var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);
+            var tos = new List<uint>(edges.Count);
+            foreach (var edge in edges)
             {
-                edgesForContractions.Add(neighbour);
-                tos.Add(neighbour.Neighbour);
+                // use this edge for contraction.
+                edgesForContractions.Add(edge);
+                tos.Add(edge.Neighbour);
                 removed++;
             }
 
-            // loop over all neighbours and check for witnesses.
+            var toRequeue = new HashSet<uint>();
+
             // loop over each combination of edges just once.
             var forwardWitnesses = new bool[edgesForContractions.Count];
             var backwardWitnesses = new bool[edgesForContractions.Count];
             var weights = new List<float>(edgesForContractions.Count);
-            for (int x = 0; x < edgesForContractions.Count; x++)
+            for (int x = 1; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
                 var xEdge = edgesForContractions[x];
 
@@ -106,9 +107,10 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     if (xEdge.Neighbour != yEdge.Neighbour)
                     {
                         // reset witnesses.
+                        var forwardWeight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
                         forwardWitnesses[y] = !xEdge.EdgeData.CanMoveBackward || !yEdge.EdgeData.CanMoveForward;
                         backwardWitnesses[y] = !xEdge.EdgeData.CanMoveForward || !yEdge.EdgeData.CanMoveBackward;
-                        weights.Add((float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight);
+                        weights.Add(forwardWeight);
                     }
                     else
                     { // already set this to true, not use calculating it's witness.
@@ -122,19 +124,118 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 _witness_calculator.Exists(_data, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
                 _witness_calculator.Exists(_data, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
 
-                for (int y = 0; y < edgesForContractions.Count; y++)
+                for (int y = 0; y < x; y++)
                 { // loop over all elements.
                     var yEdge = edgesForContractions[y];
 
-                    var canMoveForward = !forwardWitnesses[y] && (xEdge.EdgeData.CanMoveBackward && yEdge.EdgeData.CanMoveForward);
-                    var canMoveBackward = !backwardWitnesses[y] && (xEdge.EdgeData.CanMoveForward && yEdge.EdgeData.CanMoveBackward);
+                    // add the combinations of these edges.
+                    if (xEdge.Neighbour != yEdge.Neighbour)
+                    { // there is a connection from x to y and there is no witness path.
+                        // create x-to-y data and edge.
+                        var canMoveForward = !forwardWitnesses[y] && (xEdge.EdgeData.CanMoveBackward && yEdge.EdgeData.CanMoveForward);
+                        var canMoveBackward = !backwardWitnesses[y] && (xEdge.EdgeData.CanMoveForward && yEdge.EdgeData.CanMoveBackward);
 
-                    if (yEdge.Neighbour != xEdge.Neighbour &&
-                        (canMoveForward || canMoveBackward))
-                    { // the neighbours point to different vertices.
-                        // a new edge is needed.
-                        // no witness exists.
-                        newEdges++;
+                        if (canMoveForward || canMoveBackward)
+                        { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
+                            // calculate the total weights.
+                            var weight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
+
+                            // there are a few options now:
+                            //  1) No edges yet between xEdge.Neighbour and yEdge.Neighbour.
+                            //  1) There is no other contracted edge: just add as a duplicate.
+                            //  2) There is at least on other contracted edge: optimize information because there can only be 4 case between two vertices:
+                            //     - One bidirectional edge.
+                            //     - Two directed edges with different weights.
+                            //     - One forward edge.
+                            //     - One backward edge.
+                            //    =>  all available information needs to be combined.
+                            // check existing data.
+                            var existingForwardWeight = float.MaxValue;
+                            var existingBackwardWeight = float.MaxValue;
+                            uint existingForwardContracted = 0;
+                            uint existingBackwardContracted = 0;
+                            var existingCanMoveForward = false;
+                            var existingCanMoveBackward = false;
+                            var existingEdges = _data.GetEdges(xEdge.Neighbour, yEdge.Neighbour);
+                            var existingEdgesToRemove = new List<CHEdgeData>();
+                            while (existingEdges.MoveNext())
+                            {
+                                var existingEdgeData = existingEdges.EdgeData;
+                                if (existingEdgeData.IsContracted)
+                                { // this edge is contracted, collect it's information.
+                                    existingEdgesToRemove.Add(existingEdgeData);
+                                    if (existingEdgeData.CanMoveForward)
+                                    { // can move forward, so at least one edge that can move forward.
+                                        existingCanMoveForward = true;
+                                        if (existingForwardWeight > existingEdgeData.Weight)
+                                        { // update forward weight.
+                                            existingForwardWeight = existingEdgeData.Weight;
+                                            existingForwardContracted = existingEdgeData.ContractedId;
+                                        }
+                                    }
+                                    if (existingEdgeData.CanMoveBackward)
+                                    { // can move backward, so at least one edge that can move backward.
+                                        existingCanMoveBackward = true;
+                                        if (existingBackwardWeight > existingEdgeData.Weight)
+                                        { // update backward weight.
+                                            existingBackwardWeight = existingEdgeData.Weight;
+                                            existingBackwardContracted = existingEdgeData.ContractedId;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (existingCanMoveForward || existingCanMoveBackward)
+                            { // there is already another contraced edge.
+                                uint forwardContractedId = vertex;
+                                float forwardWeight = weight;
+                                // merge with existing data.
+                                if (existingCanMoveForward &&
+                                    (weight > existingForwardWeight) || !canMoveForward)
+                                { // choose the smallest weight.
+                                    canMoveForward = true;
+                                    forwardContractedId = existingForwardContracted;
+                                    forwardWeight = existingForwardWeight;
+                                }
+
+                                uint backwardContractedId = vertex;
+                                float backwardWeight = weight;
+                                // merge with existing data.
+                                if (existingCanMoveBackward &&
+                                    (weight > existingBackwardWeight) || !canMoveBackward)
+                                { // choose the smallest weight.
+                                    canMoveBackward = true;
+                                    backwardContractedId = existingBackwardContracted;
+                                    backwardWeight = existingBackwardWeight;
+                                }
+
+                                // remove all existing stuff.
+                                removed = removed + existingEdgesToRemove.Count * 2;
+
+                                // add one of the 4 above case.
+                                if (canMoveForward && canMoveBackward && forwardWeight == backwardWeight && forwardContractedId == backwardContractedId)
+                                { // just add one edge.
+                                    newEdges = newEdges + 2;
+                                }
+                                else if (canMoveBackward && canMoveForward)
+                                { // add two different edges.
+                                    newEdges = newEdges + 4;
+                                }
+                                else if (canMoveForward)
+                                { // only add one forward edge.
+                                    newEdges = newEdges + 2;
+                                }
+                                else if (canMoveBackward)
+                                { // only add one backward edge.
+                                    newEdges = newEdges + 2;
+                                }
+                            }
+                            else
+                            { // there is no edge, just add the data.
+                                // add contracted edges like normal.
+                                newEdges = newEdges + 2;
+                            }
+                        }
                     }
                 }
             }

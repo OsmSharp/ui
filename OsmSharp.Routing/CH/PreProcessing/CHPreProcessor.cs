@@ -199,27 +199,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // get all information from the source.
             var edges = _target.GetEdges(vertex).ToList();
 
+            // report the before contraction event.
+            this.OnBeforeContraction(vertex, edges);
+
             // build the list of edges to replace.
             var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);
             var tos = new List<uint>(edges.Count);
             foreach (var edge in edges)
             {
-                // remove reverse edge, only keep edges pointing up.
-                if (edge.EdgeData.Weight > 0)
-                { // not a special edge.
-                    // use this edge for contraction.
-                    edgesForContractions.Add(edge);
-                    tos.Add(edge.Neighbour);
-                }
-            }
+                // use this edge for contraction.
+                edgesForContractions.Add(edge);
+                tos.Add(edge.Neighbour);
 
-            // report the before contraction event.
-            this.OnBeforeContraction(vertex, edgesForContractions);
-
-            // remove the edges.
-            foreach(var edge in edgesForContractions)
-            {
-                _target.RemoveEdge(edge.Neighbour, vertex);
+                // remove the edge in downwards direction and on the edge with the same data.
+                _target.RemoveEdge(edge.Neighbour, vertex, (CHEdgeData)edge.EdgeData.Reverse());
             }
 
             var toRequeue = new HashSet<uint>();
@@ -274,61 +267,105 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             // calculate the total weights.
                             var weight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
 
-                            CHEdgeData data;
-                            if (_target.GetEdge(xEdge.Neighbour, yEdge.Neighbour, out data))
-                            { // there already is an edge; evaluate for each direction.
-                                // do not replace any edges unless needed.
-                                bool replace = false;
-                                ICoordinateCollection shape = null;
-                                if (data.RepresentsNeighbourRelations)
-                                { // get shape if any.
-                                    _target.GetEdgeShape(xEdge.Neighbour, yEdge.Neighbour, out shape);
-                                }
-                                else if(data.CanMoveBackward == canMoveBackward &&
-                                    data.CanMoveForward == canMoveForward &&
-                                    data.Weight > weight)
-                                { // just replace the edge.
-                                    replace = true;
-                                }
-                                if (!replace)
-                                { // do not replace the edge but keep it by adding a virtual intermediate.
-                                    //the original edge always has to be replaced, otherwise it would have been a witness.
-                                    //add a duplicate vertex for one of the two vertices.
-                                    float latitude, longitude;
-                                    _target.GetVertex(xEdge.Neighbour, out latitude, out longitude);
-                                    var newVertex = _target.AddVertex(latitude, longitude);
-                                    _target.AddEdge(xEdge.Neighbour, newVertex, new CHEdgeData(0, true, true, true, 0));
-                                    _target.AddEdge(newVertex, xEdge.Neighbour, new CHEdgeData(0, true, true, true, 0));
-                                    _target.AddEdge(newVertex, yEdge.Neighbour, data, shape);
+                            // there are a few options now:
+                            //  1) No edges yet between xEdge.Neighbour and yEdge.Neighbour.
+                            //  1) There is no other contracted edge: just add as a duplicate.
+                            //  2) There is at least on other contracted edge: optimize information because there can only be 4 case between two vertices:
+                            //     - One bidirectional edge.
+                            //     - Two directed edges with different weights.
+                            //     - One forward edge.
+                            //     - One backward edge.
+                            //    =>  all available information needs to be combined.
 
-                                    while (data.IsContracted)
-                                    { // make sure edge contractedId <-> xEdge.Neighbour is moved.
-                                        uint contractedId = data.ContractedId;
-                                        _target.GetEdge(contractedId, xEdge.Neighbour, out data);
-                                        // _target.RemoveEdge(contractedId, xEdge.Neighbour);
-                                        _target.AddEdge(contractedId, newVertex, data);
+                            // check existing data.
+                            var existingForwardWeight = float.MaxValue;
+                            var existingBackwardWeight = float.MaxValue;
+                            uint existingForwardContracted = 0;
+                            uint existingBackwardContracted = 0;
+                            var existingCanMoveForward = false;
+                            var existingCanMoveBackward = false;
+                            var existingEdges = _target.GetEdges(xEdge.Neighbour, yEdge.Neighbour);
+                            var existingEdgesToRemove = new List<CHEdgeData>();
+                            while(existingEdges.MoveNext())
+                            {
+                                var existingEdgeData = existingEdges.EdgeData;
+                                if(existingEdgeData.IsContracted)
+                                { // this edge is contracted, collect it's information.
+                                    existingEdgesToRemove.Add(existingEdgeData);
+                                    if(existingEdgeData.CanMoveForward)
+                                    { // can move forward, so at least one edge that can move forward.
+                                        existingCanMoveForward = true;
+                                        if (existingForwardWeight > existingEdgeData.Weight)
+                                        { // update forward weight.
+                                            existingForwardWeight = existingEdgeData.Weight;
+                                            existingForwardContracted = existingEdgeData.ContractedId;
+                                        }
                                     }
+                                    if (existingEdgeData.CanMoveBackward)
+                                    { // can move backward, so at least one edge that can move backward.
+                                        existingCanMoveBackward = true;
+                                        if (existingBackwardWeight > existingEdgeData.Weight)
+                                        { // update backward weight.
+                                            existingBackwardWeight = existingEdgeData.Weight;
+                                            existingBackwardContracted = existingEdgeData.ContractedId;
+                                        }
+                                    }
+                                }
+                            }
 
-                                    // DO NOT ADD REVERSE EDGE AND DO NOT QUEUE NEW VERTEX.
-                                    // ASSUME THIS VERTEX CONTRACTED AND IMMIDIATELY CONTRACT THE xEdge.Neighbour.
-                                    //if (shape != null)
-                                    //{ // invert shape.
-                                    //    var reverseShape = shape.ToSimpleArray();
-                                    //    reverseShape.Reverse();
-                                    //    shape = new CoordinateArrayCollection<GeoCoordinateSimple>(reverseShape);
-                                    //}
-                                    //_target.AddEdge(yEdge.Neighbour, newVertex, (CHEdgeData)data.Reverse(), shape);
-                                    //toRequeue.Add(newVertex);
-                                    this.MarkContracted(newVertex);
+                            if (existingCanMoveForward || existingCanMoveBackward)
+                            { // there is already another contraced edge.
+                                uint forwardContractedId = vertex;
+                                float forwardWeight = weight;
+                                // merge with existing data.
+                                if(existingCanMoveForward && 
+                                    (weight > existingForwardWeight) || !canMoveForward)
+                                { // choose the smallest weight.
+                                    canMoveForward = true;
+                                    forwardContractedId = existingForwardContracted;
+                                    forwardWeight = existingForwardWeight;
                                 }
 
-                                // add contracted edges like normal.
-                                _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(vertex, canMoveForward, canMoveBackward, weight));
-                                _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(vertex, canMoveBackward, canMoveForward, weight));
+                                uint backwardContractedId = vertex;
+                                float backwardWeight = weight;
+                                // merge with existing data.
+                                if (existingCanMoveBackward && 
+                                    (weight > existingBackwardWeight) || !canMoveBackward)
+                                { // choose the smallest weight.
+                                    canMoveBackward = true;
+                                    backwardContractedId = existingBackwardContracted;
+                                    backwardWeight = existingBackwardWeight;
+                                }
 
-                                if (!replace)
-                                { // make sure to immidately contract the neighbour used as a virtual edge.
-                                    this.Contract(xEdge.Neighbour);
+                                // remove all existing stuff.
+                                foreach(var existingEdgeToRemove in existingEdgesToRemove)
+                                {
+                                    _target.RemoveEdge(xEdge.Neighbour, yEdge.Neighbour, existingEdgeToRemove);
+                                    _target.RemoveEdge(yEdge.Neighbour, xEdge.Neighbour, (CHEdgeData)existingEdgeToRemove.Reverse());
+                                }
+
+                                // add one of the 4 above case.
+                                if(canMoveForward && canMoveBackward && forwardWeight == backwardWeight && forwardContractedId == backwardContractedId)
+                                { // just add one edge.
+                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, true, forwardWeight));
+                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, true, backwardWeight));
+                                }
+                                else if(canMoveBackward && canMoveForward)
+                                { // add two different edges.
+                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
+                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
+                                }
+                                else if(canMoveForward)
+                                { // only add one forward edge.
+                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
+                                }
+                                else if(canMoveBackward)
+                                { // only add one backward edge.
+                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
                                 }
                             }
                             else
@@ -336,11 +373,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 // add contracted edges like normal.
                                 _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(vertex, canMoveForward, canMoveBackward, weight));
                                 _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(vertex, canMoveBackward, canMoveForward, weight));
-
-                                toRequeue.Add(xEdge.Neighbour);
-                                toRequeue.Add(yEdge.Neighbour);
                             }
-
                         }
                     }
                 }
