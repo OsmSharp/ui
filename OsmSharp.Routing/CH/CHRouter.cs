@@ -1888,6 +1888,23 @@ namespace OsmSharp.Routing.CH
                                     }
                                 }
                             }
+                            if (this.GetEdgeShape(graph, arc.Value.Key, arc.Key, out arcValueValueCoordinates) &&
+                                arcValueValueCoordinates != null)
+                            { // search over intermediate points.
+                                var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
+                                for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
+                                {
+                                    vertexCoordinate = new GeoCoordinate(
+                                        arcValueValueCoordinatesArray[idx].Latitude,
+                                        arcValueValueCoordinatesArray[idx].Longitude);
+                                    distance = coordinate.DistanceReal(vertexCoordinate).Value;
+                                    if (distance < closestWithoutMatch.Distance)
+                                    { // the distance found is closer.
+                                        closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
+                                            distance, arc.Key, arc.Value.Key, idx, arc.Value.Value, arcValueValueCoordinatesArray);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
