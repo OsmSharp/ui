@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// The default search delta.
         /// </summary>
-        private const float DefaultSearchDelta = .0075f;
+        protected float DefaultSearchDelta = .0075f;
 
         /// <summary>
         /// Holds the graph object containing the routable network.
@@ -1186,7 +1186,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, null, null, verticesOnly);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate, null, null, verticesOnly);
         }
 
         /// <summary>
@@ -1236,7 +1236,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
         }
 
         /// <summary>
@@ -1292,7 +1292,7 @@ namespace OsmSharp.Routing.Routers
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollectionBase matchingTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags, verticesOnly);
         }
 
@@ -1366,7 +1366,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate);
         }
 
         /// <summary>
@@ -1397,7 +1397,7 @@ namespace OsmSharp.Routing.Routers
         public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate,
             IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags);
         }
 
@@ -1460,7 +1460,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            return this.Search(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, verticesOnly);
+            return this.Search(vehicle,this.DefaultSearchDelta, coordinate, verticesOnly);
         }
 
         /// <summary>

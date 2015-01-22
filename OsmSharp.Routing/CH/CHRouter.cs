@@ -1496,7 +1496,14 @@ namespace OsmSharp.Routing.CH
                     edgeData.RepresentsNeighbourRelations &&
                     edgeData.Weight < lowestWeight)
                 {
-                    data = edges.Intermediates.Reverse();
+                    if (edges.Intermediates != null)
+                    {
+                        data = edges.Intermediates.Reverse();
+                    }
+                    else
+                    {
+                        data = null;
+                    }
                     lowestWeight = edgeData.Weight;
                 }
             }
