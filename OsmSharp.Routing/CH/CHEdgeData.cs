@@ -257,10 +257,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             if (this.IsContracted)
             {
-                return new CHEdgeData(this.ContractedId, this.CanMoveBackward, this.CanMoveBackward, this.Weight);
+                return new CHEdgeData(this.ContractedId, this.CanMoveBackward, this.CanMoveForward, this.Weight);
             }
             return new CHEdgeData(this.Tags, !this.Forward,
-                this.CanMoveBackward, this.CanMoveBackward, this.Weight);
+                this.CanMoveBackward, this.CanMoveForward, this.Weight);
         }
 
         /// <summary>
