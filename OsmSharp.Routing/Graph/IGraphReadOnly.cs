@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,7 +21,7 @@ using OsmSharp.Collections.Coordinates.Collections;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
-    /// Abstracts an graph implementation. 
+    /// Abstracts a graph implementation. 
     /// </summary>
     public interface IGraphReadOnly<TEdgeData>
         where TEdgeData : IGraphEdgeData
@@ -30,6 +30,11 @@ namespace OsmSharp.Routing.Graph
         /// Returns true if an edge is only as an outgoing edge. When false, edges are added both from and to.
         /// </summary>
         bool IsDirected { get; }
+
+        /// <summary>
+        /// Returns true if there can be multiple edges 
+        /// </summary>
+        bool CanHaveDuplicates { get; }
 
         /// <summary>
         /// Gets an existing vertex.
@@ -45,17 +50,35 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        bool ContainsEdge(uint vertexId, uint neighbour);
+        bool ContainsEdges(uint vertexId, uint neighbour);
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns true if the given edge exists.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <param name="neighbour"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data);
+
+        /// <summary>
+        /// Returns all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
         IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
 
         /// <summary>
-        /// Gets the data associated with the given edge and returns true if the edge exists.
+        /// Returns all edges between the given vertices.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
+
+        /// <summary>
+        /// Returns the edge between the two given vertices. Throws exception if this graph allows duplicate edges, use GetEdges in that case..
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
@@ -64,7 +87,7 @@ namespace OsmSharp.Routing.Graph
         bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data);
 
         /// <summary>
-        /// Gets the shape associated with the given edge and returns true if the edge exists.
+        /// Returns the edge shape between the two given vertices. Throws exception if this graph allows duplicate edges, use GetEdges in that case.
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>

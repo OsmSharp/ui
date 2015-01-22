@@ -213,9 +213,32 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdges(uint vertexId, uint neighbour)
         {
-            return _graph.ContainsEdge(vertexId, neighbour);
+            return _graph.ContainsEdges(vertexId, neighbour);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has neighbour as a neighbour.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <param name="neighbour"></param>
+        /// <returns></returns>
+        public bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data)
+        {
+            return _graph.ContainsEdges(vertexId, neighbour);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
+        {
+            return _graph.GetEdges(vertex1, vertex2);
         }
 
         /// <summary>
@@ -294,19 +317,6 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds a new edge.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="data"></param>
-        /// <param name="coordinates"></param>
-        /// <param name="comparer"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer)
-        {
-            _graph.AddEdge(vertex1, vertex2, data, coordinates, comparer);
-        }
-
-        /// <summary>
         /// Removes all arcs starting at vertex.
         /// </summary>
         /// <param name="vertex"></param>
@@ -321,6 +331,17 @@ namespace OsmSharp.Routing.Graph
         /// <param name="from"></param>
         /// <param name="to"></param>
         public void RemoveEdge(uint from, uint to)
+        {
+            _graph.RemoveEdge(from, to);
+        }
+
+        /// <summary>
+        /// Deletes an arc.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        public void RemoveEdge(uint from, uint to, TEdgeData data)
         {
             _graph.RemoveEdge(from, to);
         }
@@ -506,6 +527,11 @@ namespace OsmSharp.Routing.Graph
         public bool IsDirected
         {
             get { return _graph.IsDirected; }
+        }
+
+        public bool CanHaveDuplicates
+        {
+            get { return _graph.CanHaveDuplicates; }
         }
     }
 }

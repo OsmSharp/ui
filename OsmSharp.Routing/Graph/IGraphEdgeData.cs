@@ -50,19 +50,4 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         IGraphEdgeData Reverse();
     }
-
-    /// <summary>
-    /// Abstract a comparer for edges.
-    /// </summary>
-    public interface IDynamicGraphEdgeComparer<in TEdgeData>
-        where TEdgeData : IGraphEdgeData
-    {
-        /// <summary>
-        /// Returns true if the data in the edge2 is useless if the data in edge1 is present.
-        /// </summary>
-        /// <param name="edge1"></param>
-        /// <param name="edge2"></param>
-        /// <returns></returns>
-        bool Overlaps(TEdgeData edge1, TEdgeData edge2);
-    }
 }

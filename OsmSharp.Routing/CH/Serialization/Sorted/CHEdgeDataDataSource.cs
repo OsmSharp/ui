@@ -170,10 +170,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdges(uint vertexId, uint neighbour)
         {
-            CHEdgeData data;
-            return this.GetEdge(vertexId, neighbour, out data);
+            return this.GetEdges(vertexId, neighbour).MoveNext();
         }
 
         /// <summary>
@@ -183,9 +182,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
-            return this.LoadArc(vertex1, vertex2, out data);
+            throw new NotImplementedException();
+            // return this.LoadArc(vertex1, vertex2);
         }
 
         /// <summary>
@@ -846,6 +846,23 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         public bool IsDirected
         {
             get { return true; }
+        }
+
+
+        public bool CanHaveDuplicates
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public bool ContainsEdge(uint vertexId, uint neighbour, CHEdgeData data)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public bool GetEdge(uint vertex1, uint vertex2, out CHEdgeData data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

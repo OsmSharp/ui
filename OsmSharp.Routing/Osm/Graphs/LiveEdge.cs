@@ -132,6 +132,7 @@ namespace OsmSharp.Routing.Osm.Graphs
                 { // basic info different.
                     return false;
                 }
+                return otherLive.Distance == this.Distance;
             }
             return false;
         }

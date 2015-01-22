@@ -114,7 +114,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
-            : base(dynamicGraph, interpreter, null, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
+            : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
         {
             _vehicles = new HashSet<Vehicle>();
             if (vehicles != null)

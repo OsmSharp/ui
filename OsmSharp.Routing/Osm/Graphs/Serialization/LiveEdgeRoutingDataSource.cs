@@ -223,7 +223,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         }
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
@@ -262,7 +262,19 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdges(uint vertexId, uint neighbour)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <param name="neighbour"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool ContainsEdge(uint vertexId, uint neighbour, LiveEdge data)
         {
             throw new NotImplementedException();
         }
@@ -283,13 +295,12 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 this.LoadMissingTile(tile);
                 _tilesPerVertex.Remove(vertex1);
             }
-
             // get the arcs and return.
             if (_vertices.Length > vertex1)
             {
                 var vertex = _vertices[(int)vertex1];
                 if (vertex != null &&
-                    vertex.Arcs != null)
+                vertex.Arcs != null)
                 {
                     for (int idx = 0; idx < vertex.Arcs.Length; idx++)
                     {
@@ -303,6 +314,44 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             }
             data = default(LiveEdge);
             return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertex1, uint vertex2)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if (vertex.Arcs[idx].Item1 == vertex2)
+                        {
+                            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[]{
+                                new KeyValuePair<uint, LiveEdge>(vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2)
+                            });
+                        }
+                    }
+                }
+            }
+            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
         }
 
         /// <summary>
@@ -713,6 +762,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         }
 
         public bool IsDirected
+        {
+            get { return false; }
+        }
+
+        public bool CanHaveDuplicates
         {
             get { return false; }
         }
