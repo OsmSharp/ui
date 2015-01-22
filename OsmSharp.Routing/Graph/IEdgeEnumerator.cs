@@ -163,5 +163,25 @@ namespace OsmSharp.Routing.Graph
             }
             return pairs.ToArray();
         }
+
+
+        /// <summary>
+        /// Converts the given edge enumerator to an array of key-value pairs.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        /// <param name="enumerator"></param>
+        /// <returns></returns>
+        public static KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>[] ToKeyValuePairsAndShapes<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
+            where TEdgeData : IGraphEdgeData
+        {
+            enumerator.Reset();
+            var pairs = new List<KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>>();
+            while (enumerator.MoveNext())
+            {
+                pairs.Add(new KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>(enumerator.Neighbour, 
+                    new KeyValuePair<TEdgeData, ICoordinateCollection>(enumerator.EdgeData, enumerator.Intermediates)));
+            }
+            return pairs.ToArray();
+        }
     }
 }

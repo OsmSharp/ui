@@ -180,12 +180,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
-            throw new NotImplementedException();
-            // return this.LoadArc(vertex1, vertex2);
+            return new EdgeEnumerator(this.GetEdgePairs(vertex1, vertex2));
         }
 
         /// <summary>
@@ -223,6 +221,26 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             public int Length { get; set; }
         }
+
+        /// <summary>
+        /// Returns all arcs for the given vertices.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        private KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>[] GetEdgePairs(uint vertex1, uint vertex2)
+        {
+            var arcs = this.LoadArcs(vertex1);
+            var selectedArcs = new List<KeyValuePair<uint, KeyValuePair<CHEdgeData, ICoordinateCollection>>>(arcs.Length);
+            for(int idx = 0; idx < arcs.Length; idx++)
+            {
+                if(arcs[idx].Key == vertex2)
+                {
+                    selectedArcs.Add(arcs[idx]);
+                }
+            }
+            return selectedArcs.ToArray();
+        }
+
 
         /// <summary>
         /// Returns all arcs for the given vertex.

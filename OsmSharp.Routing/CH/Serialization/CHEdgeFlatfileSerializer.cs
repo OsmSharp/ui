@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <returns></returns>
         protected override DynamicGraphRouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new DynamicGraphRouterDataSource<CHEdgeData>(tagsCollectionIndex);
+            return new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsCollectionIndex);
         }
 
         /// <summary>
@@ -67,23 +67,20 @@ namespace OsmSharp.Routing.CH.Serialization
                     // choose only those arcs that start at a vertex smaller than the target.
                     for (int idx = 0; idx < arcs.Count; idx++)
                     {
-                        if (arcs[idx].Neighbour > vertex)
+                        arcsQueue.Add(new SerializableEdge()
                         {
-                            arcsQueue.Add(new SerializableEdge()
-                            {
-                                FromId = vertex,
-                                ToId = arcs[idx].Neighbour,
-                                Meta = arcs[idx].EdgeData.Meta,
-                                Value = arcs[idx].EdgeData.Value,
-                                Weight = arcs[idx].EdgeData.Weight,
-                                Coordinates = arcs[idx].Intermediates.ToSimpleArray()
-                            });
+                            FromId = vertex,
+                            ToId = arcs[idx].Neighbour,
+                            Meta = arcs[idx].EdgeData.Meta,
+                            Value = arcs[idx].EdgeData.Value,
+                            Weight = arcs[idx].EdgeData.Weight,
+                            Coordinates = arcs[idx].Intermediates.ToSimpleArray()
+                        });
 
-                            if (arcsQueue.Count == blockSize)
-                            { // execute serialization.
-                                typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
-                                arcsQueue.Clear();
-                            }
+                        if (arcsQueue.Count == blockSize)
+                        { // execute serialization.
+                            typeModel.SerializeWithSize(stream, arcsQueue.ToArray());
+                            arcsQueue.Clear();
                         }
                     }
 

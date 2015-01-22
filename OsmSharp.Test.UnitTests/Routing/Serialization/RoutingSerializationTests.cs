@@ -541,11 +541,10 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             {
                 network = routingSerializer.Deserialize(stream, out metaData, false) as DynamicGraphRouterDataSource<CHEdgeData>;
             }
-
             // compare networks.
             Assert.IsNotNull(network);
-            Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
-            for (uint vertex = 0; vertex < network.VertexCount; vertex++)
+            // Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
+            for (uint vertex = 1; vertex < referenceNetwork.VertexCount; vertex++)
             {
                 float referenceLatitude, referenceLongitude, latitude, longitude;
                 Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));
@@ -553,61 +552,59 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
-                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairsAndShapes();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairsAndShapes();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
                     var referenceArc = referenceArcs[idx];
                     // find the same edge in the new arcs.
-                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key && x.Value.Key.Equals(referenceArcs[idx].Value.Key); });
 
                     Assert.AreEqual(referenceArc.Key, arc.Key);
-                    Assert.AreEqual(referenceArc.Value.Meta, arc.Value.Meta);
-                    Assert.AreEqual(referenceArc.Value.Value, arc.Value.Value);
-                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
-                    ICoordinateCollection referenceCoordinates;
-                    ICoordinateCollection coordinates;
-                    if(referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
-                    { // there is a shape.
-                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
-                        if(referenceCoordinates == null)
-                        { // reference shape is null, shape is null.
-                            Assert.IsNull(coordinates);
-                        }
-                        else
-                        { // reference shape is not null compare them.
-                            Assert.IsNotNull(coordinates);
-                            referenceCoordinates.Reset();
-                            coordinates.Reset();
-                            while(referenceCoordinates.MoveNext())
-                            {
-                                Assert.IsTrue(coordinates.MoveNext());
+                    Assert.AreEqual(referenceArc.Value.Key.Meta, arc.Value.Key.Meta);
+                    Assert.AreEqual(referenceArc.Value.Key.Value, arc.Value.Key.Value);
+                    Assert.AreEqual(referenceArc.Value.Key.Weight, arc.Value.Key.Weight);
+                    Assert.AreEqual(referenceArc.Value.Key.RepresentsNeighbourRelations, arc.Value.Key.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Key.Tags, arc.Value.Key.Tags);
+                    var referenceCoordinates = referenceArc.Value.Value;
+                    var coordinates = arc.Value.Value;
 
-                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
-                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
-                            }
-                            Assert.IsFalse(coordinates.MoveNext());
-                        }
+                    if (referenceCoordinates == null)
+                    { // reference shape is null, shape is null.
+                        Assert.IsNull(coordinates);
                     }
                     else
-                    { // there is no shape.
-                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                    { // reference shape is not null compare them.
+                        Assert.IsNotNull(coordinates);
+                        referenceCoordinates.Reset();
+                        coordinates.Reset();
+                        while (referenceCoordinates.MoveNext())
+                        {
+                            Assert.IsTrue(coordinates.MoveNext());
+
+                            Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                            Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
+                        }
+                        Assert.IsFalse(coordinates.MoveNext());
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
-                    var tags = network.TagsIndex.Get(arc.Value.Tags);
-                    if (referenceTags == null)
-                    { // other tags also have to be null.
-                        Assert.IsNull(tags);
-                    }
-                    else
-                    { // contents need to be the same.
-                        Assert.AreEqual(referenceTags.Count, tags.Count);
-                        foreach (var referenceTag in referenceTags)
-                        {
-                            Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                    if (!referenceArc.Value.Key.IsContracted)
+                    {
+                        var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Key.Tags);
+                        var tags = network.TagsIndex.Get(arc.Value.Key.Tags);
+                        if (referenceTags == null)
+                        { // other tags also have to be null.
+                            Assert.IsNull(tags);
+                        }
+                        else
+                        { // contents need to be the same.
+                            Assert.AreEqual(referenceTags.Count, tags.Count);
+                            foreach (var referenceTag in referenceTags)
+                            {
+                                Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                            }
                         }
                     }
                 }
@@ -661,90 +658,59 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assert.AreEqual(referenceLatitude, latitude);
                 Assert.AreEqual(referenceLongitude, longitude);
 
-                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairs();
-                var arcs = network.GetEdges(vertex).ToKeyValuePairs();
+                var referenceArcs = referenceNetwork.GetEdges(vertex).ToKeyValuePairsAndShapes();
+                var arcs = network.GetEdges(vertex).ToKeyValuePairsAndShapes();
                 Assert.AreEqual(referenceArcs.Length, arcs.Length);
                 for (int idx = 0; idx < referenceArcs.Length; idx++)
                 {
                     var referenceArc = referenceArcs[idx];
                     // find the same edge in the new arcs.
-                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key; });
+                    var arc = arcs.First((x) => { return x.Key == referenceArcs[idx].Key && x.Value.Key.Equals(referenceArcs[idx].Value.Key); });
 
                     Assert.AreEqual(referenceArc.Key, arc.Key);
-                    Assert.AreEqual(referenceArc.Value.Meta, arc.Value.Meta);
-                    Assert.AreEqual(referenceArc.Value.Value, arc.Value.Value);
-                    Assert.AreEqual(referenceArc.Value.Weight, arc.Value.Weight);
-                    Assert.AreEqual(referenceArc.Value.RepresentsNeighbourRelations, arc.Value.RepresentsNeighbourRelations);
-                    Assert.AreEqual(referenceArc.Value.Tags, arc.Value.Tags);
-                    ICoordinateCollection referenceCoordinates;
-                    ICoordinateCollection coordinates;
-                    if (referenceNetwork.GetEdgeShape(vertex, referenceArc.Key, out referenceCoordinates))
-                    { // there is a shape.
-                        Assert.IsTrue(network.GetEdgeShape(vertex, arc.Key, out coordinates));
-                        if (referenceCoordinates == null)
-                        { // reference shape is null, shape is null.
-                            Assert.IsNull(coordinates);
-                        }
-                        else
-                        { // reference shape is not null compare them.
-                            Assert.IsNotNull(coordinates);
-                            referenceCoordinates.Reset();
-                            coordinates.Reset();
-                            while (referenceCoordinates.MoveNext())
-                            {
-                                Assert.IsTrue(coordinates.MoveNext());
+                    Assert.AreEqual(referenceArc.Value.Key.Meta, arc.Value.Key.Meta);
+                    Assert.AreEqual(referenceArc.Value.Key.Value, arc.Value.Key.Value);
+                    Assert.AreEqual(referenceArc.Value.Key.Weight, arc.Value.Key.Weight);
+                    Assert.AreEqual(referenceArc.Value.Key.RepresentsNeighbourRelations, arc.Value.Key.RepresentsNeighbourRelations);
+                    Assert.AreEqual(referenceArc.Value.Key.Tags, arc.Value.Key.Tags);
+                    var referenceCoordinates = referenceArc.Value.Value;
+                    var coordinates = arc.Value.Value;
 
-                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
-                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
-                            }
-                            Assert.IsFalse(coordinates.MoveNext());
-                        }
+                    if (referenceCoordinates == null)
+                    { // reference shape is null, shape is null.
+                        Assert.IsNull(coordinates);
                     }
                     else
-                    { // there is no shape.
-                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
-                    }
+                    { // reference shape is not null compare them.
+                        Assert.IsNotNull(coordinates);
+                        referenceCoordinates.Reset();
+                        coordinates.Reset();
+                        while (referenceCoordinates.MoveNext())
+                        {
+                            Assert.IsTrue(coordinates.MoveNext());
 
-                    if (referenceNetwork.GetEdgeShape(referenceArc.Key, vertex, out referenceCoordinates))
-                    { // there is a shape.
-                        Assert.IsTrue(network.GetEdgeShape(arc.Key, vertex, out coordinates));
-                        if (referenceCoordinates == null)
-                        { // reference shape is null, shape is null.
-                            Assert.IsNull(coordinates);
+                            Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
+                            Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
                         }
-                        else
-                        { // reference shape is not null compare them.
-                            Assert.IsNotNull(coordinates);
-                            referenceCoordinates.Reset();
-                            coordinates.Reset();
-                            while (referenceCoordinates.MoveNext())
-                            {
-                                Assert.IsTrue(coordinates.MoveNext());
-
-                                Assert.AreEqual(referenceCoordinates.Latitude, coordinates.Latitude);
-                                Assert.AreEqual(referenceCoordinates.Longitude, coordinates.Longitude);
-                            }
-                            Assert.IsFalse(coordinates.MoveNext());
-                        }
-                    }
-                    else
-                    { // there is no shape.
-                        Assert.IsFalse(network.GetEdgeShape(vertex, arc.Key, out coordinates));
+                        Assert.IsFalse(coordinates.MoveNext());
                     }
 
                     // check tags.
-                    var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Tags);
-                    var tags = network.TagsIndex.Get(arc.Value.Tags);
-                    if (referenceTags == null)
-                    { // other tags also have to be null.
-                        Assert.IsNull(tags);
-                    }
-                    else
-                    { // contents need to be the same.
-                        Assert.AreEqual(referenceTags.Count, tags.Count);
-                        foreach (var referenceTag in referenceTags)
-                        {
-                            Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                    if (!referenceArc.Value.Key.IsContracted)
+                    {
+                        var referenceTags = referenceNetwork.TagsIndex.Get(referenceArc.Value.Key.Tags);
+                        var tags = network.TagsIndex.Get(arc.Value.Key.Tags);
+                        if (referenceTags == null)
+                        { // other tags also have to be null.
+                            Assert.IsNull(tags);
+                        }
+                        else
+                        { // contents need to be the same.
+                            Assert.AreEqual(referenceTags.Count, tags.Count);
+                            foreach (var referenceTag in referenceTags)
+                            {
+                                Assert.IsTrue(tags.ContainsKeyValue(referenceTag.Key, referenceTag.Value));
+                            }
                         }
                     }
                 }
