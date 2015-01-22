@@ -229,15 +229,15 @@ namespace OsmSharp.Test.Unittests.Routing
                     var referenceEntry = reference.Segments[entryIdx];
                     var routeEntry = route.Segments[entryIdx];
 
-                    if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
-                    { // there are way names.
-                        Assert.IsNotNull(routeEntry.SideStreets);
-                        Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);
-                    }
-                    else
-                    { // there are no way names.
-                        Assert.IsTrue(routeEntry.SideStreets == null || routeEntry.SideStreets.Length == 0);
-                    }
+                    //if (referenceEntry.SideStreets != null && referenceEntry.SideStreets.Length > 0)
+                    //{ // there are way names.
+                    //    Assert.IsNotNull(routeEntry.SideStreets);
+                    //    Assert.AreEqual(referenceEntry.SideStreets.Length, routeEntry.SideStreets.Length);
+                    //}
+                    //else
+                    //{ // there are no way names.
+                    //    Assert.IsTrue(routeEntry.SideStreets == null || routeEntry.SideStreets.Length == 0);
+                    //}
                 }
             }
         }

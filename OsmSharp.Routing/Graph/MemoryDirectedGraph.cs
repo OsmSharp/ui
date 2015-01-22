@@ -669,6 +669,7 @@ namespace OsmSharp.Routing.Graph
             _edges[newEdgeId + NODEA] = _edges[oldEdgeId + NODEA];
             _edges[newEdgeId + NEXTNODEA] = _edges[oldEdgeId + NEXTNODEA];
             _edgeData[newEdgeId / EDGE_SIZE] = _edgeData[oldEdgeId / EDGE_SIZE];
+            _edgeShapes[newEdgeId / EDGE_SIZE] = _edgeShapes[oldEdgeId / EDGE_SIZE];
 
             // loop over all edges of vertex1 and replace the oldEdgeId with the new one.
             uint vertex1 = _edges[oldEdgeId + NODEA];
@@ -695,6 +696,7 @@ namespace OsmSharp.Routing.Graph
             _edges[oldEdgeId + NODEA] = NO_EDGE;
             _edges[oldEdgeId + NEXTNODEA] = NO_EDGE;
             _edgeData[oldEdgeId / EDGE_SIZE] = default(TEdgeData);
+            _edgeShapes[oldEdgeId / EDGE_SIZE] = null;
         }
 
         /// <summary>
