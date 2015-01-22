@@ -1464,6 +1464,45 @@ namespace OsmSharp.Routing.CH
             return lowestWeight < float.MaxValue;
         }
 
+        /// <summary>
+        /// Returns an edge with a shape.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private bool GetEdgeShape(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out ICoordinateCollection data)
+        {
+            var lowestWeight = float.MaxValue;
+            data = null;
+            var edges = graph.GetEdges(from, to);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveForward &&
+                    edgeData.RepresentsNeighbourRelations &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edges.Intermediates;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            edges = graph.GetEdges(to, from);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveBackward &&
+                    edgeData.RepresentsNeighbourRelations &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edges.Intermediates.Reverse();
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            return lowestWeight < float.MaxValue;
+        }
+
         #endregion
 
         #region Notifications
@@ -1825,7 +1864,7 @@ namespace OsmSharp.Routing.CH
                         }
 
                         ICoordinateCollection arcValueValueCoordinates;
-                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                        if (this.GetEdgeShape(graph, arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
                             arcValueValueCoordinates != null)
                         { // search over intermediate points.
                             var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();

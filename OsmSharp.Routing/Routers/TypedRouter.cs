@@ -940,10 +940,10 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 TEdgeData data;
-                if(!_dataGraph.GetEdge((uint)vertex1, (uint)vertex2, out data))
+                if(!this.GetEdge(_dataGraph, (uint)vertex1, (uint)vertex2, out data))
                 { // try reverse edge.
                     TEdgeData reverse = default(TEdgeData);
-                    if(!_dataGraph.GetEdge((uint)vertex2, (uint)vertex1, out reverse))
+                    if(!this.GetEdge(_dataGraph, (uint)vertex2, (uint)vertex1, out reverse))
                     {
                         throw new Exception(string.Format("Edge {0}->{1} not found!",
                             vertex1, vertex2));
@@ -955,7 +955,7 @@ namespace OsmSharp.Routing.Routers
             else
             { // one of the vertices was a resolved vertex.
                 // edge should be in the resolved graph.
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetEdges(vertex1);
+                var arcs = graph.GetEdges(vertex1);
                 foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
                 {
                     if (arc.Key == vertex2)
@@ -983,9 +983,9 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 ICoordinateCollection shape;
-                if (!_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
+                if (!this.GetEdgeShape(_dataGraph, (uint)vertex1, (uint)vertex2, out shape))
                 { // try the reverse.
-                    if (!_dataGraph.GetEdgeShape((uint)vertex2, (uint)vertex1, out shape))
+                    if (!this.GetEdgeShape(_dataGraph, (uint)vertex2, (uint)vertex1, out shape))
                     { // hmm information is missing! 
                         throw new Exception(string.Format("Edge {0}->{1} not found!",
                             vertex1, vertex2));
@@ -1054,6 +1054,47 @@ namespace OsmSharp.Routing.Routers
                 }
             }
             return new GeoCoordinate(latitude, longitude);
+        }
+
+
+        /// <summary>
+        /// Returns an edge with a shape.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual bool GetEdge(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out TEdgeData data)
+        {
+            if (!graph.CanHaveDuplicates)
+            {
+                return graph.GetEdge(from, to, out data);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// Returns an edge with a shape.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual bool GetEdgeShape(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out ICoordinateCollection data)
+        {
+            if (!graph.CanHaveDuplicates)
+            {
+                return graph.GetEdgeShape(from, to, out data);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
 
