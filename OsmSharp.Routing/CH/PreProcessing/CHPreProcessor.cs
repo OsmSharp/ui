@@ -572,6 +572,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 }
             }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         /// <summary>

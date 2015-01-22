@@ -273,7 +273,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var otherEdge = (CHEdgeData)other;
             return otherEdge._value == this._value &&
                 otherEdge._meta == this._meta &&
-                otherEdge.Weight == this.Weight;
+                System.Math.Abs(otherEdge.Weight - this.Weight) < 0.0001;
         }
     }
 
