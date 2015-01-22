@@ -1656,7 +1656,7 @@ namespace OsmSharp.Routing.CH
                         distance = coordinate.DistanceReal(fromCoordinates).Value;
                         ICoordinateCollection coordinates;
                         ICoordinate[] coordinatesArray = null;
-                        if (!graph.GetEdgeShape(arc.Key, arc.Value.Key, out coordinates))
+                        if (!this.GetEdgeShape(graph, arc.Key, arc.Value.Key, out coordinates))
                         {
                             coordinates = null;
                         }
@@ -1717,7 +1717,7 @@ namespace OsmSharp.Routing.CH
                         double distanceTotal = 0;
                         var previous = fromCoordinates;
                         ICoordinateCollection arcValueValueCoordinates;
-                        if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
+                        if (this.GetEdgeShape(graph, arc.Key, arc.Value.Key, out arcValueValueCoordinates) &&
                             arcValueValueCoordinates != null)
                         { // calculate distance along all coordinates.
                             var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
