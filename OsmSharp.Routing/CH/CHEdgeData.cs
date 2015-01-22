@@ -272,7 +272,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             var otherEdge = (CHEdgeData)other;
             return otherEdge._value == this._value &&
-                otherEdge.ContractedId == this.ContractedId &&
+                otherEdge._meta == this._meta &&
                 otherEdge.Weight == this.Weight;
         }
     }
@@ -291,7 +291,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var result = new List<Edge<CHEdgeData>>(edges.Count);
             foreach (var edge in edges)
             {
-                if (edge.EdgeData.ContractedId == 0)
+                if (!edge.EdgeData.IsContracted)
                 {
                     result.Add(edge);
                 }
