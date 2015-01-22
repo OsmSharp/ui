@@ -119,7 +119,6 @@ namespace OsmSharp.Routing.CH
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="expandedResult"></param>
-        /// <param name="vehicle"></param>
         /// <returns></returns>
         private PathSegment<long> AugmentWithWeights(IGraphReadOnly<CHEdgeData> graph, PathSegment<long> expandedResult)
         {
@@ -652,7 +651,6 @@ namespace OsmSharp.Routing.CH
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <param name="max_settles"></param>
-        /// <param name="exception"></param>
         /// <returns></returns>
         private CHResult DoCalculate(IGraphReadOnly<CHEdgeData> graph,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, int max_settles)

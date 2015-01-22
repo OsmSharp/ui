@@ -242,7 +242,8 @@ namespace OsmSharp.Routing.Osm.Interpreter
         public List<KeyValuePair<string, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
         {
             var restrictions = new List<KeyValuePair<string, long[]>>();
-            if(relation.Tags.ContainsKeyValue("type", "restriction"))
+            if(relation.Tags.ContainsKeyValue("type", "restriction") &&
+                relation.Members != null)
             { // regular restriction.
                 Way fromWay = null, toWay = null, viaWay = null;
                 Node viaNode = null;
