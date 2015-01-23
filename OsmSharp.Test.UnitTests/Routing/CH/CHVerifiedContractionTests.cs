@@ -210,6 +210,32 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             graph.AddEdge(vertex2, vertex5, new CHEdgeData(1, true, true, true, 10));
             graph.AddEdge(vertex5, vertex2, new CHEdgeData(1, false, true, true, 10));
 
+            Assert.IsFalse(graph.ContainsEdges(vertex1, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex4, vertex1));
+            Assert.IsFalse(graph.ContainsEdges(vertex5, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex5, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex5, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex5, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex1, vertex5));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex5));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex5));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex5));
+            Assert.IsFalse(graph.ContainsEdges(vertex5, vertex5));
+
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(graph, 
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);

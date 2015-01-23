@@ -154,11 +154,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
-                                               {
-                                                   Forward = true,
-                                                   Tags = 0
-                                               }, null);
+            graph.AddEdge(vertex1, vertex2, new LiveEdge(), null);
 
             var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
             Assert.AreEqual(1, arcs.Length);
@@ -181,18 +177,13 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge1001()
         {
-            int count = 1001;
+            var count = 1001;
             var graph = this.CreateGraph();
-            uint vertex1 = graph.AddVertex(51, 1);
+            var vertex1 = graph.AddVertex(51, 1);
             while (count > 0)
             {
-                uint vertex2 = graph.AddVertex(51, 1);
-
-                graph.AddEdge(vertex1, vertex2, new LiveEdge()
-                                                   {
-                                                       Tags = 0,
-                                                       Forward =  true
-                                                   }, null);
+                var vertex2 = graph.AddVertex(51, 1);
+                graph.AddEdge(vertex1, vertex2, new LiveEdge(), null);
 
                 var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
                 Assert.AreEqual(1001 - count + 1, arcs.Length);
@@ -728,53 +719,6 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         }
 
         /// <summary>
-        /// Tests trimming the graph but edges only (all vertices are still used).
-        /// </summary>
-        [Test]
-        public void TestLiveEdgeDynamicGraphCompressVertices()
-        {
-            var graph = this.CreateGraph();
-
-            var vertex1 = graph.AddVertex(51, 1);
-            var vertex2 = graph.AddVertex(51, 2);
-            var vertex3 = graph.AddVertex(51, 3);
-            var vertex4 = graph.AddVertex(51, 3);
-
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 1
-            }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 2
-            }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 3
-            }, null);
-
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 4
-            }, null);
-
-            // make vertex4 obsolete.
-            graph.RemoveEdges(vertex4);
-
-            graph.Compress();
-
-            Assert.AreEqual(3, graph.VertexCount);
-
-            Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
-            Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 1);
-            Assert.AreEqual(graph.GetEdges(vertex3).ToKeyValuePairs().Length, 1);
-        }
-
-        /// <summary>
         /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]
@@ -834,7 +778,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
             Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
 
-            // should overwrite, identical data.
+            // should not overwrite, even when identical data.
             graph.AddEdge(vertex1, vertex2, new LiveEdge()
             {
                 Forward = true,
@@ -842,7 +786,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
-            Assert.AreEqual(2, edges.Length);
+            Assert.AreEqual(3, edges.Length);
             Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
             Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
         }

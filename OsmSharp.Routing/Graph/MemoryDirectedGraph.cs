@@ -167,24 +167,19 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public uint AddVertex(float latitude, float longitude)
         {
-            // make sure vertices array is large enough.
-            if (_nextVertexId >= _vertices.Length)
+            // create vertex.
+            var newId = _nextVertexId;
+            var vertexIdx = newId * VERTEX_SIZE;
+            if (vertexIdx + 1 >= _vertices.Length)
             {
                 this.IncreaseVertexSize();
             }
 
-            // create vertex.
-            uint newId = _nextVertexId;
             _coordinates[newId] = new GeoCoordinateSimple()
             {
                 Latitude = latitude,
                 Longitude = longitude
             };
-            uint vertexIdx = newId * VERTEX_SIZE;
-            if(vertexIdx >= _vertices.Length)
-            {
-                this.IncreaseVertexSize();
-            }
             // _vertices[vertexIdx + FIRST_EDGE] = NO_EDGE;
             _vertices[vertexIdx + EDGE_COUNT] = 0;
             _nextVertexId++; // increase for next vertex.
@@ -255,10 +250,6 @@ namespace OsmSharp.Routing.Graph
             var vertex1Idx = vertex1 * VERTEX_SIZE;
             var edgeCount = _vertices[vertex1Idx + EDGE_COUNT];
             var edgeId = _vertices[vertex1Idx + FIRST_EDGE];
-            edgeCount++;
-
-            // update edge count in vertex.
-            _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
 
             if ((edgeCount & (edgeCount - 1)) == 0)
             { // edgeCount is a power of two, increase space.
@@ -267,27 +258,53 @@ namespace OsmSharp.Routing.Graph
                 _vertices[vertex1Idx + FIRST_EDGE] = newEdgeId;
 
                 // move edges.
-                if (edgeCount > 1)
+                if (edgeCount > 0)
                 {
-                    for (uint toMoveIdx = edgeId; toMoveIdx < edgeId + edgeCount - 1; toMoveIdx = toMoveIdx + EDGE_SIZE)
+                    if (newEdgeId + edgeCount >= _edges.Length)
+                    { // edges need to be increased.
+                        this.IncreaseEdgeSize();
+                    }
+
+                    for (uint toMoveIdx = edgeId; toMoveIdx < edgeId + edgeCount; toMoveIdx = toMoveIdx + EDGE_SIZE)
                     {
                         _edges[newEdgeId] = _edges[toMoveIdx];
+                        _edgeData[newEdgeId] = _edgeData[toMoveIdx];
+                        _edgeShapes[newEdgeId] = _edgeShapes[toMoveIdx];
+
                         newEdgeId++;
                     }
-                }
-                edgeId = newEdgeId;
 
-                // increase the nextEdgeId, these edges have been added at the end of the edge-array.
-                _nextEdgeId = _nextEdgeId + edgeCount;
+                    // the edge id is the last new edge id.
+                    edgeId = newEdgeId;
+
+                    // increase the nextEdgeId, these edges have been added at the end of the edge-array.
+                    _nextEdgeId = _nextEdgeId + (2 * edgeCount);
+                }
+                else
+                { // just add next edge id.
+                    if (_nextEdgeId + 1 >= _edges.Length)
+                    { // edges need to be increased.
+                        this.IncreaseEdgeSize();
+                    }
+
+                    edgeId = _nextEdgeId;
+                    _nextEdgeId++;
+                }
             }
+            else
+            { // calculate edgeId of new edge.
+                edgeId = edgeId + edgeCount;
+                _nextEdgeId++;
+            }
+
+            // update edge count in vertex.
+            edgeCount++;
+            _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
 
             // update edge.
             _edges[edgeId] = vertex2;
-
-            // add edge in the vertex.
-            _edgeData[edgeId / EDGE_SIZE] = data;
-            _edgeShapes[edgeId / EDGE_SIZE] = coordinates;
-            _nextEdgeId++;
+            _edgeData[edgeId] = data;
+            _edgeShapes[edgeId] = coordinates;
             return;
         }
 
@@ -330,6 +347,7 @@ namespace OsmSharp.Routing.Graph
                     _edgeShapes[removeIdx] = _edgeShapes[edgeId + edgeCount];
                 }
             }
+            _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
         }
 
         /// <summary>
@@ -360,6 +378,7 @@ namespace OsmSharp.Routing.Graph
                     break;
                 }
             }
+            _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
         }
 
         /// <summary>
@@ -476,13 +495,13 @@ namespace OsmSharp.Routing.Graph
         public void Trim()
         {
             // resize coordinates/vertices.
-            _coordinates.Resize(_nextVertexId);
-            _vertices.Resize(_nextVertexId);
+            _coordinates.Resize(_nextVertexId * VERTEX_SIZE);
+            _vertices.Resize(_nextVertexId * VERTEX_SIZE);
 
             // resize edges.
             _edgeData.Resize(_nextEdgeId / EDGE_SIZE);
             _edgeShapes.Resize(_nextEdgeId / EDGE_SIZE);
-            _edges.Resize(_nextEdgeId);
+            _edges.Resize(_nextEdgeId * EDGE_SIZE);
         }
 
         /// <summary>
@@ -493,7 +512,7 @@ namespace OsmSharp.Routing.Graph
         public void Resize(long vertexEstimate, long edgeEstimate)
         {
             // resize coordinates/vertices.
-            this.IncreaseVertexSize((int)vertexEstimate);
+            this.IncreaseVertexSize((int)vertexEstimate * VERTEX_SIZE);
 
             // resize edges.
             this.IncreaseEdgeSize((int)(edgeEstimate * EDGE_SIZE));
