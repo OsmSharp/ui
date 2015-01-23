@@ -473,7 +473,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             }
 
                             // remove original edge.
-                            _dynamicGraph.RemoveEdge(from, to);
+                            _dynamicGraph.RemoveEdge(from, to, existingData);
+                            if(_dynamicGraph.IsDirected && _dynamicGraph.CanHaveDuplicates)
+                            { // also remove opposite edges.
+                                _dynamicGraph.RemoveEdge(to, from, (TEdgeData)existingData.Reverse());
+                            }
                         }
                         
                         newVertex = _dynamicGraph.AddVertex(intermediates[0].Latitude, intermediates[0].Longitude);
