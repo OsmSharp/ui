@@ -78,7 +78,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
@@ -92,7 +91,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// </summary>
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="collectIntermediates"></param>
@@ -458,8 +456,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null);
                             if(_dynamicGraph.IsDirected)
                             { // also the need to add the reverse edge.
-                                beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                                    new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), fromCoordinate, null);
+                                beforeEdgeData = (TEdgeData)beforeEdgeData.Reverse();
                                 _dynamicGraph.AddEdge(newVertex, from, beforeEdgeData, null);
                             }
 
@@ -471,8 +468,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             if (_dynamicGraph.IsDirected)
                             { // also the need to add the reverse edge.
                                 afterIntermediates.Reverse();
-                                afterEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                                    toCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), afterIntermediates);
+                                afterEdgeData = (TEdgeData)afterEdgeData.Reverse();
                                 _dynamicGraph.AddEdge(to, newVertex, afterEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(afterIntermediates.ToArray()));
                             }
 
@@ -486,8 +482,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                         _dynamicGraph.AddEdge(from, newVertex, newEdgeData, null);
                         if (_dynamicGraph.IsDirected)
                         { // also the need to add the reverse edge.
-                            newEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                                new GeoCoordinate(intermediates[0].Latitude, intermediates[0].Longitude), fromCoordinate, null);
+                            newEdgeData = (TEdgeData)newEdgeData.Reverse();
                             _dynamicGraph.AddEdge(newVertex, from, newEdgeData, null);
                         }
 
@@ -508,8 +503,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             _dynamicGraph.AddEdge(from, newVertex, beforeEdgeData, null);
                             if (_dynamicGraph.IsDirected)
                             { // also the need to add the reverse edge.
-                                beforeEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                                    new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), fromCoordinate, null);
+                                beforeEdgeData = (TEdgeData)beforeEdgeData.Reverse();
                                 _dynamicGraph.AddEdge(newVertex, from, beforeEdgeData, null);
                             }
 
@@ -521,8 +515,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             if (_dynamicGraph.IsDirected)
                             { // also the need to add the reverse edge.
                                 afterIntermediates.Reverse();
-                                afterEdgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                                    toCoordinate, new GeoCoordinate(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude), afterIntermediates);
+                                afterEdgeData = (TEdgeData)afterEdgeData.Reverse();
                                 _dynamicGraph.AddEdge(to, newVertex, afterEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(afterIntermediates.ToArray()));
                             }
                         }
@@ -539,8 +532,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     if (_dynamicGraph.IsDirected)
                     { // also the need to add the reverse edge.
                         intermediates.Reverse();
-                        edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                            toCoordinate, fromCoordinate, intermediates);
+                        edgeData = (TEdgeData)edgeData.Reverse();
                         _dynamicGraph.AddEdge(to, from, edgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray()));
                     }
                 }
@@ -563,8 +555,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             intermediates.Reverse();
                             intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
                         }
-                        edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tagsIndex, tags, false,
-                            toCoordinate, fromCoordinate, intermediates);
+                        edgeData = (TEdgeData)edgeData.Reverse();
                         _dynamicGraph.AddEdge(to, from, edgeData, intermediatesCollection);
                     }
                 }
