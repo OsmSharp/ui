@@ -166,7 +166,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Holds the current idx.
         /// </summary>
-        private int _currentIdx;
+        private int _currentIdx = -1;
 
         /// <summary>
         /// Returns the current coordinate.
@@ -205,6 +205,18 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <returns></returns>
         public bool MoveNext()
         {
+            if(_reverse)
+            {
+                if(_currentIdx < 0)
+                {
+                    _currentIdx = _coordinateArray.Length - 1;
+                }
+                else
+                {
+                    _currentIdx--;
+                }
+                return _currentIdx >= 0;
+            }
             _currentIdx++;
             return _currentIdx < this.Count;
         }

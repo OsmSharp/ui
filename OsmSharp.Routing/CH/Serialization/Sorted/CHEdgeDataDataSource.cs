@@ -114,12 +114,8 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 var vertexArcs = this.GetEdges(vertexId);
                 foreach (var arc in vertexArcs)
                 {
-                    if (vertexId < arc.Neighbour ||
-                        !vertices.Contains(arc.Neighbour))
-                    {
-                        arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                            vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData)));
-                    }
+                    arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
+                        vertexId, new KeyValuePair<uint, CHEdgeData>(arc.Neighbour, arc.EdgeData)));
                 }
             }
             return arcs.ToArray();
