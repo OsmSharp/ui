@@ -1167,6 +1167,17 @@ namespace OsmSharp.Routing.Graph
             {
 
             }
+
+
+            public bool HasCount
+            {
+                get { return false; }
+            }
+
+            int IEdgeEnumerator<TEdgeData>.Count
+            {
+                get { throw new InvalidOperationException(); }
+            }
         }
 
         public bool IsDirected

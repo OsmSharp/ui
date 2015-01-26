@@ -15,10 +15,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -28,10 +24,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
     public interface INodeWeightCalculator
     {
         /// <summary>
-        /// Calculates the weight of the given vertex u.
+        /// Calculates the weight of the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
-        /// <returns>A estimate of the benefit of contraction, when float.MaxValue the vertex will not be contracted.</returns>
+        /// <returns>A estimate of the benefit of contraction.</returns>
         float Calculate(uint vertex);
 
         /// <summary>

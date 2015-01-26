@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -36,18 +36,41 @@ namespace OsmSharp.Collections.Arrays
         private int _arraySize = (int)System.Math.Pow(2, 20);
 
         /// <summary>
+        /// Holds the array size power of 2.
+        /// </summary>
+        private int _arrayPow = 20;
+
+        /// <summary>
         /// Holds the size of this array.
         /// </summary>
         private long _size;
+
+        ///// <summary>
+        ///// Creates a new huge array.
+        ///// </summary>
+        ///// <param name="size"></param>
+        ///// <param name="arraySize"></param>
+        //public HugeArray(long size, int arraySize)
+        //{
+        //    _arraySize = arraySize;
+        //    _size = size;
+
+        //    long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
+        //    _arrays = new T[arrayCount][];
+        //    for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
+        //    {
+        //        _arrays[arrayIdx] = new T[_arraySize];
+        //    }
+        //    _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
+        //}
 
         /// <summary>
         /// Creates a new huge array.
         /// </summary>
         /// <param name="size"></param>
-        /// <param name="arraySize"></param>
-        public HugeArray(long size, int arraySize)
+        public HugeArray(long size)
         {
-            _arraySize = arraySize;
+            _arraySize = (int)System.Math.Pow(2, 20);
             _size = size;
 
             long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
@@ -59,15 +82,9 @@ namespace OsmSharp.Collections.Arrays
             _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
         }
 
-        /// <summary>
-        /// Creates a new huge array.
-        /// </summary>
-        /// <param name="size"></param>
-        public HugeArray(long size)
-            : this(size, (int)System.Math.Pow(2, 20))
-        {
+        private long _latestArrayIdx = -1;
 
-        }
+        private T[] _latestArray;
 
         /// <summary>
         /// Gets or sets the element at the given idx.
@@ -79,9 +96,19 @@ namespace OsmSharp.Collections.Arrays
             get
             {
                 //long arrayIdx = (long)System.Math.(idx / _arraySize);
-                long localIdx = idx % _arraySize;
-                long arrayIdx = (idx - localIdx) / _arraySize;
-                return _arrays[arrayIdx][localIdx];
+                //long localIdx = idx % _arraySize;
+                long arrayIdx = idx >> _arrayPow;
+                long localIdx = idx - (arrayIdx << _arrayPow);
+                if (_latestArrayIdx == arrayIdx)
+                {
+                    return _latestArray[localIdx];
+                }
+                else
+                {
+                    _latestArray = _arrays[arrayIdx];
+                    _latestArrayIdx = arrayIdx;
+                }
+                return _latestArray[localIdx];
             }
             set
             {
@@ -98,6 +125,8 @@ namespace OsmSharp.Collections.Arrays
         public void Resize(long size)
         {
             _size = size;
+            _latestArrayIdx = -1;
+            _latestArray = null;
 
             long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
             if (arrayCount != _arrays.Length)

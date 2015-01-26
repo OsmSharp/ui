@@ -51,5 +51,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="maxSettles"></param>
         /// <param name="exists"></param>
         void Exists(IGraph<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
+
+        /// <summary>
+        /// Gets or sets the hop limit.
+        /// </summary>
+        int HopLimit { get; set; }
     }
 }

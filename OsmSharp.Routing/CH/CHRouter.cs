@@ -1180,7 +1180,6 @@ namespace OsmSharp.Routing.CH
 
                 // add the neighbours to the queue.
                 while (neighbours.MoveNext())
-                // foreach (var neighbour in neighbours)
                 {
                     var neighbourEdgeData = neighbours.EdgeData;
                     if (neighbourEdgeData.CanMoveForward)
@@ -1193,20 +1192,6 @@ namespace OsmSharp.Routing.CH
                                 neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        //else if ((exception == 0 || (exception != neighbourNeighbour &&
-                        //    exception != neighbourEdgeData.ForwardContractedId)))
-                        //{
-                        //    // node was settled before: make sure this route is not shorter.
-                        //    var routeToNeighbour = new PathSegment<long>(
-                        //        neighbourNeighbour, current.Weight + neighbourEdgeData.ForwardWeight, current);
-
-                        //    // remove from the queue again when there is a shorter route found.
-                        //    if (settledQueue.Forward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
-                        //    {
-                        //        settledQueue.Forward.Remove(neighbourNeighbour);
-                        //        queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                        //    }
-                        //}
                     }
                 }
             }
@@ -1255,10 +1240,10 @@ namespace OsmSharp.Routing.CH
                 while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
+                    var neighbourNeighbour = neighbours.Neighbour;
                     var neighbourEdgeData = neighbours.EdgeData;
                     if (neighbourEdgeData.CanMoveBackward)
                     { // the edge is backward, and is to higher or was not contracted at all.
-                        var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Backward.ContainsKey(neighbourNeighbour))
                         {
                             // if not yet settled.
@@ -1266,20 +1251,6 @@ namespace OsmSharp.Routing.CH
                                 neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
                         }
-                        //else if ((exception == 0 || (exception != neighbourNeighbour &&
-                        //    exception != neighbourEdgeData.BackwardContractedId)))
-                        //{
-                        //    // node was settled before: make sure this route is not shorter.
-                        //    var routeToNeighbour = new PathSegment<long>(
-                        //        neighbourNeighbour, current.Weight + neighbourEdgeData.BackwardContractedId, current);
-
-                        //    // remove from the queue again when there is a shorter route found.
-                        //    if (settledQueue.Backward[neighbourNeighbour].Weight > routeToNeighbour.Weight)
-                        //    {
-                        //        settledQueue.Backward.Remove(neighbourNeighbour);
-                        //        queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
-                        //    }
-                        //}
                     }
                 }
             }

@@ -834,6 +834,17 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             {
 
             }
+
+
+            public bool HasCount
+            {
+                get { return true; }
+            }
+
+            int IEdgeEnumerator<CHEdgeData>.Count
+            {
+                get { return _edges.Length; }
+            }
         }
 
 

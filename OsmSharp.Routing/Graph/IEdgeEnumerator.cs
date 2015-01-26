@@ -63,6 +63,22 @@ namespace OsmSharp.Routing.Graph
         {
             get;
         }
+
+        /// <summary>
+        /// Returns true if the count is known without enumeration.
+        /// </summary>
+        bool HasCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the count if known.
+        /// </summary>
+        int Count
+        {
+            get;
+        }
     }
 
     /// <summary>

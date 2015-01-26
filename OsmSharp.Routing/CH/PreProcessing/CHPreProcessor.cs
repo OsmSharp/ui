@@ -78,7 +78,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds a witness calculator just for contraction.
         /// </summary>
-        private INodeWitnessCalculator _contractionWitnessCalculator = new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(20);
+        private INodeWitnessCalculator _contractionWitnessCalculator = 
+            new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(20);
 
         /// <summary>
         /// Starts pre-processing all nodes
@@ -106,44 +107,79 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 // calculate and log progress.
                 float progress = (float)(System.Math.Floor(((double)current / (double)total) * 1000) / 10.0);
+                if(progress > 99)
+                {
+                    progress = (float)(System.Math.Floor(((double)current / (double)total) * 10000) / 100.0);
+                }
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                         "Pre-processing... {0}% [{1}/{2}]", progress, current, total);
                     latestProgress = progress;
-                    //if (progress % 1 == 0)
-                    //{
-                    //    int totalCardinality = 0;
-                    //    int uncontracted = 0;
-                    //    int maxCardinality = 0;
-                    //    for (uint v = 0; v < _target.VertexCount; v++)
-                    //    {
-                    //        if (!this.IsContracted(v))
-                    //        {
-                    //            var edges = _target.GetEdges(v);
-                    //            if (edges != null)
-                    //            {
-                    //                int edgesCount = 0;
-                    //                foreach(var edge in edges)
-                    //                {
-                    //                    if(!edge.EdgeData.ToLower &&
-                    //                        edge.EdgeData.Forward)
-                    //                    {
-                    //                        edgesCount++;
-                    //                    }
-                    //                }
-                    //                totalCardinality = edgesCount + totalCardinality;
-                    //                if (maxCardinality < edgesCount)
-                    //                {
-                    //                    maxCardinality = edgesCount;
-                    //                }
-                    //            }
-                    //            uncontracted++;
-                    //        }
-                    //    }
-                    //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                    //        "Average card uncontracted vertices: {0} with max {1}", (double)totalCardinality / (double)uncontracted, maxCardinality);
-                    //}
+                    if (progress % 1 == 0 || progress > 99)
+                    {
+                        int totaEdges = 0;
+                        int totalUncontracted = 0;
+                        int maxCardinality = 0;
+                        for (uint v = 0; v < _target.VertexCount; v++)
+                        {
+                            if (!this.IsContracted(v))
+                            {
+                                var edges = _target.GetEdges(v);
+                                if (edges != null)
+                                {
+                                    int edgesCount = 0;
+                                    foreach (var edge in edges)
+                                    {
+                                        edgesCount++;
+                                    }
+                                    totaEdges = edgesCount + totaEdges;
+                                    if (maxCardinality < edgesCount)
+                                    {
+                                        maxCardinality = edgesCount;
+                                    }
+                                }
+                                totalUncontracted++;
+                            }
+                        }
+
+                        var density = (double)totaEdges / (double)totalUncontracted;
+                        OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                            "Average card uncontracted vertices: {0} with max {1}", density, maxCardinality);
+
+                        //if (density > 30 &&
+                        //    _witnessCalculator.HopLimit < 5)
+                        //{
+                        //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
+
+                        //    _witnessCalculator.HopLimit = 5;
+                        //    this.RecalculateQueue();
+                        //}
+                        //else if (density > 20 &&
+                        //    _witnessCalculator.HopLimit < 4)
+                        //{
+                        //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
+
+                        //    _witnessCalculator.HopLimit = 4;
+                        //    this.RecalculateQueue();
+                        //}
+                        //else if (density > 10 &&
+                        //    _witnessCalculator.HopLimit < 3)
+                        //{
+                        //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
+
+                        //    _witnessCalculator.HopLimit = 3;
+                        //    this.RecalculateQueue();
+                        //}
+                        //else if (density > 3.3 &&
+                        //    _witnessCalculator.HopLimit < 2)
+                        //{
+                        //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
+
+                        //    _witnessCalculator.HopLimit = 2;
+                        //    this.RecalculateQueue();
+                        //}
+                    }
                 }
                 current++;
             }
@@ -212,10 +248,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 tos.Add(edge.Neighbour);
 
                 // remove the edge in downwards direction and on the edge with the same data.
-                _target.RemoveEdge(edge.Neighbour, vertex, (CHEdgeData)edge.EdgeData.Reverse());
+                _target.RemoveEdge(edge.Neighbour, vertex);
             }
 
             var toRequeue = new HashSet<uint>();
+
+            var forwardEdges = new CHEdgeData?[2];
+            var backwardEdges = new CHEdgeData?[2];
+            var existingEdgesToRemove = new HashSet<CHEdgeData>();
 
             // loop over each combination of edges just once.
             var forwardWitnesses = new bool[edgesForContractions.Count];
@@ -227,6 +267,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 // calculate max weight.
                 weights.Clear();
+                var forwardUnknown = false;
+                var backwardUnknown = false;
                 for (int y = 0; y < x; y++)
                 {
                     // update maxWeight.
@@ -237,6 +279,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         var forwardWeight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
                         forwardWitnesses[y] = !xEdge.EdgeData.CanMoveBackward || !yEdge.EdgeData.CanMoveForward;
                         backwardWitnesses[y] = !xEdge.EdgeData.CanMoveForward || !yEdge.EdgeData.CanMoveBackward;
+                        forwardUnknown = !forwardWitnesses[y] || forwardUnknown;
+                        backwardUnknown = !backwardWitnesses[y] || backwardUnknown;
                         weights.Add(forwardWeight);
                     }
                     else
@@ -248,8 +292,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 }
 
                 // calculate witnesses.
-                _contractionWitnessCalculator.Exists(_target, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
-                _contractionWitnessCalculator.Exists(_target, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
+                if (forwardUnknown)
+                {
+                    _contractionWitnessCalculator.Exists(_target, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
+                }
+                if (backwardUnknown)
+                {
+                    _contractionWitnessCalculator.Exists(_target, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
+                }
 
                 for (int y = 0; y < x; y++)
                 { // loop over all elements.
@@ -285,7 +335,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             var existingCanMoveForward = false;
                             var existingCanMoveBackward = false;
                             var existingEdges = _target.GetEdges(xEdge.Neighbour, yEdge.Neighbour);
-                            var existingEdgesToRemove = new List<CHEdgeData>();
+                            existingEdgesToRemove.Clear();
                             while(existingEdges.MoveNext())
                             {
                                 var existingEdgeData = existingEdges.EdgeData;
@@ -318,8 +368,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 uint forwardContractedId = vertex;
                                 float forwardWeight = weight;
                                 // merge with existing data.
-                                if(existingCanMoveForward && 
-                                    (weight > existingForwardWeight) || !canMoveForward)
+                                if (existingCanMoveForward &&
+                                    ((weight > existingForwardWeight) || !canMoveForward))
                                 { // choose the smallest weight.
                                     canMoveForward = true;
                                     forwardContractedId = existingForwardContracted;
@@ -329,63 +379,102 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 uint backwardContractedId = vertex;
                                 float backwardWeight = weight;
                                 // merge with existing data.
-                                if (existingCanMoveBackward && 
-                                    (weight > existingBackwardWeight) || !canMoveBackward)
+                                if (existingCanMoveBackward &&
+                                    ((weight > existingBackwardWeight) || !canMoveBackward))
                                 { // choose the smallest weight.
                                     canMoveBackward = true;
                                     backwardContractedId = existingBackwardContracted;
                                     backwardWeight = existingBackwardWeight;
                                 }
 
-                                // remove all existing stuff.
-                                foreach(var existingEdgeToRemove in existingEdgesToRemove)
-                                {
-                                    _target.RemoveEdge(xEdge.Neighbour, yEdge.Neighbour, existingEdgeToRemove);
-                                    _target.RemoveEdge(yEdge.Neighbour, xEdge.Neighbour, (CHEdgeData)existingEdgeToRemove.Reverse());
+                                // add one of the 4 above case.
+                                forwardEdges[0] = null;
+                                forwardEdges[1] = null;
+                                backwardEdges[0] = null;
+                                backwardEdges[1] = null;
+                                if (canMoveForward && canMoveBackward && forwardWeight == backwardWeight && forwardContractedId == backwardContractedId)
+                                { // just add one edge.
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, true, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, true, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(backwardContractedId, true, true, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, true, backwardWeight));
+                                }
+                                else if (canMoveBackward && canMoveForward)
+                                { // add two different edges.
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, false, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(forwardContractedId, false, true, forwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
+                                    forwardEdges[1] = new CHEdgeData(backwardContractedId, false, true, backwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    backwardEdges[1] = new CHEdgeData(backwardContractedId, true, false, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
+                                }
+                                else if (canMoveForward)
+                                { // only add one forward edge.
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, false, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(forwardContractedId, false, true, forwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
+                                }
+                                else if (canMoveBackward)
+                                { // only add one backward edge.
+                                    forwardEdges[0] = new CHEdgeData(backwardContractedId, false, true, backwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(backwardContractedId, true, false, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
                                 }
 
-                                // add one of the 4 above case.
-                                if(canMoveForward && canMoveBackward && forwardWeight == backwardWeight && forwardContractedId == backwardContractedId)
-                                { // just add one edge.
-                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, true, forwardWeight));
-                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, true, backwardWeight));
+                                // remove all existing stuff.
+                                foreach (var existingEdgeToRemove in existingEdgesToRemove)
+                                {
+                                    if (forwardEdges[0].Equals(existingEdgeToRemove))
+                                    { // this forward edge is to be kept.
+                                        forwardEdges[0] = null; // it's already there.
+                                    }
+                                    else if(forwardEdges[1] != null &&
+                                        !forwardEdges[1].Equals(existingEdgeToRemove))
+                                    { // this forward edge is to be kept.
+                                        forwardEdges[1] = null; // it's already there.
+                                    }
+                                    else
+                                    { // yup, just remove it now.
+                                        _target.RemoveEdge(xEdge.Neighbour, yEdge.Neighbour, existingEdgeToRemove);
+                                    }
+                                    var existingEdgeToRemoveBackward = (CHEdgeData)existingEdgeToRemove.Reverse();
+                                    if (backwardEdges[0].Equals(existingEdgeToRemoveBackward))
+                                    { // this backward edge is to be kept.
+                                        backwardEdges[0] = null; // it's already there.
+                                    }
+                                    else if (backwardEdges[1] != null &&
+                                        !backwardEdges[1].Equals(existingEdgeToRemoveBackward))
+                                    { // this backward edge is to be kept.
+                                        backwardEdges[1] = null; // it's already there.
+                                    }
+                                    else
+                                    { // yup, just remove it now.
+                                        _target.RemoveEdge(yEdge.Neighbour, xEdge.Neighbour, existingEdgeToRemoveBackward);
+                                    }
                                 }
-                                else if(canMoveBackward && canMoveForward)
-                                { // add two different edges.
-                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
-                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
-                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
-                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
-                                }
-                                else if(canMoveForward)
-                                { // only add one forward edge.
-                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
-                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
-                                }
-                                else if(canMoveBackward)
-                                { // only add one backward edge.
-                                    _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
-                                    _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
-                                }
+
+                                // add remaining edges.
+                                if (forwardEdges[0].HasValue) { _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, forwardEdges[0].Value); }
+                                if (forwardEdges[1].HasValue) { _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, forwardEdges[1].Value); }
+                                if (backwardEdges[0].HasValue) { _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, backwardEdges[0].Value); }
+                                if (backwardEdges[1].HasValue) { _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, backwardEdges[1].Value); }
                             }
                             else
                             { // there is no edge, just add the data.
                                 // add contracted edges like normal.
                                 _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(vertex, canMoveForward, canMoveBackward, weight));
                                 _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(vertex, canMoveBackward, canMoveForward, weight));
-                            }
 
-                            toRequeue.Add(xEdge.Neighbour);
-                            toRequeue.Add(yEdge.Neighbour);
+                                toRequeue.Add(xEdge.Neighbour);
+                                toRequeue.Add(yEdge.Neighbour);
+                            }
                         }
                     }
                 }
-            }
-
-            // update priority of direct neighbours.
-            foreach (var neighbour in toRequeue)
-            {
-                this.ReQueue(neighbour);
             }
 
             // mark the vertex as contracted.
@@ -396,6 +485,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             // report the after contraction event.
             this.OnAfterContraction(vertex, edgesForContractions);
+
+            // update priority of direct neighbours.
+            foreach (var neighbour in toRequeue)
+            {
+                this.ReQueue(neighbour);
+            }
         }
 
         #endregion
@@ -436,9 +531,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private BinairyHeap<uint> _queue;
 
         /// <summary>
+        /// Holds the fraction of the 'misses' queue that is required for recalculation.
+        /// </summary>
+        private float _a = 1f;
+
+        /// <summary>
         /// The amount of queue 'misses' to recalculated.
         /// </summary>
-        private int _k = 30;
+        private int _k = 20;
 
         /// <summary>
         /// Holds a counter of all misses.
@@ -512,14 +612,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 else
                 { // no recalculation.
                     if (priority != current_priority)
-                    { // re-enqueue the weight.
+                    { // re-enqueue.
                         _queue.Pop();
                         _queue.Push(first_queued, priority);
                     }
                     else
-                    {
-                        //if (this.CanBeContracted(first_queued))
-                        //{ // yet, this vertex can be contracted!
+                    { // try to select another.
                         return _queue.Pop();
                     }
                 }

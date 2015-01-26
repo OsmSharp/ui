@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.Graph
                 // move edges.
                 if (edgeCount > 0)
                 {
-                    if (newEdgeId + edgeCount >= _edges.Length)
+                    if (newEdgeId + (2 * edgeCount) >= _edges.Length)
                     { // edges need to be increased.
                         this.IncreaseEdgeSize();
                     }
@@ -293,6 +293,11 @@ namespace OsmSharp.Routing.Graph
             }
             else
             { // calculate edgeId of new edge.
+                if (_nextEdgeId + 1 >= _edges.Length)
+                { // edges need to be increased.
+                    this.IncreaseEdgeSize();
+                }
+
                 edgeId = edgeId + edgeCount;
                 _nextEdgeId++;
             }
@@ -366,6 +371,7 @@ namespace OsmSharp.Routing.Graph
             var edgeCount = _vertices[vertex1Idx + EDGE_COUNT];
             var edgeId = _vertices[vertex1Idx + FIRST_EDGE];
 
+            bool removed = false;
             for (var removeIdx = edgeId; removeIdx < edgeId + edgeCount; removeIdx++)
             {
                 if (_edges[removeIdx] == vertex2 &&
@@ -375,10 +381,15 @@ namespace OsmSharp.Routing.Graph
                     _edges[removeIdx] = _edges[edgeId + edgeCount];
                     _edgeData[removeIdx] = _edgeData[edgeId + edgeCount];
                     _edgeShapes[removeIdx] = _edgeShapes[edgeId + edgeCount];
-                    break;
+                    removed = true;
                 }
             }
             _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
+
+            if(!removed)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>
@@ -531,31 +542,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public void Compress()
         {
-            //// trim edges.
-            //uint maxAllocatedEdgeId = 0;
-            //for (uint edgeId = 0; edgeId < _nextEdgeId; edgeId = edgeId + EDGE_SIZE)
-            //{
-            //    if (_edges[edgeId] != NO_EDGE)
-            //    { // this edge is allocated.
-            //        if (edgeId != maxAllocatedEdgeId)
-            //        { // there is data here.
-            //            this.MoveEdge(edgeId, maxAllocatedEdgeId);
-            //        }
-            //        maxAllocatedEdgeId = maxAllocatedEdgeId + EDGE_SIZE;
-            //    }
-            //}
-            //_nextEdgeId = maxAllocatedEdgeId;
 
-            //// trim vertices.
-            //uint minUnAllocatedVertexId = 0;
-            //for (uint vertexId = 0; vertexId < _nextVertexId; vertexId++)
-            //{
-            //    if (_vertices[vertexId] != NO_EDGE)
-            //    {
-            //        minUnAllocatedVertexId = vertexId;
-            //    }
-            //}
-            //_nextVertexId = minUnAllocatedVertexId + 1;
         }
 
         /// <summary>
@@ -715,20 +702,6 @@ namespace OsmSharp.Routing.Graph
             }
 
             /// <summary>
-            /// Returns the count.
-            /// </summary>
-            /// <returns></returns>
-            public int Count()
-            {
-                int count = 0;
-                while (this.MoveNext())
-                {
-                    count++;
-                }
-                return count;
-            }
-
-            /// <summary>
             /// Resets this enumerator.
             /// </summary>
             public void Reset()
@@ -762,6 +735,17 @@ namespace OsmSharp.Routing.Graph
             public void Dispose()
             {
 
+            }
+
+
+            public bool HasCount
+            {
+                get { return _neighbour == 0; }
+            }
+
+            public int Count
+            {
+                get { return (int)_count; }
             }
         }
 

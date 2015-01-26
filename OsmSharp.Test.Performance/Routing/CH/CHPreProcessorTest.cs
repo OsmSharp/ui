@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "kempen.osm.pbf");
+            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "belgium-latest.osm.pbf");
         }
 
         /// <summary>

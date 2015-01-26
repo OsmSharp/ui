@@ -673,20 +673,6 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             }
 
             /// <summary>
-            /// Returns the count.
-            /// </summary>
-            /// <returns></returns>
-            public int Count()
-            {
-                int count = 0;
-                while (this.MoveNext())
-                {
-                    count++;
-                }
-                return count;
-            }
-
-            /// <summary>
             /// Resets this enumerator.
             /// </summary>
             public void Reset()
@@ -728,6 +714,28 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             object System.Collections.IEnumerator.Current
             {
                 get { return new Edge<LiveEdge>(this); }
+            }
+
+            /// <summary>
+            /// Returns true if the count is known without enumeration.
+            /// </summary>
+            public bool HasCount
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            /// <summary>
+            /// Returns the count if known.
+            /// </summary>
+            public int Count
+            {
+                get
+                {
+                    return _edges.Length;
+                }
             }
 
             /// <summary>

@@ -90,6 +90,10 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 
             var toRequeue = new HashSet<uint>();
 
+            var forwardEdges = new CHEdgeData?[2];
+            var backwardEdges = new CHEdgeData?[2];
+            var existingEdgesToRemove = new HashSet<CHEdgeData>();
+
             // loop over each combination of edges just once.
             var forwardWitnesses = new bool[edgesForContractions.Count];
             var backwardWitnesses = new bool[edgesForContractions.Count];
@@ -121,8 +125,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 }
 
                 // calculate witnesses.
-                _witness_calculator.Exists(_data, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
-                _witness_calculator.Exists(_data, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
+                _witness_calculator.Exists(_data, true, xEdge.Neighbour, tos, weights, 1000, ref forwardWitnesses);
+                _witness_calculator.Exists(_data, false, xEdge.Neighbour, tos, weights, 1000, ref backwardWitnesses);
 
                 for (int y = 0; y < x; y++)
                 { // loop over all elements.
@@ -137,7 +141,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 
                         if (canMoveForward || canMoveBackward)
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            // calculate the total weights.
+                            // add contracted edges like normal. // calculate the total weights.
                             var weight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
 
                             // there are a few options now:
@@ -149,6 +153,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                             //     - One forward edge.
                             //     - One backward edge.
                             //    =>  all available information needs to be combined.
+
                             // check existing data.
                             var existingForwardWeight = float.MaxValue;
                             var existingBackwardWeight = float.MaxValue;
@@ -157,7 +162,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                             var existingCanMoveForward = false;
                             var existingCanMoveBackward = false;
                             var existingEdges = _data.GetEdges(xEdge.Neighbour, yEdge.Neighbour);
-                            var existingEdgesToRemove = new List<CHEdgeData>();
+                            existingEdgesToRemove.Clear();
                             while (existingEdges.MoveNext())
                             {
                                 var existingEdgeData = existingEdges.EdgeData;
@@ -191,7 +196,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                                 float forwardWeight = weight;
                                 // merge with existing data.
                                 if (existingCanMoveForward &&
-                                    (weight > existingForwardWeight) || !canMoveForward)
+                                    ((weight > existingForwardWeight) || !canMoveForward))
                                 { // choose the smallest weight.
                                     canMoveForward = true;
                                     forwardContractedId = existingForwardContracted;
@@ -202,37 +207,91 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                                 float backwardWeight = weight;
                                 // merge with existing data.
                                 if (existingCanMoveBackward &&
-                                    (weight > existingBackwardWeight) || !canMoveBackward)
+                                    ((weight > existingBackwardWeight) || !canMoveBackward))
                                 { // choose the smallest weight.
                                     canMoveBackward = true;
                                     backwardContractedId = existingBackwardContracted;
                                     backwardWeight = existingBackwardWeight;
                                 }
 
-                                // remove all existing stuff.
-                                removed = removed + existingEdgesToRemove.Count * 2;
-
                                 // add one of the 4 above case.
+                                forwardEdges[0] = null;
+                                forwardEdges[1] = null;
+                                backwardEdges[0] = null;
+                                backwardEdges[1] = null;
                                 if (canMoveForward && canMoveBackward && forwardWeight == backwardWeight && forwardContractedId == backwardContractedId)
                                 { // just add one edge.
-                                    newEdges = newEdges + 2;
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, true, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, true, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(backwardContractedId, true, true, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, true, backwardWeight));
                                 }
                                 else if (canMoveBackward && canMoveForward)
                                 { // add two different edges.
-                                    newEdges = newEdges + 4;
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, false, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(forwardContractedId, false, true, forwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
+                                    forwardEdges[1] = new CHEdgeData(backwardContractedId, false, true, backwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    backwardEdges[1] = new CHEdgeData(backwardContractedId, true, false, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
                                 }
                                 else if (canMoveForward)
                                 { // only add one forward edge.
-                                    newEdges = newEdges + 2;
+                                    forwardEdges[0] = new CHEdgeData(forwardContractedId, true, false, forwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(forwardContractedId, true, false, forwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(forwardContractedId, false, true, forwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(forwardContractedId, false, true, forwardWeight));
                                 }
                                 else if (canMoveBackward)
                                 { // only add one backward edge.
-                                    newEdges = newEdges + 2;
+                                    forwardEdges[0] = new CHEdgeData(backwardContractedId, false, true, backwardWeight);
+                                    //_target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, new CHEdgeData(backwardContractedId, false, true, backwardWeight));
+                                    backwardEdges[0] = new CHEdgeData(backwardContractedId, true, false, backwardWeight);
+                                    //_target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, new CHEdgeData(backwardContractedId, true, false, backwardWeight));
                                 }
+
+                                // remove all existing stuff.
+                                foreach (var existingEdgeToRemove in existingEdgesToRemove)
+                                {
+                                    if (forwardEdges[0].Equals(existingEdgeToRemove))
+                                    { // this forward edge is to be kept.
+                                        forwardEdges[0] = null; // it's already there.
+                                    }
+                                    else if (forwardEdges[1] != null &&
+                                        !forwardEdges[1].Equals(existingEdgeToRemove))
+                                    { // this forward edge is to be kept.
+                                        forwardEdges[1] = null; // it's already there.
+                                    }
+                                    else
+                                    { // yup, just remove it now.
+                                        removed++;
+                                    }
+                                    var existingEdgeToRemoveBackward = (CHEdgeData)existingEdgeToRemove.Reverse();
+                                    if (backwardEdges[0].Equals(existingEdgeToRemoveBackward))
+                                    { // this backward edge is to be kept.
+                                        backwardEdges[0] = null; // it's already there.
+                                    }
+                                    else if (backwardEdges[1] != null &&
+                                        !backwardEdges[1].Equals(existingEdgeToRemoveBackward))
+                                    { // this backward edge is to be kept.
+                                        backwardEdges[1] = null; // it's already there.
+                                    }
+                                    else
+                                    { // yup, just remove it now.
+                                        removed++;
+                                    }
+                                }
+
+                                // add remaining edges.
+                                if (forwardEdges[0].HasValue) { newEdges++; }
+                                if (forwardEdges[1].HasValue) { newEdges++; }
+                                if (backwardEdges[0].HasValue) { newEdges++; }
+                                if (backwardEdges[1].HasValue) { newEdges++; }
                             }
                             else
                             { // there is no edge, just add the data.
-                                // add contracted edges like normal.
                                 newEdges = newEdges + 2;
                             }
                         }
@@ -243,7 +302,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // get the depth.
             long vertex_depth = 0;
             _depth.TryGetValue(vertex, out vertex_depth);
-            return (2 * newEdges) + (-3 * removed) + (2 * contracted) + (2 * vertex_depth);
+            return 4 * (newEdges - removed) + (2 * vertex_depth) +(-2 * contracted);
         }
 
         /// <summary>

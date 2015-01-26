@@ -128,7 +128,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             {
                 // pop the first customer.
                 var current = heap.Pop();
-                if (!settled.Contains(current.VertexId))
+                if (current.Hops + 1 < maxHops &&
+                    !settled.Contains(current.VertexId))
                 { // the current vertex has net been settled.
                     settled.Add(current.VertexId); // settled the vertex.
 
@@ -154,8 +155,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                     var neighbours = graph.GetEdges(current.VertexId);
                     while (neighbours.MoveNext())
                     { // move next.
-                        if (!settled.Contains(neighbours.Neighbour))
-                        { // neighbour not yet settled, good!
+                        //if (!settled.Contains(neighbours.Neighbour))
+                        //{ // neighbour not yet settled, good!
                             var edgeData = neighbours.EdgeData;
                             if(searchForward)
                             { // search forward.
@@ -163,7 +164,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                                 {
                                     var neighbour = new SettledVertex(neighbours.Neighbour,
                                         edgeData.Weight + current.Weight, current.Hops + 1);
-                                    if (neighbour.Weight <= maxWeight && neighbour.Hops < maxHops)
+                                    if (neighbour.Weight <= maxWeight)
                                     { // push to heap.
                                         heap.Push(neighbour, neighbour.Weight);
                                     }
@@ -175,13 +176,13 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                                 {
                                     var neighbour = new SettledVertex(neighbours.Neighbour,
                                         edgeData.Weight + current.Weight, current.Hops + 1);
-                                    if (neighbour.Weight <= maxWeight && neighbour.Hops < maxHops)
+                                    if (neighbour.Weight <= maxWeight)
                                     { // push to heap.
                                         heap.Push(neighbour, neighbour.Weight);
                                     }
                                 }
                             }
-                        }
+                       //}
                     }
                 }
             }
@@ -191,6 +192,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// Calculates witnesses from one source to multiple targets at once but using only one hop.
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="searchForward"></param>
         /// <param name="from"></param>
         /// <param name="tos"></param>
         /// <param name="tosWeights"></param>
@@ -212,35 +214,38 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                 }
             }
 
-            var neighbours = graph.GetEdges(from);
-            while (neighbours.MoveNext())
+            if (toSet.Count > 0)
             {
-                if (toSet.Contains(neighbours.Neighbour))
-                { // ok, this is a to-edge.
-                    int index = tos.IndexOf(neighbours.Neighbour);
-                    toSet.Remove(neighbours.Neighbour);
+                var neighbours = graph.GetEdges(from);
+                while (neighbours.MoveNext())
+                {
+                    if (toSet.Contains(neighbours.Neighbour))
+                    { // ok, this is a to-edge.
+                        int index = tos.IndexOf(neighbours.Neighbour);
+                        toSet.Remove(neighbours.Neighbour);
 
-                    var edgeData = neighbours.EdgeData;
-                    if (searchForward)
-                    {
-                        if (edgeData.CanMoveForward &&
-                            edgeData.Weight < tosWeights[index])
+                        var edgeData = neighbours.EdgeData;
+                        if (searchForward)
                         {
-                            exists[index] = true;
+                            if (edgeData.CanMoveForward &&
+                                edgeData.Weight < tosWeights[index])
+                            {
+                                exists[index] = true;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (edgeData.CanMoveBackward &&
-                            edgeData.Weight < tosWeights[index])
+                        else
                         {
-                            exists[index] = true;
+                            if (edgeData.CanMoveBackward &&
+                                edgeData.Weight < tosWeights[index])
+                            {
+                                exists[index] = true;
+                            }
                         }
-                    }
 
-                    if (toSet.Count == 0)
-                    {
-                        break;
+                        if (toSet.Count == 0)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -278,6 +283,21 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// The hop-count of this vertex.
             /// </summary>
             public uint Hops { get; set; }
+        }
+
+        /// <summary>
+        /// Gets or sets the hop limit.
+        /// </summary>
+        public int HopLimit
+        {
+            get
+            {
+                return _hopLimit;
+            }
+            set
+            {
+                _hopLimit = value;
+            }
         }
     }
 }
