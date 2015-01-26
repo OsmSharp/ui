@@ -212,6 +212,16 @@ namespace OsmSharp.Collections.Coordinates.Collections
         #region Helper Methods
 
         /// <summary>
+        /// Increases the size of the coordinates array.
+        /// To be used when the ESTIMATED_SIZE has underestimated to average coordinate collection size.
+        /// </summary>
+        private void IncreaseCoordinates()
+        {
+            _coordinates.Resize(_coordinates.Length + (1 << 20));
+        }
+
+
+        /// <summary>
         /// Tries to get the index and the size (if any).
         /// </summary>
         /// <param name="id"></param>
@@ -273,6 +283,10 @@ namespace OsmSharp.Collections.Coordinates.Collections
             coordinates.Reset();
             while(coordinates.MoveNext())
             {
+                if (_coordinates.Length <= (_nextIdx * 2) + 1)
+                { // make sure they fit!
+                    this.IncreaseCoordinates();
+                }
                 _coordinates[(_nextIdx * 2)] = coordinates.Latitude;
                 _coordinates[(_nextIdx * 2) + 1] = coordinates.Longitude;
                 _nextIdx = _nextIdx + 1;
