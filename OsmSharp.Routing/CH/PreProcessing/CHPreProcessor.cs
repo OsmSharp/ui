@@ -121,16 +121,31 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         int totaEdges = 0;
                         int totalUncontracted = 0;
                         int maxCardinality = 0;
+                        var neighbourCount = new Dictionary<uint, int>();
                         for (uint v = 0; v < _target.VertexCount; v++)
                         {
                             if (!this.IsContracted(v))
                             {
+                                neighbourCount.Clear();
                                 var edges = _target.GetEdges(v);
                                 if (edges != null)
                                 {
                                     int edgesCount = 0;
                                     foreach (var edge in edges)
                                     {
+                                        int nCount;
+                                        if(!neighbourCount.TryGetValue(edge.Neighbour, out nCount))
+                                        {
+                                            neighbourCount.Add(edge.Neighbour, 1);
+                                        }
+                                        else
+                                        {
+                                            neighbourCount[edge.Neighbour] = nCount++;
+                                        }
+                                        if(nCount > 2)
+                                        {
+                                            throw new Exception();
+                                        }
                                         edgesCount++;
                                     }
                                     totaEdges = edgesCount + totaEdges;
