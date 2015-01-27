@@ -79,13 +79,15 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Holds a witness calculator just for contraction.
         /// </summary>
         private INodeWitnessCalculator _contractionWitnessCalculator = 
-            new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(20);
+            new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(int.MaxValue);
 
         /// <summary>
         /// Starts pre-processing all nodes
         /// </summary>
         public void Start()
         {
+            //_witnessCalculator.HopLimit = 5;
+
             _missesQueue = new Queue<bool>();
             _misses = 0;
 
@@ -130,24 +132,25 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 var edges = _target.GetEdges(v);
                                 if (edges != null)
                                 {
-                                    int edgesCount = 0;
-                                    foreach (var edge in edges)
-                                    {
-                                        int nCount;
-                                        if(!neighbourCount.TryGetValue(edge.Neighbour, out nCount))
-                                        {
-                                            neighbourCount.Add(edge.Neighbour, 1);
-                                        }
-                                        else
-                                        {
-                                            neighbourCount[edge.Neighbour] = nCount++;
-                                        }
-                                        if(nCount > 2)
-                                        {
-                                            throw new Exception();
-                                        }
-                                        edgesCount++;
-                                    }
+                                    int edgesCount = edges.Count;
+                                    //int edgesCount = 0;
+                                    //foreach (var edge in edges)
+                                    //{
+                                    //    int nCount;
+                                    //    if (!neighbourCount.TryGetValue(edge.Neighbour, out nCount))
+                                    //    {
+                                    //        neighbourCount.Add(edge.Neighbour, 1);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        neighbourCount[edge.Neighbour] = nCount++;
+                                    //    }
+                                    //    if (nCount > 2)
+                                    //    {
+                                    //        throw new Exception();
+                                    //    }
+                                    //    edgesCount++;
+                                    //}
                                     totaEdges = edgesCount + totaEdges;
                                     if (maxCardinality < edgesCount)
                                     {
@@ -162,7 +165,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                             "Average card uncontracted vertices: {0} with max {1}", density, maxCardinality);
 
-                        //if (density > 30 &&
+                        //if (density > 10000 &&
                         //    _witnessCalculator.HopLimit < 5)
                         //{
                         //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
@@ -170,7 +173,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         //    _witnessCalculator.HopLimit = 5;
                         //    this.RecalculateQueue();
                         //}
-                        //else if (density > 20 &&
+                        //else if (density > 10000 &&
                         //    _witnessCalculator.HopLimit < 4)
                         //{
                         //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
@@ -256,11 +259,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // build the list of edges to replace.
             var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);
             var tos = new List<uint>(edges.Count);
+            var tosSet = new HashSet<uint>();
             foreach (var edge in edges)
             {
                 // use this edge for contraction.
                 edgesForContractions.Add(edge);
                 tos.Add(edge.Neighbour);
+                tosSet.Add(edge.Neighbour);
 
                 // remove the edge in downwards direction and on the edge with the same data.
                 _target.RemoveEdge(edge.Neighbour, vertex);
@@ -276,9 +281,45 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var forwardWitnesses = new bool[edgesForContractions.Count];
             var backwardWitnesses = new bool[edgesForContractions.Count];
             var weights = new List<float>(edgesForContractions.Count);
+            var edgesToY = new Dictionary<uint, Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>>(edgesForContractions.Count);
             for (int x = 1; x < edgesForContractions.Count; x++)
             { // loop over all elements first.
                 var xEdge = edgesForContractions[x];
+
+                // get edges.
+                edgesToY.Clear();
+                var rawEdgesToY = _target.GetEdges(xEdge.Neighbour);
+                while (rawEdgesToY.MoveNext())
+                {
+                    var rawEdgeNeighbour = rawEdgesToY.Neighbour;
+                    if (tosSet.Contains(rawEdgeNeighbour))
+                    {
+                        var rawEdgeData = rawEdgesToY.EdgeData;
+                        var rawEdgeForwardWeight = rawEdgeData.CanMoveForward ? rawEdgeData.Weight : float.MaxValue;
+                        var rawEdgeBackwardWeight = rawEdgeData.CanMoveBackward ? rawEdgeData.Weight : float.MaxValue;
+                        Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float> edgeTuple;
+                        if (!edgesToY.TryGetValue(rawEdgeNeighbour, out edgeTuple))
+                        {
+                            edgeTuple = new Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>(rawEdgeData, null, null,
+                                rawEdgeForwardWeight, rawEdgeBackwardWeight);
+                            edgesToY.Add(rawEdgeNeighbour, edgeTuple);
+                        }
+                        else if (!edgeTuple.Item2.HasValue)
+                        {
+                            edgesToY[rawEdgeNeighbour] = new Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>(
+                                edgeTuple.Item1, rawEdgeData, null,
+                                rawEdgeForwardWeight < edgeTuple.Item4 ? rawEdgeForwardWeight : edgeTuple.Item4,
+                                rawEdgeBackwardWeight < edgeTuple.Item5 ? rawEdgeBackwardWeight : edgeTuple.Item5);
+                        }
+                        else
+                        {
+                            edgesToY[rawEdgeNeighbour] = new Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>(
+                                edgeTuple.Item1, edgeTuple.Item2, rawEdgeData,
+                                rawEdgeForwardWeight < edgeTuple.Item4 ? rawEdgeForwardWeight : edgeTuple.Item4,
+                                rawEdgeBackwardWeight < edgeTuple.Item5 ? rawEdgeBackwardWeight : edgeTuple.Item5);
+                        }
+                    }
+                }
 
                 // calculate max weight.
                 weights.Clear();
@@ -294,9 +335,28 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         var forwardWeight = (float)xEdge.EdgeData.Weight + (float)yEdge.EdgeData.Weight;
                         forwardWitnesses[y] = !xEdge.EdgeData.CanMoveBackward || !yEdge.EdgeData.CanMoveForward;
                         backwardWitnesses[y] = !xEdge.EdgeData.CanMoveForward || !yEdge.EdgeData.CanMoveBackward;
+                        weights.Add(forwardWeight);
+
+                        Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float> edgeTuple;
+                        if (edgesToY.TryGetValue(yEdge.Neighbour, out edgeTuple))
+                        {
+                            if (!forwardWitnesses[y])
+                            { // check 1-hop witnesses.
+                                if (edgeTuple.Item4 <= forwardWeight)
+                                {
+                                    forwardWitnesses[y] = true;
+                                }
+                            }
+                            if (!backwardWitnesses[y])
+                            { // check 1-hop witnesses.
+                                if (edgeTuple.Item5 <= forwardWeight)
+                                {
+                                    backwardWitnesses[y] = true;
+                                }
+                            }
+                        }
                         forwardUnknown = !forwardWitnesses[y] || forwardUnknown;
                         backwardUnknown = !backwardWitnesses[y] || backwardUnknown;
-                        weights.Add(forwardWeight);
                     }
                     else
                     { // already set this to true, not use calculating it's witness.
@@ -307,13 +367,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 }
 
                 // calculate witnesses.
-                if (forwardUnknown)
+                if (forwardUnknown || backwardUnknown)
                 {
-                    _contractionWitnessCalculator.Exists(_target, true, xEdge.Neighbour, tos, weights, int.MaxValue, ref forwardWitnesses);
-                }
-                if (backwardUnknown)
-                {
-                    _contractionWitnessCalculator.Exists(_target, false, xEdge.Neighbour, tos, weights, int.MaxValue, ref backwardWitnesses);
+                    _contractionWitnessCalculator.Exists(_target, xEdge.Neighbour, tos, weights, int.MaxValue, 
+                        ref forwardWitnesses, ref backwardWitnesses);
                 }
 
                 for (int y = 0; y < x; y++)
@@ -477,6 +534,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
                                 if (forwardEdges[1].HasValue) { _target.AddEdge(xEdge.Neighbour, yEdge.Neighbour, forwardEdges[1].Value); }
                                 if (backwardEdges[0].HasValue) { _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, backwardEdges[0].Value); }
                                 if (backwardEdges[1].HasValue) { _target.AddEdge(yEdge.Neighbour, xEdge.Neighbour, backwardEdges[1].Value); }
+
+                                toRequeue.Add(xEdge.Neighbour);
+                                toRequeue.Add(yEdge.Neighbour);
                             }
                             else
                             { // there is no edge, just add the data.
@@ -501,11 +561,11 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // report the after contraction event.
             this.OnAfterContraction(vertex, edgesForContractions);
 
-            // update priority of direct neighbours.
-            foreach (var neighbour in toRequeue)
-            {
-                this.ReQueue(neighbour);
-            }
+            //// update priority of direct neighbours.
+            //foreach (var neighbour in toRequeue)
+            //{
+            //    this.ReQueue(neighbour);
+            //}
         }
 
         #endregion

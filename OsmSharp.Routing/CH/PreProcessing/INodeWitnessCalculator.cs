@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,12 +15,9 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph.Router;
+
 using OsmSharp.Routing.Graph;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -44,13 +41,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Calculates all witnesses from one source to multiple targets.
         /// </summary>
         /// <param name="graph"></param>
-        /// <param name="searchForward"></param>
         /// <param name="from"></param>
         /// <param name="tos"></param>
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
-        /// <param name="exists"></param>
-        void Exists(IGraph<CHEdgeData> graph, bool searchForward, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists);
+        /// <param name="forwardExists"></param>
+        /// <param name="backwardExists"></param>
+        void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+            ref bool[] forwardExists, ref bool[] backwardExists);
 
         /// <summary>
         /// Gets or sets the hop limit.
