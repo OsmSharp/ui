@@ -51,10 +51,11 @@ namespace OsmSharp.Collections.Tags.Index
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
-        public TagsTableCollectionIndex(bool reverseIndex)
+        /// <param name="checkDuplicates">Flag to prevent this index from checking for duplicates, used when sure all tag collections are unique.</param>
+        public TagsTableCollectionIndex(bool checkDuplicates)
         {
-            _tagsTable = new ObjectTable<Tag>(true);
-            _tagsCollectionTable = new ObjectTable<OsmTags>(reverseIndex);
+            _tagsTable = new ObjectTable<Tag>(false, ObjectTable<Tag>.INITIAL_CAPACITY, !checkDuplicates);
+            _tagsCollectionTable = new ObjectTable<OsmTags>(false, ObjectTable<Tag>.INITIAL_CAPACITY, !checkDuplicates);
 
             this.Add(new TagsCollection());
         }
