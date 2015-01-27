@@ -186,6 +186,10 @@ namespace OsmSharp.Collections
         public uint Add(Type value)
         {
             uint valueInt;
+            if(_allowDuplicates)
+            { // just add the object, don't check anything.
+                return this.AddObject(value);
+            }
             if (_reverseIndex != null)
             { // add string based on the reverse index, is faster.
                 if (!_reverseIndex.TryGetValue(value, out valueInt))
