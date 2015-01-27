@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         public static void Test(Stream stream)
         {
             CHSerializedRoutingTest.Test(
-                stream, 1000);
+                stream, 10000);
         }
 
         /// <summary>
