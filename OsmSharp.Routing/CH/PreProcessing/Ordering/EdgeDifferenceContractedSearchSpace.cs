@@ -302,7 +302,7 @@
 //            // get the depth.
 //            long vertex_depth = 0;
 //            _depth.TryGetValue(vertex, out vertex_depth);
-//            return 4 * (newEdges - removed) + (2 * vertex_depth) +(-2 * contracted);
+//            return 4 * (newEdges - removed) + (2 * vertex_depth) + (-2 * contracted);
 //        }
 
 //        /// <summary>

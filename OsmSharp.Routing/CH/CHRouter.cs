@@ -1186,8 +1186,7 @@ namespace OsmSharp.Routing.CH
                     { // the edge is forward, and is to higher or was not contracted at all.
                         var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Forward.ContainsKey(neighbourNeighbour))
-                        {
-                            // if not yet settled.
+                        { // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
                                 neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);
@@ -1240,13 +1239,12 @@ namespace OsmSharp.Routing.CH
                 while (neighbours.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourNeighbour = neighbours.Neighbour;
                     var neighbourEdgeData = neighbours.EdgeData;
                     if (neighbourEdgeData.CanMoveBackward)
                     { // the edge is backward, and is to higher or was not contracted at all.
+                        var neighbourNeighbour = neighbours.Neighbour;
                         if (!settledQueue.Backward.ContainsKey(neighbourNeighbour))
-                        {
-                            // if not yet settled.
+                        { // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
                                 neighbourNeighbour, current.Weight + neighbourEdgeData.Weight, current);
                             queue.Push(routeToNeighbour, (float)routeToNeighbour.Weight);

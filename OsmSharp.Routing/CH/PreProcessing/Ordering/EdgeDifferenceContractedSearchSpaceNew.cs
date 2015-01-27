@@ -43,35 +43,48 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the contracted count.
         /// </summary>
-        private Dictionary<uint, short> _contractionCount;
+        private Dictionary<uint, int> _contractionCount;
 
         /// <summary>
         /// Holds the depth.
         /// </summary>
-        private Dictionary<long, long> _depth;
+        private Dictionary<long, int> _depth;
 
         /// <summary>
         /// Creates a new edge difference calculator.
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="witness_calculator"></param>
-        public EdgeDifferenceContractedSearchSpace(IGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
+        /// <param name="witnessCalculator"></param>
+        public EdgeDifferenceContractedSearchSpace(IGraph<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
         {
             _data = data;
-            _witnessCalculator = witness_calculator;
-            _contractionCount = new Dictionary<uint, short>();
-            _depth = new Dictionary<long, long>();
+            _witnessCalculator = witnessCalculator;
+            _contractionCount = new Dictionary<uint, int>();
+            _depth = new Dictionary<long, int>();
         }
 
         /// <summary>
-        /// Calculates the edge-difference if u would be contracted.
+        /// Calculates the priority of the given vertex.
         /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns></returns>
+        /// <param name="vertex">The vertex to calculate the priority for.</param>
         public float Calculate(uint vertex)
         {
-            int newEdges = 0, removed = 0;
-            short contracted = 0;
+            int newEdges, removedEdges, depth, contracted;
+            return this.Calculate(vertex, out newEdges, out removedEdges, out depth, out contracted);
+        }
+
+        /// <summary>
+        /// Calculates the priority of the given vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to calculate the priority for.</param>
+        /// <param name="newEdges">The number of new edges that would be added.</param>
+        /// <param name="removedEdges">The number of edges that would be removed.</param>
+        /// <param name="depth">The depth of the vertex.</param>
+        /// <param name="contracted">The number of contracted neighours.</param>
+        public float Calculate(uint vertex, out int newEdges, out int removedEdges, out int depth, out int contracted)
+        {
+            newEdges = 0; 
+            removedEdges = 0;
             _contractionCount.TryGetValue(vertex, out contracted);
 
             // get all information from the source.
@@ -87,7 +100,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 edgesForContractions.Add(edge);
                 tos.Add(edge.Neighbour);
                 tosSet.Add(edge.Neighbour);
-                removed++;
+                removedEdges++;
             }
 
             var toRequeue = new HashSet<uint>();
@@ -190,8 +203,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 { // 1-hops already checked.
                     if (forwardUnknown || backwardUnknown)
                     {
-                        _witnessCalculator.Exists(_data, xEdge.Neighbour, tos, weights, int.MaxValue, 
-                            ref forwardWitnesses, ref backwardWitnesses);
+                        _witnessCalculator.Exists(_data, xEdge.Neighbour, tos, weights, int.MaxValue,
+                            ref forwardWitnesses, ref backwardWitnesses, vertex);
                     }
                 }
 
@@ -362,7 +375,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                                     }
                                     else
                                     { // yup, just remove it now.
-                                        removed++;
+                                        removedEdges++;
                                     }
                                     var existingEdgeToRemoveBackward = (CHEdgeData)existingEdgeToRemove.Reverse();
                                     if (backwardEdges[0].Equals(existingEdgeToRemoveBackward))
@@ -376,7 +389,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                                     }
                                     else
                                     { // yup, just remove it now.
-                                        removed++;
+                                        removedEdges++;
                                     }
                                 }
 
@@ -396,9 +409,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             }
 
             // get the depth.
-            long vertex_depth = 0;
-            _depth.TryGetValue(vertex, out vertex_depth);
-            return 4 * (newEdges - removed) + (2 * vertex_depth) + (2 * contracted);
+            _depth.TryGetValue(vertex, out depth);
+            return 1 * (newEdges - removedEdges) + (2 * depth) + (1 * contracted);
         }
 
         /// <summary>
@@ -414,7 +426,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             var neighbours = _data.GetEdges(vertex);
             foreach (var neighbour in neighbours)
             {
-                short count;
+                int count;
                 if (!_contractionCount.TryGetValue(neighbour.Neighbour, out count))
                 {
                     _contractionCount[neighbour.Neighbour] = 1;
@@ -425,7 +437,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                 }
             }
 
-            long vertex_depth = 0;
+            int vertex_depth = 0;
             _depth.TryGetValue(vertex, out vertex_depth);
             _depth.Remove(vertex);
             vertex_depth++;
@@ -433,7 +445,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // store the depth.
             foreach (var neighbour in neighbours)
             {
-                long depth = 0;
+                int depth = 0;
                 _depth.TryGetValue(neighbour.Neighbour, out depth);
                 if (vertex_depth < depth)
                 {

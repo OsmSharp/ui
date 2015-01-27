@@ -126,8 +126,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 var from = box.GenerateRandomIn();
                 var to = box.GenerateRandomIn();
 
-                var fromPoint = router.Resolve(Vehicle.Car, from);
-                var toPoint = router.Resolve(Vehicle.Car, to);
+                var fromPoint = router.Resolve(Vehicle.Car, 0.01f, from);
+                var toPoint = router.Resolve(Vehicle.Car, 0.01f, to);
 
                 resolvedPoints.Add(fromPoint);
                 resolvedPoints.Add(toPoint);

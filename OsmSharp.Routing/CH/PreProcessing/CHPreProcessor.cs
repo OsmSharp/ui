@@ -165,7 +165,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
                             "Average card uncontracted vertices: {0} with max {1}", density, maxCardinality);
 
-                        //if (density > 10000 &&
+                        //if (density > 20 &&
                         //    _witnessCalculator.HopLimit < 5)
                         //{
                         //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
@@ -173,7 +173,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         //    _witnessCalculator.HopLimit = 5;
                         //    this.RecalculateQueue();
                         //}
-                        //else if (density > 10000 &&
+                        //else if (density > 10 &&
                         //    _witnessCalculator.HopLimit < 4)
                         //{
                         //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
@@ -181,7 +181,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         //    _witnessCalculator.HopLimit = 4;
                         //    this.RecalculateQueue();
                         //}
-                        //else if (density > 10 &&
+                        //else if (density > 5 &&
                         //    _witnessCalculator.HopLimit < 3)
                         //{
                         //    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Increased hoplimit.");
@@ -257,19 +257,73 @@ namespace OsmSharp.Routing.CH.PreProcessing
             this.OnBeforeContraction(vertex, edges);
 
             // build the list of edges to replace.
-            var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);
+            var allNeigbours = new List<Edge<CHEdgeData>>(edges.Count);
             var tos = new List<uint>(edges.Count);
             var tosSet = new HashSet<uint>();
             foreach (var edge in edges)
             {
                 // use this edge for contraction.
-                edgesForContractions.Add(edge);
+                allNeigbours.Add(edge);
                 tos.Add(edge.Neighbour);
                 tosSet.Add(edge.Neighbour);
 
                 // remove the edge in downwards direction and on the edge with the same data.
                 _target.RemoveEdge(edge.Neighbour, vertex);
             }
+
+            //// build the list of pairs and make sure duplicates don't count.
+            //var allNeighbourPairs = new Dictionary<Tuple<uint, uint>, Tuple<float, float>>();
+            //for(int x = 1; x < allNeigbours.Count; x++)
+            //{
+            //    var xEdge = allNeigbours[x];
+            //    var xEdgeForwardWeight = xEdge.EdgeData.CanMoveBackward ? xEdge.EdgeData.Weight : float.MaxValue;
+            //    var xEdgeBackwardWeight = xEdge.EdgeData.CanMoveForward ? xEdge.EdgeData.Weight : float.MaxValue;
+            //    for(int y = 0; y < x; y++)
+            //    {
+            //        var yEdge = allNeigbours[x];
+            //        //var yEdgeForwardWeight = yEdge.EdgeData.CanMoveBackward ? yEdge.EdgeData.Weight : float.MaxValue;
+            //        //var yEdgeBackwardWeight = yEdge.EdgeData.CanMoveForward ? yEdge.EdgeData.Weight : float.MaxValue;
+            //        float forwardWeight = float.MaxValue;
+            //        float backwardWeight = float.MaxValue;
+            //        if(xEdge.Neighbour < yEdge.Neighbour)
+            //        {
+            //            if (xEdge.EdgeData.CanMoveBackward && yEdge.EdgeData.CanMoveForward)
+            //            {
+            //                forwardWeight = xEdgeBackwardWeight + yEdge.EdgeData.Weight;
+            //            }
+            //            if (xEdge.EdgeData.CanMoveForward && yEdge.EdgeData.CanMoveBackward)
+            //            {
+            //                backwardWeight = xEdgeForwardWeight + yEdge.EdgeData.Weight;
+            //            }
+            //        }
+            //        else if(xEdge.Neighbour > yEdge.Neighbour)
+            //        {
+            //            if (xEdge.EdgeData.CanMoveBackward && yEdge.EdgeData.CanMoveForward)
+            //            {
+            //                backwardWeight = xEdgeBackwardWeight + yEdge.EdgeData.Weight;
+            //            }
+            //            if (xEdge.EdgeData.CanMoveForward && yEdge.EdgeData.CanMoveBackward)
+            //            {
+            //                forwardWeight = xEdgeForwardWeight + yEdge.EdgeData.Weight;
+            //            }
+            //        }
+
+            //        Tuple<float, float> existingWeights;
+            //        Tuple<uint, uint> neighbourPair = new Tuple<uint,uint>(xEdge.Neighbour, yEdge.Neighbour);
+            //        if(!allNeighbourPairs.TryGetValue(neighbourPair, out existingWeights))
+            //        {
+            //            if (existingWeights.Item1 < forwardWeight)
+            //            {
+            //                forwardWeight = existingWeights.Item1;
+            //            }
+            //            if (existingWeights.Item2 < backwardWeight)
+            //            {
+            //                backwardWeight = existingWeights.Item2;
+            //            }
+            //        }
+            //        allNeighbourPairs[neighbourPair] = new Tuple<float, float>(forwardWeight, backwardWeight);
+            //    }
+            //}
 
             var toRequeue = new HashSet<uint>();
 
@@ -278,13 +332,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var existingEdgesToRemove = new HashSet<CHEdgeData>();
 
             // loop over each combination of edges just once.
-            var forwardWitnesses = new bool[edgesForContractions.Count];
-            var backwardWitnesses = new bool[edgesForContractions.Count];
-            var weights = new List<float>(edgesForContractions.Count);
-            var edgesToY = new Dictionary<uint, Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>>(edgesForContractions.Count);
-            for (int x = 1; x < edgesForContractions.Count; x++)
+            var forwardWitnesses = new bool[allNeigbours.Count];
+            var backwardWitnesses = new bool[allNeigbours.Count];
+            var weights = new List<float>(allNeigbours.Count);
+            var edgesToY = new Dictionary<uint, Tuple<CHEdgeData?, CHEdgeData?, CHEdgeData?, float, float>>(allNeigbours.Count);
+            for (int x = 1; x < allNeigbours.Count; x++)
             { // loop over all elements first.
-                var xEdge = edgesForContractions[x];
+                var xEdge = allNeigbours[x];
 
                 // get edges.
                 edgesToY.Clear();
@@ -328,7 +382,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 for (int y = 0; y < x; y++)
                 {
                     // update maxWeight.
-                    var yEdge = edgesForContractions[y];
+                    var yEdge = allNeigbours[y];
                     if (xEdge.Neighbour != yEdge.Neighbour)
                     {
                         // reset witnesses.
@@ -375,7 +429,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 for (int y = 0; y < x; y++)
                 { // loop over all elements.
-                    var yEdge = edgesForContractions[y];
+                    var yEdge = allNeigbours[y];
 
                     // add the combinations of these edges.
                     if (xEdge.Neighbour != yEdge.Neighbour)
@@ -559,7 +613,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _calculator.NotifyContracted(vertex);
 
             // report the after contraction event.
-            this.OnAfterContraction(vertex, edgesForContractions);
+            this.OnAfterContraction(vertex, allNeigbours);
 
             //// update priority of direct neighbours.
             //foreach (var neighbour in toRequeue)

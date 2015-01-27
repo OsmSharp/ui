@@ -29,6 +29,31 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Return true if a witness exists for the given graph vertex 
         /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="maxWeight"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="toIgnore">The vertex to ingore while calculating, to simulate a pre-contracted situation.</param>
+        /// <returns></returns>
+        bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles, uint toIgnore);
+
+        /// <summary>
+        /// Calculates all witnesses from one source to multiple targets.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="tos"></param>
+        /// <param name="tosWeights"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="forwardExists"></param>
+        /// <param name="backwardExists"></param>
+        void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+            ref bool[] forwardExists, ref bool[] backwardExists, uint toIgnore);
+
+        /// <summary>
+        /// Return true if a witness exists for the given graph vertex 
+        /// </summary>
         /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>

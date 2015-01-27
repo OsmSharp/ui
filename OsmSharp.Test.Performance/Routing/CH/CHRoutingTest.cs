@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            CHRoutingTest.TestRouting("CHRouting", "belgium-latest.osm.pbf", 2500);
+            CHRoutingTest.TestRouting("CHRouting", "kempen-big.osm.pbf", 2500);
         }
 
         /// <summary>
