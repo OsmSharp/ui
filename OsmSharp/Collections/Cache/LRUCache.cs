@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.PriorityQueues;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -64,13 +65,19 @@ namespace OsmSharp.Collections.Cache
             _lastId = _id;
             _data = new Dictionary<TKey, CacheEntry>();
 
-            this.Capacity = capacity;
+            this.MaxCapacity = ((capacity / 100) * 10) + capacity;
+            this.MinCapacity = capacity;
         }
 
         /// <summary>
-        /// Capacity.
+        /// Gets the maximum number of items to keep until the cache is full.
         /// </summary>
-        public int Capacity { get; set; }
+        public int MaxCapacity { get; private set; }
+
+        /// <summary>
+        /// Gets the number of items keep when cache overflows.
+        /// </summary>
+        public int MinCapacity { get; private set; }
 
         /// <summary>
         /// Adds a new value for the given key.
@@ -157,8 +164,8 @@ namespace OsmSharp.Collections.Cache
             {
                 _data.Clear();
             }
-            _lastId = _id;
             _id = long.MinValue;
+            _lastId = _id;
         }
 
         /// <summary>
@@ -180,27 +187,39 @@ namespace OsmSharp.Collections.Cache
         {
             lock (_data)
             {
-                while (_data.Count > this.Capacity)
-                { // oops: too much data.
-                    // remove the 'oldest' item.
-                    // TODO: remove multiple items at once!
-                    var minKey = default(TKey);
-                    var minId = long.MaxValue;
-                    foreach (var pair in _data)
+                if (_data.Count > this.MaxCapacity)
+                {
+                    var n = this.MaxCapacity - this.MinCapacity + 1;
+                    var pairEnumerator = _data.GetEnumerator();
+                    var queue = new BinaryHeapLong<KeyValuePair<TKey, CacheEntry>>((uint)n + 1);
+                    while (queue.Count < n &&
+                        pairEnumerator.MoveNext())
                     {
-                        if (pair.Value.Id < minId)
+                        var current = pairEnumerator.Current;
+                        queue.Push(current, -current.Value.Id);
+                    }
+                    long min = queue.PeekWeight();
+                    while (pairEnumerator.MoveNext())
+                    {
+                        var current = pairEnumerator.Current;
+                        if (min < -current.Value.Id)
                         {
-                            minId = pair.Value.Id;
-                            minKey = pair.Key;
+                            queue.Push(current, -current.Value.Id);
+                            queue.Pop();
+                            min = queue.PeekWeight();
                         }
                     }
-                    if(this.OnRemove != null)
-                    { // call the OnRemove delegate.
-                        this.OnRemove(_data[minKey].Value);
+                    while(queue.Count > 0)
+                    {
+                        var toRemove = queue.Pop();
+                        if (this.OnRemove != null)
+                        { // call the OnRemove delegate.
+                            this.OnRemove(toRemove.Value.Value);
+                        }
+                        _data.Remove(toRemove.Key);
+                        // update the 'last_id'
+                        _lastId++;
                     }
-                    _data.Remove(minKey);
-                    // update the 'last_id'
-                    _lastId++;
                 }
             }
         }

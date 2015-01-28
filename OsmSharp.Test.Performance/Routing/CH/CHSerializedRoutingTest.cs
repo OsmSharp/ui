@@ -26,6 +26,9 @@ using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -100,11 +103,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var graphDeserialized = routingSerializer.Deserialize(
                 stream, out metaData, true);
 
-            var router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(),
-                new OsmRoutingInterpreter());
-
-            CHSerializedRoutingTest.TestRouting(router, box, testCount);
+            CHSerializedRoutingTest.TestRouting(graphDeserialized, new CHRouter(), box, testCount);
         }
 
         /// <summary>
@@ -113,43 +112,36 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <param name="router"></param>
         /// <param name="box"></param>
         /// <param name="testCount"></param>
-        public static void TestRouting(Router router, GeoCoordinateBox box, int testCount)
+        public static void TestRouting(IGraphReadOnly<CHEdgeData> data, CHRouter router, GeoCoordinateBox box, int testCount)
         {
-            var performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
+            var performanceInfo = new PerformanceInfoConsumer("CHRouting");
             performanceInfo.Start();
-            performanceInfo.Report("Routing {0} routes: Resolving...", testCount);
-            int successCount = 0;
-            int totalCount = testCount;
-            var resolvedPoints = new List<RouterPoint>();
+            performanceInfo.Report("Routing {0} routes...", testCount);
+
+            var successCount = 0;
+            var totalCount = testCount;
+            var latestProgress = -1.0f;
+            var vertexCount = data.VertexCount;
             while (testCount > 0)
             {
-                var from = box.GenerateRandomIn();
-                var to = box.GenerateRandomIn();
+                var from = (uint)OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(vertexCount - 1) + 1;
+                var to = (uint)OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(vertexCount - 1) + 1;
 
-                var fromPoint = router.Resolve(Vehicle.Car, 0.01f, from);
-                var toPoint = router.Resolve(Vehicle.Car, 0.01f, to);
+                var route = router.Calculate(data, from, to);
 
-                resolvedPoints.Add(fromPoint);
-                resolvedPoints.Add(toPoint);
-
-                testCount--;
-            }
-            performanceInfo.Stop();
-
-            performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
-            performanceInfo.Start();
-            performanceInfo.Report("Routing {0} routes: Routing...", testCount);
-            for (int idx = 0; idx < resolvedPoints.Count; idx = idx + 2)
-            {
-                var fromPoint = resolvedPoints[idx];
-                var toPoint = resolvedPoints[idx + 1];
-                if (fromPoint != null && toPoint != null)
+                if (route != null)
                 {
-                    var route = router.Calculate(Vehicle.Car, fromPoint, toPoint, float.MaxValue, true);
-                    if (route != null)
-                    {
-                        successCount++;
-                    }
+                    successCount++;
+                }
+                testCount--;
+
+                // report progress.
+                var progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
+                if (progress != latestProgress)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("CHRouting", TraceEventType.Information,
+                        "Routing... {0}%", progress);
+                    latestProgress = progress;
                 }
             }
             performanceInfo.Stop();

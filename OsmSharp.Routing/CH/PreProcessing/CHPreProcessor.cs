@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _calculator = calculator;
             _witnessCalculator = witnessCalculator;
 
-            _queue = new BinairyHeap<uint>(target.VertexCount + (uint)System.Math.Max(target.VertexCount * 0.1, 5));
+            _queue = new BinaryHeap<uint>(target.VertexCount + (uint)System.Math.Max(target.VertexCount * 0.1, 5));
             _lowestPriorities = new float[target.VertexCount + (uint)System.Math.Max(target.VertexCount * 0.1, 5)];
             for (int idx = 0; idx < _lowestPriorities.Length; idx++)
             { // uncontracted = priority != float.MinValue.
@@ -657,7 +657,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds a queue of contraction priorities.
         /// </summary>
-        private BinairyHeap<uint> _queue;
+        private BinaryHeap<uint> _queue;
 
         /// <summary>
         /// Holds the fraction of the 'misses' queue that is required for recalculation.

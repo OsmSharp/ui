@@ -332,7 +332,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
 
             // intialize dykstra data structures.
-            var heap = new BinairyHeap<PathSegment<long>>(100);
+            var heap = new BinaryHeap<PathSegment<long>>(100);
             var visitList = new DykstraVisitList();
             var labels = new Dictionary<long, IList<RoutingLabel>>();
             foreach (long vertex in source.GetVertices())

@@ -65,7 +65,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IGraph<CHEdgeData> graph, uint from, uint to)
+        public PathSegment<long> Calculate(IGraphReadOnly<CHEdgeData> graph, uint from, uint to)
         {
             var source = new PathSegmentVisitList();
             source.UpdateVertex(new PathSegment<long>(from));
@@ -390,7 +390,7 @@ namespace OsmSharp.Routing.CH
         {
             long? to = null;
             var settledVertices = new Dictionary<long, PathSegment<long>>();
-            IPriorityQueue<PathSegment<long>> queue = new BinairyHeap<PathSegment<long>>();
+            IPriorityQueue<PathSegment<long>> queue = new BinaryHeap<PathSegment<long>>();
             foreach (long vertex in toVisitList.GetVertices())
             {
                 PathSegment<long> path = toVisitList.GetPathTo(vertex);
@@ -501,7 +501,7 @@ namespace OsmSharp.Routing.CH
             var settledVertices =
                 new Dictionary<long, PathSegment<long>>();
             //CHPriorityQueue queue = new CHPriorityQueue();
-            IPriorityQueue<PathSegment<long>> queue = new BinairyHeap<PathSegment<long>>();
+            IPriorityQueue<PathSegment<long>> queue = new BinaryHeap<PathSegment<long>>();
             foreach (long vertex in fromVisitList.GetVertices())
             {
                 PathSegment<long> path = fromVisitList.GetPathTo(vertex);
@@ -659,8 +659,8 @@ namespace OsmSharp.Routing.CH
             var settledVertices = new CHQueue();
 
             // initialize the queues.
-            var queueForward = new BinairyHeap<PathSegment<long>>();
-            var queueBackward = new BinairyHeap<PathSegment<long>>();
+            var queueForward = new BinaryHeap<PathSegment<long>>();
+            var queueBackward = new BinaryHeap<PathSegment<long>>();
 
             // add the sources to the forward queue.
             var resolvedSettles = new Dictionary<long, PathSegment<long>>();
@@ -943,8 +943,8 @@ namespace OsmSharp.Routing.CH
             var settledVertices = new CHQueue();
 
             // initialize the queues.
-            var queueForward = new BinairyHeap<PathSegment<long>>();
-            var queueBackward = new BinairyHeap<PathSegment<long>>();
+            var queueForward = new BinaryHeap<PathSegment<long>>();
+            var queueBackward = new BinaryHeap<PathSegment<long>>();
 
             // add the from vertex to the forward queue.
             queueForward.Push(new PathSegment<long>(from), 0);
@@ -1032,8 +1032,8 @@ namespace OsmSharp.Routing.CH
             var settledVertices = new CHQueue();
 
             // initialize the queues.
-            var queueForward = new BinairyHeap<PathSegment<long>>();
-            var queueBackward = new BinairyHeap<PathSegment<long>>();
+            var queueForward = new BinaryHeap<PathSegment<long>>();
+            var queueBackward = new BinaryHeap<PathSegment<long>>();
 
             // add the sources to the forward queue.
             foreach (long sourceVertex in source.GetVertices())
