@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Collections.PriorityQueues
         public void TestBinairyHeapQueueOneElement()
         {
             // creates a new binairy heap.
-            BinairyHeap<string> heap = new BinairyHeap<string>();
+            BinaryHeap<string> heap = new BinaryHeap<string>();
 
             // enqueue one item.
             heap.Push("one", 1);
@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Collections.PriorityQueues
         public void TestBinairyHeapQueueMultipleElements()
         {
             // creates a new binairy heap.
-            BinairyHeap<string> heap = new BinairyHeap<string>();
+            BinaryHeap<string> heap = new BinaryHeap<string>();
 
             // enqueue one item.
             heap.Push("one", 1);
@@ -90,7 +90,7 @@ namespace OsmSharp.Test.Unittests.Collections.PriorityQueues
             elements.Add(new KeyValuePair<string, float>("ten", 10));
 
             // creates a new binairy heap.
-            BinairyHeap<string> heap = new BinairyHeap<string>();
+            BinaryHeap<string> heap = new BinaryHeap<string>();
 
             // enqueue one item.
             while (elements.Count > 0)

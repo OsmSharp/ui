@@ -57,7 +57,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Holds a reusable heap.
         /// </summary>
-        private BinairyHeap<SettledVertex> _reusableHeap = new BinairyHeap<SettledVertex>();
+        private BinaryHeap<SettledVertex> _reusableHeap = new BinaryHeap<SettledVertex>();
 
         /// <summary>
         /// Returns true if the given vertex has a witness calculator.

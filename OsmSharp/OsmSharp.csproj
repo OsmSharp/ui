@@ -83,6 +83,7 @@
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\PermutationEnumerator.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
+    <Compile Include="Collections\PriorityQueues\BinaryHeapLong.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />

@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         public static void Test(Stream stream)
         {
             CHSerializedRoutingTest.Test(
-                stream, 10000);
+                stream, 1000);
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 var from = box.GenerateRandomIn();
                 var to = box.GenerateRandomIn();
 
-                var fromPoint = router.Resolve(Vehicle.Car, 0.01f, from);
-                var toPoint = router.Resolve(Vehicle.Car, 0.01f, to);
+                var fromPoint = router.Resolve(Vehicle.Car, from);
+                var toPoint = router.Resolve(Vehicle.Car, to);
 
                 resolvedPoints.Add(fromPoint);
                 resolvedPoints.Add(toPoint);

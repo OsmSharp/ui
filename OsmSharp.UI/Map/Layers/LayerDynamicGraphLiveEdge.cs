@@ -129,8 +129,8 @@ namespace OsmSharp.UI.Map.Layers
                 // translate each object into scene object.
                 var arcId = new ArcId()
                 {
-                    Vertex1 = arc.Key,
-                    Vertex2 = arc.Value.Key
+                    Vertex1 = arc.Vertex1,
+                    Vertex2 = arc.Vertex2
                 };
                 if (!interpretedObjects.Contains(arcId))
                 {
@@ -151,7 +151,7 @@ namespace OsmSharp.UI.Map.Layers
 
                     // create way.
                     var way = CompleteWay.Create(-1);
-                    if (arc.Value.Value.Forward)
+                    if (arc.EdgeData.Forward)
                     {
                         way.Nodes.Add(node1);
                         way.Nodes.Add(node2);
@@ -161,7 +161,7 @@ namespace OsmSharp.UI.Map.Layers
                         way.Nodes.Add(node2);
                         way.Nodes.Add(node1);
                     }
-                    way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.Value.Value.Tags));
+                    way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.EdgeData.Tags));
 
                     _styleInterpreter.Translate(_scene, map.Projection, way);
                     interpretedObjects.Add(arcId);

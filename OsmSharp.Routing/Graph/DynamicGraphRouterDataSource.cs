@@ -159,7 +159,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetEdges(
+        public INeighbourEnumerator<TEdgeData> GetEdges(
             GeoCoordinateBox box)
         {
             if (_vertexIndex == null) {
@@ -171,18 +171,19 @@ namespace OsmSharp.Routing.Graph
             var vertices = _vertexIndex.GetInside(
                 box);
 
-            // loop over all vertices and get the arcs.
-            var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
-            foreach (uint vertex in vertices)
-            {
-                var localArcs = this.GetEdges(vertex);
-                foreach (var localArc in localArcs)
-                {
-                    arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
-                        vertex, new KeyValuePair<uint, TEdgeData>(localArc.Neighbour, localArc.EdgeData)));
-                }
-            }
-            return arcs.ToArray();
+            //// loop over all vertices and get the arcs.
+            //var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
+            //foreach (uint vertex in vertices)
+            //{
+            //    var localArcs = this.GetEdges(vertex);
+            //    foreach (var localArc in localArcs)
+            //    {
+            //        arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
+            //            vertex, new KeyValuePair<uint, TEdgeData>(localArc.Neighbour, localArc.EdgeData)));
+            //    }
+            //}
+            //return arcs.ToArray();
+            return null;
         }
 
         /// <summary>

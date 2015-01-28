@@ -46,11 +46,11 @@ namespace OsmSharp.Routing.Graph.Router
         void AddSupportedProfile(Vehicle vehicle);
 
         /// <summary>
-        /// Returns a list of edges inside or intersecting with the given bounding box.
+        /// Returns a list of edges and their vertices inside the given bounding box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetEdges(GeoCoordinateBox box);
+        INeighbourEnumerator<TEdgeData> GetEdges(GeoCoordinateBox box);
 
         /// <summary>
         /// Returns the tags index.

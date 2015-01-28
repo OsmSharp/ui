@@ -47,6 +47,7 @@ namespace OsmSharp.Android.Test.Performance
             
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
+            OsmSharp.Logging.Log.Ignore("CHRouting");
             OsmSharp.Logging.Log.Ignore("CHPreProcessor");
             OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
             OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");

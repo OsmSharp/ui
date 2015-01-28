@@ -132,26 +132,25 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>[] GetEdges(
+        public INeighbourEnumerator<LiveEdge> GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
             this.LoadMissingTile(box);
 
             // get all the vertices in the given box.
-            IEnumerable<uint> vertices = _vertexIndex.GetInside(
-                box);
+            var vertices = _vertexIndex.GetInside(box);
 
             // loop over all vertices and get the arcs.
-            var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>>();
+            var neighbours = new List<Tuple<uint, uint, uint, LiveEdge>>();
             foreach (uint vertexId in vertices)
             {
                 var location = _coordinates[(int)vertexId];
                 if (location != null)
                 {
-                    // load tile if needed.
-                    this.LoadMissingTile(new GeoCoordinate(
-                        location.Latitude, location.Longitude));
+                    //// load tile if needed.
+                    //this.LoadMissingTile(new GeoCoordinate(
+                    //    location.Latitude, location.Longitude));
 
                     // get the arcs and return.
                     if (_vertices.Length > vertexId)
@@ -161,16 +160,34 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             vertex.Arcs != null)
                         {
                             var localArcs = vertex.Arcs;
-                            foreach (var localArc in localArcs)
+                            for (int arcIdx = 0; arcIdx < vertex.Arcs.Length; arcIdx++)
                             {
-                                arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>(
-                                    vertexId, new KeyValuePair<uint, Osm.Graphs.LiveEdge>(localArc.Item1, localArc.Item2)));
+                                neighbours.Add(new Tuple<uint, uint, uint, LiveEdge>(vertexId, (uint)arcIdx, localArcs[arcIdx].Item1, localArcs[arcIdx].Item2));
                             }
                         }
                     }
                 }
             }
-            return arcs.ToArray();
+            return new NeighbourEnumerator(this, neighbours);
+        }
+
+        /// <summary>
+        /// Gets the shape for the arc in from the given vertex and at the given index.
+        /// </summary>
+        /// <param name="vertexId">The vertex id.</param>
+        /// <param name="arcIdx">The index of the arc.</param>
+        /// <param name="shape">The shape.</param>
+        /// <returns>True if there was a shape.</returns>
+        private bool GetShapeForArc(uint vertexId, uint arcIdx, out ICoordinateCollection shape)
+        {
+            var vertex = _vertices[(int)vertexId];
+            var arcCoordinates = vertex.Arcs[arcIdx];
+            shape = null;
+            if (arcCoordinates != null)
+            {
+                shape = new CoordinateArrayCollection<GeoCoordinateSimple>(arcCoordinates.Item3);
+            }
+            return true;
         }
 
         /// <summary>
@@ -741,6 +758,140 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Dipose of all resources associated with this enumerable.
             /// </summary>
+            public void Dispose()
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// A neighbour enumerators.
+        /// </summary>
+        private class NeighbourEnumerator : INeighbourEnumerator<LiveEdge>
+        {
+            /// <summary>
+            /// Holds the edge and neighbours.
+            /// </summary>
+            private List<Tuple<uint, uint, uint, LiveEdge>> _neighbours;
+
+            /// <summary>
+            /// Holds the source.
+            /// </summary>
+            private RouterLiveEdgeDataSource _source;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerators.
+            /// </summary>
+            /// <param name="source">The datasource the edges come from.</param>
+            /// <param name="edges">The edge data.</param>
+            public NeighbourEnumerator(RouterLiveEdgeDataSource source, 
+                List<Tuple<uint, uint, uint, LiveEdge>> neighbours)
+            {
+                _source = source;
+                _neighbours = neighbours;
+            }
+
+            /// <summary>
+            /// Moves to the next coordinate.
+            /// </summary>
+            /// <returns></returns>
+            public bool MoveNext()
+            {
+                _current++;
+                return _neighbours.Count > _current;
+            }
+
+            /// <summary>
+            /// Gets the first vector.
+            /// </summary>
+            public uint Vertex1
+            {
+                get { return _neighbours[_current].Item1; }
+            }
+
+            /// <summary>
+            /// Gets the second vector.
+            /// </summary>
+            public uint Vertex2
+            {
+                get { return _neighbours[_current].Item3; }
+            }
+
+            /// <summary>
+            /// Gets the edge data.
+            /// </summary>
+            public LiveEdge EdgeData
+            {
+                get { return _neighbours[_current].Item4; }
+            }
+
+            /// <summary>
+            /// Gets the current intermediates.
+            /// </summary>
+            public ICoordinateCollection Intermediates
+            {
+                get
+                {
+                    ICoordinateCollection shape;
+                    if (_source.GetShapeForArc(_neighbours[_current].Item1, _neighbours[_current].Item2, out shape))
+                    {
+                        return shape;
+                    }
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns true if this enumerator has a pre-calculated count.
+            /// </summary>
+            public bool HasCount
+            {
+                get { return true; }
+            }
+
+            /// <summary>
+            /// Returns the count if any.
+            /// </summary>
+            public int Count
+            {
+                get { return _neighbours.Count; }
+            }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
+
+            public IEnumerator<Neighbour<LiveEdge>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public Neighbour<LiveEdge> Current
+            {
+                get { return new Neighbour<LiveEdge>(this); }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
             public void Dispose()
             {
 

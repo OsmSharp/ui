@@ -86,6 +86,7 @@
     <Compile Include="Graph\IGraphEdgeData.cs" />
     <Compile Include="Graph\IGraphReadOnly.cs" />
     <Compile Include="Graph\IGraphWriteOnly.cs" />
+    <Compile Include="Graph\INeighbourEnumerator.cs" />
     <Compile Include="Graph\MemoryDirectedGraph.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
     <Compile Include="Graph\MemoryMappedFileDynamicGraph.cs" />

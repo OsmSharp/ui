@@ -22,15 +22,23 @@ using System.Collections.Generic;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
-    /// Represents an abstract edge enumerator, enumerable and edge.
+    /// Represents an abstract neighbour enumerator, enumerable and neighbour.
     /// </summary>
-    public interface IEdgeEnumerator<TEdgeData> : IEnumerable<Edge<TEdgeData>>, IEnumerator<Edge<TEdgeData>>
+    public interface INeighbourEnumerator<TEdgeData> : IEnumerable<Neighbour<TEdgeData>>, IEnumerator<Neighbour<TEdgeData>>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Returns the current neighbour.
+        /// Returns the first vertex.
         /// </summary>
-        uint Neighbour
+        uint Vertex1
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the second vertex.
+        /// </summary>
+        uint Vertex2
         {
             get;
         }
@@ -39,19 +47,6 @@ namespace OsmSharp.Routing.Graph
         /// Returns the edge data.
         /// </summary>
         TEdgeData EdgeData
-        {
-            get;
-        }
-
-        /// <summary>
-        /// The edge data is inverted by default.
-        /// </summary>
-        bool isInverted
-        {
-            get;
-        }
-
-        TEdgeData InvertedEdgeData
         {
             get;
         }
@@ -82,46 +77,57 @@ namespace OsmSharp.Routing.Graph
     }
 
     /// <summary>
-    /// Abstract representation of an edge.
+    /// Abstract representation of neighbours.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public class Edge<TEdgeData>
+    public class Neighbour<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Creates a new edge.
+        /// Creates a new neighbour.
         /// </summary>
-        public Edge()
+        public Neighbour()
         {
 
         }
 
         /// <summary>
-        /// Creates a new edge by copying the given edge.
+        /// Creates a new neighbour by copying the given neighbour.
         /// </summary>
         /// <param name="edge"></param>
-        public Edge(Edge<TEdgeData> edge)
+        public Neighbour(Neighbour<TEdgeData> edge)
         {
-            this.Neighbour = edge.Neighbour;
+            this.Vertex1 = edge.Vertex1;
+            this.Vertex2 = edge.Vertex2;
             this.EdgeData = edge.EdgeData;
             this.Intermediates = edge.Intermediates;
         }
 
         /// <summary>
-        /// Creates a new edge keeping the current state of the given enumerator.
+        /// Creates a new neighbour keeping the current state of the given enumerator.
         /// </summary>
         /// <param name="enumerator"></param>
-        public Edge(IEdgeEnumerator<TEdgeData> enumerator)
+        public Neighbour(INeighbourEnumerator<TEdgeData> enumerator)
         {
-            this.Neighbour = enumerator.Neighbour;
+            this.Vertex1 = enumerator.Vertex1;
+            this.Vertex2 = enumerator.Vertex2;
             this.EdgeData = enumerator.EdgeData;
             this.Intermediates = enumerator.Intermediates;
         }
 
         /// <summary>
-        /// Returns the current neighbour.
+        /// Returns the first vertex.
         /// </summary>
-        public uint Neighbour
+        public uint Vertex1
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Returns the second vertex.
+        /// </summary>
+        public uint Vertex2
         {
             get;
             set;
@@ -151,53 +157,9 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} - {1}",
-                this.Neighbour,
+            return string.Format("{0}->{1}  {2}",
+                this.Vertex1, this.Vertex2,
                 this.EdgeData.ToInvariantString());
-        }
-    }
-
-    /// <summary>
-    /// Holds extensions methods for the edge enumerator.
-    /// </summary>
-    public static class EdgeEnumeratorExtensions
-    {
-        /// <summary>
-        /// Converts the given edge enumerator to an array of key-value pairs.
-        /// </summary>
-        /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="enumerator"></param>
-        /// <returns></returns>
-        public static KeyValuePair<uint, TEdgeData>[] ToKeyValuePairs<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
-            where TEdgeData : IGraphEdgeData
-        {
-            enumerator.Reset();
-            var pairs = new List<KeyValuePair<uint, TEdgeData>>();
-            while (enumerator.MoveNext())
-            {
-                pairs.Add(new KeyValuePair<uint, TEdgeData>(enumerator.Neighbour, enumerator.EdgeData));
-            }
-            return pairs.ToArray();
-        }
-
-
-        /// <summary>
-        /// Converts the given edge enumerator to an array of key-value pairs.
-        /// </summary>
-        /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="enumerator"></param>
-        /// <returns></returns>
-        public static KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>[] ToKeyValuePairsAndShapes<TEdgeData>(this IEdgeEnumerator<TEdgeData> enumerator)
-            where TEdgeData : IGraphEdgeData
-        {
-            enumerator.Reset();
-            var pairs = new List<KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>>();
-            while (enumerator.MoveNext())
-            {
-                pairs.Add(new KeyValuePair<uint, KeyValuePair<TEdgeData, ICoordinateCollection>>(enumerator.Neighbour, 
-                    new KeyValuePair<TEdgeData, ICoordinateCollection>(enumerator.EdgeData, enumerator.Intermediates)));
-            }
-            return pairs.ToArray();
         }
     }
 }

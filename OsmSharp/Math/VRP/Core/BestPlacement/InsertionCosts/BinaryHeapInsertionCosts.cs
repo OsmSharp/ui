@@ -14,14 +14,14 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <summary>
         /// Holds all the insertion cost heaps.
         /// </summary>
-        private Dictionary<int, Dictionary<int, BinairyHeap<InsertionCost>>> _costs;
+        private Dictionary<int, Dictionary<int, BinaryHeap<InsertionCost>>> _costs;
 
         /// <summary>
         /// Creates a new insertion cost data structure using binary heap priority queues.
         /// </summary>
         public BinaryHeapInsertionCosts()
         {
-            _costs = new Dictionary<int, Dictionary<int, BinairyHeap<InsertionCost>>>();
+            _costs = new Dictionary<int, Dictionary<int, BinaryHeap<InsertionCost>>>();
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public InsertionCost PopCheapest(int customer_from, int customer_to)
         {
-            BinairyHeap<InsertionCost> customer_heap;
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            BinaryHeap<InsertionCost> customer_heap;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (_costs.TryGetValue(customer_from, out heaps) && heaps.TryGetValue(customer_to, out customer_heap))
             { // there is a heap for this customer pair.
                 return customer_heap.Pop();
@@ -49,8 +49,8 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public InsertionCost PeekCheapest(int customer_from, int customer_to)
         {
-            BinairyHeap<InsertionCost> customer_heap;
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            BinaryHeap<InsertionCost> customer_heap;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (_costs.TryGetValue(customer_from, out heaps) && heaps.TryGetValue(customer_to, out customer_heap))
             { // there is a heap for this customer pair.
                 return customer_heap.Peek();
@@ -68,18 +68,18 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public void Add(int customer_from, int customer_to, int customer, float cost)
         {
-            BinairyHeap<InsertionCost> customer_heap;
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            BinaryHeap<InsertionCost> customer_heap;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (!_costs.TryGetValue(customer_from, out heaps))
             { // there is no heap for this customer pair.
-                customer_heap = new BinairyHeap<InsertionCost>();
-                heaps = new Dictionary<int, BinairyHeap<InsertionCost>>();
+                customer_heap = new BinaryHeap<InsertionCost>();
+                heaps = new Dictionary<int, BinaryHeap<InsertionCost>>();
                 heaps.Add(customer_to, customer_heap);
                 _costs.Add(customer_from, heaps);
             }
             else if (!heaps.TryGetValue(customer_to, out customer_heap))
             { // there is no heap for this customer pair.
-                customer_heap = new BinairyHeap<InsertionCost>();
+                customer_heap = new BinaryHeap<InsertionCost>();
                 heaps.Add(customer_to, customer_heap);
             }
             customer_heap.Push(new InsertionCost()
@@ -98,18 +98,18 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public void Add(int customer_from, int customer_to, IEnumerable<InsertionCost> costs)
         {
-            BinairyHeap<InsertionCost> customer_heap;
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            BinaryHeap<InsertionCost> customer_heap;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (!_costs.TryGetValue(customer_from, out heaps))
             { // there is no heap for this customer pair.
-                customer_heap = new BinairyHeap<InsertionCost>();
-                heaps = new Dictionary<int, BinairyHeap<InsertionCost>>();
+                customer_heap = new BinaryHeap<InsertionCost>();
+                heaps = new Dictionary<int, BinaryHeap<InsertionCost>>();
                 heaps.Add(customer_to, customer_heap);
                 _costs.Add(customer_from, heaps);
             }
             else if (!heaps.TryGetValue(customer_to, out customer_heap))
             { // there is no heap for this customer pair.
-                customer_heap = new BinairyHeap<InsertionCost>();
+                customer_heap = new BinaryHeap<InsertionCost>();
                 heaps.Add(customer_to, customer_heap);
             }
             foreach (InsertionCost cost in costs)
@@ -130,8 +130,8 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public int Count(int customer_from, int customer_to)
         {
-            BinairyHeap<InsertionCost> customer_heap;
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            BinaryHeap<InsertionCost> customer_heap;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (_costs.TryGetValue(customer_from, out heaps) && heaps.TryGetValue(customer_to, out customer_heap))
             { // there is a heap for this customer pair.
                 return customer_heap.Count;
@@ -147,7 +147,7 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
         /// <returns></returns>
         public bool Remove(int customer_from, int customer_to)
         {
-            Dictionary<int, BinairyHeap<InsertionCost>> heaps;
+            Dictionary<int, BinaryHeap<InsertionCost>> heaps;
             if (_costs.TryGetValue(customer_from, out heaps) && heaps.Remove(customer_to))
             { // there is a heap for this customer pair.
                 return true;
