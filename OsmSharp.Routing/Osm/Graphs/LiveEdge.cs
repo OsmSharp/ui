@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -132,6 +132,7 @@ namespace OsmSharp.Routing.Osm.Graphs
                 { // basic info different.
                     return false;
                 }
+                return this.Distance == otherLive.Distance;
             }
             return false;
         }
