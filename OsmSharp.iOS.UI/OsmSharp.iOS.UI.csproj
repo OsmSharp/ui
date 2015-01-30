@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="Renderer\CGContextRenderer.cs" />
     <Compile Include="Renderer\CGContextWrapper.cs" />
-    <Compile Include="MapView.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="Renderer\Images\NativeImage.cs" />
@@ -57,11 +56,12 @@
       <Link>Data\SQLite\SQLite.cs</Link>
     </Compile>
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
-    <Compile Include="Native.cs" />
     <Compile Include="Controls\IMapControlHost.cs" />
     <Compile Include="Controls\MapControl.cs" />
     <Compile Include="Markers\MapMarker.cs" />
     <Compile Include="Controls\MapControlAlignmentType.cs" />
+    <Compile Include="MapView.cs" />
+    <Compile Include="Native.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Images\layers.png" />

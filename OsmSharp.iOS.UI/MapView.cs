@@ -18,11 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -38,6 +34,26 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using System.Collections.ObjectModel;
 using OsmSharp.iOS.UI.Controls;
+#if __UNIFIED__
+using CoreGraphics;
+using Foundation;
+using UIKit;
+#else
+using MonoTouch.UIKit;
+using System.Drawing;
+using MonoTouch.Foundation;
+using MonoTouch.CoreGraphics;
+
+// Type Mappings Unified to monotouch.dll
+using CGRect = global::System.Drawing.RectangleF;
+using CGSize = global::System.Drawing.SizeF;
+using CGPoint = global::System.Drawing.PointF;
+
+using nfloat = global::System.Single;
+using nint = global::System.Int32;
+using nuint = global::System.UInt32;
+#endif
+
 
 namespace OsmSharp.iOS.UI
 {
@@ -45,36 +61,36 @@ namespace OsmSharp.iOS.UI
 	/// Map view.
 	/// </summary>
 	[Register("MapView")]
-    public class MapView : UIView, IMapView, IInvalidatableMapSurface, IMapControlHost
+	public class MapView : UIView, IMapView, IInvalidatableMapSurface, IMapControlHost
 	{
-        private const float MAX_ZOOM_LEVEL = 22;
+		private const float MAX_ZOOM_LEVEL = 22;
 		private bool _invertX = false;
-        private bool _invertY = false;
+		private bool _invertY = false;
 
-        /// <summary>
-        /// Map touched down event.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+		/// <summary>
+		/// Map touched down event.
+		/// </summary>
+		public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
 
-        /// <summary>
-        /// Map touched event.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+		/// <summary>
+		/// Map touched event.
+		/// </summary>
+		public event MapViewDelegates.MapTouchedDelegate MapTouched;
 
-        /// <summary>
-        /// Map touched up event.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+		/// <summary>
+		/// Map touched up event.
+		/// </summary>
+		public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
 
-        /// <summary>
-        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
-        /// </summary>
-        public event MapViewDelegates.MapInitialized MapInitialized;
+		/// <summary>
+		/// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+		/// </summary>
+		public event MapViewDelegates.MapInitialized MapInitialized;
 
-        /// <summary>
-        /// Raised when the map moves.
-        /// </summary>
-        public event MapViewDelegates.MapMoveDelegate MapMove;
+		/// <summary>
+		/// Raised when the map moves.
+		/// </summary>
+		public event MapViewDelegates.MapMoveDelegate MapMove;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
@@ -107,7 +123,7 @@ namespace OsmSharp.iOS.UI
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
 		/// </summary>
 		/// <param name="frame">Frame.</param>
-		public MapView(RectangleF frame) : base(frame)
+		public MapView(CGRect frame) : base(frame)
 		{
 			this.Initialize(new GeoCoordinate(0, 0), new Map(), 0, 16);
 		}
@@ -168,7 +184,7 @@ namespace OsmSharp.iOS.UI
 			MapTilt = defaultMapTilt;
 			MapZoom = defaultMapZoom;
 
-            _map.MapChanged += MapChanged;
+			_map.MapChanged += MapChanged;
 
 			_doubleTapAnimator = new MapViewAnimator(this);
 
@@ -228,14 +244,14 @@ namespace OsmSharp.iOS.UI
 				var singleTapGesture = new UITapGestureRecognizer(SingleTap);
 				singleTapGesture.NumberOfTapsRequired = 1;
 				// TODO: workaround for xamarin bug, remove later!
-//				singleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
-//				singleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+				//				singleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				//				singleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
 
 				var doubleTapGesture = new UITapGestureRecognizer(DoubleTap);
 				doubleTapGesture.NumberOfTapsRequired = 2;
 				// TODO: workaround for xamarin bug, remove later!
-//				doubleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
-//				doubleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+				//				doubleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				//				doubleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
 
 				//singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
 				this.AddGestureRecognizer(singleTapGesture);
@@ -280,7 +296,7 @@ namespace OsmSharp.iOS.UI
 			}
 
 			// set scalefactor.
-			_scaleFactor = this.ContentScaleFactor;
+			_scaleFactor = (float)this.ContentScaleFactor;
 
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper>(
@@ -288,27 +304,27 @@ namespace OsmSharp.iOS.UI
 			_backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
 		}
 
-        /// <summary>
-        /// Gets or sets the frame.
-        /// </summary>
-        /// <value>The frame.</value>
-        public override RectangleF Frame
-        {
-            get
-            {
-                return base.Frame;
-            }
-            set
-            {
-                base.Frame = value;
+		/// <summary>
+		/// Gets or sets the frame.
+		/// </summary>
+		/// <value>The frame.</value>
+		public override CGRect Frame
+		{
+			get
+			{
+				return base.Frame;
+			}
+			set
+			{
+				base.Frame = value;
 
-                if (_rect.Width == 0 && value.Width != 0)
-                { // trigger the initial rendering when the frame has a size for the first time.
-                    _rect = value;
-                    (this as IMapView).Invalidate();
-                }
-            }
-        }
+				if (_rect.Width == 0 && value.Width != 0)
+				{ // trigger the initial rendering when the frame has a size for the first time.
+					_rect = value;
+					(this as IMapView).Invalidate();
+				}
+			}
+		}
 
 
 		/// <summary>
@@ -328,7 +344,7 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// The 
 		/// </summary>
-		private RectangleF _rect;
+		private CGRect _rect;
 		/// <summary>
 		/// Holds the on screen buffered image.
 		/// </summary>
@@ -370,14 +386,14 @@ namespace OsmSharp.iOS.UI
 				try
 				{
 					// create the view that would be use for rendering.
-					float size = System.Math.Max(_rect.Width, _rect.Height);
+					float size = (float)System.Math.Max(_rect.Width, _rect.Height);
 					View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-						              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
-						              this.MapCenter, _invertX, _invertY, this.MapTilt);
+						this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
+						this.MapCenter, _invertX, _invertY, this.MapTilt);
 
 					// ... and compare to the previous rendered view.
 					if (_previouslyRenderedView != null &&
-					    view.Equals(_previouslyRenderedView))
+						view.Equals(_previouslyRenderedView))
 					{
 						_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
 						return;
@@ -386,7 +402,7 @@ namespace OsmSharp.iOS.UI
 
 					// end existing rendering thread.
 					if (_renderingThread != null &&
-					    _renderingThread.IsAlive)
+						_renderingThread.IsAlive)
 					{
 						if (_cacheRenderer.IsRunning)
 						{
@@ -447,19 +463,19 @@ namespace OsmSharp.iOS.UI
 				{
 					try
 					{
-							// use object
-						RectangleF rect = _rect;
+						// use object
+						CGRect rect = _rect;
 
 						// create the view.
-						float size = System.Math.Max(_rect.Width, _rect.Height);
+						float size = (float)System.Math.Max(_rect.Width, _rect.Height);
 						var view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-							              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-                                          this.MapCenter, _invertX, _invertY, this.MapTilt);
+							this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+							this.MapCenter, _invertX, _invertY, this.MapTilt);
 						if (rect.Width == 0)
 						{ // only render if a proper size is known.
 							return;
 						}
-	                        
+
 						// calculate width/height.
 						int imageWidth = (int)(size * _extra * _scaleFactor);
 						int imageHeight = (int)(size * _extra * _scaleFactor);
@@ -472,9 +488,9 @@ namespace OsmSharp.iOS.UI
 
 						// get old image if available.
 						CGBitmapContext image = new CGBitmapContext(null, imageWidth, imageHeight,
-							                        bitsPerComponent, bytesPerRow,
-							                        space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
-							                        CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+							bitsPerComponent, bytesPerRow,
+							space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
+							CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
 
 						long before = DateTime.Now.Ticks;
 
@@ -488,16 +504,16 @@ namespace OsmSharp.iOS.UI
 						// add the internal layer.
 						try
 						{
-							image.SetRGBFillColor(1, 1, 1, 1);
-							image.FillRect(new RectangleF(
+							image.SetFillColor(1, 1, 1, 1);
+							image.FillRect(new CGRect(
 								0, 0, imageWidth, imageHeight));
 
-                            // notify the map that the view has changed.
-                            var normalView = _cacheRenderer.Create(_rect.Width, _rect.Height,
-                                              this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-                                              this.MapCenter, _invertX, _invertY, this.MapTilt);
+							// notify the map that the view has changed.
+							var normalView = _cacheRenderer.Create((float)_rect.Width, (float)_rect.Height,
+								this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+								this.MapCenter, _invertX, _invertY, this.MapTilt);
 							this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
-                                normalView, view);
+								normalView, view);
 							long afterViewChanged = DateTime.Now.Ticks;
 							OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
 								"View change took: {0}ms @ zoom level {1}",
@@ -508,8 +524,8 @@ namespace OsmSharp.iOS.UI
 
 							// does the rendering.
 							bool complete = _cacheRenderer.Render(new CGContextWrapper(image,
-								new RectangleF(0, 0, (int)(size * _extra), (int)(size * _extra))),
-                                                _map.Projection, layers, view, sceneZoomFactor);
+								new CGRect(0, 0, (int)(size * _extra), (int)(size * _extra))),
+								_map.Projection, layers, view, sceneZoomFactor);
 
 							long afterRendering = DateTime.Now.Ticks;
 
@@ -518,14 +534,14 @@ namespace OsmSharp.iOS.UI
 								lock (_bufferSynchronisation)
 								{
 									if (_onScreenBuffer != null &&
-                                        _onScreenBuffer.NativeImage != null)
+										_onScreenBuffer.NativeImage != null)
 									{ // on screen buffer.
-                                        _onScreenBuffer.NativeImage.Dispose();
+										_onScreenBuffer.NativeImage.Dispose();
 									}
 
 									// add the newly rendered image again.           
-                                    _onScreenBuffer = new ImageTilted2D(view.Rectangle, 
-                                        new NativeImage(image.ToImage()), float.MinValue, float.MaxValue);
+									_onScreenBuffer = new ImageTilted2D(view.Rectangle, 
+										new NativeImage(image.ToImage()), float.MinValue, float.MaxValue);
 
 									// store the previous view.
 									_previouslyRenderedView = view;
@@ -578,30 +594,30 @@ namespace OsmSharp.iOS.UI
 		/// <param name="rotation">Rotation.</param>
 		private void Rotate(UIRotationGestureRecognizer rotation)
 		{
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			if (this.MapAllowTilt &&
-                rect.Width > 0 && this.Map != null)
+				rect.Width > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 				if (rotation.State == UIGestureRecognizerState.Ended)
 				{
 					this.NotifyMovementByInvoke();;
 
-                    _mapViewBefore = null;
+					_mapViewBefore = null;
 
-                    // raise map touched event.
-                    this.RaiseMapTouched();
-                    this.RaiseMapTouchedUp();
+					// raise map touched event.
+					this.RaiseMapTouched();
+					this.RaiseMapTouchedUp();
 				}
 				else if (rotation.State == UIGestureRecognizerState.Began)
-                {
-                    this.RaiseMapTouchedDown();
+				{
+					this.RaiseMapTouchedDown();
 					_mapViewBefore = this.CreateView(rect);
 				}
 				else
 				{
 					//_mapViewBefore = this.CreateView (_rect);
-					View2D rotatedView = _mapViewBefore.RotateAroundCenter((Radian)rotation.Rotation);
+					View2D rotatedView = _mapViewBefore.RotateAroundCenter((Radian)(float)rotation.Rotation);
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
 					PointF2D sceneCenter = rotatedView.Rectangle.Center;
 					this.MapCenter = this.Map.Projection.ToGeoCoordinates(
@@ -609,8 +625,8 @@ namespace OsmSharp.iOS.UI
 
 					this.NotifyMovementByInvoke();
 
-                    // raise map move event.
-                    this.RaiseMapMove();
+					// raise map move event.
+					this.RaiseMapMove();
 				}
 			}
 		}
@@ -626,38 +642,38 @@ namespace OsmSharp.iOS.UI
 		/// <param name="pinch">Pinch.</param>
 		private void Pinch(UIPinchGestureRecognizer pinch)
 		{
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			if (this.MapAllowZoom &&
-			    rect.Width > 0)
+				rect.Width > 0)
 			{
 				this.StopCurrentAnimation();
 				if (pinch.State == UIGestureRecognizerState.Ended)
 				{
 					this.NotifyMovementByInvoke();
 
-                    _mapZoomLevelBefore = null;
+					_mapZoomLevelBefore = null;
 
-                    // raise map touched event.
-                    this.RaiseMapTouched();
-                    this.RaiseMapTouchedUp();
+					// raise map touched event.
+					this.RaiseMapTouched();
+					this.RaiseMapTouchedUp();
 				}
 				else if (pinch.State == UIGestureRecognizerState.Began)
-                {
-                    this.RaiseMapTouchedDown();
-                    _mapZoomLevelBefore = MapZoom;
+				{
+					this.RaiseMapTouchedDown();
+					_mapZoomLevelBefore = MapZoom;
 				}
 				else
 				{
 					MapZoom = _mapZoomLevelBefore.Value;
 
-                    double zoomFactor = this.Map.Projection.ToZoomFactor(MapZoom);
+					double zoomFactor = this.Map.Projection.ToZoomFactor(MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-                    MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
+					MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-                    this.NotifyMovementByInvoke();
+					this.NotifyMovementByInvoke();
 
-                    // raise map move event.
-                    this.RaiseMapMove();
+					// raise map move event.
+					this.RaiseMapMove();
 				}
 			}
 		}
@@ -665,31 +681,31 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the previous pan offset.
 		/// </summary>
-        private PointF _prevOffset;
+		private CGPoint _prevOffset;
 		/// <summary>
 		/// Pan the specified some.
 		/// </summary>
 		/// <param name="some">Some.</param>
 		private void Pan(UIPanGestureRecognizer pan)
 		{
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			if (this.MapAllowPan &&
-                rect.Width > 0 && this.Map != null)
+				rect.Width > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
-				PointF offset = pan.TranslationInView(this);
+				CGPoint offset = pan.TranslationInView(this);
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
 					this.NotifyMovementByInvoke();
 
-                    // raise map touched event.
-                    this.RaiseMapTouched();
-                    this.RaiseMapTouchedUp();
+					// raise map touched event.
+					this.RaiseMapTouched();
+					this.RaiseMapTouchedUp();
 				}
 				else if (pan.State == UIGestureRecognizerState.Began)
 				{
-                    _prevOffset = new PointF(0, 0);
-                    this.RaiseMapTouchedDown();
+					_prevOffset = new CGPoint(0, 0);
+					this.RaiseMapTouchedDown();
 				}
 				else if (pan.State == UIGestureRecognizerState.Changed)
 				{
@@ -697,18 +713,18 @@ namespace OsmSharp.iOS.UI
 					double centerXPixels = rect.Width / 2.0f - (offset.X - _prevOffset.X);
 					double centerYPixels = rect.Height / 2.0f - (offset.Y - _prevOffset.Y);
 
-                    _prevOffset = offset;
+					_prevOffset = offset;
 
 					double[] sceneCenter = view.FromViewPort(rect.Width, rect.Height,
-						                       centerXPixels, centerYPixels);
+						centerXPixels, centerYPixels);
 
-                    this.MapCenter = this.Map.Projection.ToGeoCoordinates(
+					this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-                    this.NotifyMovementByInvoke();
+					this.NotifyMovementByInvoke();
 
-                    // raise map move event.
-                    this.RaiseMapMove();
+					// raise map move event.
+					this.RaiseMapMove();
 				}
 			}
 		}
@@ -726,21 +742,21 @@ namespace OsmSharp.iOS.UI
 		/// <param name="tap">Tap.</param>
 		private void SingleTap(UITapGestureRecognizer tap)
 		{
-			RectangleF rect = this.Frame;
-            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
+			CGRect rect = this.Frame;
+			if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
 
 				if (this.MapTapEvent != null)
 				{
 					View2D view = this.CreateView(rect);
-					PointF location = tap.LocationInView(this);
+					CGPoint location = tap.LocationInView(this);
 					double[] sceneCoordinates = view.FromViewPort(rect.Width, rect.Height, location.X, location.Y);
 					this.MapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCoordinates[0], sceneCoordinates[1]));
 				}
 
-                // notify controls map was tapped.
-                this.NotifyMapTapToControls();
+				// notify controls map was tapped.
+				this.NotifyMapTapToControls();
 			}
 		}
 
@@ -760,14 +776,14 @@ namespace OsmSharp.iOS.UI
 		/// <param name="tap">Tap.</param>
 		private void DoubleTap(UITapGestureRecognizer tap)
 		{
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			if (this.MapAllowZoom &&
-                rect.Width > 0 && rect.Height > 0 && this.Map != null)
+				rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				this.StopCurrentAnimation();
-				
+
 				View2D view = this.CreateView(rect);
-				PointF location = tap.LocationInView(this);
+				CGPoint location = tap.LocationInView(this);
 				double[] sceneCoordinates = view.FromViewPort(rect.Width, rect.Height, location.X, location.Y);
 				GeoCoordinate geoLocation = this.Map.Projection.ToGeoCoordinates(sceneCoordinates[0], sceneCoordinates[1]);
 
@@ -777,13 +793,13 @@ namespace OsmSharp.iOS.UI
 				}
 				else
 				{ // minimum zoom.
-                    // Clamp the zoom level between the configured maximum and minimum.
-                    float tapRequestZoom = MapZoom + 0.5f;
+					// Clamp the zoom level between the configured maximum and minimum.
+					float tapRequestZoom = MapZoom + 0.5f;
 					_doubleTapAnimator.Start(geoLocation, tapRequestZoom, new TimeSpan(0, 0, 0, 0, 500));
-                }
+				}
 
-                // notify controls map was tapped.
-                this.NotifyMapTapToControls();
+				// notify controls map was tapped.
+				this.NotifyMapTapToControls();
 			}
 		}
 
@@ -809,8 +825,8 @@ namespace OsmSharp.iOS.UI
 			_triggeredNotifyMovement = false;
 
 			// change the map markers.
-			RectangleF rect = this.Frame;
-            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
+			CGRect rect = this.Frame;
+			if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				// create the current view.
 				View2D view = this.CreateView(rect);
@@ -880,16 +896,16 @@ namespace OsmSharp.iOS.UI
 		{
 			get { return _map; }
 			set { 
-                if (_map != null)
-                {
-                    _map.MapChanged-=MapChanged;
-                }
-                _map = value;
-                if (_map != null)
-                {
-                    _map.MapChanged+=MapChanged;
-                }
-            }
+				if (_map != null)
+				{
+					_map.MapChanged-=MapChanged;
+				}
+				_map = value;
+				if (_map != null)
+				{
+					_map.MapChanged+=MapChanged;
+				}
+			}
 		}
 
 		/// <summary>
@@ -905,18 +921,18 @@ namespace OsmSharp.iOS.UI
 		{
 			get	{ return _mapZoom; }
 			set {
-                if (value > _mapMaxZoomLevel)
-                {
-                    _mapZoom = _mapMaxZoomLevel;
-                }
-                else if (value < _mapMinZoomLevel)
-                {
-                    _mapZoom = _mapMinZoomLevel;
-                }
-                else
-                {
-                    _mapZoom = value;
-                }
+				if (value > _mapMaxZoomLevel)
+				{
+					_mapZoom = _mapMaxZoomLevel;
+				}
+				else if (value < _mapMinZoomLevel)
+				{
+					_mapZoom = _mapMinZoomLevel;
+				}
+				else
+				{
+					_mapZoom = value;
+				}
 
 				this.NotifyMovementByInvoke();
 			}
@@ -926,23 +942,23 @@ namespace OsmSharp.iOS.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-        private float _mapMaxZoomLevel = MAX_ZOOM_LEVEL;
+		private float _mapMaxZoomLevel = MAX_ZOOM_LEVEL;
 
 		public float MapMaxZoomLevel
 		{
-            get {  return _mapMaxZoomLevel; }
-            set { _mapMaxZoomLevel = (value < MAX_ZOOM_LEVEL) ? value : MAX_ZOOM_LEVEL; }
+			get {  return _mapMaxZoomLevel; }
+			set { _mapMaxZoomLevel = (value < MAX_ZOOM_LEVEL) ? value : MAX_ZOOM_LEVEL; }
 		}
 
 		/// <summary>
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-        private float _mapMinZoomLevel = 0;
+		private float _mapMinZoomLevel = 0;
 		public float MapMinZoomLevel
 		{
-            get { return _mapMinZoomLevel; }
-            set { _mapMinZoomLevel = (value > 0) ? value : 0; }
+			get { return _mapMinZoomLevel; }
+			set { _mapMinZoomLevel = (value > 0) ? value : 0; }
 		}
 
 		/// <summary>
@@ -968,66 +984,66 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
-        /// <summary>
-        /// The map center.
-        /// </summary>
-        private GeoCoordinate _mapCenter;
+		/// <summary>
+		/// The map center.
+		/// </summary>
+		private GeoCoordinate _mapCenter;
 
-        /// <summary>
-        /// Gets or sets the center.
-        /// </summary>
-        /// <value>The center.</value>
-        public GeoCoordinate MapCenter
-        {
-            get { return _mapCenter; }
-            set
-            {
-                if (this.CurrentWidth == 0 || this.MapBoundingBox == null)
-                {
-                    _mapCenter = value;
-                }
-                else
-                {
-                    if (_rect.Width > 0 && _rect.Height > 0 && this.Map != null)
-                    {
-                        View2D view = this.CreateView(_rect);
-                        _mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, view);
-                    }
-                    else
-                    {
-                        _mapCenter = value;
-                    }
-                }
-                
-                this.NotifyMovementByInvoke();
-            }
-        }
+		/// <summary>
+		/// Gets or sets the center.
+		/// </summary>
+		/// <value>The center.</value>
+		public GeoCoordinate MapCenter
+		{
+			get { return _mapCenter; }
+			set
+			{
+				if (this.CurrentWidth == 0 || this.MapBoundingBox == null)
+				{
+					_mapCenter = value;
+				}
+				else
+				{
+					if (_rect.Width > 0 && _rect.Height > 0 && this.Map != null)
+					{
+						View2D view = this.CreateView(_rect);
+						_mapCenter = this.Map.EnsureViewWithinBoundingBox(value, this.MapBoundingBox, view);
+					}
+					else
+					{
+						_mapCenter = value;
+					}
+				}
 
-        /// <summary>
-        /// Box within which one can pan the map
-        /// </summary>
-        private GeoCoordinateBox _mapBoundingBox = null;
+				this.NotifyMovementByInvoke();
+			}
+		}
 
-        /// <summary>
-        /// Gets or sets the bounding box within which one can pan the map.
-        /// </summary>
-        /// <value>The box.</value>
-        public GeoCoordinateBox MapBoundingBox
-        {
-            get
-            {
-                return _mapBoundingBox;
-            }
-            set
-            {
-                // If the current map center falls outside the bounding box, set the MapCenter to the middle of the box.
-                if (_mapCenter != null && !value.Contains(MapCenter))
-                {
-                    MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
-                }
-                _mapBoundingBox = value;
-            }
-        }
+		/// <summary>
+		/// Box within which one can pan the map
+		/// </summary>
+		private GeoCoordinateBox _mapBoundingBox = null;
+
+		/// <summary>
+		/// Gets or sets the bounding box within which one can pan the map.
+		/// </summary>
+		/// <value>The box.</value>
+		public GeoCoordinateBox MapBoundingBox
+		{
+			get
+			{
+				return _mapBoundingBox;
+			}
+			set
+			{
+				// If the current map center falls outside the bounding box, set the MapCenter to the middle of the box.
+				if (_mapCenter != null && !value.Contains(MapCenter))
+				{
+					MapCenter = new GeoCoordinate(value.MinLat + 0.5f * value.DeltaLat, value.MinLon + 0.5f * value.DeltaLon);
+				}
+				_mapBoundingBox = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the map tilt flag.
@@ -1056,47 +1072,47 @@ namespace OsmSharp.iOS.UI
 			set;
 		}
 
-        /// <summary>
-        /// Gets the density.
-        /// </summary>
-        public float Density
-        {
-            get
-            {
-                return 1;
-            }
-        }
+		/// <summary>
+		/// Gets the density.
+		/// </summary>
+		public float Density
+		{
+			get
+			{
+				return 1;
+			}
+		}
 
-        /// <summary>
-        /// Gets the current view.
-        /// </summary>
-        public View2D CurrentView
-        {
-            get
-            {
-                if (_rect.Width != 0)
-                {
-                    return this.CreateView(_rect);
-                }
-                return null;
-            }
-        }
+		/// <summary>
+		/// Gets the current view.
+		/// </summary>
+		public View2D CurrentView
+		{
+			get
+			{
+				if (_rect.Width != 0)
+				{
+					return this.CreateView(_rect);
+				}
+				return null;
+			}
+		}
 
-        /// <summary>
-        /// Returns the current width.
-        /// </summary>
-        public int CurrentWidth
-        {
-            get { return (int)_rect.Width; }
-        }
+		/// <summary>
+		/// Returns the current width.
+		/// </summary>
+		public int CurrentWidth
+		{
+			get { return (int)_rect.Width; }
+		}
 
-        /// <summary>
-        /// Returns the current height.
-        /// </summary>
-        public int CurrentHeight
-        {
-            get { return (int)_rect.Height; }
-        }
+		/// <summary>
+		/// Returns the current height.
+		/// </summary>
+		public int CurrentHeight
+		{
+			get { return (int)_rect.Height; }
+		}
 
 		#region IMapView implementation
 
@@ -1110,7 +1126,7 @@ namespace OsmSharp.iOS.UI
 		{
 			MapCenter = center;
 			MapTilt = mapTilt;
-            MapZoom = mapZoom;
+			MapZoom = mapZoom;
 
 			this.NotifyMovementByInvoke();
 		}
@@ -1159,24 +1175,24 @@ namespace OsmSharp.iOS.UI
 		/// Creates the view.
 		/// </summary>
 		/// <returns>The view.</returns>
-		public View2D CreateView(System.Drawing.RectangleF rect)
+		public View2D CreateView(CGRect rect)
 		{
-            if (this.Map != null)
-            {
-                double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
-                float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+			if (this.Map != null)
+			{
+				double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+				float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
-                return View2D.CreateFrom(sceneCenter[0], sceneCenter[1],
-                    rect.Width, rect.Height, sceneZoomFactor,
-                    _invertX, _invertY, this.MapTilt);
-            }
-            return null;
+				return View2D.CreateFrom(sceneCenter[0], sceneCenter[1],
+					rect.Width, rect.Height, sceneZoomFactor,
+					_invertX, _invertY, this.MapTilt);
+			}
+			return null;
 		}
 
-        /// <summary>
-        /// Holds the initialized flag.
-        /// </summary>
-        private bool _initialized = false;
+		/// <summary>
+		/// Holds the initialized flag.
+		/// </summary>
+		private bool _initialized = false;
 
 		/// <summary>
 		/// Invalidates the map.
@@ -1184,18 +1200,18 @@ namespace OsmSharp.iOS.UI
 		private void InvalidateMap()
 		{
 			// change the map markers.
-			RectangleF rect = this.Frame;
-            if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
+			CGRect rect = this.Frame;
+			if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
 			{
 				View2D view = this.CreateView(rect);
 
 				this.NotifyMapChangeToControls(rect.Width, rect.Height, view, this.Map.Projection);
 
-                if (!_initialized)
-                { // map has a size, markers and controls have been place, map is officially initialized there!
-                    _initialized = true;
-                    this.RaiseMapInitialized();
-                }
+				if (!_initialized)
+				{ // map has a size, markers and controls have been place, map is officially initialized there!
+					_initialized = true;
+					this.RaiseMapInitialized();
+				}
 			}
 
 			// tell this view it needs to refresh.
@@ -1217,11 +1233,11 @@ namespace OsmSharp.iOS.UI
 		/// Draws the view within the specified rectangle.
 		/// </summary>
 		/// <param name="rect">Rect.</param>
-		public override void Draw(System.Drawing.RectangleF rect)
+		public override void Draw(CGRect rect)
 		{
 			_rect = rect;
 			base.Draw(rect);
-            
+
 			lock (_bufferSynchronisation)
 			{
 				// recreate the view.
@@ -1255,7 +1271,7 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the controls.
 		/// </summary>
-        private List<MapControl> _controls = new List<MapControl>();
+		private List<MapControl> _controls = new List<MapControl>();
 
 		/// <summary>
 		/// Returns the mapcontrols list.
@@ -1272,26 +1288,26 @@ namespace OsmSharp.iOS.UI
 			_controls.Add(control); // add to controls list.
 			this.Add(control.BaseView); // add to this view.
 
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			if (rect.Width > 0 && rect.Height > 0)
 			{
-                View2D view = this.CreateView(rect);
-                this.NotifyOnBeforeSetLayout();
+				View2D view = this.CreateView(rect);
+				this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
-                this.NotifyOnAfterSetLayout();
+				this.NotifyOnAfterSetLayout();
 			}
 		}
 
-        /// <summary>
-        /// Returns a read-only collection of controls.
-        /// </summary>
-        public ReadOnlyCollection<MapControl> Controls
-        {
-            get
-            {
-                return _controls.AsReadOnly();
-            }
-        }
+		/// <summary>
+		/// Returns a read-only collection of controls.
+		/// </summary>
+		public ReadOnlyCollection<MapControl> Controls
+		{
+			get
+			{
+				return _controls.AsReadOnly();
+			}
+		}
 
 		/// <summary>
 		/// Clears all map controls.
@@ -1315,7 +1331,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="control"></param>
 		public bool RemoveControl(MapControl control)
 		{
-            if (control != null)
+			if (control != null)
 			{
 				control.DetachFrom(this); // remove the map view.
 				control.BaseView.RemoveFromSuperview();
@@ -1354,9 +1370,9 @@ namespace OsmSharp.iOS.UI
 		/// <param name="control"></param>
 		public void ZoomToControls(List<MapControl> controls, double percentage)
 		{
-			float width = this.Frame.Width;
-			float height = this.Frame.Height;
-			RectangleF rect = this.Frame;
+			float width = (float)this.Frame.Width;
+			float height = (float)this.Frame.Height;
+			CGRect rect = this.Frame;
 			if (width > 0)
 			{
 				PointF2D[] points = new PointF2D[controls.Count];
@@ -1368,183 +1384,183 @@ namespace OsmSharp.iOS.UI
 				View2D fittedView = view.Fit(points, percentage);
 
 				float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
-					             width, height));
+					width, height));
 				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
-					                       fittedView.Center[0], fittedView.Center[1]);
-				
+					fittedView.Center[0], fittedView.Center[1]);
+
 				this.MapCenter = center;
 				this.MapZoom = zoom;
 
 				this.NotifyMovementByInvoke();
 			}
-        }
+		}
 
-        /// <summary>
-        /// Adds the view.
-        /// </summary>
-        /// <param name="view">View.</param>
-        void IMapControlHost.AddView(UIView view)
-        {
-            this.Add(view);
-        }
+		/// <summary>
+		/// Adds the view.
+		/// </summary>
+		/// <param name="view">View.</param>
+		void IMapControlHost.AddView(UIView view)
+		{
+			this.Add(view);
+		}
 
-        /// <summary>
-        /// Removes the view.
-        /// </summary>
-        /// <param name="view">View.</param>
-        void IMapControlHost.RemoveView(UIView view)
-        {
-            view.RemoveFromSuperview();
-        }
+		/// <summary>
+		/// Removes the view.
+		/// </summary>
+		/// <param name="view">View.</param>
+		void IMapControlHost.RemoveView(UIView view)
+		{
+			view.RemoveFromSuperview();
+		}
 
-        #region Markers
+		#region Markers
 
-        /// <summary>
-        /// Holds the markers.
-        /// </summary>
-        private List<MapMarker> _markers = new List<MapMarker>();
+		/// <summary>
+		/// Holds the markers.
+		/// </summary>
+		private List<MapMarker> _markers = new List<MapMarker>();
 
-        /// <summary>
-        /// Returns the mapmarkers list.
-        /// </summary>
-        /// <value>The markers.</value>
-        public void AddMarker(MapMarker marker)
-        {
-            if (marker == null)
-            {
-                throw new ArgumentNullException("marker");
-            }
+		/// <summary>
+		/// Returns the mapmarkers list.
+		/// </summary>
+		/// <value>The markers.</value>
+		public void AddMarker(MapMarker marker)
+		{
+			if (marker == null)
+			{
+				throw new ArgumentNullException("marker");
+			}
 
-            marker.AttachTo(this); // attach this view to the marker.
-            _markers.Add(marker); // add to markers list.
-            this.Add(marker.View); // add to this view.
+			marker.AttachTo(this); // attach this view to the marker.
+			_markers.Add(marker); // add to markers list.
+			this.Add(marker.View); // add to this view.
 
-            RectangleF rect = this.Frame;
-            if (rect.Width > 0 && rect.Height > 0)
-            {
-                View2D view = this.CreateView(rect);
-                this.NotifyOnBeforeSetLayout();
-                this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, marker);
-                this.NotifyOnAfterSetLayout();
-            }
-        }
+			CGRect rect = this.Frame;
+			if (rect.Width > 0 && rect.Height > 0)
+			{
+				View2D view = this.CreateView(rect);
+				this.NotifyOnBeforeSetLayout();
+				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, marker);
+				this.NotifyOnAfterSetLayout();
+			}
+		}
 
-        /// <summary>
-        /// Returns a read-only collection of markers.
-        /// </summary>
-        public ReadOnlyCollection<MapMarker> Markers
-        {
-            get
-            {
-                return _markers.AsReadOnly();
-            }
-        }
+		/// <summary>
+		/// Returns a read-only collection of markers.
+		/// </summary>
+		public ReadOnlyCollection<MapMarker> Markers
+		{
+			get
+			{
+				return _markers.AsReadOnly();
+			}
+		}
 
-        /// <summary>
-        /// Adds the marker.
-        /// </summary>
-        /// <returns>The marker.</returns>
-        /// <param name="location">Location.</param>
-        public MapMarker AddMarker(GeoCoordinate location)
-        {
-            if (location == null)
-            {
-                throw new ArgumentNullException("location");
-            }
-            ;
+		/// <summary>
+		/// Adds the marker.
+		/// </summary>
+		/// <returns>The marker.</returns>
+		/// <param name="location">Location.</param>
+		public MapMarker AddMarker(GeoCoordinate location)
+		{
+			if (location == null)
+			{
+				throw new ArgumentNullException("location");
+			}
+			;
 
-            MapMarker marker = new MapMarker(location);
-            this.AddMarker(marker);
-            return marker;
-        }
+			MapMarker marker = new MapMarker(location);
+			this.AddMarker(marker);
+			return marker;
+		}
 
-        /// <summary>
-        /// Clears all map markers.
-        /// </summary>
-        public void ClearMarkers()
-        {
-            if (_markers != null)
-            {
-                foreach (MapMarker marker in _markers)
-                {
-                    marker.DetachFrom(this);
-                    marker.View.RemoveFromSuperview();
-                }
-                _markers.Clear();
-            }
-        }
+		/// <summary>
+		/// Clears all map markers.
+		/// </summary>
+		public void ClearMarkers()
+		{
+			if (_markers != null)
+			{
+				foreach (MapMarker marker in _markers)
+				{
+					marker.DetachFrom(this);
+					marker.View.RemoveFromSuperview();
+				}
+				_markers.Clear();
+			}
+		}
 
-        /// <summary>
-        /// Removes the given map marker.
-        /// </summary>
-        /// <param name="marker"></param>
-        public bool RemoveMarker(MapMarker marker)
-        {
-            if (marker != null)
-            {
-                marker.DetachFrom(this); // remove the map view.
-                marker.View.RemoveFromSuperview();
-                return _markers.Remove(marker);
-            }
-            return false;
-        }
+		/// <summary>
+		/// Removes the given map marker.
+		/// </summary>
+		/// <param name="marker"></param>
+		public bool RemoveMarker(MapMarker marker)
+		{
+			if (marker != null)
+			{
+				marker.DetachFrom(this); // remove the map view.
+				marker.View.RemoveFromSuperview();
+				return _markers.Remove(marker);
+			}
+			return false;
+		}
 
-        /// <summary>
-        /// Zoom to the current markers.
-        /// </summary>
-        public void ZoomToMarkers()
-        {
-            this.ZoomToMarkers(_markers);
-        }
+		/// <summary>
+		/// Zoom to the current markers.
+		/// </summary>
+		public void ZoomToMarkers()
+		{
+			this.ZoomToMarkers(_markers);
+		}
 
-        /// <summary>
-        /// Zoom to the current markers.
-        /// </summary>
-        public void ZoomToMarkers(double percentage)
-        {
-            this.ZoomToMarkers(_markers, percentage);
-        }
+		/// <summary>
+		/// Zoom to the current markers.
+		/// </summary>
+		public void ZoomToMarkers(double percentage)
+		{
+			this.ZoomToMarkers(_markers, percentage);
+		}
 
-        /// <summary>
-        /// Zoom to the current markers.
-        /// </summary>
-        public void ZoomToMarkers(List<MapMarker> markers)
-        {
-            this.ZoomToMarkers(markers, 15);
-        }
+		/// <summary>
+		/// Zoom to the current markers.
+		/// </summary>
+		public void ZoomToMarkers(List<MapMarker> markers)
+		{
+			this.ZoomToMarkers(markers, 15);
+		}
 
-        /// <summary>
-        /// Zoom to the given makers list.
-        /// </summary>
-        /// <param name="marker"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
-        {
-            float width = this.Frame.Width;
-            float height = this.Frame.Height;
-            RectangleF rect = this.Frame;
-            if (width > 0)
-            {
-                PointF2D[] points = new PointF2D[markers.Count];
-                for (int idx = 0; idx < markers.Count; idx++)
-                {
-                    points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
-                }
-                View2D view = this.CreateView(rect);
-                View2D fittedView = view.Fit(points, percentage);
+		/// <summary>
+		/// Zoom to the given makers list.
+		/// </summary>
+		/// <param name="marker"></param>
+		public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+		{
+			float width = (float)this.Frame.Width;
+			float height = (float)this.Frame.Height;
+			CGRect rect = this.Frame;
+			if (width > 0)
+			{
+				PointF2D[] points = new PointF2D[markers.Count];
+				for (int idx = 0; idx < markers.Count; idx++)
+				{
+					points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
+				}
+				View2D view = this.CreateView(rect);
+				View2D fittedView = view.Fit(points, percentage);
 
-                float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
-                    width, height));
-                GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
-                    fittedView.Center[0], fittedView.Center[1]);
+				float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+					width, height));
+				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+					fittedView.Center[0], fittedView.Center[1]);
 
-                this.MapCenter = center;
-                this.MapZoom = zoom;
+				this.MapCenter = center;
+				this.MapZoom = zoom;
 
-                this.NotifyMovementByInvoke();
-            }
-        }
+				this.NotifyMovementByInvoke();
+			}
+		}
 
-        #endregion
+		#endregion
 
 		/// <summary>
 		/// Notifies the map change to markers.
@@ -1554,89 +1570,89 @@ namespace OsmSharp.iOS.UI
 		/// <param name="view">View.</param>
 		/// <param name="projection">Projection.</param>
 		internal void NotifyMapChangeToControls(double pixelsWidth, double pixelsHeight, View2D view, 
-		                                       IProjection projection)
+			IProjection projection)
 		{
-            this.NotifyOnBeforeSetLayout();
+			this.NotifyOnBeforeSetLayout();
 			foreach (var marker in _markers)
 			{
 				this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, marker);
 			}
-            foreach (var control in _controls)
-            {
-                this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
-            }
-            this.NotifyOnAfterSetLayout();
+			foreach (var control in _controls)
+			{
+				this.NotifyMapChangeToControl(pixelsWidth, pixelsHeight, view, projection, control);
+			}
+			this.NotifyOnAfterSetLayout();
 		}
 
-        /// <summary>
-        /// Calls OnBeforeLayout on all controls/markers.
-        /// </summary>
-        internal void NotifyOnBeforeSetLayout()
-        {
-            lock (_markers)
-            {
-                if (_markers != null)
-                {
-                    foreach (var marker in _markers)
-                    {
-                        marker.OnBeforeSetLayout();
-                    }
-                }
-            }
-            lock (_controls)
-            {
-                if (_controls != null)
-                {
-                    foreach (var control in _controls)
-                    {
-                        control.OnBeforeSetLayout();
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// Calls OnBeforeLayout on all controls/markers.
+		/// </summary>
+		internal void NotifyOnBeforeSetLayout()
+		{
+			lock (_markers)
+			{
+				if (_markers != null)
+				{
+					foreach (var marker in _markers)
+					{
+						marker.OnBeforeSetLayout();
+					}
+				}
+			}
+			lock (_controls)
+			{
+				if (_controls != null)
+				{
+					foreach (var control in _controls)
+					{
+						control.OnBeforeSetLayout();
+					}
+				}
+			}
+		}
 
-        /// <summary>
-        /// Calls OnAfterLayout on all controls/markers.
-        /// </summary>
-        internal void NotifyOnAfterSetLayout()
-        {
-            lock (_markers)
-            {
-                if (_markers != null)
-                {
-                    foreach (var marker in _markers)
-                    {
-                        marker.OnAfterSetLayout();
-                    }
-                }
-            }
-            lock (_controls)
-            {
-                if (_controls != null)
-                {
-                    foreach (var control in _controls)
-                    {
-                        control.OnAfterSetLayout();
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// Calls OnAfterLayout on all controls/markers.
+		/// </summary>
+		internal void NotifyOnAfterSetLayout()
+		{
+			lock (_markers)
+			{
+				if (_markers != null)
+				{
+					foreach (var marker in _markers)
+					{
+						marker.OnAfterSetLayout();
+					}
+				}
+			}
+			lock (_controls)
+			{
+				if (_controls != null)
+				{
+					foreach (var control in _controls)
+					{
+						control.OnAfterSetLayout();
+					}
+				}
+			}
+		}
 
 
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.
 		/// </summary>
 		/// <param name="mapMarker"></param>
-        public void NotifyControlChange(MapControl control)
+		public void NotifyControlChange(MapControl control)
 		{
-			RectangleF rect = this.Frame;
+			CGRect rect = this.Frame;
 			// notify map layout of changes.
 			if (rect.Width > 0 && rect.Height > 0)
 			{
 				View2D view = this.CreateView(rect);
-                this.NotifyOnBeforeSetLayout();
+				this.NotifyOnBeforeSetLayout();
 				this.NotifyMapChangeToControl(rect.Width, rect.Height, view, this.Map.Projection, control);
-                this.NotifyOnAfterSetLayout();
+				this.NotifyOnAfterSetLayout();
 			}
 		}
 
@@ -1649,7 +1665,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="projection"></param>
 		/// <param name="mapMarker"></param>
 		internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, 
-		                                      IProjection projection, MapControl mapMarker)
+			IProjection projection, MapControl mapMarker)
 		{
 			if (mapMarker != null)
 			{
@@ -1657,43 +1673,43 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
-        /// <summary>
-        /// Notifies controls that there was a map tap.
-        /// </summary>
-        /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
-        internal void NotifyMapTapToControls() 
-        {
-            foreach (var marker in _markers)
-            {
-                marker.NotifyMapTap();
-            }
-            foreach (var control in _controls)
-            {
-                control.NotifyMapTap();
-            }
-        }
+		/// <summary>
+		/// Notifies controls that there was a map tap.
+		/// </summary>
+		/// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
+		internal void NotifyMapTapToControls() 
+		{
+			foreach (var marker in _markers)
+			{
+				marker.NotifyMapTap();
+			}
+			foreach (var control in _controls)
+			{
+				control.NotifyMapTap();
+			}
+		}
 
-        /// <summary>
-        /// Notifies this host that the control was clicked.
-        /// </summary>
-        /// <param name="clickedControl">Control.</param>
-        public void NotifyControlClicked(MapControl clickedControl)
-        { // make sure to close all other popups.
-            foreach (var marker in _markers)
-            {
-                if (marker != clickedControl)
-                {
-                    marker.NotifyOtherControlClicked();
-                }
-            }
-            foreach (var control in _controls)
-            {
-                if (control != clickedControl)
-                {
-                    control.NotifyOtherControlClicked();
-                }
-            }
-        }
+		/// <summary>
+		/// Notifies this host that the control was clicked.
+		/// </summary>
+		/// <param name="clickedControl">Control.</param>
+		public void NotifyControlClicked(MapControl clickedControl)
+		{ // make sure to close all other popups.
+			foreach (var marker in _markers)
+			{
+				if (marker != clickedControl)
+				{
+					marker.NotifyOtherControlClicked();
+				}
+			}
+			foreach (var control in _controls)
+			{
+				if (control != clickedControl)
+				{
+					control.NotifyOtherControlClicked();
+				}
+			}
+		}
 
 		#endregion
 
@@ -1709,29 +1725,29 @@ namespace OsmSharp.iOS.UI
 
 		}
 
-        /// <summary>
-        /// Handles the changed event.
-        /// </summary>
-        private void MapChanged()
-        {
-            if (_listener != null)
-            {
-                _listener.Invalidate();
-            }
-            _previouslyRenderedView = null;
-            this.NotifyMovementByInvoke();
-        }
+		/// <summary>
+		/// Handles the changed event.
+		/// </summary>
+		private void MapChanged()
+		{
+			if (_listener != null)
+			{
+				_listener.Invalidate();
+			}
+			_previouslyRenderedView = null;
+			this.NotifyMovementByInvoke();
+		}
 
-        /// <summary>
-        /// Raises the map touched up event.
-        /// </summary>
-        private void RaiseMapTouchedUp()
-        {
-            if (this.MapTouchedUp != null)
-            {
-                this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
-            }
-        }
+		/// <summary>
+		/// Raises the map touched up event.
+		/// </summary>
+		private void RaiseMapTouchedUp()
+		{
+			if (this.MapTouchedUp != null)
+			{
+				this.MapTouchedUp(this, this.MapZoom, this.MapTilt, this.MapCenter);
+			}
+		}
 
 		/// <summary>
 		/// Raises the map touched event.
@@ -1742,40 +1758,40 @@ namespace OsmSharp.iOS.UI
 			{
 				this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
 			}
-        }
+		}
 
-        /// <summary>
-        /// Raises the map touched down event.
-        /// </summary>
-        private void RaiseMapTouchedDown()
-        {
-            if (this.MapTouchedDown != null)
-            {
-                this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
-            }
-        }
+		/// <summary>
+		/// Raises the map touched down event.
+		/// </summary>
+		private void RaiseMapTouchedDown()
+		{
+			if (this.MapTouchedDown != null)
+			{
+				this.MapTouchedDown(this, this.MapZoom, this.MapTilt, this.MapCenter);
+			}
+		}
 
-        /// <summary>
-        /// Raises the map touched event.
-        /// </summary>
-        private void RaiseMapMove()
-        {
-            if (this.MapMove != null)
-            {
-                this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
-            }
-        }
+		/// <summary>
+		/// Raises the map touched event.
+		/// </summary>
+		private void RaiseMapMove()
+		{
+			if (this.MapMove != null)
+			{
+				this.MapMove(this, this.MapZoom, this.MapTilt, this.MapCenter);
+			}
+		}
 
-        /// <summary>
-        /// Raises the map touched event.
-        /// </summary>
-        private void RaiseMapInitialized()
-        {
-            if (this.MapInitialized != null)
-            {
-                this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
-            }
-        }
+		/// <summary>
+		/// Raises the map touched event.
+		/// </summary>
+		private void RaiseMapInitialized()
+		{
+			if (this.MapInitialized != null)
+			{
+				this.MapInitialized(this, this.MapZoom, this.MapTilt, this.MapCenter);
+			}
+		}
 
 		/// <summary>
 		/// Dispose the specified disposing.
@@ -1786,9 +1802,9 @@ namespace OsmSharp.iOS.UI
 			base.Dispose(disposing);
 
 			if (_onScreenBuffer != null &&
-                _onScreenBuffer.NativeImage != null)
+				_onScreenBuffer.NativeImage != null)
 			{
-                _onScreenBuffer.NativeImage.Dispose();
+				_onScreenBuffer.NativeImage.Dispose();
 			}
 
 			if (_renderingThread != null)
@@ -1797,5 +1813,5 @@ namespace OsmSharp.iOS.UI
 				_renderingThread = null;
 			}
 		}
-    }
+	}
 }

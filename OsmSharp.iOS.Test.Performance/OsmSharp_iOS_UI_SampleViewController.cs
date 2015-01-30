@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 using OsmSharp.Logging;
 using OsmSharp.Math;
 using OsmSharp.Math.Geo;
@@ -26,7 +24,19 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.iOS.UI;
+#if __UNIFIED__
+using Foundation;
+using UIKit;
+using CoreGraphics;
+#else
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
+
+using CGRect = global::System.Drawing.RectangleF;
+using CGSize = global::System.Drawing.SizeF;
+using CGPoint = global::System.Drawing.PointF;
+#endif
 
 namespace OsmSharp.iOS.Test.Performance
 {
@@ -164,11 +174,11 @@ namespace OsmSharp.iOS.Test.Performance
                     target.SetShouldAntialias (false);
                     target.SetBlendMode (CGBlendMode.Copy);
                     target.SetAlpha (1);
-                    return new CGContextWrapper(target, new RectangleF(
+                    return new CGContextWrapper(target, new CGRect(
                         0, 0, width, height));
                 },
                 () => {
-                    return new CGContextRenderer (1);
+					return new CGContextRenderer (1);
                 });
         }
 	}
