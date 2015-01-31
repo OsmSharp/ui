@@ -214,7 +214,11 @@ namespace OsmSharp.Routing.Graph
             }
             if(localArcs.isInverted)
             { // make sure to return the inverse edge.
-                shape = localArcs.Intermediates.Reverse();
+                shape = null;
+                if(localArcs.Intermediates != null)
+                {
+                    shape = localArcs.Intermediates.Reverse();
+                }
                 return true;
             }
             shape = localArcs.Intermediates;
