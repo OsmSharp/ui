@@ -37,12 +37,12 @@ namespace OsmSharp.Collections.Cache
         /// <summary>
         /// Holds the next id.
         /// </summary>
-        private long _id;
+        private ulong _id;
 
         /// <summary>
         /// Holds the last id.
         /// </summary>
-        private long _lastId;
+        private ulong _lastId;
 
         /// <summary>
         /// A delegate to use for when an item is pushed out of the cache.
@@ -61,11 +61,11 @@ namespace OsmSharp.Collections.Cache
         /// <param name="capacity"></param>
         public LRUCache(int capacity)
         {
-            _id = long.MinValue;
+            _id = ulong.MinValue;
             _lastId = _id;
             _data = new Dictionary<TKey, CacheEntry>();
 
-            this.MaxCapacity = ((capacity / 100) * 10) + capacity;
+            this.MaxCapacity = ((capacity / 100) * 10) + capacity + 1;
             this.MinCapacity = capacity;
         }
 
@@ -164,7 +164,7 @@ namespace OsmSharp.Collections.Cache
             {
                 _data.Clear();
             }
-            _id = long.MinValue;
+            _id = ulong.MinValue;
             _lastId = _id;
         }
 
@@ -191,20 +191,20 @@ namespace OsmSharp.Collections.Cache
                 {
                     var n = this.MaxCapacity - this.MinCapacity + 1;
                     var pairEnumerator = _data.GetEnumerator();
-                    var queue = new BinaryHeapLong<KeyValuePair<TKey, CacheEntry>>((uint)n + 1);
+                    var queue = new BinaryHeapULong<KeyValuePair<TKey, CacheEntry>>((uint)n + 1);
                     while (queue.Count < n &&
                         pairEnumerator.MoveNext())
                     {
                         var current = pairEnumerator.Current;
-                        queue.Push(current, -current.Value.Id);
+                        queue.Push(current, ulong.MaxValue - current.Value.Id);
                     }
-                    long min = queue.PeekWeight();
+                    ulong min = queue.PeekWeight();
                     while (pairEnumerator.MoveNext())
                     {
                         var current = pairEnumerator.Current;
-                        if (min < -current.Value.Id)
+                        if (min < ulong.MaxValue - current.Value.Id)
                         {
-                            queue.Push(current, -current.Value.Id);
+                            queue.Push(current, ulong.MaxValue - current.Value.Id);
                             queue.Pop();
                             min = queue.PeekWeight();
                         }
@@ -232,7 +232,7 @@ namespace OsmSharp.Collections.Cache
             /// <summary>
             /// The id of the object.
             /// </summary>
-            public long Id { get; set; }
+            public ulong Id { get; set; }
 
             /// <summary>
             /// The object being cached.

@@ -26,7 +26,7 @@ namespace OsmSharp.Collections.PriorityQueues
     /// Implements a priority queue in the form of a binairy heap.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BinaryHeapLong<T>// : IPriorityQueue<T>
+    public class BinaryHeapULong<T>
     {
         /// <summary>
         /// The objects per priority.
@@ -36,7 +36,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Holds the priorities of this heap.
         /// </summary>
-        private long[] _priorities;
+        private ulong[] _priorities;
 
         /// <summary>
         /// The current count of elements.
@@ -51,7 +51,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Creates a new binairy heap.
         /// </summary>
-        public BinaryHeapLong()
+        public BinaryHeapULong()
             : this(2)
         {
 
@@ -60,10 +60,10 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Creates a new binairy heap.
         /// </summary>
-        public BinaryHeapLong(uint initialSize)
+        public BinaryHeapULong(uint initialSize)
         {
             _heap = new T[initialSize];
-            _priorities = new long[initialSize];
+            _priorities = new ulong[initialSize];
 
             _count = 0;
             _latest_index = 1;
@@ -82,7 +82,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// </summary>
         /// <param name="item"></param>
         /// <param name="priority"></param>
-        public void Push(T item, long priority)
+        public void Push(T item, ulong priority)
         {
             _count++; // another item was added!
 
@@ -90,7 +90,7 @@ namespace OsmSharp.Collections.PriorityQueues
             if (_latest_index == _priorities.Length - 1)
             { // time to increase size!
                 Array.Resize<T>(ref _heap, _heap.Length + 100);
-                Array.Resize<long>(ref _priorities, _priorities.Length + 100);
+                Array.Resize<ulong>(ref _priorities, _priorities.Length + 100);
             }
 
             // add the item at the first free point 
@@ -105,7 +105,7 @@ namespace OsmSharp.Collections.PriorityQueues
                 uint parent_idx = bubble_index / 2;
                 if (_priorities[bubble_index] < _priorities[parent_idx])
                 { // the parent priority is higher; do the swap.
-                    long temp_priority = _priorities[parent_idx];
+                    ulong temp_priority = _priorities[parent_idx];
                     T temp_item = _heap[parent_idx];
                     _priorities[parent_idx] = _priorities[bubble_index];
                     _heap[parent_idx] = _heap[bubble_index];
@@ -125,7 +125,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// Returns the smallest weight in the queue.
         /// </summary>
         /// <returns></returns>
-        public long PeekWeight()
+        public ulong PeekWeight()
         {
             return _priorities[1];
         }
@@ -182,7 +182,7 @@ namespace OsmSharp.Collections.PriorityQueues
                     // One if the parent's children are smaller or equal, swap them
                     if (parent != swapitem)
                     {
-                        long temp_priority = _priorities[parent];
+                        ulong temp_priority = _priorities[parent];
                         T temp_item = _heap[parent];
                         _priorities[parent] = _priorities[swapitem];
                         _heap[parent] = _heap[swapitem];
