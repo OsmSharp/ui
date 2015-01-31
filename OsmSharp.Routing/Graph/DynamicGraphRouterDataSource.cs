@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -179,8 +179,16 @@ namespace OsmSharp.Routing.Graph
                 uint arcIdx = 0;
                 while(localArcs.MoveNext())
                 {
-                    neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
-                        localArcs.EdgeData));
+                    if(localArcs.isInverted)
+                    {
+                        neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
+                            (TEdgeData)localArcs.EdgeData.Reverse()));
+                    }
+                    else
+                    { // not inverted.
+                        neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
+                            localArcs.EdgeData));
+                    }
                     arcIdx++;
                 }
             }
@@ -203,6 +211,11 @@ namespace OsmSharp.Routing.Graph
                 index < edgeIdx)
             {
                 edgeIdx++;
+            }
+            if(localArcs.isInverted)
+            { // make sure to return the inverse edge.
+                shape = localArcs.Intermediates.Reverse();
+                return true;
             }
             shape = localArcs.Intermediates;
             return true;
