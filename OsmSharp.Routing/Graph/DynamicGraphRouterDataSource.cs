@@ -171,19 +171,41 @@ namespace OsmSharp.Routing.Graph
             var vertices = _vertexIndex.GetInside(
                 box);
 
-            //// loop over all vertices and get the arcs.
-            //var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
-            //foreach (uint vertex in vertices)
-            //{
-            //    var localArcs = this.GetEdges(vertex);
-            //    foreach (var localArc in localArcs)
-            //    {
-            //        arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
-            //            vertex, new KeyValuePair<uint, TEdgeData>(localArc.Neighbour, localArc.EdgeData)));
-            //    }
-            //}
-            //return arcs.ToArray();
-            return null;
+            // loop over all vertices and get the arcs.
+            var neighbours = new List<Tuple<uint, uint, uint, TEdgeData>>();
+            foreach (uint vertexId in vertices)
+            {
+                var localArcs = this.GetEdges(vertexId);
+                uint arcIdx = 0;
+                while(localArcs.MoveNext())
+                {
+                    neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
+                        localArcs.EdgeData));
+                    arcIdx++;
+                }
+            }
+            return new NeighbourEnumerator(this, neighbours);
+        }
+
+
+        /// <summary>
+        /// Gets an edge-shape based on the from vertex and the index of the edge.
+        /// </summary>
+        /// <param name="vertex">The vertex where the edge is incident.</param>
+        /// <param name="index">The index of the edge.</param>
+        /// <param name="shape">The shape, if any, to return.</param>
+        /// <returns></returns>
+        internal bool GetShapeForArc(uint vertex, uint index, out ICoordinateCollection shape)
+        {
+            var localArcs = this.GetEdges(vertex);
+            uint edgeIdx = 0;
+            while (localArcs.MoveNext() &&
+                index < edgeIdx)
+            {
+                edgeIdx++;
+            }
+            shape = localArcs.Intermediates;
+            return true;
         }
 
         /// <summary>
@@ -524,6 +546,143 @@ namespace OsmSharp.Routing.Graph
         }
 
         #endregion
+
+
+
+        /// <summary>
+        /// A neighbour enumerators.
+        /// </summary>
+        private class NeighbourEnumerator : INeighbourEnumerator<TEdgeData>
+        {
+            /// <summary>
+            /// Holds the edge and neighbours.
+            /// </summary>
+            /// <remarks>(vertex1, vertex2, edgeIdx, edgeData)</remarks>
+            private List<Tuple<uint, uint, uint, TEdgeData>> _neighbours;
+
+            /// <summary>
+            /// Holds the source.
+            /// </summary>
+            private DynamicGraphRouterDataSource<TEdgeData> _source;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerators.
+            /// </summary>
+            /// <param name="source">The datasource the edges come from.</param>
+            /// <param name="neighbours">The neighbour data with tuples (vertex1, vertex2, edgeIdx, edgeData).</param>
+            public NeighbourEnumerator(DynamicGraphRouterDataSource<TEdgeData> source,
+                List<Tuple<uint, uint, uint, TEdgeData>> neighbours)
+            {
+                _source = source;
+                _neighbours = neighbours;
+            }
+
+            /// <summary>
+            /// Moves to the next coordinate.
+            /// </summary>
+            /// <returns></returns>
+            public bool MoveNext()
+            {
+                _current++;
+                return _neighbours.Count > _current;
+            }
+
+            /// <summary>
+            /// Gets the first vector.
+            /// </summary>
+            public uint Vertex1
+            {
+                get { return _neighbours[_current].Item1; }
+            }
+
+            /// <summary>
+            /// Gets the second vector.
+            /// </summary>
+            public uint Vertex2
+            {
+                get { return _neighbours[_current].Item2; }
+            }
+
+            /// <summary>
+            /// Gets the edge data.
+            /// </summary>
+            public TEdgeData EdgeData
+            {
+                get { return _neighbours[_current].Item4; }
+            }
+
+            /// <summary>
+            /// Gets the current intermediates.
+            /// </summary>
+            public ICoordinateCollection Intermediates
+            {
+                get
+                {
+                    ICoordinateCollection shape;
+                    if (_source.GetShapeForArc(_neighbours[_current].Item1, _neighbours[_current].Item3, out shape))
+                    {
+                        return shape;
+                    }
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns true if this enumerator has a pre-calculated count.
+            /// </summary>
+            public bool HasCount
+            {
+                get { return true; }
+            }
+
+            /// <summary>
+            /// Returns the count if any.
+            /// </summary>
+            public int Count
+            {
+                get { return _neighbours.Count; }
+            }
+
+            /// <summary>
+            /// Resets this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = -1;
+            }
+
+            public IEnumerator<Neighbour<TEdgeData>> GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                this.Reset();
+                return this;
+            }
+
+            public Neighbour<TEdgeData> Current
+            {
+                get { return new Neighbour<TEdgeData>(this); }
+            }
+
+            object System.Collections.IEnumerator.Current
+            {
+                get { return this; }
+            }
+
+            public void Dispose()
+            {
+
+            }
+        }
 
         public bool IsDirected
         {
