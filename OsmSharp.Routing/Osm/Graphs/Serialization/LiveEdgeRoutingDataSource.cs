@@ -183,7 +183,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             var vertex = _vertices[(int)vertexId];
             var arcCoordinates = vertex.Arcs[arcIdx];
             shape = null;
-            if (arcCoordinates != null)
+            if (arcCoordinates.Item3 != null)
             {
                 shape = new CoordinateArrayCollection<GeoCoordinateSimple>(arcCoordinates.Item3);
             }
