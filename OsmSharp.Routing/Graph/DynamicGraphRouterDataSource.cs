@@ -208,7 +208,7 @@ namespace OsmSharp.Routing.Graph
             var localArcs = this.GetEdges(vertex);
             uint edgeIdx = 0;
             while (localArcs.MoveNext() &&
-                index < edgeIdx)
+                edgeIdx < index)
             {
                 edgeIdx++;
             }

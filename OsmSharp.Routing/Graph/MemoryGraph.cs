@@ -1023,10 +1023,10 @@ namespace OsmSharp.Routing.Graph
             {
                 if(_nextEdgeId != NO_EDGE)
                 { // there is a next edge.
-                    _currentEdgeId = _nextEdgeId;
-                    _neighbour = 0; // reset neighbour.
                     do
                     { // if search for specific edges, keep looping until found.
+                        _currentEdgeId = _nextEdgeId;
+                        _neighbour = 0; // reset neighbour.
                         if (_graph._edges[_nextEdgeId + NODEA] == _vertex)
                         {
                             _neighbour = _graph._edges[_nextEdgeId + NODEB];
