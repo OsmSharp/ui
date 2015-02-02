@@ -439,15 +439,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
                 TEdgeData existingData;
-                ICoordinateCollection shape;
-                if (this.GetEdge(_dynamicGraph, from, to, out existingData, out shape))
+                ICoordinateCollection forwardShape;
+                if (this.GetEdge(_dynamicGraph, from, to, out existingData, out forwardShape))
                 { // oeps, an edge already exists!
                     if (intermediates != null && intermediates.Count > 0)
                     { // add one of the intermediates as new vertex.
                         uint newVertex;
-                        if (shape != null && shape.Count > 0)
+                        if (forwardShape != null && forwardShape.Count > 0)
                         { // the other edge also has a shape, make sure to also split it.
-                            var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
+                            var existingIntermediates = new List<GeoCoordinateSimple>(forwardShape.ToSimpleArray());
                             newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
 
                             // add edge before.
@@ -496,9 +496,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                     else
                     { // hmm, no intermediates, the other edge should have them.
-                        if (shape != null && shape.Count > 0)
+                        if (forwardShape != null && forwardShape.Count > 0)
                         { // there is a shape, add one of the intermediates as a new vertex.
-                            var existingIntermediates = new List<GeoCoordinateSimple>(shape.ToSimpleArray());
+                            var existingIntermediates = new List<GeoCoordinateSimple>(forwardShape.ToSimpleArray());
                             var newVertex = _dynamicGraph.AddVertex(existingIntermediates[0].Latitude, existingIntermediates[0].Longitude);
 
                             // add edge before.
@@ -521,6 +521,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                 afterIntermediates.Reverse();
                                 afterEdgeData = (TEdgeData)afterEdgeData.Reverse();
                                 _dynamicGraph.AddEdge(to, newVertex, afterEdgeData, new CoordinateArrayCollection<GeoCoordinateSimple>(afterIntermediates.ToArray()));
+                            }
+
+                            if (_dynamicGraph.CanHaveDuplicates)
+                            { // make sure to remove the existing edge if graph allows duplicates.
+                                _dynamicGraph.RemoveEdge(from, to); 
+                                if(_dynamicGraph.IsDirected)
+                                { // also remove the reverse.
+                                    _dynamicGraph.RemoveEdge(to, from); 
+                                }
                             }
                         }
                         else
