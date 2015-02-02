@@ -53,6 +53,17 @@ namespace OsmSharp.Routing.Graph.Router
         INeighbourEnumerator<TEdgeData> GetEdges(GeoCoordinateBox box);
 
         /// <summary>
+        /// Returns all neighbours even the reverse edges in directed graph.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Only to be used for generating instructions or statistics about a route.
+        /// WARNING: could potentially increase memory usage.
+        /// </remarks>
+        IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex);
+
+        /// <summary>
         /// Returns the tags index.
         /// </summary>
         ITagsCollectionIndexReadonly TagsIndex

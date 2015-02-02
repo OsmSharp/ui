@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -245,6 +246,48 @@ namespace OsmSharp.Routing.Graph
         public IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
         {
             return _graph.GetEdges(vertexId);
+        }
+
+        /// <summary>
+        /// Returns all neighbours even the reverse edges in directed graph.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Only to be used for generating instructions or statistics about a route.
+        /// WARNING: could potentially increase memory usage.
+        /// </remarks>
+        public IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex)
+        {
+            if(_graph.IsDirected)
+            { // only do some special stuff for a directed graph.
+                var edgeList = new List<Edge<TEdgeData>>(_graph.GetEdges(vertex));
+                var reverseNeighbours = new uint[256];
+                var reverseCount = this.GetReverse(vertex, 0, ref reverseNeighbours);
+                do
+                {
+                    for (int i = 0; i < reverseCount; i++)
+                    {
+                        var reverseEdges = _graph.GetEdges(reverseNeighbours[i], vertex);
+                        while(reverseEdges.MoveNext())
+                        {
+                            var intermediates = reverseEdges.Intermediates;
+                            if (intermediates == null)
+                            {
+                                edgeList.Add(new Edge<TEdgeData>(reverseNeighbours[i],
+                                    reverseEdges.InvertedEdgeData, null));
+                            }
+                            else
+                            {
+                                edgeList.Add(new Edge<TEdgeData>(reverseNeighbours[i],
+                                    reverseEdges.InvertedEdgeData, reverseEdges.Intermediates.Reverse()));
+                            }
+                        }
+                    }
+                } while (reverseCount == reverseNeighbours.Length);
+                return edgeList;
+            }
+            return _graph.GetEdges(vertex);
         }
 
         /// <summary>
@@ -564,7 +607,109 @@ namespace OsmSharp.Routing.Graph
 
         #endregion
 
+        #region Reverse Neighbour Index
 
+        /// <summary>
+        /// Holds the first reverse neighbour for each vertex.
+        /// </summary>
+        private HugeArray<uint> _reverseDirectNeighbours;
+
+        /// <summary>
+        /// Holds additional reverse neighbours.
+        /// </summary>
+        private Dictionary<uint, uint[]> _additionalReverseNeighbours;
+
+        /// <summary>
+        /// Initializes the reverse index.
+        /// </summary>
+        private void BuildReverse()
+        {
+            _reverseDirectNeighbours = new HugeArray<uint>(_graph.VertexCount + 1);
+            _additionalReverseNeighbours = new Dictionary<uint, uint[]>();
+
+            for (uint currentVertex = 1; currentVertex <= _graph.VertexCount; currentVertex++)
+            {
+                var edges = _graph.GetEdges(currentVertex);
+                while (edges.MoveNext())
+                {
+                    uint neighbour = edges.Neighbour;
+                    this.AddReverse(neighbour, currentVertex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds a reverse entry (neighbour->vertex).
+        /// </summary>
+        /// <param name="neighbour"></param>
+        /// <param name="vertex"></param>
+        private void AddReverse(uint neighbour, uint vertex)
+        {
+            if (_reverseDirectNeighbours[neighbour] > 0)
+            { // there is already an entry.
+                
+                uint[] additional = null;
+                if (_additionalReverseNeighbours.TryGetValue(neighbour, out additional))
+                { // there is already an additional neighbour, add this one.
+                    var newAdditional = new uint[additional.Length + 1];
+                    additional.CopyTo(newAdditional, 0);
+                    newAdditional[additional.Length] = vertex;
+                    _additionalReverseNeighbours[neighbour] = newAdditional;
+                }
+                else
+                { // no additional neighbours yet, just add this one.
+                    _additionalReverseNeighbours[neighbour] = new uint[] { vertex };
+                }
+            }
+            else
+            { // no entry yet!
+                _reverseDirectNeighbours[neighbour] = vertex;
+            }
+        }
+
+        /// <summary>
+        /// Gets the reverse neighbours and returns the number of neighbours found. If the number of neighbours equals the array size then call method again.
+        /// </summary>
+        /// <param name="vertex">The vertex to search reverse neighbours for.</param>
+        /// <param name="start">The start index for filling the array.</param>
+        /// <param name="neighbours">The neighbours array to be filled up with neighbours.</param>
+        /// <returns></returns>
+        private int GetReverse(uint vertex, int start, ref uint[] neighbours)
+        {
+            if (_reverseDirectNeighbours == null)
+            { // build the reverse index on-demand.
+                this.BuildReverse();
+            }
+
+            int current = 0;
+            if(_reverseDirectNeighbours[vertex] > 0)
+            { // there is a neighbour set.
+                if(start <= current)
+                {
+                    neighbours[current - start] = _reverseDirectNeighbours[vertex];
+                }
+                current++;
+                uint[] additional = null;
+                if(_additionalReverseNeighbours.TryGetValue(vertex, out additional))
+                {
+                    for(int i = 0; i < additional.Length; i++)
+                    {
+                        if(start <= current)
+                        {
+                            neighbours[current - start] = additional[i];
+                        }
+                        current++;
+                        if (current - start >= neighbours.Length)
+                        { // stop when target array is full.
+                            break;
+                        }
+                    }
+                }
+            }
+            return current - start;
+        }
+
+        #endregion
 
         /// <summary>
         /// A neighbour enumerators.

@@ -61,7 +61,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            var arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1)).ToList();
+            var arcs = this.Data.GetDirectNeighbours(Convert.ToUInt32(vertex1)).ToList();
             return arcs.KeepUncontracted();
         }
 

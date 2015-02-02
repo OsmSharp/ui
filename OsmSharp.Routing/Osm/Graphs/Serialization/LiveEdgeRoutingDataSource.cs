@@ -929,5 +929,11 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         {
             get { return false; }
         }
+
+
+        public IEnumerable<Edge<LiveEdge>> GetDirectNeighbours(uint vertex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

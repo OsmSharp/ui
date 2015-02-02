@@ -99,6 +99,19 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new edge by copying the given edge.
         /// </summary>
+        /// <param name="neighbour"></param>
+        /// <param name="edgeData"></param>
+        /// <param name="intermediates"></param>
+        public Edge(uint neighbour, TEdgeData edgeData, ICoordinateCollection intermediates)
+        {
+            this.Neighbour = neighbour;
+            this.EdgeData = edgeData;
+            this.Intermediates = intermediates;
+        }
+
+        /// <summary>
+        /// Creates a new edge by copying the given edge.
+        /// </summary>
         /// <param name="edge"></param>
         public Edge(Edge<TEdgeData> edge)
         {
