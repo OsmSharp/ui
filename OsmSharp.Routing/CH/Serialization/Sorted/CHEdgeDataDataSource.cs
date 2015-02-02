@@ -1099,11 +1099,5 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             throw new NotImplementedException();
         }
-
-
-        public IEnumerable<Edge<CHEdgeData>> GetDirectNeighbours(uint vertex)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
