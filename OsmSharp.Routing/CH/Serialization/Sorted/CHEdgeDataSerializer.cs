@@ -66,6 +66,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         private bool _sort = false;
 
         /// <summary>
+        /// Holds the index size.
+        /// </summary>
+        private const int INDEX_SIZE = 20;
+
+        /// <summary>
         /// Creates a new v2 serializer.
         /// </summary>
         public CHEdgeDataDataSourceSerializer()
@@ -157,11 +162,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             DynamicGraphRouterDataSource<CHEdgeData> graph)
         {
             // sort the graph.
-            IGraph<CHEdgeData> sortedGraph = graph;
-            //if (_sort)
-            //{ // sort the graph.
-            //    sortedGraph = this.SortGraph(graph);
-            //}
+            var sortedGraph = graph;
 
             // create the regions.
             var regions = new SortedDictionary<ulong, List<uint>>();
@@ -218,9 +219,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 chRegionIndex.RegionIds[regionIdx] = region.Key;
                 regionIdx++;
             }
-            stream.Seek(20, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
+            stream.Seek(INDEX_SIZE, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
             _runtimeTypeModel.Serialize(stream, chRegionIndex); // write region index.
-            var sizeRegionIndex = (int)(stream.Position - 20); // now at beginning of [REGIONS]
+            var sizeRegionIndex = (int)(stream.Position - INDEX_SIZE); // now at beginning of [REGIONS]
             memoryStream.Seek(0, SeekOrigin.Begin);
             memoryStream.WriteTo(stream); // write regions.
             memoryStream.Dispose();
@@ -400,97 +401,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Flush();
         }
 
-        ///// <summary>
-        ///// Returns a topologically sorted version of the given graph.
-        ///// </summary>
-        ///// <param name="graph"></param>
-        ///// <returns></returns>
-        //public IGraph<CHEdgeData> SortGraph(IGraph<CHEdgeData> graph)
-        //{
-        //    //// also add all downward edges.
-        //    //graph.AddDownwardEdges();
-
-        //    // sort the topologically ordered vertices into bins representing a certain height range.
-        //    var heightBins = new List<uint>[1000];
-        //    foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
-        //    { // enumerates all vertixes depth-first.
-        //        int binIdx = (int)(vertexDepth.Depth / _heightBinSize);
-        //        if (heightBins.Length < binIdx)
-        //        { // resize bin array if needed.
-        //            Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
-        //        }
-
-        //        // add to the current bin.
-        //        var bin = heightBins[binIdx];
-        //        if (bin == null)
-        //        { // create new bin.
-        //            bin = new List<uint>();
-        //            heightBins[binIdx] = bin;
-        //        }
-        //        bin.Add(vertexDepth.VertexId);
-        //    }
-
-        //    // temp test.
-        //    var sortedGraph = new MemoryGraph<CHEdgeData>();
-        //    var currentBinIds = new Dictionary<uint, uint>();
-        //    uint newVertexId;
-        //    for (int idx = 0; idx < heightBins.Length; idx++)
-        //    {
-        //        var bin = heightBins[idx];
-        //        if (bin != null)
-        //        { // translate ids.
-        //            // fill current bin ids and add vertices to the new graph.
-        //            foreach (uint binVertexId in bin)
-        //            {
-        //                float latitude, longitude;
-        //                graph.GetVertex(binVertexId, out latitude, out longitude);
-        //                newVertexId = sortedGraph.AddVertex(latitude, longitude);
-
-        //                currentBinIds.Add(binVertexId, newVertexId); // add to the current bin index.
-        //            }
-        //        }
-        //    }
-
-        //    // rebuild the CH graph based on the new ordering and build the CHRegions.
-        //    newVertexId = 0;
-        //    for (int idx = 0; idx < heightBins.Length; idx++)
-        //    {
-        //        var bin = heightBins[idx];
-        //        if (bin != null)
-        //        { // translate ids.
-        //            foreach (uint binVertexId in bin)
-        //            {
-        //                currentBinIds.TryGetValue(binVertexId, out newVertexId);
-
-        //                // get the higher arcs and convert their ids.
-        //                var arcs = graph.GetEdges(binVertexId);
-        //                foreach (var arc in arcs)
-        //                {
-        //                    // get target vertex.
-        //                    uint nextVertexArcId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.Neighbour, currentBinIds, heightBins);
-        //                    // convert edge.
-        //                    var newEdge = new CHEdgeData();
-        //                    newEdge.CanMoveBackward = arc.EdgeData.CanMoveBackward;
-        //                    newEdge.CanMoveForward = arc.EdgeData.CanMoveForward;
-        //                    newEdge.Forward = arc.EdgeData.Forward;
-        //                    if (arc.EdgeData.ContractedId != 0)
-        //                    { // contracted info.
-        //                        newEdge.ContractedId = CHEdgeDataDataSourceSerializer.SearchVertex(arc.EdgeData.ContractedId, currentBinIds, heightBins);
-        //                    }
-        //                    else
-        //                    { // no contracted info.
-        //                        newEdge.ContractedId = 0;
-        //                        newEdge.Tags = arc.EdgeData.Tags;
-        //                    }
-        //                    newEdge.Weight = arc.EdgeData.Weight;
-        //                    sortedGraph.AddEdge(newVertexId, nextVertexArcId, newEdge, arc.Intermediates);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return sortedGraph;
-        //}
-
         /// <summary>
         /// Searches for a vertex and returns it's new id.
         /// </summary>
@@ -577,7 +487,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             stream.Seek(startOfTags, SeekOrigin.Begin);
             var tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
 
-            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + 16,
+            return new CHEdgeDataDataSource(stream, this, vehicles, sizeRegionIndex + INDEX_SIZE,
                 chVertexRegionIndex, _regionZoom,
                 startOfBlocks + sizeBlockIndex + 4, blockIndex, (uint)_blockVertexSize,
                 startOfShapes + sizeShapesIndex + 4, shapesIndex,
@@ -596,8 +506,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         internal CHBlock DeserializeBlock(Stream stream, long offset, int length, bool decompress)
         {
             CHBlock value = null;
-            //for (int idx = 0; idx < 10; idx++)
-            //{
             if (decompress)
             { // decompress the data.
                 var buffer = new byte[length];
@@ -614,7 +522,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                     new CappedStream(stream, offset, length), null,
                         typeof(CHBlock));
             }
-            //}
             return value;
         }
 
@@ -629,8 +536,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         internal CHBlockCoordinates DeserializeBlockShape(Stream stream, long offset, int length, bool decompress)
         {
             CHBlockCoordinates value = null;
-            //for (int idx = 0; idx < 10; idx++)
-            //{
             if (decompress)
             { // decompress the data.
                 var buffer = new byte[length];
@@ -647,7 +552,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         new CappedStream(stream, offset, length), null,
                             typeof(CHBlockCoordinates));
             }
-            //}
             return value;
         }
 
@@ -662,8 +566,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         internal CHBlockReverse DeserializeBlockReverse(Stream stream, int offset, int length, bool decompress)
         {
             CHBlockReverse value = null;
-            //for (int idx = 0; idx < 10; idx++)
-            //{
             if (decompress)
             { // decompress the data.
                 var buffer = new byte[length];
@@ -680,7 +582,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         new CappedStream(stream, offset, length), null,
                             typeof(CHBlockReverse));
             }
-            //}
             return value;
         }
 
