@@ -220,7 +220,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
             stream.Seek(20, SeekOrigin.Begin); // move to beginning of [REGION_INDEX]
             _runtimeTypeModel.Serialize(stream, chRegionIndex); // write region index.
-            var sizeRegionIndex = (int)(stream.Position - 16); // now at beginning of [REGIONS]
+            var sizeRegionIndex = (int)(stream.Position - 20); // now at beginning of [REGIONS]
             memoryStream.Seek(0, SeekOrigin.Begin);
             memoryStream.WriteTo(stream); // write regions.
             memoryStream.Dispose();
