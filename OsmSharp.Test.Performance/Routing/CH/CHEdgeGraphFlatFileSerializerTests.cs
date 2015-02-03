@@ -37,9 +37,9 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
-        public static void Test()
+        public static DynamicGraphRouterDataSource<CHEdgeData> Test()
         {
-            CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "kempen-big.osm.pbf");
+            return CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
-        public static void TestSerialization(string name, string pbfFile)
+        public static DynamicGraphRouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             var stream = testFile.OpenRead();
@@ -57,17 +57,13 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var testOutputFile = new FileInfo(@"test.pedestrian.routing");
             testOutputFile.Delete();
             Stream writeStream = testOutputFile.OpenWrite();
-
-            var tagsIndex = new TagsTableCollectionIndex();
-            var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-
+            
             var performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Serialize");
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
-                source, new OsmRoutingInterpreter(), Vehicle.Car);
+                source, new OsmRoutingInterpreter(), Vehicle.Pedestrian);
 
             var metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
@@ -82,15 +78,16 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             performanceInfo.Stop();
 
-            performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Deserialize");
-            performanceInfo.Start();
-            performanceInfo.Report("Deserializing again...");
+            //performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Deserialize");
+            //performanceInfo.Start();
+            //performanceInfo.Report("Deserializing again...");
 
-            // open file again and read.
-            writeStream = testOutputFile.OpenRead();
-            var deserializedGraph = routingSerializer.Deserialize(writeStream);
+            //// open file again and read.
+            //writeStream = testOutputFile.OpenRead();
+            //var deserializedGraph = routingSerializer.Deserialize(writeStream);
 
-            performanceInfo.Stop();
+            //performanceInfo.Stop();
+            return data;
         }
     }
 }

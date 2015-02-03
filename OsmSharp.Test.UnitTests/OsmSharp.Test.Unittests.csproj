@@ -204,6 +204,7 @@
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
     <Compile Include="Routing\Graph\MemoryDirectedGraphTests.cs" />
     <Compile Include="Routing\Graph\MemoryMappedFileDynamicGraphTests.cs" />
+    <Compile Include="Routing\Instructions\InstructionRegressionSerializedContractedTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />

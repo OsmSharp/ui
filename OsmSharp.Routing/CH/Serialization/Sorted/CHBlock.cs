@@ -95,6 +95,32 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     }
 
     /// <summary>
+    /// Represents a block containing reverse neighbours.
+    /// </summary>
+    [ProtoContract]
+    public class CHBlockReverse
+    {
+        /// <summary>
+        /// Holds the array of arcs reverse neighbours for all nodes in this block.
+        /// </summary>
+        [ProtoMember(1)]
+        public CHArcReverse[] Vertices { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an arc containing reverse neighbours.
+    /// </summary>
+    [ProtoContract]
+    public class CHArcReverse
+    {
+        /// <summary>
+        /// Holds an array of reverse neighbours.
+        /// </summary>
+        [ProtoMember(1)]
+        public uint[] Neighbours { get; set; }
+    }
+
+    /// <summary>
     /// Represents a CH vertex.
     /// </summary>
     [ProtoContract]

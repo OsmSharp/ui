@@ -63,6 +63,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
             int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
             int startOfShapes, CHBlockIndex shapeIndex,
+            int startOfReverses, CHBlockIndex reversesIndex,
             ITagsCollectionIndexReadonly tagsIndex)
         {
             _stream = stream;
@@ -72,9 +73,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             this.InitializeRegions(startOfRegions, regionIndex, zoom);
             this.InitializeBlocks(startOfBlocks, blockIndex, blockSize);
             this.InitializeShapes(startOfShapes, shapeIndex);
+            this.InitializeReverses(startOfReverses, reversesIndex);
 
             _blocks = new LRUCache<uint, CHBlock>(5000);
             _blockShapes = new LRUCache<uint, CHBlockCoordinates>(1000);
+            _blockReverses = new LRUCache<uint, CHBlockReverse>(1000);
             _regions = new LRUCache<ulong, CHVertexRegion>(1000);
             _tagsIndex = tagsIndex;
         }
@@ -160,6 +163,36 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
         {
             return new EdgeEnumerator(this, this.GetEdgePairs(vertexId));
+        }
+
+        /// <summary>
+        /// Returns all neighbours even the reverse edges in directed graph.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public IEnumerable<Edge<CHEdgeData>> GetDirectNeighbours(uint vertex)
+        {
+            var edgeList = new List<Edge<CHEdgeData>>(this.GetEdges(vertex));
+            var reverses = this.LoadVertexReverses(vertex);
+            for (int i = 0; i < reverses.Length; i++)
+            {
+                var reverseEdges = this.GetEdges(reverses[i], vertex);
+                while (reverseEdges.MoveNext())
+                {
+                    var intermediates = reverseEdges.Intermediates;
+                    if (intermediates == null)
+                    {
+                        edgeList.Add(new Edge<CHEdgeData>(reverses[i],
+                            reverseEdges.InvertedEdgeData, null));
+                    }
+                    else
+                    {
+                        edgeList.Add(new Edge<CHEdgeData>(reverses[i],
+                            reverseEdges.InvertedEdgeData, reverseEdges.Intermediates.Reverse()));
+                    }
+                }
+            }
+            return edgeList;
         }
 
         /// <summary>
@@ -377,6 +410,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         private LRUCache<uint, CHBlockCoordinates> _blockShapes;
 
         /// <summary>
+        /// Holds the cached block reverses.
+        /// </summary>
+        private LRUCache<uint, CHBlockReverse> _blockReverses;
+
+        /// <summary>
         /// Holds the start-position of the blocks.
         /// </summary>
         private int _startOfBlocks;
@@ -423,6 +461,27 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             _startOfShapes = startOfShapes;
             _shapesIndex = shapesIndex;
+        }
+
+        /// <summary>
+        /// Holds the start-position of the reverses.
+        /// </summary>
+        private int _startOfReverses;
+
+        /// <summary>
+        /// Holds the reverses index.
+        /// </summary>
+        private CHBlockIndex _reversesIndex;
+
+        /// <summary>
+        /// Initializes the shapes stuff.
+        /// </summary>
+        /// <param name="startOfReverses"></param>
+        /// <param name="reversesIndex"></param>
+        private void InitializeReverses(int startOfReverses, CHBlockIndex reversesIndex)
+        {
+            _startOfReverses = startOfReverses;
+            _reversesIndex = reversesIndex;
         }
 
         /// <summary>
@@ -775,6 +834,54 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
 
             return _serializer.DeserializeBlockShape(_stream, blockOffset, blockSize, true);
+        }
+
+        /// <summary>
+        /// Deserialize the block with the given id.
+        /// </summary>
+        /// <param name="blockId"></param>
+        /// <returns></returns>
+        private CHBlockReverse DeserializeReverse(uint blockId)
+        {
+            int blockOffset;
+            int blockSize;
+            uint blockIdx = blockId / _blockSize;
+            if (blockIdx == 0)
+            { // the block idx zero.
+                blockOffset = _startOfReverses;
+                blockSize = _reversesIndex.BlockLocationIndex[blockIdx];
+            }
+            else
+            { // need to calculate offset and size.
+                blockOffset = _startOfReverses + _reversesIndex.BlockLocationIndex[blockIdx - 1];
+                blockSize = _reversesIndex.BlockLocationIndex[blockIdx] - _reversesIndex.BlockLocationIndex[blockIdx - 1];
+            }
+
+            return _serializer.DeserializeBlockReverse(_stream, blockOffset, blockSize, true);
+        }
+
+
+        /// <summary>
+        /// Loads the reverses for the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        private uint[] LoadVertexReverses(uint vertex)
+        {
+            uint blockId = CHBlock.CalculateId(vertex, _blockSize);
+            CHBlockReverse blockReverses;
+            if (!_blockReverses.TryGet(blockId, out blockReverses))
+            { // damn block not cached!
+                blockReverses = this.DeserializeReverse(blockId);
+                if (blockReverses == null)
+                { // oops even now the block is not found!
+                    return new uint[0];
+                }
+                _blockReverses.Add(blockId, blockReverses);
+                uint blockIdx = vertex - blockId;
+                return blockReverses.Vertices[blockIdx].Neighbours;
+            }
+            return new uint[0];
         }
 
         #endregion

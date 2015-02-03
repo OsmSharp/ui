@@ -31,14 +31,16 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
+using System.IO;
+using OsmSharp.Routing.CH.Serialization.Sorted;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
     /// <summary>
-    /// Holds regression tests based on dykstra routing live.
+    /// Holds regression tests based on a deserialized contracted graph.
     /// </summary>
     [TestFixture]
-    public class InstructionRegressionTestsCH : InstructionRegressionTestsBase
+    public class InstructionRegressionSerializedContractedTests : InstructionRegressionTestsBase
     {
         /// <summary>
         /// Creates a router.
@@ -48,26 +50,26 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         protected override Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
-            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
-            var targetData = new CHEdgeGraphOsmStreamTarget(
-                data, interpreter, tagsIndex, Vehicle.Car);
-            var dataProcessorSource = new XmlOsmStreamSource(
+            var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceName));
-            var sorter = new OsmStreamFilterSort();
-            sorter.RegisterSource(dataProcessorSource);
-            targetData.RegisterSource(sorter);
-            targetData.Pull();
+            var data = CHEdgeGraphOsmStreamTarget.Preprocess(
+                source, new OsmRoutingInterpreter(), Vehicle.Car);
 
-            // do the pre-processing part.
-            var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(data,
-                new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
-            preProcessor.Start();
+            // serialize.
+            var memoryStream = new MemoryStream();
+            TagsCollectionBase metaData = new TagsCollection();
+            metaData.Add("some_key", "some_value");
+            var routingSerializer = new CHEdgeDataDataSourceSerializer();
+            routingSerializer.Serialize(memoryStream, data, metaData);
 
-            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            var deserialized = routingSerializer.Deserialize(memoryStream);
+
+            return Router.CreateCHFrom(deserialized, new CHRouter(), new OsmRoutingInterpreter());
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         [Test]
         public void InstructionRegressionCHTest2()
         {
-            this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm", 
+            this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm",
                 new GeoCoordinate(51.01257, 4.000753),
                 new GeoCoordinate(51.01250, 4.000013));
         }
