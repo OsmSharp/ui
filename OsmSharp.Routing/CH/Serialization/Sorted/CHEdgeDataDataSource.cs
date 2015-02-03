@@ -879,7 +879,11 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                 }
                 _blockReverses.Add(blockId, blockReverses);
                 uint blockIdx = vertex - blockId;
-                return blockReverses.Vertices[blockIdx].Neighbours;
+                var vertices = blockReverses.Vertices[blockIdx].Neighbours;
+                if(vertices != null)
+                {
+                    return vertices;
+                }
             }
             return new uint[0];
         }
