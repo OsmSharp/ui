@@ -264,12 +264,15 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
                         chArcCoordinates.Coordinates = sortedArc.Intermediates.ToSimpleArray();
                         blockArcCoordinates.Add(chArcCoordinates);
 
-                        if(!reverseNeighbours.TryGetValue(sortedArc.Neighbour, out reverse))
+                        if (sortedArc.EdgeData.RepresentsNeighbourRelations)
                         {
-                            reverse = new List<uint>();
-                            reverseNeighbours[sortedArc.Neighbour] = reverse;
+                            if (!reverseNeighbours.TryGetValue(sortedArc.Neighbour, out reverse))
+                            {
+                                reverse = new List<uint>();
+                                reverseNeighbours[sortedArc.Neighbour] = reverse;
+                            }
+                            reverse.Add(vertexId);
                         }
-                        reverse.Add(vertexId);
                     }
                     chVertex.ArcCount = (ushort)(blockArcs.Count - chVertex.ArcIndex);
                     blockVertices.Add(chVertex);
