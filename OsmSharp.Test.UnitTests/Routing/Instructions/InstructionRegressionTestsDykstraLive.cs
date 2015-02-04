@@ -23,8 +23,7 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -63,7 +62,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive();
+            IRoutingAlgorithm<LiveEdge> basicRouter = new Dykstra();
             return Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
         }
 

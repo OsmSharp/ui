@@ -23,8 +23,7 @@ using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
@@ -78,7 +77,7 @@ namespace OsmSharp.Routing
 
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
-                memoryData, interpreter, new DykstraRoutingLive());
+                memoryData, interpreter, new Dykstra());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }
@@ -93,7 +92,7 @@ namespace OsmSharp.Routing
         {
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
-                data, interpreter, new DykstraRoutingLive());
+                data, interpreter, new Dykstra());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }
@@ -105,7 +104,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateLiveFrom(IBasicRouterDataSource<LiveEdge> data, IBasicRouter<LiveEdge> basicRouter, 
+        public static Router CreateLiveFrom(IBasicRouterDataSource<LiveEdge> data, IRoutingAlgorithm<LiveEdge> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
@@ -128,7 +127,7 @@ namespace OsmSharp.Routing
 
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
-                source, interpreter, new DykstraRoutingLive());
+                source, interpreter, new Dykstra());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }
@@ -140,7 +139,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateCHFrom(IBasicRouterDataSource<CHEdgeData> data, IBasicRouter<CHEdgeData> basicRouter, 
+        public static Router CreateCHFrom(IBasicRouterDataSource<CHEdgeData> data, IRoutingAlgorithm<CHEdgeData> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.

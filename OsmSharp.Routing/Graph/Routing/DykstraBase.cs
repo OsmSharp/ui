@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -25,18 +25,18 @@ using OsmSharp.Units.Distance;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Routing.Graph.Router.Dykstra
+namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
     /// Contains generic fuctions common to all dykstra routers.
     /// </summary>
-    public abstract class DykstraRoutingBase<TEdgeData>
+    public abstract class DykstraBase<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
         /// Creates a new basic dykstra router.
         /// </summary>
-        protected DykstraRoutingBase()
+        protected DykstraBase()
         {
 
         }

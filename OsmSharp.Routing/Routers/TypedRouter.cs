@@ -22,7 +22,7 @@ using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics;
 using OsmSharp.Units.Distance;
@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
         /// </summary>
-        private readonly IBasicRouter<TEdgeData> _router;
+        private readonly IRoutingAlgorithm<TEdgeData> _router;
 
         /// <summary>
         /// Interpreter for the routing network.
@@ -65,7 +65,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
         public TypedRouter(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
-            IBasicRouter<TEdgeData> router)
+            IRoutingAlgorithm<TEdgeData> router)
         {
             _dataGraph = graph;
             _interpreter = interpreter;

@@ -27,7 +27,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public override Router BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basicRouter)
+            IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> basicRouter)
         {
             return Router.CreateCHFrom(data, basicRouter, interpreter);
         }
@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        public override IRoutingAlgorithm<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
         {
             return new CHRouter();
         }

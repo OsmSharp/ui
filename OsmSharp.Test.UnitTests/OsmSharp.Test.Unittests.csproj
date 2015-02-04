@@ -217,18 +217,18 @@
     <Compile Include="Routing\Navigation\RouterTrackerTests.cs" />
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
-    <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
+    <Compile Include="Routing\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\Graph\MemoryGraphTests.cs" />
     <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
-    <Compile Include="Routing\Dykstra\DykstraLiveAccessTests.cs">
+    <Compile Include="Routing\DykstraLiveAccessTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Routing\RoutingAccessTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\RouteTests.cs" />
-    <Compile Include="Routing\Dykstra\OsmSourceRoutingTest.cs" />
+    <Compile Include="Routing\OsmSourceRoutingTest.cs" />
     <Compile Include="Routing\RoutingComparisonTests.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />

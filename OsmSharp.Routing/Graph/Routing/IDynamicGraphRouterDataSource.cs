@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.Graph.Router
+namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
     /// Interface representing objects that are both and IBasicRouterDataSource and a IDynamicGraph.

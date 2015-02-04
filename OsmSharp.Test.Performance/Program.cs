@@ -25,7 +25,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;
@@ -77,14 +77,14 @@ namespace OsmSharp.Test.Performance
                 //// test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
                 //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-                //Routing.LiveRoutingTest.Test();
+                Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();
 
                 //// test serializer/deseriazation routing performance.
-                var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+                //var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
                 // tests the mapcss interpretation.

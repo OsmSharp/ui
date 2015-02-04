@@ -29,8 +29,7 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -192,7 +191,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
             RouterPoint source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
@@ -283,7 +282,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             var router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
             var source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
@@ -369,7 +368,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
 //            // try to do some routing on the deserialized version.
 //            var basicRouter =
-//                new DykstraRoutingLive(deserializedVersion.TagsIndex);
+//                new Dykstra(deserializedVersion.TagsIndex);
 //            Router router = Router.CreateLiveFrom(
 //                deserializedVersion, basicRouter, interpreter);
 

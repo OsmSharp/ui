@@ -21,8 +21,7 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using System.Reflection;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Collections.Tags;
@@ -31,7 +30,7 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Collections.Tags.Index;
 
-namespace OsmSharp.Test.Unittests.Routing.Dykstra
+namespace OsmSharp.Test.Unittests.Routing
 {
     /// <summary>
     /// Does some raw routing tests.
@@ -45,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// <returns></returns>
         public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
             IOsmRoutingInterpreter interpreter,
-                IBasicRouter<LiveEdge> basicRouter)
+                IRoutingAlgorithm<LiveEdge> basicRouter)
         {
             // initialize the router.
             return Router.CreateLiveFrom(data, basicRouter, interpreter);
@@ -56,9 +55,9 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
+        public override IRoutingAlgorithm<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
         {
-            return new DykstraRoutingLive();
+            return new Dykstra();
         }
 
         /// <summary>

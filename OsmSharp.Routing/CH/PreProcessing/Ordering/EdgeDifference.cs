@@ -17,7 +17,7 @@
 //// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 //using OsmSharp.Routing.Graph;
-//using OsmSharp.Routing.Graph.Router;
+//using OsmSharp.Routing.Graph.Routing;
 //using System.Collections.Generic;
 
 //namespace OsmSharp.Routing.CH.PreProcessing.Ordering

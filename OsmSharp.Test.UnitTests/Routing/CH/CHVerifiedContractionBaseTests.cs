@@ -27,8 +27,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -102,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // initialize the router.
-            _referenceRouter = Router.CreateLiveFrom(data, new DykstraRoutingLive(), interpreter);
+            _referenceRouter = Router.CreateLiveFrom(data, new Dykstra(), interpreter);
         }
 
         /// <summary>

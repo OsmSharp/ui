@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Performance.Routing
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
             LiveRoutingTest.TestSerializedRouting("LiveRouting", 
-                "kempen-big.osm.pbf", box, 2500);
+                "kempen.osm.pbf", box, 2500);
         }
 
         /// <summary>
