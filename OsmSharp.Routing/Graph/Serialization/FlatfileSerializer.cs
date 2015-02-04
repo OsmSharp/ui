@@ -128,7 +128,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         protected virtual ITagsCollectionIndex CreateTagsCollectionIndex()
         {
-            var tagsTable =  new TagsTableCollectionIndex(false);
+            var tagsTable =  new TagsTableCollectionIndex(false, true);
             // tagsTable.DropReverseIndexex();
             return tagsTable;
         }

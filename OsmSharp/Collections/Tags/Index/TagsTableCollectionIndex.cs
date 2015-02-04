@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -51,10 +51,36 @@ namespace OsmSharp.Collections.Tags.Index
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
-        public TagsTableCollectionIndex(bool reverseIndex)
+        /// <param name="checkDuplicates">Flag to prevent this index from checking for duplicates, used when sure all tag collections are unique.</param>
+        public TagsTableCollectionIndex(bool checkDuplicates)
         {
             _tagsTable = new ObjectTable<Tag>(true);
-            _tagsCollectionTable = new ObjectTable<OsmTags>(reverseIndex);
+            _tagsCollectionTable = new ObjectTable<OsmTags>(false, ObjectTable<Tag>.INITIAL_CAPACITY, !checkDuplicates);
+
+            this.Add(new TagsCollection());
+        }
+
+        /// <summary>
+        /// Creates a new tags index with a given strings table.
+        /// </summary>
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="allowDuplicates">Flag preventing this object table for checking for duplicates. Use this when sure almost all objects will be unique.</param>
+        public TagsTableCollectionIndex(bool reverseIndex, bool checkDuplicates)
+            : this(reverseIndex, ObjectTable<OsmTags>.INITIAL_CAPACITY, checkDuplicates)
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new tags index with a given strings table.
+        /// </summary>
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="initCapacity">The inital capacity.</param>
+        /// <param name="allowDuplicates">Flag preventing this object table for checking for duplicates. Use this when sure almost all objects will be unique.</param>
+        public TagsTableCollectionIndex(bool reverseIndex, int initCapacity, bool checkDuplicates)
+        {
+            _tagsTable = new ObjectTable<Tag>(true);
+            _tagsCollectionTable = new ObjectTable<OsmTags>(reverseIndex, initCapacity, !checkDuplicates);
 
             this.Add(new TagsCollection());
         }

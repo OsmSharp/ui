@@ -109,7 +109,7 @@ namespace OsmSharp.Osm.PBF.Streams
         public override void Reset()
         {
             _current = null;
-            _cachedPrimitives.Clear();
+            if (_cachedPrimitives != null) { _cachedPrimitives.Clear(); }
             _stream.Seek(0, SeekOrigin.Begin);
         }
 

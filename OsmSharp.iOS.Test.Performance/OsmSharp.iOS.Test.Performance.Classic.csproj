@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{CE762DC7-4C2D-4884-8B38-334D4B10825F}</ProjectGuid>
+    <ProjectGuid>{58F740B3-9083-48A9-BF56-1FC4D8483ED6}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>OsmSharp.iOS.Test.Performance</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>OsmSharpiOS_UnifiedTestPerformance</AssemblyName>
+    <AssemblyName>SomeiOSTestProject</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -19,12 +19,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <MtouchArch>i386</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchProfiling>true</MtouchProfiling>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -32,10 +32,8 @@
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <MtouchArch>i386</MtouchArch>
     <MtouchLink>None</MtouchLink>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <ConsolePause>false</ConsolePause>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -47,11 +45,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchProfiling>true</MtouchProfiling>
-    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <IpaPackageName>
+    </IpaPackageName>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -60,7 +60,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
@@ -71,12 +70,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <IpaIncludeArtwork>true</IpaIncludeArtwork>
-    <CodesignKey>iPhone Distribution</CodesignKey>
-    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <BuildIpa>true</BuildIpa>
+    <CodesignProvision>44D4884F-A791-43A8-97ED-608FF0F8816D</CodesignProvision>
+    <CodesignKey>iPhone Developer: Ben Abelshausen (KB222ZJG5Z)</CodesignKey>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>full</DebugType>
@@ -84,64 +83,39 @@
     <OutputPath>bin\iPhone\AppStore</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>Automatic:AppStore</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <ConsolePause>false</ConsolePause>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
+    <Reference Include="monotouch" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
-      <InProject>false</InProject>
-    </ImageAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
-    <InterfaceDefinition Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.xib">
-      <Link>OsmSharp_iOS_UI_SampleViewController.xib</Link>
-    </InterfaceDefinition>
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
+      <Link>default.map</Link>
+    </EmbeddedResource>
     <None Include="Info.plist" />
-    <None Include="..\OsmSharp.iOS.Test.Performance\OsmSharp.iOS.Test.Performance.csproj">
-      <Link>OsmSharp.iOS.Test.Performance.csproj</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\AppDelegate.cs">
-      <Link>AppDelegate.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.cs">
-      <Link>OsmSharp_iOS_UI_SampleViewController.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.designer.cs">
-      <Link>OsmSharp_iOS_UI_SampleViewController.designer.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\Main.cs">
-      <Link>Main.cs</Link>
-    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.cs" />
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.designer.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308af80-af15-4cbe-8222-e499df12dcc4}</Project>
-      <Name>OsmSharp.iOS.UI</Name>
+    <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.Classic.csproj">
+      <Project>{fc72e8bf-3daf-4265-a693-e988f923c7dc}</Project>
+      <Name>OsmSharp.iOS.UI.Classic</Name>
       <IsAppExtension>false</IsAppExtension>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Test.Performance\OsmSharp.Test.Performance.iOS.csproj">
-      <Project>{5627e042-8851-48ac-8399-8fe48b69d5fd}</Project>
-      <Name>OsmSharp.Test.Performance.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
-      <Name>OsmSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
@@ -151,17 +125,26 @@
       <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Test.Performance\OsmSharp.Test.Performance.iOS.csproj">
+      <Project>{5627E042-8851-48AC-8399-8FE48B69D5FD}</Project>
+      <Name>OsmSharp.Test.Performance.iOS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
+      <Name>OsmSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Icon-72.png" />
+    <BundleResource Include="Resources\Icon-72%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
       <Link>kempen-big.osm.pbf.routing</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
-      <Link>default.map</Link>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

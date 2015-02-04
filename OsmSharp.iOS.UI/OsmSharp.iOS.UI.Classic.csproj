@@ -3,18 +3,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{5627E042-8851-48AC-8399-8FE48B69D5FD}</ProjectGuid>
+    <ProjectGuid>{FC72E8BF-3DAF-4265-A693-E988F923C7DC}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>OsmSharp.Test.Performance.iOS_Unified</RootNamespace>
+    <RootNamespace>OsmSharp.iOS.UI</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>OsmSharp.Test.Performance.iOS_Unified</AssemblyName>
+    <AssemblyName>OsmSharp.iOS.UI</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>..\OutputiOS</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +23,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>..\OutputiOS</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,28 +32,39 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
+    <Reference Include="monotouch" />
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
-    <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
-    <Compile Include="PerformanceInfoConsumer.cs" />
+    <Compile Include="Renderer\CGContextRenderer.cs" />
+    <Compile Include="Renderer\CGContextWrapper.cs" />
+    <Compile Include="Log\TextViewTraceListener.cs" />
+    <Compile Include="Log\ConsoleTraceListener.cs" />
+    <Compile Include="Renderer\Images\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
+    <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
+      <Link>Data\SQLite\SQLite.cs</Link>
+    </Compile>
+    <Compile Include="Data\SQLite\SQLiteConnection.cs" />
+    <Compile Include="Controls\IMapControlHost.cs" />
+    <Compile Include="Controls\MapControl.cs" />
+    <Compile Include="Markers\MapMarker.cs" />
+    <Compile Include="Controls\MapControlAlignmentType.cs" />
+    <Compile Include="MapView.cs" />
+    <Compile Include="Native.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308af80-af15-4cbe-8222-e499df12dcc4}</Project>
-      <Name>OsmSharp.iOS.UI</Name>
-      <IsAppExtension>false</IsAppExtension>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
-      <Name>OsmSharp</Name>
-    </ProjectReference>
+    <BundleResource Include="Images\layers.png" />
+    <BundleResource Include="Images\layers%402x.png" />
+    <BundleResource Include="Images\marker-and-shadow%402x.png" />
+    <BundleResource Include="Images\marker-and-shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
@@ -61,6 +72,10 @@
     <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
       <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
+      <Name>OsmSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>

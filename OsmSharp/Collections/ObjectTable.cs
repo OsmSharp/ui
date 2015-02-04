@@ -50,11 +50,32 @@ namespace OsmSharp.Collections
         private uint _nextIdx = 0;
 
         /// <summary>
+        /// Holds the allow duplicates flag.
+        /// </summary>
+        private bool _allowDuplicates;
+
+        /// <summary>
+        /// Holds the default initial capactiy.
+        /// </summary>
+        public const int INITIAL_CAPACITY = 1000;
+
+        /// <summary>
         /// Creates a new string table.
         /// </summary>
-        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="reverseIndex">The reverse index is enabled if true.</param>
         public ObjectTable(bool reverseIndex)
-            :this(reverseIndex, 1000)
+            : this(reverseIndex, INITIAL_CAPACITY, false)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new string table.
+        /// </summary>
+        /// <param name="initCapacity">The inital capacity.</param>
+        /// <param name="allowDuplicates">Flag preventing this object table for checking for duplicates. Use this when sure almost all objects will be unique.</param>
+        public ObjectTable(int initCapacity, bool allowDuplicates)
+            : this(true, INITIAL_CAPACITY, allowDuplicates)
         {
 
         }
@@ -63,16 +84,18 @@ namespace OsmSharp.Collections
         /// Creates a new string table.
         /// </summary>
         /// <param name="reverseIndex">The reverse index is enable if true.</param>
-        /// <param name="initCapacity"></param>
-        public ObjectTable(bool reverseIndex, int initCapacity)
+        /// <param name="initCapacity">The inital capacity.</param>
+        /// <param name="allowDuplicates">Flag preventing this object table for checking for duplicates. Use this when sure almost all objects will be unique.</param>
+        public ObjectTable(bool reverseIndex, int initCapacity, bool allowDuplicates)
         {
             _objects = new Type[initCapacity];
             _initCapacity = initCapacity;
 
-            if (reverseIndex)
+            if (reverseIndex && !allowDuplicates)
             {
                 this.BuildReverseIndex();
             }
+            _allowDuplicates = allowDuplicates;
         }
 
         /// <summary>
@@ -163,6 +186,10 @@ namespace OsmSharp.Collections
         public uint Add(Type value)
         {
             uint valueInt;
+            if(_allowDuplicates)
+            { // just add the object, don't check anything.
+                return this.AddObject(value);
+            }
             if (_reverseIndex != null)
             { // add string based on the reverse index, is faster.
                 if (!_reverseIndex.TryGetValue(value, out valueInt))
@@ -265,7 +292,7 @@ namespace OsmSharp.Collections
                 int count = BitConverter.ToInt32(countBytes, 0);
 
                 // deserialize objects.
-                var objectTable = new ObjectTable<Type>(false, count);
+                var objectTable = new ObjectTable<Type>(false, count, true);
                 int idx = 0;
                 while(idx < count)
                 {
