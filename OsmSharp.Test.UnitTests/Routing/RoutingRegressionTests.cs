@@ -32,6 +32,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Coordinates.Collections;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -689,6 +690,9 @@ namespace OsmSharp.Test.Unittests.Routing
             Assert.AreEqual(0, resolved8.Location.DistanceReal(vertex8).Value, e);
         }
 
+        /// <summary>
+        /// Issue with resolving and search for close edges and oneway, directed edges.
+        /// </summary>
         [Test]
         public void RoutingRegressionTest9ResolvingReverse()
         {
@@ -735,6 +739,109 @@ namespace OsmSharp.Test.Unittests.Routing
                     edges.Vertex2 == 1)
                 {
                     Assert.IsTrue(edges.EdgeData.Forward);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Issue with resolving and search for close edges and oneway, directed edges and their shapes.
+        /// </summary>
+        [Test]
+        public void RoutingRegressionTest10ResolvingReverse()
+        {
+            // build a graph to encode from.
+            var tags = new TagsTableCollectionIndex();
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
+            var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
+            var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
+            var edge = new LiveEdge() // all edges are identical.
+            {
+                Distance = 100,
+                Forward = true,
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("highway", "tertiary"),
+                    Tag.Create("oneway", "yes")))
+            };
+            var shape1 = new CoordinateArrayCollection<OsmSharp.Math.Geo.Simple.GeoCoordinateSimple>(
+                new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple[] {
+                    new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple()
+                    {
+                        Latitude = 1,
+                        Longitude = 1
+                    },
+                    new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple()
+                    {
+                        Latitude = 2,
+                        Longitude = 2
+                    }
+                });
+            var shape2 = new CoordinateArrayCollection<OsmSharp.Math.Geo.Simple.GeoCoordinateSimple>(
+                new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple[] {
+                    new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple()
+                    {
+                        Latitude = 3,
+                        Longitude = 3
+                    },
+                    new OsmSharp.Math.Geo.Simple.GeoCoordinateSimple()
+                    {
+                        Latitude = 4,
+                        Longitude = 4
+                    }
+                });
+            graphDataSource.AddEdge(vertex1, vertex2, edge, shape1);
+            graphDataSource.AddEdge(vertex3, vertex1, edge, shape2);
+
+            // {RectF:[(3,71326552867889,51,048498214689),(3,73326552867889,51,068498214689)]}
+            var edges = graphDataSource.GetEdges(new GeoCoordinateBox(
+                new GeoCoordinate(51.068498214689, 3.73326552867889),
+                new GeoCoordinate(51.048498214689, 3.71326552867889)));
+
+            while (edges.MoveNext())
+            {
+                if (edges.Vertex1 == 1 &&
+                    edges.Vertex2 == 2)
+                {
+                    Assert.IsTrue(edges.EdgeData.Forward);
+                    var shapes = edges.Intermediates.ToSimpleArray();
+                    Assert.AreEqual(2, shapes.Length);
+                    Assert.AreEqual(1, shapes[0].Latitude);
+                    Assert.AreEqual(1, shapes[0].Longitude);
+                    Assert.AreEqual(2, shapes[1].Latitude);
+                    Assert.AreEqual(2, shapes[1].Longitude);
+                }
+                else if (edges.Vertex1 == 2 &&
+                    edges.Vertex2 == 1)
+                {
+                    Assert.IsFalse(edges.EdgeData.Forward);
+                    var shapes = edges.Intermediates.ToSimpleArray();
+                    Assert.AreEqual(2, shapes.Length);
+                    Assert.AreEqual(2, shapes[0].Latitude);
+                    Assert.AreEqual(2, shapes[0].Longitude);
+                    Assert.AreEqual(1, shapes[1].Latitude);
+                    Assert.AreEqual(1, shapes[1].Longitude);
+                }
+                if (edges.Vertex1 == 1 &&
+                    edges.Vertex2 == 3)
+                {
+                    Assert.IsFalse(edges.EdgeData.Forward);
+                    var shapes = edges.Intermediates.ToSimpleArray();
+                    Assert.AreEqual(2, shapes.Length);
+                    Assert.AreEqual(4, shapes[0].Latitude);
+                    Assert.AreEqual(4, shapes[0].Longitude);
+                    Assert.AreEqual(3, shapes[1].Latitude);
+                    Assert.AreEqual(3, shapes[1].Longitude);
+                }
+                else if (edges.Vertex1 == 3 &&
+                    edges.Vertex2 == 1)
+                {
+                    Assert.IsTrue(edges.EdgeData.Forward);
+                    var shapes = edges.Intermediates.ToSimpleArray();
+                    Assert.AreEqual(2, shapes.Length);
+                    Assert.AreEqual(3, shapes[0].Latitude);
+                    Assert.AreEqual(3, shapes[0].Longitude);
+                    Assert.AreEqual(4, shapes[1].Latitude);
+                    Assert.AreEqual(4, shapes[1].Longitude);
                 }
             }
         }
