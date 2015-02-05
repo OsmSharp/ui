@@ -688,5 +688,55 @@ namespace OsmSharp.Test.Unittests.Routing
             var resolved8 = router.Resolve(Vehicle.Car, vertex8, true);
             Assert.AreEqual(0, resolved8.Location.DistanceReal(vertex8).Value, e);
         }
+
+        [Test]
+        public void RoutingRegressionTest9ResolvingReverse()
+        {
+            // build a graph to encode from.
+            var tags = new TagsTableCollectionIndex();
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
+            var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
+            var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
+            var edge = new LiveEdge() // all edges are identical.
+            {
+                Distance = 100,
+                Forward = true,
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("highway", "tertiary"),
+                    Tag.Create("oneway", "yes")))
+            };
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge, null);
+
+            // {RectF:[(3,71326552867889,51,048498214689),(3,73326552867889,51,068498214689)]}
+            var edges = graphDataSource.GetEdges(new GeoCoordinateBox(
+                new GeoCoordinate(51.068498214689, 3.73326552867889),
+                new GeoCoordinate(51.048498214689, 3.71326552867889)));
+
+            while(edges.MoveNext())
+            {
+                if(edges.Vertex1 == 1 &&
+                    edges.Vertex2 == 2)
+                {
+                    Assert.IsTrue(edges.EdgeData.Forward);
+                }
+                else if(edges.Vertex1 == 2 &&
+                    edges.Vertex2 == 1)
+                {
+                    Assert.IsFalse(edges.EdgeData.Forward);
+                }
+                if (edges.Vertex1 == 1 &&
+                    edges.Vertex2 == 3)
+                {
+                    Assert.IsFalse(edges.EdgeData.Forward);
+                }
+                else if (edges.Vertex1 == 3 &&
+                    edges.Vertex2 == 1)
+                {
+                    Assert.IsTrue(edges.EdgeData.Forward);
+                }
+            }
+        }
     }
 }

@@ -182,16 +182,16 @@ namespace OsmSharp.Routing.Graph
                 {
                     if (localArcs.EdgeData.RepresentsNeighbourRelations)
                     {
-                        if (localArcs.isInverted)
-                        {
-                            neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
-                                (TEdgeData)localArcs.EdgeData.Reverse()));
-                        }
-                        else
-                        { // not inverted.
+                        //if (localArcs.isInverted)
+                        //{
+                        //    neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
+                        //        (TEdgeData)localArcs.EdgeData.Reverse()));
+                        //}
+                        //else
+                        //{ // not inverted.
                             neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
                                 localArcs.EdgeData));
-                        }
+                        //}
                     }
                     arcIdx++;
                 }
