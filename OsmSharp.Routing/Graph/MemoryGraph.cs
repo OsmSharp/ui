@@ -582,6 +582,15 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Returns an empty edge enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        {
+            return new EdgeEnumerator(this);
+        }
+
+        /// <summary>
         /// Returns all arcs starting at the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
@@ -590,7 +599,9 @@ namespace OsmSharp.Routing.Graph
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
-            return new EdgeEnumerator(this, _vertices[vertex], vertex);
+            var enumerator = new EdgeEnumerator(this);
+            enumerator.MoveTo(vertex);
+            return enumerator;
         }
 
         /// <summary>
@@ -735,7 +746,9 @@ namespace OsmSharp.Routing.Graph
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex is not part of this graph."); }
 
-            return new EdgeEnumerator(this, _vertices[vertex1], vertex1, vertex2);
+            var enumerator = new EdgeEnumerator(this);
+            enumerator.MoveTo(vertex1, vertex2);
+            return enumerator;
         }
 
         /// <summary>
@@ -984,16 +997,15 @@ namespace OsmSharp.Routing.Graph
             /// <param name="graph"></param>
             /// <param name="edgeId"></param>
             /// <param name="vertex1"></param>
-            public EdgeEnumerator(MemoryGraph<TEdgeData> graph, uint edgeId, uint vertex1)
+            public EdgeEnumerator(MemoryGraph<TEdgeData> graph)
             {
                 _graph = graph;
-                _nextEdgeId = edgeId;
                 _currentEdgeId = 0;
-                _vertex = vertex1;
+                _vertex = 0;
 
-                _startVertex1 = vertex1;
+                _startVertex1 = 0;
                 _startVertex2 = 0;
-                _startEdge = edgeId;
+                _startEdge = 0;
                 _currentEdgeInverted = false;
             }
 
@@ -1180,13 +1192,54 @@ namespace OsmSharp.Routing.Graph
             {
                 get { throw new InvalidOperationException(); }
             }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex.
+            /// </summary>
+            /// <param name="vertex"></param>
+            public void MoveTo(uint vertex)
+            {
+                var edgeId = _graph._vertices[vertex];
+                _nextEdgeId = edgeId;
+                _currentEdgeId = 0;
+                _vertex = vertex;
+
+                _startVertex1 = vertex;
+                _startVertex2 = 0;
+                _startEdge = edgeId;
+                _currentEdgeInverted = false;
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertices.
+            /// </summary>
+            /// <param name="vertex1"></param>
+            /// <param name="vertex2"></param>
+            public void MoveTo(uint vertex1, uint vertex2)
+            {
+                var edgeId = _graph._vertices[vertex1];
+                _nextEdgeId = edgeId;
+                _currentEdgeId = 0;
+                _vertex = vertex1;
+
+                _startVertex1 = vertex1;
+                _startVertex2 = vertex2;
+                _startEdge = edgeId;
+                _currentEdgeInverted = false;
+            }
         }
 
+        /// <summary>
+        /// Returns true if the graph is directed.
+        /// </summary>
         public bool IsDirected
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Returns true if this graph can have duplicate edges.
+        /// </summary>
         public bool CanHaveDuplicates
         {
             get { return false; }

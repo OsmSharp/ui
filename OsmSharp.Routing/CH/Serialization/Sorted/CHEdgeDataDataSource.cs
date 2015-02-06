@@ -156,13 +156,24 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         }
 
         /// <summary>
+        /// Returns an empty edge enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEdgeEnumerator<CHEdgeData> GetEdgeEnumerator()
+        {
+            return new EdgeEnumerator(this);
+        }
+
+        /// <summary>
         /// Returns an enumerator for edges for the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
         public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
         {
-            return new EdgeEnumerator(this, this.GetEdgePairs(vertexId));
+            var enumerator = new CHEdgeDataDataSource.EdgeEnumerator(this);
+            enumerator.MoveTo(vertexId);
+            return enumerator;
         }
 
         /// <summary>
@@ -214,7 +225,9 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <returns></returns>
         public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
-            return new EdgeEnumerator(this, this.GetEdgePairs(vertex1, vertex2));
+            var enumerator = new EdgeEnumerator(this);
+            enumerator.MoveTo(vertex1, vertex2);
+            return enumerator;
         }
 
         /// <summary>
@@ -286,7 +299,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             }
             return selectedArcs.ToArray();
         }
-
 
         /// <summary>
         /// Returns all arcs for the given vertex.
@@ -915,10 +927,10 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
             /// <param name="edges">The edge data.</param>
-            public EdgeEnumerator(CHEdgeDataDataSource source, Tuple<uint, uint, uint, CHEdgeData>[] edges)
+            public EdgeEnumerator(CHEdgeDataDataSource source)
             {
                 _source = source;
-                _edges = edges;
+                _edges = null;
             }
 
             /// <summary>
@@ -1032,6 +1044,27 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             int IEdgeEnumerator<CHEdgeData>.Count
             {
                 get { return _edges.Length; }
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex.
+            /// </summary>
+            /// <param name="vertex"></param>
+            public void MoveTo(uint vertex)
+            {
+                _edges = _source.GetEdgePairs(vertex);
+                this.Reset();
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex1 and enumerate only edges that lead to vertex2.
+            /// </summary>
+            /// <param name="vertex1">The vertex to enumerate edges for.</param>
+            /// <param name="vertex2">The neighbour.</param>
+            public void MoveTo(uint vertex1, uint vertex2)
+            {
+                _edges = _source.GetEdgePairs(vertex1, vertex2);
+                this.Reset();
             }
         }
 

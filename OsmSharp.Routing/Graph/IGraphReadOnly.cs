@@ -62,6 +62,12 @@ namespace OsmSharp.Routing.Graph
         bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data);
 
         /// <summary>
+        /// Returns an empty enumerator.
+        /// </summary>
+        /// <returns></returns>
+        IEdgeEnumerator<TEdgeData> GetEdgeEnumerator();
+
+        /// <summary>
         /// Returns all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>

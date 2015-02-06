@@ -242,7 +242,16 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Returns all arcs starting at a given vertex.
+        /// Returns an empty edge enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        {
+            return _graph.GetEdgeEnumerator();
+        }
+
+        /// <summary>
+        /// Returns the edge enumerator for the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>

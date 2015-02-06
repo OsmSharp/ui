@@ -28,6 +28,19 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
+        /// Moves this enumerator to the given vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to enumerate edges for.</param>
+        void MoveTo(uint vertex);
+
+        /// <summary>
+        /// Moves this enumerator to the given vertex1 and enumerate only edges that lead to vertex2.
+        /// </summary>
+        /// <param name="vertex1">The vertex to enumerate edges for.</param>
+        /// <param name="vertex2">The neighbour.</param>
+        void MoveTo(uint vertex1, uint vertex2);
+
+        /// <summary>
         /// Returns the current neighbour.
         /// </summary>
         uint Neighbour

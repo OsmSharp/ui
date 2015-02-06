@@ -72,11 +72,6 @@ namespace OsmSharp.Routing.Graph
         private HugeCoordinateCollectionIndex _edgeShapes;
 
         /// <summary>
-        /// Holds the edge enumerator for this graph.
-        /// </summary>
-        private EdgeEnumerator _edgeEnumerator = new EdgeEnumerator();
-
-        /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryDirectedGraph()
@@ -393,6 +388,15 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Returns an empty edge enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        {
+            return new EdgeEnumerator(this);
+        }
+
+        /// <summary>
         /// Returns all arcs starting at the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
@@ -401,9 +405,25 @@ namespace OsmSharp.Routing.Graph
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
-            var vertexIdx = vertex * VERTEX_SIZE;
-            _edgeEnumerator.Set(this, _vertices[vertexIdx + FIRST_EDGE], _vertices[vertexIdx + EDGE_COUNT]);
-            return _edgeEnumerator;
+            var enumerator = new EdgeEnumerator(this);
+            enumerator.MoveTo(vertex);
+            return enumerator;
+        }
+
+        /// <summary>
+        /// Gets the data associated with the given edge and return true if it exists.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <returns></returns>
+        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
+        {
+            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex is not part of this graph."); }
+            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex is not part of this graph."); }
+
+            var enumerator = new EdgeEnumerator(this);
+            enumerator.MoveTo(vertex1, vertex2);
+            return enumerator;
         }
 
         /// <summary>
@@ -458,22 +478,6 @@ namespace OsmSharp.Routing.Graph
                 }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Gets the data associated with the given edge and return true if it exists.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
-        {
-            if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex is not part of this graph."); }
-            if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex is not part of this graph."); }
-
-            var vertexIdx = vertex1 * VERTEX_SIZE;
-            _edgeEnumerator.Set(this, _vertices[vertexIdx + FIRST_EDGE], _vertices[vertexIdx + EDGE_COUNT], vertex2);
-            return _edgeEnumerator;
         }
 
         /// <summary>
@@ -581,36 +585,15 @@ namespace OsmSharp.Routing.Graph
             private uint _neighbour;
 
             /// <summary>
-            /// Resets and prepares the enumerator for enumerating all the edges starting at edgeId.
+            /// Creates a new edge enumerator.
             /// </summary>
             /// <param name="graph"></param>
-            /// <param name="startEdgeId"></param>
-            /// <param name="count"></param>
-            public void Set(MemoryDirectedGraph<TEdgeData> graph, uint startEdgeId, uint count)
+            public EdgeEnumerator(MemoryDirectedGraph<TEdgeData> graph)
             {
                 _graph = graph;
-                _startEdgeId = startEdgeId;
-                _count = count;
+                _startEdgeId = 0;
+                _count = 0;
                 _neighbour = 0;
-
-                // reset.
-                _currentEdgeId = uint.MaxValue;
-                _currentCount = -1;
-            }
-
-            /// <summary>
-            /// Resets and prepares the enumerator for enumerating all the edges starting at edgeId.
-            /// </summary>
-            /// <param name="graph"></param>
-            /// <param name="startEdgeId"></param>
-            /// <param name="count"></param>
-            /// <param name="neighbour"></param>
-            public void Set(MemoryDirectedGraph<TEdgeData> graph, uint startEdgeId, uint count, uint neighbour)
-            {
-                _graph = graph;
-                _startEdgeId = startEdgeId;
-                _count = count;
-                _neighbour = neighbour;
 
                 // reset.
                 _currentEdgeId = uint.MaxValue;
@@ -747,13 +730,52 @@ namespace OsmSharp.Routing.Graph
             {
                 get { return (int)_count; }
             }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex.
+            /// </summary>
+            /// <param name="vertex"></param>
+            public void MoveTo(uint vertex)
+            {
+                 var vertexId = vertex * VERTEX_SIZE;
+                 _startEdgeId = _graph._vertices[vertexId + FIRST_EDGE];
+                 _count = _graph._vertices[vertexId + EDGE_COUNT];
+                _neighbour = 0;
+
+                // reset.
+                _currentEdgeId = uint.MaxValue;
+                _currentCount = -1;
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex with the given neighbour.
+            /// </summary>
+            /// <param name="vertex1"></param>
+            /// <param name="vertex2"></param>
+            public void MoveTo(uint vertex1, uint vertex2)
+            {
+                var vertexId = vertex1 * VERTEX_SIZE;
+                _startEdgeId = _graph._vertices[vertexId + FIRST_EDGE];
+                _count = _graph._vertices[vertexId + EDGE_COUNT];
+                _neighbour = vertex2;
+
+                // reset.
+                _currentEdgeId = uint.MaxValue;
+                _currentCount = -1;
+            }
         }
 
+        /// <summary>
+        /// Returns true if this graph is directed.
+        /// </summary>
         public bool IsDirected
         {
             get { return true; }
         }
 
+        /// <summary>
+        /// Returns true if this graph can have duplicate edges.
+        /// </summary>
         public bool CanHaveDuplicates
         {
             get { return true; }
