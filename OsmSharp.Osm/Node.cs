@@ -16,15 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Geo.Geometries;
-using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Interpreter;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Geo.Interpreter;
 
 namespace OsmSharp.Osm
 {
@@ -114,7 +110,7 @@ namespace OsmSharp.Osm
         {
             get
             {
-                return this.Geometries.Box;
+                return this.Features.Box;
             }
         }
 
@@ -134,34 +130,34 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The interpreter for these objects.
         /// </summary>
-        public static GeometryInterpreter GeometryInterperter = new SimpleGeometryInterpreter(); // set a default geometry interpreter.
+        public static FeatureInterpreter FeatureInterperter = new SimpleFeatureInterpreter(); // set a default feature interpreter.
 
         /// <summary>
-        /// The geometries this OSM-object represents.
+        /// The feature(s) this OSM-object represents.
         /// </summary>
-        private GeometryCollection _geometries;
+        private FeatureCollection _features;
 
         /// <summary>
-        /// Returns the geometries this OSM-object represents.
+        /// Returns the feature(s) this OSM-object represents.
         /// </summary>
-        public GeometryCollection Geometries
+        public FeatureCollection Features
         {
             get
             {
-                if (_geometries == null)
+                if (_features == null)
                 {
-                    _geometries = CompleteOsmGeo.GeometryInterperter.Interpret(this);
+                    _features = CompleteOsmGeo.FeatureInterperter.Interpret(this);
                 }
-                return _geometries;
+                return _features;
             }
         }
 
         /// <summary>
         /// Make sure the geometries of this objects will be recalculated.
         /// </summary>
-        public void ResetGeometries()
+        public void ResetFeatures()
         {
-            _geometries = null;
+            _features = null;
         }
 
         #endregion

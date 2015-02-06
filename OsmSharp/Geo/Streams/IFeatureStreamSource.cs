@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,15 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
+using OsmSharp.Geo.Features;
 using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 
 namespace OsmSharp.Geo.Geometries.Streams
 {
     /// <summary>
-    /// Represents a source of geometry objects.
+    /// Represents a streamed source of features.
     /// </summary>
-    public interface IGeoStreamSource : IEnumerator<Geometry>, IEnumerable<Geometry>
+    public interface IFeatureStreamSource : IEnumerator<Feature>, IEnumerable<Feature>
     {
         /// <summary>
         /// Intializes this source.
