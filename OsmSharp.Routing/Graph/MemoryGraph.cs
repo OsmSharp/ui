@@ -585,7 +585,7 @@ namespace OsmSharp.Routing.Graph
         /// Returns an empty edge enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        public EdgeEnumerator<TEdgeData> GetEdgeEnumerator()
         {
             return new EdgeEnumerator(this);
         }
@@ -595,7 +595,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex)
+        public EdgeEnumerator<TEdgeData> GetEdges(uint vertex)
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
@@ -741,7 +741,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
+        public EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex is not part of this graph."); }
@@ -949,7 +949,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Represents the internal edge enumerator.
         /// </summary>
-        class EdgeEnumerator : IEdgeEnumerator<TEdgeData>
+        class EdgeEnumerator : EdgeEnumerator<TEdgeData>
         {
             /// <summary>
             /// Holds the graph.
@@ -1033,7 +1033,7 @@ namespace OsmSharp.Routing.Graph
             /// Move to the next edge.
             /// </summary>
             /// <returns></returns>
-            public bool MoveNext()
+            public override bool MoveNext()
             {
                 if(_nextEdgeId != NO_EDGE)
                 { // there is a next edge.
@@ -1067,7 +1067,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns the current neighbour.
             /// </summary>
-            public uint Neighbour
+            public override uint Neighbour
             {
                 get { return _neighbour; }
             }
@@ -1075,7 +1075,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public TEdgeData EdgeData
+            public override TEdgeData EdgeData
             {
                 get
                 {
@@ -1090,7 +1090,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns true if the edge data is inverted by default.
             /// </summary>
-            public bool isInverted
+            public override bool isInverted
             {
                 get { return _currentEdgeInverted; }
             }
@@ -1098,7 +1098,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public TEdgeData InvertedEdgeData
+            public override TEdgeData InvertedEdgeData
             {
                 get
                 {
@@ -1113,7 +1113,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public ICoordinateCollection Intermediates
+            public override ICoordinateCollection Intermediates
             {
 
                 get
@@ -1135,69 +1135,56 @@ namespace OsmSharp.Routing.Graph
             /// Returns the count.
             /// </summary>
             /// <returns></returns>
-            public int Count()
+            public override int Count
             {
-                int count = 0;
-                while (this.MoveNext())
+                get
                 {
-                    count++;
+                    int count = 0;
+                    while (this.MoveNext())
+                    {
+                        count++;
+                    }
+                    return count;
                 }
-                return count;
             }
 
             /// <summary>
             /// Resets this enumerator.
             /// </summary>
-            public void Reset()
+            public override void Reset()
             {
                 _nextEdgeId = _startEdge;
                 _currentEdgeId = 0;
                 _vertex = _startVertex1;
             }
 
-            public IEnumerator<Edge<TEdgeData>> GetEnumerator()
+            public override IEnumerator<Edge<TEdgeData>> GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                this.Reset();
-                return this;
-            }
-
-            public Edge<TEdgeData> Current
+            public override Edge<TEdgeData> Current
             {
                 get { return new Edge<TEdgeData>(this); }
             }
 
-            object System.Collections.IEnumerator.Current
-            {
-                get { return new Edge<TEdgeData>(this); }
-            }
-
-            public void Dispose()
+            public override void Dispose()
             {
 
             }
 
 
-            public bool HasCount
+            public override bool HasCount
             {
                 get { return false; }
-            }
-
-            int IEdgeEnumerator<TEdgeData>.Count
-            {
-                get { throw new InvalidOperationException(); }
             }
 
             /// <summary>
             /// Moves this enumerator to the given vertex.
             /// </summary>
             /// <param name="vertex"></param>
-            public void MoveTo(uint vertex)
+            public override void MoveTo(uint vertex)
             {
                 var edgeId = _graph._vertices[vertex];
                 _nextEdgeId = edgeId;
@@ -1215,7 +1202,7 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             /// <param name="vertex1"></param>
             /// <param name="vertex2"></param>
-            public void MoveTo(uint vertex1, uint vertex2)
+            public override void MoveTo(uint vertex1, uint vertex2)
             {
                 var edgeId = _graph._vertices[vertex1];
                 _nextEdgeId = edgeId;

@@ -82,7 +82,7 @@
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\IEdgeEnumerator.cs" />
+    <Compile Include="Graph\EdgeEnumerator.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\IGraphEdgeData.cs" />
     <Compile Include="Graph\IGraphReadOnly.cs" />

@@ -1150,7 +1150,7 @@ namespace OsmSharp.Routing.CH
         private void SearchForward(IGraphReadOnly<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
-            PathSegment<long> current = queue.Pop();
+            var current = queue.Pop();
             while (current != null && settledQueue.Forward.ContainsKey(
                 current.VertexId))
             { // keep trying.
@@ -1159,6 +1159,9 @@ namespace OsmSharp.Routing.CH
 
             if (current != null)
             { // there is a next vertex found.
+                // get the edge enumerator.
+                var edgeEnumerator = graph.GetEdgeEnumerator();
+
                 // add to the settled vertices.
                 PathSegment<long> previousLinkedRoute;
                 if (settledQueue.Forward.TryGetValue(current.VertexId, out previousLinkedRoute))
@@ -1176,15 +1179,16 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                //var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                edgeEnumerator.MoveTo(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                while (neighbours.MoveNext())
+                while (edgeEnumerator.MoveNext())
                 {
-                    var neighbourEdgeData = neighbours.EdgeData;
+                    var neighbourEdgeData = edgeEnumerator.EdgeData;
                     if (neighbourEdgeData.CanMoveForward)
                     { // the edge is forward, and is to higher or was not contracted at all.
-                        var neighbourNeighbour = neighbours.Neighbour;
+                        var neighbourNeighbour = edgeEnumerator.Neighbour;
                         if (!settledQueue.Forward.ContainsKey(neighbourNeighbour))
                         { // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(
@@ -1206,8 +1210,7 @@ namespace OsmSharp.Routing.CH
         private void SearchBackward(IGraphReadOnly<CHEdgeData> graph, CHQueue settledQueue, IPriorityQueue<PathSegment<long>> queue)
         {
             // get the current vertex with the smallest weight.
-            //PathSegment<long> current = queue.Pop();
-            PathSegment<long> current = queue.Pop();
+            var current = queue.Pop();
             while (current != null && settledQueue.Backward.ContainsKey(
                 current.VertexId))
             { // keep trying.
@@ -1216,6 +1219,9 @@ namespace OsmSharp.Routing.CH
 
             if (current != null)
             {
+                // get the edge enumerator.
+                var edgeEnumerator = graph.GetEdgeEnumerator();
+
                 // add to the settled vertices.
                 PathSegment<long> previousLinkedRoute;
                 if (settledQueue.Backward.TryGetValue(current.VertexId, out previousLinkedRoute))
@@ -1233,16 +1239,17 @@ namespace OsmSharp.Routing.CH
                 }
 
                 // get neighbours.
-                var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                //var neighbours = graph.GetEdges(Convert.ToUInt32(current.VertexId));
+                edgeEnumerator.MoveTo(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
-                while (neighbours.MoveNext())
+                while (edgeEnumerator.MoveNext())
                 // foreach (var neighbour in neighbours)
                 {
-                    var neighbourEdgeData = neighbours.EdgeData;
+                    var neighbourEdgeData = edgeEnumerator.EdgeData;
                     if (neighbourEdgeData.CanMoveBackward)
                     { // the edge is backward, and is to higher or was not contracted at all.
-                        var neighbourNeighbour = neighbours.Neighbour;
+                        var neighbourNeighbour = edgeEnumerator.Neighbour;
                         if (!settledQueue.Backward.ContainsKey(neighbourNeighbour))
                         { // if not yet settled.
                             var routeToNeighbour = new PathSegment<long>(

@@ -159,7 +159,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Returns an empty edge enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdgeEnumerator()
+        public EdgeEnumerator<CHEdgeData> GetEdgeEnumerator()
         {
             return new EdgeEnumerator(this);
         }
@@ -169,7 +169,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
+        public EdgeEnumerator<CHEdgeData> GetEdges(uint vertexId)
         {
             var enumerator = new CHEdgeDataDataSource.EdgeEnumerator(this);
             enumerator.MoveTo(vertexId);
@@ -223,7 +223,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
+        public EdgeEnumerator<CHEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
             var enumerator = new EdgeEnumerator(this);
             enumerator.MoveTo(vertex1, vertex2);
@@ -905,7 +905,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// An edge enumerator.
         /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<CHEdgeData>
+        private class EdgeEnumerator : EdgeEnumerator<CHEdgeData>
         {
             /// <summary>
             /// Holds the edges.
@@ -937,7 +937,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// Moves to the next coordinate.
             /// </summary>
             /// <returns></returns>
-            public bool MoveNext()
+            public override bool MoveNext()
             {
                 _current++;
                 return _edges.Length > _current;
@@ -946,7 +946,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the current neighbour.
             /// </summary>
-            public uint Neighbour
+            public override uint Neighbour
             {
                 get { return _edges[_current].Item3; }
             }
@@ -954,7 +954,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public CHEdgeData EdgeData
+            public override CHEdgeData EdgeData
             {
                 get { return _edges[_current].Item4; }
             }
@@ -962,7 +962,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns true if the edge data is inverted by default.
             /// </summary>
-            public bool isInverted
+            public override bool isInverted
             {
                 get { return false; }
             }
@@ -970,7 +970,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public CHEdgeData InvertedEdgeData
+            public override CHEdgeData InvertedEdgeData
             {
                 get { return (CHEdgeData)this.EdgeData.Reverse(); }
             }
@@ -978,7 +978,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public ICoordinateCollection Intermediates
+            public override ICoordinateCollection Intermediates
             {
                 get
                 {
@@ -995,62 +995,48 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// Returns the count.
             /// </summary>
             /// <returns></returns>
-            public int Count()
+            public override int Count
             {
-                return _edges.Length;
+                get
+                {
+                    return _edges.Length;
+                }
             }
 
             /// <summary>
             /// Resets this enumerator.
             /// </summary>
-            public void Reset()
+            public override void Reset()
             {
                 _current = -1;
             }
 
-            public IEnumerator<Edge<CHEdgeData>> GetEnumerator()
+            public override IEnumerator<Edge<CHEdgeData>> GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                this.Reset();
-                return this;
-            }
-
-            public Edge<CHEdgeData> Current
+            public override Edge<CHEdgeData> Current
             {
                 get { return new Edge<CHEdgeData>(this); }
             }
 
-            object System.Collections.IEnumerator.Current
-            {
-                get { return this; }
-            }
-
-            public void Dispose()
+            public override void Dispose()
             {
 
             }
 
 
-            public bool HasCount
+            public override bool HasCount
             {
                 get { return true; }
-            }
-
-            int IEdgeEnumerator<CHEdgeData>.Count
-            {
-                get { return _edges.Length; }
             }
 
             /// <summary>
             /// Moves this enumerator to the given vertex.
             /// </summary>
             /// <param name="vertex"></param>
-            public void MoveTo(uint vertex)
+            public override void MoveTo(uint vertex)
             {
                 _edges = _source.GetEdgePairs(vertex);
                 this.Reset();
@@ -1061,7 +1047,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             /// </summary>
             /// <param name="vertex1">The vertex to enumerate edges for.</param>
             /// <param name="vertex2">The neighbour.</param>
-            public void MoveTo(uint vertex1, uint vertex2)
+            public override void MoveTo(uint vertex1, uint vertex2)
             {
                 _edges = _source.GetEdgePairs(vertex1, vertex2);
                 this.Reset();

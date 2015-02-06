@@ -65,14 +65,14 @@ namespace OsmSharp.Routing.Graph
         /// Returns an empty enumerator.
         /// </summary>
         /// <returns></returns>
-        IEdgeEnumerator<TEdgeData> GetEdgeEnumerator();
+        EdgeEnumerator<TEdgeData> GetEdgeEnumerator();
 
         /// <summary>
         /// Returns all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
+        EdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
 
         /// <summary>
         /// Returns all edges between the given vertices.
@@ -81,7 +81,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
+        EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
 
         /// <summary>
         /// Returns the edge between the two given vertices. Throws exception if this graph allows duplicate edges, use GetEdges in that case..

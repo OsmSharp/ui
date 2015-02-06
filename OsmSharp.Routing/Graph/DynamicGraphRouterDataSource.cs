@@ -245,7 +245,7 @@ namespace OsmSharp.Routing.Graph
         /// Returns an empty edge enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        public EdgeEnumerator<TEdgeData> GetEdgeEnumerator()
         {
             return _graph.GetEdgeEnumerator();
         }
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
+        public EdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
         {
             return _graph.GetEdges(vertexId);
         }
@@ -335,7 +335,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
+        public EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
             return _graph.GetEdges(vertex1, vertex2);
         }

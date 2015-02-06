@@ -243,7 +243,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// Returns an empty enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdgeEnumerator()
+        public EdgeEnumerator<LiveEdge> GetEdgeEnumerator()
         {
             return new RouterLiveEdgeDataSource.EdgeEnumerator(this);
         }
@@ -253,7 +253,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
+        public EdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
         {
             var enumerator = new RouterLiveEdgeDataSource.EdgeEnumerator(this);
             enumerator.MoveTo(vertexId);
@@ -267,7 +267,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertex1, uint vertex2)
+        public EdgeEnumerator<LiveEdge> GetEdges(uint vertex1, uint vertex2)
         {
             var enumerator = new RouterLiveEdgeDataSource.EdgeEnumerator(this);
             enumerator.MoveTo(vertex1, vertex2);
@@ -654,7 +654,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// An edge enumerator.
         /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<LiveEdge>
+        private class EdgeEnumerator : EdgeEnumerator<LiveEdge>
         {
             /// <summary>
             /// Holds the edges.
@@ -697,7 +697,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Moves to the next edge.
             /// </summary>
             /// <returns></returns>
-            public bool MoveNext()
+            public override bool MoveNext()
             {
                 _current++;
                 return _edges.Length > _current;
@@ -706,7 +706,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current neighbour.
             /// </summary>
-            public uint Neighbour
+            public override uint Neighbour
             {
                 get { return _edges[_current].Key; }
             }
@@ -714,7 +714,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public LiveEdge EdgeData
+            public override LiveEdge EdgeData
             {
                 get { return _edges[_current].Value; }
             }
@@ -722,7 +722,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns true if the edge data is inverted by default.
             /// </summary>
-            public bool isInverted
+            public override bool isInverted
             {
                 get { return false; }
             }
@@ -730,7 +730,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public LiveEdge InvertedEdgeData
+            public override LiveEdge InvertedEdgeData
             {
                 get { return (LiveEdge)this.EdgeData.Reverse(); }
             }
@@ -738,7 +738,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public ICoordinateCollection Intermediates
+            public override ICoordinateCollection Intermediates
             {
                 get { return null; }
             }
@@ -746,7 +746,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Resets this enumerator.
             /// </summary>
-            public void Reset()
+            public override void Reset()
             {
                 _current = -1;
             }
@@ -755,17 +755,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Returns the enumerator.
             /// </summary>
             /// <returns></returns>
-            public IEnumerator<Edge<LiveEdge>> GetEnumerator()
-            {
-                this.Reset();
-                return this;
-            }
-
-            /// <summary>
-            /// Returns the enumerator.
-            /// </summary>
-            /// <returns></returns>
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            public override IEnumerator<Edge<LiveEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
@@ -774,15 +764,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current edge.
             /// </summary>
-            public Edge<LiveEdge> Current
-            {
-                get { return new Edge<LiveEdge>(this); }
-            }
-
-            /// <summary>
-            /// Returns the current edge.
-            /// </summary>
-            object System.Collections.IEnumerator.Current
+            public override Edge<LiveEdge> Current
             {
                 get { return new Edge<LiveEdge>(this); }
             }
@@ -790,7 +772,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns true if the count is known without enumeration.
             /// </summary>
-            public bool HasCount
+            public override bool HasCount
             {
                 get
                 {
@@ -801,7 +783,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the count if known.
             /// </summary>
-            public int Count
+            public override int Count
             {
                 get
                 {
@@ -812,7 +794,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Dipose of all resources associated with this enumerable.
             /// </summary>
-            public void Dispose()
+            public override void Dispose()
             {
 
             }
@@ -821,7 +803,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// Moves this enumerator to the given vertex.
             /// </summary>
             /// <param name="vertex"></param>
-            public void MoveTo(uint vertex)
+            public override void MoveTo(uint vertex)
             {
                 _edges = _graph.GetEdgesFor(vertex);
                 this.Reset();
@@ -832,7 +814,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// </summary>
             /// <param name="vertex1">The vertex to enumerate edges for.</param>
             /// <param name="vertex2">The neighbour.</param>
-            public void MoveTo(uint vertex1, uint vertex2)
+            public override void MoveTo(uint vertex1, uint vertex2)
             {
                 _edges = _graph.GetEdgesFor(vertex1, vertex2);
                 this.Reset();
