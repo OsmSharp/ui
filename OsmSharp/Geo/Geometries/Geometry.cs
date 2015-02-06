@@ -44,14 +44,5 @@ namespace OsmSharp.Geo.Geometries
         /// <param name="box"></param>
         /// <returns></returns>
         public abstract bool IsInside(GeoCoordinateBox box);
-
-        #region Attributes
-
-        /// <summary>
-        /// Gets/sets the attribute collection.
-        /// </summary>
-        public GeometryAttributeCollection Attributes { get; set; }
-
-        #endregion
     }
 }

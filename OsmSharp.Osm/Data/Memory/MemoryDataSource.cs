@@ -16,16 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
-using OsmSharp.Osm.Interpreter;
-using System.IO;
 using OsmSharp.Osm.Streams;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace OsmSharp.Osm.Data.Memory
 {

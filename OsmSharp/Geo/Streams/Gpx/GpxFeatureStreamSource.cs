@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -23,13 +23,14 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.IO.Xml.Sources;
 using OsmSharp.Math.Geo;
 using OsmSharp.IO.Xml.Gpx;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.Geo.Streams.Gpx
 {
     /// <summary>
-    /// Gpx-stream source.
+    /// Gpx-stream feature source.
     /// </summary>
-    public class GpxGeoStreamSource : GeoCollectionStreamSource
+    public class GpxFeatureStreamSource : FeatureCollectionStreamSource
     {
         /// <summary>
         /// Holds the stream containing the source-data.
@@ -45,8 +46,8 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// Creates a new Gpx-geometry stream.
         /// </summary>
         /// <param name="stream"></param>
-        public GpxGeoStreamSource(Stream stream)
-            : base(new GeometryCollection())
+        public GpxFeatureStreamSource(Stream stream)
+            : base(new FeatureCollection())
         {
             _stream = stream;
         }
@@ -56,8 +57,8 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="createTrackPoints"></param>
-        public GpxGeoStreamSource(Stream stream, bool createTrackPoints)
-            : base(new GeometryCollection())
+        public GpxFeatureStreamSource(Stream stream, bool createTrackPoints)
+            : base(new FeatureCollection())
         {
             _stream = stream;
             _createTrackPoints = createTrackPoints;
@@ -111,16 +112,16 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// <param name="gpx"></param>
         private void ReadGpxv1_1(IO.Xml.Gpx.v1_1.gpxType gpx)
         {
-            this.GeometryCollection.Clear();
+            this.FeatureCollection.Clear();
 
             // do the waypoints.
             if (gpx.wpt != null)
             { // there are waypoints.
                 foreach (var wpt in gpx.wpt)
                 {
-                    Point point = new Point(
+                    var geometry = new Point(
                         new GeoCoordinate((double)wpt.lat, (double)wpt.lon));
-                    point.Attributes = new SimpleGeometryAttributeCollection();
+                    var point = new Feature(geometry);
 
                     if (wpt.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", wpt.ageofdgpsdata); }
                     if (wpt.eleSpecified) { point.Attributes.Add("ele", wpt.ele); }
@@ -141,7 +142,7 @@ namespace OsmSharp.Geo.Streams.Gpx
                     if (wpt.sym != null) { point.Attributes.Add("sym", wpt.sym); }
                     if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
-                    this.GeometryCollection.Add(point);
+                    this.FeatureCollection.Add(point);
                 }
             }
 
@@ -150,16 +151,16 @@ namespace OsmSharp.Geo.Streams.Gpx
             {
                 foreach (var rte in gpx.rte)
                 { // convert to a line-string
-                    List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+                    var coordinates = new List<GeoCoordinate>();
                     foreach (var rtept in rte.rtept)
                     {
-                        GeoCoordinate coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
+                        var coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
                         coordinates.Add(coordinate);
 
                         if (_createTrackPoints)
                         {
-                            Point point = new Point(coordinate);
-                            point.Attributes = new SimpleGeometryAttributeCollection();
+                            var geometry = new Point(coordinate);
+                            var point = new Feature(geometry);
 
                             if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
                             if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
@@ -180,32 +181,32 @@ namespace OsmSharp.Geo.Streams.Gpx
                             if (rtept.sym != null) { point.Attributes.Add("sym", rtept.sym); }
                             if (rtept.type != null) { point.Attributes.Add("type", rtept.type); }
 
-                            this.GeometryCollection.Add(point);
+                            this.FeatureCollection.Add(point);
                         }
                     }
 
                     // creates a new linestring.
-                    LineString lineString = new LineString(coordinates);
-                    lineString.Attributes = new SimpleGeometryAttributeCollection();
+                    var lineString = new Feature(new LineString(coordinates));
+
                     if (rte.cmt != null) { lineString.Attributes.Add("cmt", rte.cmt); }
                     if (rte.desc != null) { lineString.Attributes.Add("desc", rte.desc); }
                     if (rte.name != null) { lineString.Attributes.Add("name", rte.name); }
                     if (rte.number != null) { lineString.Attributes.Add("number", rte.number); }
                     if (rte.src != null) { lineString.Attributes.Add("src", rte.src); }
 
-                    this.GeometryCollection.Add(lineString);
+                    this.FeatureCollection.Add(lineString);
                 }
             }
 
             // do the tracks.
             foreach (var trk in gpx.trk)
             { // convert to a line-string
-                List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+                var coordinates = new List<GeoCoordinate>();
                 foreach (var trkseg in trk.trkseg)
                 {
                     foreach (var wpt in trkseg.trkpt)
                     {
-                        GeoCoordinate coordinate = new GeoCoordinate((double)wpt.lat, (double)wpt.lon);
+                        var coordinate = new GeoCoordinate((double)wpt.lat, (double)wpt.lon);
 
                         // only add new coordinates.
                         if (coordinates.Count == 0 || coordinates[coordinates.Count - 1] != coordinate)
@@ -215,8 +216,7 @@ namespace OsmSharp.Geo.Streams.Gpx
 
                         if (_createTrackPoints)
                         {
-                            Point point = new Point(coordinate);
-                            point.Attributes = new SimpleGeometryAttributeCollection();
+                            var point = new Feature(new Point(coordinate));
 
                             if (wpt.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", wpt.ageofdgpsdata); }
                             if (wpt.eleSpecified) { point.Attributes.Add("ele", wpt.ele); }
@@ -237,21 +237,21 @@ namespace OsmSharp.Geo.Streams.Gpx
                             if (wpt.sym != null) { point.Attributes.Add("sym", wpt.sym); }
                             if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
-                            this.GeometryCollection.Add(point);
+                            this.FeatureCollection.Add(point);
                         }
                     }
                 }
 
                 // creates a new linestring.
-                LineString lineString = new LineString(coordinates);
-                lineString.Attributes = new SimpleGeometryAttributeCollection();
+                var lineString = new Feature(new LineString(coordinates));
+
                 if (trk.cmt != null) { lineString.Attributes.Add("cmt", trk.cmt); }
                 if (trk.desc != null) { lineString.Attributes.Add("desc", trk.desc); }
                 if (trk.name != null) { lineString.Attributes.Add("name", trk.name); }
                 if (trk.number != null) { lineString.Attributes.Add("number", trk.number); }
                 if (trk.src != null) { lineString.Attributes.Add("src", trk.src); }
 
-                this.GeometryCollection.Add(lineString);
+                this.FeatureCollection.Add(lineString);
             }
         }
 
@@ -261,16 +261,14 @@ namespace OsmSharp.Geo.Streams.Gpx
         /// <param name="gpx"></param>
         private void ReadGpxv1_0(OsmSharp.IO.Xml.Gpx.v1_0.gpx gpx)
         {
-            this.GeometryCollection.Clear();
+            this.FeatureCollection.Clear();
 
             // do the waypoints.
             if (gpx.wpt != null)
             { // there are waypoints.
                 foreach (var wpt in gpx.wpt)
                 {
-                    Point point = new Point(
-                        new GeoCoordinate((double)wpt.lat, (double)wpt.lon));
-                    point.Attributes = new SimpleGeometryAttributeCollection();
+                    var point = new Feature(new Point(new GeoCoordinate((double)wpt.lat, (double)wpt.lon)));
 
                     if (wpt.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", wpt.ageofdgpsdata); }
                     if (wpt.eleSpecified) { point.Attributes.Add("ele", wpt.ele); }
@@ -294,7 +292,7 @@ namespace OsmSharp.Geo.Streams.Gpx
                     if (wpt.urlname != null) { point.Attributes.Add("urlname", wpt.urlname); }
                     if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
-                    this.GeometryCollection.Add(point);
+                    this.FeatureCollection.Add(point);
                 }
             }
 
@@ -303,16 +301,15 @@ namespace OsmSharp.Geo.Streams.Gpx
             {
                 foreach (var rte in gpx.rte)
                 { // convert to a line-string
-                    List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+                    var coordinates = new List<GeoCoordinate>();
                     foreach (var rtept in rte.rtept)
                     {
-                        GeoCoordinate coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
+                        var coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
                         coordinates.Add(coordinate);
 
                         if (_createTrackPoints)
                         {
-                            Point point = new Point(coordinate);
-                            point.Attributes = new SimpleGeometryAttributeCollection();
+                            var point = new Feature(new Point(coordinate));
 
                             if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
                             if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
@@ -336,13 +333,13 @@ namespace OsmSharp.Geo.Streams.Gpx
                             if (rtept.urlname != null) { point.Attributes.Add("urlname", rtept.urlname); }
                             if (rtept.type != null) { point.Attributes.Add("type", rtept.type); }
 
-                            this.GeometryCollection.Add(point);
+                            this.FeatureCollection.Add(point);
                         }
                     }
 
                     // creates a new linestring.
-                    LineString lineString = new LineString(coordinates);
-                    lineString.Attributes = new SimpleGeometryAttributeCollection();
+                    var lineString = new Feature(new LineString(coordinates));
+
                     if (rte.Any != null) { lineString.Attributes.Add("Any", rte.Any); }
                     if (rte.cmt != null) { lineString.Attributes.Add("cmt", rte.cmt); }
                     if (rte.desc != null) { lineString.Attributes.Add("desc", rte.desc); }
@@ -352,7 +349,7 @@ namespace OsmSharp.Geo.Streams.Gpx
                     if (rte.url != null) { lineString.Attributes.Add("url", rte.url); }
                     if (rte.urlname != null) { lineString.Attributes.Add("urlname", rte.urlname); }
 
-                    this.GeometryCollection.Add(lineString);
+                    this.FeatureCollection.Add(lineString);
                 }
             }
 
@@ -367,8 +364,7 @@ namespace OsmSharp.Geo.Streams.Gpx
 
                     if (_createTrackPoints)
                     {
-                        Point point = new Point(coordinate);
-                        point.Attributes = new SimpleGeometryAttributeCollection();
+                        var point = new Feature(new Point(coordinate));
 
                         if (trkseg.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", trkseg.ageofdgpsdata); }
                         if (trkseg.eleSpecified) { point.Attributes.Add("ele", trkseg.ele); }
@@ -392,13 +388,13 @@ namespace OsmSharp.Geo.Streams.Gpx
                         if (trkseg.urlname != null) { point.Attributes.Add("urlname", trkseg.urlname); }
                         if (trkseg.type != null) { point.Attributes.Add("type", trkseg.type); }
 
-                        this.GeometryCollection.Add(point);
+                        this.FeatureCollection.Add(point);
                     }
                 }
 
                 // creates a new linestring.
-                LineString lineString = new LineString(coordinates);
-                lineString.Attributes = new SimpleGeometryAttributeCollection();
+                var lineString = new Feature(new LineString(coordinates));
+
                 if (trk.Any != null) { lineString.Attributes.Add("Any", trk.Any); }
                 if (trk.cmt != null) { lineString.Attributes.Add("cmt", trk.cmt); }
                 if (trk.desc != null) { lineString.Attributes.Add("desc", trk.desc); }
@@ -408,7 +404,7 @@ namespace OsmSharp.Geo.Streams.Gpx
                 if (trk.url != null) { lineString.Attributes.Add("url", trk.url); }
                 if (trk.urlname != null) { lineString.Attributes.Add("urlname", trk.urlname); }
 
-                this.GeometryCollection.Add(lineString);
+                this.FeatureCollection.Add(lineString);
             }
         }
 

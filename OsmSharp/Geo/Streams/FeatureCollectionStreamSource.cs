@@ -16,39 +16,40 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Geometries.Streams;
 using OsmSharp.Math.Geo;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Geo.Streams
 {
     /// <summary>
-    /// A geometry stream source for a geometry collection.
+    /// A geometry stream source for a feature collection.
     /// </summary>
-    public class GeoCollectionStreamSource : IGeoStreamSource
+    public class FeatureCollectionStreamSource : IFeatureStreamSource
     {
         /// <summary>
-        /// Creates a new geometry collection stream source.
+        /// Creates a new feature collection stream source.
         /// </summary>
         /// <param name="collection"></param>
-        public GeoCollectionStreamSource(GeometryCollection collection)
+        public FeatureCollectionStreamSource(FeatureCollection collection)
         {
-            this.GeometryCollection = collection;
+            this.FeatureCollection = collection;
         }
 
         /// <summary>
-        /// Gets/sets the geometry collection.
+        /// Gets/sets the feature collection.
         /// </summary>
-        public GeometryCollection GeometryCollection { get; private set; }
+        public FeatureCollection FeatureCollection { get; private set; }
 
         /// <summary>
         /// Initializes this stream source.
         /// </summary>
         public virtual void Initialize()
         {
-            _enumerator = this.GeometryCollection.GetEnumerator();
+            _enumerator = this.FeatureCollection.GetEnumerator();
         }
 
         /// <summary>
@@ -82,13 +83,13 @@ namespace OsmSharp.Geo.Streams
         /// <returns></returns>
         public GeoCoordinateBox GetBounds()
         {
-            return this.GeometryCollection.Box;
+            return this.FeatureCollection.Box;
         }
 
         /// <summary>
         /// Returns the current geometry.
         /// </summary>
-        public Geometry Current
+        public Feature Current
         {
             get
             {
@@ -117,7 +118,7 @@ namespace OsmSharp.Geo.Streams
         /// <summary>
         /// Holds the current enumerator.
         /// </summary>
-        private IEnumerator<Geometry> _enumerator;
+        private IEnumerator<Feature> _enumerator;
 
         /// <summary>
         /// Move to the next item in the geometry collection.
@@ -145,7 +146,7 @@ namespace OsmSharp.Geo.Streams
         /// Returns a enumerator for this source.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<Geometry> GetEnumerator()
+        public IEnumerator<Feature> GetEnumerator()
         {
             this.Initialize();
 

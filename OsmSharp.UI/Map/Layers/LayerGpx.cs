@@ -94,12 +94,12 @@ namespace OsmSharp.UI.Map.Layers
         public GeoCoordinateBox AddGpx(Stream stream)
         {
             GeoCoordinateBox bounds = null;
-            var gpxStream = new GpxGeoStreamSource(stream);
-            foreach (var geometry in gpxStream)
+            var gpxStream = new GpxFeatureStreamSource(stream);
+            foreach (var feature in gpxStream)
             {
-                if (geometry is Point)
+                if (feature.Geometry is Point)
                 { // add the point.
-                    var point = (geometry as Point);
+                    var point = (feature.Geometry as Point);
 
                     // get x/y.
                     var x = _projection.LongitudeToX(point.Coordinate.Longitude);
@@ -122,9 +122,9 @@ namespace OsmSharp.UI.Map.Layers
                         bounds = bounds + point.Box;
                     }
                 }
-                else if (geometry is LineString)
+                else if (feature.Geometry is LineString)
                 { // add the lineString.
-                    var lineString = (geometry as LineString);
+                    var lineString = (feature.Geometry as LineString);
 
                     // get x/y.
                     var x = new double[lineString.Coordinates.Count];
