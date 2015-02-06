@@ -111,6 +111,7 @@
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
     <Compile Include="Geo\Interpreter\FeatureInterpreter.cs" />
     <Compile Include="Geo\Interpreter\SimpleFeatureInterpreter.cs" />
+    <Compile Include="Geo\Streams\OsmFeatureStreamSource.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />
@@ -189,6 +190,7 @@
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
