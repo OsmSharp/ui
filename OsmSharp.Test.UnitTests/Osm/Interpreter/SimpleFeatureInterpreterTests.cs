@@ -1,22 +1,37 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using NUnit.Framework;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Osm.Geo.Interpreter;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Osm.Interpreter;
-using OsmSharp.Osm;
-using OsmSharp.Geo.Geometries;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Test.Unittests.Osm.Interpreter
 {
     /// <summary>
-    /// Contains tests for the default geometry interpreter class testing as many of the openstreetmap tags ->  geometry logic
-    /// as possible.
+    /// Contains tests for the default feature interpreter class testing as many of the openstreetmap tags ->  geometry logic as possible.
     /// </summary>
     [TestFixture]
-    public class SimpleGeometryInterpreterTests
+    public class SimpleFeatureInterpreterTests
     {
         /// <summary>
         /// Tests the interpretation of an area.
@@ -27,20 +42,20 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         [Test]
         public void TestWayAreaIsYesArea()
         {
-            Node node1 = new Node();
+            var node1 = new Node();
             node1.Id = 1;
             node1.Latitude = 0;
             node1.Longitude = 0;
-            Node node2 = new Node();
+            var node2 = new Node();
             node2.Id = 2;
             node2.Latitude = 1;
             node2.Longitude = 0;
-            Node node3 = new Node();
+            var node3 = new Node();
             node3.Id = 3;
             node3.Latitude = 0;
             node3.Longitude = 1;
 
-            Way way = new Way();
+            var way = new Way();
             way.Id = 1;
             way.Nodes = new List<long>();
             way.Nodes.Add(1);
@@ -50,21 +65,21 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
             way.Tags = new TagsCollection();
             way.Tags.Add("area", "yes");
 
-            MemoryDataSource source = new MemoryDataSource();
+            var source = new MemoryDataSource();
             source.AddNode(node1);
             source.AddNode(node2);
             source.AddNode(node3);
             source.AddWay(way);
 
             // the use of natural=water implies an area-type.
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(way, source);
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(way, source);
 
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<LineairRing>(geometry);
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("area", "yes"));
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<LineairRing>(feature.Geometry);
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("area", "yes"));
         }
 
         /// <summary>
@@ -76,20 +91,20 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         [Test]
         public void TestWayNaturalIsWaterArea()
         {
-            Node node1 = new Node();
+            var node1 = new Node();
             node1.Id = 1;
             node1.Latitude = 0;
             node1.Longitude = 0;
-            Node node2 = new Node();
+            var node2 = new Node();
             node2.Id = 2;
             node2.Latitude = 1;
             node2.Longitude = 0;
-            Node node3 = new Node();
+            var node3 = new Node();
             node3.Id = 3;
             node3.Latitude = 0;
             node3.Longitude = 1;
 
-            Way way = new Way();
+            var way = new Way();
             way.Id = 1;
             way.Nodes = new List<long>();
             way.Nodes.Add(1);
@@ -99,21 +114,21 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
             way.Tags = new TagsCollection();
             way.Tags.Add("natural", "water");
 
-            MemoryDataSource source = new MemoryDataSource();
+            var source = new MemoryDataSource();
             source.AddNode(node1);
             source.AddNode(node2);
             source.AddNode(node3);
             source.AddWay(way);
 
             // the use of natural=water implies an area-type.
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(way, source);
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(way, source);
 
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<LineairRing>(geometry);
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("natural", "water"));
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<LineairRing>(feature.Geometry);
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("natural", "water"));
         }
 
         /// <summary>
@@ -126,7 +141,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         public void TestRelationMultipolygonAreaOneOuter()
         {
             // tests a multipolygon containing one 'outer' member.
-            MemoryDataSource source = new MemoryDataSource(
+            var source = new MemoryDataSource(
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
@@ -136,13 +151,13 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way)));
 
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<LineairRing>(geometry);
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<LineairRing>(feature.Geometry);
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("type", "multipolygon"));
         }
 
         /// <summary>
@@ -154,7 +169,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterOneInner()
         {
-            MemoryDataSource source = new MemoryDataSource(
+            var source = new MemoryDataSource(
                 Node.Create(1, 0, 0),
                 Node.Create(2, 0, 1),
                 Node.Create(3, 1, 1),
@@ -171,16 +186,16 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                     RelationMember.Create(1, "outer", OsmGeoType.Way),
                     RelationMember.Create(2, "inner", OsmGeoType.Way)));
 
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<Polygon>(geometry);
-            Polygon polygon = geometry as Polygon;
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            var polygon = feature.Geometry as Polygon;
             Assert.IsNotNull(polygon.Holes);
             Assert.AreEqual(1, polygon.Holes.Count());
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("type", "multipolygon"));
         }
         
         /// <summary>
@@ -192,7 +207,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterTwoInners()
         {
-            MemoryDataSource source = new MemoryDataSource(
+            var source = new MemoryDataSource(
                 Node.Create(1, 0, 0),
                 Node.Create(2, 0, 1),
                 Node.Create(3, 1, 1),
@@ -215,16 +230,16 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                     RelationMember.Create(2, "inner", OsmGeoType.Way),
                     RelationMember.Create(3, "inner", OsmGeoType.Way)));
 
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<Polygon>(geometry);
-            Polygon polygon = geometry as Polygon;
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            Polygon polygon = feature.Geometry as Polygon;
             Assert.IsNotNull(polygon.Holes);
             Assert.AreEqual(2, polygon.Holes.Count());
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("type", "multipolygon"));
         }
 
         /// <summary>
@@ -236,7 +251,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
         [Test]
         public void TestRelationMultipolygonAreaOneOuterTwoPartialInners()
         {
-            MemoryDataSource source = new MemoryDataSource(
+            var source = new MemoryDataSource(
                 Node.Create(1, 0, 0),
                 Node.Create(2, 0, 1),
                 Node.Create(3, 1, 1),
@@ -255,16 +270,16 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                     RelationMember.Create(2, "inner", OsmGeoType.Way),
                     RelationMember.Create(3, "inner", OsmGeoType.Way)));
 
-            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
-            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
-            Assert.IsNotNull(geometries);
-            Assert.AreEqual(1, geometries.Count);
-            Geometry geometry = geometries[0];
-            Assert.IsInstanceOf<Polygon>(geometry);
-            Polygon polygon = geometry as Polygon;
+            var interpreter = new SimpleFeatureInterpreter();
+            var features = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(features);
+            Assert.AreEqual(1, features.Count);
+            var feature = features[0];
+            Assert.IsInstanceOf<Polygon>(feature.Geometry);
+            Polygon polygon = feature.Geometry as Polygon;
             Assert.IsNotNull(polygon.Holes);
             Assert.AreEqual(1, polygon.Holes.Count());
-            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("type", "multipolygon"));
         }
     }
 }

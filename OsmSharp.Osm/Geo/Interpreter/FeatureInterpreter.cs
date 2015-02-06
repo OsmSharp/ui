@@ -24,29 +24,30 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Features;
 
-namespace OsmSharp.Osm.Interpreter
+namespace OsmSharp.Osm.Geo.Interpreter
 {
     /// <summary>
     /// Represents a geometry interpreter to convert OSM-objects to corresponding geometries.
     /// </summary>
-    public abstract class GeometryInterpreter
+    public abstract class FeatureInterpreter
     {
         /// <summary>
         /// Holds the default geometry interpreter.
         /// </summary>
-        private static GeometryInterpreter _defaultInterpreter;
+        private static FeatureInterpreter _defaultInterpreter;
 
         /// <summary>
         /// Gets/sets the default interpreter.
         /// </summary>
-        public static GeometryInterpreter DefaultInterpreter
+        public static FeatureInterpreter DefaultInterpreter
         {
             get
             {
                 if (_defaultInterpreter == null)
                 { 
-                    _defaultInterpreter = new SimpleGeometryInterpreter();
+                    _defaultInterpreter = new SimpleFeatureInterpreter();
                 }
                 return _defaultInterpreter;
             }
@@ -61,7 +62,7 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        public abstract GeometryCollection Interpret(ICompleteOsmGeo osmObject);
+        public abstract FeatureCollection Interpret(ICompleteOsmGeo osmObject);
 
         /// <summary>
         /// Returns true if the given tags collection contains potential area tags.
@@ -76,7 +77,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="simpleOsmGeo"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public virtual GeometryCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data)
+        public virtual FeatureCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data)
         {
             switch (simpleOsmGeo.Type)
             {

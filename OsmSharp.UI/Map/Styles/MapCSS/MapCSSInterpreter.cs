@@ -16,20 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Algorithms;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Interpreter;
+using OsmSharp.Osm.Geo.Interpreter;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -51,7 +52,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <summary>
         /// Holds the geometry interpreter.
         /// </summary>
-        private readonly GeometryInterpreter _geometryInterpreter;
+        private readonly FeatureInterpreter _geometryInterpreter;
 
         // defaults taken from: http://josm.openstreetmap.de/wiki/Help/Styles/MapCSSImplementation#Generalproperties
         //  area: 1, casing: 2, left-/right-casing: 2.1, line-pattern: 2.9, 
@@ -92,7 +93,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
             _mapCSSFile = mapCSSFile;
             _mapCSSImageSource = imageSource;
-            _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+            _geometryInterpreter = FeatureInterpreter.DefaultInterpreter;
 
             this.PrepareForProcessing();
         }
@@ -108,7 +109,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
             _mapCSSFile = MapCSSFile.FromStream(stream);
             _mapCSSImageSource = imageSource;
-            _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+            _geometryInterpreter = FeatureInterpreter.DefaultInterpreter;
 
             this.PrepareForProcessing();
         }
@@ -198,7 +199,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
             _mapCSSFile = MapCSSFile.FromString(css);
             _mapCSSImageSource = imageSource;
-            _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
+            _geometryInterpreter = FeatureInterpreter.DefaultInterpreter;
 
             this.PrepareForProcessing();
         }
@@ -209,7 +210,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="mapCSSFile"></param>
         /// <param name="imageSource"></param>
         /// <param name="geometryInterpreter"></param>
-        public MapCSSInterpreter(MapCSSFile mapCSSFile, IMapCSSImageSource imageSource, GeometryInterpreter geometryInterpreter)
+        public MapCSSInterpreter(MapCSSFile mapCSSFile, IMapCSSImageSource imageSource, FeatureInterpreter geometryInterpreter)
         {
             if (imageSource == null) throw new ArgumentNullException("imageSource");
             if (geometryInterpreter == null) throw new ArgumentNullException("geometryInterpreter");
@@ -227,7 +228,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="stream"></param>
         /// <param name="imageSource"></param>
         /// <param name="geometryInterpreter"></param>
-        public MapCSSInterpreter(Stream stream, IMapCSSImageSource imageSource, GeometryInterpreter geometryInterpreter)
+        public MapCSSInterpreter(Stream stream, IMapCSSImageSource imageSource, FeatureInterpreter geometryInterpreter)
         {
             if (imageSource == null) throw new ArgumentNullException("imageSource");
             if (geometryInterpreter == null) throw new ArgumentNullException("geometryInterpreter");
@@ -245,7 +246,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="css"></param>
         /// <param name="imageSource"></param>
         /// <param name="geometryInterpreter"></param>
-        public MapCSSInterpreter(string css, IMapCSSImageSource imageSource, GeometryInterpreter geometryInterpreter)
+        public MapCSSInterpreter(string css, IMapCSSImageSource imageSource, FeatureInterpreter geometryInterpreter)
         {
             if (imageSource == null) throw new ArgumentNullException("imageSource");
             if (geometryInterpreter == null) throw new ArgumentNullException("geometryInterpreter");
@@ -349,19 +350,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     _keysForAreas == null || osmGeo.Tags.ContainsOneOfKeys(_keysForAreas))
                 { // good keys present.
                     var collection = _geometryInterpreter.Interpret(osmGeo);
-                    foreach (Geometry geometry in collection)
+                    foreach (var feature in collection)
                     {
-                        if (geometry is LineairRing)
+                        if (feature.Geometry is LineairRing)
                         { // a simple lineair ring.
-                            this.TranslateLineairRing(scene, projection, geometry as LineairRing);
+                            this.TranslateLineairRing(scene, projection, feature);
                         }
-                        else if (geometry is Polygon)
+                        else if (feature.Geometry is Polygon)
                         { // a simple polygon.
-                            this.TranslatePolygon(scene, projection, geometry as Polygon);
+                            this.TranslatePolygon(scene, projection, feature);
                         }
-                        else if (geometry is MultiPolygon)
+                        else if (feature.Geometry is MultiPolygon)
                         { // a multipolygon.
-                            this.TranslateMultiPolygon(scene, projection, geometry as MultiPolygon);
+                            this.TranslateMultiPolygon(scene, projection, feature);
                         }
                     }
                 }
@@ -723,12 +724,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene">The scene to add primitives to.</param>
         /// <param name="projection">The projection used to convert the objects.</param>
         /// <param name="multiPolygon"></param>
-        private void TranslateMultiPolygon(Scene2D scene, IProjection projection, MultiPolygon multiPolygon)
+        private void TranslateMultiPolygon(Scene2D scene, IProjection projection, Feature multiPolygon)
         {
-            foreach(Polygon polygon in multiPolygon)
+            foreach(var polygon in multiPolygon.Geometry as MultiPolygon)
             {
-                polygon.Attributes = multiPolygon.Attributes;
-                this.TranslatePolygon(scene, projection, polygon);
+                this.TranslatePolygon(scene, projection, new Feature(polygon, multiPolygon.Attributes));
             }
         }
 
@@ -738,19 +738,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene">The scene to add primitives to.</param>
         /// <param name="projection">The projection used to convert the objects.</param>
         /// <param name="polygon"></param>
-        private void TranslatePolygon(Scene2D scene, IProjection projection, Polygon polygon)
+        private void TranslatePolygon(Scene2D scene, IProjection projection, Feature polygon)
         {
-            polygon.Ring.Attributes = polygon.Attributes;
-            this.TranslateLineairRing(scene, projection, polygon.Ring);
-            //// build the rules.
-            //List<MapCSSRuleProperties> rules =
-            //    this.BuildRules(new MapCSSObject(polygon));
-
-            //// validate what's there.
-            //if (rules.Count == 0)
-            //{
-            //    return;
-            //}
+            this.TranslateLineairRing(scene, projection, new Feature((polygon.Geometry as Polygon).Ring,
+                polygon.Attributes));
         }
 
         /// <summary>
@@ -758,12 +749,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="scene">The scene to add primitives to.</param>
         /// <param name="projection">The projection used to convert the objects.</param>
-        /// <param name="lineairRing"></param>
-        private void TranslateLineairRing(Scene2D scene, IProjection projection, LineairRing lineairRing)
+        /// <param name="feature"></param>
+        private void TranslateLineairRing(Scene2D scene, IProjection projection, Feature feature)
         {
+            var lineairRing = feature.Geometry as LineairRing;
+
             // build the rules.
-            List<MapCSSRuleProperties> rules =
-                this.BuildRules(new MapCSSObject(lineairRing));
+            var rules = this.BuildRules(new MapCSSObject(feature));
 
             // validate what's there.
             if (rules.Count == 0)
@@ -1133,9 +1125,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <returns></returns>
         private bool AppliesToArea(TagsCollectionBase tagsCollection)
         {
-            LineairRing ring = new LineairRing();
-            ring.Attributes = new SimpleGeometryAttributeCollection(tagsCollection);
-            List<MapCSSRuleProperties> rules = this.BuildRules(new MapCSSObject(ring));
+            var feature = new Feature(new LineairRing(),
+                new SimpleGeometryAttributeCollection(tagsCollection));
+            var rules = this.BuildRules(new MapCSSObject(feature));
             return rules != null && rules.Count > 0;
         }
 

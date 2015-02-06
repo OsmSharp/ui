@@ -17,9 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Interpreter;
+using OsmSharp.Osm.Geo.Interpreter;
 
 namespace OsmSharp.Osm
 {
@@ -61,39 +62,39 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public abstract OsmSharp.Osm.OsmGeo ToSimple();
 
-        #region Geometry - Interpreter
+        #region Features - Interpreter
 
         /// <summary>
         /// The interpreter for these objects.
         /// </summary>
-        public static GeometryInterpreter GeometryInterperter = new SimpleGeometryInterpreter(); // set a default geometry interpreter.
+        public static FeatureInterpreter FeatureInterperter = new SimpleFeatureInterpreter(); // set a default geometry interpreter.
 
         /// <summary>
-        /// The geometries this OSM-object represents.
+        /// The feature(s) this OSM-object represents.
         /// </summary>
-        private GeometryCollection _geometries;
+        private FeatureCollection _features;
 
         /// <summary>
-        /// Returns the geometries this OSM-object represents.
+        /// Returns the feature(s) this OSM-object represents.
         /// </summary>
-        public GeometryCollection Geometries
+        public FeatureCollection Features
         {
             get
             {
-                if (_geometries == null)
+                if (_features == null)
                 {
-                    _geometries = CompleteOsmGeo.GeometryInterperter.Interpret(this);
+                    _features = CompleteOsmGeo.FeatureInterperter.Interpret(this);
                 }
-                return _geometries;
+                return _features;
             }
         }
 
         /// <summary>
         /// Make sure the geometries of this objects will be recalculated.
         /// </summary>
-        public void ResetGeometries()
+        public void ResetFeatures()
         {
-            _geometries = null;
+            _features = null;
         }
 
         #endregion
@@ -107,7 +108,7 @@ namespace OsmSharp.Osm
         {
             get
             {
-                return this.Geometries.Box;
+                return this.Features.Box;
             }
         }
 

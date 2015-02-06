@@ -109,8 +109,8 @@
     <Compile Include="Filters\Tags\FilterTagCount.cs" />
     <Compile Include="Filters\Tags\FilterTagExists.cs" />
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
-    <Compile Include="Interpreter\GeometryInterpreter.cs" />
-    <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
+    <Compile Include="Geo\Interpreter\FeatureInterpreter.cs" />
+    <Compile Include="Geo\Interpreter\SimpleFeatureInterpreter.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />

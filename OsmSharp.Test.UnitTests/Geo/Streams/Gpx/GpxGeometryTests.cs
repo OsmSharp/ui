@@ -21,6 +21,7 @@ using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Streams.Gpx;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.Test.Unittests.Geo.Streams.Gpx
 {
@@ -37,18 +38,18 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.Gpx
         public void GpxReadGeometryv1_0()
         {
             // initialize the geometry source.
-            GpxGeoStreamSource gpxSource = new GpxGeoStreamSource(
+            var gpxSource = new GpxFeatureStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v1.0.gpx"),
                 false);
 
             // pull all the objects from the stream into the given collection.
-            GeometryCollection gpxCollection = new GeometryCollection(gpxSource);
-            List<Geometry> geometries = new List<Geometry>(gpxCollection);
+            var gpxCollection = new FeatureCollection(gpxSource);
+            var features = new List<Feature>(gpxCollection);
 
             // test collection contents.
-            Assert.AreEqual(1, geometries.Count);
-            Assert.IsInstanceOf(typeof(LineString), geometries[0]);
-            Assert.AreEqual(424, (geometries[0] as LineString).Coordinates.Count);
+            Assert.AreEqual(1, features.Count);
+            Assert.IsInstanceOf(typeof(LineString), features[0].Geometry);
+            Assert.AreEqual(424, (features[0].Geometry as LineString).Coordinates.Count);
         }
     }
 }

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Features;
 using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm
@@ -37,14 +38,14 @@ namespace OsmSharp.Osm
         long? ChangeSetId { get; set; }
 
         /// <summary>
-        /// Gets the interpreted geometries collection.
+        /// Gets the interpreted feature collection.
         /// </summary>
-        OsmSharp.Geo.Geometries.GeometryCollection Geometries { get; }
+        FeatureCollection Features { get; }
 
         /// <summary>
-        /// Resets the current geometries for this object.
+        /// Resets the current features for this object.
         /// </summary>
-        void ResetGeometries();
+        void ResetFeatures();
 
         /// <summary>
         /// Converts this object to it's corresponding simple version.

@@ -23,32 +23,33 @@ using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Logging;
+using OsmSharp.Geo.Features;
 
-namespace OsmSharp.Osm.Interpreter
+namespace OsmSharp.Osm.Geo.Interpreter
 {
     /// <summary>
     /// Simple implementation of OSM-data interpreter.
     /// </summary>
-    public class SimpleGeometryInterpreter : GeometryInterpreter
+    public class SimpleFeatureInterpreter : FeatureInterpreter
     {
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        public override GeometryCollection Interpret(ICompleteOsmGeo osmObject)
+        public override FeatureCollection Interpret(ICompleteOsmGeo osmObject)
         {
             // DISCLAIMER: this is a very very very simple geometry interpreter and
             // contains hardcoded all relevant tags.
 
-            GeometryCollection collection = new GeometryCollection();
+            var collection = new FeatureCollection();
             TagsCollectionBase tags;
             if (osmObject != null)
             {
                 switch (osmObject.Type)
                 {
                     case CompleteOsmType.Node:
-                        TagsCollection newCollection = new TagsCollection(
+                        var newCollection = new TagsCollection(
                             osmObject.Tags);
                         newCollection.RemoveKey("FIXME");
                         newCollection.RemoveKey("node");
@@ -56,7 +57,8 @@ namespace OsmSharp.Osm.Interpreter
 
                         if (newCollection.Count > 0)
                         { // there is still some relevant information left.
-                            collection.Add(new Point((osmObject as Node).Coordinate));
+                            collection.Add(new Feature(new Point((osmObject as Node).Coordinate),
+                                new SimpleGeometryAttributeCollection(osmObject.Tags)));
                         }
                         break;
                     case CompleteOsmType.Way:
@@ -98,19 +100,19 @@ namespace OsmSharp.Osm.Interpreter
 
                         if (isArea)
                         { // area tags leads to simple polygon
-                            LineairRing lineairRing = new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
-                            lineairRing.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            var lineairRing = new Feature(new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()),
+                                new SimpleGeometryAttributeCollection(tags));
                             collection.Add(lineairRing);
                         }
                         else
                         { // no area tag leads to just a line.
-                            LineString lineString = new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
-                            lineString.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            var lineString = new Feature(new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()),
+                                new SimpleGeometryAttributeCollection(tags));
                             collection.Add(lineString);
                         }
                         break;
                     case CompleteOsmType.Relation:
-                        CompleteRelation relation = (osmObject as CompleteRelation);
+                        var relation = (osmObject as CompleteRelation);
                         tags = relation.Tags;
 
                         string typeValue;
@@ -118,10 +120,10 @@ namespace OsmSharp.Osm.Interpreter
                         { // there is a type in this relation.
                             if (typeValue == "multipolygon")
                             { // this relation is a multipolygon.
-                                Geometry geometry = this.InterpretMultipolygonRelation(relation);
-                                if (geometry != null)
+                                var feature = this.InterpretMultipolygonRelation(relation);
+                                if (feature != null)
                                 { // add the geometry.
-                                    collection.Add(geometry);
+                                    collection.Add(feature);
                                 }
                             }
                             else if (typeValue == "boundary")
@@ -199,17 +201,17 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="relation"></param>
         /// <returns></returns>
-        private Geometry InterpretMultipolygonRelation(CompleteRelation relation)
+        private Feature InterpretMultipolygonRelation(CompleteRelation relation)
         {
-            Geometry geometry = null;
+            Feature feature = null;
             if (relation.Members == null)
             { // the relation has no members.
-                return geometry;
+                return feature;
             }
 
             // build lists of outer and inner ways.
             var ways = new List<KeyValuePair<bool, CompleteWay>>(); // outer=true
-            foreach (CompleteRelationMember member in relation.Members)
+            foreach (var member in relation.Members)
             {
                 if (member.Role == "inner" &&
                     member.Member is CompleteWay)
@@ -236,13 +238,13 @@ namespace OsmSharp.Osm.Interpreter
                     string.Format("Ring assignment failed: invalid multipolygon relation [{0}] detected!", relation.Id));
             }
             // group the rings and create a multipolygon.
-            geometry = this.GroupRings(rings);
+            var geometry = this.GroupRings(rings);
             if (geometry != null)
             {
-                // assign attributes.
-                geometry.Attributes = new SimpleGeometryAttributeCollection(relation.Tags);
+                feature = new Feature(geometry, 
+                    new SimpleGeometryAttributeCollection(relation.Tags));
             }
-            return geometry;
+            return feature;
         }
 
         /// <summary>

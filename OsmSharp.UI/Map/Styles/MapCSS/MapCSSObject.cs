@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -37,17 +38,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <summary>
         /// Creates a new MapCSS object with a geometry object.
         /// </summary>
-        /// <param name="geometry"></param>
-        public MapCSSObject(Geometry geometry)
+        /// <param name="feature"></param>
+        public MapCSSObject(Feature feature)
         {
-            if (geometry == null) throw new ArgumentNullException();
+            if (feature == null) throw new ArgumentNullException();
 
-            this.Geometry = geometry;
+            this.Feature = feature;
 
-            if (!(this.Geometry is LineairRing ||
-                this.Geometry is Polygon ||
-                this.Geometry is MultiPolygon ||
-                this.Geometry is LineString))
+            if (!(this.Feature.Geometry is LineairRing ||
+                this.Feature.Geometry is Polygon ||
+                this.Feature.Geometry is MultiPolygon ||
+                this.Feature.Geometry is LineString))
             {
                 throw new Exception("Invalid MapCSS type.");
             }
@@ -64,9 +65,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         public OsmGeo OsmGeo { get; private set; }
 
         /// <summary>
-        /// Gets the geometry object.
+        /// Gets the feature.
         /// </summary>
-        public Geometry Geometry { get; set; }
+        public Feature Feature { get; set; }
 
         /// <summary>
         /// Returns true if this object contains an osmgeo object.
@@ -87,7 +88,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         {
             get
             {
-                return this.Geometry != null;
+                return this.Feature != null;
             }
         }
 
@@ -127,13 +128,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 }
                 else
                 {
-                    if (this.Geometry is LineairRing ||
-                        this.Geometry is Polygon ||
-                        this.Geometry is MultiPolygon)
+                    if (this.Feature.Geometry is LineairRing ||
+                        this.Feature.Geometry is Polygon ||
+                        this.Feature.Geometry is MultiPolygon)
                     {
                         return MapCSS.MapCSSType.Area;
                     }
-                    else if (this.Geometry is LineString)
+                    else if (this.Feature.Geometry is LineString)
                     {
                         return MapCSS.MapCSSType.Line;
                     }
@@ -141,24 +142,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 throw new Exception("Invalid MapCSS type.");
             }
         }
-
-        ///// <summary>
-        ///// Returns true if the object set in this mapcss object is of the given type.
-        ///// </summary>
-        ///// <param name="type"></param>
-        ///// <returns></returns>
-        //public bool IsType(Type type)
-        //{
-        //    if (this.IsGeo)
-        //    {
-        //        return type.IsInstanceOfType(this.Geometry);
-        //    }
-        //    if (this.OsmGeoComplete != null)
-        //    {
-        //        return type.IsInstanceOfType(this.OsmGeoComplete);
-        //    }
-        //    return type.IsInstanceOfType(this.OsmGeo);
-        //}
 
         /// <summary>
         /// Returns true if the tags- or attributecollection contains the given key.
@@ -169,8 +152,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         {
             if (this.IsGeo)
             {
-                return this.Geometry.Attributes != null &&
-                    this.Geometry.Attributes.ContainsKey(key);
+                return this.Feature.Attributes != null &&
+                    this.Feature.Attributes.ContainsKey(key);
             }
             if (this.OsmGeoComplete != null)
             {
@@ -193,8 +176,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             if (this.IsGeo)
             {
                 object value;
-                if (this.Geometry.Attributes != null &&
-                    this.Geometry.Attributes.TryGetValue(key, out value))
+                if (this.Feature.Attributes != null &&
+                    this.Feature.Attributes.TryGetValue(key, out value))
                 {
                     if (value != null)
                     {
