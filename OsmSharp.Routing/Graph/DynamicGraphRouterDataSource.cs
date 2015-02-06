@@ -266,9 +266,11 @@ namespace OsmSharp.Routing.Graph
             { // only do some special stuff for a directed graph.
                 var edgeList = new List<Edge<TEdgeData>>(_graph.GetEdges(vertex));
                 var reverseNeighbours = new uint[256];
-                var reverseCount = this.GetReverse(vertex, 0, ref reverseNeighbours);
+                var start = 0;
+                var reverseCount = 0;
                 do
                 {
+                    reverseCount = this.GetReverse(vertex, start, ref reverseNeighbours);
                     for (int i = 0; i < reverseCount; i++)
                     {
                         var reverseEdges = _graph.GetEdges(reverseNeighbours[i], vertex);
@@ -287,6 +289,8 @@ namespace OsmSharp.Routing.Graph
                             }
                         }
                     }
+
+                    start = start + reverseCount;
                 } while (reverseCount == reverseNeighbours.Length);
                 return edgeList;
             }
