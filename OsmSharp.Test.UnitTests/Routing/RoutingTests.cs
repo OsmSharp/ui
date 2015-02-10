@@ -22,7 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 
@@ -42,14 +42,14 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<TEdgeData> basicRouter);
+            IRoutingInterpreter interpreter, IRoutingAlgorithm<TEdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
+        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
 
         /// <summary>
         /// Builds the data.
@@ -110,7 +110,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
@@ -175,7 +175,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
@@ -193,7 +193,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
@@ -211,7 +211,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
@@ -229,7 +229,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
@@ -247,7 +247,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basic_router = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basic_router = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basic_router);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
@@ -265,7 +265,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578153, 3.7193937));
@@ -283,7 +283,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
@@ -331,7 +331,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             var resolvedPoints = new RouterPoint[3];
@@ -359,7 +359,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             for (int idx = 1; idx < data.VertexCount; idx++)
@@ -476,7 +476,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 var vertex2120 = new GeoCoordinate(point[1], point[0]);
 
                 // calculate route.
-                IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+                IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
                 Router router = this.BuildRouter(data, interpreter, basicRouter);
 
                 Route route = router.Calculate(Vehicle.Car,
@@ -518,7 +518,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var vertex2116 = new GeoCoordinate(point[1], point[0]);
 
             // calculate route.
-            IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(data, interpreter, basicRouter);
 
             Route route = router.Calculate(Vehicle.Car,

@@ -20,7 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 
@@ -40,14 +40,14 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basicRouter);
+            IRoutingInterpreter interpreter, IRoutingAlgorithm<EdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data);
+        public abstract IRoutingAlgorithm<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data);
 
         /// <summary>
         /// Builds the data.
@@ -62,7 +62,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0582205, 3.7192647)); // -52
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579530, 3.7196168)); // -56
@@ -150,7 +150,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             var resolvedPoints = new RouterPoint[3];
@@ -179,7 +179,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             var resolvedPoints = new RouterPoint[3];
@@ -207,7 +207,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             for (int idx = 1; idx < data.VertexCount; idx++)
@@ -228,7 +228,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data);
 
             const float delta = 0.001f;
             var result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null, null);

@@ -21,7 +21,7 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Routing.Graph;
-//using OsmSharp.Routing.Graph.Router;
+//using OsmSharp.Routing.Graph.Routing;
 
 //namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 //{

@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> router)
+        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> router)
             : base(graph, interpreter, router)
         {
             DefaultSearchDelta = 0.1f;

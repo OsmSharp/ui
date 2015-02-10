@@ -24,12 +24,12 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Coordinates.Collections;
 
-namespace OsmSharp.Routing.Graph.Router
+namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
     /// Abstract a router that works on a dynamic graph.
     /// </summary>
-    public interface IBasicRouter<TEdgeData>
+    public interface IRoutingAlgorithm<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>

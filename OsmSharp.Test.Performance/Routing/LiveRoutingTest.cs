@@ -29,7 +29,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -79,9 +79,9 @@ namespace OsmSharp.Test.Performance.Routing
             data.RebuildVertexIndex();
 
             // creates the live edge router.
-            var router = new DykstraRoutingLive();
+            var router = new Dykstra();
 
-            var performanceInfo = new PerformanceInfoConsumer("CHRouting");
+            var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
             performanceInfo.Start();
             performanceInfo.Report("Routing {0} routes...", testCount);
 
@@ -105,14 +105,14 @@ namespace OsmSharp.Test.Performance.Routing
                 var progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("CHRouting", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("LiveRouting", TraceEventType.Information,
                         "Routing... {0}%", progress);
                     latestProgress = progress;
                 }
             }
             performanceInfo.Stop();
 
-            OsmSharp.Logging.Log.TraceEvent("CHRouting", OsmSharp.Logging.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("LiveRouting", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("{0}/{1} routes successfull!", successCount, totalCount));
         }
 

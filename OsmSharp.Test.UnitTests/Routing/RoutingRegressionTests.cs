@@ -26,8 +26,7 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -62,7 +61,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // resolve the three points in question.
@@ -99,7 +98,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // build coordinates list of resolved points.
@@ -184,7 +183,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // build coordinates list of resolved points.
@@ -265,7 +264,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            var basicRouter = new DykstraRoutingLive();
+            var basicRouter = new Dykstra();
             var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
 
             // resolve the three points in question.

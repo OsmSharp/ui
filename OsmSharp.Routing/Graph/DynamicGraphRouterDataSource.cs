@@ -22,7 +22,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using System;
 using System.Collections.Generic;
 

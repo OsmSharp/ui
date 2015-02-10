@@ -25,7 +25,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
 using System;
@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.CH
     /// <summary>
     /// A router for CH.
     /// </summary>
-    public class CHRouter : IBasicRouter<CHEdgeData>
+    public class CHRouter : IRoutingAlgorithm<CHEdgeData>
     {
         /// <summary>
         /// Creates a new CH router on the givend data.

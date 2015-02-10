@@ -18,7 +18,7 @@
 
 using OsmSharp.Logging;
 using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph;

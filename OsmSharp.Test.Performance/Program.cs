@@ -25,7 +25,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;

@@ -22,7 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math;
 using OsmSharp.Collections.Tags.Index;
 
-namespace OsmSharp.Routing.Graph.Router
+namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.

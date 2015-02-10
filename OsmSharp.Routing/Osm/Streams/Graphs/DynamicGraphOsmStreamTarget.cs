@@ -30,7 +30,7 @@ using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.Collections.Generic;

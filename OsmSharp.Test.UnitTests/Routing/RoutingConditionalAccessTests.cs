@@ -21,7 +21,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 
@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basicRouter);
+            IRoutingInterpreter interpreter, IRoutingAlgorithm<EdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="data"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
+        public abstract IRoutingAlgorithm<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
             Vehicle vehicle);
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
@@ -112,7 +112,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
-            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
+            IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
             RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
@@ -161,7 +161,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
         //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-        //    IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+        //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
         //    ResolvedType[] resolved_points = new ResolvedType[3];
@@ -190,7 +190,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
         //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-        //    IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+        //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
         //    ResolvedType[] resolved_points = new ResolvedType[3];
@@ -218,7 +218,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
         //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-        //    IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+        //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
         //    for (int idx = 1; idx < data.VertexCount; idx++)
@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
         //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
-        //    IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+        //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
 
         //    float delta = 0.001f;
         //    SearchClosestResult result;

@@ -4,8 +4,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -249,7 +248,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             IRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // creates the data.
-            IBasicRouter<LiveEdge> router = new DykstraRoutingLive();
+            IRoutingAlgorithm<LiveEdge> router = new Dykstra();
 
             var nonameLocation = new GeoCoordinate(
                 (fromNoname.Latitude + toNoname.Latitude) / 2.0,

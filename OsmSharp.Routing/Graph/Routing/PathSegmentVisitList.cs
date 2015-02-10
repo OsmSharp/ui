@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Routing.Graph.Router
+namespace OsmSharp.Routing.Graph.Routing
 {
     /// <summary>
     /// Internal data structure reprenting a visit list,
