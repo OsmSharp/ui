@@ -384,6 +384,18 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// A delegate used to communicate about vertices being added.
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <param name="vertex"></param>
+        public delegate void VertexAddedDelegate(long nodeId, uint vertex);
+
+        /// <summary>
+        /// An event triggered when a new vertex was added for a given node.
+        /// </summary>
+        public event VertexAddedDelegate VertexAdded;
+
+        /// <summary>
         /// Adds a node that is at least part of one road.
         /// </summary>
         /// <param name="nodeId"></param>
@@ -406,6 +418,13 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     {
                         _idTransformations[nodeId] = id;
                     }
+
+                    // trigger event.
+                    if(this.VertexAdded != null)
+                    {
+                        this.VertexAdded(nodeId, id);
+                    }
+
                     return id;
                 }
                 return null;
