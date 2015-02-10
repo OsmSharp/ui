@@ -72,7 +72,6 @@ namespace OsmSharp.Routing.Graph.Routing
             return this.Calculate(graph, interpreter, vehicle, source, target, float.MaxValue, null);
         }
 
-
         /// <summary>
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
@@ -311,7 +310,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="returnAtWeight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
+        private PathSegment<long>[] DoCalculation(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stopAtFirst, bool returnAtWeight, Dictionary<string, object> parameters)
         {
@@ -339,7 +338,6 @@ namespace OsmSharp.Routing.Graph.Routing
             // intialize dykstra data structures.
             var heap = new BinaryHeap<DykstraVisit>(100);
             var visits = new Dictionary<long, DykstraVisit>();
-            var restrictions = new Dictionary<long, uint[]>();
 
             // initialize a dictionary of speeds per profile.
             var speeds = new Dictionary<uint, Speed>();
@@ -370,8 +368,7 @@ namespace OsmSharp.Routing.Graph.Routing
             // set the from node as the current node and put it in the correct data structures.
             // initialize the source's neighbors.
             var current = heap.Pop();
-            while (current != null &&
-                visits.ContainsKey(current.Vertex))
+            while (current != null && visits.ContainsKey(current.Vertex))
             { // keep dequeuing.
                 current = heap.Pop();
             }
@@ -387,7 +384,7 @@ namespace OsmSharp.Routing.Graph.Routing
             foreach (long sourceVertex in source.GetVertices())
             { // get the path to the vertex.
                 // get the source path.
-                var sourcePath = source.GetPathTo(sourceVertex); 
+                var sourcePath = source.GetPathTo(sourceVertex);
                 sourcePath = sourcePath.From;
                 while (sourcePath != null)
                 { // add the path to the paths from source.
@@ -405,7 +402,7 @@ namespace OsmSharp.Routing.Graph.Routing
                 foreach (long targetVertex in new List<long>(targets[idx].GetVertices()))
                 {
                     // get the target path.
-                    var targetPath = targets[idx].GetPathTo(targetVertex); 
+                    var targetPath = targets[idx].GetPathTo(targetVertex);
 
                     targetPath = targetPath.From;
                     while (targetPath != null)
@@ -439,7 +436,7 @@ namespace OsmSharp.Routing.Graph.Routing
                 var oneFound = false;
                 for (int idx = 0; idx < targets.Length; idx++)
                 {
-                    if(targets[idx].Count < targetsCount[idx])
+                    if (targets[idx].Count < targetsCount[idx])
                     {
                         oneFound = true;
                         break;
@@ -516,7 +513,7 @@ namespace OsmSharp.Routing.Graph.Routing
             }
 
             // start OsmSharp.Routing.
-            var edgeEnumerator = graph.GetEdges(Convert.ToUInt32(current.Vertex));
+            var edges = graph.GetEdges(Convert.ToUInt32(current.Vertex));
             visits[current.Vertex] = current;
 
             // loop until target is found and the route is the shortest!
@@ -532,16 +529,17 @@ namespace OsmSharp.Routing.Graph.Routing
                 }
 
                 // check turn-restrictions.
-                //List<uint[]> restrictionsAtVertex = null;
+                //List<uint[]> restrictions = null;
                 bool isRestricted = false;
-                //if (current.From > 0 &&
-                //    graph.TryGetRestrictionAsStart(vehicle, (uint)current.From, out restrictionsAtVertex))
+                //if (current.From != null &&
+                //    current.From.Vertex > 0 &&
+                //    graph.TryGetRestrictionAsStart(vehicle, (uint)current.From.Vertex, out restrictions))
                 //{ // there are restrictions!
                 //    // search for a restriction that ends in the currently selected vertex.
                 //    for(int idx = 0; idx < restrictions.Count; idx++)
                 //    {
                 //        var restriction = restrictions[idx];
-                //        if(restriction[restriction.Length - 1] == current.Vertex)
+                //        if(restriction[restriction.Length - 1] == current.VertexId)
                 //        { // oeps, do not consider the neighbours of this vertex.
                 //            isRestricted = true;
                 //            break;
@@ -549,36 +547,41 @@ namespace OsmSharp.Routing.Graph.Routing
 
                 //        for(int restrictedIdx = 0; restrictedIdx < restriction.Length; restrictedIdx++)
                 //        { // make sure the restricted vertices can be choosen multiple times.
-                //            restrictions[current.From] = restrictionsAtVertex
                 //            // restrictedVertices.Add(restriction[restrictedIdx]);
-                //            visits.SetRestricted(restriction[restrictedIdx]);
+                //            visitList.SetRestricted(restriction[restrictedIdx]);
                 //        }
                 //    }
                 //}
                 if (!isRestricted)
                 {
                     // update the visited nodes.
-                    while (edgeEnumerator.MoveNext())
+                    while (edges.MoveNext())
                     {
-                        //var neighbour = arcs;
-                        var neighbour = edgeEnumerator.Neighbour;
-                        if(visits.ContainsKey(current.Vertex))
+                        var edge = edges;
+                        var neighbour = edge.Neighbour;
+
+                        if (current.From == neighbour)
+                        { // don't go back!
+                            continue;
+                        }
+
+                        if (visits.ContainsKey(neighbour))
                         { // has already been choosen.
                             continue;
                         }
 
-                        // prevent u-turns.
-                        if(current.From != 0)
-                        { // a possible u-turn.
-                            if (current.From == neighbour)
-                            { // a u-turn, don't do this please!
-                                continue;
-                            }
-                        }
+                        //// prevent u-turns.
+                        //if(current.From != null)
+                        //{ // a possible u-turn.
+                        //    if(current.From.VertexId == neighbour.Neighbour)
+                        //    { // a u-turn, don't do this please!
+                        //        continue;
+                        //    }
+                        //}
 
                         // get the speed from cache or calculate.
-                        Speed speed = noSpeed;
-                        var edgeData = edgeEnumerator.EdgeData;
+                        var edgeData = edge.EdgeData;
+                        var speed = noSpeed;
                         if (!speeds.TryGetValue(edgeData.Tags, out speed))
                         { // speed not there, calculate speed.
                             var tags = graph.TagsIndex.Get(edgeData.Tags);
@@ -596,27 +599,25 @@ namespace OsmSharp.Routing.Graph.Routing
 
                         // check the tags against the interpreter.
                         if (speed.MeterPerSecond > 0 && (!speed.Direction.HasValue || speed.Direction.Value == edgeData.Forward))
-                        //if (vehicle.CanTraverse(tags))
                         { // it's ok; the edge can be traversed by the given vehicle.
-                            if ((current.From == 0 ||
-                                interpreter.CanBeTraversed(current.From, current.Vertex, neighbour)))
+                            if ((current.From == 0 || interpreter.CanBeTraversed(current.From, current.Vertex, neighbour)))
                             { // the neighbour is forward and is not settled yet!
                                 bool restrictionsOk = true;
-                                if (restrictions != null)
-                                { // search for a restriction that ends in the currently selected neighbour and check if it's via-vertex matches.
-                                    for (int idx = 0; idx < restrictions.Count; idx++)
-                                    {
-                                        var restriction = restrictions[idx];
-                                        if (restriction[restriction.Length - 1] == neighbour)
-                                        { // oeps, do not consider the neighbours of this vertex.
-                                            if (restriction[restriction.Length - 2] == current.Vertex)
-                                            { // damn this route-part is restricted!
-                                                restrictionsOk = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
+                                //if (restrictions != null)
+                                //{ // search for a restriction that ends in the currently selected neighbour and check if it's via-vertex matches.
+                                //    for (int idx = 0; idx < restrictions.Count; idx++)
+                                //    {
+                                //        var restriction = restrictions[idx];
+                                //        if (restriction[restriction.Length - 1] == neighbour.Neighbour)
+                                //        { // oeps, do not consider the neighbours of this vertex.
+                                //            if (restriction[restriction.Length - 2] == current.VertexId)
+                                //            { // damn this route-part is restricted!
+                                //                restrictionsOk = false;
+                                //                break;
+                                //            }
+                                //        }
+                                //    }
+                                //}
 
                                 // check the labels (if needed).
                                 bool constraintsOk = true;
@@ -649,9 +650,9 @@ namespace OsmSharp.Routing.Graph.Routing
                                 { // all constraints are validated or there are none.
                                     // calculate neighbors weight.
                                     double totalWeight = current.Weight + (edgeData.Distance / speed.MeterPerSecond);
-                                    //double totalWeight = current.Weight + neighbour.Value.Distance;
+                                    //double totalWeight = current.Weight + edgeData.Distance;
 
-                                    // update the visit list;
+                                    // update the visit list.
                                     var neighbourVisit = new DykstraVisit(neighbour, current.Vertex, (float)totalWeight);// new PathSegment<long>(neighbour, totalWeight, current);
                                     heap.Push(neighbourVisit, neighbourVisit.Weight);
                                 }
@@ -670,7 +671,6 @@ namespace OsmSharp.Routing.Graph.Routing
                         current = heap.Pop();
                     }
                 }
-
                 while (current != null && current.Weight > weight)
                 {
                     if (returnAtWeight)
@@ -688,8 +688,8 @@ namespace OsmSharp.Routing.Graph.Routing
                 if (current != null)
                 { // we visit this one, set visit.
                     visits[current.Vertex] = current;
-                } 
-                else 
+                }
+                else
                 { // route is not found, there are no vertices left
                     // or the search went outside of the max bounds.
                     break;
@@ -698,7 +698,7 @@ namespace OsmSharp.Routing.Graph.Routing
                 // check target.
                 for (int idx = 0; idx < targets.Length; idx++)
                 {
-                    var target = targets[idx];
+                    PathSegmentVisitList target = targets[idx];
                     if (target.Contains(current.Vertex))
                     { // the current is a target!
                         var toPath = target.GetPathTo(current.Vertex);
@@ -739,7 +739,7 @@ namespace OsmSharp.Routing.Graph.Routing
                 }
 
                 // get the neighbors of the current node.
-                edgeEnumerator.MoveTo(Convert.ToUInt32(current.Vertex));
+                edges = graph.GetEdges(Convert.ToUInt32(current.Vertex));
             }
 
             // return the result.
@@ -775,7 +775,7 @@ namespace OsmSharp.Routing.Graph.Routing
         {
             this.Vertex = path.VertexId;
             this.Weight = (float)path.Weight;
-            if(path.From != null)
+            if (path.From != null)
             {
                 this.From = path.From.VertexId;
             }
@@ -827,7 +827,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <returns></returns>
         public PathSegment<long> ToPath(Dictionary<long, DykstraVisit> visits)
         {
-            if(this.From == 0)
+            if (this.From == 0)
             {
                 return new PathSegment<long>(this.Vertex);
             }
