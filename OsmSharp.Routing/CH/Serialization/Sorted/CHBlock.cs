@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ProtoBuf;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
 {
@@ -34,7 +35,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// Holds all relative block locations in the file.
         /// </summary>
         [ProtoMember(1)]
-        public int[] LocationIndex { get; set; }
+        public int[] BlockLocationIndex { get; set; }
     }
 
     /// <summary>
@@ -65,6 +66,58 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         {
             return (((vertexId - 1) / blockSize) * (uint)blockSize) + 1;
         }
+    }
+
+    /// <summary>
+    /// Represents a block containing arc shapes in the same position compared to the regular blocks.
+    /// </summary>
+    [ProtoContract]
+    public class CHBlockCoordinates
+    {
+        /// <summary>
+        /// Holds the array of arcs shapes for all nodes in this block.
+        /// </summary>
+        [ProtoMember(1)]
+        public CHArcCoordinates[] Arcs { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a block containing arc shapes.
+    /// </summary>
+    [ProtoContract]
+    public struct CHArcCoordinates
+    {
+        /// <summary>
+        /// Gets or sets the coordinates.
+        /// </summary>
+        [ProtoMember(1)]
+        public GeoCoordinateSimple[] Coordinates { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a block containing reverse neighbours.
+    /// </summary>
+    [ProtoContract]
+    public class CHBlockReverse
+    {
+        /// <summary>
+        /// Holds the array of arcs reverse neighbours for all nodes in this block.
+        /// </summary>
+        [ProtoMember(1)]
+        public CHArcReverse[] Vertices { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an arc containing reverse neighbours.
+    /// </summary>
+    [ProtoContract]
+    public class CHArcReverse
+    {
+        /// <summary>
+        /// Holds an array of reverse neighbours.
+        /// </summary>
+        [ProtoMember(1)]
+        public uint[] Neighbours { get; set; }
     }
 
     /// <summary>
@@ -114,37 +167,19 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// The weight of this arc.
         /// </summary>
         [ProtoMember(2)]
-        public float ForwardWeight { get; set; }
+        public float Weight { get; set; }
 
         /// <summary>
-        /// Gets or sets the forward contracted id.
+        /// Gets or sets the raw value.
         /// </summary>
         [ProtoMember(3)]
-        public uint ForwardContractedId { get; set; }
+        public uint Value { get; set; }
 
         /// <summary>
-        /// The weight of this arc.
+        /// Gets or sets the raw meta data.
         /// </summary>
         [ProtoMember(4)]
-        public float BackwardWeight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the backward contracted id.
-        /// </summary>
-        [ProtoMember(5)]
-        public uint BackwardContractedId { get; set; }
-
-        /// <summary>
-        /// Holds the contracted direction (0=none, 1=tohigher, 2=tolower).
-        /// </summary>
-        [ProtoMember(6)]
-        public byte ContractedDirectionValue { get; set; }
-
-        /// <summary>
-        /// Holds the tags id associated with this arc.
-        /// </summary>
-        [ProtoMember(7)]
-        public uint TagsValue { get; set; }
+        public byte Meta { get; set; }
     }
 
     /// <summary>

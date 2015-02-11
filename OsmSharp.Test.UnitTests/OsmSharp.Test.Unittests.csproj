@@ -165,15 +165,18 @@
     <Compile Include="Geo\Streams\Gpx\GpxGeometryTests.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheDiskTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheMemoryTests.cs" />
     <Compile Include="Osm\Cache\OsmDataCacheTestsBase.cs" />
     <Compile Include="Osm\ComparisonHelpers.cs" />
-    <Compile Include="Osm\Interpreter\SimpleGeometryInterpreterTests.cs" />
+    <Compile Include="Osm\Geo\Interpreter\SimpleFeatureInterpreterTests.cs" />
+    <Compile Include="Osm\Geo\Streams\OsmFeatureStreamSourceTests.cs" />
     <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterExcludeTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
@@ -188,22 +191,21 @@
     <Compile Include="Routing\CH\CHEdgeDataTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceComparisonTests.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionBaseTests.cs" />
-    <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />
     <Compile Include="Osm\PBF\Streams\PBFDataProcessingSourceTests.cs" />
     <Compile Include="Osm\Xml\Streams\XmlDataProcessorSourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\MemoryDataSourceTests.cs" />
-    <Compile Include="Routing\CH\CHEdgeDifferenceTests.cs" />
-    <Compile Include="Routing\CH\CHSparseComparisonTests.cs" />
-    <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
+    <Compile Include="Routing\CH\CHPriorityCalculationTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDataSourceSerializeSortTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
+    <Compile Include="Routing\Graph\MemoryDirectedGraphTests.cs" />
     <Compile Include="Routing\Graph\MemoryMappedFileDynamicGraphTests.cs" />
+    <Compile Include="Routing\Instructions\InstructionRegressionSerializedContractedTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />
@@ -216,18 +218,18 @@
     <Compile Include="Routing\Navigation\RouterTrackerTests.cs" />
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
-    <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
+    <Compile Include="Routing\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\Graph\MemoryGraphTests.cs" />
     <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
-    <Compile Include="Routing\Dykstra\DykstraLiveAccessTests.cs">
+    <Compile Include="Routing\DykstraLiveAccessTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Routing\RoutingAccessTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\RouteTests.cs" />
-    <Compile Include="Routing\Dykstra\OsmSourceRoutingTest.cs" />
+    <Compile Include="Routing\OsmSourceRoutingTest.cs" />
     <Compile Include="Routing\RoutingComparisonTests.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
@@ -293,9 +295,6 @@
   <ItemGroup>
     <EmbeddedResource Include="test_network_big.osm" />
     <EmbeddedResource Include="test_network_real1.osm" />
-    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test3.osm" />
-    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test2.osm" />
-    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test1.osm" />
     <EmbeddedResource Include="test_segments.osm" />
     <EmbeddedResource Include="tsp_one.csv" />
     <EmbeddedResource Include="tsp_two.csv" />
@@ -303,6 +302,7 @@
     <EmbeddedResource Include="regression1.gpx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="test_routing_regression3.osm" />
     <None Include="test_network.svg" />
     <EmbeddedResource Include="test.v1.0.gpx" />
     <EmbeddedResource Include="test.v1.1.gpx" />
@@ -317,6 +317,9 @@
     <EmbeddedResource Include="tsp_real.osm" />
     <EmbeddedResource Include="test_routing_regression1.osm" />
     <EmbeddedResource Include="test_routing_regression2.osm" />
+    <EmbeddedResource Include="test_routing_regression4.osm" />
+    <EmbeddedResource Include="test_routing_regression5.osm" />
+    <EmbeddedResource Include="test_routing_regression6.osm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">

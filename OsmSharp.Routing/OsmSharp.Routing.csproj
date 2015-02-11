@@ -14,8 +14,6 @@
     <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +34,29 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\OsmSharp.Routing.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.Routing.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.Routing.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
@@ -54,7 +75,7 @@
     <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
-    <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
+    <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpaceNew.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
     <Compile Include="CH\Serialization\CHEdgeFlatfileSerializer.cs" />
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
@@ -62,24 +83,27 @@
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\IEdgeEnumerator.cs" />
+    <Compile Include="Graph\EdgeEnumerator.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\IGraphEdgeData.cs" />
     <Compile Include="Graph\IGraphReadOnly.cs" />
     <Compile Include="Graph\IGraphWriteOnly.cs" />
+    <Compile Include="Graph\INeighbourEnumerator.cs" />
+    <Compile Include="Graph\MemoryDirectedGraph.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
     <Compile Include="Graph\MemoryMappedGraph.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
-    <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
-    <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
-    <Compile Include="Graph\Router\IBasicRouter.cs" />
-    <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
-    <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\Router\PathSegment.cs" />
-    <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
+    <Compile Include="Graph\Routing\DykstraBase.cs" />
+    <Compile Include="Graph\Routing\Dykstra.cs" />
+    <Compile Include="Graph\Routing\IRoutingAlgorithm.cs" />
+    <Compile Include="Graph\Routing\IBasicRouterDataSource.cs" />
+    <Compile Include="Graph\Routing\IDynamicGraphRouterDataSource.cs" />
+    <Compile Include="Graph\Routing\PathSegment.cs" />
+    <Compile Include="Graph\Routing\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
     <Compile Include="IEdgeMatcher.cs" />
+    <Compile Include="Graph\IGraphExtensions.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\DutchLanguageGenerator.cs" />
@@ -143,6 +167,7 @@
     <Compile Include="TSP\RouterTSP.cs" />
     <Compile Include="TSP\RouterTSPWrapper.cs" />
     <Compile Include="Vehicle.cs" />
+    <Compile Include="VehicleType.cs" />
     <Compile Include="VRP\MTSP\RouterMTSP.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />

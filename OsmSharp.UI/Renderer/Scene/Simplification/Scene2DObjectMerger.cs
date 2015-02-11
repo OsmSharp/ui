@@ -54,7 +54,11 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
         /// <returns></returns>
         public Scene2D BuildMergedScene(Scene2D other)
         {
-            Scene2D target = new Scene2D(new WebMercator(), other.GetZoomFactors().ToList(), true);
+            // build new scene and copy some relevant configurations.
+            var target = new Scene2D(new WebMercator(), other.GetZoomFactors().ToList(), true);
+            target.BackColor = other.BackColor;
+
+            // merge objects per zoom factor.
             for (int idx = 0; idx < other.GetZoomFactors().Length; idx++)
             {
                 this.MergeObjects(target, other, idx);

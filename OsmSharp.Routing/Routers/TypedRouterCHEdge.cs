@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using System;
 using System.Collections.Generic;
@@ -37,10 +37,10 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> router)
+        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> router)
             : base(graph, interpreter, router)
         {
-
+            DefaultSearchDelta = 0.1f;
         }
 
         /// <summary>
@@ -61,8 +61,92 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            var arcs = this.Data.GetEdges(Convert.ToUInt32(vertex1)).ToList();
+            var arcs = this.Data.GetDirectNeighbours(Convert.ToUInt32(vertex1)).ToList();
             return arcs.KeepUncontracted();
+        }
+
+
+        /// <summary>
+        /// Returns an edge with a forward weight.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool GetEdge(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out CHEdgeData data)
+        {
+            var lowestWeight = float.MaxValue;
+            data = new CHEdgeData();
+            var edges = graph.GetEdges(from, to);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveForward &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edgeData;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            edges = graph.GetEdges(to, from);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveBackward &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edgeData;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            return lowestWeight < float.MaxValue;
+        }
+
+        /// <summary>
+        /// Returns a shape between the given vertices.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool GetEdgeShape(IGraphReadOnly<CHEdgeData> graph, uint from, uint to, out Collections.Coordinates.Collections.ICoordinateCollection data)
+        {
+            var lowestWeight = float.MaxValue;
+            data = null;
+            var edges = graph.GetEdges(from, to);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveForward &&
+                    edgeData.RepresentsNeighbourRelations &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    data = edges.Intermediates;
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            edges = graph.GetEdges(to, from);
+            while (edges.MoveNext())
+            {
+                var edgeData = edges.EdgeData;
+                if (edgeData.CanMoveBackward &&
+                    edgeData.RepresentsNeighbourRelations &&
+                    edgeData.Weight < lowestWeight)
+                {
+                    if (edges.Intermediates != null)
+                    {
+                        data = edges.Intermediates.Reverse();
+                    }
+                    else
+                    {
+                        data = null;
+                    }
+                    lowestWeight = edgeData.Weight;
+                }
+            }
+            return lowestWeight < float.MaxValue;
         }
     }
 }

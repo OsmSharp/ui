@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -38,6 +38,15 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         public GeoCoordinate(double[] values)
             : base(values)
+        {
+
+        }        
+        
+        /// <summary>
+        /// Creates a geo coordinate.
+        /// </summary>
+        public GeoCoordinate(OsmSharp.Math.Geo.Simple.GeoCoordinateSimple values)
+            : this(values.Latitude, values.Longitude)
         {
 
         }

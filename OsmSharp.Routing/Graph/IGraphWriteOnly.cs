@@ -60,16 +60,6 @@ namespace OsmSharp.Routing.Graph
         void AddEdge(uint from, uint to, TEdgeData data, ICoordinateCollection coordinates);
 
         /// <summary>
-        /// Adds an edge with associated data.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="data"></param>
-        /// <param name="coordinates"></param>
-        /// <param name="comparer"></param>
-        void AddEdge(uint from, uint to, TEdgeData data, ICoordinateCollection coordinates, IDynamicGraphEdgeComparer<TEdgeData> comparer);
-
-        /// <summary>
         /// Compresses all the data in this graph.
         /// </summary>
         /// <remarks>Does not trim or resize the internal data structures. Use Trim()</remarks>

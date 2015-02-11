@@ -51,7 +51,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 data, interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -64,10 +64,9 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(data,
-                new EdgeDifference(data, witnessCalculator), witnessCalculator);
+                new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 
-            //IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive(memoryData.TagsIndex);
             return Router.CreateCHFrom(data, new CHRouter(), interpreter);
         }
 

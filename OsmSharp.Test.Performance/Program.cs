@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,15 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
 using OsmSharp.WinForms.UI.Renderer;
-using OsmSharp.Routing;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Test.Performance
 {
@@ -66,21 +74,21 @@ namespace OsmSharp.Test.Performance
                 //Tags.Collections.TagsTableCollectionIndexTests.Test();
                 //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-                // test the routing preprocessor.
+                //// test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
                 //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-                //Routing.LiveRoutingTest.Test();
+                Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
-                Routing.CH.CHRoutingTest.Test();
+                //Routing.CH.CHRoutingTest.Test();
 
                 //// test serializer/deseriazation routing performance.
-                //Stream serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+                //var serializedMobileRoutingFile = Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test(serializedMobileRoutingFile);
 
                 // tests the mapcss interpretation.
-                //Stream serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+                //var serializedScene = UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
                 //// test some rendering implementations.
                 //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(serializedScene,
                 //    (width, height) =>

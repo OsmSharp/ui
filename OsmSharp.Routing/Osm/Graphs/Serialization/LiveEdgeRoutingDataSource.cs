@@ -26,7 +26,7 @@ using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -132,26 +132,25 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>[] GetEdges(
+        public INeighbourEnumerator<LiveEdge> GetEdges(
             GeoCoordinateBox box)
         {
             // load the missing tiles.
             this.LoadMissingTile(box);
 
             // get all the vertices in the given box.
-            IEnumerable<uint> vertices = _vertexIndex.GetInside(
-                box);
+            var vertices = _vertexIndex.GetInside(box);
 
             // loop over all vertices and get the arcs.
-            var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>>();
+            var neighbours = new List<Tuple<uint, uint, uint, LiveEdge>>();
             foreach (uint vertexId in vertices)
             {
                 var location = _coordinates[(int)vertexId];
                 if (location != null)
                 {
-                    // load tile if needed.
-                    this.LoadMissingTile(new GeoCoordinate(
-                        location.Latitude, location.Longitude));
+                    //// load tile if needed.
+                    //this.LoadMissingTile(new GeoCoordinate(
+                    //    location.Latitude, location.Longitude));
 
                     // get the arcs and return.
                     if (_vertices.Length > vertexId)
@@ -161,16 +160,34 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             vertex.Arcs != null)
                         {
                             var localArcs = vertex.Arcs;
-                            foreach (var localArc in localArcs)
+                            for (int arcIdx = 0; arcIdx < vertex.Arcs.Length; arcIdx++)
                             {
-                                arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, Osm.Graphs.LiveEdge>>(
-                                    vertexId, new KeyValuePair<uint, Osm.Graphs.LiveEdge>(localArc.Item1, localArc.Item2)));
+                                neighbours.Add(new Tuple<uint, uint, uint, LiveEdge>(vertexId, (uint)arcIdx, localArcs[arcIdx].Item1, localArcs[arcIdx].Item2));
                             }
                         }
                     }
                 }
             }
-            return arcs.ToArray();
+            return new NeighbourEnumerator(this, neighbours);
+        }
+
+        /// <summary>
+        /// Gets the shape for the arc in from the given vertex and at the given index.
+        /// </summary>
+        /// <param name="vertexId">The vertex id.</param>
+        /// <param name="arcIdx">The index of the arc.</param>
+        /// <param name="shape">The shape.</param>
+        /// <returns>True if there was a shape.</returns>
+        private bool GetShapeForArc(uint vertexId, uint arcIdx, out ICoordinateCollection shape)
+        {
+            var vertex = _vertices[(int)vertexId];
+            var arcCoordinates = vertex.Arcs[arcIdx];
+            shape = null;
+            if (arcCoordinates.Item3 != null)
+            {
+                shape = new CoordinateArrayCollection<GeoCoordinateSimple>(arcCoordinates.Item3);
+            }
+            return true;
         }
 
         /// <summary>
@@ -223,11 +240,46 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         }
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns an empty enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public EdgeEnumerator<LiveEdge> GetEdgeEnumerator()
+        {
+            return new RouterLiveEdgeDataSource.EdgeEnumerator(this);
+        }
+
+        /// <summary>
+        /// Returns all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public IEdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
+        public EdgeEnumerator<LiveEdge> GetEdges(uint vertexId)
+        {
+            var enumerator = new RouterLiveEdgeDataSource.EdgeEnumerator(this);
+            enumerator.MoveTo(vertexId);
+            return enumerator;
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public EdgeEnumerator<LiveEdge> GetEdges(uint vertex1, uint vertex2)
+        {
+            var enumerator = new RouterLiveEdgeDataSource.EdgeEnumerator(this);
+            enumerator.MoveTo(vertex1, vertex2);
+            return enumerator;
+        }
+
+        /// <summary>
+        /// Returns all edges adjacent to the given vertex in an array for key-value pairs.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        private KeyValuePair<uint, LiveEdge>[] GetEdgesFor(uint vertexId)
         {
             Tile tile;
             if (_tilesPerVertex.TryGetValue(vertexId, out tile))
@@ -245,15 +297,50 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                     vertex.Arcs != null)
                 {
                     var arcs = new KeyValuePair<uint, Osm.Graphs.LiveEdge>[vertex.Arcs.Length];
-                    for(int idx = 0; idx< vertex.Arcs.Length; idx++)
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
                     {
                         arcs[idx] = new KeyValuePair<uint, LiveEdge>(
                             vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2);
                     }
-                    return new EdgeEnumerator(arcs);
+                    return arcs;
                 }
             }
-            return new EdgeEnumerator(new KeyValuePair<uint, LiveEdge>[0]);
+            return new KeyValuePair<uint, LiveEdge>[0];
+        }
+
+        /// <summary>
+        /// Returns all edges adjacent to the given vertex1 in an array for key-value pairs but only those that lead to vertex2.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        private KeyValuePair<uint, LiveEdge>[] GetEdgesFor(uint vertex1, uint vertex2)
+        {
+            Tile tile;
+            if (_tilesPerVertex.TryGetValue(vertex1, out tile))
+            {
+                // load missing tile if needed.
+                this.LoadMissingTile(tile);
+                _tilesPerVertex.Remove(vertex1);
+            }
+
+            // get the arcs and return.
+            if (_vertices.Length > vertex1)
+            {
+                var vertex = _vertices[(int)vertex1];
+                if (vertex != null &&
+                    vertex.Arcs != null)
+                {
+                    for (int idx = 0; idx < vertex.Arcs.Length; idx++)
+                    {
+                        if (vertex.Arcs[idx].Item1 == vertex2)
+                        {
+                            return new KeyValuePair<uint, LiveEdge>[]{
+                                new KeyValuePair<uint, LiveEdge>(vertex.Arcs[idx].Item1, vertex.Arcs[idx].Item2)
+                            };
+                        }
+                    }
+                }
+            }
+            return new KeyValuePair<uint, LiveEdge>[0];
         }
 
         /// <summary>
@@ -262,7 +349,19 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool ContainsEdge(uint vertexId, uint neighbour)
+        public bool ContainsEdges(uint vertexId, uint neighbour)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has the given neighbour.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <param name="neighbour"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool ContainsEdge(uint vertexId, uint neighbour, LiveEdge data)
         {
             throw new NotImplementedException();
         }
@@ -283,13 +382,12 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 this.LoadMissingTile(tile);
                 _tilesPerVertex.Remove(vertex1);
             }
-
             // get the arcs and return.
             if (_vertices.Length > vertex1)
             {
                 var vertex = _vertices[(int)vertex1];
                 if (vertex != null &&
-                    vertex.Arcs != null)
+                vertex.Arcs != null)
                 {
                     for (int idx = 0; idx < vertex.Arcs.Length; idx++)
                     {
@@ -556,12 +654,27 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// An edge enumerator.
         /// </summary>
-        private class EdgeEnumerator : IEdgeEnumerator<LiveEdge>
+        private class EdgeEnumerator : EdgeEnumerator<LiveEdge>
         {
             /// <summary>
             /// Holds the edges.
             /// </summary>
-            private KeyValuePair<uint, LiveEdge>[] _edges;
+            private KeyValuePair<uint, LiveEdge>[] _edges = null;
+
+            /// <summary>
+            /// Holds the vertex currently being enumerated.
+            /// </summary>
+            private uint _vertex1;
+
+            /// <summary>
+            /// Holds the neighbour.
+            /// </summary>
+            private uint _vertex2;
+
+            /// <summary>
+            /// Holds the source-graph.
+            /// </summary>
+            private RouterLiveEdgeDataSource _graph;
 
             /// <summary>
             /// Holds the current position.
@@ -571,13 +684,20 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Creates a new enumerator.
             /// </summary>
-            /// <param name="edges"></param>
-            public EdgeEnumerator(KeyValuePair<uint, LiveEdge>[] edges)
+            /// <param name="graph"></param>
+            public EdgeEnumerator(RouterLiveEdgeDataSource graph)
             {
-                _edges = edges;
+                _graph = graph;
+                _edges = null;
+                _vertex1 = 0;
+                _vertex2 = 0;
             }
 
-            public bool MoveNext()
+            /// <summary>
+            /// Moves to the next edge.
+            /// </summary>
+            /// <returns></returns>
+            public override bool MoveNext()
             {
                 _current++;
                 return _edges.Length > _current;
@@ -586,7 +706,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current neighbour.
             /// </summary>
-            public uint Neighbour
+            public override uint Neighbour
             {
                 get { return _edges[_current].Key; }
             }
@@ -594,7 +714,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current edge data.
             /// </summary>
-            public LiveEdge EdgeData
+            public override LiveEdge EdgeData
             {
                 get { return _edges[_current].Value; }
             }
@@ -602,7 +722,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns true if the edge data is inverted by default.
             /// </summary>
-            public bool isInverted
+            public override bool isInverted
             {
                 get { return false; }
             }
@@ -610,7 +730,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the inverted edge data.
             /// </summary>
-            public LiveEdge InvertedEdgeData
+            public override LiveEdge InvertedEdgeData
             {
                 get { return (LiveEdge)this.EdgeData.Reverse(); }
             }
@@ -618,23 +738,185 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             /// <summary>
             /// Returns the current intermediates.
             /// </summary>
-            public ICoordinateCollection Intermediates
+            public override ICoordinateCollection Intermediates
             {
                 get { return null; }
             }
 
             /// <summary>
-            /// Returns the count.
+            /// Resets this enumerator.
+            /// </summary>
+            public override void Reset()
+            {
+                _current = -1;
+            }
+
+            /// <summary>
+            /// Returns the enumerator.
             /// </summary>
             /// <returns></returns>
-            public int Count()
+            public override IEnumerator<Edge<LiveEdge>> GetEnumerator()
             {
-                int count = 0;
-                while (this.MoveNext())
+                this.Reset();
+                return this;
+            }
+
+            /// <summary>
+            /// Returns the current edge.
+            /// </summary>
+            public override Edge<LiveEdge> Current
+            {
+                get { return new Edge<LiveEdge>(this); }
+            }
+
+            /// <summary>
+            /// Returns true if the count is known without enumeration.
+            /// </summary>
+            public override bool HasCount
+            {
+                get
                 {
-                    count++;
+                    return true;
                 }
-                return count;
+            }
+
+            /// <summary>
+            /// Returns the count if known.
+            /// </summary>
+            public override int Count
+            {
+                get
+                {
+                    return _edges.Length;
+                }
+            }
+
+            /// <summary>
+            /// Dipose of all resources associated with this enumerable.
+            /// </summary>
+            public override void Dispose()
+            {
+
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex.
+            /// </summary>
+            /// <param name="vertex"></param>
+            public override void MoveTo(uint vertex)
+            {
+                _edges = _graph.GetEdgesFor(vertex);
+                this.Reset();
+            }
+
+            /// <summary>
+            /// Moves this enumerator to the given vertex1 and enumerate only edges that lead to vertex2.
+            /// </summary>
+            /// <param name="vertex1">The vertex to enumerate edges for.</param>
+            /// <param name="vertex2">The neighbour.</param>
+            public override void MoveTo(uint vertex1, uint vertex2)
+            {
+                _edges = _graph.GetEdgesFor(vertex1, vertex2);
+                this.Reset();
+            }
+        }
+
+        /// <summary>
+        /// A neighbour enumerators.
+        /// </summary>
+        private class NeighbourEnumerator : INeighbourEnumerator<LiveEdge>
+        {
+            /// <summary>
+            /// Holds the edge and neighbours.
+            /// </summary>
+            private List<Tuple<uint, uint, uint, LiveEdge>> _neighbours;
+
+            /// <summary>
+            /// Holds the source.
+            /// </summary>
+            private RouterLiveEdgeDataSource _source;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private int _current = -1;
+
+            /// <summary>
+            /// Creates a new enumerators.
+            /// </summary>
+            /// <param name="source">The datasource the edges come from.</param>
+            /// <param name="edges">The edge data.</param>
+            public NeighbourEnumerator(RouterLiveEdgeDataSource source, 
+                List<Tuple<uint, uint, uint, LiveEdge>> neighbours)
+            {
+                _source = source;
+                _neighbours = neighbours;
+            }
+
+            /// <summary>
+            /// Moves to the next coordinate.
+            /// </summary>
+            /// <returns></returns>
+            public bool MoveNext()
+            {
+                _current++;
+                return _neighbours.Count > _current;
+            }
+
+            /// <summary>
+            /// Gets the first vector.
+            /// </summary>
+            public uint Vertex1
+            {
+                get { return _neighbours[_current].Item1; }
+            }
+
+            /// <summary>
+            /// Gets the second vector.
+            /// </summary>
+            public uint Vertex2
+            {
+                get { return _neighbours[_current].Item3; }
+            }
+
+            /// <summary>
+            /// Gets the edge data.
+            /// </summary>
+            public LiveEdge EdgeData
+            {
+                get { return _neighbours[_current].Item4; }
+            }
+
+            /// <summary>
+            /// Gets the current intermediates.
+            /// </summary>
+            public ICoordinateCollection Intermediates
+            {
+                get
+                {
+                    ICoordinateCollection shape;
+                    if (_source.GetShapeForArc(_neighbours[_current].Item1, _neighbours[_current].Item2, out shape))
+                    {
+                        return shape;
+                    }
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns true if this enumerator has a pre-calculated count.
+            /// </summary>
+            public bool HasCount
+            {
+                get { return true; }
+            }
+
+            /// <summary>
+            /// Returns the count if any.
+            /// </summary>
+            public int Count
+            {
+                get { return _neighbours.Count; }
             }
 
             /// <summary>
@@ -645,45 +927,28 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                 _current = -1;
             }
 
-            /// <summary>
-            /// Returns the enumerator.
-            /// </summary>
-            /// <returns></returns>
-            public IEnumerator<Edge<LiveEdge>> GetEnumerator()
+            public IEnumerator<Neighbour<LiveEdge>> GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
 
-            /// <summary>
-            /// Returns the enumerator.
-            /// </summary>
-            /// <returns></returns>
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
                 this.Reset();
                 return this;
             }
 
-            /// <summary>
-            /// Returns the current edge.
-            /// </summary>
-            public Edge<LiveEdge> Current
+            public Neighbour<LiveEdge> Current
             {
-                get { return new Edge<LiveEdge>(this); }
+                get { return new Neighbour<LiveEdge>(this); }
             }
 
-            /// <summary>
-            /// Returns the current edge.
-            /// </summary>
             object System.Collections.IEnumerator.Current
             {
-                get { return new Edge<LiveEdge>(this); }
+                get { return this; }
             }
 
-            /// <summary>
-            /// Dipose of all resources associated with this enumerable.
-            /// </summary>
             public void Dispose()
             {
 
@@ -692,22 +957,39 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
 
         public void AddRestriction(uint[] route)
         {
-            throw new NotImplementedException();
+
         }
 
-        public void AddRestriction(Vehicle vehicle, uint[] route)
+        public void AddRestriction(string vehicleType, uint[] route)
         {
-            throw new NotImplementedException();
+
         }
 
         public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
-            throw new NotImplementedException();
+            routes = null;
+            return false;
         }
 
         public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
-            throw new NotImplementedException();
+            routes = null;
+            return false;
+        }
+
+        public bool IsDirected
+        {
+            get { return false; }
+        }
+
+        public bool CanHaveDuplicates
+        {
+            get { return false; }
+        }
+
+        public IEnumerable<Edge<LiveEdge>> GetDirectNeighbours(uint vertex)
+        {
+            return this.GetEdges(vertex);
         }
     }
 }

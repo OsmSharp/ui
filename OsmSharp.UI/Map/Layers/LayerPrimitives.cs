@@ -53,6 +53,11 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
+        /// Holds the envelope of the current data.
+        /// </summary>
+        private GeoCoordinateBox _envelope;
+
+        /// <summary>
         /// Adds a point.
         /// </summary>
         /// <returns>The point.</returns>
@@ -61,8 +66,15 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="color"></param>
         public void AddPoint(GeoCoordinate coordinate, float sizePixels, int color)
         {
-            double[] projectedCoordinates = _projection.ToPixel(
-                                       coordinate);
+            // update envelope.
+            if (_envelope == null)
+            { // create initial envelope.
+                _envelope = new GeoCoordinateBox(coordinate, coordinate);
+            }
+            // also include the current point.
+            _envelope.ExpandWith(coordinate);
+
+            double[] projectedCoordinates = _projection.ToPixel(coordinate);
             uint pointId = _scene.AddPoint(projectedCoordinates[0], projectedCoordinates[1]);
             _scene.AddStylePoint(pointId, 0, float.MinValue, float.MaxValue, color, sizePixels);
             this.RaiseLayerChanged();
@@ -78,11 +90,20 @@ namespace OsmSharp.UI.Map.Layers
         /// <returns></returns>
         public void AddLine(GeoCoordinate point1, GeoCoordinate point2, float sizePixels, int color)
         {
-            double[] projected1 = _projection.ToPixel(point1);
-            double[] projected2 = _projection.ToPixel(point2);
+            // update envelope.
+            if (_envelope == null)
+            { // create initial envelope.
+                _envelope = new GeoCoordinateBox(point1, point2);
+            }
+            // also include the current point.
+            _envelope.ExpandWith(point1);
+            _envelope.ExpandWith(point2);
 
-            double[] x = new double[] { projected1[0], projected2[0] };
-            double[] y = new double[] { projected1[1], projected2[1] };
+            var projected1 = _projection.ToPixel(point1);
+            var projected2 = _projection.ToPixel(point2);
+
+            var x = new double[] { projected1[0], projected2[0] };
+            var y = new double[] { projected1[1], projected2[1] };
 
             uint? pointsId = _scene.AddPoints(x, y);
             if (pointsId.HasValue)
@@ -105,6 +126,14 @@ namespace OsmSharp.UI.Map.Layers
             var y = new double[points.Length];
             for(int idx = 0; idx < points.Length; idx++)
             {
+                // update envelope.
+                if (_envelope == null)
+                { // create initial envelope.
+                    _envelope = new GeoCoordinateBox(points[idx], points[idx]);
+                }
+                // also include the current point.
+                _envelope.ExpandWith(points[idx]);
+
                 var projected =_projection.ToPixel(points[idx]);
                 x[idx] = projected[0];
                 y[idx] = projected[1];
@@ -132,6 +161,14 @@ namespace OsmSharp.UI.Map.Layers
             var y = new double[points.Length];
             for (int idx = 0; idx < points.Length; idx++)
             {
+                // update envelope.
+                if (_envelope == null)
+                { // create initial envelope.
+                    _envelope = new GeoCoordinateBox(points[idx], points[idx]);
+                }
+                // also include the current point.
+                _envelope.ExpandWith(points[idx]);
+
                 var projected = _projection.ToPixel(points[idx]);
                 x[idx] = projected[0];
                 y[idx] = projected[1];

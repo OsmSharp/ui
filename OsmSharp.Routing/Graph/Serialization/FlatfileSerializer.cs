@@ -20,7 +20,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System;
@@ -128,7 +128,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         protected virtual ITagsCollectionIndex CreateTagsCollectionIndex()
         {
-            var tagsTable =  new TagsTableCollectionIndex(false);
+            var tagsTable =  new TagsTableCollectionIndex(false, true);
             // tagsTable.DropReverseIndexex();
             return tagsTable;
         }

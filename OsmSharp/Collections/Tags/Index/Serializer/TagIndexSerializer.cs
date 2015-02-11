@@ -24,6 +24,7 @@ using System.IO;
 using ProtoBuf.Meta;
 using OsmSharp.IO;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Collections.Cache;
 
 namespace OsmSharp.Collections.Tags.Serializer.Index
 {
@@ -298,39 +299,44 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
         /// <returns></returns>
         public static ITagsCollectionIndexReadonly Deserialize(Stream stream)
         {
-            byte[] intBytes = new byte[4];
-            stream.Read(intBytes, 0, 4);
-            int startOfTags = BitConverter.ToInt32(intBytes, 0);
-            stream.Read(intBytes, 0, 4);
-            int endOfFile = BitConverter.ToInt32(intBytes, 0);
+            var tagsIndexList = new Dictionary<uint, TagsCollection>();
 
-            RuntimeTypeModel typeModel = TagIndexSerializer.CreateTypeModel();
-            byte[] stringTableBytes = new byte[startOfTags - 8];
+            var intBytes = new byte[4];
+            stream.Read(intBytes, 0, 4);
+            var startOfTags = BitConverter.ToInt32(intBytes, 0);
+            stream.Read(intBytes, 0, 4);
+            var endOfFile = BitConverter.ToInt32(intBytes, 0);
+
+            var typeModel = TagIndexSerializer.CreateTypeModel();
+            var stringTableBytes = new byte[startOfTags - 8];
             stream.Read(stringTableBytes, 0, stringTableBytes.Length);
-            MemoryStream memoryStream = new MemoryStream(stringTableBytes);
-            List<string> strings = typeModel.Deserialize(memoryStream, null, typeof(List<string>)) as List<string>;
+            var memoryStream = new MemoryStream(stringTableBytes);
+            var strings = typeModel.Deserialize(memoryStream, null, typeof(List<string>)) as List<string>;
             memoryStream.Dispose();
 
-            byte[] tagsIndexBytes = new byte[endOfFile - startOfTags];
+            var tagsIndexBytes = new byte[endOfFile - startOfTags];
             stream.Read(tagsIndexBytes, 0, tagsIndexBytes.Length);
             memoryStream = new MemoryStream(tagsIndexBytes);
-            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexTableList = typeModel.Deserialize(memoryStream, null,
+            var tagsIndexTableList = typeModel.Deserialize(memoryStream, null,
                 typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>)) as List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>;
             memoryStream.Dispose();
 
-            Dictionary<uint, TagsCollection> tagsIndexList = new Dictionary<uint, TagsCollection>();
             for (int idx = 0; idx < tagsIndexTableList.Count; idx++)
             {
-                KeyValuePair<uint, List<KeyValuePair<uint, uint>>> serializedTagsCollection =
-                    tagsIndexTableList[idx];
-                TagsCollection tagsCollection = new TagsCollection();
+                var serializedTagsCollection = tagsIndexTableList[idx];
+                TagsCollection tagsCollection = null;
                 if (serializedTagsCollection.Value != null)
                 {
-                    foreach (KeyValuePair<uint, uint> pair in serializedTagsCollection.Value)
+                    tagsCollection = new TagsCollection(serializedTagsCollection.Value.Count);
+                    foreach (var pair in serializedTagsCollection.Value)
                     {
                         tagsCollection.Add(
                             new Tag(strings[(int)pair.Key], strings[(int)pair.Value]));
                     }
+                }
+                else
+                {
+                    tagsCollection = new TagsCollection();
                 }
                 tagsIndexList.Add(serializedTagsCollection.Key, tagsCollection);
             }
@@ -438,6 +444,11 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             private readonly int[] _blockPositions;
 
             /// <summary>
+            /// Holds the cached blocked.
+            /// </summary>
+            private LRUCache<int, KeyValuePair<uint, ITagsCollectionIndexReadonly>> _cache;
+
+            /// <summary>
             /// Creates a new reaonly index.
             /// </summary>
             /// <param name="stream"></param>
@@ -450,6 +461,8 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
                 _begin = begin;
                 _blockSize = blockSize;
                 _blockPositions = blockPositions;
+
+                _cache = new LRUCache<int, KeyValuePair<uint, ITagsCollectionIndexReadonly>>(100);
             }
 
             /// <summary>
@@ -532,8 +545,21 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
                     return new TagsCollection();
                 }
 
-                // deserialize block.
-                this.DeserializeBlock(blockIdx);
+                // check cache.
+                KeyValuePair<uint, ITagsCollectionIndexReadonly> blockOut;
+                if (!_cache.TryGet(blockIdx, out blockOut))
+                { // cache miss!
+                    // deserialize block.
+                    this.DeserializeBlock(blockIdx);
+
+                    _cache.Add(blockIdx, new KeyValuePair<uint, ITagsCollectionIndexReadonly>(
+                        _currentBlockMin, _currentBlock));
+                }
+                else
+                { // cache hit!
+                    _currentBlock = blockOut.Value;
+                    _currentBlockMin = blockOut.Key;
+                }
 
                 return _currentBlock.Get(tagsId);
             }

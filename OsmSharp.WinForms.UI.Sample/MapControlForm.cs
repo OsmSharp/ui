@@ -21,6 +21,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.TSP;
@@ -62,7 +63,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize mapcss interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\static\default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
@@ -75,20 +76,19 @@ namespace OsmSharp.WinForms.UI.Sample
                 16, 14, 12, 10 }));
             var target = new StyleOsmStreamSceneTarget(
                 mapCSSInterpreter, scene, new WebMercator());
-            var testFile = new FileInfo(@"kempen-big.osm.pbf");
-            var stream = testFile.OpenRead();
-            var source = new PBFOsmStreamSource(stream);
+            var source = new XmlOsmStreamSource(
+                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
             var progress = new OsmStreamFilterProgress();
             progress.RegisterSource(source);
             target.RegisterSource(progress);
             target.Pull();
 
-            var merger = new Scene2DObjectMerger();
-            scene = merger.BuildMergedScene(scene);
+            //var merger = new Scene2DObjectMerger();
+            //scene = merger.BuildMergedScene(scene);
 
             map.AddLayer(new LayerScene(scene));
-            //var dataSource = MemoryDataSource.CreateFromPBFStream(
-            //    new FileInfo(@"kempen-big.osm.pbf").OpenRead());
+            //var dataSource = MemoryDataSource.CreateFromXmlStream(
+            //    new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
             //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //var layerTile = new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg", 200);
             //layerTile.MinZoom = 12;
@@ -106,7 +106,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
-            this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
+            this.mapControl1.MapCenter = new GeoCoordinate(51.0167, 4.4914); // wechel
             this.mapControl1.MapZoom = 14;
             this.mapControl1.MapMouseClick += mapControl1_MapMouseClick;
             this.mapControl1.MapMouseMove += mapControl1_MapMouseMove;

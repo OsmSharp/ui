@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -25,16 +25,24 @@ namespace OsmSharp.Routing.Graph
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Removes all edges from/to the given vertex.
+        /// Removes all edges adjacent to the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
         void RemoveEdges(uint vertex);
 
         /// <summary>
-        /// Delete the edge between the two given vertices.
+        /// Removes all the edges between the two given vertices.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         void RemoveEdge(uint from, uint to);
+
+        /// <summary>
+        /// Removes the edge between the two given vertices and with matching data.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        void RemoveEdge(uint from, uint to, TEdgeData data);
     }
 }

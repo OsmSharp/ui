@@ -196,7 +196,7 @@ namespace OsmSharp.Routing.TSP
             Route route;
             for (int idx = 0; idx < solution.Length - 1; idx++)
             {
-                route = _router.Calculate(Vehicle.Car, points[solution[idx]],
+                route = _router.Calculate(vehicle, points[solution[idx]],
                     points[solution[idx + 1]]);
                 if (tsp == null)
                 { // first route = start
@@ -210,7 +210,7 @@ namespace OsmSharp.Routing.TSP
             if (tspSolution.IsRound)
             {
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(Vehicle.Car, points[solution[solution.Length - 1]],
+                route = _router.Calculate(vehicle, points[solution[solution.Length - 1]],
                             points[solution[0]]);
                 tsp = Route.Concatenate(tsp, route);
             }

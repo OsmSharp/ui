@@ -3,18 +3,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>OsmSharp.iOS.UI</RootNamespace>
+    <RootNamespace>OsmSharp.iOS_Unified.UI</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>OsmSharp.iOS.UI</AssemblyName>
+    <AssemblyName>OsmSharp.iOS_Unified.UI</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\OutputiOS</OutputPath>
+    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\OutputiOS</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,44 +33,18 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="GoogleMaps">
+      <HintPath>..\Components\googlemapsios-1.9.0.2\lib\ios-unified\GoogleMaps.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
-    <Folder Include="Renderer\Images\" />
-    <Folder Include="Data\" />
-    <Folder Include="Data\SQLite\" />
-    <Folder Include="Controls\" />
-    <Folder Include="Markers\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
-  <ItemGroup>
-    <Compile Include="Renderer\CGContextRenderer.cs" />
-    <Compile Include="Renderer\CGContextWrapper.cs" />
-    <Compile Include="MapView.cs" />
-    <Compile Include="Log\TextViewTraceListener.cs" />
-    <Compile Include="Log\ConsoleTraceListener.cs" />
-    <Compile Include="Renderer\Images\NativeImage.cs" />
-    <Compile Include="Renderer\Images\NativeImageCache.cs" />
-    <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
-      <Link>Data\SQLite\SQLite.cs</Link>
-    </Compile>
-    <Compile Include="Data\SQLite\SQLiteConnection.cs" />
-    <Compile Include="Native.cs" />
-    <Compile Include="Controls\IMapControlHost.cs" />
-    <Compile Include="Controls\MapControl.cs" />
-    <Compile Include="Markers\MapMarker.cs" />
-    <Compile Include="Controls\MapControlAlignmentType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Images\layers.png" />
-    <BundleResource Include="Images\layers%402x.png" />
-    <BundleResource Include="Images\marker-and-shadow%402x.png" />
-    <BundleResource Include="Images\marker-and-shadow.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
+      <Name>OsmSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
@@ -78,13 +53,75 @@
       <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
-      <Name>OsmSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\OsmSharp.iOS.UI\MapView.cs">
+      <Link>MapView.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Renderer\CGContextRenderer.cs">
+      <Link>Renderer\CGContextRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Renderer\CGContextWrapper.cs">
+      <Link>Renderer\CGContextWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Controls\MapControl.cs">
+      <Link>Controls\MapControl.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Controls\IMapControlHost.cs">
+      <Link>Controls\IMapControlHost.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Controls\MapControlAlignmentType.cs">
+      <Link>Controls\MapControlAlignmentType.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Data\SQLite\SQLiteConnection.cs">
+      <Link>Data\SQLite\SQLiteConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
+      <Link>Data\SQLite\SQLite.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Log\ConsoleTraceListener.cs">
+      <Link>Log\ConsoleTraceListener.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Log\TextViewTraceListener.cs">
+      <Link>Log\TextViewTraceListener.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Markers\MapMarker.cs">
+      <Link>Markers\MapMarker.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Renderer\Images\NativeImage.cs">
+      <Link>Renderer\Images\NativeImage.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Renderer\Images\NativeImageCache.cs">
+      <Link>Renderer\Images\NativeImageCache.cs</Link>
+    </Compile>
+    <Compile Include="..\OsmSharp.iOS.UI\Native.cs">
+      <Link>Native.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Images\" />
+    <Folder Include="Log\" />
+    <Folder Include="Markers\" />
+    <Folder Include="Renderer\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\OsmSharp.iOS.UI\Images\layers.png">
+      <Link>Images\layers.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\OsmSharp.iOS.UI\Images\layers%402x.png">
+      <Link>Images\layers%402x.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\OsmSharp.iOS.UI\Images\marker-and-shadow.png">
+      <Link>Images\marker-and-shadow.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\OsmSharp.iOS.UI\Images\marker-and-shadow%402x.png">
+      <Link>Images\marker-and-shadow%402x.png</Link>
+    </BundleResource>
   </ItemGroup>
 </Project>

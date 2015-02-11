@@ -96,6 +96,15 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         }
 
         /// <summary>
+        /// Returns the backcolor if any.
+        /// </summary>
+        public int? BackColor
+        {
+            get { return null; }
+        }
+
+
+        /// <summary>
         /// Layer comparer to sort objects by layer.
         /// </summary>
         private class LayerComparer : IComparer<Primitive2D>

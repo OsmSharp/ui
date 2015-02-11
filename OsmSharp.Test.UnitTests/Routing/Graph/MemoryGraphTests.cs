@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -24,7 +24,7 @@ using System;
 namespace OsmSharp.Test.Unittests.Routing.Graph
 {
     /// <summary>
-    /// Tests a simple weighed dynamic graph.
+    /// Tests a dynamic graph.
     /// </summary>
     [TestFixture]
     public class MemoryGraphTests
@@ -67,11 +67,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
-                graph.ContainsEdge(vertex3, vertex1);
+                graph.ContainsEdges(vertex3, vertex1);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
-                graph.ContainsEdge(vertex1, vertex3);
+                graph.ContainsEdges(vertex1, vertex3);
             });
             LiveEdge edge;
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -182,9 +182,9 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge10000()
+        public void TestLiveEdgeDynamicGraphEdge1001()
         {
-            int count = 10000;
+            int count = 1001;
             var graph = this.CreateGraph();
             uint vertex1 = graph.AddVertex(51, 1);
             while (count > 0)
@@ -198,7 +198,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                                                    }, null);
 
                 var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(10000 - count + 1, arcs.Length);
+                Assert.AreEqual(1001 - count + 1, arcs.Length);
 
                 arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
                 Assert.AreEqual(1, arcs.Length);
@@ -375,8 +375,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Tags = 1
             }, null);
 
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
 
             graph.AddEdge(vertex2, vertex3, new LiveEdge()
             {
@@ -384,11 +384,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Tags = 2
             }, null);
 
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex2));
 
             graph.AddEdge(vertex3, vertex4, new LiveEdge()
             {
@@ -396,14 +396,14 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Tags = 3
             }, null);
 
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex2));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
-            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex4));
+            Assert.IsTrue(graph.ContainsEdges(vertex4, vertex3));
 
             graph.AddEdge(vertex4, vertex2, new LiveEdge()
             {
@@ -411,17 +411,17 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Tags = 4
             }, null);
 
-            Assert.IsTrue(graph.ContainsEdge(vertex1, vertex2));
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex1));
+            Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex2));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
-            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex3));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex4));
+            Assert.IsTrue(graph.ContainsEdges(vertex4, vertex3));
 
-            Assert.IsTrue(graph.ContainsEdge(vertex2, vertex4));
-            Assert.IsTrue(graph.ContainsEdge(vertex4, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex2, vertex4));
+            Assert.IsTrue(graph.ContainsEdges(vertex4, vertex2));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 3);
@@ -466,8 +466,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             graph.RemoveEdge(vertex2, vertex4);
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex4));
-            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex2));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 2);
@@ -512,8 +512,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             graph.RemoveEdge(vertex2, vertex3);
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex2));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 2);
@@ -558,8 +558,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             graph.RemoveEdge(vertex2, vertex1);
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
-            Assert.IsFalse(graph.ContainsEdge(vertex1, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdges(vertex1, vertex2));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 0);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 2);
@@ -607,10 +607,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             graph.RemoveEdge(vertex2, vertex3);
             graph.RemoveEdge(vertex4, vertex3);
             graph.RemoveEdge(vertex4, vertex2);
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex3));
-            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex2));
         }
 
         /// <summary>
@@ -649,10 +649,10 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             });
 
             graph.RemoveEdges(vertex2);
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex1));
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex2));
-            Assert.IsTrue(graph.ContainsEdge(vertex3, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex1));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex2));
+            Assert.IsTrue(graph.ContainsEdges(vertex3, vertex4));
         }
 
         /// <summary>
@@ -695,8 +695,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             graph.Compress();
 
-            Assert.IsFalse(graph.ContainsEdge(vertex2, vertex3));
-            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex2));
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex2));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 2);
@@ -737,8 +737,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             graph.Compress();
 
-            Assert.IsFalse(graph.ContainsEdge(vertex3, vertex4));
-            Assert.IsFalse(graph.ContainsEdge(vertex4, vertex3));
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex4));
+            Assert.IsFalse(graph.ContainsEdges(vertex4, vertex3));
 
             Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 3);
@@ -823,6 +823,52 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Forward = true,
                 Tags = 2
             }, null);
+
+            LiveEdge edge;
+            Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
+            Assert.AreEqual(2, edge.Tags);
+            Assert.IsTrue(graph.GetEdge(vertex2, vertex1, out edge));
+            Assert.AreEqual(2, edge.Tags);
+        }
+
+        /// <summary>
+        /// Tests adding a duplicate or overwriting the existing edge.
+        /// </summary>
+        [Test]
+        public void TestAddingDuplicateEdge()
+        {            
+            var graph = new MemoryGraph<LiveEdge>();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            
+            // should overwrite.
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+
+            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(2, edges[0].Value.Tags);
+            
+            // should overwrite again.
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(1, edges[0].Value.Tags);
         }
     }
 }

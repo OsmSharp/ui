@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,13 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections;
 
@@ -42,7 +43,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// </summary>
         public DykstraWitnessCalculator()
         {
-            _hopLimit = 1;
+            _hopLimit = int.MaxValue;
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Holds a reusable heap.
         /// </summary>
-        private BinairyHeap<SettledVertex> _reusableHeap = new BinairyHeap<SettledVertex>();
+        private BinaryHeap<SettledVertex> _reusableHeap = new BinaryHeap<SettledVertex>();
 
         /// <summary>
         /// Returns true if the given vertex has a witness calculator.
@@ -66,16 +67,32 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="to"></param>
         /// <param name="maxWeight"></param>
         /// <param name="maxSettles"></param>
+        public bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles)
+        {
+            return this.Exists(graph, from, to, maxWeight, maxSettles, uint.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex has a witness calculator.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="maxWeight"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="toSkip"></param>
         /// <returns></returns>
-        public bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles)
+        public bool Exists(IGraph<CHEdgeData> graph, uint from, uint to, float maxWeight, int maxSettles, uint toSkip)
         {
             var tos = new List<uint>(1);
             tos.Add(to);
             var tosWeights = new List<float>(1);
             tosWeights.Add(maxWeight);
-            var exists = new bool[1];
-            this.Exists(graph, from, tos, tosWeights, maxSettles, ref exists);
-            return exists[0];
+            var forwardExists = new bool[1];
+            var backwardExists = new bool[1];
+            this.Exists(graph, from, tos, tosWeights, maxSettles,
+                ref forwardExists, ref backwardExists, toSkip);
+            return forwardExists[0];
         }
 
         /// <summary>
@@ -86,129 +103,189 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="tos"></param>
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
-        /// <param name="exists"></param>
-        public void Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
+        /// <param name="forwardExists"></param>
+        /// <param name="backwardExists"></param>
+        public void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+            ref bool[] forwardExists, ref bool[] backwardExists)
+        {
+            this.Exists(graph, from, tos, tosWeights, maxSettles, ref forwardExists, ref backwardExists, uint.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates witnesses from on source to multiple targets at once.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="tos"></param>
+        /// <param name="tosWeights"></param>
+        /// <param name="maxSettles"></param>
+        /// <param name="forwardExists"></param>
+        /// <param name="backwardExists"></param>
+        /// <param name="toSkip"></param>
+        public void Exists(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+            ref bool[] forwardExists, ref bool[] backwardExists, uint toSkip)
         {
             int maxHops = _hopLimit;
 
             if (maxHops == 1)
             {
-                this.ExistsOneHop(graph, from, tos, tosWeights, maxSettles, ref exists);
+                this.ExistsOneHop(graph, from, tos, tosWeights, maxSettles, ref forwardExists, ref backwardExists);
                 return;
             }
 
             // creates the settled list.
-            var settled = new HashSet<uint>();
-            var toSet = new HashSet<uint>();
-            float maxWeight = 0;
-            for(int idx = 0; idx < tos.Count; idx++)
+            var backwardSettled = new HashSet<uint>();
+            var forwardSettled = new HashSet<uint>();
+            var backwardToSet = new HashSet<uint>();
+            var forwardToSet = new HashSet<uint>();
+            float forwardMaxWeight = 0, backwardMaxWeight = 0;
+            for (int idx = 0; idx < tosWeights.Count; idx++)
             {
-                if(!exists[idx])
+                if (!forwardExists[idx])
                 {
-                    toSet.Add(tos[idx]);
-                    if(maxWeight < tosWeights[idx])
+                    forwardToSet.Add(tos[idx]);
+                    if (forwardMaxWeight < tosWeights[idx])
                     {
-                        maxWeight = tosWeights[idx];
+                        forwardMaxWeight = tosWeights[idx];
+                    }
+                }
+                if (!backwardExists[idx])
+                {
+                    backwardToSet.Add(tos[idx]);
+                    if (backwardMaxWeight < tosWeights[idx])
+                    {
+                        backwardMaxWeight = tosWeights[idx];
                     }
                 }
             }
+            if (forwardMaxWeight == 0 && backwardMaxWeight == 0)
+            { // no need to search!
+                return;
+            }
 
             // creates the priorty queue.
+            var forwardMinWeight = new Dictionary<uint, float>();
+            var backwardMinWeight = new Dictionary<uint, float>();
             var heap = _reusableHeap;
             heap.Clear();
-            heap.Push(new SettledVertex(from, 0, 0), 0);
+            heap.Push(new SettledVertex(from, 0, 0, forwardMaxWeight > 0, backwardMaxWeight > 0), 0);
 
             // keep looping until the queue is empty or the target is found!
             while (heap.Count > 0)
-            {
-                // pop the first customer.
+            { // pop the first customer.
                 var current = heap.Pop();
-                if (!settled.Contains(current.VertexId))
+                if (current.Hops + 1 < maxHops)
                 { // the current vertex has net been settled.
-                    settled.Add(current.VertexId); // settled the vertex.
-
-                    // check if this is a to.
-                    if(toSet.Contains(current.VertexId))
+                    if(current.VertexId == toSkip)
                     {
-                        int index = tos.IndexOf(current.VertexId);
-                        exists[index] = current.Weight < tosWeights[index];
-                        toSet.Remove(current.VertexId);
+                        continue;
+                    }
+                    bool forwardWasSettled = forwardSettled.Contains(current.VertexId);
+                    bool backwardWasSettled = backwardSettled.Contains(current.VertexId);
+                    if (forwardWasSettled && backwardWasSettled)
+                    {
+                        continue;
+                    }
 
-                        if(toSet.Count == 0)
+                    if (current.Forward)
+                    { // this is a forward settle.
+                        forwardSettled.Add(current.VertexId);
+                        forwardMinWeight.Remove(current.VertexId);
+                        if (forwardToSet.Contains(current.VertexId))
                         {
-                            break;
+                            int index = tos.IndexOf(current.VertexId);
+                            forwardExists[index] = current.Weight <= tosWeights[index];
+                            //if (forwardExists[index])
+                            //{
+                            forwardToSet.Remove(current.VertexId);
+                            //}
+                        }
+                    }
+                    if (current.Backward)
+                    { // this is a backward settle.
+                        backwardSettled.Add(current.VertexId);
+                        backwardMinWeight.Remove(current.VertexId);
+                        if (backwardToSet.Contains(current.VertexId))
+                        {
+                            int index = tos.IndexOf(current.VertexId);
+                            backwardExists[index] = current.Weight <= tosWeights[index];
+                            //if (backwardExists[index])
+                            //{
+                            backwardToSet.Remove(current.VertexId);
+                            //}
                         }
                     }
 
-                    if (settled.Count >= maxSettles)
+                    if (forwardToSet.Count == 0 &&
+                        backwardToSet.Count == 0)
+                    { // there is nothing left to check.
+                        break;
+                    }
+
+                    if (forwardSettled.Count >= maxSettles &&
+                        backwardSettled.Count >= maxSettles)
                     { // do not continue searching.
                         break;
                     }
 
-                    // get the neighbours.
-                    var neighbours = graph.GetEdges(current.VertexId);
-                    while (neighbours.MoveNext())
-                    {
-                        if (!settled.Contains(neighbours.Neighbour))
-                        {
-                            if (neighbours.isInverted)
+                    bool doForward = current.Forward && forwardToSet.Count > 0 && !forwardWasSettled;
+                    bool doBackward = current.Backward && backwardToSet.Count > 0 && !backwardWasSettled;
+                    if (doForward || doBackward)
+                    { // get the neighbours.
+                        var neighbours = graph.GetEdges(current.VertexId);
+                        while (neighbours.MoveNext())
+                        { // move next.
+                            var edgeData = neighbours.EdgeData;
+                            var neighbourWeight = current.Weight + edgeData.Weight;
+                            var doNeighbourForward = doForward && edgeData.CanMoveForward && neighbourWeight <= forwardMaxWeight &&
+                                !forwardSettled.Contains(neighbours.Neighbour);
+                            var doNeighbourBackward = doBackward && edgeData.CanMoveBackward && neighbourWeight <= backwardMaxWeight &&
+                                !backwardSettled.Contains(neighbours.Neighbour);
+                            if (doNeighbourBackward || doNeighbourForward)
                             {
-                                var invertedEdgeData = neighbours.InvertedEdgeData;
-                                if (invertedEdgeData.Backward &&
-                                    !invertedEdgeData.ToHigher &&
-                                    !invertedEdgeData.ToLower)
+                                float existingWeight;
+                                if (doNeighbourForward)
                                 {
-                                    var neighbour = new SettledVertex(neighbours.Neighbour,
-                                        invertedEdgeData.BackwardWeight + current.Weight, current.Hops + 1);
-                                    if (neighbour.Weight < maxWeight && neighbour.Hops < maxHops)
+                                    if (forwardMinWeight.TryGetValue(neighbours.Neighbour, out existingWeight))
                                     {
-                                        heap.Push(neighbour, neighbour.Weight);
-                                        //if (toSet.Contains(neighbours.Neighbour)) // check early for witnesses.
-                                        //{ // this neighbour has been found and it already represents a witness even if not shortest.
-                                        //    int index = tos.IndexOf(neighbours.Neighbour);
-                                        //    if (neighbour.Weight < tosWeights[index] ||
-                                        //        heap.Peek().VertexId == neighbours.Neighbour)
-                                        //    { // ok, witness already found.
-                                        //        exists[index] = current.Weight < tosWeights[index];
-                                        //        toSet.Remove(neighbours.Neighbour);
-
-                                        //        if (toSet.Count == 0)
-                                        //        {
-                                        //            break;
-                                        //        }
-                                        //    }
-                                        //}
+                                        if(existingWeight <= neighbourWeight)
+                                        {
+                                            doNeighbourForward = false;
+                                        }
+                                        else
+                                        {
+                                            forwardMinWeight[neighbours.Neighbour] = neighbourWeight;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        forwardMinWeight[neighbours.Neighbour] = neighbourWeight;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                var edgeData = neighbours.EdgeData;
-                                if (edgeData.Forward &&
-                                    !edgeData.ToHigher &&
-                                    !edgeData.ToLower)
+                                if (doNeighbourBackward)
+                                {
+                                    if (backwardMinWeight.TryGetValue(neighbours.Neighbour, out existingWeight))
+                                    {
+                                        if (existingWeight <= neighbourWeight)
+                                        {
+                                            doNeighbourBackward = false;
+                                        }
+                                        else
+                                        {
+                                            backwardMinWeight[neighbours.Neighbour] = neighbourWeight;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        backwardMinWeight[neighbours.Neighbour] = neighbourWeight;
+                                    }
+                                }
+
+                                if (doNeighbourBackward || doNeighbourForward)
                                 {
                                     var neighbour = new SettledVertex(neighbours.Neighbour,
-                                        edgeData.ForwardWeight + current.Weight, current.Hops + 1);
-                                    if (neighbour.Weight < maxWeight && neighbour.Hops < maxHops)
-                                    {
-                                        heap.Push(neighbour, neighbour.Weight);
-                                        //if (toSet.Contains(neighbours.Neighbour)) // check early for witnesses.
-                                        //{ // this neighbour has been found and it already represents a witness even if not shortest.
-                                        //    int index = tos.IndexOf(neighbours.Neighbour);
-                                        //    if (neighbour.Weight < tosWeights[index] ||
-                                        //        heap.Peek().VertexId == neighbours.Neighbour)
-                                        //    { // ok, witness already found.
-                                        //        exists[index] = current.Weight < tosWeights[index];
-                                        //        toSet.Remove(neighbours.Neighbour);
-
-                                        //        if (toSet.Count == 0)
-                                        //        {
-                                        //            break;
-                                        //        }
-                                        //    }
-                                        //}
-                                    }
+                                        neighbourWeight, current.Hops + 1, doNeighbourForward, doNeighbourBackward);
+                                    heap.Push(neighbour, neighbour.Weight);
                                 }
                             }
                         }
@@ -225,14 +302,16 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="tos"></param>
         /// <param name="tosWeights"></param>
         /// <param name="maxSettles"></param>
-        /// <param name="exists"></param>
-        private void ExistsOneHop(IBasicRouterDataSource<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles, ref bool[] exists)
+        /// <param name="forwardExists"></param>
+        /// <param name="backwardExists"></param>
+        private void ExistsOneHop(IGraph<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
+            ref bool[] forwardExists, ref bool[] backwardExists)
         {
             var toSet = new HashSet<uint>();
             float maxWeight = 0;
-            for (int idx = 0; idx < tos.Count; idx++)
+            for (int idx = 0; idx < tosWeights.Count; idx++)
             {
-                if (!exists[idx])
+                if (!forwardExists[idx] || !backwardExists[idx])
                 {
                     toSet.Add(tos[idx]);
                     if (maxWeight < tosWeights[idx])
@@ -242,36 +321,32 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                 }
             }
 
-            var neighbours = graph.GetEdges(from);
-            while(neighbours.MoveNext())
+            if (toSet.Count > 0)
             {
-                if(toSet.Contains(neighbours.Neighbour))
-                { // ok, this is a to-edge.
-                    int index = tos.IndexOf(neighbours.Neighbour);
-                    toSet.Remove(neighbours.Neighbour);
+                var neighbours = graph.GetEdges(from);
+                while (neighbours.MoveNext())
+                {
+                    if (toSet.Contains(neighbours.Neighbour))
+                    { // ok, this is a to-edge.
+                        int index = tos.IndexOf(neighbours.Neighbour);
+                        toSet.Remove(neighbours.Neighbour);
 
-                    if(neighbours.isInverted)
-                    {
-                        if (!neighbours.InvertedEdgeData.ToHigher &&
-                            neighbours.InvertedEdgeData.Backward &&
-                            neighbours.InvertedEdgeData.BackwardWeight < tosWeights[index])
+                        var edgeData = neighbours.EdgeData;
+                        if (edgeData.CanMoveForward &&
+                            edgeData.Weight < tosWeights[index])
                         {
-                            exists[index] = true;
+                            forwardExists[index] = true;
                         }
-                    }
-                    else
-                    {
-                        if (!neighbours.EdgeData.ToLower && 
-                            neighbours.EdgeData.Forward &&
-                            neighbours.EdgeData.ForwardWeight < tosWeights[index])
+                        if (edgeData.CanMoveBackward &&
+                            edgeData.Weight < tosWeights[index])
                         {
-                            exists[index] = true;
+                            backwardExists[index] = true;
                         }
-                    }
 
-                    if(toSet.Count == 0)
-                    {
-                        break;
+                        if (toSet.Count == 0)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -288,11 +363,15 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// <param name="vertex"></param>
             /// <param name="weight"></param>
             /// <param name="hops"></param>
-            public SettledVertex(uint vertex, float weight, uint hops)
+            /// <param name="forward"></param>
+            /// <param name="backward"></param>
+            public SettledVertex(uint vertex, float weight, uint hops, bool forward, bool backward)
             {
                 this.VertexId = vertex;
                 this.Weight = weight;
                 this.Hops = hops;
+                this.Forward = forward;
+                this.Backward = backward;
             }
 
             /// <summary>
@@ -309,6 +388,31 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// The hop-count of this vertex.
             /// </summary>
             public uint Hops { get; set; }
+
+            /// <summary>
+            /// Holds the forward flag.
+            /// </summary>
+            public bool Forward { get; set; }
+
+            /// <summary>
+            /// Holds the backward flag.
+            /// </summary>
+            public bool Backward { get; set; }
+        }
+
+        /// <summary>
+        /// Gets or sets the hop limit.
+        /// </summary>
+        public int HopLimit
+        {
+            get
+            {
+                return _hopLimit;
+            }
+            set
+            {
+                _hopLimit = value;
+            }
         }
     }
 }

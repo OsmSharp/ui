@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2014 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -30,10 +30,20 @@ namespace OsmSharp.UI
     /// </summary>
     public interface IMapView
     {
+        /// <summary>
+        /// Raised when a pressure gesture on the map was started.
+        /// </summary>
+        event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
 		/// <summary>
-		/// Raised after the map was touched.
+		/// Raised when the map is being touched.
 		/// </summary>
         event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Raised when a pressure gesture on the map was finished.
+        /// </summary>
+        event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
 
         /// <summary>
         /// Raised when the map moves.

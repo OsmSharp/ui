@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             // generate instructions.
             var instructions = InstructionGenerator.Generate(route, new OsmRoutingInterpreter(), languageGenerator);
             Assert.AreEqual(3, instructions.Count);
-            Assert.AreEqual("GenerateRoundabout:1", instructions[1].Text);
+            Assert.AreEqual("GenerateRoundabout:3", instructions[1].Text);
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             // generate instructions.
             List<Instruction> instructions = InstructionGenerator.Generate(route, new OsmRoutingInterpreter(), languageGenerator);
             Assert.AreEqual(3, instructions.Count);
-            Assert.AreEqual("GenerateRoundabout:1", instructions[1].Text);
+            Assert.AreEqual("GenerateRoundabout:3", instructions[1].Text);
         }
     }
 }

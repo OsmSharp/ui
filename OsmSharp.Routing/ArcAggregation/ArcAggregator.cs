@@ -31,10 +31,6 @@ namespace OsmSharp.Routing.ArcAggregation
     /// </summary>
     public class ArcAggregator
     {
-        private AggregatedPoint previousPoint = null;
-        private AggregatedArc previousArc = null;
-        private AggregatedPoint p = null;
-
         /// <summary>
         /// Holds the routing interpreter.
         /// </summary>
@@ -62,6 +58,9 @@ namespace OsmSharp.Routing.ArcAggregation
             AggregatedRoutePoint previous = null;
             AggregatedRoutePoint current = null;
             AggregatedRoutePoint next = null;
+            AggregatedPoint previousPoint = null;
+            AggregatedArc previousArc = null;
+            AggregatedPoint p = null;
 
             // loop over all aggregated points.
             while (enumerator.MoveNext())
@@ -70,7 +69,7 @@ namespace OsmSharp.Routing.ArcAggregation
                 next = enumerator.Current;
 
                 // process 
-                this.Process(route, previous, current, next);
+                this.Process(route, previous, current, next, ref p, ref previousArc, ref previousPoint);
 
                 // make the next, current and the current previous.
                 previous = current;
@@ -79,7 +78,7 @@ namespace OsmSharp.Routing.ArcAggregation
             }
 
             // process once more, the current current has not been processed.
-            this.Process(route, previous, current, next);
+            this.Process(route, previous, current, next, ref p, ref previousArc, ref previousPoint);
 
             return p;
         }
@@ -87,12 +86,8 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <summary>
         /// Processes a part of the route.
         /// </summary>
-        /// <param name="route"></param>
-        /// <param name="previous"></param>
-        /// <param name="current"></param>
-        /// <param name="next"></param>
         private void Process(Route route, AggregatedRoutePoint previous, AggregatedRoutePoint current, 
-            AggregatedRoutePoint next)
+            AggregatedRoutePoint next, ref AggregatedPoint p, ref AggregatedArc previousArc, ref AggregatedPoint previousPoint)
         {
             // process the current point.
             if (current != null)

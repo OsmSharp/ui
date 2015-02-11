@@ -20,8 +20,13 @@ using System;
 using OsmSharp.UI.Renderer.Images;
 using OsmSharp.UI.Renderer.Primitives;
 using System.Collections.Generic;
+#if __UNIFIED__
+using Foundation;
+using UIKit;
+#else
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
+#endif
 
 namespace OsmSharp.iOS.UI
 {    

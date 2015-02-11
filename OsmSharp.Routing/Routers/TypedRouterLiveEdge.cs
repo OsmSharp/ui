@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 
@@ -34,7 +34,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
         public TypedRouterLiveEdge(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-                           IBasicRouter<LiveEdge> router)
+                           IRoutingAlgorithm<LiveEdge> router)
             :base(graph, interpreter, router)
         {
             

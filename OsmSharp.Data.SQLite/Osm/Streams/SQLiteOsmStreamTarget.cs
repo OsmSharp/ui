@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -93,8 +93,8 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 					@"CREATE TABLE IF NOT EXISTS [relation_tags] ([relation_id] INTEGER NOT NULL,[key] varchar(100) NOT NULL,[value] varchar(500) NULL, PRIMARY KEY ([relation_id],[key])); " +
                     @"CREATE TABLE IF NOT EXISTS [relation_members] ([relation_id] INTEGER NOT NULL,[member_type]INTEGER NOT NULL,[member_id] INTEGER  NOT NULL,[member_role] varchar(100) NULL,[sequence_id] INTEGER  NOT NULL); " +
 					@"CREATE INDEX IF NOT EXISTS [IDX_NODE_TILE] ON [node]([tile]  ASC); " +
-					@"CREATE INDEX [IDX_WAY_NODES_NODE] ON [way_nodes]([node_id]  ASC); " +
-					@"CREATE INDEX [IDX_WAY_NODES_WAY_SEQUENCE] ON [way_nodes]([way_id]  ASC,[sequence_id]  ASC); " +
+                    @"CREATE INDEX IF NOT EXISTS [IDX_WAY_NODES_NODE] ON [way_nodes]([node_id]  ASC); " +
+                    @"CREATE INDEX IF NOT EXISTS [IDX_WAY_NODES_WAY_SEQUENCE] ON [way_nodes]([way_id]  ASC,[sequence_id]  ASC); " +
 					@"";
 				sqliteCmd.ExecuteNonQuery();
 			}

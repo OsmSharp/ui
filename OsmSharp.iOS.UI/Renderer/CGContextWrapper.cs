@@ -1,6 +1,19 @@
 using System;
-using MonoTouch.CoreGraphics;
+#if __UNIFIED__
+using CoreGraphics;
+#else
 using System.Drawing;
+using MonoTouch.CoreGraphics;
+
+// Type Mappings Unified to monotouch.dll
+using CGRect = global::System.Drawing.RectangleF;
+using CGSize = global::System.Drawing.SizeF;
+using CGPoint = global::System.Drawing.PointF;
+
+using nfloat = global::System.Single;
+using nint = global::System.Int32;
+using nuint = global::System.UInt32;
+#endif
 
 namespace OsmSharp.iOS.UI
 {
@@ -17,14 +30,14 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the size of the CG context.
 		/// </summary>
-		private RectangleF _rectangle;
+		private CGRect _rectangle;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.CGContextWrapper"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="rectangle">Rectangle.</param>
-		public CGContextWrapper (CGContext context, RectangleF rectangle)
+		public CGContextWrapper (CGContext context, CGRect rectangle)
 		{
 			_rectangle = rectangle;
 			_context = context;
@@ -46,7 +59,7 @@ namespace OsmSharp.iOS.UI
 		/// <value>The width.</value>
 		public float Width {
 			get{
-				return _rectangle.Width;
+				return (float)_rectangle.Width;
 			}
 		}
 
@@ -56,7 +69,7 @@ namespace OsmSharp.iOS.UI
 		/// <value>The height.</value>
 		public float Height {
 			get{
-				return _rectangle.Height;
+				return (float)_rectangle.Height;
 			}
 		}
 	}

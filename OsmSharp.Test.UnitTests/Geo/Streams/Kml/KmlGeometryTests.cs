@@ -21,6 +21,7 @@ using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Streams.Kml;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.Test.Unittests.Streams.IO.Kml
 {
@@ -37,16 +38,16 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         public void KmlReadGeometryv2_0()
         {
             // initialize the geometry source.
-            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
+            var kmlSource = new KmlFeatureStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.0.kml"));
 
             // pull all the objects from the stream into the given collection.
-            GeometryCollection kmlCollection = new GeometryCollection(kmlSource);
-            List<Geometry> geometries = new List<Geometry>(kmlCollection);
+            var kmlCollection = new FeatureCollection(kmlSource);
+            var features = new List<Feature>(kmlCollection);
 
             // test collection contents.
-            Assert.AreEqual(1, geometries.Count);
-            Assert.IsInstanceOf(typeof(Point), geometries[0]);
+            Assert.AreEqual(1, features.Count);
+            Assert.IsInstanceOf(typeof(Point), features[0].Geometry);
         }
         
         /// <summary>
@@ -56,22 +57,22 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         public void KmlReadGeometryv2_0_response()
         {
             // initialize the geometry source.
-            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
+            var kmlSource = new KmlFeatureStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.0.response.kml"));
 
             // pull all the objects from the stream into the given collection.
-            GeometryCollection kmlCollection = new GeometryCollection(kmlSource);
-            List<Geometry> geometries = new List<Geometry>(kmlCollection);
+            var kmlCollection = new FeatureCollection(kmlSource);
+            var geometries = new List<Feature>(kmlCollection);
 
             // test collection contents.
             Assert.AreEqual(7, geometries.Count);
-            Assert.IsInstanceOf(typeof(Point), geometries[0]);
-            Assert.IsInstanceOf(typeof(Point), geometries[1]);
-            Assert.IsInstanceOf(typeof(Point), geometries[2]);
-            Assert.IsInstanceOf(typeof(Point), geometries[3]);
-            Assert.IsInstanceOf(typeof(Point), geometries[4]);
-            Assert.IsInstanceOf(typeof(Point), geometries[5]);
-            Assert.IsInstanceOf(typeof(Point), geometries[6]);
+            Assert.IsInstanceOf(typeof(Point), geometries[0].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[1].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[2].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[3].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[4].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[5].Geometry);
+            Assert.IsInstanceOf(typeof(Point), geometries[6].Geometry);
         }
 
         /// <summary>
@@ -81,38 +82,38 @@ namespace OsmSharp.Test.Unittests.Streams.IO.Kml
         public void KmlReadGeometryv2_1()
         {
             // initialize the geometry source.
-            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
+            var kmlSource = new KmlFeatureStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test.v2.1.kml"));
 
             // pull all the objects from the stream into the given collection.
-            GeometryCollection kmlCollection = new GeometryCollection(kmlSource);
-            List<Geometry> geometries = new List<Geometry>(kmlCollection);
+            var kmlCollection = new FeatureCollection(kmlSource);
+            var features = new List<Feature>(kmlCollection);
 
             // test collection contents.
-            Assert.AreEqual(23, geometries.Count);
-            Assert.IsInstanceOf(typeof(LineString), geometries[0]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[1]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[2]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[3]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[4]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[5]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[6]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[7]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[8]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[9]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[10]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[11]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[12]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[13]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[14]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[15]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[16]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[17]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[18]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[19]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[20]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[21]);
-            Assert.IsInstanceOf(typeof(LineString), geometries[22]);
+            Assert.AreEqual(23, features.Count);
+            Assert.IsInstanceOf(typeof(LineString), features[0].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[1].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[2].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[3].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[4].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[5].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[6].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[7].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[8].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[9].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[10].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[11].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[12].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[13].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[14].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[15].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[16].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[17].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[18].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[19].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[20].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[21].Geometry);
+            Assert.IsInstanceOf(typeof(LineString), features[22].Geometry);
         }
     }
 }

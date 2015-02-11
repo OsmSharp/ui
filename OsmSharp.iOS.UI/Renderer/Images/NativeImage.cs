@@ -17,9 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using MonoTouch.CoreGraphics;
 using OsmSharp.UI.Renderer.Primitives;
+#if __UNIFIED__
+using CoreGraphics;
+using UIKit;
+#else
 using MonoTouch.UIKit;
+using MonoTouch.CoreGraphics;
+#endif
 
 namespace OsmSharp.iOS.UI
 {

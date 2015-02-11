@@ -79,7 +79,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             //base.TextMaxSpeed(Vehicle.Car, 5, "highway", "pedestrian");
 
-            base.TextMaxSpeed(vehicle, 5, "highway", "living_street");
+            base.TextMaxSpeed(vehicle, vehicle.MaxSpeed().Value, "highway", "living_street");
             base.TextMaxSpeed(vehicle, 30, "highway", "road");
             base.TextMaxSpeed(vehicle, 30, "highway", "track");
             base.TextMaxSpeed(vehicle, 50, "highway", "unclassified");
@@ -110,7 +110,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             //base.TextMaxSpeed(Vehicle.Car, 5, "highway", "pedestrian");
 
-            base.TextProbableSpeed(vehicle, System.Math.Min(5, max), "highway", "living_street");
+            base.TextProbableSpeed(vehicle, System.Math.Min(vehicle.MaxSpeed().Value, max), "highway", "living_street");
             base.TextProbableSpeed(vehicle, System.Math.Min(30, max), "highway", "road");
             base.TextProbableSpeed(vehicle, System.Math.Min(30, max), "highway", "track");
             base.TextProbableSpeed(vehicle, System.Math.Min(50, max), "highway", "unclassified");

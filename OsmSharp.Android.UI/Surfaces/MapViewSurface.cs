@@ -1008,6 +1008,17 @@ namespace OsmSharp.Android.UI
             {
                 if (!_renderingSuspended && this.Map != null && this.Map.Projection != null && this.MapCenter != null)
                 {
+                    var actionCode = e.Action & MotionEventActions.Mask;
+                    switch (actionCode)
+                    {
+                        case MotionEventActions.Down:
+                            _mapView.RaiseMapTouchedDown();
+                            break;
+                        case MotionEventActions.Up:
+                            _mapView.RaiseMapTouchedUp();
+                            break;
+                    }
+
                     _tagGestureDetector.OnTouchEvent(e);
                     _scaleGestureDetector.OnTouchEvent(e);
                     _rotateGestureDetector.OnTouchEvent(e);
@@ -1144,21 +1155,22 @@ namespace OsmSharp.Android.UI
         {
             try
             {
-                float height = this.SurfaceHeight;
-                float width = this.SurfaceWidth;
-                if (width > 0)
+                if (this.SurfaceWidth > 0 && _bufferFactor > 0)
                 {
-                    PointF2D[] points = new PointF2D[controls.Count];
+                    float height = this.SurfaceHeight / _bufferFactor;
+                    float width = this.SurfaceWidth / _bufferFactor;
+
+                    var points = new PointF2D[controls.Count];
                     for (int idx = 0; idx < controls.Count; idx++)
                     {
                         points[idx] = new PointF2D(this.Map.Projection.ToPixel(controls[idx].Location));
                     }
-                    View2D view = this.CreateView();
-                    View2D fittedView = view.Fit(points, percentage);
+                    var view = this.CreateView();
+                    var fittedView = view.Fit(points, percentage);
 
-                    float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+                    var zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
                                                  width, height));
-                    GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+                    var center = this.Map.Projection.ToGeoCoordinates(
                                                            fittedView.Center[0], fittedView.Center[1]);
 
                     this.SetMapView(center, this.MapTilt, zoom);

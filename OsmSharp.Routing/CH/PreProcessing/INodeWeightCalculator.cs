@@ -15,10 +15,6 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -28,11 +24,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
     public interface INodeWeightCalculator
     {
         /// <summary>
-        /// Calculates the weight of the given vertex u.
+        /// Calculates the priority of the given vertex.
         /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns>A estimate of the benefit of contraction, when float.MaxValue the vertex will not be contracted.</returns>
+        /// <param name="vertex">The vertex to calculate the priority for.</param>
         float Calculate(uint vertex);
+
+        /// <summary>
+        /// Calculates the priority of the given vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex to calculate the priority for.</param>
+        /// <param name="newEdges">The number of new edges that would be added.</param>
+        /// <param name="removedEdges">The number of edges that would be removed.</param>
+        /// <param name="depth">The depth of the vertex.</param>
+        /// <param name="contracted">The number of contracted neighours.</param>
+        float Calculate(uint vertex, out int newEdges, out int removedEdges, out int depth, out int contracted);
 
         /// <summary>
         /// Notifies this calculator that the vertex was contracted.

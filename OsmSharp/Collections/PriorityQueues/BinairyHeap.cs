@@ -26,7 +26,7 @@ namespace OsmSharp.Collections.PriorityQueues
     /// Implements a priority queue in the form of a binairy heap.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BinairyHeap<T> : IPriorityQueue<T>
+    public class BinaryHeap<T> : IPriorityQueue<T>
     {
         /// <summary>
         /// The objects per priority.
@@ -51,7 +51,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Creates a new binairy heap.
         /// </summary>
-        public BinairyHeap()
+        public BinaryHeap()
             : this(2)
         {
 
@@ -60,7 +60,7 @@ namespace OsmSharp.Collections.PriorityQueues
         /// <summary>
         /// Creates a new binairy heap.
         /// </summary>
-        public BinairyHeap(uint initialSize)
+        public BinaryHeap(uint initialSize)
         {
             _heap = new T[initialSize];
             _priorities = new float[initialSize];
@@ -211,11 +211,19 @@ namespace OsmSharp.Collections.PriorityQueues
             _latest_index = 1;
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();

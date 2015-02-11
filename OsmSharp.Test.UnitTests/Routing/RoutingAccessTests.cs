@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
@@ -45,14 +45,14 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
-            IOsmRoutingInterpreter interpreter, IBasicRouter<TEdgeData> basicRouter);
+            IOsmRoutingInterpreter interpreter, IRoutingAlgorithm<TEdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
+        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
 
         /// <summary>
         /// Builds the data.
@@ -366,7 +366,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             IBasicRouterDataSource<TEdgeData> data = 
                 this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_segments.osm", vehicle);
-            IBasicRouter<TEdgeData> basicRouter = 
+            IRoutingAlgorithm<TEdgeData> basicRouter = 
                 this.BuildBasicRouter(data);
             Router router = 
                 this.BuildRouter(data, interpreter, basicRouter);

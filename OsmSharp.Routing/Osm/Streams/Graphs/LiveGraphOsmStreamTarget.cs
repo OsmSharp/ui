@@ -18,7 +18,6 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Collections.Coordinates;
-using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
@@ -26,7 +25,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -115,7 +114,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
-            : base(dynamicGraph, interpreter, null, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
+            : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
         {
             _vehicles = new HashSet<Vehicle>();
             if (vehicles != null)
@@ -127,41 +126,41 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             }
         }
 
-        /// <summary>
-        /// Adds an edge.
-        /// </summary>
-        /// <param name="forward"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="tags"></param>
-        /// <param name="intermediates"></param>
-        protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
-        {
-            float latitude;
-            float longitude;
-            GeoCoordinate fromCoordinate = null;
-            if (this.DynamicGraph.GetVertex(from, out latitude, out longitude))
-            { // 
-                fromCoordinate = new GeoCoordinate(latitude, longitude);
-            }
-            GeoCoordinate toCoordinate = null;
-            if (this.DynamicGraph.GetVertex(to, out latitude, out longitude))
-            { // 
-                toCoordinate = new GeoCoordinate(latitude, longitude);
-            }
+        ///// <summary>
+        ///// Adds an edge.
+        ///// </summary>
+        ///// <param name="forward"></param>
+        ///// <param name="from"></param>
+        ///// <param name="to"></param>
+        ///// <param name="tags"></param>
+        ///// <param name="intermediates"></param>
+        //protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
+        //{
+        //    float latitude;
+        //    float longitude;
+        //    GeoCoordinate fromCoordinate = null;
+        //    if (this.DynamicGraph.GetVertex(from, out latitude, out longitude))
+        //    { // 
+        //        fromCoordinate = new GeoCoordinate(latitude, longitude);
+        //    }
+        //    GeoCoordinate toCoordinate = null;
+        //    if (this.DynamicGraph.GetVertex(to, out latitude, out longitude))
+        //    { // 
+        //        toCoordinate = new GeoCoordinate(latitude, longitude);
+        //    }
 
-            if (fromCoordinate != null && toCoordinate != null)
-            { // calculate the edge data.
-                var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
+        //    if (fromCoordinate != null && toCoordinate != null)
+        //    { // calculate the edge data.
+        //        var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
 
-                ICoordinateCollection intermediatesCollection = null;
-                if(intermediates != null)
-                {
-                    intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
-                }
-                this.DynamicGraph.AddEdge(from, to, edgeData, intermediatesCollection, this.EdgeComparer);
-            }
-        }
+        //        ICoordinateCollection intermediatesCollection = null;
+        //        if(intermediates != null)
+        //        {
+        //            intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
+        //        }
+        //        this.DynamicGraph.AddEdge(from, to, edgeData, intermediatesCollection, this.EdgeComparer);
+        //    }
+        //}
 
         /// <summary>
         /// Calculates edge data.
@@ -175,7 +174,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="intermediates"></param>
         /// <returns></returns>
         protected override LiveEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
-            TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
+            TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             if (edgeInterpreter == null) throw new ArgumentNullException("edgeInterpreter");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -185,15 +184,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
 
             uint tagsId = tagsIndex.Add(tags);
 
-            GeoCoordinateSimple[] coordinates = null;
-            if (intermediates != null && intermediates.Count > 0)
-            { // only instiate if needed.
-                coordinates = intermediates.ToArray();
-            }
-
             return new LiveEdge()
             {
-                Forward = directionForward,
+                Forward = tagsForward,
                 Tags = tagsId,
                 Distance = (float)from.DistanceEstimate(to).Value
             };

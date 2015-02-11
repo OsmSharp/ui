@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -63,7 +63,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+                data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
                     data, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -79,7 +79,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     // do the pre-processing part.
                     var witnessCalculator = new DykstraWitnessCalculator();
                     var preProcessor = new CHPreProcessor(data,
-                        new EdgeDifference(data, witnessCalculator), witnessCalculator);
+                        new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
                     preProcessor.Start();
                 }
 

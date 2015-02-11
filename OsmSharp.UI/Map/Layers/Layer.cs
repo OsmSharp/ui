@@ -180,6 +180,29 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
+        /// Returns the bounding rectangle of this layer (if available).
+        /// </summary>
+        /// <remarks>Not all layers, formats support getting an envolope. Property can return null even on some types of bounded data.</remarks>
+        public virtual GeoCoordinateBox Envelope
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the backcolor of this layer.
+        /// </summary>
+        public virtual int? BackColor
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Closes the layer.
         /// </summary>
         /// <remarks>Stop with whatever the layer might be doing.</remarks>

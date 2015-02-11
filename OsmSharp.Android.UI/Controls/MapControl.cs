@@ -55,6 +55,17 @@ namespace OsmSharp.Android.UI.Controls
         {
             get;
             set;
+        }        
+        
+        /// <summary>
+        /// Gets or sets the move with map flag.
+        /// </summary>
+        /// <value><c>true</c> if move with map; otherwise, <c>false</c>.</value>
+        /// <remarks>When false, this control will not move along with the map.</remarks>
+        public bool MoveWithMap
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -75,14 +86,31 @@ namespace OsmSharp.Android.UI.Controls
         internal abstract void DetachFrom(IMapControlHost controlHost);
 
         /// <summary>
+        /// Called when any map control has changed and is about to be reposition if needed.
+        /// </summary>
+        internal virtual void OnBeforeSetLayout()
+        {
+
+        }
+
+        /// <summary>
         /// Sets layout.
         /// </summary>
         /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <param name="view"></param>
         /// <param name="projection"></param>
+        /// <param name="afterLayout"></param>
         /// <returns></returns>
         internal abstract bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
+
+        /// <summary>
+        /// Called when any map control has changed and was repositioned if needed.
+        /// </summary>
+        internal virtual void OnAfterSetLayout()
+        {
+
+        }
 
         /// <summary>
         /// Notifies this control there was a map tap.
@@ -139,6 +167,8 @@ namespace OsmSharp.Android.UI.Controls
             _view = view;
             _location = location;
             _alignment = alignment;
+
+            this.MoveWithMap = true;
         }
 
         /// <summary>
@@ -155,6 +185,7 @@ namespace OsmSharp.Android.UI.Controls
             _location = location;
             _alignment = alignment;
 
+            this.MoveWithMap = true;
             this.SetSize(width, height);
         }
 
@@ -292,31 +323,38 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="projection">Projection.</param>
         internal override bool SetLayout(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
         {
-            if (this.Location != null)
-            { // only set layout if there is a location set.
-                var projected = projection.ToPixel(this.Location);
-                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+            if (this.MoveWithMap)
+            { // keep location the same and move with map.
+                if (this.Location != null)
+                { // only set layout if there is a location set.
+                    var projected = projection.ToPixel(this.Location);
+                    double leftMargin, topMargin;
+                    var fromMatrix = view.CreateToViewPort(pixelsWidth, pixelsHeight);
+                    fromMatrix.Apply(projected[0], projected[1], out leftMargin, out topMargin);
 
-                // set the new location depending on the size of the image and the alignment parameter.
-                double leftMargin = locationPixel[0];
-                double topMargin = locationPixel[1];
+                    leftMargin = leftMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
 
-                leftMargin = locationPixel[0] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                    switch (_alignment)
+                    {
+                        case MapControlAlignmentType.Center:
+                            topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+                            break;
+                        case MapControlAlignmentType.CenterTop:
+                            break;
+                        case MapControlAlignmentType.CenterBottom:
+                            topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            break;
+                    }
 
-                switch (_alignment)
-                {
-                    case MapControlAlignmentType.Center:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
-                        break;
-                    case MapControlAlignmentType.CenterTop:
-                        break;
-                    case MapControlAlignmentType.CenterBottom:
-                        topMargin = locationPixel[1] - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
+                    (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
+                    (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
                 }
-
-                (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
-                (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
+            }
+            else
+            { // do not move with map but change the location.
+                var locationProjected = view.FromViewPort(pixelsWidth, pixelsHeight, 
+                    this.View.Left + this.View.Width / 2.0f, this.View.Top + this.View.Height / 2.0f);
+                _location = projection.ToGeoCoordinates(locationProjected[0], locationProjected[1]);
             }
             return true;
         }
@@ -339,14 +377,8 @@ namespace OsmSharp.Android.UI.Controls
 
 
         /// <summary>
-        /// Releases all resource used by the <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> object.
+        /// Releases all resource used by the MapControl object.
         /// </summary>
-        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/>. The <see cref="Dispose"/> method leaves the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> in an unusable state. After calling
-        /// <see cref="Dispose"/>, you must release all references to the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> so the garbage collector can reclaim the memory that the
-        /// <see cref="OsmSharp.iOS.UI.Controls.MapControl`1"/> was occupying.</remarks>
         public override void Dispose()
         {
 

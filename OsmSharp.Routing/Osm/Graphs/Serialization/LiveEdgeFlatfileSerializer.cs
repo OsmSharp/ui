@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                         {
                             Distance = serializableEdges[idx].Distance,
                             Value = serializableEdges[idx].Value
-                        }, coordinateCollection, null);
+                        }, coordinateCollection);
                 }
             }
         }

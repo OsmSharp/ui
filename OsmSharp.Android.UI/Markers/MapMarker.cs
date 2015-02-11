@@ -52,8 +52,19 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="context"></param>
         /// <param name="location"></param>
-        public MapMarker(Context context, GeoCoordinate location)
-            : this(context, location, MapControlAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+        public MapMarker(Context context, GeoCoordinate location) : this(context, location, MapControlAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="location">Coordinate.</param>
+        /// <param name="resId">Drawable.</param>
+        public MapMarker(Context context, GeoCoordinate location, 
+                         int resId) : this(context, location, MapControlAlignmentType.CenterBottom, context.Resources, resId)
         {
 
         }
@@ -65,8 +76,7 @@ namespace OsmSharp.Android.UI
         /// <param name="location">Coordinate.</param>
         /// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
-            MapControlAlignmentType alignment)
-            : this(context, location, alignment, MapMarker.GetDefaultImage())
+                         MapControlAlignmentType alignment) : this(context, location, alignment, MapMarker.GetDefaultImage())
         {
 
         }
@@ -80,8 +90,7 @@ namespace OsmSharp.Android.UI
         /// <param name="res"></param>
         /// <param name="id"></param>
         public MapMarker(Context context, GeoCoordinate location,
-            MapControlAlignmentType alignment, Resources res, int id)
-            : base(new ImageButton(context), location, alignment)
+                         MapControlAlignmentType alignment, Resources res, int id) : base(new ImageButton(context), location, alignment)
         {
             _image = BitmapFactory.DecodeResource(res, id);
             _context = context;
@@ -104,8 +113,7 @@ namespace OsmSharp.Android.UI
         /// <param name="image">Bitmap.</param>
         /// <param name="alignment">The alignment.</param>
         public MapMarker(Context context, GeoCoordinate location, 
-            MapControlAlignmentType alignment, global::Android.Graphics.Bitmap image)
-            : base(new ImageButton(context), location, alignment, image.Width, image.Height)
+                         MapControlAlignmentType alignment, global::Android.Graphics.Bitmap image) : base(new ImageButton(context), location, alignment, ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent)
         {
             _context = context;
             this.View.SetBackgroundColor(global::Android.Graphics.Color.Transparent);
@@ -172,6 +180,11 @@ namespace OsmSharp.Android.UI
         private bool _popupIsVisible;
 
         /// <summary>
+        /// Holds the flag keeping layout status.
+        /// </summary>
+        private bool _popupLayoutSet = false;
+
+        /// <summary>
         /// Adds a default popup and returns the new view.
         /// </summary>
         /// <param name="width"></param>
@@ -184,8 +197,8 @@ namespace OsmSharp.Android.UI
 
             // create default ninepatch.
             var ninepatchImage = global::Android.Graphics.BitmapFactory.DecodeStream(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Android.UI.Images.marker_popup.9.png"));
+                                     Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                                         "OsmSharp.Android.UI.Images.marker_popup.9.png"));
             var ninepatchDrawable = NinePatchChunk.createNinePatchDrawable(this.View.Resources, ninepatchImage, "marker_popup");
             layout.SetBackgroundDrawable(ninepatchDrawable);
 
@@ -233,6 +246,8 @@ namespace OsmSharp.Android.UI
             layoutParams.TopMargin = -1;
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
             _popupView.LayoutParameters = layoutParams;
+
+            _popupLayoutSet = false;
         }
 
         /// <summary>
@@ -255,6 +270,10 @@ namespace OsmSharp.Android.UI
         {
             if (_popupView != null && this.Host != null)
             {
+                if (!_popupLayoutSet)
+                {
+                    this.Host.NotifyControlChange(this);
+                }
                 this.Host.RemoveView(_popupView);
                 this.Host.AddView(_popupView, _popupView.LayoutParameters);
             }
@@ -298,7 +317,7 @@ namespace OsmSharp.Android.UI
         {
             if (this.HasPopup && this.TogglePopupOnClick)
             { // toggle popup visible.
-                if(_popupIsVisible)
+                if (_popupIsVisible)
                 {
                     this.HidePopup();
                 }
@@ -323,7 +342,7 @@ namespace OsmSharp.Android.UI
             base.AttachTo(controlHost);
 
             // show popup if it is supposed to be visible.
-            if(_popupIsVisible)
+            if (_popupIsVisible)
             {
                 this.ShowPopup();
             }
@@ -354,44 +373,64 @@ namespace OsmSharp.Android.UI
         {
             base.SetLayout(pixelsWidth, pixelsHeight, view, projection);
 
-            if (this.Location != null &&
-                _popupView != null)
-            { // only set layout if there is a location set.
-                var projected = projection.ToPixel(this.Location);
-                var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+            if (this.MoveWithMap)
+            { // keep location the same and move with map.
+                if (this.Location != null &&
+                    _popupView != null)
+                { // only set layout if there is a location set.
+                    var projected = projection.ToPixel(this.Location);
+                    var toView = view.CreateToViewPort(pixelsWidth, pixelsHeight);
+                    double locationPixelX, locationPixelY;
+                    // var locationPixel = view.ToViewPort(pixelsWidth, pixelsHeight, projected[0], projected[1]);
+                    toView.Apply(projected[0], projected[1], out locationPixelX, out locationPixelY);
 
-                // set the new location depending on the size of the image and the alignment parameter.
-                double leftPopupMargin = locationPixel[0];
-                double topPopupMargin = locationPixel[1];
+                    // set the new location depending on the size of the image and the alignment parameter.
+                    double leftPopupMargin = locationPixelX;
+                    double topPopupMargin = locationPixelY;
 
-                leftPopupMargin = locationPixel[0] - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                    leftPopupMargin = locationPixelX - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
 
-                switch (this.Alignment)
-                {
-                    case MapControlAlignmentType.Center:
-                        topPopupMargin = locationPixel[1]
+                    switch (this.Alignment)
+                    {
+                        case MapControlAlignmentType.Center:
+                            topPopupMargin = locationPixelY
                             - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0
                             - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
-                    case MapControlAlignmentType.CenterTop:
-                        topPopupMargin = locationPixel[1]
+                            break;
+                        case MapControlAlignmentType.CenterTop:
+                            topPopupMargin = locationPixelY
                             - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
-                    case MapControlAlignmentType.CenterBottom:
-                        topPopupMargin = locationPixel[1]
+                            break;
+                        case MapControlAlignmentType.CenterBottom:
+                            topPopupMargin = locationPixelY
                             - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height
                             - (_popupView.LayoutParameters as FrameLayout.LayoutParams).Height;
-                        break;
+                            break;
+                    }
+
+                    // add offsets.
+                    leftPopupMargin = leftPopupMargin + _popupXOffset;
+                    topPopupMargin = topPopupMargin + _popupYOffset;
+
+                    (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
+                    (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
+
+                    _popupLayoutSet = true;
                 }
-
-                // add offsets.
-                leftPopupMargin = leftPopupMargin + _popupXOffset;
-                topPopupMargin = topPopupMargin + _popupYOffset;
-
-                (_popupView.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftPopupMargin;
-                (_popupView.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topPopupMargin;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Called after one of the markers/controls has been changed.
+        /// </summary>
+        internal override void OnAfterSetLayout()
+        {
+            // make sure popups are on top.
+            if (_popupView != null)
+            {
+                _popupView.BringToFront();
+            }
         }
 
         /// <summary>

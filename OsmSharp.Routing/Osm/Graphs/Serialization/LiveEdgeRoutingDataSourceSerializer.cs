@@ -23,7 +23,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;

@@ -25,6 +25,11 @@ using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph.Routing;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -38,11 +43,8 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            var box = new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820));
-            LiveRoutingTest.TestSerializedRouting("LiveRouting", 
-                "kempen-big.osm.pbf", box, 2500);
+            LiveRoutingTest.TestSerializedRouting("LiveRouting",
+                "kempen-big.osm.pbf", 250);
         }
 
         /// <summary>
@@ -50,11 +52,8 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test(Stream stream, int testCount)
         {
-            var box = new GeoCoordinateBox(
-                new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820));
             LiveRoutingTest.TestSerializedRouting("LiveRouting",
-                stream, box, testCount);
+                stream, testCount);
         }
 
         /// <summary>
@@ -62,45 +61,51 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         /// <param name="name"></param>
         /// <param name="stream"></param>
-        /// <param name="box"></param>
         /// <param name="testCount"></param>
-        public static void TestSerializedRouting(string name, Stream stream,
-            GeoCoordinateBox box, int testCount)
+        public static void TestSerializedRouting(string name, Stream stream, int testCount)
         {
-            var router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream),
-                new OsmRoutingInterpreter());
+            var vehicle = Vehicle.Car;
+
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
+            var interpreter = new OsmRoutingInterpreter();
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            data.DropVertexIndex();
+            var targetData = new LiveGraphOsmStreamTarget(data, interpreter, tagsIndex);
+            targetData.RegisterSource(reader);
+            targetData.Pull();
+            data.RebuildVertexIndex();
+
+            // creates the live edge router.
+            var router = new Dykstra();
 
             var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
             performanceInfo.Start();
             performanceInfo.Report("Routing {0} routes...", testCount);
 
-            int successCount = 0;
-            int totalCount = testCount;
-            float latestProgress = -1;
+            var successCount = 0;
+            var totalCount = testCount;
+            var latestProgress = -1.0f;
             while (testCount > 0)
             {
-                var from = box.GenerateRandomIn();
-                var to = box.GenerateRandomIn();
+                var from = (uint)OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(data.VertexCount - 1) + 1;
+                var to = (uint)OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(data.VertexCount - 1) + 1;
 
-                var fromPoint = router.Resolve(Vehicle.Car, from);
-                var toPoint = router.Resolve(Vehicle.Car, to);
+                var route = router.Calculate(data, interpreter, vehicle, from, to);
 
-                if (fromPoint != null && toPoint != null)
+                if (route != null)
                 {
-                    var route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
-                    if (route != null)
-                    {
-                        successCount++;
-                    }
+                    successCount++;
                 }
-
                 testCount--;
 
                 // report progress.
-                float progress = (float)System.Math.Round(((double)(totalCount - testCount)  / (double)totalCount) * 100);
+                var progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("LiveRouting", TraceEventType.Information,
                         "Routing... {0}%", progress);
                     latestProgress = progress;
                 }
@@ -114,13 +119,12 @@ namespace OsmSharp.Test.Performance.Routing
         /// <summary>
         /// Tests routing from a serialized routing file.
         /// </summary>
-        public static void TestSerializedRouting(string name, string routeFile, 
-            GeoCoordinateBox box, int testCount)
+        public static void TestSerializedRouting(string name, string routeFile, int testCount)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", routeFile));
             var stream = testFile.OpenRead();
 
-            LiveRoutingTest.TestSerializedRouting(name, stream, box, testCount);
+            LiveRoutingTest.TestSerializedRouting(name, stream, testCount);
 
             stream.Dispose();
         }

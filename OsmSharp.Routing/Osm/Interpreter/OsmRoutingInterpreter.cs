@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Units.Speed;
@@ -88,7 +89,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         private void FillRelevantTags()
         {
-            _relevantRoutingKeys = new HashSet<string> { "oneway", "highway", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction" }; 
+            _relevantRoutingKeys = new HashSet<string> { "oneway", "highway", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction", "type", "barrier" }; 
             _relevantKeys = new HashSet<string> { "name" };
         }
 
@@ -117,7 +118,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
                 switch(key)
                 {
                     case "oneway":
-                        return value == "yes" || value == "reverse";
+                        return value == "yes" || value == "reverse" || value == "-1";
                     case "maxspeed":
                         return TagExtensions.TryParseSpeed(value, out speed);
                 }
@@ -178,7 +179,22 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <returns></returns>
         public bool IsRestriction(OsmGeoType type, TagsCollectionBase tags)
         { // at least there need to be some tags.
-            return type == OsmGeoType.Node && tags != null && tags.Count > 0;
+            if (type == OsmGeoType.Relation)
+            { // filter out relation-based turn-restrictions.
+                if (tags != null &&
+                    tags.ContainsKeyValue("type", "restriction"))
+                { // yep, there's a restriction here!
+                    return true;
+                }
+            }
+            else if(type == OsmGeoType.Node)
+            { // a node is possibly a restriction too.
+                if(tags != null)
+                {
+                    return tags.ContainsKey("barrier");
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -186,19 +202,118 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public List<Vehicle> CalculateRestrictions(Node node)
+        public List<string> CalculateRestrictions(Node node)
         {
-            return new List<Vehicle>();
+            var restrictedVehicles = new List<string>(2);
+            if(node != null &&
+                node.Tags != null)
+            {
+                string barrierValue;
+                if (node.Tags.TryGetValue("barrier", out barrierValue))
+                { // there is a barrier: http://wiki.openstreetmap.org/wiki/Key:barrier
+                    if(barrierValue == "bollard")
+                    { // there is a bollard, implies a restriction for all motor vehicles.
+                        // http://wiki.openstreetmap.org/wiki/Tag:barrier%3Dbollard
+                        restrictedVehicles.Add(VehicleType.MotorVehicle); // all motor vehicles are restricted.
+                    }
+                }
+                string bicyleValue;
+                if (node.Tags.TryGetValue("bicycle", out bicyleValue) &&
+                    bicyleValue == "no")
+                {
+                    restrictedVehicles.Add(VehicleType.Bicycle);
+                }
+                string pedestrianValue;
+                if (node.Tags.TryGetValue("foot", out pedestrianValue) &&
+                    bicyleValue == "no")
+                {
+                    restrictedVehicles.Add(VehicleType.Bicycle);
+                }
+            }
+            return restrictedVehicles;
         }
 
         /// <summary>
         /// Returns all restrictions that are represented by the given node.
         /// </summary>
-        /// <param name="completeRelation"></param>
+        /// <param name="relation"></param>
+        /// <param name="source"></param>
         /// <returns></returns>
-        public List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(CompleteRelation completeRelation)
+        public List<KeyValuePair<string, long[]>> CalculateRestrictions(Relation relation, IOsmGeoSource source)
         {
-            return new List<KeyValuePair<Vehicle, long[]>>();
+            var restrictions = new List<KeyValuePair<string, long[]>>();
+            if(relation.Tags.ContainsKeyValue("type", "restriction") &&
+                relation.Members != null)
+            { // regular restriction.
+                Way fromWay = null, toWay = null, viaWay = null;
+                Node viaNode = null;
+                for(int idx = 0; idx < relation.Members.Count; idx++)
+                {
+                    var member = relation.Members[idx];
+                    if(member.MemberRole == "from")
+                    { // the from-way.
+                        fromWay = source.GetWay(member.MemberId.Value);
+                    }
+                    else if(member.MemberRole == "to")
+                    { // the to-way.
+                        toWay = source.GetWay(member.MemberId.Value);
+                    }
+                    else if(member.MemberRole == "via")
+                    { // the via node/way.
+                        if (member.MemberType.Value == OsmGeoType.Node)
+                        {
+                            viaNode = source.GetNode(member.MemberId.Value);
+                        }
+                        else if(member.MemberType.Value == OsmGeoType.Way)
+                        {
+                            viaWay = source.GetWay(member.MemberId.Value);
+                        }
+                    }
+                }
+
+                // check if all data was found and type of restriction.
+                if(fromWay != null && toWay != null &&
+                    fromWay.Nodes.Count > 1 && toWay.Nodes.Count > 1)
+                { // ok, from-to is there and has enough nodes.
+                    if(viaWay != null)
+                    { // via-part is a way.
+
+                    }
+                    else if (viaNode != null)
+                    { // via-node is a node.
+                        var restriction = new long[3];
+                        // get from.
+                        if (fromWay.Nodes[0] == viaNode.Id)
+                        { // next node is from-node.
+                            restriction[0] = fromWay.Nodes[1];
+                        }
+                        else if(fromWay.Nodes[fromWay.Nodes.Count - 1] == viaNode.Id)
+                        { // previous node is from-node.
+                            restriction[0] = fromWay.Nodes[fromWay.Nodes.Count - 2];
+                        }
+                        else
+                        { // not found!
+                            return restrictions;
+                        }
+                        restriction[1] = viaNode.Id.Value;
+                        // get to.
+                        if (toWay.Nodes[0] == viaNode.Id)
+                        { // next node is to-node.
+                            restriction[2] = toWay.Nodes[1];
+                        }
+                        else if (toWay.Nodes[toWay.Nodes.Count - 1] == viaNode.Id)
+                        { // previous node is to-node.
+                            restriction[2] = toWay.Nodes[toWay.Nodes.Count - 2];
+                        }
+                        else
+                        { // not found!
+                            return restrictions;
+                        }
+                        restrictions.Add(new KeyValuePair<string, long[]>(VehicleType.Vehicle, restriction));
+                    }
+                }
+            }
+            return restrictions;
         }
     }
 }

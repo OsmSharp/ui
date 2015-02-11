@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,7 +22,7 @@ using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics;
 using OsmSharp.Units.Distance;
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// The default search delta.
         /// </summary>
-        private const float DefaultSearchDelta = .01f;
+        protected float DefaultSearchDelta = .0075f;
 
         /// <summary>
         /// Holds the graph object containing the routable network.
@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
         /// </summary>
-        private readonly IBasicRouter<TEdgeData> _router;
+        private readonly IRoutingAlgorithm<TEdgeData> _router;
 
         /// <summary>
         /// Interpreter for the routing network.
@@ -65,13 +65,13 @@ namespace OsmSharp.Routing.Routers
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
         public TypedRouter(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
-            IBasicRouter<TEdgeData> router)
+            IRoutingAlgorithm<TEdgeData> router)
         {
             _dataGraph = graph;
             _interpreter = interpreter;
             _router = router;
 
-            _routerPoints = new Dictionary<GeoCoordinate, RouterPoint>();
+            _routerPoints = new Dictionary<string, Dictionary<GeoCoordinate, RouterPoint>>();
             _resolvedGraphs = new Dictionary<Vehicle, TypedRouterResolvedGraph>();
         }
 
@@ -727,7 +727,7 @@ namespace OsmSharp.Routing.Routers
                 { // get the real neighbour.
                     checkIntermediates = true;
                     RouterPoint resolvedPoint;
-                    if (!this.GetRouterPoint(previousVertex, out resolvedPoint))
+                    if (!this.GetRouterPoint(vehicle, previousVertex, out resolvedPoint))
                     { // oeps, point not found!
                         throw new Exception("Resolved point detected but not found as a router point!");
                     }
@@ -758,7 +758,7 @@ namespace OsmSharp.Routing.Routers
                 { // get the real neighbour.
                     checkIntermediates = true;
                     RouterPoint resolvedPoint;
-                    if (!this.GetRouterPoint(nextVertex, out resolvedPoint))
+                    if (!this.GetRouterPoint(vehicle, nextVertex, out resolvedPoint))
                     { // oeps, point not found!
                         throw new Exception("Resolved point detected but not found as a router point!");
                     }
@@ -940,15 +940,22 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 TEdgeData data;
-                if(_dataGraph.GetEdge((uint)vertex1, (uint)vertex2, out data))
-                { // edge was found, yay!
-                    return data;
+                if(!this.GetEdge(_dataGraph, (uint)vertex1, (uint)vertex2, out data))
+                { // try reverse edge.
+                    TEdgeData reverse = default(TEdgeData);
+                    if(!this.GetEdge(_dataGraph, (uint)vertex2, (uint)vertex1, out reverse))
+                    {
+                        throw new Exception(string.Format("Edge {0}->{1} not found!",
+                            vertex1, vertex2));
+                    }
+                    return (TEdgeData)reverse.Reverse();
                 }
+                return data;
             }
             else
             { // one of the vertices was a resolved vertex.
                 // edge should be in the resolved graph.
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = graph.GetEdges(vertex1);
+                var arcs = graph.GetEdges(vertex1);
                 foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
                 {
                     if (arc.Key == vertex2)
@@ -976,14 +983,27 @@ namespace OsmSharp.Routing.Routers
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
                 ICoordinateCollection shape;
-                if (_dataGraph.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
-                { // edge was found, yay!
-                    if(shape != null)
-                    {
-                        return shape.ToArray();
+                if (!this.GetEdgeShape(_dataGraph, (uint)vertex1, (uint)vertex2, out shape))
+                { // try the reverse.
+                    if (!this.GetEdgeShape(_dataGraph, (uint)vertex2, (uint)vertex1, out shape))
+                    { // hmm information is missing! 
+                        throw new Exception(string.Format("Edge {0}->{1} not found!",
+                            vertex1, vertex2));
                     }
-                    return null;
+                    if (shape != null)
+                    {
+                        shape.Reset();
+                        var list = shape.ToList();
+                        list.Reverse();
+                        return list.ToArray();
+                    }
                 }
+                if (shape != null)
+                {
+                    shape.Reset();
+                    return shape.ToArray();
+                }
+                return null;
             }
             else
             { // one of the vertices was a resolved vertex.
@@ -993,7 +1013,7 @@ namespace OsmSharp.Routing.Routers
                 {
                     if (arc.Key == vertex2)
                     {
-                        if(arc.Value.Coordinates == null)
+                        if (arc.Value.Coordinates == null)
                         {
                             return null;
                         }
@@ -1037,6 +1057,47 @@ namespace OsmSharp.Routing.Routers
         }
 
 
+        /// <summary>
+        /// Returns an edge with a shape.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual bool GetEdge(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out TEdgeData data)
+        {
+            if (!graph.CanHaveDuplicates)
+            {
+                return graph.GetEdge(from, to, out data);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// Returns an edge with a shape.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected virtual bool GetEdgeShape(IGraphReadOnly<TEdgeData> graph, uint from, uint to, out ICoordinateCollection data)
+        {
+            if (!graph.CanHaveDuplicates)
+            {
+                return graph.GetEdgeShape(from, to, out data);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+
         #endregion
 
         #region Resolving Points
@@ -1044,44 +1105,64 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds all resolved points.
         /// </summary>
-        private readonly Dictionary<GeoCoordinate, RouterPoint> _routerPoints;
+        private readonly Dictionary<string, Dictionary<GeoCoordinate, RouterPoint>> _routerPoints;
 
         /// <summary>
         /// Normalizes the router point.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected RouterPoint Normalize(RouterPoint point)
+        protected RouterPoint Normalize(Vehicle vehicle, RouterPoint point)
         {
-            RouterPoint normalize;
-            if (!_routerPoints.TryGetValue(point.Location, out normalize))
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            if(!_routerPoints.TryGetValue(vehicle.UniqueName, out perLocation))
             {
-                _routerPoints.Add(point.Location, point);
+                perLocation = new Dictionary<GeoCoordinate, RouterPoint>();
+                perLocation.Add(point.Location, point);
+                _routerPoints.Add(vehicle.UniqueName, perLocation);
+                return point;
+            }
+            RouterPoint normalize;
+            if (!perLocation.TryGetValue(point.Location, out normalize))
+            {
+                perLocation.Add(point.Location, point);
                 normalize = point;
             }
             return normalize;
         }
 
         /// <summary>
-        /// Returns a routerpoint for the given location.
+        /// Returns a routerpoint for the given location and vehicle profile.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="location"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected bool GetRouterPoint(GeoCoordinate location, out RouterPoint point)
+        protected bool GetRouterPoint(Vehicle vehicle, GeoCoordinate location, out RouterPoint point)
         {
-            return _routerPoints.TryGetValue(location, out point);
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            point = null;
+            return _routerPoints.TryGetValue(vehicle.UniqueName, out perLocation) &&
+                perLocation != null &&
+                perLocation.TryGetValue(location, out point);
         }
 
         /// <summary>
         /// Returns a routerpoint for the given resolvedId.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="resolvedId"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        protected bool GetRouterPoint(long resolvedId, out RouterPoint point)
+        protected bool GetRouterPoint(Vehicle vehicle, long resolvedId, out RouterPoint point)
         {
-            point = _routerPoints.Values.First(x => x.Id == resolvedId);
+            Dictionary<GeoCoordinate, RouterPoint> perLocation;
+            point = null;
+            if (_routerPoints.TryGetValue(vehicle.UniqueName, out perLocation))
+            {
+                point = perLocation.Values.First(x => x.Id == resolvedId);
+            }
             return point != null;
         }
 
@@ -1105,7 +1186,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, null, null, verticesOnly);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate, null, null, verticesOnly);
         }
 
         /// <summary>
@@ -1155,7 +1236,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, TagsCollectionBase pointTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate, pointTags, verticesOnly);
         }
 
         /// <summary>
@@ -1211,7 +1292,7 @@ namespace OsmSharp.Routing.Routers
         public virtual RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollectionBase matchingTags, bool verticesOnly)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags, verticesOnly);
         }
 
@@ -1262,7 +1343,7 @@ namespace OsmSharp.Routing.Routers
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
                     }
-                    return this.Normalize(new RouterPoint(result.Vertex1.Value, new GeoCoordinate(latitude, longitude)));
+                    return this.Normalize(vehicle, new RouterPoint(result.Vertex1.Value, vehicle, new GeoCoordinate(latitude, longitude)));
                 }
                 else if(result.IntermediateIndex.HasValue)
                 { // an exact match with an intermediate coordinate.
@@ -1285,7 +1366,7 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate);
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate);
         }
 
         /// <summary>
@@ -1316,7 +1397,7 @@ namespace OsmSharp.Routing.Routers
         public virtual RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate,
             IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
-            return this.Resolve(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate,
+            return this.Resolve(vehicle, this.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags);
         }
 
@@ -1379,7 +1460,7 @@ namespace OsmSharp.Routing.Routers
                     vehicle.ToString()));
             }
 
-            return this.Search(vehicle, TypedRouter<TEdgeData>.DefaultSearchDelta, coordinate, verticesOnly);
+            return this.Search(vehicle,this.DefaultSearchDelta, coordinate, verticesOnly);
         }
 
         /// <summary>
@@ -1517,7 +1598,7 @@ namespace OsmSharp.Routing.Routers
                 RouterPoint intermediaRouterpoint;
                 for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude),
+                    if (this.GetRouterPoint(vehicle, new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude),
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1635,7 +1716,7 @@ namespace OsmSharp.Routing.Routers
                         vertices[idx + 1] = intermediateId;
 
                         // add as a resolved point.
-                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                        this.Normalize(vehicle, new RouterPoint(intermediateId, vehicle, new GeoCoordinate(
                             edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
@@ -1669,7 +1750,7 @@ namespace OsmSharp.Routing.Routers
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
                 if (new GeoCoordinate(latitude, longitude).DistanceReal(resolvedCoordinate).Value < epsilon.Value)
                 { // distance to this vertex is small enough to consider the equal.
-                    return new RouterPoint(vertices[idx], new GeoCoordinate(latitude, longitude));
+                    return new RouterPoint(vertices[idx], vehicle, new GeoCoordinate(latitude, longitude));
                 }
             }
             throw new Exception("Intermediate point not in graph!");
@@ -1700,7 +1781,7 @@ namespace OsmSharp.Routing.Routers
                 RouterPoint intermediaRouterpoint;
                 for (int idx = 0; idx < edgeCoordinates.Length; idx++)
                 {
-                    if (this.GetRouterPoint(new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude), 
+                    if (this.GetRouterPoint(vehicle, new GeoCoordinate(edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude), 
                         out intermediaRouterpoint))
                     {
                         intermediates.Add(intermediaRouterpoint.Id);
@@ -1805,7 +1886,7 @@ namespace OsmSharp.Routing.Routers
                         vertices[idx + 1] = intermediateId;
 
                         // add as a resolved point.
-                        this.Normalize(new RouterPoint(intermediateId, new GeoCoordinate(
+                        this.Normalize(vehicle, new RouterPoint(intermediateId, vehicle, new GeoCoordinate(
                             edgeCoordinates[idx].Latitude, edgeCoordinates[idx].Longitude)));
 
                         previousVertex = intermediateId;
@@ -1878,7 +1959,7 @@ namespace OsmSharp.Routing.Routers
                 graph.GetVertex(vertices[idx], out latitude, out longitude);
                 if(new GeoCoordinate(latitude, longitude).DistanceReal(resolvedCoordinate).Value < epsilon.Value)
                 { // distance to this vertex is small enough to consider the equal.
-                    return new RouterPoint(vertices[idx], new GeoCoordinate(latitude, longitude));
+                    return new RouterPoint(vertices[idx], vehicle, new GeoCoordinate(latitude, longitude));
                 }
             }
 
@@ -1913,8 +1994,8 @@ namespace OsmSharp.Routing.Routers
                                       edgeData.Tags,
                                       !edgeData.Forward));
 
-            return this.Normalize(
-                        new RouterPoint(resolvedVertex, resolvedCoordinate));
+            return this.Normalize(vehicle,
+                        new RouterPoint(resolvedVertex, vehicle, resolvedCoordinate));
         }
 
         #region Resolved Graph Routing

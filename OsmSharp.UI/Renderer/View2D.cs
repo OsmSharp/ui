@@ -398,26 +398,19 @@ namespace OsmSharp.UI.Renderer
                 return true;
             }
             return false;
-
-            //double minX;
-            //if (right < _minX)
-            //{ // completely to the left of this view.
-            //    return false;
-            //}
-            ////if (top < _maxY)
-            ////{ // completely below this view.
-            ////    return false;
-            ////}
-            ////if (bottom > _minY)
-            ////{ // completely above this view.
-            ////    return false;
-            ////}
-            //if (left > _maxX)
-            //{ // completely to the right of this view.
-            //    return false;
-            //}
-            //return true;
 		}
+
+        /// <summary>
+        /// Creates a transformation matrix that transforms coordinates from the view port to scene-coordinates.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <returns></returns>
+        public Matrix2D CreateFromViewPort(double pixelsWidth, double pixelsHeight)
+        {
+            // from viewport means to rectangle.
+            return Matrix2D.ToRectangle(_rectangle, pixelsWidth, pixelsHeight, _invertX, _invertY);
+        }
 
         /// <summary>
         /// Returns the coordinates represented by the given pixel in the given viewport.
@@ -428,21 +421,47 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
         public double[] FromViewPort(double pixelsWidth, double pixelsHeight, double pixelX, double pixelY)
-        { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner and increases to 
-			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
+        { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner. 
+            // return _rectangle.TransformFrom(pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
+            double x, y;
+            var fromViewport = this.CreateFromViewPort(pixelsWidth, pixelsHeight);
+            fromViewport.Apply(pixelX, pixelY, out x, out y);
+            return new double[] { x, y };
         }
 
-		/// <summary>
-		/// Froms the view port.
-		/// </summary>
-		/// <returns>The view port.</returns>
-		/// <param name="pixelsWidth">Pixels width.</param>
-		/// <param name="pixelsHeight">Pixels height.</param>
-		/// <param name="pixelsX">Pixels x.</param>
-		/// <param name="pixelsY">Pixels y.</param>
-		public double[][] FromViewPort(double pixelsWidth, double pixelsHeight, double[] pixelsX, double[] pixelsY) {
-			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelsX, pixelsY);
-		}
+        /// <summary>
+        /// Froms the view port.
+        /// </summary>
+        /// <returns>The view port.</returns>
+        /// <param name="pixelsWidth">Pixels width.</param>
+        /// <param name="pixelsHeight">Pixels height.</param>
+        /// <param name="pixelsX">Pixels x.</param>
+        /// <param name="pixelsY">Pixels y.</param>
+        public double[][] FromViewPort(double pixelsWidth, double pixelsHeight, double[] pixelsX, double[] pixelsY)
+        {
+            //return _rectangle.TransformFrom(pixelsWidth, pixelsHeight, _invertX, _invertY, pixelsX, pixelsY);
+            double[][] result = new double[pixelsX.Length][];
+            var fromView = this.CreateFromViewPort(pixelsWidth, pixelsHeight);
+            for (int idx = 0; idx < pixelsX.Length; idx++)
+            {
+                double x, y;
+                fromView.Apply(pixelsX[idx], pixelsY[idx], out x, out y);
+                result[idx] = new double[] { x, y };
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a transformation matrix that transforms coordinates from the scene to the given viewport.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <returns></returns>
+        public Matrix2D CreateToViewPort(double pixelsWidth, double pixelsHeight)
+        {
+            // to viewport means from rectangle.
+            return Matrix2D.FromRectangle(_rectangle, pixelsWidth, pixelsHeight, _invertX, _invertY);
+        }
 
         /// <summary>
         /// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
@@ -454,34 +473,50 @@ namespace OsmSharp.UI.Renderer
         /// <returns></returns>
         public double[][] ToViewPort(double pixelsWidth, double pixelsHeight, double[] sceneX, double[] sceneY)
         { // the right and going down.
-			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
-		}
+            //return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
+            double[][] result = new double[sceneX.Length][];
+            var toView = this.CreateToViewPort(pixelsWidth, pixelsHeight);
+            for (int idx = 0; idx < sceneX.Length; idx++)
+            {
+                double x, y;
+                toView.Apply(sceneX[idx], sceneY[idx], out x, out y);
+                result[idx] = new double[] { x, y };
+            }
+            return result;
+        }
 
-		/// <summary>
-		/// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
-		/// </summary>
-		/// <param name="pixelsWidth"></param>
-		/// <param name="pixelsHeight"></param>
-		/// <param name="sceneX"></param>
-		/// <param name="sceneY"></param>
-		/// <returns></returns>
-		public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
-		{ // the right and going down.
-            return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
-		}
+        /// <summary>
+        /// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="sceneX"></param>
+        /// <param name="sceneY"></param>
+        /// <returns></returns>
+        public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
+        { // the right and going down.
+            //return _rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
+            double x, y;
+            var toViewport = this.CreateToViewPort(pixelsWidth, pixelsHeight);
+            toViewport.Apply(sceneX, sceneY, out x, out y);
+            return new double[] { x, y };
+        }
 
-		/// <summary>
-		/// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
-		/// </summary>
-		/// <param name="pixelsWidth"></param>
-		/// <param name="pixelsHeight"></param>
-		/// <param name="sceneX"></param>
-		/// <param name="sceneY"></param>
-		/// <returns></returns>
-		public void ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY, double[] transformed)
-		{ // the right and going down.
-			_rectangle.TransformTo(pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY, transformed);
-		}
+        /// <summary>
+        /// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="sceneX"></param>
+        /// <param name="sceneY"></param>
+        /// <returns></returns>
+        public void ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY, double[] transformed)
+        { // the right and going down.
+            double x, y;
+            this.CreateToViewPort(pixelsWidth, pixelsHeight).Apply(sceneX, sceneY, out x, out y);
+            transformed[0] = x;
+            transformed[1] = y;
+        }
 
         /// <summary>
         /// Calculates the zoom factor for the given view when at the given resolution.

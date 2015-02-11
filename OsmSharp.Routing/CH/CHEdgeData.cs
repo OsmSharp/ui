@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -25,162 +25,205 @@ using System.Linq;
 namespace OsmSharp.Routing.CH.PreProcessing
 {
     /// <summary>
-    /// Represents the data on a CH edge.
+    /// Represents the data on a contracted edge.
     /// </summary>
     public struct CHEdgeData : IGraphEdgeData
     {
         /// <summary>
-        /// Holds the contracted direction.
+        /// Bitmask holding status info [forwardMove(1), backwardMove(2), forwardTags(4), contracted(8)]
         /// </summary>
-        /// <remarks>0: uncontracted, 1: tohigher, 2: tolower</remarks>
-        private byte _contractedDirection;
+        private byte _meta;
 
         /// <summary>
-        /// Gets/sets the value.
-        /// </summary>
-        internal byte ContractedDirectionValue
-        {
-            get
-            {
-                return _contractedDirection;
-            }
-            set
-            {
-                _contractedDirection = value;
-            }
-        }
-
-        /// <summary>
-        /// Sets the contracted direction flags.
-        /// </summary>
-        /// <param name="toHigher"></param>
-        /// <param name="toBackward"></param>
-        public void SetContractedDirection(bool toHigher, bool toBackward)
-        {
-            if(!toHigher && !toBackward)
-            {
-                _contractedDirection = 0;
-            }
-            else if(toHigher)
-            {
-                _contractedDirection = 1;
-            }
-            else
-            {
-                _contractedDirection = 2;
-            }
-        }
-
-        /// <summary>
-        /// Gets the to higher flag.
-        /// </summary>
-        public bool ToHigher
-        {
-            get
-            {
-                return _contractedDirection == 1;
-            }
-        }
-
-        /// <summary>
-        /// Gets the to higher flag.
-        /// </summary>
-        public bool ToLower
-        {
-            get
-            {
-                return _contractedDirection == 2;
-            }
-        }
-
-        /// <summary>
-        /// Gets the forward flag.
-        /// </summary>
-        public bool Forward
-        {
-            get
-            {
-                return this.ForwardWeight != float.MaxValue;
-            }
-        }
-
-        /// <summary>
-        /// Gets the backward flag.
-        /// </summary>
-        public bool Backward
-        {
-            get
-            {
-                return this.BackwardWeight != float.MaxValue;
-            }
-        }
-
-        /// <summary>
-        /// Holds the forward weight.
-        /// </summary>
-        public float ForwardWeight { get; set; }
-
-        /// <summary>
-        /// Holds the forward contracted id.
-        /// </summary>
-        public uint ForwardContractedId { get; set; }
-
-        /// <summary>
-        /// Holds the backward weight.
-        /// </summary>
-        public float BackwardWeight { get; set; }
-
-        /// <summary>
-        /// Holds the backward contracted id.
-        /// </summary>
-        public uint BackwardContractedId { get; set; }
-
-        /// <summary>
-        /// Returns true if the backward or forward edge represents a neighbour relation.
-        /// </summary>
-        public bool RepresentsNeighbourRelations
-        {
-            get { return this.BackwardContractedId == 0 ||
-                this.ForwardContractedId == 0; }
-        }
-        /// <summary>
-        /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
+        /// Contains a value that either represents the contracted vertex of the tags id.
         /// </summary>
         private uint _value;
 
         /// <summary>
-        /// Gets/sets the value.
+        /// Creates a new contracted edge that represents normal neighbour relations.
         /// </summary>
-        internal uint TagsValue
+        /// <param name="tagsId"></param>
+        /// <param name="tagsForward"></param>
+        /// <param name="canMoveforward"></param>
+        /// <param name="canMoveBackward"></param>
+        /// <param name="weight"></param>
+        public CHEdgeData(uint tagsId, bool tagsForward, bool canMoveforward, bool canMoveBackward, float weight)
+            : this()
+        {
+            _meta = 0;
+
+            this.CanMoveBackward = canMoveBackward;
+            this.CanMoveForward = canMoveforward;
+            this.Tags = tagsId;
+            this.Forward = tagsForward;
+            this.Weight = weight;
+        }
+
+        /// <summary>
+        /// Creates a new contracted edge.
+        /// </summary>
+        /// <param name="contractedId"></param>
+        /// <param name="canMoveforward"></param>
+        /// <param name="canMoveBackward"></param>
+        /// <param name="weight"></param>
+        public CHEdgeData(uint contractedId, bool canMoveforward, bool canMoveBackward, float weight)
+            : this()
+        {
+            _meta = 0;
+
+            this.CanMoveBackward = canMoveBackward;
+            this.CanMoveForward = canMoveforward;
+            this.ContractedId = contractedId;
+            this.Weight = weight;
+        }
+
+        /// <summary>
+        /// Creates a new contracted edge using raw data.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="weight"></param>
+        /// <param name="meta"></param>
+        public CHEdgeData(uint value, float weight, byte meta)
+            : this()
+        {
+            _meta = meta;
+            _value = value;
+
+            this.Weight = weight;
+        }
+
+        /// <summary>
+        /// Gets the raw meta data.
+        /// </summary>
+        public byte Meta
+        {
+            get
+            {
+                return _meta;
+            }
+        }
+
+        /// <summary>
+        /// Gets the raw value.
+        /// </summary>
+        public uint Value
         {
             get
             {
                 return _value;
             }
-            set
+        }
+
+        /// <summary>
+        /// Holds the weight.
+        /// </summary>
+        public float Weight { get; private set; }
+
+        /// <summary>
+        /// Returns true if you can move forward along this edge.
+        /// </summary>
+        public bool CanMoveForward
+        {
+            get
             {
+                return (_meta & (1 << 0)) != 0;
+            }
+            private set
+            {
+                if (value)
+                {
+                    _meta = (byte)(_meta | 1);
+                }
+                else
+                {
+                    _meta = (byte)(_meta & (255 - 1));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if you can move backward along this edge.
+        /// </summary>
+        public bool CanMoveBackward
+        {
+            get
+            {
+                return (_meta & (1 << 1)) != 0;
+            }
+            private set
+            {
+                if (value)
+                {
+                    _meta = (byte)(_meta | 2);
+                }
+                else
+                {
+                    _meta = (byte)(_meta & (255 - 2));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Holds the forward contracted id.
+        /// </summary>
+        public uint ContractedId
+        {
+            get
+            {
+                if (!this.RepresentsNeighbourRelations)
+                {
+                    return _value;
+                }
+                return uint.MaxValue;
+            }
+            private set
+            {
+                // set contracted.
+                _meta = (byte)(_meta | 8);
                 _value = value;
+            }
+        }
+
+        /// <summary>
+        /// Returns true when this edge is not contracted and represents an normal neighbour relation.
+        /// </summary>
+        public bool RepresentsNeighbourRelations
+        {
+            get
+            {
+                return !this.IsContracted;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this edge is a contracted edge.
+        /// </summary>
+        public bool IsContracted
+        {
+            get
+            {
+                return (_meta & (1 << 3)) != 0;
             }
         }
 
         /// <summary>
         /// Flag indicating if the tags are forward relative to this edge or not.
         /// </summary>
-        public bool TagsForward
+        public bool Forward
         {
             get
-            { // true when first bit is 0.
-                return _value % 2 == 0;
-            }
-            set
             {
-                if (_value % 2 == 0)
-                { // true already.
-                    if (!value) { _value = _value + 1; }
+                return (_meta & (1 << 2)) != 0;
+            }
+            private set
+            {
+                if (value)
+                {
+                    _meta = (byte)(_meta | 4);
                 }
                 else
-                { // false already.
-                    if (value) { _value = _value - 1; }
+                {
+                    _meta = (byte)(_meta & (255 - 4));
                 }
             }
         }
@@ -192,21 +235,19 @@ namespace OsmSharp.Routing.CH.PreProcessing
         {
             get
             {
-                return _value / 2;
+                if (this.IsContracted)
+                {
+                    return uint.MaxValue;
+                }
+                return _value;
             }
             set
             {
-                if (_value % 2 == 0)
-                { // true already.
-                    _value = value * 2;
-                }
-                else
-                { // false already.
-                    _value = (value * 2) + 1;
-                }
+                // set uncontracted.
+                _meta = (byte)(_meta & (255 - 8));
+                _value = value;
             }
         }
-
 
         /// <summary>
         /// Returns the exact inverse of this edge.
@@ -214,30 +255,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         public IGraphEdgeData Reverse()
         {
-            var reverse = new CHEdgeData();
-
-            // forward/backward specific info.
-            reverse.BackwardWeight = this.ForwardWeight;
-            reverse.BackwardContractedId = this.ForwardContractedId;
-            reverse.ForwardContractedId = this.BackwardContractedId;
-            reverse.ForwardWeight = this.BackwardWeight;
-
-            // tags.
-            reverse.Tags = this.Tags;
-            reverse.TagsForward = !this.TagsForward;
-
-            // contracted direction info.
-            reverse._contractedDirection = this._contractedDirection;
-            switch(_contractedDirection)
+            if (this.IsContracted)
             {
-                case 1:
-                    reverse._contractedDirection = 2;
-                    break;
-                case 2:
-                    reverse._contractedDirection = 1;
-                    break;
+                return new CHEdgeData(this.ContractedId, this.CanMoveBackward, this.CanMoveForward, this.Weight);
             }
-            return reverse;
+            return new CHEdgeData(this.Tags, !this.Forward,
+                this.CanMoveBackward, this.CanMoveForward, this.Weight);
         }
 
         /// <summary>
@@ -248,12 +271,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public bool Equals(IGraphEdgeData other)
         {
             var otherEdge = (CHEdgeData)other;
-            return (otherEdge._contractedDirection == this._contractedDirection &&
-                otherEdge._value == this._value &&
-                otherEdge.BackwardContractedId == this.BackwardContractedId &&
-                otherEdge.BackwardWeight == this.BackwardWeight &&
-                otherEdge.ForwardWeight == this.ForwardWeight &&
-                otherEdge.ForwardContractedId == this.ForwardContractedId);
+            return otherEdge._value == this._value &&
+                otherEdge._meta == this._meta &&
+                otherEdge.Weight == this.Weight;
         }
     }
 
@@ -271,54 +291,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
             var result = new List<Edge<CHEdgeData>>(edges.Count);
             foreach (var edge in edges)
             {
-                if ((edge.EdgeData.Backward && edge.EdgeData.BackwardContractedId == 0) || (edge.EdgeData.Forward && edge.EdgeData.ForwardContractedId == 0))
+                if (!edge.EdgeData.IsContracted)
                 {
                     result.Add(edge);
                 }
             }
             return result;
-        }
-
-        /// <summary>
-        /// Returns the arcs that point to higher vertices.
-        /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        public static List<Edge<CHEdgeData>> GetArcsHigher(this IGraph<CHEdgeData> graph,
-            uint vertexId)
-        {
-            var arcs = graph.GetEdges(vertexId).ToList();
-            var higherArcs = new List<Edge<CHEdgeData>>();
-            for (int idx = 0; idx < arcs.Count; idx++)
-            {
-                if (arcs[idx].EdgeData.ToHigher)
-                {
-                    higherArcs.Add(arcs[idx]);
-                }
-            }
-            return higherArcs;
-        }
-
-        /// <summary>
-        /// Returns the arcs that point to lower vertices.
-        /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        public static List<Edge<CHEdgeData>> GetArcsLower(this IGraph<CHEdgeData> graph,
-            uint vertexId)
-        {
-            var arcs = graph.GetEdges(vertexId).ToList();
-            var higherArcs = new List<Edge<CHEdgeData>>();
-            for (int idx = 0; idx < arcs.Count; idx++)
-            {
-                if (!arcs[idx].EdgeData.ToHigher)
-                {
-                    higherArcs.Add(arcs[idx]);
-                }
-            }
-            return higherArcs;
         }
     }
 }

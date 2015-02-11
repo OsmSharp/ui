@@ -18,40 +18,44 @@
 
 using System;
 using OsmSharp.UI;
+#if __UNIFIED__
+using UIKit;
+#else
 using MonoTouch.UIKit;
+#endif
 
 namespace OsmSharp.iOS.UI.Controls
 {
-    /// <summary>
-    /// Abstract definition of a map marker host.
-    /// </summary>
-    public interface IMapControlHost : IMapView
-    {        
-        /// <summary>
-        /// Adds a view to this host.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <remarks>This allows markers and controls to add subviews.</remarks>
-        void AddView(UIView view);
+	/// <summary>
+	/// Abstract definition of a map marker host.
+	/// </summary>
+	public interface IMapControlHost : IMapView
+	{        
+		/// <summary>
+		/// Adds a view to this host.
+		/// </summary>
+		/// <param name="view"></param>
+		/// <remarks>This allows markers and controls to add subviews.</remarks>
+		void AddView(UIView view);
 
-        /// <summary>
-        /// Removes a view from this host.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <remarks>This allows markers and controls to remove subviews.</remarks>
-        void RemoveView(UIView view);
+		/// <summary>
+		/// Removes a view from this host.
+		/// </summary>
+		/// <param name="view"></param>
+		/// <remarks>This allows markers and controls to remove subviews.</remarks>
+		void RemoveView(UIView view);
 
-        /// <summary>
-        /// Notifies this host that the given control has changed.
-        /// </summary>
-        /// <param name="control">Control.</param>
-        void NotifyControlChange(MapControl control);
+		/// <summary>
+		/// Notifies this host that the given control has changed.
+		/// </summary>
+		/// <param name="control">Control.</param>
+		void NotifyControlChange(MapControl control);
 
-        /// <summary>
-        /// Notifies this host that the control was clicked.
-        /// </summary>
-        /// <param name="control">Control.</param>
-        void NotifyControlClicked(MapControl control);
-    }
+		/// <summary>
+		/// Notifies this host that the control was clicked.
+		/// </summary>
+		/// <param name="control">Control.</param>
+		void NotifyControlClicked(MapControl control);
+	}
 }
 

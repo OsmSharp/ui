@@ -14,8 +14,6 @@
     <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +33,29 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Output\OsmSharp.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyVersion.cs">
@@ -63,6 +84,7 @@
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\PermutationEnumerator.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
+    <Compile Include="Collections\PriorityQueues\BinaryHeapLong.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
@@ -97,6 +119,8 @@
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
     <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
     <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\Features\Feature.cs" />
+    <Compile Include="Geo\Features\FeatureCollection.cs" />
     <Compile Include="Geo\GeoCoordinate.cs" />
     <Compile Include="Geo\GeoCoordinateBox.cs" />
     <Compile Include="Geo\GeoCoordinateLine.cs" />
@@ -128,11 +152,11 @@
     <Compile Include="Geo\Projections\WebMercator.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
-    <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
-    <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
-    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
-    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
-    <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\FeatureCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\IFeatureStreamSource.cs" />
+    <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlFeatureStreamSource.cs" />
     <Compile Include="IClonable.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
@@ -204,6 +228,7 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\HilbertCurve.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />

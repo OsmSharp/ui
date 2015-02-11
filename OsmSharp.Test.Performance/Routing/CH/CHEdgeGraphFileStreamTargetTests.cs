@@ -45,40 +45,48 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
         /// <summary>
+        /// Tests the CH serializer.
+        /// </summary>
+        /// <returns>A stream to the file that was serialized.</returns>
+        public static Stream Test(DynamicGraphRouterDataSource<CHEdgeData> data)
+        {
+            return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf", data);
+        }
+
+        /// <summary>
         /// Tests preprocessing data from a PBF file.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
         public static Stream TestSerialization(string name, string pbfFile)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
-            Stream stream = testFile.OpenRead();
-            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
-
-            FileInfo testOutputFile = new FileInfo(@"test.routing");
-            testOutputFile.Delete();
-            Stream writeStream = testOutputFile.OpenWrite();
-
-            var tagsIndex = new TagsTableCollectionIndex();
-            var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            CHEdgeGraphFileStreamTarget target = new CHEdgeGraphFileStreamTarget(writeStream, graph, interpreter, tagsIndex,
-                Vehicle.Car);
-            target.RegisterSource(source);
-
-            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializer");
-            performanceInfo.Start();
-            performanceInfo.Report("Pulling from {0}...", testFile.Name);
+            var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
+            var stream = testFile.OpenRead();
+            var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
+            source.RegisterSource(new PBFOsmStreamSource(stream));
 
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
                 source, new OsmRoutingInterpreter(), Vehicle.Car);
+            stream.Dispose();
+
+            return CHEdgeGraphFileStreamTargetTests.TestSerialization(name, pbfFile, data);
+        }
+
+        public static Stream TestSerialization(string name, string pbfFile, DynamicGraphRouterDataSource<CHEdgeData> data)
+        {
+            var testOutputFile = new FileInfo(@"test.routing");
+            testOutputFile.Delete();
+            var writeStream = testOutputFile.OpenWrite();
+
+            var performanceInfo = new PerformanceInfoConsumer("CHSerializer");
+            performanceInfo.Start();
+            performanceInfo.Report("Writing to {0}...", testOutputFile.Name);
 
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
             var routingSerializer = new CHEdgeDataDataSourceSerializer();
             routingSerializer.Serialize(writeStream, data, metaData);
 
-            stream.Dispose();
             writeStream.Dispose();
 
             OsmSharp.Logging.Log.TraceEvent("CHSerializer", OsmSharp.Logging.TraceEventType.Information,

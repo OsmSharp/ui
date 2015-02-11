@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.PriorityQueues;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,12 +37,12 @@ namespace OsmSharp.Collections.Cache
         /// <summary>
         /// Holds the next id.
         /// </summary>
-        private long _id;
+        private ulong _id;
 
         /// <summary>
         /// Holds the last id.
         /// </summary>
-        private long _lastId;
+        private ulong _lastId;
 
         /// <summary>
         /// A delegate to use for when an item is pushed out of the cache.
@@ -60,17 +61,23 @@ namespace OsmSharp.Collections.Cache
         /// <param name="capacity"></param>
         public LRUCache(int capacity)
         {
-            _id = long.MinValue;
+            _id = ulong.MinValue;
             _lastId = _id;
             _data = new Dictionary<TKey, CacheEntry>();
 
-            this.Capacity = capacity;
+            this.MaxCapacity = ((capacity / 100) * 10) + capacity + 1;
+            this.MinCapacity = capacity;
         }
 
         /// <summary>
-        /// Capacity.
+        /// Gets the maximum number of items to keep until the cache is full.
         /// </summary>
-        public int Capacity { get; set; }
+        public int MaxCapacity { get; private set; }
+
+        /// <summary>
+        /// Gets the number of items keep when cache overflows.
+        /// </summary>
+        public int MinCapacity { get; private set; }
 
         /// <summary>
         /// Adds a new value for the given key.
@@ -157,8 +164,8 @@ namespace OsmSharp.Collections.Cache
             {
                 _data.Clear();
             }
+            _id = ulong.MinValue;
             _lastId = _id;
-            _id = long.MinValue;
         }
 
         /// <summary>
@@ -180,27 +187,39 @@ namespace OsmSharp.Collections.Cache
         {
             lock (_data)
             {
-                while (_data.Count > this.Capacity)
-                { // oops: too much data.
-                    // remove the 'oldest' item.
-                    // TODO: remove multiple items at once!
-                    TKey minKey = default(TKey);
-                    long minId = long.MaxValue;
-                    foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
+                if (_data.Count > this.MaxCapacity)
+                {
+                    var n = this.MaxCapacity - this.MinCapacity + 1;
+                    var pairEnumerator = _data.GetEnumerator();
+                    var queue = new BinaryHeapULong<KeyValuePair<TKey, CacheEntry>>((uint)n + 1);
+                    while (queue.Count < n &&
+                        pairEnumerator.MoveNext())
                     {
-                        if (pair.Value.Id < minId)
+                        var current = pairEnumerator.Current;
+                        queue.Push(current, ulong.MaxValue - current.Value.Id);
+                    }
+                    ulong min = queue.PeekWeight();
+                    while (pairEnumerator.MoveNext())
+                    {
+                        var current = pairEnumerator.Current;
+                        if (min < ulong.MaxValue - current.Value.Id)
                         {
-                            minId = pair.Value.Id;
-                            minKey = pair.Key;
+                            queue.Push(current, ulong.MaxValue - current.Value.Id);
+                            queue.Pop();
+                            min = queue.PeekWeight();
                         }
                     }
-                    if(this.OnRemove != null)
-                    { // call the OnRemove delegate.
-                        this.OnRemove(_data[minKey].Value);
+                    while(queue.Count > 0)
+                    {
+                        var toRemove = queue.Pop();
+                        if (this.OnRemove != null)
+                        { // call the OnRemove delegate.
+                            this.OnRemove(toRemove.Value.Value);
+                        }
+                        _data.Remove(toRemove.Key);
+                        // update the 'last_id'
+                        _lastId++;
                     }
-                    _data.Remove(minKey);
-                    // update the 'last_id'
-                    _lastId++;
                 }
             }
         }
@@ -213,7 +232,7 @@ namespace OsmSharp.Collections.Cache
             /// <summary>
             /// The id of the object.
             /// </summary>
-            public long Id { get; set; }
+            public ulong Id { get; set; }
 
             /// <summary>
             /// The object being cached.
