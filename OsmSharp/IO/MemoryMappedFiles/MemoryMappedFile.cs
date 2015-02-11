@@ -192,9 +192,9 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         public void Dispose()
         {
-            foreach (var file in _accessors)
+            while (_accessors.Count > 0)
             {
-                file.Dispose();
+                _accessors[0].Dispose();
             }
             _accessors.Clear();
         }

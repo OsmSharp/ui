@@ -134,7 +134,7 @@ namespace OsmSharp.IO
         {
             if (offset > _length)
             {
-                throw new Exception();
+                throw new Exception("Cannot read past end of capped stream.");
             }
             return _stream.Seek(offset + _offset, origin);
         }
@@ -158,7 +158,11 @@ namespace OsmSharp.IO
         /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotSupportedException("Writing to a CappedStream is not possible.");
+            if (this.Position + count > this.Length)
+            {
+                throw new Exception("Cannot write past end of capped stream.");
+            }
+            _stream.Write(buffer, offset, count);
         }
     }
 }
