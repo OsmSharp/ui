@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
@@ -58,7 +59,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Creates a new huge coordinate index.
         /// </summary>
-        /// <param name="size"></param>
+        /// <param name="size">The original size.</param>
         public HugeCoordinateCollectionIndex(long size)
         {
             _index = new HugeArray<ulong>(size);
@@ -76,14 +77,14 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
-        /// Creates a new huge coordinate index.
+        /// Creates a new, memory mapped, huge coordinate index.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="size"></param>
-        public HugeCoordinateCollectionIndex(MemoryMappedFileParameters parameters, long size)
+        /// <param name="file">The memory mapped file.</param>
+        /// <param name="size">The original size.</param>
+        public HugeCoordinateCollectionIndex(MemoryMappedFile file, long size)
         {
-            _index = new MemoryMappedHugeArray<ulong>(MemoryMappedFileFactories.UInt64File(parameters), size);
-            _coordinates = new MemoryMappedHugeArray<float>(MemoryMappedFileFactories.SingleFile(parameters), size * 2 * ESTIMATED_SIZE);
+            _index = new MemoryMappedHugeArrayUInt64(file, size);
+            _coordinates = new MemoryMappedHugeArraySingle(file, size * 2 * ESTIMATED_SIZE);
 
             for (long idx = 0; idx < _index.Length; idx++)
             {

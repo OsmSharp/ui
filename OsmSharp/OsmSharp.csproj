@@ -62,7 +62,11 @@
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Collections\Arrays\IHugeArray.cs" />
-    <Compile Include="Collections\Arrays\MemoryMappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArraySingle.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt64.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt32.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Collections\Coordinates\Collections\HugeCoordinateCollectionIndex.cs" />
     <Compile Include="Collections\Coordinates\CoordinateIndex.cs" />
@@ -167,17 +171,12 @@
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\LimitedStream.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Generic\GenericMemoryMappedFile.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Generic\GenericMemoryMappedViewAccessor.cs" />
-    <Compile Include="IO\MemoryMappedFiles\IMemoryMappedFile.cs" />
-    <Compile Include="IO\MemoryMappedFiles\IMemoryMappedViewAccessor.cs" />
-    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileFactories.cs" />
-    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileFactory.cs" />
-    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFileParameters.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Native\INativeMemoryMappedViewAccessor.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Native\NativeMemoryMappedFileFactory.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Native\INativeMemoryMappedFile.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Native\NativeMemoryMappedFileWrapper.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
+    <Compile Include="IO\MemoryMappedFiles\MemoryMappedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt32.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorSingle.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt64.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />

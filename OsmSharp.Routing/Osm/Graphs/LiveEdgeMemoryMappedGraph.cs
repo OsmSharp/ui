@@ -1,4 +1,5 @@
 ﻿using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
@@ -19,65 +20,45 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <summary>
         /// Creates a new memory mapped file dynamic graph.
         /// </summary>
-        /// <param name="estimatedSize"></param>
-        public LiveEdgeMemoryMappedGraph(long estimatedSize)
-            : this(estimatedSize, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="arraySize"></param>
-        public LiveEdgeMemoryMappedGraph(long estimatedSize, int arraySize)
-            : this(estimatedSize, arraySize, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="parameters"></param>
-        public LiveEdgeMemoryMappedGraph(long estimatedSize, MemoryMappedFileParameters parameters)
+        /// <param name="file">The file.</param>
+        /// <param name="estimatedSize">The estimated size.</param>
+        public LiveEdgeMemoryMappedGraph(MemoryMappedFile file, long estimatedSize)
             : base(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(MemoryMappedFileFactories.GeoCoordinateSimpleFile(parameters), estimatedSize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize),
-            new MemoryMappedHugeArray<LiveEdge>(LiveEdgeMemoryMappedGraph.LiveEdgeFile(parameters), estimatedSize),
-            new HugeCoordinateCollectionIndex(parameters, estimatedSize))
+            new MappedHugeArray<GeoCoordinateSimple, float>(new MemoryMappedHugeArraySingle(file, estimatedSize * 2), 2, 
+            (array, idx, value) => 
+            {
+                array[idx] = value.Latitude;
+                array[idx + 1] = value.Longitude;
+            },
+            (array, idx) => 
+            {
+                return new GeoCoordinateSimple()
+                {
+                    Latitude = array[idx],
+                    Longitude = array[idx + 1]
+                };
+            }),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MappedHugeArray<LiveEdge, uint>(new MemoryMappedHugeArrayUInt32(file, estimatedSize * 2), 2,
+            (array, idx, value) =>
+            {
+                array[idx] = value.Value;
+                array[idx + 1] = value.Tags;
+                array[idx + 2] = BitConverter.ToUInt32(BitConverter.GetBytes(value.Distance), 0);
+            },
+            (array, idx) =>
+            {
+                return new LiveEdge()
+                {
+                    Value = array[idx],
+                    Tags = array[idx + 1],
+                    Distance = BitConverter.ToSingle(BitConverter.GetBytes(array[idx + 2]), 0)
+                };
+            }),
+            new HugeCoordinateCollectionIndex(file, estimatedSize))
         {
 
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="parameters"></param>
-        /// <param name="arraySize"></param>
-        public LiveEdgeMemoryMappedGraph(long estimatedSize, int arraySize, MemoryMappedFileParameters parameters)
-            : base(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(MemoryMappedFileFactories.GeoCoordinateSimpleFile(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<LiveEdge>(LiveEdgeMemoryMappedGraph.LiveEdgeFile(parameters), estimatedSize, arraySize),
-            new HugeCoordinateCollectionIndex(parameters, estimatedSize))
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file factory.
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public static MemoryMappedFileFactory<LiveEdge> LiveEdgeFile(MemoryMappedFileParameters parameters)
-        {
-            return null;
         }
     }
 }

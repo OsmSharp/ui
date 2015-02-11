@@ -1,4 +1,5 @@
 ﻿using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
@@ -17,67 +18,45 @@ namespace OsmSharp.Routing.CH
     public class CHEdgeMemoryMappedGraph : MemoryMappedGraph<CHEdgeData>
     {       
         /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
+        /// Creates a new memory mapped graph.
         /// </summary>
-        /// <param name="estimatedSize"></param>
-        public CHEdgeMemoryMappedGraph(long estimatedSize)
-            : this(estimatedSize, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="arraySize"></param>
-        public CHEdgeMemoryMappedGraph(long estimatedSize, int arraySize)
-            : this(estimatedSize, arraySize, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="parameters"></param>
-        public CHEdgeMemoryMappedGraph(long estimatedSize, MemoryMappedFileParameters parameters)
+        /// <param name="file">The file.</param>
+        /// <param name="estimatedSize">The initial size.</param>
+        public CHEdgeMemoryMappedGraph(MemoryMappedFile file, long estimatedSize)
             : base(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(MemoryMappedFileFactories.GeoCoordinateSimpleFile(parameters), estimatedSize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize),
-            new MemoryMappedHugeArray<CHEdgeData>(CHEdgeMemoryMappedGraph.CHEdgeData(parameters), estimatedSize),
-            new HugeCoordinateCollectionIndex(parameters, estimatedSize))
+            new MappedHugeArray<GeoCoordinateSimple, float>(new MemoryMappedHugeArraySingle(file, estimatedSize * 2), 2, 
+            (array, idx, value) => 
+            {
+                array[idx] = value.Latitude;
+                array[idx + 1] = value.Longitude;
+            },
+            (array, idx) => 
+            {
+                return new GeoCoordinateSimple()
+                {
+                    Latitude = array[idx],
+                    Longitude = array[idx + 1]
+                };
+            }),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MappedHugeArray<CHEdgeData, uint>(new MemoryMappedHugeArrayUInt32(file, estimatedSize * 2), 2,
+            (array, idx, value) =>
+            {
+                array[idx] = value.Value;
+                array[idx + 1] = value.Tags;
+                array[idx + 2] = value.Meta;
+            },
+            (array, idx) =>
+            {
+                return new CHEdgeData(
+                    array[idx],
+                    array[idx + 1],
+                    (byte)array[idx + 2]);
+            }),
+            new HugeCoordinateCollectionIndex(file, estimatedSize))
         {
 
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file dynamic graph.
-        /// </summary>
-        /// <param name="estimatedSize"></param>
-        /// <param name="parameters"></param>
-        /// <param name="arraySize"></param>
-        public CHEdgeMemoryMappedGraph(long estimatedSize, int arraySize, MemoryMappedFileParameters parameters)
-            : base(estimatedSize,
-            new MemoryMappedHugeArray<GeoCoordinateSimple>(MemoryMappedFileFactories.GeoCoordinateSimpleFile(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<uint>(MemoryMappedFileFactories.UInt32File(parameters), estimatedSize, arraySize),
-            new MemoryMappedHugeArray<CHEdgeData>(CHEdgeMemoryMappedGraph.CHEdgeData(parameters), estimatedSize, arraySize),
-            new HugeCoordinateCollectionIndex(parameters, estimatedSize))
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a new memory mapped file factory.
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public static MemoryMappedFileFactory<CHEdgeData> CHEdgeData(MemoryMappedFileParameters parameters)
-        {
-            return null;
         }
     }
 }
