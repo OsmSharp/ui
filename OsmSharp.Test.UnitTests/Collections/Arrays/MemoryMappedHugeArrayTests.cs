@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -39,9 +39,6 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         [Test]
         public void MemoryMappedHugeArraySimpleTest()
         {
-            // make sure to initialize the native hooks to create a memory mapping.
-            Native.Initialize();
-
             using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
             {
                 var intArrayRef = new uint[1000];
@@ -74,9 +71,6 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         [Test]
         public void MemoryMappedHugeArrayResizeTests()
         {
-            // make sure to initialize the native hooks to create a memory mapping.
-            Native.Initialize();
-
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
             using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 300))
@@ -95,6 +89,8 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                         intArrayRef[idx] = int.MaxValue;
                         intArray[idx] = int.MaxValue;
                     }
+
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
 
                 Array.Resize<uint>(ref intArrayRef, 335);
@@ -123,6 +119,8 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                         intArrayRef[idx] = int.MaxValue;
                         intArray[idx] = int.MaxValue;
                     }
+
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
 
                 Array.Resize<uint>(ref intArrayRef, 1235);

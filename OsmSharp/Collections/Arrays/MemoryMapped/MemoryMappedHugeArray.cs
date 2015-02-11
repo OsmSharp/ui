@@ -107,10 +107,11 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size"></param>
         public void Resize(long size)
         {
+            var oldSize = _length;
             _length = size;
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
-            _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
+            // _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
             if (arrayCount < _accessors.Count)
             { // decrease files/accessors.
                 for (int arrayIdx = (int)arrayCount; arrayIdx < _accessors.Count; arrayIdx++)
@@ -125,6 +126,14 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
                 for (int arrayIdx = _accessors.Count; arrayIdx < arrayCount; arrayIdx++)
                 {
                     _accessors.Add(this.CreateAccessor(_file, _fileSizeBytes));
+                }
+            }
+
+            if (oldSize < _length)
+            {
+                for(var i = oldSize; i < _length; i++)
+                {
+                    this[i] = default(T);
                 }
             }
         }

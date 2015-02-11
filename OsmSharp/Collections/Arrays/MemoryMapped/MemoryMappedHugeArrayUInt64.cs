@@ -44,7 +44,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize)
-            : base(file, 8, size, DefaultFileElementSize)
+            : base(file, 8, size, arraySize)
         {
 
         }

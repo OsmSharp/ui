@@ -82,7 +82,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         public long Length
         {
-            get { return _baseArray.Length * _elementSize; }
+            get { return _baseArray.Length / _elementSize; }
         }
 
         /// <summary>

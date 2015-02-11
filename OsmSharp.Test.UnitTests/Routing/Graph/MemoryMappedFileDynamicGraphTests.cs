@@ -34,15 +34,6 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
     public class MemoryMappedFileDynamicGraphTests
     {
         /// <summary>
-        /// Initialize for testing.
-        /// </summary>
-        [SetUp]
-        public void Init()
-        {
-            Native.Initialize();
-        }
-
-        /// <summary>
         /// Tests argument out of range.
         /// </summary>
         [Test]
