@@ -16,9 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.IO.MemoryMappedFiles;
 
-namespace OsmSharp.Collections.Arrays.MemoryMapped
+namespace OsmSharp.Collections.Arrays
 {
     /// <summary>
     /// Represents a memory mapped huge array of ulongs.
@@ -31,7 +32,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="file">The the memory mapped file.</param>
         /// <param name="size">The initial size of the array.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size)
-            : base(file, size, DefaultFileElementSize)
+            : base(file, 8, size, DefaultFileElementSize)
         {
 
         }
@@ -43,7 +44,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize)
-            : base(file, size, DefaultFileElementSize)
+            : base(file, 8, size, DefaultFileElementSize)
         {
 
         }

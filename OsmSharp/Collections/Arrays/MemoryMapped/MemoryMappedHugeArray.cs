@@ -45,7 +45,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Holds the default file element size.
         /// </summary>
-        public static long DefaultFileElementSize = (long)1024 * (long)1024 * (long)128;
+        public static long DefaultFileElementSize = (long)1024 * (long)1024;
 
         /// <summary>
         /// Holds the file element size.
@@ -66,14 +66,15 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// Creates a memory mapped huge array.
         /// </summary>
         /// <param name="file">The the memory mapped file.</param>
+        /// <param name="elementSize">The element size.</param>
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(MemoryMappedFile file, long size, long arraySize)
+        public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize)
         {
             _file = file;
             _length = size;
             _fileElementSize = arraySize;
-            _elementSize = 4;
+            _elementSize = elementSize;
             _fileSizeBytes = arraySize * _elementSize;
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);

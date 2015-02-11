@@ -18,10 +18,12 @@
 
 using NUnit.Framework;
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Random;
 using OsmSharp.WinForms.UI;
 using System;
+using System.IO;
 
 namespace OsmSharp.Test.Unittests.Collections.Arrays
 {  
@@ -40,12 +42,12 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
             // make sure to initialize the native hooks to create a memory mapping.
             Native.Initialize();
 
-            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 1024))
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
             {
-                var intArrayRef = new int[1000];
+                var intArrayRef = new uint[1000];
 
                 var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
-                for (int idx = 0; idx < 1000; idx++)
+                for (uint idx = 0; idx < 1000; idx++)
                 {
                     if (randomGenerator.Generate(2.0) > 1)
                     { // add data.
@@ -77,11 +79,11 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
 
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
-            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 300))
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 300))
             {
-                var intArrayRef = new int[1000];
+                var intArrayRef = new uint[1000];
 
-                for (int idx = 0; idx < 1000; idx++)
+                for (uint idx = 0; idx < 1000; idx++)
                 {
                     if (randomGenerator.Generate(2.0) > 1)
                     { // add data.
@@ -95,7 +97,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                     }
                 }
 
-                Array.Resize<int>(ref intArrayRef, 335);
+                Array.Resize<uint>(ref intArrayRef, 335);
                 intArray.Resize(335);
 
                 Assert.AreEqual(intArrayRef.Length, intArray.Length);
@@ -105,11 +107,11 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 }
             }
 
-            using (var intArray = new MemoryMappedHugeArray<int>(MemoryMappedFileFactories.Int32File(null), 1000, 300))
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 300))
             {
-                var intArrayRef = new int[1000];
+                var intArrayRef = new uint[1000];
 
-                for (int idx = 0; idx < 1000; idx++)
+                for (uint idx = 0; idx < 1000; idx++)
                 {
                     if (randomGenerator.Generate(2.0) > 1)
                     { // add data.
@@ -123,7 +125,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                     }
                 }
 
-                Array.Resize<int>(ref intArrayRef, 1235);
+                Array.Resize<uint>(ref intArrayRef, 1235);
                 intArray.Resize(1235);
 
                 Assert.AreEqual(intArrayRef.Length, intArray.Length);

@@ -17,11 +17,13 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.WinForms.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Test.Unittests.Routing.Graph
 {
@@ -46,7 +48,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphArguments()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 uint vertex1 = graph.AddVertex(0, 0);
                 uint vertex2 = graph.AddVertex(0, 0);
@@ -102,7 +104,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphVertex()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex = graph.AddVertex(51, 4);
 
@@ -128,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphVertex10000()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 int count = 10000;
                 while (count > 0)
@@ -157,7 +159,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -194,7 +196,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge10000()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 int count = 10000;
                 uint vertex1 = graph.AddVertex(51, 1);
@@ -227,7 +229,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphEdge1()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -287,7 +289,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemove1()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -321,7 +323,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemove2()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 uint tagsId = 10;
                 var vertex1 = graph.AddVertex(51, 1);
@@ -380,7 +382,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddRemoveX()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -454,7 +456,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveEnd()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -500,7 +502,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveMiddle()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -546,7 +548,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveBegin()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -592,7 +594,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveAll()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -638,7 +640,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphRemoveAllOneVertex()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -681,7 +683,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphCompressEdges()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -723,7 +725,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Assert.AreEqual(graph.GetEdges(vertex4).ToKeyValuePairs().Length, 2);
             }
 
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 uint vertex1 = graph.AddVertex(51, 1);
                 uint vertex2 = graph.AddVertex(51, 2);
@@ -780,7 +782,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphCompressVertices()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
@@ -828,7 +830,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestLiveEdgeDynamicGraphAddReverse()
         {
-            using (var graph = new LiveEdgeMemoryMappedGraph(1000, 1024))
+            using (var graph = new LiveEdgeMemoryMappedGraph(new MemoryMappedStream(new MemoryStream()), 1000))
             {
                 var vertex1 = graph.AddVertex(51, 1);
                 var vertex2 = graph.AddVertex(51, 2);
