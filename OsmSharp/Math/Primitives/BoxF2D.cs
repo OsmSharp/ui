@@ -440,6 +440,39 @@ namespace OsmSharp.Math.Primitives
         ///     - If false is returned there can be no intersection.
         ///     - If true is returned there might be intersection but it is not certain.
         /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <returns></returns>
+        public bool IntersectsPotentially(double x1, double y1, double x2, double y2)
+        {
+            if (x1 > _max[0] && x2 > _max[0])
+            {
+                return false;
+            }
+            if (x1 < _min[0] && x2 < _min[0])
+            {
+                return false;
+            }
+            if (y1 > _max[1] && y2 > _max[1])
+            {
+                return false;
+            }
+            if (y1 < _min[1] && y2 < _min[1])
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the two points could potentially intersect this box.
+        /// 
+        /// This is a rudemantairy quick test to rule out intersection. 
+        ///     - If false is returned there can be no intersection.
+        ///     - If true is returned there might be intersection but it is not certain.
+        /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
         /// <returns></returns>
