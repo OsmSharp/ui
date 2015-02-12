@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.IO.MemoryMappedFiles;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Collections.Arrays.MemoryMapped
@@ -31,6 +32,26 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// Holds the length of this array.
         /// </summary>
         private long _length;
+
+        /// <summary>
+        /// Holds the buffer size.
+        /// </summary>
+        private int _bufferSize;
+
+        /// <summary>
+        /// Holds the buffer position.
+        /// </summary>
+        private long _bufferPosition;
+
+        /// <summary>
+        /// Holds the buffer.
+        /// </summary>
+        private T[] _buffer;
+
+        /// <summary>
+        /// Holds the buffer dirty flag.
+        /// </summary>
+        private bool _bufferDirty;
 
         /// <summary>
         /// Holds the file to create the memory mapped accessors.
@@ -71,11 +92,22 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="arraySize">The size of an indivdual array block.</param>
         public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize)
         {
+            if (file == null) { throw new ArgumentNullException(); }
+            if (elementSize < 0) { throw new ArgumentOutOfRangeException("elementSize"); }
+            if (arraySize < 0) { throw new ArgumentOutOfRangeException("arraySize"); }
+            if (size < 0) { throw new ArgumentOutOfRangeException("size"); }
+            if ((arraySize & (arraySize - 1)) != 0) { throw new ArgumentException("arraySize needs to be a power of 2."); }
+
             _file = file;
             _length = size;
             _fileElementSize = arraySize;
             _elementSize = elementSize;
             _fileSizeBytes = arraySize * _elementSize;
+
+            _bufferSize = (int)arraySize / 64;
+            _buffer = new T[_bufferSize];
+            _bufferPosition = -1;
+            _bufferDirty = false;
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
             _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
@@ -107,6 +139,15 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size"></param>
         public void Resize(long size)
         {
+            // clear buffer.
+            if(_bufferDirty)
+            { // flush buffer.
+                this.FlushBuffer();
+            }
+            _bufferPosition = -1;
+            _buffer = new T[_bufferSize];
+
+
             var oldSize = _length;
             _length = size;
 
@@ -147,27 +188,77 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         {
             get
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
-                long localIdx = idx % _fileElementSize;
-                long localPosition = localIdx * _elementSize;
-                T structure;
-                _accessors[(int)arrayIdx].Read(localPosition, out structure);
-                return structure;
+                // sync buffer.
+                this.SyncBuffer(idx);
+
+                return _buffer[idx - _bufferPosition];
             }
             set
             {
-                long arrayIdx = (long)System.Math.Floor(idx / _fileElementSize);
-                long localIdx = idx % _fileElementSize;
-                long localPosition = localIdx * _elementSize;
-                _accessors[(int)arrayIdx].Write(localPosition, ref value);
+                // sync buffer.
+                this.SyncBuffer(idx);
+
+                _buffer[idx - _bufferPosition] = value;
+                _bufferDirty = true;
             }
         }
+
+        #region Buffering
+
+        /// <summary>
+        /// Syncs buffer.
+        /// </summary>
+        private void SyncBuffer(long idx)
+        {
+            // check buffer.
+            if (_bufferPosition >= 0 &&
+                idx >= _bufferPosition &&
+                idx - _bufferPosition < _bufferSize)
+            { // in buffer.
+
+            }
+            else
+            { // load buffer.
+                if (_bufferDirty)
+                { // flush buffer.
+                    this.FlushBuffer();
+                }
+
+                // load buffer.
+                _bufferPosition = idx - (idx % _bufferSize);
+
+                long arrayIdx = (long)System.Math.Floor(_bufferPosition / _fileElementSize);
+                long localIdx = _bufferPosition % _fileElementSize;
+                long localPosition = localIdx * _elementSize;
+
+                _accessors[(int)arrayIdx].ReadArray(localPosition, _buffer, 0, _bufferSize);
+            }
+        }
+
+        /// <summary>
+        /// Flushes the current buffer to the file.
+        /// </summary>
+        private void FlushBuffer()
+        {
+            long arrayIdx = (long)System.Math.Floor(_bufferPosition / _fileElementSize);
+            long localIdx = _bufferPosition % _fileElementSize;
+            long localPosition = localIdx * _elementSize;
+
+            _accessors[(int)arrayIdx].WriteArray(localPosition, _buffer, 0, _bufferSize);
+        }
+
+        #endregion
 
         /// <summary>
         /// Diposes of all native resource associated with this array.
         /// </summary>
         public void Dispose()
         {
+            if (_bufferDirty)
+            { // flush buffer.
+                this.FlushBuffer();
+            }
+
             // disposing the file will also dispose of all undisposed accessors, and accessor cannot exist without a file.
             _file.Dispose();
         }

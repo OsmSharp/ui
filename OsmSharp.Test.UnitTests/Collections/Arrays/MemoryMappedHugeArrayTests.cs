@@ -56,6 +56,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                         intArrayRef[idx] = int.MaxValue;
                         intArray[idx] = int.MaxValue;
                     }
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
                 }
 
                 for (int idx = 0; idx < 1000; idx++)

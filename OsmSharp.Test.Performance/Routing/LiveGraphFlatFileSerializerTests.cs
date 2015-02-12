@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Performance.Routing
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
 
-            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            var performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 2000);
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
@@ -71,31 +71,28 @@ namespace OsmSharp.Test.Performance.Routing
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
-            //// read from the OSM-stream.
-            //using (var fileFactory = new OsmSharp.IO.MemoryMappedFiles.Native.NativeMemoryMappedFileFactory(@"d:\temp\"))
-            //{
-                var memoryMappedFileParameter = MemoryMappedFileParameters.NativeDirectory(@"d:\temp\");
-                using (var memoryMappedGraph = new LiveEdgeMemoryMappedGraph(10000, memoryMappedFileParameter))
-                {
-                    using (var coordinates = new HugeCoordinateIndex(MemoryMappedFileFactories.SingleFile(memoryMappedFileParameter), 10000))
-                    {
-                        var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
-                        var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
-                        targetData.RegisterSource(progress);
-                        targetData.Pull();
+            // read from the OSM-stream.
+            //using (var file = new MemoryMappedStream(new MemoryStream()))
+            //using (var file = new MemoryMappedStream(new BufferedStream(new FileInfo(@"temp.map").Open(FileMode.OpenOrCreate, FileAccess.ReadWrite), 1024 * 1024)))
+            using (var file = new MemoryMappedStream(new FileInfo(@"temp.map").Open(FileMode.OpenOrCreate, FileAccess.ReadWrite)))
+            {
+                var memoryMappedGraph = new LiveEdgeMemoryMappedGraph(file, 10000);
+                var coordinates = new HugeCoordinateIndex(file, 10000);
+                var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+                var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
+                targetData.RegisterSource(progress);
+                targetData.Pull();
 
-                        performanceInfo.Stop();
+                performanceInfo.Stop();
 
-                        performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-                        performanceInfo.Start();
-                        performanceInfo.Report("Writing file for {0}...", testFile.Name);
+                performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+                performanceInfo.Start();
+                performanceInfo.Report("Writing file for {0}...", testFile.Name);
 
-                        var metaData = new TagsCollection();
-                        metaData.Add("some_key", "some_value");
-                        routingSerializer.Serialize(writeStream, memoryData, metaData);
-                    }
-                }
-            //}
+                var metaData = new TagsCollection();
+                metaData.Add("some_key", "some_value");
+                routingSerializer.Serialize(writeStream, memoryData, metaData);
+            }
             stream.Dispose();
             writeStream.Dispose();
 
