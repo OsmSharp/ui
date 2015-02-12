@@ -245,6 +245,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             long localPosition = localIdx * _elementSize;
 
             _accessors[(int)arrayIdx].WriteArray(localPosition, _buffer, 0, _bufferSize);
+            _bufferDirty = false;
         }
 
         #endregion

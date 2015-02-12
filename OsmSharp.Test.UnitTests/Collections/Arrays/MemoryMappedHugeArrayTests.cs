@@ -74,7 +74,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         {
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
-            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 300))
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 256))
             {
                 var intArrayRef = new uint[1000];
 
@@ -104,7 +104,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 }
             }
 
-            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 300))
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 256))
             {
                 var intArrayRef = new uint[1000];
 
