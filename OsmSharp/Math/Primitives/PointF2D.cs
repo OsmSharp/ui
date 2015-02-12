@@ -243,8 +243,8 @@ namespace OsmSharp.Math.Primitives
         public override string ToString()
         {
             return string.Format("Point({0},{1})",
-                _values[0].ToString(CultureInfo.InvariantCulture),
-                _values[1].ToString(CultureInfo.InvariantCulture));
+                _values[0].ToInvariantString(),
+                _values[1].ToInvariantString());
         }
 
         #region Equals/GetHashCode

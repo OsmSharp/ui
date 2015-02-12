@@ -302,8 +302,8 @@ namespace OsmSharp.Math.Geo
         public override string ToString()
         {
             return string.Format("[{0},{1}]",
-                this.Latitude,
-                this.Longitude);
+                this.Latitude.ToInvariantString(),
+                this.Longitude.ToInvariantString());
         }
 
         /// <summary>

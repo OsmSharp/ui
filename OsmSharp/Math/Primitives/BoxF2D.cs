@@ -719,7 +719,8 @@ namespace OsmSharp.Math.Primitives
         public override string ToString()
         {
             return string.Format("RectF:[({0},{1}),({2},{3})]",
-                                 this.Min[0], this.Min[1], this.Max[0], this.Max[1]);
+                                 this.Min[0].ToInvariantString(), this.Min[1].ToInvariantString(),
+                                 this.Max[0].ToInvariantString(), this.Max[1].ToInvariantString());
         }
 
         /// <summary>
