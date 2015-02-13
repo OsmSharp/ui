@@ -44,12 +44,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Holds the coordinates index position and count.
         /// </summary>
-        private IHugeArray<ulong> _index;
+        private HugeArrayBase<ulong> _index;
 
         /// <summary>
         /// Holds the coordinates in linked-list form.
         /// </summary>
-        private IHugeArray<float> _coordinates;
+        private HugeArrayBase<float> _coordinates;
 
         /// <summary>
         /// Holds the next idx.
@@ -320,7 +320,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <summary>
             /// Holds the coordinates.
             /// </summary>
-            private IHugeArray<float> _coordinates;
+            private HugeArrayBase<float> _coordinates;
 
             /// <summary>
             /// Holds the reverse flag.
@@ -333,7 +333,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <param name="coordinates"></param>
             /// <param name="startIdx"></param>
             /// <param name="size"></param>
-            public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size)
+            public HugeCoordinateCollection(HugeArrayBase<float> coordinates, long startIdx, long size)
                 : this(coordinates, startIdx, size, false)
             {
 
@@ -346,7 +346,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <param name="startIdx"></param>
             /// <param name="size"></param>
             /// <param name="reverse"></param>
-            public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size, bool reverse)
+            public HugeCoordinateCollection(HugeArrayBase<float> coordinates, long startIdx, long size, bool reverse)
             {
                 _startIdx = startIdx;
                 _size = size;

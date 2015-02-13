@@ -35,22 +35,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the coordinates array.
         /// </summary>
-        private IHugeArray<GeoCoordinateSimple> _coordinates;
+        private HugeArrayBase<GeoCoordinateSimple> _coordinates;
 
         /// <summary>
         /// Holds the vertex array.
         /// </summary>
-        private IHugeArray<uint> _vertices;
+        private HugeArrayBase<uint> _vertices;
 
         /// <summary>
         /// Holds the edges array.
         /// </summary>
-        private IHugeArray<uint> _edges;
+        private HugeArrayBase<uint> _edges;
 
         /// <summary>
         /// Holds the edge data array.
         /// </summary>
-        private IHugeArray<TEdgeData> _edgeData;
+        private HugeArrayBase<TEdgeData> _edgeData;
 
         /// <summary>
         /// Holds the shapes index.
@@ -67,10 +67,10 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgeData"></param>
         /// <param name="edgeShapes"></param>
         public MemoryMappedGraph(long estimatedSize,
-            IHugeArray<GeoCoordinateSimple> coordinates,
-            IHugeArray<uint> vertices,
-            IHugeArray<uint> edges,
-            IHugeArray<TEdgeData> edgeData,
+            HugeArrayBase<GeoCoordinateSimple> coordinates,
+            HugeArrayBase<uint> vertices,
+            HugeArrayBase<uint> edges,
+            HugeArrayBase<TEdgeData> edgeData,
             HugeCoordinateCollectionIndex edgeShapes)
             : base(estimatedSize, coordinates, vertices, edges, edgeData, edgeShapes)
         {

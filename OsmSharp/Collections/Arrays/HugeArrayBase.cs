@@ -23,24 +23,29 @@ namespace OsmSharp.Collections.Arrays
     /// <summary>
     /// An abstract representation of a huge array.
     /// </summary>
-    public interface IHugeArray<T> : IDisposable
+    public abstract class HugeArrayBase<T> : IDisposable
     {
         /// <summary>
         /// Returns the length of this array.
         /// </summary>
-        long Length { get; }
+        public abstract long Length { get; }
         
         /// <summary>
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
-        void Resize(long size);
+        public abstract void Resize(long size);
 
         /// <summary>
         /// Returns the element at the given index.
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        T this[long idx] { get; set; }
+        public abstract T this[long idx] { get; set; }
+
+        /// <summary>
+        /// Disposes of all resources associated with this array.
+        /// </summary>
+        public abstract void Dispose();
     }
 }

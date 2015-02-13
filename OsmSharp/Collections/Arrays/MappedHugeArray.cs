@@ -23,14 +23,14 @@ namespace OsmSharp.Collections.Arrays
     /// </summary>
     /// <typeparam name="TMapped">The more 'advanced' stucture.</typeparam>
     /// <typeparam name="T">The 'simple' structure.</typeparam>
-    public class MappedHugeArray<TMapped, T> : IHugeArray<TMapped>
+    public class MappedHugeArray<TMapped, T> : HugeArrayBase<TMapped>
         where TMapped : struct
         where T : struct
     {
         /// <summary>
         /// Holds the base array.
         /// </summary>
-        private IHugeArray<T> _baseArray;
+        private HugeArrayBase<T> _baseArray;
 
         /// <summary>
         /// Holds the size of one element.
@@ -48,7 +48,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="array"></param>
         /// <param name="idx"></param>
         /// <param name="toMap"></param>
-        public delegate void MapTo(IHugeArray<T> array, long idx, TMapped toMap);
+        public delegate void MapTo(HugeArrayBase<T> array, long idx, TMapped toMap);
 
         /// <summary>
         /// Holds the map from implemenation.
@@ -60,7 +60,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         /// <param name="array"></param>
         /// <param name="idx"></param>
-        public delegate TMapped MapFrom(IHugeArray<T> array, long idx);
+        public delegate TMapped MapFrom(HugeArrayBase<T> array, long idx);
 
         /// <summary>
         /// Creates a new mapped huge array.
@@ -69,7 +69,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="elementSize">The size of one mapped structure when translate to the simpler structure.</param>
         /// <param name="mapTo">The map to implementation.</param>
         /// <param name="mapFrom">The map from implementation.</param>
-        public MappedHugeArray(IHugeArray<T> baseArray, int elementSize, MapTo mapTo, MapFrom mapFrom)
+        public MappedHugeArray(HugeArrayBase<T> baseArray, int elementSize, MapTo mapTo, MapFrom mapFrom)
         {
             _baseArray = baseArray;
             _elementSize = elementSize;
@@ -80,7 +80,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Returns the length of this array.
         /// </summary>
-        public long Length
+        public override long Length
         {
             get { return _baseArray.Length / _elementSize; }
         }
@@ -89,7 +89,7 @@ namespace OsmSharp.Collections.Arrays
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
-        public void Resize(long size)
+        public override void Resize(long size)
         {
             _baseArray.Resize(size * _elementSize);
         }
@@ -99,7 +99,7 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public TMapped this[long idx]
+        public override TMapped this[long idx]
         {
             get
             {
@@ -114,7 +114,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Disposes of all native resources associated with this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             _baseArray.Dispose();
             _baseArray = null;

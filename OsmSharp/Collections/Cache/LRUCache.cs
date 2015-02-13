@@ -162,6 +162,13 @@ namespace OsmSharp.Collections.Cache
         {
             lock(_data)
             {
+                if (this.OnRemove != null)
+                { // call the OnRemove delegate.
+                    foreach (var entry in _data)
+                    {
+                        this.OnRemove(entry.Value.Value);
+                    }
+                }
                 _data.Clear();
             }
             _id = ulong.MinValue;

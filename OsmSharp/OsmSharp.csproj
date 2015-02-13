@@ -61,7 +61,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Collections\Arrays\IHugeArray.cs" />
+    <Compile Include="Collections\Arrays\HugeArrayBase.cs" />
     <Compile Include="Collections\Arrays\MappedHugeArray.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArray.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArraySingle.cs" />

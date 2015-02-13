@@ -33,7 +33,7 @@ namespace OsmSharp.Collections.Coordinates
         /// <summary>
         /// Holds all coordinates.
         /// </summary>
-        private IHugeArray<float> _coordinates;
+        private HugeArrayBase<float> _coordinates;
 
         /// <summary>
         /// Holds the count.
@@ -65,7 +65,7 @@ namespace OsmSharp.Collections.Coordinates
         /// Creates a new huge coordinate index.
         /// </summary>
         /// <param name="coordinates"></param>
-        private HugeCoordinateIndex(IHugeArray<float> coordinates)
+        private HugeCoordinateIndex(HugeArrayBase<float> coordinates)
         {
             _coordinates = coordinates;
 

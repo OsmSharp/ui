@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Cache;
 using OsmSharp.IO.MemoryMappedFiles;
 using System;
 using System.Collections.Generic;
@@ -25,33 +26,13 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
     /// <summary>
     /// Represents a memory mapped huge array.
     /// </summary>
-    public abstract class MemoryMappedHugeArray<T> : IHugeArray<T>
+    public abstract class MemoryMappedHugeArray<T> : HugeArrayBase<T>
         where T : struct
     {
         /// <summary>
         /// Holds the length of this array.
         /// </summary>
         private long _length;
-
-        /// <summary>
-        /// Holds the buffer size.
-        /// </summary>
-        private int _bufferSize;
-
-        /// <summary>
-        /// Holds the buffer position.
-        /// </summary>
-        private long _bufferPosition;
-
-        /// <summary>
-        /// Holds the buffer.
-        /// </summary>
-        private T[] _buffer;
-
-        /// <summary>
-        /// Holds the buffer dirty flag.
-        /// </summary>
-        private bool _bufferDirty;
 
         /// <summary>
         /// Holds the file to create the memory mapped accessors.
@@ -105,9 +86,9 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             _fileSizeBytes = arraySize * _elementSize;
 
             _bufferSize = (int)arraySize / 64;
-            _buffer = new T[_bufferSize];
-            _bufferPosition = -1;
-            _bufferDirty = false;
+            _cachedBuffer = null;
+            _cachedBuffers = new LRUCache<long, CachedBuffer>(64);
+            _cachedBuffers.OnRemove += new LRUCache<long, CachedBuffer>.OnRemoveDelegate(buffer_OnRemove);
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);
             _accessors = new List<MemoryMappedAccessor<T>>(arrayCount);
@@ -128,7 +109,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Returns the length of this array.
         /// </summary>
-        public long Length
+        public override long Length
         {
             get { return _length; }
         }
@@ -137,17 +118,13 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
-        public void Resize(long size)
+        public override void Resize(long size)
         {
-            // clear buffer.
-            if(_bufferDirty)
-            { // flush buffer.
-                this.FlushBuffer();
-            }
-            _bufferPosition = -1;
-            _buffer = new T[_bufferSize];
+            // clear cache (and save dirty blocks).
+            _cachedBuffers.Clear();
+            _cachedBuffer = null;
 
-
+            // store old size.
             var oldSize = _length;
             _length = size;
 
@@ -171,8 +148,8 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             }
 
             if (oldSize < _length)
-            {
-                for(var i = oldSize; i < _length; i++)
+            { // initialize new elements.
+                for (var i = oldSize; i < _length; i++)
                 {
                     this[i] = default(T);
                 }
@@ -184,68 +161,110 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public T this[long idx]
+        public override T this[long idx]
         {
             get
             {
                 // sync buffer.
-                this.SyncBuffer(idx);
+                var relativePosition = this.SyncBuffer(idx);
 
-                return _buffer[idx - _bufferPosition];
+                return _cachedBuffer.Buffer[relativePosition];
             }
             set
             {
                 // sync buffer.
-                this.SyncBuffer(idx);
+                var relativePosition = this.SyncBuffer(idx);
 
-                _buffer[idx - _bufferPosition] = value;
-                _bufferDirty = true;
+                _cachedBuffer.Buffer[relativePosition] = value;
+                _cachedBuffer.IsDirty = true;
             }
         }
 
         #region Buffering
 
         /// <summary>
-        /// Syncs buffer.
+        /// Holds all the cached buffers.
         /// </summary>
-        private void SyncBuffer(long idx)
+        private LRUCache<long, CachedBuffer> _cachedBuffers;
+
+        /// <summary>
+        /// Holds the buffer size.
+        /// </summary>
+        private int _bufferSize;
+
+        /// <summary>
+        /// Holds the last used cached buffer.
+        /// </summary>
+        private CachedBuffer _cachedBuffer = null;
+
+        /// <summary>
+        /// Called when an item is removed from the cache.
+        /// </summary>
+        /// <param name="item"></param>
+        void buffer_OnRemove(MemoryMappedHugeArray<T>.CachedBuffer item)
         {
-            // check buffer.
-            if (_bufferPosition >= 0 &&
-                idx >= _bufferPosition &&
-                idx - _bufferPosition < _bufferSize)
-            { // in buffer.
-
-            }
-            else
-            { // load buffer.
-                if (_bufferDirty)
-                { // flush buffer.
-                    this.FlushBuffer();
-                }
-
-                // load buffer.
-                _bufferPosition = idx - (idx % _bufferSize);
-
-                long arrayIdx = (long)System.Math.Floor(_bufferPosition / _fileElementSize);
-                long localIdx = _bufferPosition % _fileElementSize;
+            if (item.IsDirty)
+            {
+                long arrayIdx = (long)System.Math.Floor(item.Position / _fileElementSize);
+                long localIdx = item.Position % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
 
-                _accessors[(int)arrayIdx].ReadArray(localPosition, _buffer, 0, _bufferSize);
+                _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, _bufferSize);
             }
         }
 
         /// <summary>
-        /// Flushes the current buffer to the file.
+        /// Syncs buffer.
         /// </summary>
-        private void FlushBuffer()
+        private int SyncBuffer(long idx)
         {
-            long arrayIdx = (long)System.Math.Floor(_bufferPosition / _fileElementSize);
-            long localIdx = _bufferPosition % _fileElementSize;
-            long localPosition = localIdx * _elementSize;
+            // calculate the buffer position.
+            var bufferPosition = idx - (idx % _bufferSize);
 
-            _accessors[(int)arrayIdx].WriteArray(localPosition, _buffer, 0, _bufferSize);
-            _bufferDirty = false;
+            // check buffer.
+            if (_cachedBuffer == null ||
+                _cachedBuffer.Position != bufferPosition)
+            { // not in buffer.
+                if (!_cachedBuffers.TryGet(bufferPosition, out _cachedBuffer))
+                {
+                    var newBuffer = new T[_bufferSize];
+
+                    var arrayIdx = (long)System.Math.Floor(bufferPosition / _fileElementSize);
+                    var localIdx = bufferPosition % _fileElementSize;
+                    var localPosition = localIdx * _elementSize;
+
+                    _accessors[(int)arrayIdx].ReadArray(localPosition, newBuffer, 0, _bufferSize);
+                    _cachedBuffer = new CachedBuffer()
+                    {
+                        Buffer = newBuffer,
+                        IsDirty = false,
+                        Position = bufferPosition
+                    };
+                    _cachedBuffers.Add(_cachedBuffer.Position, _cachedBuffer);
+                }
+            }
+            return (int)(idx - bufferPosition);
+        }
+
+        /// <summary>
+        /// A cached buffer.
+        /// </summary>
+        private class CachedBuffer
+        {
+            /// <summary>
+            /// Holds the position.
+            /// </summary>
+            public long Position;
+
+            /// <summary>
+            /// Holds the dirty flag.
+            /// </summary>
+            public bool IsDirty;
+
+            /// <summary>
+            /// Holds the buffer.
+            /// </summary>
+            public T[] Buffer;
         }
 
         #endregion
@@ -253,12 +272,10 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Diposes of all native resource associated with this array.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
-            if (_bufferDirty)
-            { // flush buffer.
-                this.FlushBuffer();
-            }
+            // clear cache.
+            _cachedBuffers.Clear();
 
             // disposing the file will also dispose of all undisposed accessors, and accessor cannot exist without a file.
             _file.Dispose();

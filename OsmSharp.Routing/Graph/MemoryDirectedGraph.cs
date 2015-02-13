@@ -49,22 +49,22 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the coordinates of the vertices.
         /// </summary>
-        private IHugeArray<GeoCoordinateSimple> _coordinates;
+        private HugeArrayBase<GeoCoordinateSimple> _coordinates;
 
         /// <summary>
         /// Holds all vertices pointing to it's first edge.
         /// </summary>
-        private IHugeArray<uint> _vertices;
+        private HugeArrayBase<uint> _vertices;
 
         /// <summary>
         /// Holds all edges (meaning vertex1-vertex2)
         /// </summary>
-        private IHugeArray<uint> _edges;
+        private HugeArrayBase<uint> _edges;
 
         /// <summary>
         /// Holds all data associated with edges.
         /// </summary>
-        private IHugeArray<TEdgeData> _edgeData;
+        private HugeArrayBase<TEdgeData> _edgeData;
 
         /// <summary>
         /// Holds all shapes associated with edges.
@@ -99,8 +99,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        protected MemoryDirectedGraph(long sizeEstimate, IHugeArray<GeoCoordinateSimple> coordinateArray, 
-            IHugeArray<uint> vertexArray, IHugeArray<uint> edgesArray, IHugeArray<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
+        protected MemoryDirectedGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
+            HugeArrayBase<uint> vertexArray, HugeArrayBase<uint> edgesArray, HugeArrayBase<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
