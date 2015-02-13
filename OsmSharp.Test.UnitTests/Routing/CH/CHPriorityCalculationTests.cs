@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestPriorityCalculation1NoWitnesses()
         {
-            var graph = new CHEdgeDataGraph();
+            var graph = new MemoryDirectedGraph<CHEdgeData>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);

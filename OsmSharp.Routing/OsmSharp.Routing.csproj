@@ -67,7 +67,6 @@
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
     <Compile Include="CH\CHEdgeData.cs" />
-    <Compile Include="CH\CHEdgeDataGraph.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />

@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(new LiveEdgeGraph(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -155,7 +155,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(new LiveEdgeGraph(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -246,7 +246,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(new LiveEdgeGraph(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(

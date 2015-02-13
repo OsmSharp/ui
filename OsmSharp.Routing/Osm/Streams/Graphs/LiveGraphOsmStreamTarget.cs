@@ -240,7 +240,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                                                         IOsmRoutingInterpreter interpreter)
         {
             var dynamicGraphRouterDataSource =
-                new DynamicGraphRouterDataSource<LiveEdge>(new LiveEdgeGraph(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter,
                 tagsIndex);
             targetData.RegisterSource(reader);
