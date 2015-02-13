@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2014 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -74,6 +74,20 @@ namespace OsmSharp.Collections.Coordinates.Collections
             {
                 _coordinates[idx] = float.MinValue;
             }
+        }
+
+        /// <summary>
+        /// Creates a huge coordinate index based on exisiting data.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="index">The index array.</param>
+        /// <param name="coordinates">The coordinates array.</param>
+        public HugeCoordinateCollectionIndex(long size, 
+            HugeArrayBase<ulong> index, HugeArrayBase<float> coordinates)
+        {
+            _nextIdx = size;
+            _index = index;
+            _coordinates = coordinates;
         }
 
         /// <summary>
@@ -208,6 +222,28 @@ namespace OsmSharp.Collections.Coordinates.Collections
                 bestSize = _coordinates.Length;
             }
             _coordinates.Resize(bestSize);
+        }
+
+        /// <summary>
+        /// Returns the length of the coordinates index.
+        /// </summary>
+        public long LengthIndex
+        {
+            get
+            {
+                return _index.Length;
+            }
+        }
+
+        /// <summary>
+        /// Returns the length of the coordinates.
+        /// </summary>
+        public long LengthCoordinates
+        {
+            get
+            {
+                return _coordinates.Length;
+            }
         }
 
         #region Helper Methods

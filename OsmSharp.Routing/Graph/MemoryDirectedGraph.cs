@@ -17,7 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
@@ -28,7 +30,7 @@ namespace OsmSharp.Routing.Graph
     /// An implementation of an in-memory dynamic graph but with explicitly directed edges.
     /// </summary>
     public class MemoryDirectedGraph<TEdgeData> : IGraph<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : struct, IGraphEdgeData
     {
         protected const int VERTEX_SIZE = 2; // holds the first edge index and the edge count.
         protected const int FIRST_EDGE = 0;
@@ -81,11 +83,52 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Creates a graph using the existing data in the given arrays.
+        /// </summary>
+        /// <param name="coordinateArray"></param>
+        /// <param name="vertexArray"></param>
+        /// <param name="edgesArray"></param>
+        /// <param name="edgeDataArray"></param>
+        /// <param name="edgeShapeArray"></param>
+        public MemoryDirectedGraph(
+            HugeArrayBase<GeoCoordinateSimple> coordinateArray,
+            HugeArrayBase<uint> vertexArray,
+            HugeArrayBase<uint> edgesArray,
+            HugeArrayBase<TEdgeData> edgeDataArray,
+            HugeCoordinateCollectionIndex edgeShapeArray)
+        {
+            _nextVertexId = (uint)(_vertices.Length + 1);
+            _nextEdgeId = (uint)(edgesArray.Length + 1);
+            _vertices = vertexArray;
+            //_vertices.Resize(sizeEstimate);
+            //for (int idx = 0; idx < sizeEstimate; idx++)
+            //{
+            //    _vertices[idx] = NO_EDGE;
+            //}
+            _coordinates = coordinateArray;
+            //_coordinates.Resize(sizeEstimate);
+            _edges = edgesArray;
+            //_edges.Resize(sizeEstimate * 3 * EDGE_SIZE);
+            //for (int idx = 0; idx < sizeEstimate * 3 * EDGE_SIZE; idx++)
+            //{
+            //    _edges[idx] = NO_EDGE;
+            //}
+            _edgeData = edgeDataArray;
+            //_edgeData.Resize(sizeEstimate * 3);
+            _edgeShapes = edgeShapeArray;
+            //_edgeShapes.Resize(sizeEstimate * 3);
+        }
+
+        /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
         public MemoryDirectedGraph(long sizeEstimate)
-            : this(sizeEstimate, new HugeArray<GeoCoordinateSimple>(sizeEstimate), new HugeArray<uint>(sizeEstimate), 
-                    new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), new HugeArray<TEdgeData>(sizeEstimate * 3), new HugeCoordinateCollectionIndex(sizeEstimate * 3))
+            : this(sizeEstimate, 
+            new HugeArray<GeoCoordinateSimple>(sizeEstimate), 
+            new HugeArray<uint>(sizeEstimate), 
+            new HugeArray<uint>(sizeEstimate * 3 * EDGE_SIZE), 
+            new HugeArray<TEdgeData>(sizeEstimate * 3), 
+            new HugeCoordinateCollectionIndex(sizeEstimate * 3))
         {
 
         }
@@ -99,7 +142,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        protected MemoryDirectedGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
+        public MemoryDirectedGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
             HugeArrayBase<uint> vertexArray, HugeArrayBase<uint> edgesArray, HugeArrayBase<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
@@ -114,6 +157,93 @@ namespace OsmSharp.Routing.Graph
             _edgeData.Resize(sizeEstimate * 3);
             _edgeShapes = edgeShapeArray;
             _edgeShapes.Resize(sizeEstimate * 3);
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped graph using the given file.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="estimatedSize"></param>
+        /// <param name="mapFrom"></param>
+        /// <param name="mapTo"></param>
+        public MemoryDirectedGraph(MemoryMappedFile file, long estimatedSize,
+            MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo,
+            int edgeDataSize)
+            : this(estimatedSize,
+            new MappedHugeArray<GeoCoordinateSimple, float>(new MemoryMappedHugeArraySingle(file, estimatedSize * 2), 2,
+            (array, idx, value) =>
+            {
+                array[idx] = value.Latitude;
+                array[idx + 1] = value.Longitude;
+            },
+            (array, idx) =>
+            {
+                return new GeoCoordinateSimple()
+                {
+                    Latitude = array[idx],
+                    Longitude = array[idx + 1]
+                };
+            }),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MemoryMappedHugeArrayUInt32(file, estimatedSize),
+            new MappedHugeArray<TEdgeData, uint>(new MemoryMappedHugeArrayUInt32(file, estimatedSize * edgeDataSize), edgeDataSize, 
+                mapTo, mapFrom),
+            new HugeCoordinateCollectionIndex(file, estimatedSize))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped graph from existing data.
+        /// </summary>
+        /// <param name="vertexCount"></param>
+        /// <param name="edgesCount"></param>
+        /// <param name="verticesFile"></param>
+        /// <param name="verticesCoordinatesFile"></param>
+        /// <param name="edgesFile"></param>
+        /// <param name="edgeDataFile"></param>
+        /// <param name="shapesIndexFile"></param>
+        /// <param name="shapesIndexLength"></param>
+        /// <param name="shapesCoordinateFile"></param>
+        /// <param name="shapesCoordinateLength"></param>
+        /// <param name="mapFrom"></param>
+        /// <param name="mapTo"></param>
+        /// <param name="edgeDataSize"></param>
+        public MemoryDirectedGraph(long vertexCount, long edgesCount, 
+            MemoryMappedFile verticesFile,
+            MemoryMappedFile verticesCoordinatesFile,
+            MemoryMappedFile edgesFile,
+            MemoryMappedFile edgeDataFile,
+            MemoryMappedFile shapesIndexFile, long shapesIndexLength,
+            MemoryMappedFile shapesCoordinateFile, long shapesCoordinateLength,
+            MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo,
+            int edgeDataSize)
+            : this(
+                new MappedHugeArray<GeoCoordinateSimple, float>(new MemoryMappedHugeArraySingle(verticesCoordinatesFile, vertexCount * 2), 2,
+                (array, idx, value) =>
+                {
+                    array[idx] = value.Latitude;
+                    array[idx + 1] = value.Longitude;
+                },
+                (array, idx) =>
+                {
+                    return new GeoCoordinateSimple()
+                    {
+                        Latitude = array[idx],
+                        Longitude = array[idx + 1]
+                    };
+                }),
+                new MemoryMappedHugeArrayUInt32(verticesFile, vertexCount),
+                new MemoryMappedHugeArrayUInt32(edgesFile, edgesCount),
+                new MappedHugeArray<TEdgeData, uint>(new MemoryMappedHugeArrayUInt32(edgeDataFile, edgesCount * edgeDataSize), edgeDataSize,
+                    mapTo,
+                    mapFrom),
+                new HugeCoordinateCollectionIndex(shapesIndexLength, new MemoryMappedHugeArrayUInt64(shapesIndexFile, shapesIndexLength),
+                    new MemoryMappedHugeArraySingle(shapesCoordinateFile, shapesCoordinateLength)))
+        {
+
         }
 
         /// <summary>

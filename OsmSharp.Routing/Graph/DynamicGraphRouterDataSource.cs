@@ -54,35 +54,6 @@ namespace OsmSharp.Routing.Graph
         /// Holds the supported vehicle profiles.
         /// </summary>
         private readonly HashSet<Vehicle> _supportedVehicles;
-        /// <summary>
-        /// Creates a new osm memory router data source.
-        /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsCollectionIndexReadonly tagsIndex)
-        {
-            if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
-
-            _graph = new MemoryGraph<TEdgeData>();
-            _vertexIndex = null; // do not create an index initially.
-            _tagsIndex = tagsIndex;
-
-            _supportedVehicles = new HashSet<Vehicle>();
-        }
-
-        /// <summary>
-        /// Creates a new osm memory router data source.
-        /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsCollectionIndexReadonly tagsIndex, int initSize)
-        {
-            if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
-
-            _graph = new MemoryGraph<TEdgeData>(initSize);
-            _vertexIndex = null; // do not create an index initially.
-            _tagsIndex = tagsIndex;
-
-            _supportedVehicles = new HashSet<Vehicle>();
-        }
 
         /// <summary>
         /// Creates a new osm memory router data source.

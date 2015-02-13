@@ -23,6 +23,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Streams;
+using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
@@ -155,7 +156,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new CHEdgeDataGraph(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);

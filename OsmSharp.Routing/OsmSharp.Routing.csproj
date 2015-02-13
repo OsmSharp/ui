@@ -67,7 +67,7 @@
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
     <Compile Include="CH\CHEdgeData.cs" />
-    <Compile Include="CH\CHEdgeMemoryMappedFileGraph.cs" />
+    <Compile Include="CH\CHEdgeDataGraph.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
@@ -134,7 +134,7 @@
     <Compile Include="Metrics\RouteMetricCalculator.cs" />
     <Compile Include="Metrics\Time\TimeCalculator.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
-    <Compile Include="Osm\Graphs\LiveEdgeMemoryMappedGraph.cs" />
+    <Compile Include="Osm\Graphs\LiveEdgeGraph.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeFlatfileSerializer.cs" />
     <Compile Include="Osm\Graphs\PreProcessing\LiveEdgePreprocessor.cs" />

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,6 +22,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
@@ -41,7 +42,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -64,20 +65,18 @@ namespace OsmSharp.Test.Performance.Routing
 
             var testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();
-            Stream writeStream = testOutputFile.OpenWrite();
+            var writeStream = testOutputFile.OpenWrite();
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<LiveEdge>(new LiveEdgeGraph(), tagsIndex);
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
-            //using (var file = new MemoryMappedStream(new MemoryStream()))
-            //using (var file = new MemoryMappedStream(new BufferedStream(new FileInfo(@"temp.map").Open(FileMode.OpenOrCreate, FileAccess.ReadWrite), 1024 * 1024)))
             using (var file = new MemoryMappedStream(new FileInfo(@"temp.map").Open(FileMode.OpenOrCreate, FileAccess.ReadWrite)))
             {
-                var memoryMappedGraph = new LiveEdgeMemoryMappedGraph(file, 10000);
-                var coordinates = new HugeCoordinateIndex(file, 10000);
+                var memoryMappedGraph = new LiveEdgeGraph(file, 1024);
+                var coordinates = new HugeCoordinateIndex(file, 1024);
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
                 targetData.RegisterSource(progress);
