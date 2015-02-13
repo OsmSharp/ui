@@ -147,13 +147,13 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
                 }
             }
 
-            if (oldSize < _length)
-            { // initialize new elements.
-                for (var i = oldSize; i < _length; i++)
-                {
-                    this[i] = default(T);
-                }
-            }
+            //if (oldSize < _length)
+            //{ // initialize new elements.
+            //    for (var i = oldSize; i < _length; i++)
+            //    {
+            //        this[i] = default(T);
+            //    }
+            //}
         }
 
         /// <summary>
