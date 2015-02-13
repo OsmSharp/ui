@@ -27,7 +27,7 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// An implementation of an in-memory dynamic graph.
     /// </summary>
-    public class MemoryGraph<TEdgeData> : IGraph<TEdgeData>
+    public class MemoryGraph<TEdgeData> : IGraph<TEdgeData>, IDisposable
         where TEdgeData : IGraphEdgeData
     {
         private const int EDGE_SIZE = 4;
@@ -91,7 +91,7 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Creates a new in-memory graph.
+        /// Creates a new graph using the given arrays.
         /// </summary>
         /// <param name="sizeEstimate"></param>
         /// <param name="coordinateArray"></param>
@@ -99,7 +99,12 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        protected MemoryGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, HugeArrayBase<uint> vertexArray, HugeArrayBase<uint> edgesArray, HugeArrayBase<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
+        public MemoryGraph(long sizeEstimate, 
+            HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
+            HugeArrayBase<uint> vertexArray, 
+            HugeArrayBase<uint> edgesArray, 
+            HugeArrayBase<TEdgeData> edgeDataArray, 
+            HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
             _nextEdgeId = 0;
@@ -1230,6 +1235,23 @@ namespace OsmSharp.Routing.Graph
         public bool CanHaveDuplicates
         {
             get { return false; }
+        }
+
+        /// <summary>
+        /// Disposes of all native resources associated with this memory dynamic graph.
+        /// </summary>
+        public void Dispose()
+        {
+            _coordinates.Dispose();
+            _coordinates = null;
+            _edges.Dispose();
+            _edges = null;
+            _edgeData.Dispose();
+            _edgeData = null;
+            _vertices.Dispose();
+            _vertices = null;
+            _edgeShapes.Dispose();
+            _edgeShapes = null;
         }
     }
 }

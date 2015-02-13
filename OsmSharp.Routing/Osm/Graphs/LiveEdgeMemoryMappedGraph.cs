@@ -13,9 +13,9 @@ using System.Text;
 namespace OsmSharp.Routing.Osm.Graphs
 {
     /// <summary>
-    /// A memory mapped graph to store CHEdgeData edges.
+    /// A memory mapped graph to store liveedge edges.
     /// </summary>
-    public class LiveEdgeMemoryMappedGraph : MemoryMappedGraph<LiveEdge>
+    public class LiveEdgeMemoryMappedGraph : MemoryGraph<LiveEdge>
     {       
         /// <summary>
         /// Creates a new memory mapped file dynamic graph.

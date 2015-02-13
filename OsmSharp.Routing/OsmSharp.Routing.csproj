@@ -91,7 +91,6 @@
     <Compile Include="Graph\INeighbourEnumerator.cs" />
     <Compile Include="Graph\MemoryDirectedGraph.cs" />
     <Compile Include="Graph\MemoryGraph.cs" />
-    <Compile Include="Graph\MemoryMappedGraph.cs" />
     <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Routing\DykstraBase.cs" />

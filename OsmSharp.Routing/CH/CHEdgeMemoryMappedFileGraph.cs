@@ -15,7 +15,7 @@ namespace OsmSharp.Routing.CH
     /// <summary>
     /// A memory mapped graph to store CHEdgeData edges.
     /// </summary>
-    public class CHEdgeMemoryMappedGraph : MemoryMappedGraph<CHEdgeData>
+    public class CHEdgeMemoryMappedGraph : MemoryDirectedGraph<CHEdgeData>
     {       
         /// <summary>
         /// Creates a new memory mapped graph.
