@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Arrays;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 
@@ -145,5 +146,33 @@ namespace OsmSharp.Routing.Osm.Graphs
         {
             return string.Format("{0}-{1}", this.Tags, this.Distance);
         }
+
+        /// <summary>
+        /// Holds the size this edge has when converted to uints.
+        /// </summary>
+        public static int SizeUints = 3;
+
+        /// <summary>
+        /// A delegate to map an edge onto uints.
+        /// </summary>
+        public static MappedHugeArray<LiveEdge, uint>.MapFrom MapFromDelegate = (array, idx) =>
+        {
+            return new LiveEdge()
+                {
+                    Value = array[idx],
+                    Tags = array[idx + 1],
+                    Distance = System.BitConverter.ToSingle(System.BitConverter.GetBytes(array[idx + 2]), 0)
+                };
+        };
+
+        /// <summary>
+        /// A delegate to map an edge onto uints.
+        /// </summary>
+        public static MappedHugeArray<LiveEdge, uint>.MapTo MapToDelegate = (array, idx, value) =>
+        {
+                array[idx] = value.Value;
+                array[idx + 1] = value.Tags;
+                array[idx + 2] = System.BitConverter.ToUInt32(System.BitConverter.GetBytes(value.Distance), 0);
+        };
     }
 }

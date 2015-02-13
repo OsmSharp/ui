@@ -56,22 +56,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <param name="file"></param>
         /// <param name="estimatedSize"></param>
         public LiveEdgeGraph(MemoryMappedFile file, long estimatedSize)
-            : base(file, estimatedSize,
-            (array, idx) =>
-            {
-                return new LiveEdge()
-                {
-                    Value = array[idx],
-                    Tags = array[idx + 1],
-                    Distance = BitConverter.ToSingle(BitConverter.GetBytes(array[idx + 2]), 0)
-                };
-            },
-            (array, idx, value) =>
-            {
-                array[idx] = value.Value;
-                array[idx + 1] = value.Tags;
-                array[idx + 2] = BitConverter.ToUInt32(BitConverter.GetBytes(value.Distance), 0);
-            }, 2)
+            : base(file, estimatedSize, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, LiveEdge.SizeUints)
         {
 
         }
@@ -86,41 +71,8 @@ namespace OsmSharp.Routing.Osm.Graphs
             MemoryMappedFile edgeDataFile,
             MemoryMappedFile shapesIndexFile, long shapesIndexLength,
             MemoryMappedFile shapesCoordinateFile, long shapesCoordinateLength)
-            : base(
-                new MappedHugeArray<GeoCoordinateSimple, float>(new MemoryMappedHugeArraySingle(verticesCoordinatesFile, vertexCount * 2), 2,
-                (array, idx, value) =>
-                {
-                    array[idx] = value.Latitude;
-                    array[idx + 1] = value.Longitude;
-                },
-                (array, idx) =>
-                {
-                    return new GeoCoordinateSimple()
-                    {
-                        Latitude = array[idx],
-                        Longitude = array[idx + 1]
-                    };
-                }),
-                new MemoryMappedHugeArrayUInt32(verticesFile, vertexCount),
-                new MemoryMappedHugeArrayUInt32(edgesFile, edgesCount),
-                new MappedHugeArray<LiveEdge, uint>(new MemoryMappedHugeArrayUInt32(edgeDataFile, edgesCount * 2), 2,
-                (array, idx, value) =>
-                {
-                    array[idx] = value.Value;
-                    array[idx + 1] = value.Tags;
-                    array[idx + 2] = BitConverter.ToUInt32(BitConverter.GetBytes(value.Distance), 0);
-                },
-                (array, idx) =>
-                {
-                    return new LiveEdge()
-                    {
-                        Value = array[idx],
-                        Tags = array[idx + 1],
-                        Distance = BitConverter.ToSingle(BitConverter.GetBytes(array[idx + 2]), 0)
-                    };
-                }),
-                new HugeCoordinateCollectionIndex(shapesIndexLength, new MemoryMappedHugeArrayUInt64(shapesIndexFile, shapesIndexLength), 
-                    new MemoryMappedHugeArraySingle(shapesCoordinateFile, shapesCoordinateLength)))
+            : base(vertexCount, edgesCount, verticesFile, verticesCoordinatesFile, edgeDataFile, edgeDataFile, shapesIndexFile, shapesIndexLength, shapesCoordinateFile, shapesCoordinateLength,
+                LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, LiveEdge.SizeUints)
         {
 
         }

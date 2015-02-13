@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Collections.Arrays;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using System;
@@ -275,6 +276,32 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 otherEdge._meta == this._meta &&
                 otherEdge.Weight == this.Weight;
         }
+
+        /// <summary>
+        /// Holds the size this edge has when converted to uints.
+        /// </summary>
+        public static int SizeUints = 3;
+
+        /// <summary>
+        /// A delegate to map an edge onto uints.
+        /// </summary>
+        public static MappedHugeArray<CHEdgeData, uint>.MapFrom MapFromDelegate = (array, idx) =>
+            {
+                return new CHEdgeData(
+                    array[idx],
+                    array[idx + 1],
+                    (byte)array[idx + 2]);
+            };
+
+        /// <summary>
+        /// A delegate to map an edge onto uints.
+        /// </summary>
+        public static MappedHugeArray<CHEdgeData, uint>.MapTo MapToDelegate = (array, idx, value) =>
+            {
+                array[idx] = value.Value;
+                array[idx + 1] = value.Tags;
+                array[idx + 2] = value.Meta;
+            };
     }
 
     /// <summary>

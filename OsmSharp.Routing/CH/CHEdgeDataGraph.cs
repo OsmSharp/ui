@@ -51,20 +51,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="file">The file to store the data at.</param>
         /// <param name="estimatedSize">The estimated size.</param>
         public CHEdgeDataGraph(MemoryMappedFile file, long estimatedSize)
-            : base(file, estimatedSize,
-            (array, idx) =>
-            {
-                return new CHEdgeData(
-                    array[idx],
-                    array[idx + 1],
-                    (byte)array[idx + 2]);
-            }, 
-            (array, idx, value) =>
-            {
-                array[idx] = value.Value;
-                array[idx + 1] = value.Tags;
-                array[idx + 2] = value.Meta;
-            }, 3)
+            : base(file, estimatedSize, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, CHEdgeData.SizeUints)
         {
 
         }
@@ -90,20 +77,7 @@ namespace OsmSharp.Routing.CH
             MemoryMappedFile shapesIndexFile, long shapesIndexLength,
             MemoryMappedFile shapesCoordinateFile, long shapesCoordinateLength)
             : base(vertexCount, edgesCount, verticesFile, verticesCoordinatesFile, edgesFile, edgeDataFile, shapesIndexFile, shapesIndexLength,
-                shapesCoordinateFile, shapesCoordinateLength,
-            (array, idx) =>
-            {
-                return new CHEdgeData(
-                    array[idx],
-                    array[idx + 1],
-                    (byte)array[idx + 2]);
-            }, 
-            (array, idx, value) =>
-            {
-                array[idx] = value.Value;
-                array[idx + 1] = value.Tags;
-                array[idx + 2] = value.Meta;
-            }, 3)
+                shapesCoordinateFile, shapesCoordinateLength, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, CHEdgeData.SizeUints)
         {
 
         }
