@@ -71,13 +71,13 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="elementSize">The element size.</param>
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
-        public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize)
+        /// <param name="bufferSize">The size of an idividual buffer.</param>
+        public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize, int bufferSize)
         {
             if (file == null) { throw new ArgumentNullException(); }
             if (elementSize < 0) { throw new ArgumentOutOfRangeException("elementSize"); }
             if (arraySize < 0) { throw new ArgumentOutOfRangeException("arraySize"); }
             if (size < 0) { throw new ArgumentOutOfRangeException("size"); }
-            if ((arraySize & (arraySize - 1)) != 0) { throw new ArgumentException("arraySize needs to be a power of 2."); }
 
             _file = file;
             _length = size;
@@ -85,7 +85,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             _elementSize = elementSize;
             _fileSizeBytes = arraySize * _elementSize;
 
-            _bufferSize = (int)arraySize / 64;
+            _bufferSize = bufferSize;
             _cachedBuffer = null;
             _cachedBuffers = new LRUCache<long, CachedBuffer>(64);
             _cachedBuffers.OnRemove += new LRUCache<long, CachedBuffer>.OnRemoveDelegate(buffer_OnRemove);
@@ -146,14 +146,6 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
                     _accessors.Add(this.CreateAccessor(_file, _fileSizeBytes));
                 }
             }
-
-            //if (oldSize < _length)
-            //{ // initialize new elements.
-            //    for (var i = oldSize; i < _length; i++)
-            //    {
-            //        this[i] = default(T);
-            //    }
-            //}
         }
 
         /// <summary>
@@ -209,6 +201,10 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
                 long localIdx = item.Position % _fileElementSize;
                 long localPosition = localIdx * _elementSize;
 
+                if(item.Position + _bufferSize > _length)
+                { // only partially write buffer, do not write past the end.
+                    _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, (int)((item.Position + _bufferSize) - _length));
+                }
                 _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, _bufferSize);
             }
         }

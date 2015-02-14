@@ -31,7 +31,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="file">The the memory mapped file.</param>
         /// <param name="size">The initial size of the array.</param>
         public MemoryMappedHugeArraySingle(MemoryMappedFile file, long size)
-            : base(file, 4, size, DefaultFileElementSize)
+            : base(file, 4, size, DefaultFileElementSize, (int)DefaultFileElementSize / 64)
         {
 
         }
@@ -43,7 +43,20 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
         public MemoryMappedHugeArraySingle(MemoryMappedFile file, long size, long arraySize)
-            : base(file, 4, size, arraySize)
+            : base(file, 4, size, arraySize, (int)arraySize / 64)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memorymapped huge array.
+        /// </summary>
+        /// <param name="file">The the memory mapped file.</param>
+        /// <param name="size">The initial size of the array.</param>
+        /// <param name="arraySize">The size of an indivdual array block.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        public MemoryMappedHugeArraySingle(MemoryMappedFile file, long size, long arraySize, int bufferSize)
+            :base(file, 4, size, arraySize, bufferSize)
         {
 
         }

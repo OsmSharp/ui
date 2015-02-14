@@ -23,6 +23,7 @@ using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -899,5 +900,27 @@ namespace OsmSharp.Routing.Graph
         {
             get { return true; }
         }
+
+        //#region Serialization
+
+        ///// <summary>
+        ///// Serializes this graph to disk.
+        ///// </summary>
+        ///// <param name="stream"></param>
+        //public void Serialize(Stream stream)
+        //{
+        //    // write in this order: vertices, vertexCoordinates, edges, edgeData, edgeShapes.
+        //    var file = new MemoryMappedStream(stream);
+        //    file.CreateUInt32(_vertices.Length
+
+        //    var vertexArray = new MemoryMappedHugeArrayUInt32(file, _vertices.Length, _vertices.Length);
+        //    for(int idx = 0; idx  < _vertices.Length; idx++)
+        //    {
+        //        vertexArray[idx] = _vertices[idx];
+        //    }
+
+        //}
+
+        //#endregion
     }
 }
