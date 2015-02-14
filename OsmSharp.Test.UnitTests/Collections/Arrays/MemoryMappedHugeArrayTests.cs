@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 // huge array is not initialized.
                 for (long idx = oldSize; idx < intArray.Length;idx++)
                 {
-                    intArrayRef[idx] = 0;
+                    intArray[idx] = 0;
                 }
 
                 Assert.AreEqual(intArrayRef.Length, intArray.Length);
