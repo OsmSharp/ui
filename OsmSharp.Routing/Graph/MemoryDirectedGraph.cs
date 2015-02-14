@@ -901,26 +901,124 @@ namespace OsmSharp.Routing.Graph
             get { return true; }
         }
 
-        //#region Serialization
+        #region Serialization
 
-        ///// <summary>
-        ///// Serializes this graph to disk.
-        ///// </summary>
-        ///// <param name="stream"></param>
-        //public void Serialize(Stream stream)
-        //{
-        //    // write in this order: vertices, vertexCoordinates, edges, edgeData, edgeShapes.
-        //    var file = new MemoryMappedStream(stream);
-        //    file.CreateUInt32(_vertices.Length
+        /// <summary>
+        /// Serializes this graph to disk.
+        /// </summary>
+        /// <param name="stream">The stream to write to. Writing will start at position 0.</param>
+        /// <param name="edgeDataSize">The edge data size.</param>
+        /// <param name="mapFrom">The map from for the edge data.</param>
+        /// <param name="mapTo">The map to for the edge data.</param>
+        public long Serialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
+        {
+            // write vertex and edge count.
+            long position = 0;
+            stream.Write(BitConverter.GetBytes(_vertices.Length), 0, 8);
+            position = position + 8;
+            stream.Write(BitConverter.GetBytes(_edgeData.Length), 0, 8);
+            position = position + 8;
 
-        //    var vertexArray = new MemoryMappedHugeArrayUInt32(file, _vertices.Length, _vertices.Length);
-        //    for(int idx = 0; idx  < _vertices.Length; idx++)
-        //    {
-        //        vertexArray[idx] = _vertices[idx];
-        //    }
+            // write in this order: vertices, vertexCoordinates, edges, edgeData, edgeShapes.
+            using (var file = new MemoryMappedStream(stream))
+            {
+                // write vertices.
+                var vertexArray = new MemoryMappedHugeArrayUInt32(file, _vertices.Length, _vertices.Length, 1024);
+                vertexArray.CopyFrom(_vertices);
+                position = position + (_vertices.Length * 4);
 
-        //}
+                // write vertex coordinates.
+                var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
+                    new MemoryMappedHugeArraySingle(file, _coordinates.Length * 2, _coordinates.Length * 2, 1024),
+                        2, (array, idx, coordinate) =>
+                        {
+                            array[idx] = coordinate.Latitude;
+                            array[idx + 1] = coordinate.Longitude;
+                        },
+                        (Array, idx) =>
+                        {
+                            return new GeoCoordinateSimple()
+                            {
+                                Latitude = Array[idx],
+                                Longitude = Array[idx + 1]
+                            };
+                        });
+                vertexCoordinateArray.CopyFrom(_coordinates);
+                position = position + (_coordinates.Length * 8);
 
-        //#endregion
+                // write edges.
+                var edgeArray = new MemoryMappedHugeArrayUInt32(file, _edges.Length, _edges.Length, 1024);
+                edgeArray.CopyFrom(_edges);
+                position = position + (_edges.Length * 4);
+
+                // write edge data.
+                var edgeDataArray = new MappedHugeArray<TEdgeData, uint>(
+                    new MemoryMappedHugeArrayUInt32(file, _edgeData.Length * edgeDataSize, _edgeData.Length * edgeDataSize, 1024), edgeDataSize, mapTo, mapFrom);
+                edgeDataArray.CopyFrom(_edgeData);
+                position = position + (_edgeData.Length * edgeDataSize * 4);
+            }
+
+            // write shapes.
+            stream.Seek(position, SeekOrigin.Begin);
+            position = position + _edgeShapes.Serialize(stream);
+            return position;
+        }
+
+        /// <summary>
+        /// Deserializes a graph from the given stream.
+        /// </summary>
+        /// <param name="stream">The stream to read from. Reading will start at position 0.</param>
+        /// <param name="edgeDataSize">The edge data size.</param>
+        /// <param name="mapFrom">The map from for the edge data.</param>
+        /// <param name="mapTo">The map to for the edge data.</param>
+        /// <returns></returns>
+        public static MemoryDirectedGraph<TEdgeData> Deserialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
+        {
+            // read sizes.
+            long position = 0;
+            var longBytes = new byte[8];
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var vertexLength = BitConverter.ToInt64(longBytes, 0);
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var edgeLength = BitConverter.ToInt64(longBytes, 0);
+
+            var file = new MemoryMappedStream(stream);
+            var vertexArray = new MemoryMappedHugeArrayUInt32(file, vertexLength, vertexLength, 1024);
+            position = position + (vertexLength * 4);
+            var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
+                new MemoryMappedHugeArraySingle(file, vertexLength * 2, vertexLength* 2, 1024),
+                    2, (array, idx, coordinate) =>
+                    {
+                        array[idx] = coordinate.Latitude;
+                        array[idx + 1] = coordinate.Longitude;
+                    },
+                    (Array, idx) =>
+                    {
+                        return new GeoCoordinateSimple()
+                        {
+                            Latitude = Array[idx],
+                            Longitude = Array[idx + 1]
+                        };
+                    });
+            position = position + (vertexLength * 8);
+            var edgeArray = new MemoryMappedHugeArrayUInt32(file, edgeLength, edgeLength, 1024);
+            position = position + (edgeLength * 4);
+            var edgeDataArray = new MappedHugeArray<TEdgeData, uint>(
+                new MemoryMappedHugeArrayUInt32(file, edgeLength * edgeDataSize, edgeLength * edgeDataSize, 1024), edgeDataSize, mapTo, mapFrom);
+            position = position + (edgeLength * edgeDataSize * 4);
+
+            // deserialize shapes.
+            stream.Seek(position, SeekOrigin.Begin);
+            var cappedStream = new OsmSharp.IO.LimitedStream(stream);
+            var shapes = HugeCoordinateCollectionIndex.Deserialize(cappedStream);
+
+            return new MemoryDirectedGraph<TEdgeData>(vertexCoordinateArray, vertexArray, edgeArray, edgeDataArray, shapes);
+        }
+
+        #endregion
     }
 }

@@ -47,5 +47,17 @@ namespace OsmSharp.Collections.Arrays
         /// Disposes of all resources associated with this array.
         /// </summary>
         public abstract void Dispose();
+
+        /// <summary>
+        /// Copies all the data over from the given array to this array.
+        /// </summary>
+        /// <param name="array"></param>
+        public virtual void CopyFrom(HugeArrayBase<T> array)
+        {
+            for(int idx = 0; idx < array.Length; idx++)
+            {
+                this[idx] = array[idx];
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@ using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Collections.Coordinates.Collections
 {
@@ -513,6 +514,59 @@ namespace OsmSharp.Collections.Coordinates.Collections
             {
                 return new HugeCoordinateCollection(_coordinates, _startIdx, _size, !_reverse);
             }
+        }
+
+        /// <summary>
+        /// Serializes this huge collection index to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        public long Serialize(Stream stream)
+        {
+            long position = 0;
+            stream.Write(BitConverter.GetBytes(_index.Length), 0, 8);
+            position = position + 8;
+            stream.Write(BitConverter.GetBytes(_coordinates.Length), 0, 8);
+            position = position + 8;
+
+            // write in this order: index, shapes.
+            using (var file = new MemoryMappedStream(stream))
+            {
+                // write index.
+                var indexArray = new MemoryMappedHugeArrayUInt64(file, _index.Length, _index.Length, 1024);
+                indexArray.CopyFrom(_index);
+                position = position + (_index.Length * 8);
+
+                // write coordinates.
+                var coordinatesArray = new MemoryMappedHugeArraySingle(file, _coordinates.Length, _coordinates.Length, 1024);
+                coordinatesArray.CopyFrom(_coordinates);
+                position = position + (_coordinates.Length * 4);
+            }
+
+            return position;
+        }
+
+        /// <summary>
+        /// Deserializes a huge collection index from the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static HugeCoordinateCollectionIndex Deserialize(Stream stream)
+        {
+            // read sizes.
+            long position = 0;
+            var longBytes = new byte[8];
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var indexLength = BitConverter.ToInt64(longBytes, 0);
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var coordinateLength = BitConverter.ToInt64(longBytes, 0);
+
+            var file = new MemoryMappedStream(stream);
+            var indexArray = new MemoryMappedHugeArrayUInt64(file, indexLength, indexLength, 1024);
+            var coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength, coordinateLength, 1024);
+
+            return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);
         }
 
         /// <summary>
