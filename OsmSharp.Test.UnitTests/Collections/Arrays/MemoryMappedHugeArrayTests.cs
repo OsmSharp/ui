@@ -125,7 +125,13 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 }
 
                 Array.Resize<uint>(ref intArrayRef, 1235);
+                var oldSize = intArray.Length;
                 intArray.Resize(1235);
+                // huge array is not initialized.
+                for (long idx = oldSize; idx < intArray.Length;idx++)
+                {
+                    intArrayRef[idx] = 0;
+                }
 
                 Assert.AreEqual(intArrayRef.Length, intArray.Length);
                 for (int idx = 0; idx < intArrayRef.Length; idx++)
