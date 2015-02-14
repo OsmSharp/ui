@@ -136,7 +136,8 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
                 Assert.AreEqual(intArrayRef.Length, intArray.Length);
                 for (int idx = 0; idx < intArrayRef.Length; idx++)
                 {
-                    Assert.AreEqual(intArrayRef[idx], intArray[idx]);
+                    Assert.AreEqual(intArrayRef[idx], intArray[idx], string.Format("Array element not equal at index: {0}. Expected {1}, found {2}",
+                        idx, intArray[idx], intArrayRef[idx]));
                 }
             }
         }
