@@ -795,26 +795,42 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="source"></param>
         public override void RegisterSource(OsmStreamSource source)
         {
-            // add filter to remove all irrelevant tags.
-            var tagsFilter = new OsmStreamFilterTagsFilter((TagsCollectionBase tags) =>
-            {
-                var tagsToRemove = new List<Tag>();
-                foreach (var tag in tags)
-                {
-                    if (!_interpreter.IsRelevant(tag.Key, tag.Value) &&
-                        !Vehicle.IsRelevantForOneOrMore(tag.Key, tag.Value))
-                    { // not relevant for both interpreter and all registered vehicle profiles.
-                        tagsToRemove.Add(tag);
-                    }
-                }
-                foreach (Tag tag in tagsToRemove)
-                {
-                    tags.RemoveKeyValue(tag.Key, tag.Value);
-                }
-            });
-            tagsFilter.RegisterSource(source);
+            this.RegisterSource(source, true);
+        }
 
-            base.RegisterSource(tagsFilter);
+        /// <summary>
+        /// Registers the source for this target.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="filterTags">The filter tags flag.</param>
+        public virtual void RegisterSource(OsmStreamSource source, bool filterTags)
+        {
+            if (filterTags)
+            { // add filter to remove all irrelevant tags.
+                var tagsFilter = new OsmStreamFilterTagsFilter((TagsCollectionBase tags) =>
+                {
+                    var tagsToRemove = new List<Tag>();
+                    foreach (var tag in tags)
+                    {
+                        if (!_interpreter.IsRelevant(tag.Key, tag.Value) &&
+                            !Vehicle.IsRelevantForOneOrMore(tag.Key, tag.Value))
+                        { // not relevant for both interpreter and all registered vehicle profiles.
+                            tagsToRemove.Add(tag);
+                        }
+                    }
+                    foreach (Tag tag in tagsToRemove)
+                    {
+                        tags.RemoveKeyValue(tag.Key, tag.Value);
+                    }
+                });
+                tagsFilter.RegisterSource(source);
+
+                base.RegisterSource(tagsFilter);
+            }
+            else
+            { // no filter!
+                base.RegisterSource(source);
+            }
         }
 
         /// <summary>
