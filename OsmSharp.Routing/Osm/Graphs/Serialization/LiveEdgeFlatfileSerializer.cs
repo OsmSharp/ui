@@ -40,7 +40,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <returns></returns>
         protected override DynamicGraphRouterDataSource<LiveEdge> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsCollectionIndex);
+            return new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsCollectionIndex);
         }
 
         /// <summary>

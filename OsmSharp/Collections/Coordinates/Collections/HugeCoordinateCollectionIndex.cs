@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Arrays.MemoryMapped;
+using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
@@ -517,29 +518,66 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
+        /// Trims the size of the index and of the coordinate array to the exact size needed.
+        /// </summary>
+        /// <returns></returns>
+        public void Trim()
+        {
+            // find the highest index where the index-entry is non-null.
+            long maxIndex = 0;
+            for(long idx = _index.Length - 1; idx > 0; idx--)
+            {
+                if(_index[idx] != 0)
+                {
+                    maxIndex = idx;
+                    break;
+                }
+            }
+
+            // resize accordingly.
+            var indexSize = maxIndex + 1;
+            var coordinateLength = _nextIdx * 2;
+            if(coordinateLength == 0)
+            { // minimum one.
+                coordinateLength = 2;
+            }
+            _index.Resize(indexSize);
+            _coordinates.Resize(coordinateLength);
+        }
+
+        /// <summary>
         /// Serializes this huge collection index to the given stream.
         /// </summary>
         /// <param name="stream"></param>
         public long Serialize(Stream stream)
         {
+            // first trim to minimize the amount of useless data store.
+            this.Trim();
+
+            // start writing.
+            long indexSize = _index.Length;
+            long coordinatesCount = _coordinates.Length;
+            
             long position = 0;
-            stream.Write(BitConverter.GetBytes(_index.Length), 0, 8);
+            stream.Write(BitConverter.GetBytes(indexSize), 0, 8); // write the actual index size.
             position = position + 8;
-            stream.Write(BitConverter.GetBytes(_coordinates.Length), 0, 8);
+            stream.Write(BitConverter.GetBytes(coordinatesCount), 0, 8); // write the actual number of coordinates.
             position = position + 8;
 
             // write in this order: index, shapes.
-            using (var file = new MemoryMappedStream(stream))
+            using (var file = new MemoryMappedStream(new LimitedStream(stream)))
             {
                 // write index.
-                var indexArray = new MemoryMappedHugeArrayUInt64(file, _index.Length, _index.Length, 1024);
-                indexArray.CopyFrom(_index);
-                position = position + (_index.Length * 8);
+                var indexArray = new MemoryMappedHugeArrayUInt64(file, indexSize, indexSize, 1024);
+                indexArray.CopyFrom(_index, indexSize);
+                indexArray.Dispose();
+                position = position + (indexSize * 8);
 
                 // write coordinates.
-                var coordinatesArray = new MemoryMappedHugeArraySingle(file, _coordinates.Length, _coordinates.Length, 1024);
+                var coordinatesArray = new MemoryMappedHugeArraySingle(file, coordinatesCount * 2, coordinatesCount * 2, 1024);
                 coordinatesArray.CopyFrom(_coordinates);
-                position = position + (_coordinates.Length * 4);
+                coordinatesArray.Dispose();
+                position = position + (coordinatesCount * 2 * 4);
             }
 
             return position;
@@ -548,9 +586,10 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Deserializes a huge collection index from the given stream.
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="stream">The source stream.</param>
+        /// <param name="copy">The copy flag. When true all data is copied into memory, otherwise the source-stream is used as a memorymapped file.</param>
         /// <returns></returns>
-        public static HugeCoordinateCollectionIndex Deserialize(Stream stream)
+        public static HugeCoordinateCollectionIndex Deserialize(Stream stream, bool copy = false)
         {
             // read sizes.
             long position = 0;
@@ -562,9 +601,22 @@ namespace OsmSharp.Collections.Coordinates.Collections
             position = position + 8;
             var coordinateLength = BitConverter.ToInt64(longBytes, 0);
 
-            var file = new MemoryMappedStream(stream);
+            var file = new MemoryMappedStream(new LimitedStream(stream));
             var indexArray = new MemoryMappedHugeArrayUInt64(file, indexLength, indexLength, 1024);
-            var coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength, coordinateLength, 1024);
+            var coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength * 2, coordinateLength * 2, 1024);
+
+            if (copy)
+            { // copy the data.
+                var indexArrayCopy = new HugeArray<ulong>(indexLength);
+                indexArrayCopy.CopyFrom(indexArray);
+
+                var coordinateArrayCopy = new HugeArray<float>(coordinateLength * 2);
+                coordinateArrayCopy.CopyFrom(coordinateArray);
+
+                file.Dispose();
+
+                return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);
+            }
 
             return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);
         }

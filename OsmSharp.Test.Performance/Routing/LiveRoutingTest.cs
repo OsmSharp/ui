@@ -71,7 +71,7 @@ namespace OsmSharp.Test.Performance.Routing
             // read from the OSM-stream.
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
             var interpreter = new OsmRoutingInterpreter();
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             data.DropVertexIndex();
             var targetData = new LiveGraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);

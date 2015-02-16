@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction1NoWitnesses()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
@@ -126,7 +126,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction2Witness()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
@@ -192,7 +192,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction3TinyOneWay()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
@@ -309,7 +309,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction4ReplacePrevious()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var vertex1 = graph.AddVertex(1, 0);
             var vertex2 = graph.AddVertex(2, 0);
             var vertex3 = graph.AddVertex(3, 0);
@@ -363,7 +363,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction5KeepPrevious()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
@@ -416,7 +416,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction6DuplicateBackward()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
@@ -471,7 +471,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestVerifiedContraction6DuplicateForward()
         {
-            var graph = new MemoryDirectedGraph<CHEdgeData>();
+            var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);

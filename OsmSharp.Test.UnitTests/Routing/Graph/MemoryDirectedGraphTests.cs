@@ -34,9 +34,9 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Returns a graph.
         /// </summary>
         /// <returns></returns>
-        protected IGraph<LiveEdge> CreateGraph()
+        protected GraphBase<LiveEdge> CreateGraph()
         {
-            return new MemoryDirectedGraph<LiveEdge>();
+            return new DirectedGraph<LiveEdge>();
         }
 
         /// <summary>

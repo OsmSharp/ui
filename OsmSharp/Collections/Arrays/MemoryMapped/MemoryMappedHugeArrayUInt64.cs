@@ -57,7 +57,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="arraySize">The size of an indivdual array block.</param>
         /// <param name="bufferSize">The buffer size.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize, int bufferSize)
-            :base(file, 4, size, arraySize, bufferSize)
+            :base(file, 8, size, arraySize, bufferSize)
         {
 
         }

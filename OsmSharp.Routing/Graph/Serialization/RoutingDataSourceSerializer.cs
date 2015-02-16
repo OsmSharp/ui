@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
     public abstract class RoutingDataSourceSerializer<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+        where TEdgeData : struct, IGraphEdgeData
     {
         #region Versioning
 

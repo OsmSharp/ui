@@ -203,7 +203,8 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
 
                 if(item.Position + _bufferSize > _length)
                 { // only partially write buffer, do not write past the end.
-                    _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, (int)((item.Position + _bufferSize) - _length));
+                    _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, (int)(_length - item.Position));
+                    return;
                 }
                 _accessors[(int)arrayIdx].WriteArray(localPosition, item.Buffer, 0, _bufferSize);
             }
@@ -273,8 +274,11 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             // clear cache.
             _cachedBuffers.Clear();
 
-            // disposing the file will also dispose of all undisposed accessors, and accessor cannot exist without a file.
-            _file.Dispose();
+            // dispose only the accessors, the file may still be in use.
+            foreach(var accessor in _accessors)
+            {
+                accessor.Dispose();
+            }
         }
     }
 }

@@ -26,7 +26,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
@@ -68,7 +67,7 @@ namespace OsmSharp.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             memoryData.DropVertexIndex();
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
@@ -114,23 +113,23 @@ namespace OsmSharp.Routing
             return new Router(liveEdgeRouter); // create the actual router.
         }
 
-        /// <summary>
-        /// Creates a new router.
-        /// </summary>
-        /// <param name="flatFile">The flatfile containing the graph.</param>
-        /// <param name="interpreter">The routing interpreter.</param>
-        /// <returns></returns>
-        public static Router CreateLiveFrom(Stream flatFile, IOsmRoutingInterpreter interpreter)
-        {
-            var serializer = new LiveEdgeFlatfileSerializer();
-            var source = serializer.Deserialize(flatFile, false) as DynamicGraphRouterDataSource<LiveEdge>;
+        ///// <summary>
+        ///// Creates a new router.
+        ///// </summary>
+        ///// <param name="flatFile">The flatfile containing the graph.</param>
+        ///// <param name="interpreter">The routing interpreter.</param>
+        ///// <returns></returns>
+        //public static Router CreateLiveFrom(Stream flatFile, IOsmRoutingInterpreter interpreter)
+        //{
+        //    var serializer = new LiveEdgeFlatfileSerializer();
+        //    var source = serializer.Deserialize(flatFile, false) as DynamicGraphRouterDataSource<LiveEdge>;
 
-            // creates the live edge router.
-            var liveEdgeRouter = new TypedRouterLiveEdge(
-                source, interpreter, new Dykstra());
+        //    // creates the live edge router.
+        //    var liveEdgeRouter = new TypedRouterLiveEdge(
+        //        source, interpreter, new Dykstra());
 
-            return new Router(liveEdgeRouter); // create the actual router.
-        }
+        //    return new Router(liveEdgeRouter); // create the actual router.
+        //}
 
         /// <summary>
         /// Creates a router using live interpreted edges.

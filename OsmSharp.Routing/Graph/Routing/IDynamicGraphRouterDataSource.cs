@@ -22,9 +22,60 @@ namespace OsmSharp.Routing.Graph.Routing
     /// Interface representing objects that are both and IBasicRouterDataSource and a IDynamicGraph.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IDynamicGraphRouterDataSource<TEdgeData> : IGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
-        where TEdgeData : IGraphEdgeData
+    public abstract class DynamicGraphRouterDataSourceBase<TEdgeData> : GraphBase<TEdgeData>, IBasicRouterDataSource<TEdgeData>
+        where TEdgeData : struct, IGraphEdgeData
     {
 
+        public abstract bool SupportsProfile(Vehicle vehicle);
+
+        public abstract void AddSupportedProfile(Vehicle vehicle);
+
+        public abstract INeighbourEnumerator<TEdgeData> GetEdges(Math.Geo.GeoCoordinateBox box);
+
+        public abstract System.Collections.Generic.IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex);
+
+        public abstract Collections.Tags.Index.ITagsCollectionIndexReadonly TagsIndex
+        {
+            get;
+        }
+
+        public abstract void AddRestriction(uint[] route);
+
+        public abstract void AddRestriction(string vehicleType, uint[] route);
+
+        public abstract bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out System.Collections.Generic.List<uint[]> routes);
+
+        public abstract bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out System.Collections.Generic.List<uint[]> routes);
+
+        public override abstract bool IsDirected
+        {
+            get;
+        }
+
+        public override abstract bool CanHaveDuplicates
+        {
+            get;
+        }
+
+        public override abstract bool GetVertex(uint id, out float latitude, out float longitude);
+
+        public override abstract bool ContainsEdges(uint vertexId, uint neighbour);
+
+        public override abstract bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data);
+
+        public override abstract EdgeEnumerator<TEdgeData> GetEdgeEnumerator();
+
+        public override abstract EdgeEnumerator<TEdgeData> GetEdges(uint vertexId);
+
+        public override abstract EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2);
+
+        public override abstract bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data);
+
+        public override abstract bool GetEdgeShape(uint vertex1, uint vertex2, out Collections.Coordinates.Collections.ICoordinateCollection shape);
+
+        public override abstract uint VertexCount
+        {
+            get;
+        }
     }
 }

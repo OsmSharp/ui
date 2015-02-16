@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the data target.
         /// </summary>
-        private IGraph<CHEdgeData> _target;
+        private GraphBase<CHEdgeData> _target;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        public CHPreProcessor(IGraph<CHEdgeData> target,
+        public CHPreProcessor(GraphBase<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
         {

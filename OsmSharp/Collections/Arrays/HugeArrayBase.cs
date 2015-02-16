@@ -51,12 +51,34 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Copies all the data over from the given array to this array.
         /// </summary>
-        /// <param name="array"></param>
+        /// <param name="array">The array to copy to.</param>
         public virtual void CopyFrom(HugeArrayBase<T> array)
         {
-            for(int idx = 0; idx < array.Length; idx++)
+            this.CopyFrom(array, 0, 0, array.Length);
+        }
+
+        /// <summary>
+        /// Copies all the data over from the given array to this array.
+        /// </summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="count">The number of elements to copy.</param>
+        public virtual void CopyFrom(HugeArrayBase<T> array, long count)
+        {
+            this.CopyFrom(array, 0, 0, count);
+        }
+
+        /// <summary>
+        /// Copies all the data over from the given array to this array.
+        /// </summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="index">The index to copy to.</param>
+        /// <param name="start">The start index to copy from.</param>
+        /// <param name="count">The number of elements to copy.</param>
+        public virtual void CopyFrom(HugeArrayBase<T> array, long index, long start, long count)
+        {
+            for (int idx = 0; idx < count; idx++)
             {
-                this[idx] = array[idx];
+                this[index + idx] = array[start + idx];
             }
         }
     }

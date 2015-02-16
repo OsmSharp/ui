@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// An implementation of an in-memory dynamic graph but with explicitly directed edges.
     /// </summary>
-    public class MemoryDirectedGraph<TEdgeData> : IGraph<TEdgeData>
+    public class DirectedGraph<TEdgeData> : GraphBase<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
         protected const int VERTEX_SIZE = 2; // holds the first edge index and the edge count.
@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public MemoryDirectedGraph()
+        public DirectedGraph()
             : this(1000)
         {
 
@@ -91,7 +91,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        public MemoryDirectedGraph(
+        public DirectedGraph(
             HugeArrayBase<GeoCoordinateSimple> coordinateArray,
             HugeArrayBase<uint> vertexArray,
             HugeArrayBase<uint> edgesArray,
@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public MemoryDirectedGraph(long sizeEstimate)
+        public DirectedGraph(long sizeEstimate)
             : this(sizeEstimate, 
             new HugeArray<GeoCoordinateSimple>(sizeEstimate), 
             new HugeArray<uint>(sizeEstimate), 
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgesArray"></param>
         /// <param name="edgeDataArray"></param>
         /// <param name="edgeShapeArray"></param>
-        public MemoryDirectedGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
+        public DirectedGraph(long sizeEstimate, HugeArrayBase<GeoCoordinateSimple> coordinateArray, 
             HugeArrayBase<uint> vertexArray, HugeArrayBase<uint> edgesArray, HugeArrayBase<TEdgeData> edgeDataArray, HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _nextVertexId = 1;
@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="estimatedSize"></param>
         /// <param name="mapFrom"></param>
         /// <param name="mapTo"></param>
-        public MemoryDirectedGraph(MemoryMappedFile file, long estimatedSize,
+        public DirectedGraph(MemoryMappedFile file, long estimatedSize,
             MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
             MappedHugeArray<TEdgeData, uint>.MapTo mapTo,
             int edgeDataSize)
@@ -211,7 +211,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="mapFrom"></param>
         /// <param name="mapTo"></param>
         /// <param name="edgeDataSize"></param>
-        public MemoryDirectedGraph(long vertexCount, long edgesCount, 
+        public DirectedGraph(long vertexCount, long edgesCount, 
             MemoryMappedFile verticesFile,
             MemoryMappedFile verticesCoordinatesFile,
             MemoryMappedFile edgesFile,
@@ -291,7 +291,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns></returns>
-        public uint AddVertex(float latitude, float longitude)
+        public override uint AddVertex(float latitude, float longitude)
         {
             // create vertex.
             var newId = _nextVertexId;
@@ -318,7 +318,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex"></param>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
-        public void SetVertex(uint vertex, float latitude, float longitude)
+        public override void SetVertex(uint vertex, float latitude, float longitude)
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
@@ -335,7 +335,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns></returns>
-        public bool GetVertex(uint id, out float latitude, out float longitude)
+        public override bool GetVertex(uint id, out float latitude, out float longitude)
         {
             if (_nextVertexId > id)
             {
@@ -354,7 +354,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data)
+        public override void AddEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
             this.AddEdge(vertex1, vertex2, data, null);
         }
@@ -367,7 +367,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         /// <param name="coordinates"></param>
         /// <remarks>This only adds edge vertex1->vertex2 NOT vertex2->vertex1</remarks>
-        public void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
+        public override void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
             if (vertex1 == vertex2) { throw new ArgumentException("Given vertices must be different."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
@@ -444,7 +444,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex"></param>
         /// <remarks>Only deletes all edges vertex->* NOT *->vertex</remarks>
-        public void RemoveEdges(uint vertex)
+        public override void RemoveEdges(uint vertex)
         {
             var edges = this.GetEdges(vertex);
             while (edges.MoveNext())
@@ -459,7 +459,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
-        public void RemoveEdge(uint vertex1, uint vertex2)
+        public override void RemoveEdge(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -488,7 +488,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
-        public void RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
+        public override void RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -522,7 +522,7 @@ namespace OsmSharp.Routing.Graph
         /// Returns an empty edge enumerator.
         /// </summary>
         /// <returns></returns>
-        public EdgeEnumerator<TEdgeData> GetEdgeEnumerator()
+        public override EdgeEnumerator<TEdgeData> GetEdgeEnumerator()
         {
             return new EdgeEnumerator(this);
         }
@@ -532,7 +532,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public EdgeEnumerator<TEdgeData> GetEdges(uint vertex)
+        public override EdgeEnumerator<TEdgeData> GetEdges(uint vertex)
         {
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
@@ -547,7 +547,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <returns></returns>
-        public EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
+        public override EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex is not part of this graph."); }
@@ -564,7 +564,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <returns></returns>
         /// <remarks>Returns true ONLY when edge vertex1->vertex2 is there NOT when only vertex2->vertex1.</remarks>
-        public bool ContainsEdges(uint vertex1, uint vertex2)
+        public override bool ContainsEdges(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -591,7 +591,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="data"></param>
         /// <returns></returns>
         /// <remarks>Returns true ONLY when edge vertex1->vertex2 is there NOT when only vertex2->vertex1.</remarks>
-        public bool ContainsEdge(uint vertex1, uint vertex2, TEdgeData data)
+        public override bool ContainsEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -618,7 +618,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
+        public override bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
         {
             throw new InvalidOperationException("Cannot use GetEdge on a graph that can have duplicate edges.");
         }
@@ -630,7 +630,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
+        public override bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
             throw new InvalidOperationException("Cannot use GetEdgeShape on a graph that can have duplicate edges.");
         }
@@ -638,7 +638,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Trims the internal data structures of this graph.
         /// </summary>
-        public void Trim()
+        public override void Trim()
         {
             // resize coordinates/vertices.
             _coordinates.Resize(_nextVertexId * VERTEX_SIZE);
@@ -655,7 +655,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertexEstimate"></param>
         /// <param name="edgeEstimate"></param>
-        public void Resize(long vertexEstimate, long edgeEstimate)
+        public override void Resize(long vertexEstimate, long edgeEstimate)
         {
             // resize coordinates/vertices.
             this.IncreaseVertexSize((int)vertexEstimate * VERTEX_SIZE);
@@ -667,7 +667,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns the number of vertices in this graph.
         /// </summary>
-        public uint VertexCount
+        public override uint VertexCount
         {
             get { return _nextVertexId - 1; }
         }
@@ -675,7 +675,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Trims the size of this graph to it's smallest possible size.
         /// </summary>
-        public void Compress()
+        public override void Compress()
         {
 
         }
@@ -688,7 +688,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Holds the graph.
             /// </summary>
-            private MemoryDirectedGraph<TEdgeData> _graph;
+            private DirectedGraph<TEdgeData> _graph;
 
             /// <summary>
             /// Holds the current edge id.
@@ -719,7 +719,7 @@ namespace OsmSharp.Routing.Graph
             /// Creates a new edge enumerator.
             /// </summary>
             /// <param name="graph"></param>
-            public EdgeEnumerator(MemoryDirectedGraph<TEdgeData> graph)
+            public EdgeEnumerator(DirectedGraph<TEdgeData> graph)
             {
                 _graph = graph;
                 _startEdgeId = 0;
@@ -888,7 +888,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if this graph is directed.
         /// </summary>
-        public bool IsDirected
+        public override bool IsDirected
         {
             get { return true; }
         }
@@ -896,7 +896,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if this graph can have duplicate edges.
         /// </summary>
-        public bool CanHaveDuplicates
+        public override bool CanHaveDuplicates
         {
             get { return true; }
         }
@@ -910,11 +910,13 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgeDataSize">The edge data size.</param>
         /// <param name="mapFrom">The map from for the edge data.</param>
         /// <param name="mapTo">The map to for the edge data.</param>
-        public long Serialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
+        public override long Serialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
             MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
         {
             // write vertex and edge count.
             long position = 0;
+            stream.Write(BitConverter.GetBytes((int)1), 0, 4);
+            position = position + 4;
             stream.Write(BitConverter.GetBytes(_vertices.Length), 0, 8);
             position = position + 8;
             stream.Write(BitConverter.GetBytes(_edgeData.Length), 0, 8);
@@ -973,7 +975,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="mapFrom">The map from for the edge data.</param>
         /// <param name="mapTo">The map to for the edge data.</param>
         /// <returns></returns>
-        public static MemoryDirectedGraph<TEdgeData> Deserialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
+        public new static DirectedGraph<TEdgeData> Deserialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, 
             MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
         {
             // read sizes.
@@ -1016,7 +1018,7 @@ namespace OsmSharp.Routing.Graph
             var cappedStream = new OsmSharp.IO.LimitedStream(stream);
             var shapes = HugeCoordinateCollectionIndex.Deserialize(cappedStream);
 
-            return new MemoryDirectedGraph<TEdgeData>(vertexCoordinateArray, vertexArray, edgeArray, edgeDataArray, shapes);
+            return new DirectedGraph<TEdgeData>(vertexCoordinateArray, vertexArray, edgeArray, edgeDataArray, shapes);
         }
 
         #endregion

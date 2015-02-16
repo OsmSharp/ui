@@ -41,12 +41,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// Data Processor Target to fill a dynamic graph object.
     /// </summary>
     public abstract class DynamicGraphOsmStreamWriter<TEdgeData> : OsmStreamTarget
-        where TEdgeData : IGraphEdgeData 
+        where TEdgeData : struct, IGraphEdgeData 
     {
         /// <summary>
         /// Holds the dynamic graph.
         /// </summary>
-        private readonly IDynamicGraphRouterDataSource<TEdgeData> _dynamicGraph;
+        private readonly DynamicGraphRouterDataSourceBase<TEdgeData> _dynamicGraph;
 
         /// <summary>
         /// The interpreter for osm data.
@@ -79,7 +79,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="tagsIndex"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
+        protected DynamicGraphOsmStreamWriter(DynamicGraphRouterDataSourceBase<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
             : this(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
@@ -96,7 +96,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="collectIntermediates"></param>
         /// <param name="coordinates"></param>
         protected DynamicGraphOsmStreamWriter(
-            IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter,
+            DynamicGraphRouterDataSourceBase<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter,
             ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
         {
             _dynamicGraph = dynamicGraph;
@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Returns the target graph.
         /// </summary>
-        public IDynamicGraphRouterDataSource<TEdgeData> DynamicGraph
+        public DynamicGraphRouterDataSourceBase<TEdgeData> DynamicGraph
         {
             get { return _dynamicGraph; }
         }
@@ -603,7 +603,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="existingData"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        private bool GetEdge(IGraph<TEdgeData> graph, uint from, uint to, out TEdgeData existingData, out ICoordinateCollection shape)
+        private bool GetEdge(GraphBase<TEdgeData> graph, uint from, uint to, out TEdgeData existingData, out ICoordinateCollection shape)
         {
             if(!graph.CanHaveDuplicates)
             {

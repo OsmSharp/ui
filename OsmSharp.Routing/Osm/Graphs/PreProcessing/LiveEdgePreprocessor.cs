@@ -35,13 +35,13 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private IGraph<LiveEdge> _graph;
+        private GraphBase<LiveEdge> _graph;
 
         /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="graph"></param>
-        public LiveEdgePreprocessor(IGraph<LiveEdge> graph)
+        public LiveEdgePreprocessor(GraphBase<LiveEdge> graph)
         {
             _graph = graph;
         }

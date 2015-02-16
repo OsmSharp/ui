@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <returns></returns>
         protected override DynamicGraphRouterDataSource<CHEdgeData> CreateGraph(ITagsCollectionIndex tagsCollectionIndex)
         {
-            return new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsCollectionIndex);
+            return new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsCollectionIndex);
         }
 
         /// <summary>

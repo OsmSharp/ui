@@ -69,13 +69,13 @@ namespace OsmSharp.Test.Performance.Routing
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             var routingSerializer = new LiveEdgeFlatfileSerializer();
 
             // read from the OSM-stream.
             using (var file = new MemoryMappedStream(new FileInfo(@"temp.map").Open(FileMode.OpenOrCreate, FileAccess.ReadWrite)))
             {
-                var memoryMappedGraph = new MemoryGraph<LiveEdge>(file, 1024, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, LiveEdge.SizeUints);
+                var memoryMappedGraph = new Graph<LiveEdge>(file, 1024, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, LiveEdge.SizeUints);
                 var coordinates = new HugeCoordinateIndex(file, 1024);
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);

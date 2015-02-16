@@ -54,7 +54,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             var targetData = new ReferenceGraphTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(

@@ -74,7 +74,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // do the data processing.
             var memoryData =
-                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(

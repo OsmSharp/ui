@@ -50,7 +50,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             edge.Forward = true;
             edge.Tags = tagsIndex.Add(tags);
 
-            var graph = new MemoryGraph<LiveEdge>();
+            var graph = new Graph<LiveEdge>();
             uint vertex1 = graph.AddVertex(51.267797f, 4.8013623f);
             uint vertex2 = graph.AddVertex(51.267702f, 4.8013396f);
             uint vertex3 = graph.AddVertex(51.267592f, 4.8013024f);

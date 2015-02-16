@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<CHEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             : base(dynamicGraph, interpreter, tagsIndex)
         {
@@ -156,7 +156,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);

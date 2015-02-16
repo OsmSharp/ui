@@ -90,7 +90,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -133,7 +133,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -178,7 +178,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);

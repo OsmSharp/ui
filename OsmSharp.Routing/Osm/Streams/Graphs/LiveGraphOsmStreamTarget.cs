@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph"></param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
-        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
             : this(dynamicGraph, interpreter, tagsIndex, null, true, new CoordinateIndex())
         {
@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="coordinates"></param>
-        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, ICoordinateIndex coordinates)
             : this(dynamicGraph, interpreter, tagsIndex, null, true, coordinates)
         {
@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles)
             : this(dynamicGraph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
@@ -94,7 +94,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates"></param>
-        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates)
             : this(dynamicGraph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates"></param>
         /// <param name="coordinates"></param>
-        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
             : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
@@ -240,7 +240,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                                                         IOsmRoutingInterpreter interpreter)
         {
             var dynamicGraphRouterDataSource =
-                new DynamicGraphRouterDataSource<LiveEdge>(new MemoryGraph<LiveEdge>(), tagsIndex);
+                new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter,
                 tagsIndex);
             targetData.RegisterSource(reader);

@@ -224,9 +224,9 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
         /// </summary>
         /// <param name="stream">The target stream.</param>
         /// <param name="tagsIndex">The tags index to serialize.</param>
-        public static void Serialize(Stream stream, ITagsCollectionIndex tagsIndex)
+        public static long Serialize(Stream stream, ITagsCollectionIndexReadonly tagsIndex)
         {
-            int begin = (int)stream.Position;
+            long begin = stream.Position;
 
             // build a string index.
             ObjectTable<string> stringTable = new ObjectTable<string>(false);
@@ -252,25 +252,26 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             }
 
             // do the serialization.
-            TagIndexSerializer.Serialize(begin, stream, tagsIndexList, stringTable);
+            var size = TagIndexSerializer.Serialize(begin, stream, tagsIndexList, stringTable);
 
             // clear everything.
             tagsIndexList.Clear();
+            return size;
         }
 
         /// <summary>
         /// Does the actual serialization of the given data structures.
         /// </summary>
-        private static void Serialize(int begin, Stream stream, List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagIndex,
+        private static long Serialize(long begin, Stream stream, List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagIndex,
             ObjectTable<string> stringTable)
         {
-            RuntimeTypeModel typeModel = TagIndexSerializer.CreateTypeModel();
+            var typeModel = TagIndexSerializer.CreateTypeModel();
 
             // move until after the index (index contains two int's, startoftagindex, endoffile).
             stream.Seek(begin + 8, SeekOrigin.Begin);
 
             // serialize string table.
-            List<string> strings = new List<string>();
+            var strings = new List<string>();
             for (uint id = 0; id < stringTable.Count; id++)
             {
                 strings.Add(stringTable.Get(id));
@@ -278,11 +279,11 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             stringTable.Clear();
             stringTable = null;
             typeModel.Serialize(stream, strings);
-            long startOfTagsIndex = stream.Position - begin;
+            var startOfTagsIndex = stream.Position - begin;
 
             // serialize tagindex.
             typeModel.Serialize(stream, tagIndex);
-            long endOfFile = stream.Position - begin;
+            var endOfFile = stream.Position - begin;
 
             // write index.
             stream.Seek(begin, SeekOrigin.Begin);
@@ -290,6 +291,7 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             stream.Write(BitConverter.GetBytes((int)endOfFile), 0, 4); // write size of complete file.
 
             stream.Seek(begin + endOfFile, SeekOrigin.Begin);
+            return endOfFile;
         }
 
         /// <summary>
