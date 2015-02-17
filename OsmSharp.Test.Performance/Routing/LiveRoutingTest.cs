@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -39,21 +40,34 @@ namespace OsmSharp.Test.Performance.Routing
     public static class LiveRoutingTest
     {
         /// <summary>
-        /// Tests the live routing.
+        /// Tests routing from a raw OSM-file.
         /// </summary>
         public static void Test()
         {
-            LiveRoutingTest.TestSerializedRouting("LiveRouting",
-                "kempen-big.osm.pbf", 250);
+            LiveRoutingTest.Test("LiveRouting",
+                "kempen.osm.pbf", 250);
         }
 
         /// <summary>
-        /// Tests routing from a serialized routing file.
+        /// Tests routing from a raw OSM-file.
         /// </summary>
         public static void Test(Stream stream, int testCount)
         {
-            LiveRoutingTest.TestSerializedRouting("LiveRouting",
+            LiveRoutingTest.Test("LiveRouting",
                 stream, testCount);
+        }
+
+        /// <summary>
+        /// Tests routing from a raw OSM-file.
+        /// </summary>
+        public static void Test(string name, string routeFile, int testCount)
+        {
+            var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", routeFile));
+            var stream = testFile.OpenRead();
+
+            LiveRoutingTest.Test(name, stream, testCount);
+
+            stream.Dispose();
         }
 
         /// <summary>
@@ -62,7 +76,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// <param name="name"></param>
         /// <param name="stream"></param>
         /// <param name="testCount"></param>
-        public static void TestSerializedRouting(string name, Stream stream, int testCount)
+        public static void Test(string name, Stream stream, int testCount)
         {
             var vehicle = Vehicle.Car;
 
@@ -78,8 +92,26 @@ namespace OsmSharp.Test.Performance.Routing
             targetData.Pull();
             data.RebuildVertexIndex();
 
+            LiveRoutingTest.Test(data, vehicle, testCount);
+        }
+
+        /// <summary>
+        /// Tests routing from a serialized file.
+        /// </summary>
+        /// <param name="stream"></param>
+        public static void TestSerialized(Stream stream)
+        {
+            var routingSerializer = new LiveEdgeSerializer();
+            var data = routingSerializer.Deserialize(stream);
+
+            LiveRoutingTest.Test(data, Vehicle.Car, 250);
+        }
+
+        public static void Test(IBasicRouterDataSource<LiveEdge> data, Vehicle vehicle, int testCount)
+        {
             // creates the live edge router.
             var router = new Dykstra();
+            var interpreter = new OsmRoutingInterpreter();
 
             var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
             performanceInfo.Start();
@@ -114,19 +146,6 @@ namespace OsmSharp.Test.Performance.Routing
 
             OsmSharp.Logging.Log.TraceEvent("LiveRouting", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("{0}/{1} routes successfull!", successCount, totalCount));
-        }
-
-        /// <summary>
-        /// Tests routing from a serialized routing file.
-        /// </summary>
-        public static void TestSerializedRouting(string name, string routeFile, int testCount)
-        {
-            var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", routeFile));
-            var stream = testFile.OpenRead();
-
-            LiveRoutingTest.TestSerializedRouting(name, stream, testCount);
-
-            stream.Dispose();
         }
     }
 }

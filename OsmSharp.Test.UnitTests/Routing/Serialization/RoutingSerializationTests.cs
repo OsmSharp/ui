@@ -30,6 +30,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System;
@@ -48,85 +49,40 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
     public class RoutingSerializationTests
     {
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the routing serializer.
+        /// Tests serializing/deserializing using the routing serializer.
         /// </summary>
         [Test]
         public void RoutingSerializationDataSourceTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
-            // create the tags index.
-            var tagsIndex = new TagsTableCollectionIndex();
+            var serializer = new LiveEdgeSerializer();
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(
-                original, interpreter, tagsIndex, null, false);
-            var dataProcessorSource = new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
-            targetData.RegisterSource(dataProcessorSource);
-            targetData.Pull();
+            var graph = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter);
 
-            // store some lat/lons.
-            var verticesLocations = new List<GeoCoordinate>();
-            for (uint vertex = 1; vertex <= 5; vertex++)
-            {
-                float latitude, longitude;
-                if(original.GetVertex(vertex, out latitude, out longitude))
-                {
-                    verticesLocations.Add(
-                        new GeoCoordinate(latitude, longitude));
-                }
-            }
+            // serialize.
+            var stream = new MemoryStream();
+            serializer.Serialize(stream, graph);
 
-            DynamicGraphRouterDataSource<LiveEdge> deserialized = null;
-            byte[] byteArray;
-            using (var stream = new MemoryStream())
-            {
-                try
-                {
-                    original.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
-                    byteArray = stream.ToArray();
-                }
-                catch (Exception)
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        Debugger.Break();
-                    }
-                    throw;
-                }
-            }
-            using (var stream = new MemoryStream(byteArray))
-            {
-                try
-                {
-                    deserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(
-                        stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
-                }
-                catch (Exception)
-                {
-                    if (Debugger.IsAttached)
-                    {
-                        Debugger.Break();
-                    }
-                    throw;
-                }
-            }
+            // deserialize.
+            stream.Seek(0, SeekOrigin.Begin);
+            var graphSerialized = serializer.Deserialize(stream);
 
-            //Assert.AreEqual(original.VertexCount, deserializedVersion.VertexCount);
-            Assert.AreEqual(original.TagsIndex.Get(0), deserialized.TagsIndex.Get(0));
-
-            for (uint vertex = 1; vertex <= 5; vertex++)
+            Assert.AreEqual(graph.VertexCount, graphSerialized.VertexCount);
+            Assert.AreEqual(graph.TagsIndex.Get(0), graphSerialized.TagsIndex.Get(0));
+            for (uint vertex = 1; vertex <= graph.VertexCount; vertex++)
             {
-                float latitude, longitude;
-                if (deserialized.GetVertex(vertex, out latitude, out longitude))
+                float latitude1, longitude1, latitude2, longitude2;
+                if (graph.GetVertex(vertex, out latitude1, out longitude1) &&
+                    graphSerialized.GetVertex(vertex, out latitude2, out longitude2))
                 {
-                    Assert.AreEqual(verticesLocations[(int)vertex - 1].Latitude, latitude, 0.000001);
-                    Assert.AreEqual(verticesLocations[(int)vertex - 1].Longitude, longitude, 0.000001);
+                    Assert.AreEqual(latitude1, latitude2, 0.000001);
+                    Assert.AreEqual(longitude1, longitude2, 0.000001);
                 }
             }
         }

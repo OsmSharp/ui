@@ -29,10 +29,10 @@ using System.Linq;
 namespace OsmSharp.Routing.Graph.Serialization
 {
     /// <summary>
-    /// Abstract representation of a routing serializer.
+    /// Abstract representation of a routing data source serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public abstract class RoutingDataSourceSerializer<TEdgeData>
+    public abstract class GraphSerializer<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
         #region Versioning
@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             stream.Seek(0, SeekOrigin.Begin);
 
             // write the header bytes.
-            byte[] header = this.BuildVersionHeader();
+            var header = this.BuildVersionHeader();
             stream.Write(header, 0, header.Length);
         }
 
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         private bool ReadAndValidateHeader(Stream stream)
         {
             // get the original version header.
-            byte[] header = this.BuildVersionHeader();
+            var header = this.BuildVersionHeader();
 
             try
             {
@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         private RuntimeTypeModel BuildVehiclesRuntimeTypeModel()
         {
-            RuntimeTypeModel typeModel = TypeModel.Create();
+            var typeModel = TypeModel.Create();
             typeModel.Add(typeof(List<string>), true);
             return typeModel;
         }
@@ -143,13 +143,13 @@ namespace OsmSharp.Routing.Graph.Serialization
         private IEnumerable<string> ReadVehicleProfiles(Stream stream)
         {
             List<string> vehicles = null;
-            byte[] intBytes = new byte[4];
+            var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
-            int metaLength = BitConverter.ToInt32(intBytes, 0);
+            var metaLength = BitConverter.ToInt32(intBytes, 0);
             if (metaLength > 0)
             {
                 // read meta byte array.
-                byte[] tagsBytes = new byte[metaLength];
+                var tagsBytes = new byte[metaLength];
                 stream.Read(tagsBytes, 0, metaLength);
                 vehicles = this.BuildVehiclesRuntimeTypeModel().Deserialize(new MemoryStream(tagsBytes), null, typeof(List<string>)) as List<string>;
             }
@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="vehicleProfiles"></param>
         private void WriteVehicleProfiles(Stream stream, IEnumerable<Vehicle> vehicleProfiles)
         {
-            List<string> vehicles = new List<string>(
+            var vehicles = new List<string>(
                 vehicleProfiles.Select(x => x.UniqueName));
             this.WriteVehicleProfiles(stream, vehicles);
         }
@@ -179,10 +179,10 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="vehicleProfiles"></param>
         private void WriteVehicleProfiles(Stream stream, IEnumerable<string> vehicleProfiles)
         {
-            MemoryStream vehiclesStream = new MemoryStream();
+            var vehiclesStream = new MemoryStream();
             this.BuildVehiclesRuntimeTypeModel().Serialize(vehiclesStream, new List<string>(vehicleProfiles));
 
-            byte[] tagsBytes = vehiclesStream.ToArray();
+            var tagsBytes = vehiclesStream.ToArray();
             stream.Write(BitConverter.GetBytes(tagsBytes.Length), 0, 4);
             stream.Write(tagsBytes, 0, tagsBytes.Length);
         }
@@ -195,20 +195,31 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         public virtual bool CanDeSerialize(Stream stream)
         {
-            bool canRead = this.ReadAndValidateHeader(stream);
+            var canRead = this.ReadAndValidateHeader(stream);
             stream.Seek(0, SeekOrigin.Begin);
             return canRead;
         }
 
         /// <summary>
-        /// Serializes the given graph and tags index to the given stream.
+        /// Serializes the given graph.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="graph"></param>
+        /// <param name="metaTags"></param>
+        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph)
+        {
+            this.Serialize(stream, graph, new TagsCollection());
+        }
+
+        /// <summary>
+        /// Serializes the given graph.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <param name="metaTags"></param>
         public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
         {
-           if (stream == null)
+            if (stream == null)
                 throw new ArgumentNullException("stream");
             if (graph == null)
                 throw new ArgumentNullException("graph");
@@ -242,7 +253,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        public IBasicRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
+        public DynamicGraphRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
         {
             TagsCollectionBase notNeeded;
             return this.Deserialize(stream, out notNeeded);
@@ -255,13 +266,13 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="metaTags"></param>
         /// <returns></returns>
-        public IBasicRouterDataSource<TEdgeData> Deserialize(Stream stream, out TagsCollectionBase metaTags, bool lazy = true)
+        public DynamicGraphRouterDataSource<TEdgeData> Deserialize(Stream stream, out TagsCollectionBase metaTags, bool lazy = true)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
-			// make sure the stream seeks to the beginning.
-			stream.Seek(0, SeekOrigin.Begin);
+            // make sure the stream seeks to the beginning.
+            stream.Seek(0, SeekOrigin.Begin);
 
             if (this.CanDeSerialize(stream))
             {
@@ -269,7 +280,7 @@ namespace OsmSharp.Routing.Graph.Serialization
                 this.ReadAndValidateHeader(stream);
 
                 // read vehicle profiles.
-                IEnumerable<string> vehicles = this.ReadVehicleProfiles(stream);
+                var vehicles = this.ReadVehicleProfiles(stream);
 
                 // deserialize meta data.
                 metaTags = this.ReadMeta(stream);
@@ -290,6 +301,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
+        protected abstract DynamicGraphRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
     }
 }

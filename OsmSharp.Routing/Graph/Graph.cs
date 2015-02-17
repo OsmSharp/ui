@@ -1411,7 +1411,7 @@ namespace OsmSharp.Routing.Graph
             {
                 // write vertices (each vertex = 1 uint (4 bytes)).
                 var vertexArray = new MemoryMappedHugeArrayUInt32(file, vertexCount, vertexCount, 1024);
-                vertexArray.CopyFrom(_vertices, 0, 1, vertexCount);
+                vertexArray.CopyFrom(_vertices, 0, 0, vertexCount);
                 vertexArray.Dispose(); // written, get rid of it!
                 position = position + (vertexCount * 4);
 
@@ -1431,7 +1431,7 @@ namespace OsmSharp.Routing.Graph
                                 Longitude = Array[idx + 1]
                             };
                         });
-                vertexCoordinateArray.CopyFrom(_coordinates, 0, 1, vertexCount);
+                vertexCoordinateArray.CopyFrom(_coordinates, 0, 0, vertexCount);
                 vertexCoordinateArray.Dispose(); // written, get rid of it!
                 position = position + (vertexCount * 8);
 

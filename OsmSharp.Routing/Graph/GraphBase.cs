@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Math.Geo;
 using System.IO;
 namespace OsmSharp.Routing.Graph
 {
@@ -71,7 +72,22 @@ namespace OsmSharp.Routing.Graph
             get;
         }
 
-        public abstract bool GetVertex(uint id, out float latitude, out float longitude);
+        public abstract bool GetVertex(uint vertex, out float latitude, out float longitude);
+
+        /// <summary>
+        /// Gets an existing vertex.
+        /// </summary>
+        /// <param name="vertex">The vertex.</param>
+        /// <returns></returns>
+        public virtual GeoCoordinate GetVertex(uint vertex)
+        {
+            float latitude, longitude;
+            if(this.GetVertex(vertex, out latitude, out longitude))
+            { // a vertex was found.
+                return new GeoCoordinate(latitude, longitude);
+            }
+            return null;
+        }
 
         public abstract bool ContainsEdges(uint vertexId, uint neighbour);
 
@@ -120,9 +136,9 @@ namespace OsmSharp.Routing.Graph
             var graphType = System.BitConverter.ToInt32(intBytes, 0);
             switch (graphType)
             {
-                case 1:
-                    return Graph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
                 case 2:
+                    return Graph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
+                case 1:
                     return DirectedGraph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
             }
             throw new System.Exception(string.Format("Invalid graph type: {0}", graphType.ToInvariantString()));

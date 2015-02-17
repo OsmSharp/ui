@@ -21,11 +21,11 @@ using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.CH.Serialization;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -96,7 +96,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             GeoCoordinateBox box, int testCount)
         {
             TagsCollectionBase metaData = null;
-            var routingSerializer = new CHEdgeDataDataSourceSerializer();
+            var routingSerializer = new CHEdgeSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
                 stream, out metaData, true);
 
@@ -187,7 +187,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Report("Routing & generating instructions...");
 
             TagsCollectionBase metaData = null;
-            var routingSerializer = new CHEdgeDataDataSourceSerializer();
+            var routingSerializer = new CHEdgeSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
                 stream, out metaData, true);
 

@@ -293,7 +293,7 @@ namespace OsmSharp.Test.Unittests.Collections.Coordinates
                 long length = coordinates.Serialize(stream);
                 data = stream.ToArray();
 
-                Assert.AreEqual(112, length);
+                Assert.AreEqual(168, length);
                 Assert.AreEqual(data.Length, length);
             }
 

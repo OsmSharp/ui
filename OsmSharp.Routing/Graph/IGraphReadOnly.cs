@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -39,10 +40,10 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Gets an existing vertex.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        bool GetVertex(uint id, out float latitude, out float longitude);
+        /// <param name="vertex">The vertex.</param>
+        /// <param name="latitude">The latitude.</param>
+        /// <param name="longitude">The longitude.</param>
+        bool GetVertex(uint vertex, out float latitude, out float longitude);
 
         /// <summary>
         /// Returns true if the given edge exists.

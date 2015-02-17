@@ -67,7 +67,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             var metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            var routingSerializer = new CHEdgeFlatfileSerializer();
+            var routingSerializer = new CHEdgeSerializer();
             routingSerializer.Serialize(writeStream, data, metaData);
 
             stream.Dispose();

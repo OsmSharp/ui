@@ -21,8 +21,9 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing.Osm.Streams.Graphs;
@@ -84,7 +85,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
-            var routingSerializer = new CHEdgeDataDataSourceSerializer();
+            var routingSerializer = new CHEdgeSerializer();
             routingSerializer.Serialize(writeStream, data, metaData);
 
             writeStream.Dispose();

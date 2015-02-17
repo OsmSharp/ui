@@ -24,7 +24,6 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
@@ -76,7 +75,9 @@ namespace OsmSharp.Test.Performance
 
                 // test the routing preprocessor.
                 //Routing.LivePreProcessorTest.Test();
+                //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
+                //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.LiveRoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();

@@ -860,10 +860,13 @@ namespace OsmSharp.Routing.Graph
             MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
         {
             // make room for size of graph.
+            long position = 0;
             stream.Seek(8, System.IO.SeekOrigin.Begin);
+            position = position + 8;
 
             // first serialize all graph-data.
-            var position = _graph.Serialize(new LimitedStream(stream), edgeDataSize, mapFrom, mapTo);
+            position = position + 
+                _graph.Serialize(new LimitedStream(stream), edgeDataSize, mapFrom, mapTo);
 
             // write size of graph.
             stream.Seek(0, System.IO.SeekOrigin.Begin);

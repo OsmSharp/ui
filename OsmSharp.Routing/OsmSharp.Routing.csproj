@@ -76,6 +76,7 @@
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpaceNew.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="CH\Serialization\CHEdgeSerializer.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\EdgeEnumerator.cs" />
     <Compile Include="Graph\GraphBase.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Graph\Routing\IDynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\Routing\PathSegment.cs" />
     <Compile Include="Graph\Routing\PathSegmentVisitList.cs" />
+    <Compile Include="Graph\Serialization\GraphSerializer.cs" />
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Graph\IGraphExtensions.cs" />
     <Compile Include="Instructions\Instruction.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
     <Compile Include="Osm\Graphs\PreProcessing\LiveEdgePreprocessor.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeSerializer.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />

@@ -875,21 +875,32 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Forward = true,
                 Tags = 1
             }, null);
-
-            byte[] data = null;
-            using(var stream = new MemoryStream())
+            
+            // serialize.
+            using (var stream = new MemoryStream())
             {
                 graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
 
-                data = stream.ToArray();
-            }
+                // deserialize.
+                stream.Seek(0, SeekOrigin.Begin);
+                var graphDeserialized = Graph<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
 
-            var result = Graph<LiveEdge>.Deserialize(new MemoryStream(data),
-                LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
-            Assert.AreEqual(graph.VertexCount, result.VertexCount);
-            var edges = result.GetEdges(vertex1, vertex2).ToKeyValuePairs();
-            Assert.AreEqual(1, edges.Length);
-            Assert.AreEqual(1, edges[0].Value.Tags);
+                // compare.
+                Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
+                for (uint vertex = 1; vertex <= graph.VertexCount; vertex++)
+                {
+                    float latitude1, longitude1, latitude2, longitude2;
+                    if (graph.GetVertex(vertex, out latitude1, out longitude1) &&
+                        graphDeserialized.GetVertex(vertex, out latitude2, out longitude2))
+                    {
+                        Assert.AreEqual(latitude1, latitude2, 0.000001);
+                        Assert.AreEqual(longitude1, longitude2, 0.000001);
+                    }
+                }
+                var edges = graphDeserialized.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(1, edges[0].Value.Tags);
+            }
         }
     }
 }
