@@ -204,7 +204,7 @@
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
     <Compile Include="Routing\Graph\DirectedGraphTests.cs" />
-    <Compile Include="Routing\Graph\MemoryMappedFileDynamicGraphTests.cs" />
+    <Compile Include="Routing\Graph\MemoryMappedGraphTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionSerializedContractedTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
@@ -233,7 +233,6 @@
     <Compile Include="Routing\RoutingComparisonTests.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
-    <Compile Include="Routing\Serialization\RoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
     <Compile Include="Routing\VehicleBaseTests.cs" />

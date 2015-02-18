@@ -117,7 +117,7 @@ namespace OsmSharp.Routing.Graph
             _edgeShapes = edgeShapeArray;
             //_edgeShapes.Resize(sizeEstimate * 3);
             _nextVertexId = (uint)(_vertices.Length / VERTEX_SIZE);
-            _nextEdgeId = (uint)(edgesArray.Length / EDGE_SIZE + 1);
+            _nextEdgeId = (uint)(edgesArray.Length / EDGE_SIZE);
         }
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
     /// Tests a simple weighed dynamic graph.
     /// </summary>
     [TestFixture]
-    public class MemoryMappedFileDynamicGraphTests
+    public class MemoryMappedGraphTests
     {
         /// <summary>
         /// Tests argument out of range.

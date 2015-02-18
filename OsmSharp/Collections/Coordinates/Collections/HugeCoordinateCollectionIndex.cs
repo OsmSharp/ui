@@ -269,6 +269,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <returns></returns>
         private bool TryGetIndexAndSize(long id, out long index, out long size)
         {
+            if (id >= _index.Length)
+            {
+                index = 0;
+                size = 0;
+                return false;
+            }
             var data = _index[id];
             if(data == 0)
             {
@@ -523,26 +529,26 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <returns></returns>
         public void Trim()
         {
-            // find the highest index where the index-entry is non-null.
-            long maxIndex = 0;
-            for(long idx = _index.Length - 1; idx > 0; idx--)
-            {
-                if(_index[idx] != 0)
-                {
-                    maxIndex = idx;
-                    break;
-                }
-            }
+            //// find the highest index where the index-entry is non-null.
+            //ulong maxIndex = 0;
+            //for (long idx = 0; idx < _index.Length; idx++)
+            //{
+            //    if (_index[idx] > maxIndex)
+            //    {
+            //        maxIndex = idx;
+            //        break;
+            //    }
+            //}
 
-            // resize accordingly.
-            var indexSize = maxIndex + 1;
-            var coordinateLength = _nextIdx * 2;
-            if(coordinateLength == 0)
-            { // minimum one.
-                coordinateLength = 2;
-            }
-            _index.Resize(indexSize);
-            _coordinates.Resize(coordinateLength);
+            //// resize accordingly.
+            //var indexSize = _nextIdx;
+            //var coordinateLength = _nextIdx * 2;
+            //if(coordinateLength == 0)
+            //{ // minimum one.
+            //    coordinateLength = 2;
+            //}
+            //_index.Resize(indexSize);
+            //_coordinates.Resize(coordinateLength);
         }
 
         /// <summary>
