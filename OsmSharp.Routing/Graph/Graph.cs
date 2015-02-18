@@ -131,7 +131,7 @@ namespace OsmSharp.Routing.Graph
             //_edgeData.Resize(sizeEstimate * 3);
             _edgeShapes = edgeShapeArray;
             //_edgeShapes.Resize(sizeEstimate * 3);
-            _nextVertexId = (uint)(_vertices.Length + 1);
+            _nextVertexId = (uint)(_vertices.Length);
             _nextEdgeId = (uint)(edgesArray.Length + 1);
         }
 
@@ -1410,14 +1410,14 @@ namespace OsmSharp.Routing.Graph
             using (var file = new MemoryMappedStream(new LimitedStream(stream)))
             {
                 // write vertices (each vertex = 1 uint (4 bytes)).
-                var vertexArray = new MemoryMappedHugeArrayUInt32(file, vertexCount, vertexCount, 1024);
-                vertexArray.CopyFrom(_vertices, 0, 0, vertexCount);
+                var vertexArray = new MemoryMappedHugeArrayUInt32(file, vertexCount + 1, vertexCount + 1, 1024);
+                vertexArray.CopyFrom(_vertices, 0, 0, vertexCount + 1);
                 vertexArray.Dispose(); // written, get rid of it!
-                position = position + (vertexCount * 4);
+                position = position + ((vertexCount + 1) * 4);
 
                 // write vertex coordinates (each vertex coordinate = 2 floats (8 bytes)).
                 var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
-                    new MemoryMappedHugeArraySingle(file, vertexCount * 2, vertexCount * 2, 1024),
+                    new MemoryMappedHugeArraySingle(file, (vertexCount + 1) * 2, (vertexCount + 1) * 2, 1024),
                         2, (array, idx, coordinate) =>
                         {
                             array[idx] = coordinate.Latitude;
@@ -1431,9 +1431,9 @@ namespace OsmSharp.Routing.Graph
                                 Longitude = Array[idx + 1]
                             };
                         });
-                vertexCoordinateArray.CopyFrom(_coordinates, 0, 0, vertexCount);
+                vertexCoordinateArray.CopyFrom(_coordinates, 0, 0, (vertexCount + 1));
                 vertexCoordinateArray.Dispose(); // written, get rid of it!
-                position = position + (vertexCount * 8);
+                position = position + ((vertexCount + 1) * 8);
 
                 // write edges (each edge = 4 uints (16 bytes)).
                 var edgeArray = new MemoryMappedHugeArrayUInt32(file, edgeCount * 4, edgeCount * 4, 1024);
@@ -1479,10 +1479,10 @@ namespace OsmSharp.Routing.Graph
             var edgeLength = BitConverter.ToInt64(longBytes, 0);
 
             var file = new MemoryMappedStream(new LimitedStream(stream));
-            var vertexArray = new MemoryMappedHugeArrayUInt32(file, vertexLength, vertexLength, 1024);
-            position = position + (vertexLength * 4);
+            var vertexArray = new MemoryMappedHugeArrayUInt32(file, (vertexLength + 1), vertexLength + 1, 1024);
+            position = position + ((vertexLength + 1) * 4);
             var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
-                new MemoryMappedHugeArraySingle(file, vertexLength * 2, vertexLength * 2, 1024),
+                new MemoryMappedHugeArraySingle(file, (vertexLength + 1) * 2, (vertexLength + 1) * 2, 1024),
                     2, (array, idx, coordinate) =>
                     {
                         array[idx] = coordinate.Latitude;
@@ -1496,7 +1496,7 @@ namespace OsmSharp.Routing.Graph
                             Longitude = Array[idx + 1]
                         };
                     });
-            position = position + (vertexLength * 8);
+            position = position + ((vertexLength + 1) * 8);
             var edgeArray = new MemoryMappedHugeArrayUInt32(file, edgeLength * 4, edgeLength * 4, 1024);
             position = position + (edgeLength * 4 * 4);
             var edgeDataArray = new MappedHugeArray<TEdgeData, uint>(

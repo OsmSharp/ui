@@ -17,10 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Unittests.Routing.Graph
 {
@@ -863,7 +867,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test serializing a graph.
         /// </summary>
         [Test]
-        public void TestGraphSerialize()
+        public void TestGraphSerialize1()
         {
             var graph = new Graph<LiveEdge>();
 
@@ -900,6 +904,54 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 var edges = graphDeserialized.GetEdges(vertex1, vertex2).ToKeyValuePairs();
                 Assert.AreEqual(1, edges.Length);
                 Assert.AreEqual(1, edges[0].Value.Tags);
+            }
+        }
+
+        /// <summary>
+        /// Test serializing a graph.
+        /// </summary>
+        [Test]
+        public void TestGraphSerialize2()
+        {
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+
+            // creates a new interpreter.
+            var interpreter = new OsmRoutingInterpreter();
+
+            // do the data processing.
+            var graph = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter);
+
+            // serialize.
+            using (var stream = new MemoryStream())
+            {
+                graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+
+                // deserialize.
+                stream.Seek(0, SeekOrigin.Begin);
+                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+
+                // compare.
+                Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
+                for (uint vertex = 1; vertex <= graph.VertexCount; vertex++)
+                {
+                    float latitude1, longitude1, latitude2, longitude2;
+                    if (graph.GetVertex(vertex, out latitude1, out longitude1) &&
+                        graphDeserialized.GetVertex(vertex, out latitude2, out longitude2))
+                    {
+                        Assert.AreEqual(latitude1, latitude2, 0.000001);
+                        Assert.AreEqual(longitude1, longitude2, 0.000001);
+                    }
+                    var edges = graph.GetEdges(vertex).ToKeyValuePairs();
+                    var edgesDeserialized = graphDeserialized.GetEdges(vertex).ToKeyValuePairs();
+                    Assert.AreEqual(edges.Length, edgesDeserialized.Length);
+                    for (int idx = 0; idx < edges.Length; idx++)
+                    {
+                        Assert.AreEqual(edges[idx].Value.Distance, edgesDeserialized[idx].Value.Distance);
+                        Assert.AreEqual(edges[idx].Value.Tags, edgesDeserialized[idx].Value.Tags);
+                        Assert.AreEqual(edges[idx].Value.Forward, edgesDeserialized[idx].Value.Forward);
+                    }
+                }
             }
         }
     }

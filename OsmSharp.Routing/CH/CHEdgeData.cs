@@ -289,7 +289,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             {
                 return new CHEdgeData(
                     array[idx],
-                    array[idx + 1],
+                    BitConverter.ToSingle(BitConverter.GetBytes(array[idx + 1]), 0),
                     (byte)array[idx + 2]);
             };
 
@@ -299,7 +299,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public static MappedHugeArray<CHEdgeData, uint>.MapTo MapToDelegate = (array, idx, value) =>
             {
                 array[idx] = value.Value;
-                array[idx + 1] = value.Tags;
+                array[idx + 1] = BitConverter.ToUInt32(BitConverter.GetBytes(value.Weight), 0);
                 array[idx + 2] = value.Meta;
             };
     }
