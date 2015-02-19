@@ -621,7 +621,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
 
                 file.Dispose();
 
-                return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);
+                return new HugeCoordinateCollectionIndex(indexLength, indexArrayCopy, coordinateArrayCopy);
             }
 
             return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);

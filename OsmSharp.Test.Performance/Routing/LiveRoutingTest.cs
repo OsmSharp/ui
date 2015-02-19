@@ -104,7 +104,14 @@ namespace OsmSharp.Test.Performance.Routing
             var routingSerializer = new LiveEdgeSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
 
-            LiveRoutingTest.Test(data, Vehicle.Pedestrian, 50);
+            data.SortHilbert(1000);
+
+            // copy.
+            var graphCopy = new Graph<LiveEdge>();
+            graphCopy.CopyFrom(data);
+            var dataCopy = new DynamicGraphRouterDataSource<LiveEdge>(graphCopy, data.TagsIndex);
+
+            LiveRoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
         }
 
         public static void Test(IBasicRouterDataSource<LiveEdge> data, Vehicle vehicle, int testCount)

@@ -152,44 +152,72 @@ namespace OsmSharp.Collections.PriorityQueues
                 _count--; // reduce the element count.
                 _latest_index--; // reduce the latest index.
 
-                _heap[1] = _heap[_latest_index]; // place the last element on top.
-                _priorities[1] = _priorities[_latest_index]; // place the last element on top.
                 int swapitem = 1, parent = 1;
+                float swapItemPriority = 0;
+                float parentPriority = _priorities[_latest_index];
+                T parentItem = _heap[_latest_index];
+                _heap[1] = parentItem;// _heap[_latest_index]; // place the last element on top.
+                _priorities[1] = parentPriority; // _priorities[_latest_index]; // place the last element on top.
                 do
                 {
                     parent = swapitem;
                     if ((2 * parent + 1) <= _latest_index)
                     {
-                        if (_priorities[parent] >= _priorities[2 * parent])
+                        swapItemPriority = _priorities[2 * parent];
+                        float potentialSwapItem = _priorities[2 * parent + 1];
+                        if (parentPriority >= swapItemPriority)
                         {
                             swapitem = 2 * parent;
+                            if (_priorities[swapitem] >= potentialSwapItem)
+                            {
+                                swapItemPriority = potentialSwapItem;
+                                swapitem = 2 * parent + 1;
+                            }
                         }
-
-                        if (_priorities[swapitem] >= _priorities[2 * parent + 1])
+                        else if (parentPriority >= potentialSwapItem)
                         {
+                            swapItemPriority = potentialSwapItem;
                             swapitem = 2 * parent + 1;
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                     else if ((2 * parent) <= _latest_index)
                     {
                         // Only one child exists
-                        if (_priorities[parent] >= _priorities[2 * parent])
+                        swapItemPriority = _priorities[2 * parent];
+                        if (parentPriority >= swapItemPriority)
                         {
                             swapitem = 2 * parent;
                         }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
 
                     // One if the parent's children are smaller or equal, swap them
-                    if (parent != swapitem)
-                    {
-                        float temp_priority = _priorities[parent];
-                        T temp_item = _heap[parent];
-                        _priorities[parent] = _priorities[swapitem];
-                        _heap[parent] = _heap[swapitem];
-                        _priorities[swapitem] = temp_priority;
-                        _heap[swapitem] = temp_item;
-                    }
-                } while (parent != swapitem);
+                    //if (parent == swapitem)
+                    //{
+                    //    OsmSharp.Logging.Log.TraceEvent("hug", Logging.TraceEventType.Information, "");
+                    //}
+
+                    //float temp_priority = _priorities[parent];
+                    //T temp_item = _heap[parent];
+                    _priorities[parent] = swapItemPriority;
+                    _priorities[swapitem] = parentPriority;
+                    _heap[parent] = _heap[swapitem];
+                    _heap[swapitem] = parentItem;
+
+                    //parentPriority = _priorities[swapitem];
+                    //parentItem = _heap[swapitem];
+                } while (true);
 
                 return item;
             }
