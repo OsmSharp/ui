@@ -887,8 +887,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="mapFrom"></param>
         /// <param name="mapTo"></param>
         /// <returns></returns>
-        public new static DynamicGraphRouterDataSource<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize, 
-            MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
+        public new static DynamicGraphRouterDataSource<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize,
+            MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)
         {
             // read size of graph and start location of tags.
             var longBytes = new byte[8];
@@ -896,7 +896,7 @@ namespace OsmSharp.Routing.Graph
             var position = BitConverter.ToInt64(longBytes, 0);
 
             // deserialize graph.
-            var graph = GraphBase<TEdgeData>.Deserialize(new CappedStream(stream, 8, position - 8), edgeDataSize, mapFrom, mapTo);
+            var graph = GraphBase<TEdgeData>.Deserialize(new CappedStream(stream, 8, position - 8), edgeDataSize, mapFrom, mapTo, copy);
 
             // deserialize tags.
             stream.Seek(position, System.IO.SeekOrigin.Begin);

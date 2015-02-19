@@ -862,7 +862,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate);
+                var graphDeserialized = DynamicGraphRouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);

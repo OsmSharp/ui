@@ -50,6 +50,16 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         public static long DefaultFileElementSize = (long)1024 * (long)1024;
 
         /// <summary>
+        /// Holds the default buffer size.
+        /// </summary>
+        public static int DefaultBufferSize = 128;
+
+        /// <summary>
+        /// Holds the default cache size.
+        /// </summary>
+        public static int DefaultCacheSize = 64 * 8;
+
+        /// <summary>
         /// Holds the file element size.
         /// </summary>
         private long _fileElementSize = DefaultFileElementSize;
@@ -72,7 +82,8 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
         /// <param name="bufferSize">The size of an idividual buffer.</param>
-        public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize, int bufferSize)
+        /// <param name="cacheSize">The size of the LRU cache to keep buffers.</param>
+        public MemoryMappedHugeArray(MemoryMappedFile file, int elementSize, long size, long arraySize, int bufferSize, int cacheSize)
         {
             if (file == null) { throw new ArgumentNullException(); }
             if (elementSize < 0) { throw new ArgumentOutOfRangeException("elementSize"); }
@@ -87,7 +98,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
 
             _bufferSize = bufferSize;
             _cachedBuffer = null;
-            _cachedBuffers = new LRUCache<long, CachedBuffer>(64);
+            _cachedBuffers = new LRUCache<long, CachedBuffer>(cacheSize);
             _cachedBuffers.OnRemove += new LRUCache<long, CachedBuffer>.OnRemoveDelegate(buffer_OnRemove);
 
             var arrayCount = (int)System.Math.Ceiling((double)size / _fileElementSize);

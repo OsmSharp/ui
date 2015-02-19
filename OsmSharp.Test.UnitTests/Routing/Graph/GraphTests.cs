@@ -887,7 +887,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = Graph<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                var graphDeserialized = Graph<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -929,7 +929,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -977,7 +977,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);

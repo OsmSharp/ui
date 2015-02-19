@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen-big.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
         }
 
         /// <summary>
@@ -95,25 +95,25 @@ namespace OsmSharp.Test.Performance.Routing
                 string.Format("Serialized file: {0}KB", testOutputFile.Length / 1024));
             performanceInfo.Stop();
 
-            //performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
-            //performanceInfo.Start();
-            //performanceInfo.Report("Reading file for {0}...", testFile.Name);
+            ////performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
+            ////performanceInfo.Start();
+            ////performanceInfo.Report("Reading file for {0}...", testFile.Name);
 
-            var testInputFile = new FileInfo(@"test.routing");
-            var readStream = testInputFile.OpenRead();
+            //var testInputFile = new FileInfo(@"test.routing");
+            //var readStream = testInputFile.OpenRead();
 
-            LiveRoutingTest.TestSerialized(readStream);
+            //LiveRoutingTest.TestSerialized(readStream);
 
-            //var deserializedGraph = routingSerializer.Deserialize(readStream, false);
+            ////var deserializedGraph = routingSerializer.Deserialize(readStream, false);
 
-            //readStream.Dispose();
+            ////readStream.Dispose();
 
-            //OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
-            //    string.Format("Read: {0}KB", testInputFile.Length / 1024));
+            ////OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", OsmSharp.Logging.TraceEventType.Information,
+            ////    string.Format("Read: {0}KB", testInputFile.Length / 1024));
 
-            //OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", Logging.TraceEventType.Information, deserializedGraph.ToInvariantString());
+            ////OsmSharp.Logging.Log.TraceEvent("LiveSerializerFlatFile", Logging.TraceEventType.Information, deserializedGraph.ToInvariantString());
 
-            //performanceInfo.Stop();
+            ////performanceInfo.Stop();
         }
     }
 }

@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="mapTo"></param>
         /// <returns></returns>
         public static GraphBase<TEdgeData> Deserialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
-            MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)
         {
             var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
@@ -137,7 +137,7 @@ namespace OsmSharp.Routing.Graph
             switch (graphType)
             {
                 case 2:
-                    return Graph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
+                    return Graph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo, copy);
                 case 1:
                     return DirectedGraph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
             }

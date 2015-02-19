@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <returns></returns>
         protected override DynamicGraphRouterDataSource<LiveEdge> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+            return DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, !lazy);
         }
     }
 }

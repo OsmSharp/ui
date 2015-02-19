@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -45,7 +45,7 @@ namespace OsmSharp.Test.Performance.Routing
         public static void Test()
         {
             LiveRoutingTest.Test("LiveRouting",
-                "kempen.osm.pbf", 250);
+                "kempen-big.osm.pbf", 50);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// <param name="testCount"></param>
         public static void Test(string name, Stream stream, int testCount)
         {
-            var vehicle = Vehicle.Car;
+            var vehicle = Vehicle.Pedestrian;
 
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
@@ -99,12 +99,12 @@ namespace OsmSharp.Test.Performance.Routing
         /// Tests routing from a serialized file.
         /// </summary>
         /// <param name="stream"></param>
-        public static void TestSerialized(Stream stream)
+        public static void TestSerialized(Stream stream, bool lazy = true)
         {
             var routingSerializer = new LiveEdgeSerializer();
-            var data = routingSerializer.Deserialize(stream);
+            var data = routingSerializer.Deserialize(stream, lazy);
 
-            LiveRoutingTest.Test(data, Vehicle.Car, 250);
+            LiveRoutingTest.Test(data, Vehicle.Pedestrian, 50);
         }
 
         public static void Test(IBasicRouterDataSource<LiveEdge> data, Vehicle vehicle, int testCount)

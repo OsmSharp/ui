@@ -32,7 +32,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="file">The the memory mapped file.</param>
         /// <param name="size">The initial size of the array.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size)
-            : base(file, 8, size, DefaultFileElementSize, (int)DefaultFileElementSize / 64)
+            : base(file, 8, size, DefaultFileElementSize, (int)DefaultFileElementSize / DefaultBufferSize, DefaultCacheSize)
         {
 
         }
@@ -44,7 +44,7 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size">The initial size of the array.</param>
         /// <param name="arraySize">The size of an indivdual array block.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize)
-            : base(file, 8, size, arraySize, (int)arraySize / 64)
+            : base(file, 8, size, arraySize, (int)arraySize / DefaultBufferSize, DefaultCacheSize)
         {
 
         }
@@ -57,7 +57,21 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="arraySize">The size of an indivdual array block.</param>
         /// <param name="bufferSize">The buffer size.</param>
         public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize, int bufferSize)
-            :base(file, 8, size, arraySize, bufferSize)
+            : base(file, 8, size, arraySize, bufferSize, DefaultCacheSize)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a memorymapped huge array.
+        /// </summary>
+        /// <param name="file">The the memory mapped file.</param>
+        /// <param name="size">The initial size of the array.</param>
+        /// <param name="arraySize">The size of an indivdual array block.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        /// <param name="cacheSize">The size of the LRU cache to keep buffers.</param>
+        public MemoryMappedHugeArrayUInt64(MemoryMappedFile file, long size, long arraySize, int bufferSize, int cacheSize)
+            : base(file, 8, size, arraySize, bufferSize, cacheSize)
         {
 
         }

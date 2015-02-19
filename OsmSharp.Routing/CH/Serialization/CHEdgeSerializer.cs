@@ -61,7 +61,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <returns></returns>
         protected override DynamicGraphRouterDataSource<CHEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return DynamicGraphRouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate);
+            return DynamicGraphRouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, !lazy);
         }
     }
 }

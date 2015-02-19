@@ -256,7 +256,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         public DynamicGraphRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
         {
             TagsCollectionBase notNeeded;
-            return this.Deserialize(stream, out notNeeded);
+            return this.Deserialize(stream, out notNeeded, lazy);
         }
 
         /// <summary>
