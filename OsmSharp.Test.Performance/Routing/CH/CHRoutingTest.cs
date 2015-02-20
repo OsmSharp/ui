@@ -26,6 +26,7 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
+using OsmSharp.Routing.CH.Serialization;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -51,6 +52,25 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
         /// <summary>
+        /// Tests routing from a serialized file.
+        /// </summary>
+        /// <param name="stream"></param>
+        public static void TestSerialized(Stream stream, bool lazy = true)
+        {
+            var routingSerializer = new CHEdgeSerializer();
+            var data = routingSerializer.Deserialize(stream, lazy);
+
+            //data.SortHilbert(1000);
+
+            //// copy.
+            //var graphCopy = new DirectedGraph<CHEdgeData>();
+            //graphCopy.CopyFrom(data);
+            //var dataCopy = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
+
+            CHRoutingTest.Test(dataCopy, 10000);
+        }
+
+        /// <summary>
         /// Tests routing from a serialized routing file.
         /// </summary>
         /// <param name="name"></param>
@@ -68,6 +88,12 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(source,
                 new OsmRoutingInterpreter(), vehicle);
 
+            CHRoutingTest.Test(data, testCount);
+        }
+
+
+        public static void Test(DynamicGraphRouterDataSource<CHEdgeData> data, int testCount)
+        {
             var router = new CHRouter();
 
             var performanceInfo = new PerformanceInfoConsumer("CHRouting");
@@ -84,14 +110,14 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
                 var route = router.Calculate(data, from, to);
 
-                if(route != null)
+                if (route != null)
                 {
                     successCount++;
                 }
                 testCount--;
 
                 // report progress.
-                var progress = (float)System.Math.Round(((double)(totalCount - testCount)  / (double)totalCount) * 100);
+                var progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHRouting", TraceEventType.Information,

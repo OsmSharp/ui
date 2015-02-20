@@ -134,7 +134,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\CH\CHRoutingTest.cs" />
     <Compile Include="Routing\LiveGraphFlatFileSerializerTests.cs" />
-    <Compile Include="Routing\CH\CHEdgeGraphFlatFileSerializerTests.cs" />
+    <Compile Include="Routing\CH\CHEdgeGraphSerializerTests.cs" />
     <Compile Include="Routing\LiveRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeGraphFileStreamTargetTests.cs" />
     <Compile Include="Routing\CH\CHPreProcessorTest.cs" />

@@ -981,9 +981,10 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgeDataSize">The edge data size.</param>
         /// <param name="mapFrom">The map from for the edge data.</param>
         /// <param name="mapTo">The map to for the edge data.</param>
+        /// <param name="copy">Flag to make an in-memory copy.</param>
         /// <returns></returns>
         public new static DirectedGraph<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
-            MappedHugeArray<TEdgeData, uint>.MapTo mapTo)
+            MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)
         {
             // read sizes.
             long position = 0;
@@ -1025,7 +1026,23 @@ namespace OsmSharp.Routing.Graph
             // deserialize shapes.
             stream.Seek(position, System.IO.SeekOrigin.Begin);
             var cappedStream = new OsmSharp.IO.LimitedStream(stream);
-            var shapes = HugeCoordinateCollectionIndex.Deserialize(cappedStream);
+
+            var shapes = HugeCoordinateCollectionIndex.Deserialize(cappedStream, copy); 
+            if (copy)
+            { // copy the data.
+                var vertexArrayCopy = new HugeArray<uint>(vertexArray.Length);
+                vertexArrayCopy.CopyFrom(vertexArray);
+                var vertexCoordinateArrayCopy = new HugeArray<GeoCoordinateSimple>(vertexCoordinateArray.Length);
+                vertexCoordinateArrayCopy.CopyFrom(vertexCoordinateArray);
+                var edgeArrayCopy = new HugeArray<uint>(edgeArray.Length);
+                edgeArrayCopy.CopyFrom(edgeArray);
+                var edgeDataArrayCopy = new HugeArray<TEdgeData>(edgeDataArray.Length);
+                edgeDataArrayCopy.CopyFrom(edgeDataArray);
+
+                file.Dispose();
+
+                return new DirectedGraph<TEdgeData>(vertexCoordinateArrayCopy, vertexArrayCopy, edgeArrayCopy, edgeDataArrayCopy, shapes);
+            }
 
             return new DirectedGraph<TEdgeData>(vertexCoordinateArray, vertexArray, edgeArray, edgeDataArray, shapes);
         }

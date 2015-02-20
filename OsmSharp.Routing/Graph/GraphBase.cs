@@ -139,7 +139,7 @@ namespace OsmSharp.Routing.Graph
                 case 2:
                     return Graph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo, copy);
                 case 1:
-                    return DirectedGraph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo);
+                    return DirectedGraph<TEdgeData>.Deserialize(stream, edgeDataSize, mapFrom, mapTo, copy);
             }
             throw new System.Exception(string.Format("Invalid graph type: {0}", graphType.ToInvariantString()));
         }

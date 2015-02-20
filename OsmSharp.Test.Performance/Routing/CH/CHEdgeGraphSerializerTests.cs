@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -32,14 +32,14 @@ namespace OsmSharp.Test.Performance.Routing.CH
     /// <summary>
     /// Holds tests for the CH serialization code.
     /// </summary>
-    public static class CHEdgeGraphFlatFileSerializerTests
+    public static class CHEdgeGraphSerializerTests
     {
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
         public static DynamicGraphRouterDataSource<CHEdgeData> Test()
         {
-            return CHEdgeGraphFlatFileSerializerTests.TestSerialization("CHSerializerFlatFile", "germany-latest.osm.pbf");
+            return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
             source.RegisterSource(new PBFOsmStreamSource(stream));
 
-            var testOutputFile = new FileInfo(@"test.pedestrian.routing");
+            var testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();
-            Stream writeStream = testOutputFile.OpenWrite();
+            Stream writeStream = testOutputFile.Open(FileMode.CreateNew, FileAccess.ReadWrite);
             
             var performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Serialize");
             performanceInfo.Start();
@@ -78,15 +78,15 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             performanceInfo.Stop();
 
-            //performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Deserialize");
-            //performanceInfo.Start();
-            //performanceInfo.Report("Deserializing again...");
+            performanceInfo = new PerformanceInfoConsumer("CHSerializerFlatFile.Deserialize");
+            performanceInfo.Start();
+            performanceInfo.Report("Deserializing again...");
 
-            //// open file again and read.
-            //writeStream = testOutputFile.OpenRead();
-            //var deserializedGraph = routingSerializer.Deserialize(writeStream);
+            // open file again and read.
+            writeStream = testOutputFile.OpenRead();
+            var deserializedGraph = routingSerializer.Deserialize(writeStream, false);
 
-            //performanceInfo.Stop();
+            performanceInfo.Stop();
             return data;
         }
     }
