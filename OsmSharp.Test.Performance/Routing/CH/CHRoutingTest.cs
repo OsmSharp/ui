@@ -55,7 +55,9 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// Tests routing from a serialized file.
         /// </summary>
         /// <param name="stream"></param>
-        public static void TestSerialized(Stream stream, bool lazy = true)
+        /// <param name="lazy"></param>
+        /// <param name="testCount"></param>
+        public static void TestSerialized(Stream stream, bool lazy = true, int testCount = 10000)
         {
             var routingSerializer = new CHEdgeSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
@@ -67,7 +69,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             //graphCopy.CopyFrom(data);
             //var dataCopy = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
 
-            CHRoutingTest.Test(dataCopy, 10000);
+            CHRoutingTest.Test(data, testCount);
         }
 
         /// <summary>

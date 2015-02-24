@@ -109,7 +109,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             }
 
             // add tags.
-            var tagsId = tagsIndex.Add(tags);
+            uint tagsId = 0;
+            if (_storeTags)
+            {
+                tagsIndex.Add(tags);
+            }
 
             // calculate weight including intermediates.
             float weight = 0;

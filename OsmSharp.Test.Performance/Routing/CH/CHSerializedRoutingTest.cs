@@ -98,7 +98,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             TagsCollectionBase metaData = null;
             var routingSerializer = new CHEdgeSerializer();
             var graphDeserialized = routingSerializer.Deserialize(
-                stream, out metaData, true);
+                stream, out metaData, false);
 
             var router = Router.CreateCHFrom(
                 graphDeserialized, new CHRouter(),

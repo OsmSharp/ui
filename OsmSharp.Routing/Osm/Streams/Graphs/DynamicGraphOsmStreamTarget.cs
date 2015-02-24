@@ -74,6 +74,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         private bool _collectIntermediates;
 
         /// <summary>
+        /// Holds the store tags flag.
+        /// </summary>
+        protected bool _storeTags = true;
+
+        /// <summary>
         /// Creates a new processor target.
         /// </summary>
         /// <param name="dynamicGraph">The graph that will be filled.</param>
@@ -258,7 +263,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             return !_interpreter.IsRelevantRouting(x.Key) &&
                                 !Vehicle.IsRelevantForOneOrMore(x.Key);
                         });
-                        _tagsIndex.Add(routableWayTags);
+                        if (_storeTags)
+                        {
+                            _tagsIndex.Add(routableWayTags);
+                        }
 
                         int wayNodesCount = way.Nodes.Count;
                         for (int idx = 0; idx < wayNodesCount; idx++)

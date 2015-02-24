@@ -998,11 +998,13 @@ namespace OsmSharp.Routing.Graph
             position = position + 8;
             var edgeLength = BitConverter.ToInt64(longBytes, 0);
 
+            var bufferSize = 32;
+            var cacheSize = MemoryMappedHugeArrayUInt32.DefaultCacheSize;
             var file = new MemoryMappedStream(new OsmSharp.IO.LimitedStream(stream));
-            var vertexArray = new MemoryMappedHugeArrayUInt32(file, (vertexLength + 1) * VERTEX_SIZE, (vertexLength + 1) * VERTEX_SIZE, 1024);
+            var vertexArray = new MemoryMappedHugeArrayUInt32(file, (vertexLength + 1) * VERTEX_SIZE, (vertexLength + 1) * VERTEX_SIZE, bufferSize / 4, cacheSize * 4);
             position = position + ((vertexLength + 1) * VERTEX_SIZE * 4);
             var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
-                new MemoryMappedHugeArraySingle(file, (vertexLength + 1) * 2, (vertexLength + 1) * 2, 1024),
+                new MemoryMappedHugeArraySingle(file, (vertexLength + 1) * 2, (vertexLength + 1) * 2, bufferSize, cacheSize),
                     2, (array, idx, coordinate) =>
                     {
                         array[idx] = coordinate.Latitude;
@@ -1017,10 +1019,10 @@ namespace OsmSharp.Routing.Graph
                         };
                     });
             position = position + ((vertexLength + 1) * 2 * 4);
-            var edgeArray = new MemoryMappedHugeArrayUInt32(file, edgeLength * EDGE_SIZE, edgeLength * EDGE_SIZE, 1024);
+            var edgeArray = new MemoryMappedHugeArrayUInt32(file, edgeLength * EDGE_SIZE, edgeLength * EDGE_SIZE, bufferSize / 2, cacheSize * 4);
             position = position + (edgeLength * EDGE_SIZE * 4);
             var edgeDataArray = new MappedHugeArray<TEdgeData, uint>(
-                new MemoryMappedHugeArrayUInt32(file, edgeLength * edgeDataSize, edgeLength * edgeDataSize, 1024), edgeDataSize, mapTo, mapFrom);
+                new MemoryMappedHugeArrayUInt32(file, edgeLength * edgeDataSize, edgeLength * edgeDataSize, bufferSize * 2, cacheSize * 2), edgeDataSize, mapTo, mapFrom);
             position = position + (edgeLength * edgeDataSize * 4);
 
             // deserialize shapes.

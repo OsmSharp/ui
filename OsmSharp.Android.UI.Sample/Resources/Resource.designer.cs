@@ -52,10 +52,7 @@ namespace OsmSharp.Android.UI.Sample
 			public const int marker = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int marker_popup = 2130837506;
-			
-			// aapt resource value: 0x7f020003
-			public const int Splash = 2130837507;
+			public const int Splash = 2130837506;
 			
 			static Drawable()
 			{

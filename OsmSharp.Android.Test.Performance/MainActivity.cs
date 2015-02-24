@@ -47,7 +47,7 @@ namespace OsmSharp.Android.Test.Performance
             
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
-            OsmSharp.Logging.Log.Ignore("CHRouting");
+            //OsmSharp.Logging.Log.Ignore("CHRouting");
             OsmSharp.Logging.Log.Ignore("CHPreProcessor");
             OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
             OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
@@ -95,28 +95,29 @@ namespace OsmSharp.Android.Test.Performance
         {
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 1 route.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    1);
+                    embeddedResource), true, 1);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 2 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    2);
+                    embeddedResource), true, 2);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 10 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    10);
+                    embeddedResource), true, 10);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 100 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    100);
+                    embeddedResource), true, 100);
+            //Log.TraceEvent("Test", TraceEventType.Information,
+            //    "Testing: 1000 routes.");
+            //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
+            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            //        embeddedResource), true, 1000);
         }
 
         /// <summary>
