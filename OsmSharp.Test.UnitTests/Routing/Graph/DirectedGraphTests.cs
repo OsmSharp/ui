@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Returns a graph.
         /// </summary>
         /// <returns></returns>
-        protected GraphBase<LiveEdge> CreateGraph()
+        protected DirectedGraph<LiveEdge> CreateGraph()
         {
             return new DirectedGraph<LiveEdge>();
         }
@@ -627,10 +627,113 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         }
 
         /// <summary>
-        /// Tests trimming the graph but edges only (all vertices are still used).
+        /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphCompressEdges()
+        public void TestLiveEdgeDynamicGraphAddReverse()
+        {
+            var graph = this.CreateGraph();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            graph.AddEdge(vertex2, vertex1, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+
+            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(1, edges[0].Value.Tags);
+            edges = graph.GetEdges(vertex2, vertex1).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(2, edges[0].Value.Tags);
+        }
+
+        /// <summary>
+        /// Tests adding a duplicate or overwriting the existing edge.
+        /// </summary>
+        [Test]
+        public void TestAddingDuplicateEdge()
+        {
+            var graph = this.CreateGraph();
+
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            // should not overwrite but add duplicate.
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+
+            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(2, edges.Length);
+            Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
+            Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
+
+            // should not overwrite, even when identical data.
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+
+            edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(3, edges.Length);
+            Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
+            Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
+        }
+
+        /// <summary>
+        /// Tests adding an edge and compressing.
+        /// </summary>
+        [Test]
+        public void TestDirectedGraphCompress1()
+        {
+            var graph = this.CreateGraph();
+            var vertex1 = graph.AddVertex(51, 1);
+            var vertex2 = graph.AddVertex(51, 2);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge(), null);
+
+            graph.Compress(true);
+
+            Assert.IsTrue(graph.IsReadonly);
+            var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(1, arcs.Length);
+            Assert.AreEqual(0, arcs[0].Value.Tags);
+            Assert.AreEqual(vertex2, arcs[0].Key);
+
+            arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
+            Assert.AreEqual(0, arcs.Length);
+
+            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(0, edges[0].Value.Tags);
+            Assert.AreEqual(true, edges[0].Value.Forward);
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex1));
+        }
+
+        /// <summary>
+        /// Tests adding data and compressing.
+        /// </summary>
+        [Test]
+        public void TestDirectedGraphCompress2()
         {
             var graph = this.CreateGraph();
 
@@ -724,76 +827,100 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         }
 
         /// <summary>
-        /// Tests overwrite an edge with a reverse edge.
+        /// Tests adding data and compressing.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddReverse()
+        public void TestDirectedGraphCompress3()
         {
             var graph = this.CreateGraph();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
+            var vertex3 = graph.AddVertex(51, 3);
+            var vertex4 = graph.AddVertex(51, 3);
 
             graph.AddEdge(vertex1, vertex2, new LiveEdge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-
-            graph.AddEdge(vertex2, vertex1, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex2, vertex3);
+
+            graph.Compress(true);
+
+            Assert.IsFalse(graph.ContainsEdges(vertex2, vertex3));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 0);
+            Assert.AreEqual(graph.GetEdges(vertex3).ToKeyValuePairs().Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex4).ToKeyValuePairs().Length, 1);
+
+            graph = this.CreateGraph();
+
+            vertex1 = graph.AddVertex(51, 1);
+            vertex2 = graph.AddVertex(51, 2);
+            vertex3 = graph.AddVertex(51, 3);
+            vertex4 = graph.AddVertex(51, 3);
+
+            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 1
+            }, null);
+            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 2
+            }, null);
+            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 3
+            }, null);
+
+            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            {
+                Forward = true,
+                Tags = 4
+            }, null);
+
+            graph.RemoveEdge(vertex3, vertex4);
+
+            graph.Compress(true);
+
+            Assert.IsFalse(graph.ContainsEdges(vertex3, vertex4));
+
+            Assert.AreEqual(graph.GetEdges(vertex1).ToKeyValuePairs().Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex2).ToKeyValuePairs().Length, 1);
+            Assert.AreEqual(graph.GetEdges(vertex3).ToKeyValuePairs().Length, 0);
+            Assert.AreEqual(graph.GetEdges(vertex4).ToKeyValuePairs().Length, 1);
 
             var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
             Assert.AreEqual(1, edges.Length);
             Assert.AreEqual(1, edges[0].Value.Tags);
-            edges = graph.GetEdges(vertex2, vertex1).ToKeyValuePairs();
+            edges = graph.GetEdges(vertex2, vertex3).ToKeyValuePairs();
             Assert.AreEqual(1, edges.Length);
             Assert.AreEqual(2, edges[0].Value.Tags);
-        }
-
-        /// <summary>
-        /// Tests adding a duplicate or overwriting the existing edge.
-        /// </summary>
-        [Test]
-        public void TestAddingDuplicateEdge()
-        {
-            var graph = this.CreateGraph();
-
-            var vertex1 = graph.AddVertex(51, 1);
-            var vertex2 = graph.AddVertex(51, 2);
-
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 1
-            }, null);
-
-            // should not overwrite but add duplicate.
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 2
-            }, null);
-
-            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
-            Assert.AreEqual(2, edges.Length);
-            Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
-            Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
-
-            // should not overwrite, even when identical data.
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
-            {
-                Forward = true,
-                Tags = 1
-            }, null);
-
-            edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
-            Assert.AreEqual(3, edges.Length);
-            Assert.IsTrue(edges.Any(x => x.Value.Tags == 1));
-            Assert.IsTrue(edges.Any(x => x.Value.Tags == 2));
+            edges = graph.GetEdges(vertex4, vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(4, edges[0].Value.Tags);
         }
 
         /// <summary>

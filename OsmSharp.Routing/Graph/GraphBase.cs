@@ -62,6 +62,14 @@ namespace OsmSharp.Routing.Graph
 
         public abstract void Resize(long vertexEstimate, long edgeEstimate);
 
+        public virtual bool IsReadonly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public abstract bool IsDirected
         {
             get;

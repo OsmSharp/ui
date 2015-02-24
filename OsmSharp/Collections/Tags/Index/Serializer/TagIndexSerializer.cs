@@ -229,13 +229,13 @@ namespace OsmSharp.Collections.Tags.Serializer.Index
             long begin = stream.Position;
 
             // build a string index.
-            ObjectTable<string> stringTable = new ObjectTable<string>(false);
+            var stringTable = new ObjectTable<string>(false);
 
             // convert tag collections to simpler objects.
-            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
+            var tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
             for (uint tagId = 0; tagId < tagsIndex.Max; tagId++)
             {
-                TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
+                var tagsCollection = tagsIndex.Get(tagId);
                 if (tagsCollection != null)
                 { // convert the tags collection to a list and add to the tag index.
                     List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();

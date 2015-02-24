@@ -23,7 +23,6 @@ using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -75,6 +74,11 @@ namespace OsmSharp.Routing.Graph
         private HugeCoordinateCollectionIndex _edgeShapes;
 
         /// <summary>
+        /// Holds the readonly flag.
+        /// </summary>
+        private bool _readonly = false;
+
+        /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
         public DirectedGraph()
@@ -99,23 +103,10 @@ namespace OsmSharp.Routing.Graph
             HugeCoordinateCollectionIndex edgeShapeArray)
         {
             _vertices = vertexArray;
-            //_vertices.Resize(sizeEstimate);
-            //for (int idx = 0; idx < sizeEstimate; idx++)
-            //{
-            //    _vertices[idx] = NO_EDGE;
-            //}
             _coordinates = coordinateArray;
-            //_coordinates.Resize(sizeEstimate);
             _edges = edgesArray;
-            //_edges.Resize(sizeEstimate * 3 * EDGE_SIZE);
-            //for (int idx = 0; idx < sizeEstimate * 3 * EDGE_SIZE; idx++)
-            //{
-            //    _edges[idx] = NO_EDGE;
-            //}
             _edgeData = edgeDataArray;
-            //_edgeData.Resize(sizeEstimate * 3);
             _edgeShapes = edgeShapeArray;
-            //_edgeShapes.Resize(sizeEstimate * 3);
             _nextVertexId = (uint)(_vertices.Length / VERTEX_SIZE);
             _nextEdgeId = (uint)(edgesArray.Length / EDGE_SIZE);
         }
@@ -261,6 +252,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="size"></param>
         private void IncreaseVertexSize(long size)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             var oldLength = _coordinates.Length;
             _coordinates.Resize(size);
             _vertices.Resize(size);
@@ -279,6 +272,8 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         private void IncreaseEdgeSize(long size)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             var oldLength = _edges.Length;
             _edges.Resize(size);
             _edgeData.Resize(size / EDGE_SIZE);
@@ -293,6 +288,8 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public override uint AddVertex(float latitude, float longitude)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             // create vertex.
             var newId = _nextVertexId;
             var vertexIdx = newId * VERTEX_SIZE;
@@ -306,7 +303,6 @@ namespace OsmSharp.Routing.Graph
                 Latitude = latitude,
                 Longitude = longitude
             };
-            // _vertices[vertexIdx + FIRST_EDGE] = NO_EDGE;
             _vertices[vertexIdx + EDGE_COUNT] = 0;
             _nextVertexId++; // increase for next vertex.
             return newId;
@@ -320,6 +316,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="longitude"></param>
         public override void SetVertex(uint vertex, float latitude, float longitude)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
             if (_nextVertexId <= vertex) { throw new ArgumentOutOfRangeException("vertex", "vertex is not part of this graph."); }
 
             var coordinate = _coordinates[vertex];
@@ -369,6 +366,7 @@ namespace OsmSharp.Routing.Graph
         /// <remarks>This only adds edge vertex1->vertex2 NOT vertex2->vertex1</remarks>
         public override void AddEdge(uint vertex1, uint vertex2, TEdgeData data, ICoordinateCollection coordinates)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
             if (vertex1 == vertex2) { throw new ArgumentException("Given vertices must be different."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -446,6 +444,8 @@ namespace OsmSharp.Routing.Graph
         /// <remarks>Only deletes all edges vertex->* NOT *->vertex</remarks>
         public override void RemoveEdges(uint vertex)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             var edges = this.GetEdges(vertex);
             while (edges.MoveNext())
             {
@@ -461,6 +461,7 @@ namespace OsmSharp.Routing.Graph
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
         public override void RemoveEdge(uint vertex1, uint vertex2)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
@@ -490,6 +491,7 @@ namespace OsmSharp.Routing.Graph
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
         public override void RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
@@ -640,8 +642,10 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public override void Trim()
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             // resize coordinates/vertices.
-            _coordinates.Resize(_nextVertexId * VERTEX_SIZE);
+            _coordinates.Resize(_nextVertexId);
             _vertices.Resize(_nextVertexId * VERTEX_SIZE);
 
             // resize edges.
@@ -657,6 +661,8 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgeEstimate"></param>
         public override void Resize(long vertexEstimate, long edgeEstimate)
         {
+            if (_readonly) { throw new Exception("Graph is readonly."); }
+
             // resize coordinates/vertices.
             this.IncreaseVertexSize((int)vertexEstimate * VERTEX_SIZE);
 
@@ -673,11 +679,66 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Trims the size of this graph to it's smallest possible size.
+        /// Compresses the data in this graph to it's smallest size.
+        /// </summary>
+        /// <param name="toReadonly">Flag to make the graph even smaller by converting it to a readonly version.</param>
+        public void Compress(bool toReadonly)
+        {
+            if (toReadonly)
+            {
+                if (_readonly) { throw new Exception("Graph is readonly."); }
+
+                // copy everything in a better structure after the last edge.
+                var offset = _nextEdgeId;
+                var nextEdgeId = _nextEdgeId;
+                for (int vertex = 2; vertex < _nextVertexId * VERTEX_SIZE; vertex = vertex + 2)
+                { // assume vertices are sorted correctly.
+                    var newEdge = nextEdgeId;
+
+                    // move edges.
+                    for (uint oldEdgeId = _vertices[vertex + FIRST_EDGE]; oldEdgeId < _vertices[vertex + EDGE_COUNT] + _vertices[vertex + FIRST_EDGE]; oldEdgeId++)
+                    {
+                        if (nextEdgeId + 1 >= _edges.Length)
+                        { // edges need to be increased.
+                            this.IncreaseEdgeSize();
+                        }
+
+                        _edges[nextEdgeId] = _edges[oldEdgeId];
+                        _edgeData[nextEdgeId] = _edgeData[oldEdgeId];
+                        _edgeShapes[nextEdgeId] = _edgeShapes[oldEdgeId];
+                        nextEdgeId++;
+                    }
+
+                    // update vertex.
+                    _vertices[vertex + FIRST_EDGE] = newEdge - offset;
+                }
+
+                // copy everything back to the beginning.
+                for (uint edgeId = 0; edgeId < nextEdgeId - _nextEdgeId; edgeId++)
+                {
+                    _edges[edgeId] = _edges[edgeId + offset];
+                    _edgeData[edgeId] = _edgeData[edgeId + offset];
+                    _edgeShapes[edgeId] = _edgeShapes[edgeId + offset];
+                }
+                _nextEdgeId = nextEdgeId - _nextEdgeId;
+
+                // ... compress the coordinates index.
+                _edgeShapes.Compress();
+
+                // ... and trim.
+                this.Trim();
+
+                // ... last, but not least, set readonly flag.
+                _readonly = true;
+            }
+        }
+
+        /// <summary>
+        /// Compresses the data in this graph to it's smallest size.
         /// </summary>
         public override void Compress()
         {
-
+            this.Compress(false);
         }
 
         /// <summary>
@@ -899,6 +960,17 @@ namespace OsmSharp.Routing.Graph
         public override bool CanHaveDuplicates
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Returns the readonly flag.
+        /// </summary>
+        public override bool IsReadonly
+        {
+            get
+            {
+                return _readonly;
+            }
         }
 
         #region Serialization

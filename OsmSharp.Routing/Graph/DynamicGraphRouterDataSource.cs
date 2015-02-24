@@ -431,6 +431,17 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Returns the internal graph.
+        /// </summary>
+        public GraphBase<TEdgeData> Graph
+        {
+            get
+            {
+                return _graph;
+            }
+        }
+
+        /// <summary>
         /// Compresses the internal of the graph, freeing new space.
         /// </summary>
         public override void Compress()
@@ -874,8 +885,9 @@ namespace OsmSharp.Routing.Graph
             stream.Seek(position, System.IO.SeekOrigin.Begin);
 
             // serialize tags.
-            position = position + 
-                TagIndexSerializer.Serialize(stream, _tagsIndex);
+            var tagsSize = TagIndexSerializer.Serialize(stream, _tagsIndex);
+            position = position + tagsSize;
+                
             return position;
         }
 

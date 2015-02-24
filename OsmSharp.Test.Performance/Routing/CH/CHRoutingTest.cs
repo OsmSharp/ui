@@ -90,6 +90,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(source,
                 new OsmRoutingInterpreter(), vehicle);
 
+            //(data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
+
             CHRoutingTest.Test(data, testCount);
         }
 

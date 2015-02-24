@@ -203,14 +203,6 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
-        /// Trims the size of this collection index to it's smallest possible size.
-        /// </summary>
-        public void Compress()
-        {
-
-        }
-
-        /// <summary>
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
@@ -521,6 +513,14 @@ namespace OsmSharp.Collections.Coordinates.Collections
             {
                 return new HugeCoordinateCollection(_coordinates, _startIdx, _size, !_reverse);
             }
+        }
+
+        /// <summary>
+        /// Compresses the data in this index.
+        /// </summary>
+        public void Compress()
+        {
+
         }
 
         /// <summary>
