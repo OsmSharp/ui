@@ -76,8 +76,6 @@ namespace OsmSharp.Collections.Arrays
         {
             get
             {
-                //long arrayIdx = (long)System.Math.(idx / _arraySize);
-                //long localIdx = idx % _arraySize;
                 long arrayIdx = idx >> _arrayPow;
                 long localIdx = idx - (arrayIdx << _arrayPow);
                 if (_latestArrayIdx == arrayIdx)

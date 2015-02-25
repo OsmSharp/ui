@@ -722,11 +722,11 @@ namespace OsmSharp.Routing.Graph
                 }
                 _nextEdgeId = nextEdgeId - _nextEdgeId;
 
-                // ... compress the coordinates index.
-                _edgeShapes.Compress();
-
                 // ... and trim.
                 this.Trim();
+
+                // ... compress the coordinates index.
+                _edgeShapes.Compress();
 
                 // ... last, but not least, set readonly flag.
                 _readonly = true;

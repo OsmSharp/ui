@@ -104,6 +104,18 @@ namespace OsmSharp.Test.Performance.Routing
             var routingSerializer = new LiveEdgeSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
 
+            uint vertex = 1;
+            uint significantVertices = 0;
+            while(vertex < data.VertexCount)
+            {
+                var edges = data.GetEdges(vertex).ToKeyValuePairs();
+                if(edges.Length > 2)
+                {
+                    significantVertices++;
+                }
+                vertex++;
+            }
+
             data.SortHilbert(1000);
 
             // copy.

@@ -59,6 +59,11 @@ namespace OsmSharp.Collections.Coordinates.Collections
         private long _nextIdx = 0;
 
         /// <summary>
+        /// Holds the max id.
+        /// </summary>
+        private long _maxId = 0;
+
+        /// <summary>
         /// Creates a new huge coordinate index.
         /// </summary>
         /// <param name="size">The original size.</param>
@@ -199,6 +204,11 @@ namespace OsmSharp.Collections.Coordinates.Collections
                 {
                     this.Add(id, value);
                 }
+
+                if(_maxId < id)
+                { // update max id.
+                    _maxId = id;
+                }
             }
         }
 
@@ -209,13 +219,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         public void Resize(long size)
         {
             _index.Resize(size);
-
-            long bestSize = size * 2 * ESTIMATED_SIZE;
-            if (bestSize < _coordinates.Length)
-            { // make sure all coordinate data is saved.
-                bestSize = _coordinates.Length;
+            if(_maxId >= size)
+            { 
+                _maxId = size - 1;
             }
-            _coordinates.Resize(bestSize);
+
+            //this.Trim();
         }
 
         /// <summary>
@@ -520,7 +529,35 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// </summary>
         public void Compress()
         {
+            // reorganizes the data in the coordinate array and resizes it.
+            var offset = _nextIdx;
+            var nextIdx = offset * 2;
+            for(int idx = 0; idx < _maxId + 1; idx++)
+            {
+                var data = _index[idx];
+                var index = ((long)(data / (ulong)MAX_COLLECTION_SIZE)) * 2;
+                var size = (long)(data % (ulong)MAX_COLLECTION_SIZE) * 2;
+                var newId = (ulong)(((nextIdx / 2) - offset) * MAX_COLLECTION_SIZE) + (ulong)(size / 2);
+                for(var localIdx = index; localIdx < index + size; localIdx = localIdx + 2)
+                {
+                    if(nextIdx >= _coordinates.Length)
+                    { // increase the index.
+                        this.IncreaseCoordinates();
+                    }
+                    _coordinates[nextIdx] = _coordinates[localIdx];
+                    _coordinates[nextIdx + 1] = _coordinates[localIdx + 1];
+                    nextIdx = nextIdx + 2;
+                }
 
+                _index[idx] = newId;
+            }
+
+            // copy to the beginning.
+            for(int idx = 0; idx < nextIdx - (offset * 2); idx++)
+            {
+                _coordinates[idx] = _coordinates[idx + (offset * 2)];
+            }
+            _coordinates.Resize(nextIdx - (offset * 2));
         }
 
         /// <summary>
@@ -530,25 +567,14 @@ namespace OsmSharp.Collections.Coordinates.Collections
         public void Trim()
         {
             // find the highest index where the index-entry is non-null.
-            long maxIndex = 0;
-            for (long idx = _index.Length - 1; idx >=  0; idx--)
-            {
-                if (_index[idx] > 0)
-                {
-                    maxIndex = idx;
-                    break;
-                }
-            }
+            var maxIndex = _maxId;
+            //_index.Resize(maxIndex + 1);
 
-            // resize accordingly.
-            var indexSize = maxIndex + 1;
-            var coordinateLength = _nextIdx * 2;
-            if (coordinateLength == 0)
-            { // minimum one.
-                coordinateLength = 2;
-            }
-            _index.Resize(indexSize);
-            _coordinates.Resize(coordinateLength);
+            //// resize accordingly.
+            //if (_maxId > 0)
+            //{ // only compress.
+            //    this.Compress();
+            //}
         }
 
         /// <summary>
