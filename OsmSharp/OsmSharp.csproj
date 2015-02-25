@@ -178,6 +178,8 @@
     <Compile Include="IO\LZ4\Safe\LZ4Codec.cs" />
     <Compile Include="IO\LZ4\Safe\LZ4Codec.Safe32.Dirty.cs" />
     <Compile Include="IO\LZ4\Safe\LZ4Codec.Safe32HC.Dirty.cs" />
+    <Compile Include="IO\LZ4\Seekable\LZ4SeekableStreamReader.cs" />
+    <Compile Include="IO\LZ4\Seekable\LZ4SeekableStreamWriter.cs" />
     <Compile Include="IO\LZ4\Services\Safe32LZ4Service.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
