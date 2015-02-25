@@ -62,28 +62,6 @@ namespace OsmSharp.IO.LZ4.Seekable
         public LZ4SeekableStreamReader(Stream stream)
         {
             _stream = stream;
-
-            // read the buffer size.
-            _stream.Seek(0, SeekOrigin.Begin);
-            var shortBytes = new byte[2];
-            _stream.Read(shortBytes, 0, 2);
-            _buffer = new byte[BitConverter.ToInt16(shortBytes, 0)];
-        }
-
-        /// <summary>
-        /// Creates a compressed seekable stream overwriting the existing data starting at position 0.
-        /// </summary>
-        /// <param name="stream">The random-access stream.</param>
-        /// <param name="bufferSize">The buffer size.</param>
-        public LZ4SeekableStreamReader(Stream stream, ushort bufferSize)
-        {
-            _stream = stream;
-
-            // write the buffer size.
-            _stream.Seek(0, SeekOrigin.Begin);
-            _stream.Write(BitConverter.GetBytes(bufferSize), 0, 2);
-            _blockSizes = new List<ushort>();
-            _blockSizes.Add(0);
         }
 
         /// <summary>
@@ -115,7 +93,7 @@ namespace OsmSharp.IO.LZ4.Seekable
         /// </summary>
         public override void Flush()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -130,17 +108,17 @@ namespace OsmSharp.IO.LZ4.Seekable
         {
             get
             {
-                throw new NotImplementedException();
+                return _stream.Position;
             }
             set
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -150,7 +128,7 @@ namespace OsmSharp.IO.LZ4.Seekable
 
         public override void SetLength(long value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -165,7 +143,13 @@ namespace OsmSharp.IO.LZ4.Seekable
         /// </summary>
         private void ReadIndex()
         {
+            // read the buffer size.
+            _stream.Seek(0, SeekOrigin.Begin);
             var shortBytes = new byte[2];
+            _stream.Read(shortBytes, 0, 2);
+            _buffer = new byte[BitConverter.ToInt16(shortBytes, 0)];
+
+            // 
             _stream.Seek(2, SeekOrigin.Begin);
             _stream.Read(shortBytes, 0, 2);
             var blockSize = BitConverter.ToUInt16(shortBytes, 0);
