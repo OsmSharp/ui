@@ -171,6 +171,14 @@
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\LZ4\CompressionMode.cs" />
+    <Compile Include="IO\LZ4\ILZ4Service.cs" />
+    <Compile Include="IO\LZ4\LZ4Codec.cs" />
+    <Compile Include="IO\LZ4\LZ4Stream.cs" />
+    <Compile Include="IO\LZ4\Safe\LZ4Codec.cs" />
+    <Compile Include="IO\LZ4\Safe\LZ4Codec.Safe32.Dirty.cs" />
+    <Compile Include="IO\LZ4\Safe\LZ4Codec.Safe32HC.Dirty.cs" />
+    <Compile Include="IO\LZ4\Services\Safe32LZ4Service.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedStream.cs" />
@@ -393,6 +401,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\LZ4\Safe\LZ4Codec.Safe.cs" />
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">
       <SubType>Designer</SubType>
     </None>
