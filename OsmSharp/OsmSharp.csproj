@@ -170,6 +170,7 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\FastBitConverter.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />

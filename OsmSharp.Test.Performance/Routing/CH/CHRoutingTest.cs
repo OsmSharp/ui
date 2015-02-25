@@ -57,7 +57,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <param name="testCount"></param>
-        public static void TestSerialized(Stream stream, bool lazy = true, int testCount = 10000)
+        public static void TestSerialized(Stream stream, bool lazy = true, int testCount = 100)
         {
             var routingSerializer = new CHEdgeSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
