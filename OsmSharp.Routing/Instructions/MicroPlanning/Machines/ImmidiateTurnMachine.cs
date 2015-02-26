@@ -36,19 +36,19 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="planner">The planner.</param>
         public ImmidateTurnMachine(MicroPlanner planner)
-            : base(ImmidateTurnMachine.Initialize(), planner, 101)
+            : base(planner, 101)
         {
 
         }
 
         /// <summary>
-        /// Initializes this machine.
+        /// Builds the initial states.
         /// </summary>
         /// <returns></returns>
-        private static FiniteStateMachineState<MicroPlannerMessage> Initialize()
+        protected override FiniteStateMachineState<MicroPlannerMessage> BuildStates()
         {
             // generate states.
-            List<FiniteStateMachineState<MicroPlannerMessage>> states = FiniteStateMachineState<MicroPlannerMessage>.Generate(5);
+            var states = FiniteStateMachineState<MicroPlannerMessage>.Generate(5);
 
             // state 3 is final.
             states[4].Final = true;

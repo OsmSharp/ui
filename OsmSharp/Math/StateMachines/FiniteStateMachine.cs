@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.StateMachines;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Math.Automata
@@ -44,14 +45,37 @@ namespace OsmSharp.Math.Automata
         /// <summary>
         /// Creates a new finite state machine.
         /// </summary>
+        public FiniteStateMachine()
+        {
+            // create the consumed events list.
+            _consumedEvents = new List<EventType>();
+
+            // set state.
+            var initialState = this.BuildStates();
+            _initialState = initialState;
+            _currentState = initialState;
+        }
+
+        /// <summary>
+        /// Creates a new finite state machine.
+        /// </summary>
         public FiniteStateMachine(FiniteStateMachineState<EventType> initialState)
         {
             // create the consumed events list.
             _consumedEvents = new List<EventType>();
 
-            // 
+            // set state.
             _initialState = initialState;
             _currentState = initialState;
+        }
+
+        /// <summary>
+        /// Builds the initial states if none was given.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual FiniteStateMachineState<EventType> BuildStates()
+        {
+            throw new NotSupportedException("Cannot create this FSM without an explicit initial state.");
         }
 
         #region Consumption/Reset

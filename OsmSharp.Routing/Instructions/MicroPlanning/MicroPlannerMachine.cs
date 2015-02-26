@@ -40,15 +40,19 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Creates a new event machine.
         /// </summary>
-        /// <param name="initial"></param>
         /// <param name="planner"></param>
         /// <param name="priority"></param>
-        protected MicroPlannerMachine(FiniteStateMachineState<MicroPlannerMessage> initial, MicroPlanner planner, int priority)
-            :base(initial)
+        protected MicroPlannerMachine(MicroPlanner planner, int priority)
         {
             _planner = planner;
             _priority = priority;
         }
+
+        /// <summary>
+        /// Builds the initial state.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract override FiniteStateMachineState<MicroPlannerMessage> BuildStates();
 
         /// <summary>
         /// Returns the microplanner.
