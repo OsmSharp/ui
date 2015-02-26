@@ -15,11 +15,9 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using OsmSharp.Math.StateMachines;
+using System.Collections.Generic;
 
 namespace OsmSharp.Math.Automata
 {
@@ -31,37 +29,32 @@ namespace OsmSharp.Math.Automata
         /// <summary>
         /// Keeps a list of already consumed event since the latest reset.
         /// </summary>
-        private IList<EventType> _consumed_events;
+        private IList<EventType> _consumedEvents;
 
         /// <summary>
         /// Keeps the current state of this machine.
         /// </summary>
-        private FiniteStateMachineState<EventType> _current_state;
+        private FiniteStateMachineState<EventType> _currentState;
 
         /// <summary>
         /// Keeps the initial state of this machine.
         /// </summary>
-        private FiniteStateMachineState<EventType> _initial_state;
+        private FiniteStateMachineState<EventType> _initialState;
 
         /// <summary>
         /// Creates a new finite state machine.
         /// </summary>
-        public FiniteStateMachine(FiniteStateMachineState<EventType> initial_state)
+        public FiniteStateMachine(FiniteStateMachineState<EventType> initialState)
         {
             // create the consumed events list.
-            _consumed_events = new List<EventType>();
+            _consumedEvents = new List<EventType>();
 
             // 
-            _initial_state = initial_state;
-            _current_state = initial_state;
+            _initialState = initialState;
+            _currentState = initialState;
         }
 
         #region Consumption/Reset
-
-        ///// <summary>
-        ///// Boolean indicating re-consumption.
-        ///// </summary>
-        //private bool _reconsuming;
 
         /// <summary>
         /// Consumes the given event.
@@ -70,21 +63,23 @@ namespace OsmSharp.Math.Automata
         /// <returns></returns>
         public bool Consume(EventType even)
         {
-            FiniteStateMachineState<EventType> old_state = _current_state;
+            var oldState = _currentState;
 
             // add to the consumed events.
-            _consumed_events.Add(even);
+            _consumedEvents.Add(even);
 
             // if the type matches on of the outgoing transitions; change state; else revert to initial.
             bool succes = false;
             bool final = false;
-            foreach (FiniteStateMachineTransition<EventType> transition in _current_state.Outgoing)
+            foreach (var transition in _currentState.Outgoing)
             {
                 if (transition.Match(this, even))
                 {
                     succes = true;
-                    _current_state = transition.TargetState;
-                    this.NotifyStateTransition(even, _current_state);
+                    _currentState = transition.TargetState;
+                    this.NotifyStateTransition(even, _currentState);
+
+                    transition.NotifySuccessfull(even);
                     break;
                 }
             }
@@ -92,36 +87,23 @@ namespace OsmSharp.Math.Automata
             // revert if unsuccesfull.
             if (!succes)
             {
-                if (!_current_state.ConsumeAll)
+                if (!_currentState.ConsumeAll)
                 {
-                    this.NotifyReset(even, _current_state);
-                    //FiniteStateMachineState<EventType> from_state = _current_state;
+                    this.NotifyReset(even, _currentState);
                     this.Reset();
-
-                    //if (!_reconsuming && from_state != _initial_state)
-                    //{
-                    //    // event was not consumed and it was not refused in the inital state.
-                    //    _reconsuming = true;
-                    //    this.Consume(even);
-                    //    _reconsuming = false;
-                    //}
                 }
             }
             else
             {
-                if (_current_state.Final)
+                if (_currentState.Final)
                 {
                     final = true;
-                    this.NotifyFinalState(_consumed_events);
+                    this.NotifyFinalState(_consumedEvents);
                     this.Reset();
                 }
             }
-            
-            // notify listeners for a consumed events.
-            //if (!_reconsuming)
-            //{
-                this.NotifyConsumption(even, _current_state, old_state);
-            //}
+
+            this.NotifyConsumption(even, _currentState, oldState);
 
             return final;
         }
@@ -133,8 +115,8 @@ namespace OsmSharp.Math.Automata
         /// </summary>
         public void Reset()
         {
-            _consumed_events.Clear();
-            _current_state = _initial_state;
+            _consumedEvents.Clear();
+            _currentState = _initialState;
         }
 
         #region Events
@@ -152,8 +134,8 @@ namespace OsmSharp.Math.Automata
         /// <param name="even"></param>
         /// <param name="new_state"></param>
         /// <param name="old_state"></param>
-        public delegate void EventStatesDelegate(EventType even, FiniteStateMachineState<EventType> new_state, 
-            FiniteStateMachineState<EventType> old_state);
+        public delegate void EventStatesDelegate(EventType even, FiniteStateMachineState<EventType> newState, 
+            FiniteStateMachineState<EventType> oldState);
         
         /// <summary>
         /// Delegate containing an event object list.
@@ -170,16 +152,16 @@ namespace OsmSharp.Math.Automata
         /// Notify listeners an event was consumed.
         /// </summary>
         /// <param name="even"></param>
-        /// <param name="new_state"></param>
-        /// <param name="old_state"></param>
+        /// <param name="newState"></param>
+        /// <param name="oldState"></param>
         private void NotifyConsumption(EventType even, 
-            FiniteStateMachineState<EventType> new_state, FiniteStateMachineState<EventType> old_state)
+            FiniteStateMachineState<EventType> newState, FiniteStateMachineState<EventType> oldState)
         {
             if (ConsumptionEvent != null)
             {
-                ConsumptionEvent(even, new_state, old_state);
+                ConsumptionEvent(even, newState, oldState);
             }
-            this.RaiseConsumptionEvent(even, new_state, old_state);
+            this.RaiseConsumptionEvent(even, newState, oldState);
         }
 
         /// <summary>
@@ -187,9 +169,9 @@ namespace OsmSharp.Math.Automata
         /// </summary>
         /// <param name="even"></param>
         /// <param name="newState"></param>
-        /// <param name="old_state"></param>
+        /// <param name="oldState"></param>
         protected virtual void RaiseConsumptionEvent(EventType even, FiniteStateMachineState<EventType> 
-            newState, FiniteStateMachineState<EventType> old_state)
+            newState, FiniteStateMachineState<EventType> oldState)
         {
 
         }
@@ -287,9 +269,9 @@ namespace OsmSharp.Math.Automata
         /// <returns></returns>
         public override string ToString()
         {
-            if (_current_state != null)
+            if (_currentState != null)
             {
-                return string.Format("{0}:{1}", this.GetType().Name, _current_state.ToString());
+                return string.Format("{0}:{1}", this.GetType().Name, _currentState.ToString());
             }
             else
             {
