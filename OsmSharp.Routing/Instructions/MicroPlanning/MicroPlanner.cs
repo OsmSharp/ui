@@ -77,8 +77,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Plans all the messages in the aggregated 
         /// </summary>
+        /// <param name="route"></param>
         /// <param name="p"></param>
-        public List<Instruction> Plan(AggregatedPoint p)
+        public List<Instruction> Plan(Route route, AggregatedPoint p)
         {
             // set the current aggregated object.
             _current = p;
@@ -89,7 +90,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 while (_current != null)
                 {
                     // plan the current message.
-                    this.PlanNewMessage(_current);
+                    this.PlanNewMessage(route, _current);
 
                     // get the next object.
                     _current = _current.GetNext();
@@ -120,20 +121,20 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// Creates and plans a new message.
         /// </summary>
         /// <param name="aggregated"></param>
-        private void PlanNewMessage(Aggregated aggregated)
+        private void PlanNewMessage(Route route, Aggregated aggregated)
         {
             // create the message.
             MicroPlannerMessage message = null;
             if (aggregated is AggregatedPoint)
             {
-                var point = new MicroPlannerMessagePoint();
+                var point = new MicroPlannerMessagePoint(route);
                 point.Point = aggregated as AggregatedPoint;
 
                 message = point;
             }
             else if (aggregated is AggregatedArc)
             {
-                var arc = new MicroPlannerMessageArc();
+                var arc = new MicroPlannerMessageArc(route);
                 arc.Arc = aggregated as AggregatedArc;
 
                 message = arc;
@@ -304,7 +305,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             // check the other machines and their priorities.
             int priority = machine.Priority;
-            foreach (MicroPlannerMachine other_machine in _machines)
+            foreach (var other_machine in _machines)
             {
                 if (!_invalidMachines.Contains(other_machine))
                 {

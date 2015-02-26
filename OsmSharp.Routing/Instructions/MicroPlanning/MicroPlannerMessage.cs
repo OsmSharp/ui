@@ -21,8 +21,20 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
     /// <summary>
     /// A micro message.
     /// </summary>
-    public class MicroPlannerMessage
+    public abstract class MicroPlannerMessage
     {
+        /// <summary>
+        /// Creates a new microplanner message.
+        /// </summary>
+        /// <param name="route"></param>
+        public MicroPlannerMessage(Route route)
+        {
+            this.Route = route;
+        }
 
+        /// <summary>
+        /// Gets the route.
+        /// </summary>
+        public Route Route { get; private set; }
     }
 }

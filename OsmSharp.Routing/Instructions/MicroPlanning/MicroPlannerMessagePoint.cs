@@ -26,6 +26,16 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
     public class MicroPlannerMessagePoint : MicroPlannerMessage
     {
         /// <summary>
+        /// Creates new microplanner point.
+        /// </summary>
+        /// <param name="route"></param>
+        public MicroPlannerMessagePoint(Route route)
+            : base(route)
+        {
+
+        }
+
+        /// <summary>
         /// Gets or sets the aggregated point.
         /// </summary>
         public AggregatedPoint Point { get; set; }

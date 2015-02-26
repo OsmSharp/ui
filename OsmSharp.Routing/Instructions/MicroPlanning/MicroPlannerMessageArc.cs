@@ -26,6 +26,16 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
     public class MicroPlannerMessageArc : MicroPlannerMessage
     {
         /// <summary>
+        /// Creates a new microplanner message.
+        /// </summary>
+        /// <param name="route"></param>
+        public MicroPlannerMessageArc(Route route)
+            : base(route)
+        {
+
+        }
+
+        /// <summary>
         /// Gets or sets the aggregated arc.
         /// </summary>
         public AggregatedArc Arc { get; set; }
