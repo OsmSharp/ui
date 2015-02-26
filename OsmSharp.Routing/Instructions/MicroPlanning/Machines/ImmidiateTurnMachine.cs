@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -31,6 +31,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
     /// </summary>
     public class ImmidateTurnMachine : MicroPlannerMachine
     {
+        /// <summary>
+        /// Creates a new immidiate turn machine.
+        /// </summary>
+        /// <param name="planner">The planner.</param>
         public ImmidateTurnMachine(MicroPlanner planner)
             : base(ImmidateTurnMachine.Initialize(), planner, 101)
         {
@@ -128,6 +132,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Called after this machine reached the final state.
+        /// </summary>
         public override void Succes()
         {
             // get the last arc and the last point.
@@ -176,6 +183,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
         }
 
+        /// <summary>
+        /// Returns true if the objects are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is ImmidateTurnMachine)
@@ -186,6 +198,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Returns the hashcode.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {// if the machine can be used more than once 
             // this hashcode will have to be updated.

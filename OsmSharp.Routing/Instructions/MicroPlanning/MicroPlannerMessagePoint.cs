@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,7 +20,10 @@ using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerMessagePoint : MicroPlannerMessage
+    /// <summary>
+    /// A micro message that holds a point.
+    /// </summary>
+    public class MicroPlannerMessagePoint : MicroPlannerMessage
     {
         /// <summary>
         /// Gets or sets the aggregated point.

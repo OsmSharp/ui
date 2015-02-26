@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,6 +22,9 @@ using OsmSharp.Math.StateMachines;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
+    /// <summary>
+    /// An abstract micro planner machine.
+    /// </summary>
     public abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {
         /// <summary>
@@ -69,9 +72,15 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             }
         }
 
+        /// <summary>
+        /// Holds the consumed messages.
+        /// </summary>
 
         private IList<MicroPlannerMessage> _messages;
 
+        /// <summary>
+        /// Returns the message consumed.
+        /// </summary>
         public IList<MicroPlannerMessage> FinalMessages
         {
             get

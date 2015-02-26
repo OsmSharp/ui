@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,6 +18,9 @@
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
+    /// <summary>
+    /// A micro message.
+    /// </summary>
     public class MicroPlannerMessage
     {
 

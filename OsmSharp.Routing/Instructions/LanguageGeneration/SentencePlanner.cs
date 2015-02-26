@@ -27,7 +27,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
     /// <summary>
     /// Scentence planner for routing instructions.
     /// </summary>
-    internal class SentencePlanner
+    public class SentencePlanner
     {
         /// <summary>
         /// Holds the list of planned instructions.

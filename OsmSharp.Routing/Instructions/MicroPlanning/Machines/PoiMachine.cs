@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,19 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.StateMachines;
-using OsmSharp.Math.Geo;
 using OsmSharp.Math.Automata;
-using OsmSharp.Routing.Interpreter;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.StateMachines;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
-    internal class PoiMachine : MicroPlannerMachine
+    /// <summary>
+    /// A POI machine.
+    /// </summary>
+    public class PoiMachine : MicroPlannerMachine
     {
+        /// <summary>
+        /// Creates a new POI machine.
+        /// </summary>
+        /// <param name="planner">The planner.</param>
         public PoiMachine(MicroPlanner planner)
             : base(PoiMachine.Initialize(), planner, 1000)
         {
@@ -138,6 +141,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Called when this machine is succesfull.
+        /// </summary>
         public override void Succes()
         {
             var poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
@@ -158,6 +164,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             this.Planner.SentencePlanner.GenerateInstruction(metaData, poisPoint.EntryIdx, box, pois);
         }
 
+        /// <summary>
+        /// Returns true if the objects are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is PoiMachine)
@@ -168,6 +179,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Returns the hashcode.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {// if the machine can be used more than once 
             // this hashcode will have to be updated.

@@ -16,24 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.StateMachines;
-using OsmSharp.Routing.ArcAggregation.Output;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
     /// <summary>
-    /// Machine to detect significant turns.
+    /// A turn machine.
     /// </summary>
-    internal class TurnMachine : MicroPlannerMachine
+    public class TurnMachine : MicroPlannerMachine
     {
         /// <summary>
         /// Creates a new turn machine.
         /// </summary>
-        /// <param name="planner"></param>
+        /// <param name="planner">The planner.</param>
         public TurnMachine(MicroPlanner planner)
             : base(TurnMachine.Initialize(), planner, 100)
         {
@@ -127,6 +126,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Called when this machine is succesfull.
+        /// </summary>
         public override void Succes()
         {
             // get the last arc and the last point.
@@ -191,6 +193,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
         }
 
+        /// <summary>
+        /// Returns true if the objects are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is TurnMachine)
@@ -201,6 +208,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Returns the hashcode.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {// if the machine can be used more than once 
             // this hashcode will have to be updated.
