@@ -115,7 +115,6 @@ namespace OsmSharp.Routing.Instructions
         public static List<Instruction> Generate(MicroPlanner planner, Route route, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
         {
             if (route == null) { throw new ArgumentNullException("route"); }
-            if (route.Vehicle == null) { throw new InvalidOperationException("Vehicle not set on route: Cannot generate instruction for a route without a vehicle!"); }
             if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
             if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
 
