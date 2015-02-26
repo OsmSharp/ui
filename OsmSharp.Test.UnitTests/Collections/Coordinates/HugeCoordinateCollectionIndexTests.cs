@@ -297,7 +297,7 @@ namespace OsmSharp.Test.Unittests.Collections.Coordinates
                 data = stream.ToArray();
 
                 //Assert.AreEqual(168, length);
-                //Assert.AreEqual(data.Length, length);
+                Assert.AreEqual(data.Length, length);
             }
 
             var result = HugeCoordinateCollectionIndex.Deserialize(new MemoryStream(data));
