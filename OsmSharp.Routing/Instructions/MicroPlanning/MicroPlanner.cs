@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// The scentence planner for this micro planner.
         /// </summary>
-        internal SentencePlanner SentencePlanner
+        public SentencePlanner SentencePlanner
         {
             get;
             private set;
@@ -126,14 +126,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             MicroPlannerMessage message = null;
             if (aggregated is AggregatedPoint)
             {
-                MicroPlannerMessagePoint point = new MicroPlannerMessagePoint();
+                var point = new MicroPlannerMessagePoint();
                 point.Point = aggregated as AggregatedPoint;
 
                 message = point;
             }
             else if (aggregated is AggregatedArc)
             {
-                MicroPlannerMessageArc arc = new MicroPlannerMessageArc();
+                var arc = new MicroPlannerMessageArc();
                 arc.Arc = aggregated as AggregatedArc;
 
                 message = arc;
@@ -242,7 +242,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             _messagesStack.Add(message);
 
             // put the message through the machine.
-            foreach (MicroPlannerMachine machine in _machines)
+            foreach (var machine in _machines)
             {
                 if (!_invalidMachines.Contains(machine)
                     && !_validMachines.Contains(machine))

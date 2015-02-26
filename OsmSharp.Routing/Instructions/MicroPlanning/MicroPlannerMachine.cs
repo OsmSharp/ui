@@ -57,7 +57,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Returns the microplanner.
         /// </summary>
-        internal MicroPlanner Planner
+        public MicroPlanner Planner
         {
             get
             {
