@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -88,7 +88,7 @@ namespace OsmSharp.Routing.Instructions
             if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
             if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
 
-            return InstructionGenerator.Generate(new MicroPlanner(languageGenerator, interpreter), point, interpreter, languageGenerator);
+            return InstructionGenerator.Generate(new MicroPlanner(languageGenerator, interpreter), point);
         }
 
         /// <summary>
@@ -96,32 +96,19 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="planner"></param>
         /// <param name="route"></param>
-        /// <param name="interpreter"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(MicroPlanner planner, Route route, IRoutingInterpreter interpreter)
-        {
-            return InstructionGenerator.Generate(planner, route, interpreter,
-                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.EnglishLanguageGenerator());
-        }
-
-        /// <summary>
-        /// Generates instructions.
-        /// </summary>
-        /// <param name="planner"></param>
-        /// <param name="route"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="languageGenerator"></param>
-        /// <returns></returns>
-        public static List<Instruction> Generate(MicroPlanner planner, Route route, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
+        public static List<Instruction> Generate(MicroPlanner planner, Route route)
         {
             if (route == null) { throw new ArgumentNullException("route"); }
-            if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
-            if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
 
-            var aggregator = new ArcAggregator(interpreter);
+            var aggregator = new ArcAggregator(planner.Interpreter);
             var point = aggregator.Aggregate(route);
 
-            return InstructionGenerator.Generate(planner, point, interpreter, languageGenerator);
+            if(point == null)
+            { // returns an empty list because of an empty route.
+                return new List<Instruction>();
+            }
+            return InstructionGenerator.Generate(planner, point);
         }
 
         /// <summary>
@@ -129,15 +116,11 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="planner"></param>
         /// <param name="point"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="languageGenerator"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(MicroPlanner planner, AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
+        public static List<Instruction> Generate(MicroPlanner planner, AggregatedPoint point)
         {
             if (point == null) { throw new ArgumentNullException("route"); }
             if (planner == null) { throw new ArgumentNullException("planner"); }
-            if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
-            if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
 
             return planner.Plan(point);
         }
