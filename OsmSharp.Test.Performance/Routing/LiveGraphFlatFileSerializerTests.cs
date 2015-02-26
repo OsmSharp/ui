@@ -81,6 +81,8 @@ namespace OsmSharp.Test.Performance.Routing
 
             performanceInfo.Stop();
 
+            memoryData.Compress();
+
             performanceInfo = new PerformanceInfoConsumer("LiveSerializerFlatFile.Serialize", 100000);
             performanceInfo.Start();
             performanceInfo.Report("Writing file for {0}...", testFile.Name);

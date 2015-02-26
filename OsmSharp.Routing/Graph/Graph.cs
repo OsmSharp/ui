@@ -1005,6 +1005,10 @@ namespace OsmSharp.Routing.Graph
                 }
             }
             _nextVertexId = minUnAllocatedVertexId + 1;
+
+            this.Trim();
+
+            _edgeShapes.Compress();
         }
 
         /// <summary>

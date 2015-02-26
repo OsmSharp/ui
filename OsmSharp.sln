@@ -247,9 +247,6 @@ Global
 		{73BE366F-133A-4C7B-8775-6FA3E7C8452F} = {1B21D1D3-F11C-40C1-BF1C-D8852908CC53}
 		{4BBD434F-58EE-4E40-BE7B-C244B6026804} = {1B21D1D3-F11C-40C1-BF1C-D8852908CC53}
 	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = OsmSharp.WinForms.UI.Sample\OsmSharp.WinForms.UI.Sample.csproj
 	EndGlobalSection
