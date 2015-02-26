@@ -132,8 +132,8 @@ namespace OsmSharp.Math.Automata
         /// Delegate containing an event object and it's associated state.
         /// </summary>
         /// <param name="even"></param>
-        /// <param name="new_state"></param>
-        /// <param name="old_state"></param>
+        /// <param name="newState"></param>
+        /// <param name="oldState"></param>
         public delegate void EventStatesDelegate(EventType even, FiniteStateMachineState<EventType> newState, 
             FiniteStateMachineState<EventType> oldState);
         
