@@ -52,12 +52,12 @@ namespace OsmSharp.Math.StateMachines
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public delegate bool FiniteStateMachineTransitionFinishedDelegate(object message);
+        public delegate void TransitionFinishedDelegate(object message);
 
         /// <summary>
         /// Checks the actual condition.
         /// </summary>
-        public FiniteStateMachineTransitionFinishedDelegate FinishedDelegate { get; private set; }
+        public TransitionFinishedDelegate Finished { get; private set; }
 
         /// <summary>
         /// Returns true if the given event triggers a response in this transition.
@@ -95,9 +95,9 @@ namespace OsmSharp.Math.StateMachines
         /// <param name="message"></param>
         internal void NotifySuccessfull(object message)
         {
-            if(this.FinishedDelegate != null)
+            if(this.Finished != null)
             {
-                this.FinishedDelegate(message);
+                this.Finished(message);
             }
         }
 
@@ -145,7 +145,7 @@ namespace OsmSharp.Math.StateMachines
         public static FiniteStateMachineTransition<EventType> Generate(
             List<FiniteStateMachineState<EventType>> states, int start, int end, Type eventType,
             OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate checkDelegate, 
-            FiniteStateMachineTransitionFinishedDelegate finishedDelegate)
+            TransitionFinishedDelegate finishedDelegate)
         {
             return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, eventType, checkDelegate, finishedDelegate);
         }
@@ -164,7 +164,7 @@ namespace OsmSharp.Math.StateMachines
         public static FiniteStateMachineTransition<EventType> Generate(
             List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, Type eventType,
             OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate checkDelegate,
-            FiniteStateMachineTransitionFinishedDelegate finishedDelegate)
+            TransitionFinishedDelegate finishedDelegate)
         {
             var conditions = new List<FiniteStateMachineTransitionCondition<EventType>>();
             conditions.Add(new FiniteStateMachineTransitionCondition<EventType>()
@@ -178,7 +178,7 @@ namespace OsmSharp.Math.StateMachines
                 SourceState = states[start],
                 TargetState = states[end],
                 TransitionConditions = conditions,
-                FinishedDelegate = finishedDelegate,
+                Finished = finishedDelegate,
                 Inverted = inverted
             };
             states[start].Outgoing.Add(trans);
