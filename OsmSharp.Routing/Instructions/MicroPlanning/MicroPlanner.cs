@@ -153,7 +153,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Initializes the list of machines.
         /// </summary>
-        protected void InitializeMachines(List<MicroPlannerMachine> machines)
+        protected virtual void InitializeMachines(List<MicroPlannerMachine> machines)
         {
             machines.Add(new TurnMachine(this));
             machines.Add(new PoiMachine(this));
