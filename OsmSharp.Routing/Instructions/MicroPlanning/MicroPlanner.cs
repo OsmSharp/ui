@@ -42,7 +42,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _interpreter = interpreter;
 
-            this.InitializeMachines();
+            _machines = new List<MicroPlannerMachine>();
+            this.InitializeMachines(_machines);
             this.InitializeMessagesStack();
 
             this.SentencePlanner = new SentencePlanner(languageGenerator);
@@ -152,14 +153,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Initializes the list of machines.
         /// </summary>
-        private void InitializeMachines()
+        protected void InitializeMachines(List<MicroPlannerMachine> machines)
         {
-            _machines = new List<MicroPlannerMachine>();
-            _machines.Add(new TurnMachine(this));
-            _machines.Add(new PoiMachine(this));
-            _machines.Add(new PoiWithTurnMachine(this));
-            _machines.Add(new ImmidateTurnMachine(this));
-            _machines.Add(new RoundaboutMachine(this));
+            machines.Add(new TurnMachine(this));
+            machines.Add(new PoiMachine(this));
+            machines.Add(new PoiWithTurnMachine(this));
+            machines.Add(new ImmidateTurnMachine(this));
+            machines.Add(new RoundaboutMachine(this));
         }
 
         /// <summary>
@@ -291,7 +291,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             machine.Succes();
 
             // re-initialize the machines.
-            this.InitializeMachines();
+            _machines.Clear();
+            this.InitializeMachines(_machines);
 
             _succes = true;
         }
