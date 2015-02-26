@@ -103,6 +103,8 @@ namespace OsmSharp.Collections.Arrays
         /// <param name="size"></param>
         public override void Resize(long size)
         {
+            if (size <= 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
+
             _size = size;
             _latestArrayIdx = -1;
             _latestArray = null;

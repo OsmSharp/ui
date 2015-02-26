@@ -557,7 +557,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
             {
                 _coordinates[idx] = _coordinates[idx + (offset * 2)];
             }
-            _coordinates.Resize(nextIdx - (offset * 2));
+            var newSize = nextIdx - (offset * 2);
+            if (newSize <= 0)
+            { // don't resize to zero, leave things a mess.
+                newSize = 1;
+            }
+            _coordinates.Resize(newSize);
         }
 
         /// <summary>
@@ -568,7 +573,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
         {
             // find the highest index where the index-entry is non-null.
             var maxIndex = _maxId;
-            //_index.Resize(maxIndex + 1);
+            _index.Resize(maxIndex + 1);
 
             //// resize accordingly.
             //if (_maxId > 0)
