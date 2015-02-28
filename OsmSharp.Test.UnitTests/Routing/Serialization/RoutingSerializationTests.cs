@@ -74,7 +74,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -158,7 +158,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                interpreter);
 
             // create serializer.
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -244,7 +244,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
 
             // serialize network.
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
             using (var stream = new MemoryStream())

@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// <param name="stream"></param>
         public static void TestSerialized(Stream stream, bool lazy = true)
         {
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
 
             uint vertex = 1;

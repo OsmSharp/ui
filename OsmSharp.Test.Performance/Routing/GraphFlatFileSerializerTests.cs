@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Performance.Routing
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
             var graph = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
 
             var memoryMappedGraph = new Graph<Edge>(1024);
             var coordinates = new HugeCoordinateIndex(1024);

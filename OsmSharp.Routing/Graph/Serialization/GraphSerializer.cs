@@ -19,7 +19,6 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
-using OsmSharp.Routing.Graph.Routing;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// Abstract representation of a routing data source serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public abstract class GraphSerializer<TEdgeData>
+    public abstract class RoutingDataSourceSerializer<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
         #region Versioning

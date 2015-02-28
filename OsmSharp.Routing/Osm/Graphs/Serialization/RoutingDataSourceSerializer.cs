@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class EdgeSerializer : GraphSerializer<Edge>
+    public class RoutingDataSourceSerializer : RoutingDataSourceSerializer<Edge>
     {
         /// <summary>
         /// Returns the version string.

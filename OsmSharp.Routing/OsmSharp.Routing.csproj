@@ -131,7 +131,7 @@
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\Edge.cs" />
     <Compile Include="Osm\Graphs\PreProcessing\EdgePreprocessor.cs" />
-    <Compile Include="Osm\Graphs\Serialization\EdgeSerializer.cs" />
+    <Compile Include="Osm\Graphs\Serialization\RoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
