@@ -20,8 +20,21 @@ using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerMessageArc : MicroPlannerMessage
+    /// <summary>
+    /// A micro message that holds and arc.
+    /// </summary>
+    public class MicroPlannerMessageArc : MicroPlannerMessage
     {
+        /// <summary>
+        /// Creates a new microplanner message.
+        /// </summary>
+        /// <param name="route"></param>
+        public MicroPlannerMessageArc(Route route)
+            : base(route)
+        {
+
+        }
+
         /// <summary>
         /// Gets or sets the aggregated arc.
         /// </summary>

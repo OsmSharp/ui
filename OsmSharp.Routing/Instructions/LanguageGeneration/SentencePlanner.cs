@@ -27,7 +27,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
     /// <summary>
     /// Scentence planner for routing instructions.
     /// </summary>
-    internal class SentencePlanner
+    public class SentencePlanner
     {
         /// <summary>
         /// Holds the list of planned instructions.
@@ -68,7 +68,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="segmentIdx"></param>
         /// <param name="box"></param>
         /// <param name="pois"></param>
-        internal void GenerateInstruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox box, List<PointPoi> pois)
+        public void GenerateInstruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox box, List<PointPoi> pois)
         {
             string text;
             if (_generator.Generate(metaData, out text))

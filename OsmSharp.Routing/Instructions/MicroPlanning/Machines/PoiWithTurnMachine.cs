@@ -16,30 +16,34 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.StateMachines;
+using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Math.Automata;
+using OsmSharp.Math.StateMachines;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
-    internal class PoiWithTurnMachine : MicroPlannerMachine
+    /// <summary>
+    /// A POI with turn machine.
+    /// </summary>
+    public class PoiWithTurnMachine : MicroPlannerMachine
     {
+        /// <summary>
+        /// Creates a new POI with turn machine.
+        /// </summary>
+        /// <param name="planner">The planner.</param>
         public PoiWithTurnMachine(MicroPlanner planner)
-            : base(PoiWithTurnMachine.Initialize(), planner, 1001)
+            : base(planner, 1001)
         {
 
         }
 
         /// <summary>
-        /// Initializes this machine.
+        /// Builds the initial states.
         /// </summary>
         /// <returns></returns>
-        private static FiniteStateMachineState<MicroPlannerMessage> Initialize()
+        protected override FiniteStateMachineState<MicroPlannerMessage> BuildStates()
         {
             // generate states.
             List<FiniteStateMachineState<MicroPlannerMessage>> states = FiniteStateMachineState<MicroPlannerMessage>.Generate(3);
@@ -113,6 +117,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Called when this machine is succesfull.
+        /// </summary>
         public override void Succes()
         {
             var poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
@@ -141,6 +148,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             this.Planner.SentencePlanner.GenerateInstruction(metaData, poisPoint.EntryIdx, box, pois);
         }
 
+        /// <summary>
+        /// Returns true if the objects are equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is PoiWithTurnMachine)
@@ -151,6 +163,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             return false;
         }
 
+        /// <summary>
+        /// Returns the hashcode.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {// if the machine can be used more than once 
             // this hashcode will have to be updated.

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -28,7 +28,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <summary>
         /// Generates text fitting for the the given instruction.
         /// </summary>
-        /// <param name="instructionData"></param>
+        /// <param name="instructionData">The data that should be converted into an instruction.</param>
+        /// <param name="text">The output text.</param>
         /// <returns></returns>
         bool Generate(Dictionary<string, object> instructionData, out string text);
     }
