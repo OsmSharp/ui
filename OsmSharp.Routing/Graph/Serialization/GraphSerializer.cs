@@ -206,7 +206,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <param name="metaTags"></param>
-        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph)
+        public void Serialize(Stream stream, RouterDataSource<TEdgeData> graph)
         {
             this.Serialize(stream, graph, new TagsCollection());
         }
@@ -217,7 +217,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <param name="metaTags"></param>
-        public void Serialize(Stream stream, DynamicGraphRouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
+        public void Serialize(Stream stream, RouterDataSource<TEdgeData> graph, TagsCollectionBase metaTags)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -245,7 +245,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected abstract void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
+        protected abstract void DoSerialize(LimitedStream stream, RouterDataSource<TEdgeData> graph);
 
         /// <summary>
         /// Deserializes the given stream into a routable graph.
@@ -253,7 +253,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
+        public RouterDataSource<TEdgeData> Deserialize(Stream stream, bool lazy = true)
         {
             TagsCollectionBase notNeeded;
             return this.Deserialize(stream, out notNeeded, lazy);
@@ -266,7 +266,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="metaTags"></param>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<TEdgeData> Deserialize(Stream stream, out TagsCollectionBase metaTags, bool lazy = true)
+        public RouterDataSource<TEdgeData> Deserialize(Stream stream, out TagsCollectionBase metaTags, bool lazy = true)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -301,6 +301,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected abstract DynamicGraphRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
+        protected abstract RouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles);
     }
 }

@@ -39,7 +39,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// <summary>
     /// A pre-processing target for OSM-data to a CH data structure.
     /// </summary>
-    public class CHEdgeGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<CHEdgeData>
+    public class CHEdgeGraphOsmStreamTarget : GraphOsmStreamTargetBase<CHEdgeData>
     {
         /// <summary>
         /// Holds the vehicle profile this pre-processing target is for.
@@ -49,15 +49,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a CH data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
+        /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(RouterDataSourceBase<CHEdgeData> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
-            : base(dynamicGraph, interpreter, tagsIndex)
+            : base(graph, interpreter, tagsIndex)
         {
-            if (!dynamicGraph.IsDirected) { throw new ArgumentOutOfRangeException("Only directed graphs can be used for contraction hiearchies."); }
+            if (!graph.IsDirected) { throw new ArgumentOutOfRangeException("Only directed graphs can be used for contraction hiearchies."); }
 
             _vehicle = vehicle;
         }
@@ -69,7 +69,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             base.Initialize();
 
-            base.DynamicGraph.AddSupportedProfile(_vehicle);
+            base.Graph.AddSupportedProfile(_vehicle);
         }
 
         /// <summary>
@@ -156,11 +156,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
             ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
-            var graph = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
+            var graph = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
@@ -182,7 +182,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
+        public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
             IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);

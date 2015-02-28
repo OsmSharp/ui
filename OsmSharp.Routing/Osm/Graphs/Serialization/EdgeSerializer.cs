@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<Edge> graph)
+        protected override void DoSerialize(LimitedStream stream, RouterDataSource<Edge> graph)
         {
             graph.Serialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate);
         }
@@ -58,9 +58,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override DynamicGraphRouterDataSource<Edge> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
+        protected override RouterDataSource<Edge> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, !lazy);
+            return RouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, !lazy);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// <summary>
     /// A data processing target containing edges with the orignal OSM-tags and their original OSM-direction.
     /// </summary>
-    public class GraphOsmStreamTarget : DynamicGraphOsmStreamWriter<Edge>
+    public class GraphOsmStreamTarget : GraphOsmStreamTargetBase<Edge>
     {
         /// <summary>
         /// Holds the list of vehicle profiles to build routing information for.
@@ -47,12 +47,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
+        /// <param name="graph">The graph.</param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
-        public GraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph,
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
-            : this(dynamicGraph, interpreter, tagsIndex, null, true, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, null, true, new CoordinateIndex())
         {
 
         }
@@ -60,13 +60,13 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
+        /// <param name="graph">The graph.</param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="coordinates"></param>
-        public GraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph,
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, ICoordinateIndex coordinates)
-            : this(dynamicGraph, interpreter, tagsIndex, null, true, coordinates)
+            : this(graph, interpreter, tagsIndex, null, true, coordinates)
         {
 
         }
@@ -74,14 +74,14 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="tagsIndex"></param>
+        /// <param name="graph">The graph.</param>
+        /// <param name="interpreter">Inteprets the OSM-data.</param>
+        /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        public GraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph,
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles)
-            : this(dynamicGraph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
         {
 
         }
@@ -89,15 +89,15 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="tagsIndex"></param>
+        /// <param name="graph">The graph.</param>
+        /// <param name="interpreter">Inteprets the OSM-data.</param>
+        /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        /// <param name="collectIntermediates"></param>
-        public GraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph,
+        /// <param name="collectIntermediates">The collect intermediates flag.</param>
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates)
-            : this(dynamicGraph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
         {
 
         }
@@ -105,16 +105,16 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="tagsIndex"></param>
+        /// <param name="graph">The graph.</param>
+        /// <param name="interpreter">Inteprets the OSM-data.</param>
+        /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        /// <param name="collectIntermediates"></param>
-        /// <param name="coordinates"></param>
-        public GraphOsmStreamTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph,
+        /// <param name="collectIntermediates">The collect intermediates flag.</param>
+        /// <param name="coordinates">The coordinates index.</param>
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
-            : base(dynamicGraph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
+            : base(graph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
         {
             _vehicles = new HashSet<Vehicle>();
             if (vehicles != null)
@@ -126,48 +126,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             }
         }
 
-        ///// <summary>
-        ///// Adds an edge.
-        ///// </summary>
-        ///// <param name="forward"></param>
-        ///// <param name="from"></param>
-        ///// <param name="to"></param>
-        ///// <param name="tags"></param>
-        ///// <param name="intermediates"></param>
-        //protected override void AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to, List<GeoCoordinateSimple> intermediates)
-        //{
-        //    float latitude;
-        //    float longitude;
-        //    GeoCoordinate fromCoordinate = null;
-        //    if (this.DynamicGraph.GetVertex(from, out latitude, out longitude))
-        //    { // 
-        //        fromCoordinate = new GeoCoordinate(latitude, longitude);
-        //    }
-        //    GeoCoordinate toCoordinate = null;
-        //    if (this.DynamicGraph.GetVertex(to, out latitude, out longitude))
-        //    { // 
-        //        toCoordinate = new GeoCoordinate(latitude, longitude);
-        //    }
-
-        //    if (fromCoordinate != null && toCoordinate != null)
-        //    { // calculate the edge data.
-        //        var edgeData = this.CalculateEdgeData(this.Interpreter.EdgeInterpreter, this.TagsIndex, tags, forward, fromCoordinate, toCoordinate, intermediates);
-
-        //        ICoordinateCollection intermediatesCollection = null;
-        //        if(intermediates != null)
-        //        {
-        //            intermediatesCollection = new CoordinateArrayCollection<GeoCoordinateSimple>(intermediates.ToArray());
-        //        }
-        //        this.DynamicGraph.AddEdge(from, to, edgeData, intermediatesCollection, this.EdgeComparer);
-        //    }
-        //}
-
         /// <summary>
         /// Calculates edge data.
         /// </summary>
         /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="directionForward"></param>
+        /// <param name="tagsForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="edgeInterpreter"></param>
@@ -230,34 +194,31 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="interpreter"></param>
+        /// <param name="source">The source stream.</param>
+        /// <param name="tagsIndex">The tags index.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<Edge> Preprocess(OsmStreamSource reader,
-                                                                        ITagsCollectionIndex tagsIndex,
-                                                                        IOsmRoutingInterpreter interpreter)
+        public static RouterDataSource<Edge> Preprocess(OsmStreamSource source, ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter)
         {
-            var dynamicGraphRouterDataSource =
-                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new GraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter,
+            var routerDataSource =
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var targetData = new GraphOsmStreamTarget(routerDataSource, interpreter,
                 tagsIndex);
-            targetData.RegisterSource(reader);
+            targetData.RegisterSource(source);
             targetData.Pull();
 
-            return dynamicGraphRouterDataSource;
+            return routerDataSource;
         }
 
         /// <summary>
         /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="interpreter"></param>
+        /// <param name="source">The source stream.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<Edge> Preprocess(OsmStreamSource reader,
-                                                                        IOsmRoutingInterpreter interpreter)
+        public static RouterDataSource<Edge> Preprocess(OsmStreamSource source, IOsmRoutingInterpreter interpreter)
         {
-            return GraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter);
+            return GraphOsmStreamTarget.Preprocess(source, new TagsTableCollectionIndex(), interpreter);
         }
 
         #endregion

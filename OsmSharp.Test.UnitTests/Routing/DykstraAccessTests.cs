@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
+        public override Router BuildRouter(IRoutingAlgorithmData<Edge> data,
             IOsmRoutingInterpreter interpreter,
                 IRoutingAlgorithm<Edge> basicRouter)
         {
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
+        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IRoutingAlgorithmData<Edge> data)
         {
             return new Dykstra();
         }
@@ -67,14 +67,14 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="embeddedString"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
+        public override IRoutingAlgorithmData<Edge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
             var memoryData =
-                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(

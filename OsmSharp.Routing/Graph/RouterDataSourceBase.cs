@@ -16,13 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.Graph.Routing
+using OsmSharp.Routing.Graph.Routing;
+namespace OsmSharp.Routing.Graph
 {
     /// <summary>
-    /// Interface representing objects that are both and IBasicRouterDataSource and a IDynamicGraph.
+    /// A router data source baseclass that wraps a graph but also contains other meta-data for routing.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public abstract class DynamicGraphRouterDataSourceBase<TEdgeData> : GraphBase<TEdgeData>, IBasicRouterDataSource<TEdgeData>
+    public abstract class RouterDataSourceBase<TEdgeData> : GraphBase<TEdgeData>, IRoutingAlgorithmData<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
 

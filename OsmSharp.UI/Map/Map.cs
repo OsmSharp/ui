@@ -364,10 +364,10 @@ namespace OsmSharp.UI.Map
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         /// <returns></returns>
-        public LayerDynamicGraph AddLayerGraph(IBasicRouterDataSource<Edge> dataSource,
+        public LayerGraph AddLayerGraph(IRoutingAlgorithmData<Edge> dataSource,
             StyleInterpreter styleInterpreter)
         {
-            var layerGraph = new LayerDynamicGraph(dataSource, styleInterpreter);
+            var layerGraph = new LayerGraph(dataSource, styleInterpreter);
             this.AddLayer(layerGraph);
             return layerGraph;
         }

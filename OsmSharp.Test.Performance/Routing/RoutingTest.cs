@@ -85,7 +85,7 @@ namespace OsmSharp.Test.Performance.Routing
             // read from the OSM-stream.
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
             var interpreter = new OsmRoutingInterpreter();
-            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             data.DropVertexIndex();
             var targetData = new GraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
@@ -121,12 +121,12 @@ namespace OsmSharp.Test.Performance.Routing
             // copy.
             var graphCopy = new Graph<Edge>();
             graphCopy.CopyFrom(data);
-            var dataCopy = new DynamicGraphRouterDataSource<Edge>(graphCopy, data.TagsIndex);
+            var dataCopy = new RouterDataSource<Edge>(graphCopy, data.TagsIndex);
 
             RoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
         }
 
-        public static void Test(IBasicRouterDataSource<Edge> data, Vehicle vehicle, int testCount)
+        public static void Test(IRoutingAlgorithmData<Edge> data, Vehicle vehicle, int testCount)
         {
             // creates the edge router.
             var router = new Dykstra();

@@ -20,6 +20,7 @@ using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
@@ -40,12 +41,12 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Creates a reference stream target.
         /// </summary>
-        /// <param name="dynamicGraph"></param>
+        /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles"></param>
-        public ReferenceGraphTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
-            : base(dynamicGraph, interpreter, tagsIndex, vehicles, false)
+        public ReferenceGraphTarget(RouterDataSourceBase<Edge> graph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
+            : base(graph, interpreter, tagsIndex, vehicles, false)
         {
 
         }

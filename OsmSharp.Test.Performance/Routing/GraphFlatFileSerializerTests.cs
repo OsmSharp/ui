@@ -69,12 +69,12 @@ namespace OsmSharp.Test.Performance.Routing
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var graph = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var routingSerializer = new EdgeSerializer();
 
             var memoryMappedGraph = new Graph<Edge>(1024);
             var coordinates = new HugeCoordinateIndex(1024);
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
             targetData.RegisterSource(progress);
             targetData.Pull();

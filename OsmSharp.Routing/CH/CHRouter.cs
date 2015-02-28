@@ -97,7 +97,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> Calculate(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
@@ -190,7 +190,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public PathSegment<long>[][] CalculateManyToMany(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
         {
             var results = new PathSegment<long>[sources.Length][];
@@ -219,7 +219,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double CalculateWeight(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max, Dictionary<string, object> parameters)
         {
             // do the basic CH calculations.
@@ -243,7 +243,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public PathSegment<long> CalculateToClosest(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             throw new NotSupportedException();
@@ -260,7 +260,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double[] CalculateOneToManyWeight(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             double[][] manyToManyResult = this.CalculateManyToManyWeight(
@@ -280,7 +280,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public double[][] CalculateManyToManyWeight(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
         {
             return this.DoCalculateManyToMany(
@@ -305,7 +305,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public HashSet<long> CalculateRange(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             throw new NotSupportedException("Check IsCalculateRangeSupported before using this functionality!");
@@ -321,7 +321,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="weight"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public bool CheckConnectivity(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, Dictionary<string, object> parameters)
         {
             return this.DoCheckConnectivity(graph, source, weight, int.MaxValue);
@@ -385,7 +385,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="buckets"></param>
         /// <param name="toVisitList"></param>
         /// <returns></returns>
-        private long SearchBackwardIntoBucket(IBasicRouterDataSource<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets,
+        private long SearchBackwardIntoBucket(IRoutingAlgorithmData<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList toVisitList)
         {
             long? to = null;
@@ -489,7 +489,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="buckets"></param>
         /// <param name="fromVisitList"></param>
         /// <param name="tos"></param>
-        private Dictionary<long, double> SearchForwardFromBucket(IBasicRouterDataSource<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets,
+        private Dictionary<long, double> SearchForwardFromBucket(IRoutingAlgorithmData<CHEdgeData> graph, Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList fromVisitList, long[] tos)
         {
             long? from = null;
@@ -789,7 +789,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        private double[][] DoCalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        private double[][] DoCalculateManyToMany(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int maxSettles)
         {
             // TODO: implement switching of from/to when to < from.
@@ -853,7 +853,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="to"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint exception)
+        public double CalculateWeight(IRoutingAlgorithmData<CHEdgeData> graph, uint from, uint to, uint exception)
         {
             return this.CalculateWeight(graph, from, to, exception, double.MaxValue);
         }
@@ -867,7 +867,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="exception"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint exception, double max)
+        public double CalculateWeight(IRoutingAlgorithmData<CHEdgeData> graph, uint from, uint to, uint exception, double max)
         {
             // calculate the result.
             var result = this.CalculateInternal(graph, from, to, exception, max, int.MaxValue);
@@ -890,7 +890,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        public double CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint exception, double max, int maxSettles)
+        public double CalculateWeight(IRoutingAlgorithmData<CHEdgeData> graph, uint from, uint to, uint exception, double max, int maxSettles)
         {
             // calculate the result.
             var result = this.CalculateInternal(graph, from, to, exception, max, maxSettles);
@@ -910,7 +910,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<CHEdgeData> graph, PathSegmentVisitList source, double max)
+        public bool CheckConnectivity(IRoutingAlgorithmData<CHEdgeData> graph, PathSegmentVisitList source, double max)
         {
             return this.DoCheckConnectivity(graph, source, max, int.MaxValue);
         }
@@ -922,7 +922,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="source"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IBasicRouterDataSource<CHEdgeData> graph, PathSegmentVisitList source, int maxSettles)
+        public bool CheckConnectivity(IRoutingAlgorithmData<CHEdgeData> graph, PathSegmentVisitList source, int maxSettles)
         {
             return this.DoCheckConnectivity(graph, source, double.MaxValue, maxSettles);
         }
@@ -1544,7 +1544,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<CHEdgeData> SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<CHEdgeData> SearchClosest(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false, null);
@@ -1562,7 +1562,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<CHEdgeData> SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        public SearchClosestResult<CHEdgeData> SearchClosest(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             //// first try a very small area.
@@ -1587,7 +1587,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         /// <returns></returns>
-        private SearchClosestResult<CHEdgeData> DoSearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+        private SearchClosestResult<CHEdgeData> DoSearchClosest(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.

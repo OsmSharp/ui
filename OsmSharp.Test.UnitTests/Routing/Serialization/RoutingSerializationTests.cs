@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // do the data processing.
             var original =
-                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -232,7 +232,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the serializer.
+        /// Tests serializing/deserializing RouterDataSource using the serializer.
         /// </summary>
         [Test]
         public void RoutingSerialization()
@@ -329,7 +329,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the serializer for CHEdge data.
+        /// Tests serializing/deserializing RouterDataSource using the serializer for CHEdge data.
         /// </summary>
         [Test]
         public void RoutingSerializationCHEdgeData()

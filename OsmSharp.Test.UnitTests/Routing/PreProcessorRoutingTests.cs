@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Unittests.Routing
             preProcessor.Start();
 
             // create router.
-            var source = new DynamicGraphRouterDataSource<Edge>(
+            var source = new RouterDataSource<Edge>(
                 graph, tagsIndex);
             var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 

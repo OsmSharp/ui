@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterEdge(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public TypedRouterEdge(IRoutingAlgorithmData<Edge> graph, IRoutingInterpreter interpreter,
                            IRoutingAlgorithm<Edge> router)
             :base(graph, interpreter, router)
         {

@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // do the data processing.
             var memoryData =
-                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(

@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
+        public abstract Router BuildRouter(IRoutingAlgorithmData<TEdgeData> data,
             IRoutingInterpreter interpreter, IRoutingAlgorithm<TEdgeData> basicRouter);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
+        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IRoutingAlgorithmData<TEdgeData> data);
 
         /// <summary>
         /// Builds the data.
@@ -57,7 +57,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
+        public abstract IRoutingAlgorithmData<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString);
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolvedTags()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -174,7 +174,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -192,7 +192,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest2()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -210,7 +210,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest3()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -228,7 +228,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest4()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -246,7 +246,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest5()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basic_router = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basic_router);
@@ -264,7 +264,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestResolved1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -282,7 +282,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestResolved2()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -330,7 +330,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestConnectivity1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -358,7 +358,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolveAllNodes()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -505,7 +505,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // initialize data.
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
 
             var vertex20 = new GeoCoordinate(51.0578532, 3.7192229);
             var vertex21 = new GeoCoordinate(51.0578518, 3.7195654);

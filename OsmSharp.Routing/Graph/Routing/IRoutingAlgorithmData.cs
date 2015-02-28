@@ -28,7 +28,7 @@ namespace OsmSharp.Routing.Graph.Routing
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public interface IBasicRouterDataSource<TEdgeData> : IGraphReadOnly<TEdgeData>
+    public interface IRoutingAlgorithmData<TEdgeData> : IGraphReadOnly<TEdgeData>
         where TEdgeData : IGraphEdgeData
     {
         /// <summary>

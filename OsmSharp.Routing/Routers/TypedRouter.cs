@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private readonly IBasicRouterDataSource<TEdgeData> _dataGraph;
+        private readonly IRoutingAlgorithmData<TEdgeData> _dataGraph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouter(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
+        public TypedRouter(IRoutingAlgorithmData<TEdgeData> graph, IRoutingInterpreter interpreter,
             IRoutingAlgorithm<TEdgeData> router)
         {
             _dataGraph = graph;
@@ -86,7 +86,7 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Returns the data.
         /// </summary>
-        protected IBasicRouterDataSource<TEdgeData> Data
+        protected IRoutingAlgorithmData<TEdgeData> Data
         {
             get { return _dataGraph; }
         }

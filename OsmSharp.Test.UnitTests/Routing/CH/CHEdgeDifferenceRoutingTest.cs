@@ -48,7 +48,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
+        public override Router BuildRouter(IRoutingAlgorithmData<CHEdgeData> data,
             IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> basicRouter)
         {
             return Router.CreateCHFrom(data, basicRouter, interpreter);
@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IRoutingAlgorithm<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        public override IRoutingAlgorithm<CHEdgeData> BuildBasicRouter(IRoutingAlgorithmData<CHEdgeData> data)
         {
             return new CHRouter();
         }
@@ -70,19 +70,19 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override IRoutingAlgorithmData<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString)
         {
-            string key = string.Format("CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM.{0}",
+            string key = string.Format("CHEdgeDifference.Routing.IRoutingAlgorithmData<CHEdgeData>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
+            var data = StaticDictionary.Get<IRoutingAlgorithmData<CHEdgeData>>(
                 key);
             if (data == null)
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
+                var memoryData = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
                     memoryData, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -99,7 +99,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 preProcessor.Start();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
+                StaticDictionary.Add<IRoutingAlgorithmData<CHEdgeData>>(key, data);
             }
             return data;
         }

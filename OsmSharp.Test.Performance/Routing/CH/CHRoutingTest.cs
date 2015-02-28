@@ -67,7 +67,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             //// copy.
             //var graphCopy = new DirectedGraph<CHEdgeData>();
             //graphCopy.CopyFrom(data);
-            //var dataCopy = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
+            //var dataCopy = new RouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
 
             CHRoutingTest.Test(data, testCount);
         }
@@ -96,7 +96,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
 
-        public static void Test(DynamicGraphRouterDataSource<CHEdgeData> data, int testCount)
+        public static void Test(RouterDataSource<CHEdgeData> data, int testCount)
         {
             var router = new CHRouter();
 

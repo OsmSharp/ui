@@ -53,8 +53,8 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<Edge> memoryData =
-                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            RouterDataSource<Edge> memoryData =
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             GraphOsmStreamTarget target_data = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex, null, false);
             XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(

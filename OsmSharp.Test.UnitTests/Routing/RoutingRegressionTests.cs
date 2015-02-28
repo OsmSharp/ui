@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -174,7 +174,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -255,7 +255,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
@@ -697,7 +697,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
+            var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
@@ -750,7 +750,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
+            var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
@@ -853,7 +853,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
+            var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);

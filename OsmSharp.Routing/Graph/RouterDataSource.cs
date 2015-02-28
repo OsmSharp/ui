@@ -19,23 +19,21 @@
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.Collections.Tags.Serializer.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Routing.Graph.Routing;
 using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>
-    /// A router data source that uses a IDynamicGraph as it's main datasource.
+    /// A router data source that wraps a graph but also contains other meta-data for routing.
     /// </summary>
     /// <typeparam name="TEdgeData"></typeparam>
-    public class DynamicGraphRouterDataSource<TEdgeData> : DynamicGraphRouterDataSourceBase<TEdgeData>
+    public class RouterDataSource<TEdgeData> : RouterDataSourceBase<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
         /// <summary>
@@ -64,7 +62,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(GraphBase<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
+        public RouterDataSource(GraphBase<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -726,7 +724,7 @@ namespace OsmSharp.Routing.Graph
             /// <summary>
             /// Holds the source.
             /// </summary>
-            private DynamicGraphRouterDataSource<TEdgeData> _source;
+            private RouterDataSource<TEdgeData> _source;
 
             /// <summary>
             /// Holds the current position.
@@ -738,7 +736,7 @@ namespace OsmSharp.Routing.Graph
             /// </summary>
             /// <param name="source">The datasource the edges come from.</param>
             /// <param name="neighbours">The neighbour data with tuples (vertex1, vertex2, edgeIdx, edgeData).</param>
-            public NeighbourEnumerator(DynamicGraphRouterDataSource<TEdgeData> source,
+            public NeighbourEnumerator(RouterDataSource<TEdgeData> source,
                 List<Tuple<uint, uint, uint, TEdgeData>> neighbours)
             {
                 _source = source;
@@ -899,7 +897,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="mapFrom"></param>
         /// <param name="mapTo"></param>
         /// <returns></returns>
-        public new static DynamicGraphRouterDataSource<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize,
+        public new static RouterDataSource<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize,
             MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)
         {
             // read size of graph and start location of tags.
@@ -914,7 +912,7 @@ namespace OsmSharp.Routing.Graph
             stream.Seek(position, System.IO.SeekOrigin.Begin);
             var tagsIndex = TagIndexSerializer.Deserialize(stream);
 
-            return new DynamicGraphRouterDataSource<TEdgeData>(graph, tagsIndex);
+            return new RouterDataSource<TEdgeData>(graph, tagsIndex);
         }
 
         #endregion

@@ -67,7 +67,7 @@ namespace OsmSharp.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             memoryData.DropVertexIndex();
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing
         /// <param name="data">The data to route on.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateFrom(IBasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter)
+        public static Router CreateFrom(IRoutingAlgorithmData<Edge> data, IRoutingInterpreter interpreter)
         {
             // creates the edge router.
             var typedRouter = new TypedRouterEdge(
@@ -103,7 +103,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateFrom(IBasicRouterDataSource<Edge> data, IRoutingAlgorithm<Edge> basicRouter, 
+        public static Router CreateFrom(IRoutingAlgorithmData<Edge> data, IRoutingAlgorithm<Edge> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the edge router.
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing
         /// <param name="basicRouter">A custom routing implementation.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateCHFrom(IBasicRouterDataSource<CHEdgeData> data, IRoutingAlgorithm<CHEdgeData> basicRouter, 
+        public static Router CreateCHFrom(IRoutingAlgorithmData<CHEdgeData> data, IRoutingAlgorithm<CHEdgeData> basicRouter, 
             IRoutingInterpreter interpreter)
         {
             // creates the edge router.

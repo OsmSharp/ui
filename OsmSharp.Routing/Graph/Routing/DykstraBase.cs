@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public SearchClosestResult<TEdgeData> SearchClosest(IRoutingAlgorithmData<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, Dictionary<string, object> parameters)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false, null);
@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
         /// <param name="parameters"></param>
-        public SearchClosestResult<TEdgeData> SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+        public SearchClosestResult<TEdgeData> SearchClosest(IRoutingAlgorithmData<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly, Dictionary<string, object> parameters)
         {
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.

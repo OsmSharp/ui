@@ -929,7 +929,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
+                var graphDeserialized = RouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -977,7 +977,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
+                var graphDeserialized = RouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
