@@ -27,6 +27,7 @@ using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;

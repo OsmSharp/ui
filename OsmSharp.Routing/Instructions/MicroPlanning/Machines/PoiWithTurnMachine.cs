@@ -126,7 +126,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
             // calculate the box.
             var coordinates = new List<GeoCoordinate>();
-            foreach (Routing.ArcAggregation.Output.PointPoi poi in pois)
+            foreach (ArcAggregation.Output.PointPoi poi in pois)
             {
                 coordinates.Add(poi.Location);
             }

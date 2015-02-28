@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Routers;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing
 {

@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -231,7 +232,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
+                    var route = router.Calculate(_data, _interpreter, Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
                         (fromDic[to.Neighbour] != null && route == null))
                     { // the route match!
@@ -381,7 +382,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                     // calculate the route.
                     fromDic[to.Neighbour] = router.Calculate(_data, _interpreter,
-                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null); ;
+                        Vehicle.Car, fromList, toList, double.MaxValue, null); ;
                 }
             }
         }

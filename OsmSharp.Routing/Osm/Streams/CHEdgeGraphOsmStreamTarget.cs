@@ -31,6 +31,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using System;
 using System.Collections.Generic;
 

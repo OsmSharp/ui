@@ -26,6 +26,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 using System.Reflection;
 

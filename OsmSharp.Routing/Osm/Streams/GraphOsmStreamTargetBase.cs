@@ -32,6 +32,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams

@@ -21,6 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Distance;
 using System.Collections.Generic;
 using System.Linq;

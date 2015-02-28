@@ -28,6 +28,7 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

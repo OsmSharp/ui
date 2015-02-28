@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing.Graph.Serialization;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Performance.Routing
 {

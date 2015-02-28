@@ -23,6 +23,7 @@ using System.Text;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing
 {

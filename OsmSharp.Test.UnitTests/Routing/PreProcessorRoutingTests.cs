@@ -24,6 +24,7 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

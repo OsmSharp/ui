@@ -27,6 +27,7 @@ using OsmSharp.Units.Distance;
 using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.Navigation
 {

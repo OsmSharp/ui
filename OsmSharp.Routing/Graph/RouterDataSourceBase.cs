@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Vehicles;
 namespace OsmSharp.Routing.Graph
 {
     /// <summary>

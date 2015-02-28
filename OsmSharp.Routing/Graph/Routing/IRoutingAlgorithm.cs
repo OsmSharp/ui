@@ -23,6 +23,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Graph.Routing
 {

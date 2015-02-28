@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
+using OsmSharp.Routing.Vehicles;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;

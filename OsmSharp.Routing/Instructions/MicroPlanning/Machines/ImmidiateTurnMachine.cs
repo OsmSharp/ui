@@ -22,7 +22,7 @@ using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.StateMachines;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {

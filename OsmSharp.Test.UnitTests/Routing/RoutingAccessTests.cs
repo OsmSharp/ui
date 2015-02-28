@@ -28,6 +28,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
 using NUnit.Framework;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

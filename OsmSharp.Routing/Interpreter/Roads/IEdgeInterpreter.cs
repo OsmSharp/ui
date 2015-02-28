@@ -1,8 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2015 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Vehicles;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Interpreter.Roads
 {
@@ -33,17 +49,6 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// <returns></returns>
         bool IsOnlyLocalAccessible(TagsCollectionBase tags);
 
-        ///// <summary>
-        ///// Returns the weight between two points on the given edge.
-        ///// </summary>
-        ///// <param name="tags"></param>
-        ///// <param name="vehicle"></param>
-        ///// <param name="from"></param>
-        ///// <param name="to"></param>
-        ///// <returns></returns>
-        //double Weight(IDictionary<string, string> tags, Vehicle vehicle,
-        //    GeoCoordinate from, GeoCoordinate to);
-
         /// <summary>
         /// Returns the name of the edge represented by the tags.
         /// </summary>
@@ -57,23 +62,6 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// <param name="tags"></param>
         /// <returns></returns>
         Dictionary<string, string> GetNamesInAllLanguages(TagsCollectionBase tags);
-
-        ///// <summary>
-        ///// Returns true if the tags (or a subset of) represent the same edge type for the given vehicle.
-        ///// </summary>
-        ///// <param name="vehicle"></param>
-        ///// <param name="tags1"></param>
-        ///// <param name="tags2"></param>
-        ///// <returns></returns>
-        //bool IsEqualFor(VehicleEnum vehicle, IDictionary<string, string> tags1, Dictionary<string, string> tags2);
-
-        ///// <summary>
-        ///// Returns the maximum possible speed a vehicle can travel on a edge with the given properties.
-        ///// </summary>
-        ///// <param name="vehicle"></param>
-        ///// <param name="tags"></param>
-        ///// <returns></returns>
-        //KilometerPerHour MaxSpeed(VehicleEnum vehicle, IDictionary<string, string> tags);
 
         /// <summary>
         /// Returns true if the edge with given properties is a roundabout.

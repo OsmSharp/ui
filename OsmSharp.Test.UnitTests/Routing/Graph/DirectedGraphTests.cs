@@ -21,6 +21,7 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using System;
 using System.IO;
 using System.Linq;
@@ -979,7 +980,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             // do the data processing.
             var graph = OsmSharp.Routing.Osm.Streams.CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter, OsmSharp.Routing.Vehicle.Car);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter, Vehicle.Car);
 
             // serialize.
             using (var stream = new MemoryStream())

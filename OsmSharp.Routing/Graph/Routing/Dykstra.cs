@@ -24,6 +24,7 @@ using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Graph.Routing
 {

@@ -19,7 +19,7 @@
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration

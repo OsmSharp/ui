@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.Math.StateMachines;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Math.Automata;
 using OsmSharp;
 

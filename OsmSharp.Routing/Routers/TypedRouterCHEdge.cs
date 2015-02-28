@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph;
 using System.Linq;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Routers
 {

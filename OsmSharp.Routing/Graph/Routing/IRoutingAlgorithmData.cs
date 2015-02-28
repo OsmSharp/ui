@@ -21,6 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Graph.Routing
 {

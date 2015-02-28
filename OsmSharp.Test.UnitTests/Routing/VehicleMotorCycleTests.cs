@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Speed;
 
 namespace OsmSharp.Test.Unittests.Routing
@@ -34,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestVehicleMotorCycleCanTranverse()
         {
-            Vehicle vehicle = Vehicle.MotorCycle;
+            var vehicle = Vehicle.MotorCycle;
 
             // invalid highway types.
             base.TestVehicleCanTranverse(vehicle, false, "highwey", "road");

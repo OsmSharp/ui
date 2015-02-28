@@ -24,6 +24,7 @@ using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
+using OsmSharp.Routing.Vehicles;
 using System;
 using System.Collections.Generic;
 

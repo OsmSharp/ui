@@ -27,6 +27,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {

@@ -26,6 +26,7 @@ using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {

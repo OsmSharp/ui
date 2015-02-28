@@ -33,6 +33,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections;
 using OsmSharp.Units.Time;
 using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {

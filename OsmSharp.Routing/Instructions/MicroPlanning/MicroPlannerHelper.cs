@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
