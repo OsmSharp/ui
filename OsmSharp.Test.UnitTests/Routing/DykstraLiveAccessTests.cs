@@ -36,15 +36,15 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Does some raw routing tests.
     /// </summary>
     [TestFixture]
-    public class DykstraLiveAccessTests : RoutingAccessTests<LiveEdge>
+    public class DykstraLiveAccessTests : RoutingAccessTests<Edge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
+        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
             IOsmRoutingInterpreter interpreter,
-                IRoutingAlgorithm<LiveEdge> basicRouter)
+                IRoutingAlgorithm<Edge> basicRouter)
         {
             // initialize the router.
             return Router.CreateLiveFrom(data, basicRouter, interpreter);
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IRoutingAlgorithm<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
+        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
         {
             return new Dykstra();
         }
@@ -67,14 +67,14 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="embeddedString"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter,
+        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
             var memoryData =
-                new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+                new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(

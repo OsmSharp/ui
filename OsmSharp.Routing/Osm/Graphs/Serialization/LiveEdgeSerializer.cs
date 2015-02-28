@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class LiveEdgeSerializer : GraphSerializer<LiveEdge>
+    public class LiveEdgeSerializer : GraphSerializer<Edge>
     {
         /// <summary>
         /// Returns the version string.
@@ -46,9 +46,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<LiveEdge> graph)
+        protected override void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<Edge> graph)
         {
-            graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+            graph.Serialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override DynamicGraphRouterDataSource<LiveEdge> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
+        protected override DynamicGraphRouterDataSource<Edge> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, !lazy);
+            return DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, !lazy);
         }
     }
 }

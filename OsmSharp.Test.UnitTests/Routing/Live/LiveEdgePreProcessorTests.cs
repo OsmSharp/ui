@@ -40,11 +40,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         public void TestSparseRemoval1()
         {
             // use one edge definition everywhere.
-            var edge = new LiveEdge();
+            var edge = new Edge();
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);
@@ -78,11 +78,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         public void TestSparseRemoval2()
         {
             // use one edge definition everywhere.
-            var edge = new LiveEdge();
+            var edge = new Edge();
             edge.Forward = true;
             edge.Tags = 1;
 
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(1, 1);
             uint vertex3 = graph.AddVertex(2, 2);

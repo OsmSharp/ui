@@ -42,25 +42,25 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestGraphArguments()
         {
             // create graph with one vertex and start adding vertex2.
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             uint vertex1 = graph.AddVertex(0, 0);
             uint vertex2 = graph.AddVertex(0, 0);
             uint vertex3 = 3;
 
             Assert.Catch<ArgumentOutOfRangeException>(() => {
-                graph.AddEdge(vertex3, vertex1, new LiveEdge(), null);
+                graph.AddEdge(vertex3, vertex1, new Edge(), null);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
-                graph.AddEdge(vertex1, vertex3, new LiveEdge(), null);
+                graph.AddEdge(vertex1, vertex3, new Edge(), null);
             });
             Assert.Catch<ArgumentException>(() =>
             {
-                graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
+                graph.AddEdge(vertex1, vertex1, new Edge(), null);
             });
             Assert.Catch<ArgumentException>(() =>
             {
-                graph.AddEdge(vertex1, vertex1, new LiveEdge(), null);
+                graph.AddEdge(vertex1, vertex1, new Edge(), null);
             });
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             {
                 graph.ContainsEdges(vertex1, vertex3);
             });
-            LiveEdge edge;
+            Edge edge;
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
                 graph.GetEdge(vertex3, vertex1, out edge);
@@ -95,7 +95,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddVertex()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             var vertex = graph.AddVertex(51, 4);
 
             float latitude, longitude;
@@ -119,7 +119,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddVertex10000()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             int count = 10000;
             while (count > 0)
             {
@@ -146,11 +146,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddEdge()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
                                                {
                                                    Forward = true,
                                                    Tags = 0
@@ -166,7 +166,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(0, arcs[0].Value.Tags);
             Assert.AreEqual(vertex1, arcs[0].Key);
 
-            LiveEdge edge;
+            Edge edge;
             Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
             Assert.AreEqual(0, edge.Tags);
             Assert.AreEqual(true, edge.Forward);
@@ -182,13 +182,13 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestGraphAddEdge1001()
         {
             int count = 1001;
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             uint vertex1 = graph.AddVertex(51, 1);
             while (count > 0)
             {
                 uint vertex2 = graph.AddVertex(51, 1);
 
-                graph.AddEdge(vertex1, vertex2, new LiveEdge()
+                graph.AddEdge(vertex1, vertex2, new Edge()
                                                    {
                                                        Tags = 0,
                                                        Forward =  true
@@ -213,11 +213,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestGraphAddEdge1()
         {
             uint tagsId = 10;
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = tagsId
@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             // add a third vertex.
             var vertex3 = graph.AddVertex(51, 2);
-            var edge = new LiveEdge()
+            var edge = new Edge()
             {
                 Forward = true,
                 Tags = tagsId
@@ -271,11 +271,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestGraphAddRemove1()
         {
             uint tagsId = 10;
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = tagsId
@@ -303,18 +303,18 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         public void TestGraphAddRemove2()
         {
             uint tagsId = 10;
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = tagsId
             }, null);
 
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = tagsId
@@ -359,14 +359,14 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddRemoveX()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
@@ -375,7 +375,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.IsTrue(graph.ContainsEdges(vertex1, vertex2));
             Assert.IsTrue(graph.ContainsEdges(vertex2, vertex1));
 
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
@@ -387,7 +387,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.IsTrue(graph.ContainsEdges(vertex2, vertex3));
             Assert.IsTrue(graph.ContainsEdges(vertex3, vertex2));
 
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
@@ -402,7 +402,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.IsTrue(graph.ContainsEdges(vertex3, vertex4));
             Assert.IsTrue(graph.ContainsEdges(vertex4, vertex3));
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -432,30 +432,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphRemoveEnd()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -477,30 +477,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphRemoveMiddle()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -522,30 +522,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphRemoveBegin()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -567,30 +567,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphRemoveAll()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -612,30 +612,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphRemoveAllOneVertex()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             });
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             });
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             });
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -654,30 +654,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphCompressEdges()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -696,30 +696,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(graph.GetEdges(vertex4).ToKeyValuePairs().Length, 2);
 
 
-            graph = new Graph<LiveEdge>();
+            graph = new Graph<Edge>();
 
             vertex1 = graph.AddVertex(51, 1);
             vertex2 = graph.AddVertex(51, 2);
             vertex3 = graph.AddVertex(51, 3);
             vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -737,7 +737,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(graph.GetEdges(vertex3).ToKeyValuePairs().Length, 1);
             Assert.AreEqual(graph.GetEdges(vertex4).ToKeyValuePairs().Length, 1);
 
-            LiveEdge edge;
+            Edge edge;
             Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
             Assert.AreEqual(1, edge.Tags);
             Assert.IsTrue(graph.GetEdge(vertex2, vertex3, out edge));
@@ -752,30 +752,30 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphCompressVertices()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
             var vertex3 = graph.AddVertex(51, 3);
             var vertex4 = graph.AddVertex(51, 3);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
-            graph.AddEdge(vertex2, vertex3, new LiveEdge()
+            graph.AddEdge(vertex2, vertex3, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
-            graph.AddEdge(vertex3, vertex4, new LiveEdge()
+            graph.AddEdge(vertex3, vertex4, new Edge()
             {
                 Forward = true,
                 Tags = 3
             }, null);
 
-            graph.AddEdge(vertex4, vertex2, new LiveEdge()
+            graph.AddEdge(vertex4, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 4
@@ -799,24 +799,24 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddReverse()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
 
-            graph.AddEdge(vertex2, vertex1, new LiveEdge()
+            graph.AddEdge(vertex2, vertex1, new Edge()
             {
                 Forward = true,
                 Tags = 2
             }, null);
 
-            LiveEdge edge;
+            Edge edge;
             Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
             Assert.AreEqual(2, edge.Tags);
             Assert.IsTrue(graph.GetEdge(vertex2, vertex1, out edge));
@@ -829,19 +829,19 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphAddingDuplicateEdge()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
             }, null);
             
             // should overwrite.
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 2
@@ -852,7 +852,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(2, edges[0].Value.Tags);
             
             // should overwrite again.
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
@@ -869,12 +869,12 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         [Test]
         public void TestGraphSerialize1()
         {
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
 
             var vertex1 = graph.AddVertex(51, 1);
             var vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddEdge(vertex1, vertex2, new LiveEdge()
+            graph.AddEdge(vertex1, vertex2, new Edge()
             {
                 Forward = true,
                 Tags = 1
@@ -883,11 +883,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             // serialize.
             using (var stream = new MemoryStream())
             {
-                graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                graph.Serialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate);
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = Graph<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
+                var graphDeserialized = Graph<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -925,11 +925,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             // serialize.
             using (var stream = new MemoryStream())
             {
-                graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                graph.Serialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate);
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
+                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -973,11 +973,11 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             // serialize.
             using (var stream = new MemoryStream())
             {
-                graph.Serialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate);
+                graph.Serialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate);
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<LiveEdge>.Deserialize(stream, LiveEdge.SizeUints, LiveEdge.MapFromDelegate, LiveEdge.MapToDelegate, false);
+                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);

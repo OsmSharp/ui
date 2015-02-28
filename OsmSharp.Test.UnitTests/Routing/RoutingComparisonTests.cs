@@ -48,13 +48,13 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<LiveEdge> BuildDykstraDataSource(
+        public DynamicGraphRouterDataSource<Edge> BuildDykstraDataSource(
             IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new ReferenceGraphTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -72,8 +72,8 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public Router BuildDykstraRouter(IBasicRouterDataSource<LiveEdge> data,
-            IRoutingInterpreter interpreter, IRoutingAlgorithm<LiveEdge> basicRouter)
+        public Router BuildDykstraRouter(IBasicRouterDataSource<Edge> data,
+            IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
         {
             // initialize the router.
             return Router.CreateLiveFrom(data, basicRouter, interpreter);

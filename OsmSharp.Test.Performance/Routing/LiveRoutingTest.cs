@@ -85,7 +85,7 @@ namespace OsmSharp.Test.Performance.Routing
             // read from the OSM-stream.
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
             var interpreter = new OsmRoutingInterpreter();
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             data.DropVertexIndex();
             var targetData = new LiveGraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
@@ -119,14 +119,14 @@ namespace OsmSharp.Test.Performance.Routing
             data.SortHilbert(1000);
 
             // copy.
-            var graphCopy = new Graph<LiveEdge>();
+            var graphCopy = new Graph<Edge>();
             graphCopy.CopyFrom(data);
-            var dataCopy = new DynamicGraphRouterDataSource<LiveEdge>(graphCopy, data.TagsIndex);
+            var dataCopy = new DynamicGraphRouterDataSource<Edge>(graphCopy, data.TagsIndex);
 
             LiveRoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
         }
 
-        public static void Test(IBasicRouterDataSource<LiveEdge> data, Vehicle vehicle, int testCount)
+        public static void Test(IBasicRouterDataSource<Edge> data, Vehicle vehicle, int testCount)
         {
             // creates the live edge router.
             var router = new Dykstra();

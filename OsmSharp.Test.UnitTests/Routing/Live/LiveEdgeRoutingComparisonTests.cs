@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private Dictionary<string, DynamicGraphRouterDataSource<LiveEdge>> _data = null;
+        private Dictionary<string, DynamicGraphRouterDataSource<Edge>> _data = null;
 
         /// <summary>
         /// Returns a new router.
@@ -54,15 +54,15 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         {
             if (_data == null)
             {
-                _data = new Dictionary<string, DynamicGraphRouterDataSource<LiveEdge>>();
+                _data = new Dictionary<string, DynamicGraphRouterDataSource<Edge>>();
             }
-            DynamicGraphRouterDataSource<LiveEdge> data = null;
+            DynamicGraphRouterDataSource<Edge> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+                data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(
                     data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car }, false);
                 var dataProcessorSource = new XmlOsmStreamSource(

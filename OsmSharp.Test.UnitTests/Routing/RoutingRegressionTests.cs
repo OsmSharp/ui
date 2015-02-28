@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -174,7 +174,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
@@ -255,7 +255,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
@@ -697,11 +697,11 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tags);
+            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
-            var edge = new LiveEdge() // all edges are identical.
+            var edge = new Edge() // all edges are identical.
             {
                 Distance = 100,
                 Forward = true,
@@ -750,11 +750,11 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tags);
+            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
-            var edge = new LiveEdge() // all edges are identical.
+            var edge = new Edge() // all edges are identical.
             {
                 Distance = 100,
                 Forward = true,
@@ -853,11 +853,11 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tags);
+            var graphDataSource = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
-            var edgeData = new LiveEdge() // all edges are identical.
+            var edgeData = new Edge() // all edges are identical.
             {
                 Distance = 100,
                 Forward = true,
@@ -894,7 +894,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graphDataSource.AddEdge(vertex1, vertex2, edgeData, shape1);
             graphDataSource.AddEdge(vertex3, vertex1, edgeData, shape2);
 
-            var edges = new List<Edge<LiveEdge>>(graphDataSource.GetEdges(1));
+            var edges = new List<Edge<Edge>>(graphDataSource.GetEdges(1));
             Assert.AreEqual(2, edges.Count);
             foreach(var edge in edges)
             {
@@ -908,11 +908,11 @@ namespace OsmSharp.Test.Unittests.Routing
                 }
             }
 
-            edges = new List<Edge<LiveEdge>>(graphDataSource.GetEdges(2));
+            edges = new List<Edge<Edge>>(graphDataSource.GetEdges(2));
             Assert.AreEqual(1, edges.Count);
             Assert.AreEqual(false, edges[0].EdgeData.Forward);
 
-            edges = new List<Edge<LiveEdge>>(graphDataSource.GetEdges(3));
+            edges = new List<Edge<Edge>>(graphDataSource.GetEdges(3));
             Assert.AreEqual(1, edges.Count);
             Assert.AreEqual(true, edges[0].EdgeData.Forward);
         }

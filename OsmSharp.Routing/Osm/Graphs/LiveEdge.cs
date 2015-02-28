@@ -26,7 +26,7 @@ namespace OsmSharp.Routing.Osm.Graphs
     /// A simple edge containing the orignal OSM-tags and a flag indicating the direction of this edge relative to the 
     /// OSM-direction.
     /// </summary>
-    public struct LiveEdge : IGraphEdgeData
+    public struct Edge : IGraphEdgeData
     {
         /// <summary>
         /// Contains a value that represents tagsId and forward flag [forwardFlag (true when zero)][tagsIdx].
@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <returns></returns>
         public IGraphEdgeData Reverse()
         {
-            return new LiveEdge()
+            return new Edge()
             {
                 Distance = this.Distance,
                 Forward = !this.Forward,
@@ -126,9 +126,9 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <returns></returns>
         public bool Equals(IGraphEdgeData other)
         {
-            if (other is LiveEdge)
+            if (other is Edge)
             { // ok, type is the same.
-                var otherLive = (LiveEdge)other;
+                var otherLive = (Edge)other;
                 if (otherLive._value != this._value)
                 { // basic info different.
                     return false;
@@ -155,9 +155,9 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <summary>
         /// A delegate to map an edge onto uints.
         /// </summary>
-        public static MappedHugeArray<LiveEdge, uint>.MapFrom MapFromDelegate = (array, idx) =>
+        public static MappedHugeArray<Edge, uint>.MapFrom MapFromDelegate = (array, idx) =>
         {
-            return new LiveEdge()
+            return new Edge()
                 {
                     Value = array[idx],
                     Tags = array[idx + 1],
@@ -168,7 +168,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// <summary>
         /// A delegate to map an edge onto uints.
         /// </summary>
-        public static MappedHugeArray<LiveEdge, uint>.MapTo MapToDelegate = (array, idx, value) =>
+        public static MappedHugeArray<Edge, uint>.MapTo MapToDelegate = (array, idx, value) =>
         {
                 array[idx] = value.Value;
                 array[idx + 1] = value.Tags;

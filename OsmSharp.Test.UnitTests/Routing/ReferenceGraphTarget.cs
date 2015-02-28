@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles"></param>
-        public ReferenceGraphTarget(DynamicGraphRouterDataSourceBase<LiveEdge> dynamicGraph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
+        public ReferenceGraphTarget(DynamicGraphRouterDataSourceBase<Edge> dynamicGraph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
             : base(dynamicGraph, interpreter, tagsIndex, vehicles, false)
         {
 

@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test()
         {
-            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "belgium-latest.osm.pbf");
+            LiveEdgeGraphFlatFileSerializerTests.TestSerialization("LiveSerializerFlatFile", "kempen.osm.pbf");
         }
 
         /// <summary>
@@ -69,12 +69,12 @@ namespace OsmSharp.Test.Performance.Routing
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var graph = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var routingSerializer = new LiveEdgeSerializer();
 
-            var memoryMappedGraph = new Graph<LiveEdge>(1024);
+            var memoryMappedGraph = new Graph<Edge>(1024);
             var coordinates = new HugeCoordinateIndex(1024);
-            var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(memoryMappedGraph, tagsIndex);
+            var memoryData = new DynamicGraphRouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
             targetData.RegisterSource(progress);
             targetData.Pull();

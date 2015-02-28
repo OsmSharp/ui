@@ -46,11 +46,11 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             // use one edge definition everywhere.
             var tagsIndex = new TagsTableCollectionIndex();
             var tags = new TagsCollection(new Tag("highway","residential"));
-            var edge = new LiveEdge();
+            var edge = new Edge();
             edge.Forward = true;
             edge.Tags = tagsIndex.Add(tags);
 
-            var graph = new Graph<LiveEdge>();
+            var graph = new Graph<Edge>();
             uint vertex1 = graph.AddVertex(51.267797f, 4.8013623f);
             uint vertex2 = graph.AddVertex(51.267702f, 4.8013396f);
             uint vertex3 = graph.AddVertex(51.267592f, 4.8013024f);
@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             preProcessor.Start();
 
             // create router.
-            var source = new DynamicGraphRouterDataSource<LiveEdge>(
+            var source = new DynamicGraphRouterDataSource<Edge>(
                 graph, tagsIndex);
             var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
 

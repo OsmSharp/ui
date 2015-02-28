@@ -226,10 +226,10 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             uint vertexNoname1 = data.AddVertex((float)fromNoname.Latitude, (float)fromNoname.Longitude);
             uint vertexNoname2 = data.AddVertex((float)toNoname.Latitude, (float)toNoname.Longitude);
-            data.AddEdge(vertexNoname1, vertexNoname2, new LiveEdge()
+            data.AddEdge(vertexNoname1, vertexNoname2, new Edge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)
@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             tags["name"] = name;
             uint vertexName1 = data.AddVertex((float)fromName.Latitude, (float)fromName.Longitude);
             uint vertexName2 = data.AddVertex((float)toName.Latitude, (float)toName.Longitude);
-            data.AddEdge(vertexName1, vertexName2, new LiveEdge()
+            data.AddEdge(vertexName1, vertexName2, new Edge()
             {
                 Forward = true,
                 Tags = tagsIndex.Add(tags)
@@ -248,7 +248,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             IRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // creates the data.
-            IRoutingAlgorithm<LiveEdge> router = new Dykstra();
+            IRoutingAlgorithm<Edge> router = new Dykstra();
 
             var nonameLocation = new GeoCoordinate(
                 (fromNoname.Latitude + toNoname.Latitude) / 2.0,

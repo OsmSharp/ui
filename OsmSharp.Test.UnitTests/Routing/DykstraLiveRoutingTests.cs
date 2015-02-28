@@ -37,14 +37,14 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Does some raw routing tests.
     /// </summary>
     [TestFixture]
-    public class DykstraLiveRoutingTests : SimpleRoutingTests<LiveEdge>
+    public class DykstraLiveRoutingTests : SimpleRoutingTests<Edge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data, IRoutingInterpreter interpreter,
-            IRoutingAlgorithm<LiveEdge> basicRouter)
+        public override Router BuildRouter(IBasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter,
+            IRoutingAlgorithm<Edge> basicRouter)
         {
             // initialize the router.
             return Router.CreateLiveFrom(data, basicRouter, interpreter);
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IRoutingAlgorithm<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
+        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
         {
             return new Dykstra();
         }
@@ -66,19 +66,19 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter,
+        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
             string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<LiveEdge>>(
+            var data = StaticDictionary.Get<IBasicRouterDataSource<Edge>>(
                 key);
             if (data == null)
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(new Graph<LiveEdge>(), tagsIndex);
+                var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
                 var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex, null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -88,7 +88,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 targetData.Pull();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<LiveEdge>>(key,
+                StaticDictionary.Add<IBasicRouterDataSource<Edge>>(key,
                     data);
             }
             return data;
