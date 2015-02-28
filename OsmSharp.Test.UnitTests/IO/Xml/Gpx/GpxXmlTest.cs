@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -26,7 +26,7 @@ using OsmSharp.IO.Xml.Gpx;
 using OsmSharp.IO.Xml.Sources;
 using System.Reflection;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test.Unittests.IO.Xml.Gpx
 {
     /// <summary>
     /// Tests the Gpx Xml serializer/deserializer.

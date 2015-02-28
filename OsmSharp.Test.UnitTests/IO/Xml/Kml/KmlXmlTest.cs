@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,17 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>..
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using OsmSharp.IO.Xml.Kml;
 using OsmSharp.IO.Xml.Sources;
+using System.IO;
 using System.Reflection;
 
-namespace OsmSharp.Test.Unittests
+namespace OsmSharp.Test.Unittests.IO.Xml.Kml
 {
     /// <summary>
     /// Containts tests to read/write test kml-files.

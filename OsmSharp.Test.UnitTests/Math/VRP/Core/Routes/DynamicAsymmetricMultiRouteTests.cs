@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,7 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Test.Unittests.Routes
+namespace OsmSharp.Test.Unittests.Math.VRP.Core.Routes
 {
     /// <summary>
     /// Contains test function for the dynamic asymmetric multi route.

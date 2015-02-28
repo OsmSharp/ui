@@ -16,14 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using NUnit.Framework;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Memory;
 using System;
-using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 
-namespace OsmSharp.Test.Unittests.Data
+namespace OsmSharp.Test.Unittests.Osm.Data
 {
     /// <summary>
     /// Does some raw data memory tests.
