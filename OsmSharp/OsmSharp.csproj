@@ -73,9 +73,6 @@
     <Compile Include="Collections\Coordinates\HugeCoordinateIndex.cs" />
     <Compile Include="Collections\Coordinates\Collections\ICoordinateCollection.cs" />
     <Compile Include="Collections\Coordinates\ICoordinateIndex.cs" />
-    <Compile Include="Collections\DictionaryProxy.cs" />
-    <Compile Include="Collections\DictionaryWithEvents.cs" />
-    <Compile Include="Collections\HashSet.cs" />
     <Compile Include="Collections\Arrays\HugeArray.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
@@ -128,7 +125,6 @@
     <Compile Include="Geo\GeoCoordinate.cs" />
     <Compile Include="Geo\GeoCoordinateBox.cs" />
     <Compile Include="Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
     <Compile Include="Geo\Geometries\Geometry.cs" />
     <Compile Include="Geo\Geometries\GeometryCollection.cs" />
     <Compile Include="Geo\Geometries\LineairRing.cs" />
@@ -143,7 +139,6 @@
     <Compile Include="Geo\Meta\RelativeDirection.cs" />
     <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
     <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
     <Compile Include="Geo\Projections\IProjection.cs" />
     <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
     <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
@@ -152,9 +147,7 @@
     <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
     <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
     <Compile Include="Geo\Projections\ScaledProjection.cs" />
-    <Compile Include="Geo\Projections\SphericalMercator.cs" />
     <Compile Include="Geo\Projections\WebMercator.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Geo\Streams\FeatureCollectionStreamSource.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxFeatureStreamSource.cs" />
