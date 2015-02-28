@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graph.AddEdge(vertex3, vertex2, edge, null);
 
             // execute pre-processor.
-            var preProcessor = new EdgePreprocessor(graph);
+            var preProcessor = new GraphSimplificationPreprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.
@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graph.AddEdge(vertex6, vertex3, edge, null); // 3 <-> 6
 
             // execute pre-processor.
-            var preProcessor = new EdgePreprocessor(graph);
+            var preProcessor = new GraphSimplificationPreprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.

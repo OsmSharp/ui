@@ -69,7 +69,7 @@ namespace OsmSharp.Test.Unittests.Routing
             var vertex3Coordinate = new GeoCoordinate(latitude, longitude);
 
             // execute pre-processor.
-            var preProcessor = new EdgePreprocessor(graph);
+            var preProcessor = new GraphSimplificationPreprocessor(graph);
             preProcessor.Start();
 
             // create router.

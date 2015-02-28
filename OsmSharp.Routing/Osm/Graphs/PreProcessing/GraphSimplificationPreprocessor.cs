@@ -28,9 +28,9 @@ using System.Linq;
 namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
 {
     /// <summary>
-    /// Pre-processor to simplify a graph made out of edges.
+    /// Pre-processor to simplify a graph.
     /// </summary>
-    public class EdgePreprocessor : IPreProcessor
+    public class GraphSimplificationPreprocessor : IPreProcessor
     {
         /// <summary>
         /// Holds the graph.
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="graph"></param>
-        public EdgePreprocessor(GraphBase<Edge> graph)
+        public GraphSimplificationPreprocessor(GraphBase<Edge> graph)
         {
             _graph = graph;
         }
