@@ -358,28 +358,16 @@ namespace OsmSharp.UI.Map
             return layerRoute;
         }
 
-        ///// <summary>
-        ///// Adds a new scene layer with the given primitives source as it's source.
-        ///// </summary>
-        ///// <param name="scene"></param>
-        ///// <returns></returns>
-        //public LayerScene AddLayerScene(IScene2DPrimitivesSource scene)
-        //{
-        //    LayerScene layerScene = new LayerScene(scene);
-        //    this.AddLayer(layerScene);
-        //    return layerScene;
-        //}
-
         /// <summary>
         /// Adds a graph layer with the given data and style.
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         /// <returns></returns>
-        public LayerDynamicGraphLiveEdge AddLayerGraph(IBasicRouterDataSource<Edge> dataSource,
+        public LayerDynamicGraph AddLayerGraph(IBasicRouterDataSource<Edge> dataSource,
             StyleInterpreter styleInterpreter)
         {
-            LayerDynamicGraphLiveEdge layerGraph = new LayerDynamicGraphLiveEdge(dataSource, styleInterpreter);
+            var layerGraph = new LayerDynamicGraph(dataSource, styleInterpreter);
             this.AddLayer(layerGraph);
             return layerGraph;
         }

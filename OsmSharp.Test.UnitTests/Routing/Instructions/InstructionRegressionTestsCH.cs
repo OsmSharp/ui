@@ -35,7 +35,7 @@ using OsmSharp.Collections.Tags.Index;
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
     /// <summary>
-    /// Holds regression tests based on dykstra routing live.
+    /// Holds regression tests based on dykstra routing.
     /// </summary>
     [TestFixture]
     public class InstructionRegressionTestsCH : InstructionRegressionTestsBase

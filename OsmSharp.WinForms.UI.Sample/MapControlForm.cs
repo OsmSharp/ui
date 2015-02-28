@@ -69,7 +69,7 @@ namespace OsmSharp.WinForms.UI.Sample
             var map = new OsmSharp.UI.Map.Map();
 
             //// initialize router.
-            //_router = Router.CreateLiveFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
+            //_router = Router.CreateFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(
             //    new FileInfo(@"kempen.osm.pbf").OpenRead()), new OsmRoutingInterpreter());
 
             var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {

@@ -22,13 +22,13 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using System.Linq;
 
-namespace OsmSharp.Test.Unittests.Routing.Live
+namespace OsmSharp.Test.Unittests.Routing
 {
     /// <summary>
-    /// Contains tests for the live edge pre processor tests.
+    /// Contains tests for the preprocessor.
     /// </summary>
     [TestFixture]
-    public class LiveEdgePreProcessorTests
+    public class PreProcessorTests
     {
         /// <summary>
         /// Tests a simple removal of one sparse vertex.
@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             graph.AddEdge(vertex3, vertex2, edge, null);
 
             // execute pre-processor.
-            var preProcessor = new LiveEdgePreprocessor(graph);
+            var preProcessor = new EdgePreprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.
@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             graph.AddEdge(vertex6, vertex3, edge, null); // 3 <-> 6
 
             // execute pre-processor.
-            var preProcessor = new LiveEdgePreprocessor(graph);
+            var preProcessor = new EdgePreprocessor(graph);
             preProcessor.Start();
 
             // test resulting graph.

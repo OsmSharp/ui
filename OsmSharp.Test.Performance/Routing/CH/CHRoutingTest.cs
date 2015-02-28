@@ -36,7 +36,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
     public static class CHRoutingTest
     {
         /// <summary>
-        /// Tests the live routing.
+        /// Tests the routing.
         /// </summary>
         public static void Test()
         {

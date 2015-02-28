@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// <summary>
     /// A reference stream target to build a reference network.
     /// </summary>
-    public class ReferenceGraphTarget : LiveGraphOsmStreamTarget
+    public class ReferenceGraphTarget : GraphOsmStreamTarget
     {
         /// <summary>
         /// Creates a reference stream target.

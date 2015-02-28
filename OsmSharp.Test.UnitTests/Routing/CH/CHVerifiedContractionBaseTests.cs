@@ -91,7 +91,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(
+            var targetData = new GraphOsmStreamTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedName));
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // initialize the router.
-            _referenceRouter = Router.CreateLiveFrom(data, new Dykstra(), interpreter);
+            _referenceRouter = Router.CreateFrom(data, new Dykstra(), interpreter);
         }
 
         /// <summary>

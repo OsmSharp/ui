@@ -28,31 +28,30 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using System.Collections.Generic;
 using System.Reflection;
 
-namespace OsmSharp.Test.Unittests.Routing.Live
+namespace OsmSharp.Test.Unittests.Routing
 {
     /// <summary>
-    /// Tests the sparse node ordering CH.
+    /// Does some raw routing tests.
     /// </summary>
     [TestFixture]
-    public class LiveEdgeRoutingTest : SimpleRoutingTests<Edge>
+    public class DykstraRoutingTests : SimpleRoutingTests<Edge>
     {
         /// <summary>
-        /// Returns a new router.
+        /// Builds a router.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
-            IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
+        public override Router BuildRouter(IBasicRouterDataSource<Edge> data, IRoutingInterpreter interpreter,
+            IRoutingAlgorithm<Edge> basicRouter)
         {
-            return Router.CreateLiveFrom(data, basicRouter, interpreter);
+            // initialize the router.
+            return Router.CreateFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
-        /// Returns a basic router.
+        /// Builds a basic router.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -62,15 +61,15 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         }
 
         /// <summary>
-        /// Builds the data.
+        /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override IBasicRouterDataSource<Edge> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
-            string key = string.Format("LiveEdge.Routing.IBasicRouterDataSource<Edge>.OSM.{0}",
+            string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
                 embeddedString);
             var data = StaticDictionary.Get<IBasicRouterDataSource<Edge>>(
                 key);
@@ -80,8 +79,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
 
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-                var targetData = new LiveGraphOsmStreamTarget(
-                    memoryData, interpreter, tagsIndex, null, false);
+                var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex, null, false);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
                 var sorter = new OsmStreamFilterSort();
@@ -90,7 +88,8 @@ namespace OsmSharp.Test.Unittests.Routing.Live
                 targetData.Pull();
 
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<Edge>>(key, data);
+                StaticDictionary.Add<IBasicRouterDataSource<Edge>>(key,
+                    data);
             }
             return data;
         }
@@ -99,7 +98,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests a simple shortest route calculation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortedDefault()
+        public void TestDykstraShortedDefault()
         {
             this.DoTestShortestDefault();
         }
@@ -108,7 +107,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests if the raw router preserves tags.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedTags()
+        public void TestDykstraResolvedTags()
         {
             this.DoTestResolvedTags();
         }
@@ -117,52 +116,52 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
         [Test]
-        public void TestLiveEdgeArcTags()
+        public void TestDykstraArcTags()
         {
             this.DoTestArcTags();
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest1()
+        public void TestDykstraShortest1()
         {
             this.DoTestShortest1();
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest2()
+        public void TestDykstraShortest2()
         {
             this.DoTestShortest2();
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest3()
+        public void TestDykstraShortest3()
         {
             this.DoTestShortest3();
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest4()
+        public void TestDykstraShortest4()
         {
             this.DoTestShortest4();
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeShortest5()
+        public void TestDykstraShortest5()
         {
             this.DoTestShortest5();
         }
@@ -171,7 +170,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedShortest1()
+        public void TestDykstraShortestResolved1()
         {
             this.DoTestShortestResolved1();
         }
@@ -180,34 +179,52 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Test is the raw router can calculate another route.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolvedShortest2()
+        public void TestDykstraShortestResolved2()
         {
             this.DoTestShortestResolved2();
         }
 
         /// <summary>
-        /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
+        /// Test if the raw router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
         [Test]
-        public void TestLiveEdgeManyToMany1()
+        public void TestDykstraManyToMany1()
         {
             this.DoTestManyToMany1();
+        }
+
+        /// <summary>
+        /// Test if the raw router handles connectivity questions correctly.
+        /// </summary>
+        [Test]
+        public void TestDykstraConnectivity1()
+        {
+            this.DoTestConnectivity1();
         }
 
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveAllNodes()
+        public void TestDykstraResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
+        }
+
+        /// <summary>
+        /// Regression test on routing resolved nodes.
+        /// </summary>
+        [Test]
+        public void TestDykstraResolveBetweenRouteToSelf()
+        {
+            this.DoTestResolveBetweenRouteToSelf();
         }
 
         /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveBetweenClose()
+        public void TestDykstraResolveBetweenClose()
         {
             this.DoTestResolveBetweenClose();
         }
@@ -216,16 +233,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveBetweenTwo()
-        {
-            this.DoTestResolveBetweenTwo();
-        }
-
-        /// <summary>
-        /// Tests routing when resolving points.
-        /// </summary>
-        [Test]
-        public void TestLiveEdgeResolveCase1()
+        public void TestDykstraResolveCase1()
         {
             this.DoTestResolveCase1();
         }
@@ -234,9 +242,27 @@ namespace OsmSharp.Test.Unittests.Routing.Live
         /// Tests routing when resolving points.
         /// </summary>
         [Test]
-        public void TestLiveEdgeResolveCase2()
+        public void TestDykstraResolveCase2()
         {
             this.DoTestResolveCase2();
         }
+
+        /// <summary>
+        /// Tests many to many routing.
+        /// </summary>
+        [Test]
+        public void TestManyToManyBigNetwork()
+        {
+            this.DoTestManyToMany("test_network_big.osm");
+        }
+
+        ///// <summary>
+        ///// Tests many to many routing.
+        ///// </summary>
+        //[Test]
+        //public void TestManyToManyTSPReal()
+        //{
+        //    this.DoTestManyToMany("tsp_real.osm");
+        //}
     }
 }

@@ -211,26 +211,26 @@
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />
     <Compile Include="Routing\Instructions\InstructionTests.cs" />
     <Compile Include="Routing\Instructions\LanguageGenerator\LanguageTestGenerator.cs" />
-    <Compile Include="Routing\Live\LiveEdgePreProcessorRoutingTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgePreProcessorTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgeRoutingComparisonTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgeRoutingTest.cs" />
+    <Compile Include="Routing\PreProcessorRoutingTests.cs" />
+    <Compile Include="Routing\PreProcessorTests.cs" />
+    <Compile Include="Routing\RoutingComparisonTests.cs" />
+    <Compile Include="Routing\RoutingTest.cs" />
     <Compile Include="Routing\Navigation\RouterTrackerTests.cs" />
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
-    <Compile Include="Routing\DykstraLiveRoutingTests.cs" />
+    <Compile Include="Routing\DykstraRoutingTests.cs" />
     <Compile Include="Routing\Graph\GraphTests.cs" />
     <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
-    <Compile Include="Routing\DykstraLiveAccessTests.cs">
+    <Compile Include="Routing\DykstraAccessTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Routing\RoutingAccessTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\RouteTests.cs" />
     <Compile Include="Routing\OsmSourceRoutingTest.cs" />
-    <Compile Include="Routing\RoutingComparisonTests.cs" />
+    <Compile Include="Routing\RoutingComparisonTestsBase.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />

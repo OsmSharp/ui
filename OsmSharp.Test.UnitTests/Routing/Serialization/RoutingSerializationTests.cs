@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             // do the data processing.
             var original =
                 new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(
+            var targetData = new GraphOsmStreamTarget(
                 original, interpreter, tagsIndex, null, false);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -74,7 +74,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new LiveEdgeSerializer();
+            var routingSerializer = new EdgeSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // try to do some routing on the deserialized version.
             var basicRouter = new Dykstra();
-            var router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
+            var router = Router.CreateFrom(deserializedVersion, basicRouter, interpreter);
             var source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
             var target = router.Resolve(Vehicle.Car,
@@ -152,13 +152,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+            var original = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter);
 
             // create serializer.
-            var routingSerializer = new LiveEdgeSerializer();
+            var routingSerializer = new EdgeSerializer();
 
             // serialize/deserialize.
             TagsCollectionBase metaData = new TagsCollection();
@@ -188,7 +188,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             //            // try to do some routing on the deserialized version.
             //            var basicRouter =
             //                new Dykstra(deserializedVersion.TagsIndex);
-            //            Router router = Router.CreateLiveFrom(
+            //            Router router = Router.CreateFrom(
             //                deserializedVersion, basicRouter, interpreter);
 
             //// loop over all nodes and resolve their locations.
@@ -232,19 +232,19 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         }
 
         /// <summary>
-        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the serializer for LiveEdge data.
+        /// Tests serializing/deserializing DynamicGraphRouterDataSource using the serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationLiveEdge()
+        public void RoutingSerialization()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
             // load the network.
-            var referenceNetwork = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+            var referenceNetwork = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
 
             // serialize network.
-            var routingSerializer = new LiveEdgeSerializer();
+            var routingSerializer = new EdgeSerializer();
             TagsCollectionBase metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
             using (var stream = new MemoryStream())

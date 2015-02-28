@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // do the data processing.
             var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
             var sorter = new OsmStreamFilterSort();
@@ -62,7 +62,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.Pull();
 
             var basicRouter = new Dykstra();
-            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+            var router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
             // resolve the three points in question.
             var point35 = new GeoCoordinate(51.01257, 4.000753);
@@ -90,7 +90,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // do the data processing.
             var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
             var sorter = new OsmStreamFilterSort();
@@ -99,7 +99,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.Pull();
 
             var basicRouter = new Dykstra();
-            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+            var router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
             // build coordinates list of resolved points.
             var testPoints = new List<GeoCoordinate>();
@@ -122,7 +122,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                 {
                     // create router from scratch.
-                    router = Router.CreateLiveFrom(
+                    router = Router.CreateFrom(
                         memoryData, basicRouter, interpreter);
 
                     // resolve points.
@@ -140,7 +140,7 @@ namespace OsmSharp.Test.Unittests.Routing
             foreach (int[] permutation in enumerator)
             {
                 // create router from scratch.
-                router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+                router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
                 // resolve in the order of the permutation.
                 var resolvedPoints = new RouterPoint[permutation.Length];
@@ -175,7 +175,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // do the data processing.
             var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
             var sorter = new OsmStreamFilterSort();
@@ -184,7 +184,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.Pull();
 
             var basicRouter = new Dykstra();
-            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+            var router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
             // build coordinates list of resolved points.
             var testPoints = new List<GeoCoordinate>();
@@ -203,7 +203,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                 {
                     // create router from scratch.
-                    router = Router.CreateLiveFrom(
+                    router = Router.CreateFrom(
                         memoryData, basicRouter, interpreter);
 
                     // resolve points.
@@ -222,7 +222,7 @@ namespace OsmSharp.Test.Unittests.Routing
             foreach (int[] permutation in enumerator)
             {
                 // create router from scratch.
-                router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+                router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
                 // resolve in the order of the permutation.
                 var resolvedPoints = new RouterPoint[permutation.Length];
@@ -256,7 +256,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // do the data processing.
             var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
+            var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
             var sorter = new OsmStreamFilterSort();
@@ -265,7 +265,7 @@ namespace OsmSharp.Test.Unittests.Routing
             targetData.Pull();
 
             var basicRouter = new Dykstra();
-            var router = Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+            var router = Router.CreateFrom(memoryData, basicRouter, interpreter);
 
             // resolve the three points in question.
             var point35 = new GeoCoordinate(51.01257, 4.000753);
@@ -302,7 +302,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression3.osm"));
-            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 
             var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
             var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
@@ -408,7 +408,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression4.osm"));
-            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 
             var resolved3 = router.Resolve(Vehicle.Car, vertex3, true);
             var resolved6 = router.Resolve(Vehicle.Car, vertex6, true);
@@ -507,7 +507,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression5.osm"));
-            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 
             var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
             Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);
@@ -622,7 +622,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression6.osm"));
-            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 
             var resolved1 = router.Resolve(Vehicle.Car, vertex1, true);
             Assert.AreEqual(0, resolved1.Location.DistanceReal(vertex1).Value, e);

@@ -31,14 +31,14 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class LiveEdgeSerializer : GraphSerializer<Edge>
+    public class EdgeSerializer : GraphSerializer<Edge>
     {
         /// <summary>
         /// Returns the version string.
         /// </summary>
         public override string VersionString
         {
-            get { return "LiveEdgeFlatfile.v2.0"; }
+            get { return "Flatfile.v2.0"; }
         }
 
         /// <summary>

@@ -74,13 +74,13 @@ namespace OsmSharp.Test.Performance
                 //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
                 // test the routing preprocessor.
-                //Routing.LivePreProcessorTest.Test();
+                //Routing.PreProcessorTest.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
-                Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-                //Routing.LiveRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead());
+                Routing.GraphFlatFileSerializerTests.Test();
+                //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead());
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
-                //Routing.LiveRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), false);
-                //Routing.LiveRoutingTest.Test();
+                //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), false);
+                //Routing.RoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
                 //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);

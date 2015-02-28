@@ -919,7 +919,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var graph = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+            var graph = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter);
 
             // serialize.
@@ -967,7 +967,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var graph = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
+            var graph = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter);
 
             // serialize.

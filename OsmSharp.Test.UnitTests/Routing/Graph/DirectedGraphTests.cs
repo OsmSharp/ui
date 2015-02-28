@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding a vertex.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphVertex()
+        public void TestDynamicGraphVertex()
         {
             var graph = this.CreateGraph();
             var vertex = graph.AddVertex(51, 4);
@@ -126,7 +126,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 vertices.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphVertex10000()
+        public void TestDynamicGraphVertex10000()
         {
             var graph = this.CreateGraph();
             int count = 10000;
@@ -153,7 +153,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge()
+        public void TestDynamicGraphEdge()
         {
             var graph = this.CreateGraph();
             var vertex1 = graph.AddVertex(51, 1);
@@ -180,7 +180,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge1001()
+        public void TestDynamicGraphEdge1001()
         {
             var count = 1001;
             var graph = this.CreateGraph();
@@ -204,7 +204,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge and the reverse edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge1()
+        public void TestDynamicGraphEdge1()
         {
             uint tagsId = 10;
             var graph = this.CreateGraph();
@@ -256,7 +256,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing one edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemove1()
+        public void TestDynamicGraphAddRemove1()
         {
             uint tagsId = 10;
             var graph = this.CreateGraph();
@@ -288,7 +288,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing two edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemove2()
+        public void TestDynamicGraphAddRemove2()
         {
             uint tagsId = 10;
             var graph = this.CreateGraph();
@@ -338,7 +338,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and remove an arbitrary number of edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemoveX()
+        public void TestDynamicGraphAddRemoveX()
         {
             var graph = this.CreateGraph();
 
@@ -411,7 +411,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge at the end.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveEnd()
+        public void TestDynamicGraphRemoveEnd()
         {
             var graph = this.CreateGraph();
 
@@ -455,7 +455,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the middle.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveMiddle()
+        public void TestDynamicGraphRemoveMiddle()
         {
             var graph = this.CreateGraph();
 
@@ -499,7 +499,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveBegin()
+        public void TestDynamicGraphRemoveBegin()
         {
             var graph = this.CreateGraph();
 
@@ -543,7 +543,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveAll()
+        public void TestDynamicGraphRemoveAll()
         {
             var graph = this.CreateGraph();
 
@@ -588,7 +588,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests removing all edges for one vertex.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveAllOneVertex()
+        public void TestDynamicGraphRemoveAllOneVertex()
         {
             var graph = this.CreateGraph();
 
@@ -630,7 +630,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddReverse()
+        public void TestDynamicGraphAddReverse()
         {
             var graph = this.CreateGraph();
 

@@ -28,9 +28,9 @@ using System.Linq;
 namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
 {
     /// <summary>
-    /// Pre-processor to simplify a graph made out of live edges.
+    /// Pre-processor to simplify a graph made out of edges.
     /// </summary>
-    public class LiveEdgePreprocessor : IPreProcessor
+    public class EdgePreprocessor : IPreProcessor
     {
         /// <summary>
         /// Holds the graph.
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="graph"></param>
-        public LiveEdgePreprocessor(GraphBase<Edge> graph)
+        public EdgePreprocessor(GraphBase<Edge> graph)
         {
             _graph = graph;
         }
@@ -254,7 +254,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                 float progress = (float)System.Math.Round((((double)nextToProcess / (double)_graph.VertexCount) * 100));
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("Preprocessor", TraceEventType.Information,
                         "Removing edges... {0}%", progress);
                     latestProgress = progress;
                 }
@@ -355,7 +355,7 @@ namespace OsmSharp.Routing.Osm.Graphs.PreProcessing
                 float progress = (float)System.Math.Round((((double)vertex / (double)_graph.VertexCount) * 100));
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("LiveEdgePreprocessor", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("Preprocessor", TraceEventType.Information,
                         "Compressing graph... {0}%", progress);
                     latestProgress = progress;
                 }

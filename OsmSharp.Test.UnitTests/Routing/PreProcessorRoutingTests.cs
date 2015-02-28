@@ -26,13 +26,13 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 
-namespace OsmSharp.Test.Unittests.Routing.Live
+namespace OsmSharp.Test.Unittests.Routing
 {
     /// <summary>
-    /// Contains tests for the router after pre-processing using the live pre processor tests.
+    /// Contains tests for the router after pre-processing using the pre processor tests.
     /// </summary>
     [TestFixture]
-    public class LiveEdgePreProcessorRoutingTests
+    public class PreProcessorRoutingTests
     {
         /// <summary>
         /// Tests a simple removal of one sparse vertex and then serveral different routing queries.
@@ -69,13 +69,13 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             var vertex3Coordinate = new GeoCoordinate(latitude, longitude);
 
             // execute pre-processor.
-            var preProcessor = new LiveEdgePreprocessor(graph);
+            var preProcessor = new EdgePreprocessor(graph);
             preProcessor.Start();
 
             // create router.
             var source = new DynamicGraphRouterDataSource<Edge>(
                 graph, tagsIndex);
-            var router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 
             // test some basic routing requests.
             // 1 -> 3: 1 -> 2 -> 3.
@@ -94,7 +94,7 @@ namespace OsmSharp.Test.Unittests.Routing.Live
             Assert.AreEqual(vertex3Coordinate.Longitude, route.Segments[2].Longitude);
 
             // 1 -> 2: 1 -> 2.
-            router = Router.CreateLiveFrom(source, new OsmRoutingInterpreter());
+            router = Router.CreateFrom(source, new OsmRoutingInterpreter());
             resolved1 = router.Resolve(Vehicle.Car, vertex1Coordinate);
             var resolved2 = router.Resolve(Vehicle.Car, vertex2Coordinate);
             route = router.Calculate(Vehicle.Car, resolved1, resolved2);

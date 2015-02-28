@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests argument out of range.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphArguments()
+        public void TestDynamicGraphArguments()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -94,7 +94,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding a vertex.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphVertex()
+        public void TestDynamicGraphVertex()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -120,7 +120,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 vertices.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphVertex10000()
+        public void TestDynamicGraphVertex10000()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -149,7 +149,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge()
+        public void TestDynamicGraphEdge()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -186,7 +186,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge10000()
+        public void TestDynamicGraphEdge10000()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -220,7 +220,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge and the reverse edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphEdge1()
+        public void TestDynamicGraphEdge1()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -280,7 +280,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing one edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemove1()
+        public void TestDynamicGraphAddRemove1()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -314,7 +314,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing two edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemove2()
+        public void TestDynamicGraphAddRemove2()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -373,7 +373,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and remove an arbitrary number of edges.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddRemoveX()
+        public void TestDynamicGraphAddRemoveX()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -448,7 +448,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge at the end.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveEnd()
+        public void TestDynamicGraphRemoveEnd()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -494,7 +494,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the middle.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveMiddle()
+        public void TestDynamicGraphRemoveMiddle()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -541,7 +541,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveBegin()
+        public void TestDynamicGraphRemoveBegin()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -587,7 +587,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveAll()
+        public void TestDynamicGraphRemoveAll()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -634,7 +634,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests removing all edges for one vertex.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphRemoveAllOneVertex()
+        public void TestDynamicGraphRemoveAllOneVertex()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -678,7 +678,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests trimming the graph but edges only (all vertices are stull used).
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphCompressEdges()
+        public void TestDynamicGraphCompressEdges()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -779,7 +779,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests trimming the graph but edges only (all vertices are stull used).
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphCompressVertices()
+        public void TestDynamicGraphCompressVertices()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -828,7 +828,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]
-        public void TestLiveEdgeDynamicGraphAddReverse()
+        public void TestDynamicGraphAddReverse()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))

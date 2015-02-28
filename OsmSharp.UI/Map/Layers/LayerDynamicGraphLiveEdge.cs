@@ -30,7 +30,7 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A layer drawing OSM data.
     /// </summary>
-    public class LayerDynamicGraphLiveEdge : Layer
+    public class LayerDynamicGraph : Layer
     {
         /// <summary>
         /// Holds the source of the OSM raw data.
@@ -50,7 +50,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        public LayerDynamicGraphLiveEdge(IBasicRouterDataSource<Edge> dataSource, 
+        public LayerDynamicGraph(IBasicRouterDataSource<Edge> dataSource, 
                                          StyleInterpreter styleInterpreter)
         {
             _dataSource = dataSource;

@@ -128,12 +128,12 @@ namespace OsmSharp.Routing.Osm.Graphs
         {
             if (other is Edge)
             { // ok, type is the same.
-                var otherLive = (Edge)other;
-                if (otherLive._value != this._value)
+                var otherEdge = (Edge)other;
+                if (otherEdge._value != this._value)
                 { // basic info different.
                     return false;
                 }
-                return otherLive.Distance == this.Distance;
+                return otherEdge.Distance == this.Distance;
             }
             return false;
         }

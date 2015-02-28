@@ -36,7 +36,7 @@ namespace OsmSharp.Test.Unittests.Routing
     /// Does some raw routing tests.
     /// </summary>
     [TestFixture]
-    public class DykstraLiveAccessTests : RoutingAccessTests<Edge>
+    public class DykstraAccessTests : RoutingAccessTests<Edge>
     {
         /// <summary>
         /// Builds a router.
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 IRoutingAlgorithm<Edge> basicRouter)
         {
             // initialize the router.
-            return Router.CreateLiveFrom(data, basicRouter, interpreter);
+            return Router.CreateFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace OsmSharp.Test.Unittests.Routing
             // do the data processing.
             var memoryData =
                 new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(
+            var targetData = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -91,7 +91,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Test access restrictions.
         /// </summary>
         [Test]
-        public void TestDykstraLiveAccessHighways()
+        public void TestDykstraAccessHighways()
         {
             this.DoAccessTestsHighways();
         }

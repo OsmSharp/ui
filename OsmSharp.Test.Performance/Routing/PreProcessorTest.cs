@@ -30,16 +30,16 @@ using OsmSharp.Routing.Osm.Streams.Graphs;
 namespace OsmSharp.Test.Performance.Routing
 {
     /// <summary>
-    /// Contains test for the Live preprocessing step.
+    /// Contains test for the preprocessing step.
     /// </summary>
-    public static class LivePreProcessorTest
+    public static class PreProcessorTest
     {
         /// <summary>
-        /// Tests the Live pre-processor.
+        /// Tests the pre-processor.
         /// </summary>
         public static void Test()
         {
-            LivePreProcessorTest.TestPreprocessing("LivePreProcessor", "kempen-big.osm.pbf");
+            PreProcessorTest.TestPreprocessing("PreProcessor", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace OsmSharp.Test.Performance.Routing
             var progress = new OsmStreamFilterProgress();
             progress.RegisterSource(new PBFOsmStreamSource(stream));
 
-            var performanceInfo = new PerformanceInfoConsumer("LivePreProcessor", 20000);
+            var performanceInfo = new PerformanceInfoConsumer("PreProcessor", 20000);
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
@@ -62,7 +62,7 @@ namespace OsmSharp.Test.Performance.Routing
 
             // read from the OSM-stream.
             var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
+            var targetData = new GraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();
 
@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Performance.Routing
 
             performanceInfo.Stop();
             // make sure the router is still here after GC to note the memory difference.
-            OsmSharp.Logging.Log.TraceEvent("LivePreProcessor", Logging.TraceEventType.Information, memoryData.ToString());
+            OsmSharp.Logging.Log.TraceEvent("PreProcessor", Logging.TraceEventType.Information, memoryData.ToString());
             memoryData = null;
 
             GC.Collect();

@@ -43,7 +43,7 @@
 //            IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
 //        {
 //            // initialize the router.
-//            return Router.CreateLiveFrom(data, basicRouter, interpreter);
+//            return Router.CreateFrom(data, basicRouter, interpreter);
 //        }
 
 //        /// <summary>

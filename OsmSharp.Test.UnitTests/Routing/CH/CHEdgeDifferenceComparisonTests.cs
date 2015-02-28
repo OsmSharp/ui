@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
     /// Tests the CH Sparse routing against a reference implementation.
     /// </summary>
     [TestFixture]
-    public class CHEdgeDifferenceComparisonTests : RoutingComparisonTests
+    public class CHEdgeDifferenceComparisonTests : RoutingComparisonTestsBase
     {
         /// <summary>
         /// Holds the data.

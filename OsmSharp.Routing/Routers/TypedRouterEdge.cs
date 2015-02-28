@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// A version of the typedrouter using edges of type Edge.
     /// </summary>
-    internal class TypedRouterLiveEdge : TypedRouter<Edge>
+    internal class TypedRouterEdge : TypedRouter<Edge>
     {
         /// <summary>
         /// Creates a new type router using edges of type Edge.
@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterLiveEdge(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public TypedRouterEdge(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
                            IRoutingAlgorithm<Edge> router)
             :base(graph, interpreter, router)
         {

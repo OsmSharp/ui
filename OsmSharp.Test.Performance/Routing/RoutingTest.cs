@@ -37,14 +37,14 @@ namespace OsmSharp.Test.Performance.Routing
     /// <summary>
     /// Contains test for the CH routing.
     /// </summary>
-    public static class LiveRoutingTest
+    public static class RoutingTest
     {
         /// <summary>
         /// Tests routing from a raw OSM-file.
         /// </summary>
         public static void Test()
         {
-            LiveRoutingTest.Test("LiveRouting",
+            RoutingTest.Test("Routing",
                 "kempen-big.osm.pbf", 50);
         }
 
@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// </summary>
         public static void Test(Stream stream, int testCount)
         {
-            LiveRoutingTest.Test("LiveRouting",
+            RoutingTest.Test("Routing",
                 stream, testCount);
         }
 
@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Performance.Routing
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", routeFile));
             var stream = testFile.OpenRead();
 
-            LiveRoutingTest.Test(name, stream, testCount);
+            RoutingTest.Test(name, stream, testCount);
 
             stream.Dispose();
         }
@@ -87,12 +87,12 @@ namespace OsmSharp.Test.Performance.Routing
             var interpreter = new OsmRoutingInterpreter();
             var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             data.DropVertexIndex();
-            var targetData = new LiveGraphOsmStreamTarget(data, interpreter, tagsIndex);
+            var targetData = new GraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
             data.RebuildVertexIndex();
 
-            LiveRoutingTest.Test(data, vehicle, testCount);
+            RoutingTest.Test(data, vehicle, testCount);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Performance.Routing
         /// <param name="stream"></param>
         public static void TestSerialized(Stream stream, bool lazy = true)
         {
-            var routingSerializer = new LiveEdgeSerializer();
+            var routingSerializer = new EdgeSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
 
             uint vertex = 1;
@@ -123,16 +123,16 @@ namespace OsmSharp.Test.Performance.Routing
             graphCopy.CopyFrom(data);
             var dataCopy = new DynamicGraphRouterDataSource<Edge>(graphCopy, data.TagsIndex);
 
-            LiveRoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
+            RoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
         }
 
         public static void Test(IBasicRouterDataSource<Edge> data, Vehicle vehicle, int testCount)
         {
-            // creates the live edge router.
+            // creates the edge router.
             var router = new Dykstra();
             var interpreter = new OsmRoutingInterpreter();
 
-            var performanceInfo = new PerformanceInfoConsumer("LiveRouting");
+            var performanceInfo = new PerformanceInfoConsumer("Routing");
             performanceInfo.Start();
             performanceInfo.Report("Routing {0} routes...", testCount);
 
@@ -156,14 +156,14 @@ namespace OsmSharp.Test.Performance.Routing
                 var progress = (float)System.Math.Round(((double)(totalCount - testCount) / (double)totalCount) * 100);
                 if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("LiveRouting", TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("Routing", TraceEventType.Information,
                         "Routing... {0}%", progress);
                     latestProgress = progress;
                 }
             }
             performanceInfo.Stop();
 
-            OsmSharp.Logging.Log.TraceEvent("LiveRouting", OsmSharp.Logging.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("Routing", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("{0}/{1} routes successfull!", successCount, totalCount));
         }
     }

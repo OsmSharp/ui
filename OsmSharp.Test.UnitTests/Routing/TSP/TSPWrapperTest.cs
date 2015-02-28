@@ -111,7 +111,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         {
             // create the router.
             var interpreter = new OsmRoutingInterpreter();
-            var router = Router.CreateLiveFrom(
+            var router = Router.CreateFrom(
                 new XmlOsmStreamSource(dataStream), interpreter);
 
             // read the source files.
