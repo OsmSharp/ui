@@ -162,9 +162,6 @@
     <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />
     <Compile Include="Geo\Streams\Kml\KmlFeatureStreamSource.cs" />
     <Compile Include="IClonable.cs" />
-    <Compile Include="IO\ByteCache\DiskByteCache.cs" />
-    <Compile Include="IO\ByteCache\IByteCache.cs" />
-    <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
     <Compile Include="IO\CappedStream.cs" />
     <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
