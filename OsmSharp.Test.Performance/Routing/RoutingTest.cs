@@ -27,10 +27,9 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Graph.Serialization;
 
 namespace OsmSharp.Test.Performance.Routing
 {

@@ -18,8 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.PreProcessing;
+using OsmSharp.Routing.Graphs.PreProcessing;
 using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Routing

@@ -27,12 +27,11 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Routing.Osm.Streams.Graphs
+namespace OsmSharp.Routing.Osm.Streams
 {
     /// <summary>
     /// A data processing target containing edges with the orignal OSM-tags and their original OSM-direction.

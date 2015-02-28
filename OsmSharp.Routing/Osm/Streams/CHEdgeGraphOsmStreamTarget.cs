@@ -34,7 +34,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using System;
 using System.Collections.Generic;
 
-namespace OsmSharp.Routing.Osm.Streams.Graphs
+namespace OsmSharp.Routing.Osm.Streams
 {
     /// <summary>
     /// A pre-processing target for OSM-data to a CH data structure.

@@ -27,11 +27,10 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

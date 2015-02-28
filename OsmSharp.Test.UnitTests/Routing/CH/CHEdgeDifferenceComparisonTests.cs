@@ -27,7 +27,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 using System.Collections.Generic;
 using System.Reflection;
 

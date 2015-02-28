@@ -20,7 +20,7 @@ using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Logging;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;

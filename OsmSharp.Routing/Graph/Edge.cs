@@ -20,7 +20,7 @@ using OsmSharp.Collections.Arrays;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 
-namespace OsmSharp.Routing.Osm.Graphs
+namespace OsmSharp.Routing.Graph
 {
     /// <summary>
     /// A simple edge containing the orignal OSM-tags and a flag indicating the direction of this edge relative to the 

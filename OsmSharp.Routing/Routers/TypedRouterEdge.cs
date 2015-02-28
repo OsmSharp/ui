@@ -18,7 +18,7 @@
 
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.Routers
 {

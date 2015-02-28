@@ -26,12 +26,12 @@ using ProtoBuf;
 using ProtoBuf.Meta;
 using System.Collections.Generic;
 
-namespace OsmSharp.Routing.Osm.Graphs.Serialization
+namespace OsmSharp.Routing.Graph.Serialization
 {
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class RoutingDataSourceSerializer : RoutingDataSourceSerializer<Edge>
+    public class RoutingDataSourceSerializer : RoutingDataSourceSerializerBase<Edge>
     {
         /// <summary>
         /// Returns the version string.

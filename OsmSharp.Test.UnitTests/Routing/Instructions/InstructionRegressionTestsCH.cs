@@ -28,9 +28,9 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {

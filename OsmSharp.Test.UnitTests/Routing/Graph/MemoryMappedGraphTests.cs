@@ -19,7 +19,6 @@
 using NUnit.Framework;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.WinForms.UI;
 using System;
 using System.Collections.Generic;

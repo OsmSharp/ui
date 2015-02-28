@@ -34,7 +34,7 @@ using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.Collections.Generic;
 
-namespace OsmSharp.Routing.Osm.Streams.Graphs
+namespace OsmSharp.Routing.Osm.Streams
 {
     /// <summary>
     /// Data Processor Target to fill a dynamic graph object.

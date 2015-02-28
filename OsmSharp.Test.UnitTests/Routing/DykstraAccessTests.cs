@@ -23,12 +23,11 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Routing;
 using System.Reflection;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

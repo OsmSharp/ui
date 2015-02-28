@@ -24,10 +24,9 @@ using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
+using OsmSharp.Routing.Graph.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 using System.IO;
 
 namespace OsmSharp.Test.Performance.Routing

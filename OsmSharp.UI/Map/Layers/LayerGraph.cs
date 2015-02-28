@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;

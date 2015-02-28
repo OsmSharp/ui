@@ -19,9 +19,8 @@
 using NUnit.Framework;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 using System;
 using System.IO;
 using System.Reflection;

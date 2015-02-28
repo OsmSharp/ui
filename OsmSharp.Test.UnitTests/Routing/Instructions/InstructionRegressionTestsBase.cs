@@ -27,13 +27,12 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Instructions;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Units.Distance;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections;
 using OsmSharp.Units.Time;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -53,16 +52,16 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            RouterDataSource<Edge> memoryData =
+            var memoryData =
                 new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            GraphOsmStreamTarget target_data = new GraphOsmStreamTarget(
+            var targetData = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex, null, false);
-            XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(
+            var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceName));
-            OsmStreamFilterSort sorter = new OsmStreamFilterSort();
+            var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             IRoutingAlgorithm<Edge> basicRouter = new Dykstra();
             return Router.CreateFrom(memoryData, basicRouter, interpreter);

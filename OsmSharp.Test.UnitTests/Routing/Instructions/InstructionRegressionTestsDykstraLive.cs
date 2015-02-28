@@ -24,13 +24,12 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
 using System.Collections.Generic;
 using OsmSharp.Collections;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {

@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.CH.Serialization
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class CHEdgeSerializer : RoutingDataSourceSerializer<CHEdgeData>
+    public class CHEdgeSerializer : RoutingDataSourceSerializerBase<CHEdgeData>
     {
         /// <summary>
         /// Returns the version string.

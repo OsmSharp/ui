@@ -24,8 +24,7 @@ using OsmSharp.Osm.Streams.Filters;
 using System;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Performance.Routing
 {

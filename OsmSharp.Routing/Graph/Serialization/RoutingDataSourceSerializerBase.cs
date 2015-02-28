@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// Abstract representation of a routing data source serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public abstract class RoutingDataSourceSerializer<TEdgeData>
+    public abstract class RoutingDataSourceSerializerBase<TEdgeData>
         where TEdgeData : struct, IGraphEdgeData
     {
         #region Versioning

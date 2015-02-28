@@ -25,7 +25,6 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Time;

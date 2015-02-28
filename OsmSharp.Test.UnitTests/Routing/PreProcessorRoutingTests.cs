@@ -22,8 +22,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.PreProcessing;
+using OsmSharp.Routing.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Test.Unittests.Routing
