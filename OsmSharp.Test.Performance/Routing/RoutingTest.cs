@@ -107,7 +107,7 @@ namespace OsmSharp.Test.Performance.Routing
             uint significantVertices = 0;
             while(vertex < data.VertexCount)
             {
-                var edges = data.GetEdges(vertex).ToKeyValuePairs();
+                var edges =  data.GetEdges(vertex).ToKeyValuePairs();
                 if(edges.Length > 2)
                 {
                     significantVertices++;

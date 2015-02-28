@@ -1413,7 +1413,7 @@ namespace OsmSharp.Routing.CH
         {
             var lowestWeight = float.MaxValue;
             data = new CHEdgeData();
-            var edges = graph.GetEdges(from, to);
+            var edges =  graph.GetEdges(from, to);
             while(edges.MoveNext())
             {
                 var edgeData = edges.EdgeData;
@@ -1450,7 +1450,7 @@ namespace OsmSharp.Routing.CH
         {
             var lowestWeight = float.MaxValue;
             data = null;
-            var edges = graph.GetEdges(from, to);
+            var edges =  graph.GetEdges(from, to);
             while (edges.MoveNext())
             {
                 var edgeData = edges.EdgeData;
@@ -1603,25 +1603,25 @@ namespace OsmSharp.Routing.CH
                 coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            var arcs = graph.GetEdges(searchBox);
+            var edges =  graph.GetEdges(searchBox);
 
             if (!verticesOnly)
             { // find both closest arcs and vertices.
                 // loop over all.
-                foreach (var arc in arcs)
+                foreach (var arc in edges)
                 {
-                    if (!arcs.EdgeData.RepresentsNeighbourRelations)
+                    if (!edges.EdgeData.RepresentsNeighbourRelations)
                     { // skip this edge, does not represent neighbours.
                         continue;
                     }
-                    if (!graph.TagsIndex.Contains(arcs.EdgeData.Tags))
+                    if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
                     { // skip this edge, no valid tags found.
                         continue;
                     }
                     TagsCollectionBase arcTags = null;
                     if (matcher != null)
                     {
-                        arcTags = graph.TagsIndex.Get(arcs.EdgeData.Tags);
+                        arcTags = graph.TagsIndex.Get(edges.EdgeData.Tags);
                     }
                     //bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     //if (canBeTraversed)
@@ -1630,12 +1630,12 @@ namespace OsmSharp.Routing.CH
                     float fromLatitude, fromLongitude;
                     float toLatitude, toLongitude;
                     double distance;
-                    if (graph.GetVertex(arcs.Vertex1, out fromLatitude, out fromLongitude) &&
-                        graph.GetVertex(arcs.Vertex2, out toLatitude, out toLongitude))
+                    if (graph.GetVertex(edges.Vertex1, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(edges.Vertex2, out toLatitude, out toLongitude))
                     { // return the vertex.
                         var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                         distance = coordinate.DistanceReal(fromCoordinates).Value;
-                        var coordinates = arcs.Intermediates;
+                        var coordinates = edges.Intermediates;
                         ICoordinate[] coordinatesArray = null;
                         if (coordinates != null)
                         {
@@ -1645,13 +1645,13 @@ namespace OsmSharp.Routing.CH
                         if (distance < distanceEpsilon.Value)
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                distance, arcs.Vertex1);
+                                distance, edges.Vertex1);
                             if (matcher == null ||
                                 (pointTags == null || pointTags.Count == 0) ||
                                 matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
                                 closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex1);
+                                    distance, edges.Vertex1);
                                 break;
                             }
                         }
@@ -1659,16 +1659,16 @@ namespace OsmSharp.Routing.CH
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller for the without match.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                distance, arcs.Vertex1);
+                                distance, edges.Vertex1);
                         }
                         if (distance < closestWithMatch.Distance)
                         { // the distance is smaller for the with match.
                             if (matcher == null ||
                                 (pointTags == null || pointTags.Count == 0) ||
-                                matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arcs.EdgeData.Tags)))
+                                matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(edges.EdgeData.Tags)))
                             {
                                 closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex1);
+                                    distance, edges.Vertex1);
                             }
                         }
                         var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
@@ -1677,7 +1677,7 @@ namespace OsmSharp.Routing.CH
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller for the without match.
                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                distance, arcs.Vertex2);
+                                distance, edges.Vertex2);
                         }
                         if (distance < closestWithMatch.Distance)
                         { // the distance is smaller for the with match.
@@ -1686,14 +1686,14 @@ namespace OsmSharp.Routing.CH
                                 matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
                                 closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex2);
+                                    distance, edges.Vertex2);
                             }
                         }
 
                         // search along the line.
                         var distanceTotal = 0.0;
                         var previous = fromCoordinates;
-                        var arcValueValueCoordinates = arcs.Intermediates;
+                        var arcValueValueCoordinates = edges.Intermediates;
                         if (arcValueValueCoordinates != null)
                         { // calculate distance along all coordinates.
                             var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
@@ -1733,7 +1733,7 @@ namespace OsmSharp.Routing.CH
                                             double position = distancePoint / distanceTotal;
 
                                             closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                                distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                                distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                         }
                                     }
                                     if (distance < closestWithMatch.Distance)
@@ -1753,7 +1753,7 @@ namespace OsmSharp.Routing.CH
                                             {
 
                                                 closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                    distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                                    distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                             }
                                         }
                                     }
@@ -1782,7 +1782,7 @@ namespace OsmSharp.Routing.CH
                                     var position = distancePoint / distanceTotal;
 
                                     closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                        distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                 }
                             }
                             if (distance < closestWithMatch.Distance)
@@ -1801,7 +1801,7 @@ namespace OsmSharp.Routing.CH
                                     {
 
                                         closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                            distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                            distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                     }
                                 }
                             }
@@ -1813,21 +1813,21 @@ namespace OsmSharp.Routing.CH
             else
             { // only find closest vertices.
                 // loop over all.
-                while(arcs.MoveNext())
+                while(edges.MoveNext())
                 {
-                    if (!arcs.EdgeData.IsContracted)
+                    if (!edges.EdgeData.IsContracted)
                     {
                         float fromLatitude, fromLongitude;
                         float toLatitude, toLongitude;
-                        if (graph.GetVertex(arcs.Vertex1, out fromLatitude, out fromLongitude) &&
-                            graph.GetVertex(arcs.Vertex2, out toLatitude, out toLongitude))
+                        if (graph.GetVertex(edges.Vertex1, out fromLatitude, out fromLongitude) &&
+                            graph.GetVertex(edges.Vertex2, out toLatitude, out toLongitude))
                         {
                             var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
                             var distance = coordinate.DistanceReal(vertexCoordinate).Value;
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance found is closer.
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex1);
+                                    distance, edges.Vertex1);
                             }
 
                             vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
@@ -1835,10 +1835,10 @@ namespace OsmSharp.Routing.CH
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance found is closer.
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex2);
+                                    distance, edges.Vertex2);
                             }
 
-                            var arcValueValueCoordinates = arcs.Intermediates;
+                            var arcValueValueCoordinates = edges.Intermediates;
                             if (arcValueValueCoordinates != null)
                             { // search over intermediate points.
                                 var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
@@ -1851,7 +1851,7 @@ namespace OsmSharp.Routing.CH
                                     if (distance < closestWithoutMatch.Distance)
                                     { // the distance found is closer.
                                         closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                            distance, arcs.Vertex1, arcs.Vertex2, idx, arcs.EdgeData, arcValueValueCoordinatesArray);
+                                            distance, edges.Vertex1, edges.Vertex2, idx, edges.EdgeData, arcValueValueCoordinatesArray);
                                     }
                                 }
                             }

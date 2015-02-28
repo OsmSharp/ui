@@ -513,7 +513,7 @@ namespace OsmSharp.Routing.Graph.Routing
             }
 
             // start OsmSharp.Routing.
-            var edges = graph.GetEdges(Convert.ToUInt32(current.Vertex));
+            var edges =  graph.GetEdges(Convert.ToUInt32(current.Vertex));
             visits[current.Vertex] = current;
 
             // loop until target is found and the route is the shortest!

@@ -123,12 +123,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         }
 
         /// <summary>
-        /// Tests if the raw router preserves tags on arcs/ways.
+        /// Tests if the raw router preserves tags on ways.
         /// </summary>
         [Test]
-        public void TestCHEdgeDifferenceArcTags()
+        public void TestCHEdgeDifferenceEdgeTags()
         {
-            this.DoTestArcTags();
+            this.DoTestEdgeTags();
         }
 
         /// <summary>

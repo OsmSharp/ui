@@ -61,8 +61,8 @@ namespace OsmSharp.Routing.Routers
         /// <returns></returns>
         protected override List<Edge<CHEdgeData>> GetNeighboursUndirected(long vertex1)
         {
-            var arcs = this.Data.GetDirectNeighbours(Convert.ToUInt32(vertex1)).ToList();
-            return arcs.KeepUncontracted();
+            var edges =  this.Data.GetDirectNeighbours(Convert.ToUInt32(vertex1)).ToList();
+            return edges.KeepUncontracted();
         }
 
 
@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Routers
         {
             var lowestWeight = float.MaxValue;
             data = new CHEdgeData();
-            var edges = graph.GetEdges(from, to);
+            var edges =  graph.GetEdges(from, to);
             while (edges.MoveNext())
             {
                 var edgeData = edges.EdgeData;
@@ -115,7 +115,7 @@ namespace OsmSharp.Routing.Routers
         {
             var lowestWeight = float.MaxValue;
             data = null;
-            var edges = graph.GetEdges(from, to);
+            var edges =  graph.GetEdges(from, to);
             while (edges.MoveNext())
             {
                 var edgeData = edges.EdgeData;

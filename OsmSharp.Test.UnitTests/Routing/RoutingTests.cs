@@ -143,7 +143,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Tests that a router preserves tags that are located on ways/arcs in the route.
         /// </summary>
-        protected void DoTestArcTags()
+        protected void DoTestEdgeTags()
         {
             var interpreter = new OsmRoutingInterpreter();
             var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");

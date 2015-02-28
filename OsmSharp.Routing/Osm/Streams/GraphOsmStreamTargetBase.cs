@@ -619,7 +619,7 @@ namespace OsmSharp.Routing.Osm.Streams
             }
             else
             {
-                var edges = graph.GetEdges(from, to);
+                var edges =  graph.GetEdges(from, to);
                 while(edges.MoveNext())
                 {
                     if(edges.Neighbour == to)

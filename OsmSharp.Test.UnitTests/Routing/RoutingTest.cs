@@ -118,7 +118,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestArcTags()
         {
-            this.DoTestArcTags();
+            this.DoTestEdgeTags();
         }
 
         /// <summary>

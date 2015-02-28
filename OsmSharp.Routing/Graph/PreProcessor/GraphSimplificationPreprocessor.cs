@@ -278,7 +278,7 @@ namespace OsmSharp.Routing.Graphs.PreProcessing
             float latestProgress = -1;
             while (vertex <= _graph.VertexCount)
             {
-                var edges = _graph.GetEdges(vertex).ToList();
+                var edges =  _graph.GetEdges(vertex).ToList();
                 if (edges != null && edges.Count > 0)
                 { // ok, this vertex has edges.
                     if (nextCompressedPosition != vertex)

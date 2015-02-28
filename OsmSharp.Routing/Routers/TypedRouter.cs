@@ -710,13 +710,13 @@ namespace OsmSharp.Routing.Routers
 
             if (vertex1 > 0)
             { // only check 'real' vertices for any neighbours, intermediates will not have extra neighbours.
-                var arcs = this.GetNeighboursUndirected(vertex1);
+                var edges =  this.GetNeighboursUndirected(vertex1);
 
                 // remove duplicates.
                 // arcs = arcs.Distinct(new ArcEqualityComparer()).ToArray();
 
                 // check if arcs left.
-                if(arcs.Count == 0)
+                if(edges.Count == 0)
                 { // no neighbours for sure.
                     return neighbours;
                 }
@@ -741,14 +741,14 @@ namespace OsmSharp.Routing.Routers
                             visitList.GetPathTo(other).Reverse()).Reverse();
 
                         // match path with edge.
-                        for (int idx = 0; idx < arcs.Count; idx++)
+                        for (int idx = 0; idx < edges.Count; idx++)
                         {
-                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Neighbour);
-                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Neighbour, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, edges[idx].Neighbour);
+                            if (this.MatchArc(vehicle, vertex1, coordinates, edges[idx].Neighbour, path))
                             { // arc matches, remove from array.
-                                var newArcs = new List<Edge<TEdgeData>>(arcs);
+                                var newArcs = new List<Edge<TEdgeData>>(edges);
                                 newArcs.RemoveAt(idx);
-                                arcs = newArcs;
+                                edges = newArcs;
                                 break;
                             }
                         }
@@ -772,21 +772,21 @@ namespace OsmSharp.Routing.Routers
                             visitList.GetPathTo(vertex1).Reverse());
 
                         // match path with edge.
-                        for (int idx = 0; idx < arcs.Count; idx++)
+                        for (int idx = 0; idx < edges.Count; idx++)
                         {
-                            var coordinates = this.GetEdgeShape(vehicle, vertex1, arcs[idx].Neighbour);
-                            if (this.MatchArc(vehicle, vertex1, coordinates, arcs[idx].Neighbour, path))
+                            var coordinates = this.GetEdgeShape(vehicle, vertex1, edges[idx].Neighbour);
+                            if (this.MatchArc(vehicle, vertex1, coordinates, edges[idx].Neighbour, path))
                             { // arc matches, remove from array.
-                                var newArcs = new List<Edge<TEdgeData>>(arcs);
+                                var newArcs = new List<Edge<TEdgeData>>(edges);
                                 newArcs.RemoveAt(idx);
-                                arcs = newArcs;
+                                edges = newArcs;
                                 break;
                             }
                         }
                     }
                 }
 
-                foreach (var arc in arcs)
+                foreach (var arc in edges)
                 {
                     if (arc.Neighbour == previousVertex)
                     { // this is an arc to the previous point.
@@ -955,12 +955,12 @@ namespace OsmSharp.Routing.Routers
             else
             { // one of the vertices was a resolved vertex.
                 // edge should be in the resolved graph.
-                var arcs = graph.GetEdges(vertex1);
-                foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
+                var edges =  graph.GetEdges(vertex1);
+                foreach (var edge in edges)
                 {
-                    if (arc.Key == vertex2)
+                    if (edge.Key == vertex2)
                     {
-                        return arc.Value;
+                        return edge.Value;
                     }
                 }
             }
@@ -1008,16 +1008,16 @@ namespace OsmSharp.Routing.Routers
             else
             { // one of the vertices was a resolved vertex.
                 // edge should be in the resolved graph.
-                var arcs = graph.GetEdges(vertex1);
-                foreach (KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc in arcs)
+                var edges =  graph.GetEdges(vertex1);
+                foreach (var edge in edges)
                 {
-                    if (arc.Key == vertex2)
+                    if (edge.Key == vertex2)
                     {
-                        if (arc.Value.Coordinates == null)
+                        if (edge.Value.Coordinates == null)
                         {
                             return null;
                         }
-                        return new CoordinateArrayCollection<GeoCoordinateSimple>(arc.Value.Coordinates).ToArray();
+                        return new CoordinateArrayCollection<GeoCoordinateSimple>(edge.Value.Coordinates).ToArray();
                     }
                 }
             }
@@ -2163,21 +2163,21 @@ namespace OsmSharp.Routing.Routers
                 settled.Add(current.VertexId);
 
                 // get the neighbours.
-                var arcs = graph.GetEdges(current.VertexId);
+                var edges =  graph.GetEdges(current.VertexId);
                 float latitudeCurrent, longitudeCurrent;
                 graph.GetVertex(current.VertexId, out latitudeCurrent, out longitudeCurrent);
-                for (int idx = 0; idx < arcs.Length; idx++)
+                for (int idx = 0; idx < edges.Length; idx++)
                 {
-                    var arc = arcs[idx];
-                    if (!settled.Contains(arc.Key) && (arc.Key < 0 || arc.Key == vertex2))
+                    var edge = edges[idx];
+                    if (!settled.Contains(edge.Key) && (edge.Key < 0 || edge.Key == vertex2))
                     {
                         float latitudeNeighbour, longitudeNeighbour;
-                        graph.GetVertex(arc.Key, out latitudeNeighbour, out longitudeNeighbour);
+                        graph.GetVertex(edge.Key, out latitudeNeighbour, out longitudeNeighbour);
 
-                        double arcWeight = vehicle.Weight(_dataGraph.TagsIndex.Get(arc.Value.Tags),
+                        double arcWeight = vehicle.Weight(_dataGraph.TagsIndex.Get(edge.Value.Tags),
                             new GeoCoordinate(latitudeCurrent, longitudeCurrent), new GeoCoordinate(latitudeNeighbour, longitudeNeighbour));
 
-                        visit_list.UpdateVertex(new PathSegment<long>(arc.Key, arcWeight + current.Weight, current));
+                        visit_list.UpdateVertex(new PathSegment<long>(edge.Key, arcWeight + current.Weight, current));
                     }
                 }
             }

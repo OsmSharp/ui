@@ -446,7 +446,7 @@ namespace OsmSharp.Routing.Graph
         {
             if (_readonly) { throw new Exception("Graph is readonly."); }
 
-            var edges = this.GetEdges(vertex);
+            var edges =  this.GetEdges(vertex);
             while (edges.MoveNext())
             {
                 this.RemoveEdge(vertex, edges.Neighbour);

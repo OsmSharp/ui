@@ -628,7 +628,7 @@ namespace OsmSharp.Routing.Graph
 
             for (uint currentVertex = 1; currentVertex <= _graph.VertexCount; currentVertex++)
             {
-                var edges = _graph.GetEdges(currentVertex);
+                var edges =  _graph.GetEdges(currentVertex);
                 while (edges.MoveNext())
                 {
                     uint neighbour = edges.Neighbour;

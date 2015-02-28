@@ -712,7 +712,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graphDataSource.AddEdge(vertex3, vertex1, edge, null);
 
             // {RectF:[(3,71326552867889,51,048498214689),(3,73326552867889,51,068498214689)]}
-            var edges = graphDataSource.GetEdges(new GeoCoordinateBox(
+            var edges =  graphDataSource.GetEdges(new GeoCoordinateBox(
                 new GeoCoordinate(51.068498214689, 3.73326552867889),
                 new GeoCoordinate(51.048498214689, 3.71326552867889)));
 
@@ -791,7 +791,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graphDataSource.AddEdge(vertex3, vertex1, edge, shape2);
 
             // {RectF:[(3,71326552867889,51,048498214689),(3,73326552867889,51,068498214689)]}
-            var edges = graphDataSource.GetEdges(new GeoCoordinateBox(
+            var edges =  graphDataSource.GetEdges(new GeoCoordinateBox(
                 new GeoCoordinate(51.068498214689, 3.73326552867889),
                 new GeoCoordinate(51.048498214689, 3.71326552867889)));
 
@@ -893,7 +893,7 @@ namespace OsmSharp.Test.Unittests.Routing
             graphDataSource.AddEdge(vertex1, vertex2, edgeData, shape1);
             graphDataSource.AddEdge(vertex3, vertex1, edgeData, shape2);
 
-            var edges = new List<Edge<Edge>>(graphDataSource.GetEdges(1));
+            var edges =  new List<Edge<Edge>>(graphDataSource.GetEdges(1));
             Assert.AreEqual(2, edges.Count);
             foreach(var edge in edges)
             {
