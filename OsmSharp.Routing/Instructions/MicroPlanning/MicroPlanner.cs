@@ -239,6 +239,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="message"></param>
         private void Plan(MicroPlannerMessage message)
         {
+            _succes = false;
+            _error = false;
             // add the message to the stack.
             _messagesStack.Add(message);
 
