@@ -155,10 +155,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _messages = new List<MicroPlannerMessage>(messages);
 
-            if(this.Planner.ReportFinal(this, messages))
-            { // yes, this machine is the one that has success!
-                this.IsSuccesfull = true;
-            }
+            this.Planner.ReportFinal(this, messages);
         }
 
         /// <summary>
