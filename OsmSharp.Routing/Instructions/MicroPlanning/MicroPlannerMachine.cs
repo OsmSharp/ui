@@ -19,6 +19,8 @@
 using System.Collections.Generic;
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.StateMachines;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -46,6 +48,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _planner = planner;
             _priority = priority;
+
+            this.IsSuccesfull = false;
         }
 
         /// <summary>
@@ -99,6 +103,51 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         public abstract void Succes();
 
         /// <summary>
+        /// Gets the succesfull state.
+        /// </summary>
+        public bool IsSuccesfull { get; set; }
+
+        /// <summary>
+        /// Returns the boundingbox for the current message consumed in this machine.
+        /// </summary>
+        /// <returns></returns>
+        protected GeoCoordinateBox GetBoxForCurrentMessages()
+        {
+            if (this.FinalMessages.Count == 0) { return null; }
+
+            var route = this.FinalMessages[0].Route;
+
+            // get first and last point.
+            AggregatedPoint firstPoint = null;
+            if (this.FinalMessages[0] is MicroPlannerMessagePoint)
+            { // machine started on a point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessagePoint).Point;
+            }
+            else
+            { // get the previous point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessageArc).Arc.Previous;
+            }
+            AggregatedPoint lastPoint = null;
+            if (this.FinalMessages[this.FinalMessages.Count - 1] is MicroPlannerMessagePoint)
+            { // machine ended on a point.
+                lastPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            }
+            else
+            { // machine ended on an arc.
+                lastPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessageArc).Arc.Next;
+            }
+
+            // build the boundingbox.
+            var points = new List<GeoCoordinate>();
+            for (int segmentIdx = firstPoint.SegmentIdx; segmentIdx <= lastPoint.SegmentIdx; segmentIdx++)
+            {
+                var segment = route.Segments[segmentIdx];
+                points.Add(new GeoCoordinate(segment.Latitude, segment.Longitude));
+            }
+            return new GeoCoordinateBox(points.ToArray());
+        }
+
+        /// <summary>
         /// Called when a final state is reached.
         /// </summary>
         /// <param name="messages"></param>
@@ -106,7 +155,10 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _messages = new List<MicroPlannerMessage>(messages);
 
-            this.Planner.ReportFinal(this, messages);
+            if(this.Planner.ReportFinal(this, messages))
+            { // yes, this machine is the one that has success!
+                this.IsSuccesfull = true;
+            }
         }
 
         /// <summary>

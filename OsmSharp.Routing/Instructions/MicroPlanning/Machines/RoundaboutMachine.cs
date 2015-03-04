@@ -19,6 +19,7 @@
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.StateMachines;
+using OsmSharp.Routing.ArcAggregation.Output;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
@@ -132,7 +133,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         {
             if (test is MicroPlannerMessagePoint)
             {
-                MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
+                var point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
                     if (!(machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags))
@@ -149,6 +150,17 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         public override void Succes()
         {
+            // get first point.
+            AggregatedPoint firstPoint = null;
+            if (this.FinalMessages[0] is MicroPlannerMessagePoint)
+            { // machine started on a point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessagePoint).Point;
+            }
+            else
+            { // get the previous point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessageArc).Arc.Previous;
+            }
+
             // get the last arc and the last point.
             var latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
             var latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
@@ -177,7 +189,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             metaData["street"] = latestPoint.Next.Tags;
             metaData["pois"] = latestPoint.Points;
             metaData["type"] = "roundabout";
-            this.Planner.SentencePlanner.GenerateInstruction(metaData, latestPoint.EntryIdx, box, latestPoint.Points);
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, firstPoint.SegmentIdx, latestPoint.SegmentIdx, box, latestPoint.Points);
         }
 
         /// <summary>

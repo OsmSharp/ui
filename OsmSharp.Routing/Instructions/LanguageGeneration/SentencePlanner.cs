@@ -65,15 +65,16 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// Generates an instruction from the given meta data and given pois.
         /// </summary>
         /// <param name="metaData"></param>
-        /// <param name="segmentIdx"></param>
+        /// <param name="firstSegmentIdx"></param>
+        /// <param name="lastSegmentIdx"></param>
         /// <param name="box"></param>
         /// <param name="pois"></param>
-        public void GenerateInstruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox box, List<PointPoi> pois)
+        public void GenerateInstruction(Dictionary<string, object> metaData, int firstSegmentIdx, int lastSegmentIdx, GeoCoordinateBox box, List<PointPoi> pois)
         {
             string text;
             if (_generator.Generate(metaData, out text))
             { // add the instruction to the instructions list.
-                _instructions.Add(new Instruction(metaData, segmentIdx, box, text, pois));
+                _instructions.Add(new Instruction(metaData, firstSegmentIdx, lastSegmentIdx, box, text, pois));
             }
         }
     }

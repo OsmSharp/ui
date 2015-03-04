@@ -110,7 +110,7 @@ namespace OsmSharp.Routing.Navigation
             {
                 if (this.NextInstruction != null)
                 { // the next instruction exists.
-                    RouteSegment entry = _route.Segments[this.NextInstruction.SegmentIdx];
+                    var entry = _route.Segments[this.NextInstruction.LastSegmentIdx];
                     if (entry != null)
                     { // entry found.
                         return new GeoCoordinate(entry.Latitude, entry.Longitude);
@@ -288,8 +288,8 @@ namespace OsmSharp.Routing.Navigation
             _nextInstructionIdx = -1;
             for (int instructionIdx = 0; instructionIdx < _instructions.Count; instructionIdx++)
             {
-                Instruction instruction = _instructions[instructionIdx];
-                if (instruction.SegmentIdx > entryIdx)
+                var instruction = _instructions[instructionIdx];
+                if (instruction.LastSegmentIdx > entryIdx)
                 { // stop here!
                     _nextInstructionIdx = instructionIdx;
                     break;
@@ -303,9 +303,9 @@ namespace OsmSharp.Routing.Navigation
             // calculate the distance to the next instruction.
             previous = _currentRoutePosition;
             var distance = 0.0;
-            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].SegmentIdx && idx < _route.Segments.Length; idx++)
+            for (int idx = entryIdx + 1; idx <= _instructions[_nextInstructionIdx].LastSegmentIdx && idx < _route.Segments.Length; idx++)
             {
-                GeoCoordinate next = (new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude));
+                var next = (new GeoCoordinate(_route.Segments[idx].Latitude, _route.Segments[idx].Longitude));
                 distance = distance + previous.DistanceReal(next).Value;
                 previous = next;
             }

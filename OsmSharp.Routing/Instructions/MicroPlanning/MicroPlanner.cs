@@ -120,6 +120,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Creates and plans a new message.
         /// </summary>
+        /// <param name="route"></param>
         /// <param name="aggregated"></param>
         private void PlanNewMessage(Route route, Aggregated aggregated)
         {
@@ -224,16 +225,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         }
 
         /// <summary>
-        /// Boolean holding planning succes flag.
-        /// </summary>
-        private bool _succes = false;
-
-        /// <summary>
-        /// Boolean holding planning error flag.
-        /// </summary>
-        private bool _error = false;
-
-        /// <summary>
         /// Plan the given message.
         /// </summary>
         /// <param name="message"></param>
@@ -250,19 +241,12 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 { // only use machines that are still valid!
                     machine.Consume(message);
 
-                    if (_succes)
-                    {
-                        break;
-                    }
-
-                    if (_error)
+                    if (machine.IsSuccesfull)
                     {
                         break;
                     }
                 }
             }
-            _succes = false;
-            _error = false;
         }
 
         /// <summary>
@@ -289,35 +273,35 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             this.ResetMessagesStack(true);
 
             // tell the machine again it was successfull.
+            machine.IsSuccesfull = true;
             machine.Succes();
 
             // re-initialize the machines.
             _machines.Clear();
             this.InitializeMachines(_machines);
-
-            _succes = true;
         }
 
         /// <summary>
         /// Checks the machine for success.
         /// </summary>
-        internal void CheckMachine(MicroPlannerMachine machine)
+        internal bool CheckMachine(MicroPlannerMachine machine)
         {
             // check the other machines and their priorities.
-            int priority = machine.Priority;
+            var priority = machine.Priority;
             foreach (var other_machine in _machines)
             {
                 if (!_invalidMachines.Contains(other_machine))
                 {
                     if (other_machine.Priority > priority)
                     { // not sure this machine's final state is actually the final state.
-                        return;
+                        return false;
                     }
                 }
             }
 
             // no other machines exist with higher priority.
             this.Success(machine);
+            return true;
         }
 
         /// <summary>
@@ -325,13 +309,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// </summary>
         /// <param name="machine"></param>
         /// <param name="messages"></param>
-        internal void ReportFinal(MicroPlannerMachine machine, IList<MicroPlannerMessage> messages)
+        internal bool ReportFinal(MicroPlannerMachine machine, IList<MicroPlannerMessage> messages)
         {
             if (_latestFinal == _messagesStack.Count - 1)
             { // check if a machine with the same match length has higher priority.
                 if (_latestMachine.Priority >= machine.Priority)
                 { // the current machine has the same match length and has higher or the same priority.
-                    return;
+                    return false;
                 }
             }
 
@@ -343,7 +327,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             _validMachines.Add(machine);
 
             // check and see if all other machines with higher priority are invalid.
-            this.CheckMachine(machine);
+            return this.CheckMachine(machine);
         }
 
         /// <summary>
