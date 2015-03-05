@@ -681,6 +681,31 @@ namespace OsmSharp.Routing
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a string representation of this segment.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if(this.Vehicle != null && this.Name != null)
+            {
+                return string.Format("Segment: {0} for {1} @{2}s {3}m",
+                    this.Name, this.Vehicle, this.Time, this.Distance);
+            }
+            else if(this.Vehicle != null)
+            {
+                return string.Format("Segment: for {0} @{1}s {2}m",
+                    this.Vehicle, this.Time, this.Distance);
+            }
+            else if (this.Name != null)
+            {
+                return string.Format("Segment: {0} @{1}s {2}m",
+                    this.Name, this.Time, this.Distance);
+            }
+            return string.Format("Segment: @{0}s {1}m",
+                this.Time, this.Distance);
+        }
     }
 
     /// <summary>
