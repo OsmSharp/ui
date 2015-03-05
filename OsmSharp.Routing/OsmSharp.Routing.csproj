@@ -107,6 +107,7 @@
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\DutchLanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\EnglishLanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\Defaults\GermanLanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\ILanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\LanguageGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\SentencePlanner.cs" />
