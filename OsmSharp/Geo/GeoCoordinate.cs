@@ -118,6 +118,47 @@ namespace OsmSharp.Math.Geo
         }
 
         /// <summary>
+        /// Estimates the distance between location1 and location2 in meters.
+        /// Accuracy decreases with distance.
+        /// </summary>
+        /// <param name="location1"></param>
+        /// <param name="location2"></param>
+        /// <returns></returns>
+        public static double DistanceEstimateInMeter(ICoordinate location1,
+            ICoordinate location2)
+        {
+            return GeoCoordinate.DistanceEstimateInMeter(location1.Latitude, location1.Longitude,
+                location2.Latitude, location2.Longitude);
+        }
+
+        /// <summary>
+        /// Estimates the distance between lat1/lon1 and lat2/lon2 in meters.
+        /// Accuracy decreases with distance.
+        /// </summary>
+        /// <param name="latitude1"></param>
+        /// <param name="longitude1"></param>
+        /// <param name="latitude2"></param>
+        /// <param name="longitude2"></param>
+        /// <returns></returns>
+        public static double DistanceEstimateInMeter(double latitude1, double longitude1, 
+            double latitude2, double longitude2)
+        {
+            var radiusEarth = Constants.RadiusOfEarth;
+
+            var lat1Rad = (latitude1 / 180d) * System.Math.PI;
+            var lon1Rad = (longitude1 / 180d) * System.Math.PI;
+            var lat2Rad = (latitude2 / 180d) * System.Math.PI;
+            var lon2Rad = (longitude2 / 180d) * System.Math.PI;
+
+            var x = (lon2Rad - lon1Rad) * System.Math.Cos((lat1Rad + lat2Rad) / 2.0);
+            var y = lat2Rad - lat1Rad;
+
+            var m = System.Math.Sqrt(x * x + y * y) * radiusEarth;
+
+            return m;
+        }
+
+        /// <summary>
         /// Estimates the distance between this point and the given point in meters.
         /// Accuracy decreases with distance.
         /// </summary>
@@ -125,19 +166,8 @@ namespace OsmSharp.Math.Geo
         /// <returns></returns>
         public Meter DistanceEstimate(GeoCoordinate point)
         {
-            Meter radius_earth = Constants.RadiusOfEarth;
-
-            double lat1_rad = (this.Latitude / 180d) * System.Math.PI;
-            double lon1_rad = (this.Longitude / 180d) * System.Math.PI;
-            double lat2_rad = (point.Latitude / 180d) * System.Math.PI;
-            double lon2_rad = (point.Longitude / 180d) * System.Math.PI;
-
-            double x = (lon2_rad - lon1_rad) * System.Math.Cos((lat1_rad + lat2_rad) / 2.0);
-            double y = lat2_rad - lat1_rad;
-
-            double m = System.Math.Sqrt(x * x + y * y) * radius_earth.Value;
-
-            return m;
+            return GeoCoordinate.DistanceEstimateInMeter(this.Latitude, this.Longitude,
+                point.Latitude, point.Longitude);
         }
 
         /// <summary>
