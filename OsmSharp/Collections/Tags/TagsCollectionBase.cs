@@ -249,6 +249,36 @@ namespace OsmSharp.Collections.Tags
             }
         }
 
+        /// <summary>
+        /// Converts this tags collection to a dictionary with string keys and object values.
+        /// </summary>
+        /// <remarks>Duplicate keys are overwritten by the last occuring value.</remarks>
+        /// <returns></returns>
+        public Dictionary<string, object> ToStringObjectDictionary()
+        {
+            var dic = new Dictionary<string, object>();
+            foreach(var tag in this)
+            {
+                dic[tag.Key] = tag.Value;
+            }
+            return dic;
+        }
+
+        /// <summary>
+        /// Converts this tags collection to a dictionary with string keys and string values.
+        /// </summary>
+        /// <remarks>Duplicate keys are overwritten by the last occuring value.</remarks>
+        /// <returns></returns>
+        public Dictionary<string, string> ToStringStringDictionary()
+        {
+            var dic = new Dictionary<string, string>();
+            foreach (var tag in this)
+            {
+                dic[tag.Key] = tag.Value;
+            }
+            return dic;
+        }
+
         #region IEnumerable<Tag>
 
         /// <summary>
