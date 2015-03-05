@@ -21,6 +21,7 @@ using OsmSharp.Math.Automata;
 using OsmSharp.Math.StateMachines;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -145,6 +146,42 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 points.Add(new GeoCoordinate(segment.Latitude, segment.Longitude));
             }
             return new GeoCoordinateBox(points.ToArray());
+        }
+
+        /// <summary>
+        /// Returns a collection of tags that has not changed int the messages consumed in this machine.
+        /// </summary>
+        /// <returns></returns>
+        protected TagsCollectionBase GetConstantTagsForCurrentMessages()
+        {
+            TagsCollectionBase constantTags = null;
+            foreach(var message in this.FinalMessages)
+            {
+                if(message is MicroPlannerMessageArc)
+                {
+                    var tags = (message as MicroPlannerMessageArc).Arc.Tags;
+                    if(tags == null)
+                    { // one of the tags collection is empty, intersection is also empty.
+                        return new TagsCollection();
+                    }
+                    else
+                    { // calculate intersection.
+                        if(constantTags == null)
+                        { // first tags.
+                            constantTags = tags;
+                        }
+                        else
+                        { // calculate intersection.
+                            constantTags.Intersect(tags);
+                            if(constantTags.Count == 0)
+                            { // no intersection.
+                                return constantTags;
+                            }
+                        }
+                    }
+                }
+            }
+            return constantTags;
         }
 
         /// <summary>

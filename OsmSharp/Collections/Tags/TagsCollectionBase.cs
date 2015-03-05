@@ -229,6 +229,26 @@ namespace OsmSharp.Collections.Tags
             return collection;
         }
 
+        /// <summary>
+        /// Intersects this tags collection with the given one. Removes all tags from this collection that do not occur on the given one.
+        /// </summary>
+        /// <param name="tags"></param>
+        public void Intersect(TagsCollectionBase tags)
+        {
+            var toRemove = new List<Tag>();
+            foreach (var tag in this)
+            {
+                if(!tags.Contains(tag))
+                {
+                    toRemove.Add(tag);
+                }
+            }
+            foreach(var tag in toRemove)
+            {
+                this.RemoveKeyValue(tag);
+            }
+        }
+
         #region IEnumerable<Tag>
 
         /// <summary>
@@ -299,7 +319,6 @@ namespace OsmSharp.Collections.Tags
 
         #endregion
 
-        
         #region Equals
 
         /// <summary>
