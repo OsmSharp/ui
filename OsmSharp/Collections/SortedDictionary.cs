@@ -35,9 +35,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace System.Collections.Generic
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// Sorted dictionary.

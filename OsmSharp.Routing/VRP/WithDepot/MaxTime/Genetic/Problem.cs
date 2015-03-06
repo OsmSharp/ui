@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,14 +15,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-//using OsmSharp.Math.VRP.MultiSalesman.Problems;
-using OsmSharp.Units.Time;
-using OsmSharp.Math.TSP.Problems;
+
+using OsmSharp.Collections;
 using OsmSharp.Math.VRP.Core;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
 {
@@ -114,7 +110,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
             NearestNeighbours10 result = _neighbours[v];
             if (result == null)
             {
-                SortedDictionary<double, List<int>> neighbours = new SortedDictionary<double, List<int>>();
+                var neighbours = new SortedDictionary<double, List<int>>();
                 for (int customer = 0; customer < this.Size; customer++)
                 {
                     if (customer != v)

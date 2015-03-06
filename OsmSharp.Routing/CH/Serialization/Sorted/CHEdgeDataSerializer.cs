@@ -17,8 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Ionic.Zlib;
+using OsmSharp.Collections;
 using OsmSharp.Collections.Coordinates.Collections;
-using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Collections.Tags.Serializer.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
