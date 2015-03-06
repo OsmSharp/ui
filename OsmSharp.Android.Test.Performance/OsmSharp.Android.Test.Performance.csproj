@@ -23,6 +23,7 @@
     <MandroidI18n />
     <AndroidStoreUncompressedFileExtensions />
     <JavaOptions />
+    <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -39,6 +39,8 @@ namespace OsmSharp.Android.Test.Performance
 		{
 			base.OnCreate (bundle);
 
+
+
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
@@ -83,6 +85,8 @@ namespace OsmSharp.Android.Test.Performance
 
             this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
+            this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
             //this.TestRendering("OsmSharp.Android.Test.Performance.default.map");
@@ -118,6 +122,33 @@ namespace OsmSharp.Android.Test.Performance
             //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
             //        embeddedResource), true, 1000);
+        }
+
+        /// <summary>
+        /// Executes routing performance tests including the resolving code.
+        /// </summary>
+        private void TestRoutingResolved(string embeddedResource)
+        {
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 1 route.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), true, 1);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 2 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), true, 2);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 10 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), true, 10);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 100 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), true, 100);
         }
 
         /// <summary>

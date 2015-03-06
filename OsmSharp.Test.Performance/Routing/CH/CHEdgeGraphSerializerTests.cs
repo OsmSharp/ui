@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
                 source, new OsmRoutingInterpreter(), Vehicle.Car);
 
-            //(data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
+            (data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
 
             //var graphCopy = new DirectedGraph<CHEdgeData>();
             //graphCopy.CopyFrom(data);
