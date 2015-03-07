@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Performance
                 //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.CH.CHRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), true);
-                Routing.CH.CHRoutingResolveTest.TestSerializedResolved(new FileInfo("test.routing").OpenRead(), box, true, 250);
+                Routing.CH.CHRoutingResolveTest.TestSerializedResolved(new FileInfo("test.routing").OpenRead(), box, false, 1000);
                 //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();

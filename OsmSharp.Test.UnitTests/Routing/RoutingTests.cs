@@ -367,7 +367,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 float latitude, longitude;
                 if (data.GetVertex((uint)idx, out latitude, out longitude))
                 {
-                    RouterPoint point = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    var point = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
                     Assert.AreEqual(idx, (point as RouterPoint).Id);
                 }
             }
