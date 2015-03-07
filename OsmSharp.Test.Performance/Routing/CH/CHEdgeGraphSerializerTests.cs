@@ -39,7 +39,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static DynamicGraphRouterDataSource<CHEdgeData> Test()
         {
-            return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "belgium-latest.osm.pbf");
+            return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "kempen-big.osm.pbf");
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
                 source, new OsmRoutingInterpreter(), Vehicle.Car);
 
-            //(data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
+            (data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
 
             //var graphCopy = new DirectedGraph<CHEdgeData>();
             //graphCopy.CopyFrom(data);

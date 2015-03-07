@@ -80,8 +80,9 @@ namespace OsmSharp.Android.Test.Performance
             //    new GeoCoordinate(51.30720, 4.89820)), 1);
             //}
 
+            this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+            //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
@@ -118,6 +119,42 @@ namespace OsmSharp.Android.Test.Performance
             //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
             //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
             //        embeddedResource), true, 1000);
+        }
+
+        /// <summary>
+        /// Executes routing performance tests.
+        /// </summary>
+        private void TestRoutingResolved(string embeddedResource)
+        {
+            var box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
+
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 1 route.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 1);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 2 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 2);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 10 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 10);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 100 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 100);
+            //Log.TraceEvent("Test", TraceEventType.Information,
+            //    "Testing: 1000 routes.");
+            //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            //        embeddedResource), box, true, 1000);
         }
 
         /// <summary>
