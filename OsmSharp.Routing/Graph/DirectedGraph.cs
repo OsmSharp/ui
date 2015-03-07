@@ -1076,7 +1076,7 @@ namespace OsmSharp.Routing.Graph
             var vertexArray = new MemoryMappedHugeArrayUInt32(file, (vertexLength + 1) * VERTEX_SIZE, (vertexLength + 1) * VERTEX_SIZE, bufferSize / 4, cacheSize * 4);
             position = position + ((vertexLength + 1) * VERTEX_SIZE * 4);
             var vertexCoordinateArray = new MappedHugeArray<GeoCoordinateSimple, float>(
-                new MemoryMappedHugeArraySingle(file, (vertexLength + 1) * 2, (vertexLength + 1) * 2, bufferSize, cacheSize),
+                new MemoryMappedHugeArraySingle(file, (vertexLength + 1) * 2, (vertexLength + 1) * 2, bufferSize / 4, cacheSize * 4),
                     2, (array, idx, coordinate) =>
                     {
                         array[idx] = coordinate.Latitude;

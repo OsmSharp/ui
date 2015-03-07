@@ -129,14 +129,14 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHRouting", TraceEventType.Information,
-                        "Routing... {0}%", progress);
+                        "Resolving... {0}%", progress);
                     latestProgress = progress;
                 }
             }
             performanceInfo.Stop();
 
             OsmSharp.Logging.Log.TraceEvent("CHRouting", OsmSharp.Logging.TraceEventType.Information,
-                string.Format("{0}/{1} routes successfull!", successCount, totalCount));
+                string.Format("{0}/{1} resolves successfull!", successCount, totalCount));
         }
     }
 }
