@@ -150,11 +150,11 @@ namespace OsmSharp.Android.Test.Performance
             OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     embeddedResource), box, true, 100);
-            //Log.TraceEvent("Test", TraceEventType.Information,
-            //    "Testing: 1000 routes.");
-            //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
-            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
-            //        embeddedResource), box, true, 1000);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 1000 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 1000);
         }
 
         /// <summary>

@@ -45,6 +45,10 @@ namespace OsmSharp.Test.Performance
         {
             Native.Initialize();
 
+            var box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
+
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(
@@ -73,7 +77,7 @@ namespace OsmSharp.Test.Performance
                 //Tags.Collections.TagsTableCollectionIndexTests.Test();
                 //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-                // test the routing preprocessor.
+                // test routing.
                 //Routing.PreProcessorTest.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.GraphFlatFileSerializerTests.Test();
@@ -85,7 +89,8 @@ namespace OsmSharp.Test.Performance
                 //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.CH.CHRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), true);
-                Routing.CH.CHEdgeGraphSerializerTests.Test();
+                Routing.CH.CHRoutingResolveTest.TestSerializedResolved(new FileInfo("test.routing").OpenRead(), box, true, 250);
+                //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();
 
