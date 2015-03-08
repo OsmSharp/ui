@@ -1649,13 +1649,13 @@ namespace OsmSharp.Routing.CH
                                 closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff), 
                                     new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex1);
+                                    distance, edges.Vertex1);
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
                                     closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arcs.Vertex1);
+                                        distance, edges.Vertex1);
                                     break;
                                 }
                             }
@@ -1665,16 +1665,16 @@ namespace OsmSharp.Routing.CH
                                 closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
                                     new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex1);
+                                    distance, edges.Vertex1);
                             }
                             if (distance < closestWithMatch.Distance)
                             { // the distance is smaller for the with match.
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arcs.EdgeData.Tags)))
+                                    matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(edges.EdgeData.Tags)))
                                 {
                                     closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arcs.Vertex1);
+                                        distance, edges.Vertex1);
                                 }
                             }
                         }
@@ -1690,13 +1690,13 @@ namespace OsmSharp.Routing.CH
                                 closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
                                     new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex2);
+                                    distance, edges.Vertex2);
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
                                     closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arcs.Vertex2);
+                                        distance, edges.Vertex2);
                                     break;
                                 }
                             }
@@ -1707,7 +1707,7 @@ namespace OsmSharp.Routing.CH
                                 closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
                                     new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                    distance, arcs.Vertex2);
+                                    distance, edges.Vertex2);
                             }
                             if (distance < closestWithMatch.Distance)
                             { // the distance is smaller for the with match.
@@ -1716,14 +1716,14 @@ namespace OsmSharp.Routing.CH
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
                                     closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                        distance, arcs.Vertex2);
+                                        distance, edges.Vertex2);
                                 }
                             }
                         }
 
                         // search along the line.
                         var previous = fromCoordinate;
-                        var intermediates = arcs.Intermediates;
+                        var intermediates = edges.Intermediates;
                         var intermediatesBox = new GeoCoordinateBox(fromCoordinate, toCoordinate);
                         var coordinatesArray = emtpyCoordinates;
                         if (intermediates != null)
@@ -1783,7 +1783,7 @@ namespace OsmSharp.Routing.CH
                                                 closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
                                                     new GeoCoordinate(coordinate - diff));
                                                 closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                                    distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                                    distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                             }
                                         }
                                         if (distance < closestWithMatch.Distance)
@@ -1814,7 +1814,7 @@ namespace OsmSharp.Routing.CH
                                                 {
 
                                                     closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                        distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                                        distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                                 }
                                             }
                                         }
@@ -1861,7 +1861,7 @@ namespace OsmSharp.Routing.CH
                                         closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
                                             new GeoCoordinate(coordinate - diff));
                                         closestWithoutMatch = new SearchClosestResult<CHEdgeData>(
-                                            distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                            distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                     }
                                 }
 
@@ -1892,7 +1892,7 @@ namespace OsmSharp.Routing.CH
                                             matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                         {
                                             closestWithMatch = new SearchClosestResult<CHEdgeData>(
-                                                distance, arcs.Vertex1, arcs.Vertex2, position, arcs.EdgeData, coordinatesArray);
+                                                distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                         }
                                     }
                                 }

@@ -24,9 +24,10 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
 using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Vehicles;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -95,7 +96,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             CHRoutingResolveTest.TestResolved(data, testCount, box);
         }
 
-        public static void TestResolved(DynamicGraphRouterDataSource<CHEdgeData> data, int testCount, GeoCoordinateBox box)
+        public static void TestResolved(RouterDataSource<CHEdgeData> data, int testCount, GeoCoordinateBox box)
         {
             var router = Router.CreateCHFrom(data, new CHRouter(), new OsmRoutingInterpreter());
 

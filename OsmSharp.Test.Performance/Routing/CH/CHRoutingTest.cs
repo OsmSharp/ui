@@ -218,7 +218,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 string.Format("{0}/{1} routes successfull!", successCount, totalCount));
         }
 
-        public static void TestResolved(DynamicGraphRouterDataSource<CHEdgeData> data, int testCount, GeoCoordinateBox box)
+        public static void TestResolved(RouterDataSource<CHEdgeData> data, int testCount, GeoCoordinateBox box)
         {
             var router = Router.CreateCHFrom(data, new CHRouter(), new OsmRoutingInterpreter());
 
