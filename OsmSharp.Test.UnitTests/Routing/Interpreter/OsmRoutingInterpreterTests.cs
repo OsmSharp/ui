@@ -6,6 +6,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.Interpreter
 {

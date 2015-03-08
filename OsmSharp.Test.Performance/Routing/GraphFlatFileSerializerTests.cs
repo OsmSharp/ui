@@ -24,10 +24,9 @@ using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
+using OsmSharp.Routing.Graph.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 using System.IO;
 
 namespace OsmSharp.Test.Performance.Routing
@@ -69,12 +68,12 @@ namespace OsmSharp.Test.Performance.Routing
 
             var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
-            var graph = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            var routingSerializer = new EdgeSerializer();
+            var graph = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var routingSerializer = new RoutingDataSourceSerializer();
 
             var memoryMappedGraph = new Graph<Edge>(1024);
             var coordinates = new HugeCoordinateIndex(1024);
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(memoryMappedGraph, tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex, coordinates);
             targetData.RegisterSource(progress);
             targetData.Pull();

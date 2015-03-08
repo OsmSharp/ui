@@ -18,6 +18,7 @@
 
 using NUnit.Framework;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Speed;
 
 namespace OsmSharp.Test.Unittests.Routing

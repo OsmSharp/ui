@@ -25,8 +25,8 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Time;
 using System.Reflection;
@@ -48,13 +48,13 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<Edge> BuildDykstraDataSource(
+        public RouterDataSource<Edge> BuildDykstraDataSource(
             IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new ReferenceGraphTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -72,7 +72,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public Router BuildDykstraRouter(IBasicRouterDataSource<Edge> data,
+        public Router BuildDykstraRouter(IRoutingAlgorithmData<Edge> data,
             IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
         {
             // initialize the router.
@@ -141,7 +141,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="data"></param>
         /// <param name="referenceRouter"></param>
         /// <param name="router"></param>
-        protected void TestCompareAll<TEdgeData>(IBasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
+        protected void TestCompareAll<TEdgeData>(IRoutingAlgorithmData<TEdgeData> data, Router referenceRouter, Router router)
             where TEdgeData : IGraphEdgeData
         {       
             // loop over all nodes and resolve their locations.

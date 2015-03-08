@@ -23,10 +23,9 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Vehicles;
 using System.IO;
 
 namespace OsmSharp.Test.Performance.Routing.CH
@@ -49,7 +48,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// Tests the CH serializer.
         /// </summary>
         /// <returns>A stream to the file that was serialized.</returns>
-        public static Stream Test(DynamicGraphRouterDataSource<CHEdgeData> data)
+        public static Stream Test(RouterDataSource<CHEdgeData> data)
         {
             return CHEdgeGraphFileStreamTargetTests.TestSerialization("CHSerializer", "kempen-big.osm.pbf", data);
         }
@@ -73,7 +72,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             return CHEdgeGraphFileStreamTargetTests.TestSerialization(name, pbfFile, data);
         }
 
-        public static Stream TestSerialization(string name, string pbfFile, DynamicGraphRouterDataSource<CHEdgeData> data)
+        public static Stream TestSerialization(string name, string pbfFile, RouterDataSource<CHEdgeData> data)
         {
             var testOutputFile = new FileInfo(@"test.routing");
             testOutputFile.Delete();

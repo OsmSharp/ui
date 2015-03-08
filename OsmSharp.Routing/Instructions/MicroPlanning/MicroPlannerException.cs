@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,19 +21,25 @@ using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerException : Exception
+    /// <summary>
+    /// A microplanner exception.
+    /// </summary>
+    public class MicroPlannerException : Exception
     {
         /// <summary>
         /// Creates a new microplanner exception.
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="messages_stack"></param>
-        public MicroPlannerException(string message, List<MicroPlannerMessage> messages_stack)
+        /// <param name="messagesStack"></param>
+        public MicroPlannerException(string message, List<MicroPlannerMessage> messagesStack)
             :base(message)
         {
-            this.MessagesStack = messages_stack;
+            this.MessagesStack = messagesStack;
         }
 
+        /// <summary>
+        /// All messages on the stack at the time of the exception.
+        /// </summary>
         public List<MicroPlannerMessage> MessagesStack { get; private set; }
     }
 }

@@ -20,8 +20,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
@@ -364,10 +364,10 @@ namespace OsmSharp.UI.Map
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         /// <returns></returns>
-        public LayerDynamicGraph AddLayerGraph(IBasicRouterDataSource<Edge> dataSource,
+        public LayerGraph AddLayerGraph(IRoutingAlgorithmData<Edge> dataSource,
             StyleInterpreter styleInterpreter)
         {
-            var layerGraph = new LayerDynamicGraph(dataSource, styleInterpreter);
+            var layerGraph = new LayerGraph(dataSource, styleInterpreter);
             this.AddLayer(layerGraph);
             return layerGraph;
         }

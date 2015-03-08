@@ -39,6 +39,8 @@ namespace OsmSharp.Android.Test.Performance
 		{
 			base.OnCreate (bundle);
 
+
+
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
@@ -83,6 +85,8 @@ namespace OsmSharp.Android.Test.Performance
             this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+
+            this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
@@ -129,7 +133,6 @@ namespace OsmSharp.Android.Test.Performance
             var box = new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820));
-
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 1 route.");
             OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(

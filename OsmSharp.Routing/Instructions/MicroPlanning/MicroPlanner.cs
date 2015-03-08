@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Instructions.MicroPlanning.Machines;
 using OsmSharp.Routing.Interpreter;
@@ -42,7 +42,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _interpreter = interpreter;
 
-            this.InitializeMachines();
+            _machines = new List<MicroPlannerMachine>();
+            this.InitializeMachines(_machines);
             this.InitializeMessagesStack();
 
             this.SentencePlanner = new SentencePlanner(languageGenerator);
@@ -62,7 +63,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// The scentence planner for this micro planner.
         /// </summary>
-        internal SentencePlanner SentencePlanner
+        public SentencePlanner SentencePlanner
         {
             get;
             private set;
@@ -76,8 +77,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Plans all the messages in the aggregated 
         /// </summary>
+        /// <param name="route"></param>
         /// <param name="p"></param>
-        public List<Instruction> Plan(AggregatedPoint p)
+        public List<Instruction> Plan(Route route, AggregatedPoint p)
         {
             // set the current aggregated object.
             _current = p;
@@ -88,7 +90,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 while (_current != null)
                 {
                     // plan the current message.
-                    this.PlanNewMessage(_current);
+                    this.PlanNewMessage(route, _current);
 
                     // get the next object.
                     _current = _current.GetNext();
@@ -119,20 +121,20 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// Creates and plans a new message.
         /// </summary>
         /// <param name="aggregated"></param>
-        private void PlanNewMessage(Aggregated aggregated)
+        private void PlanNewMessage(Route route, Aggregated aggregated)
         {
             // create the message.
             MicroPlannerMessage message = null;
             if (aggregated is AggregatedPoint)
             {
-                MicroPlannerMessagePoint point = new MicroPlannerMessagePoint();
+                var point = new MicroPlannerMessagePoint(route);
                 point.Point = aggregated as AggregatedPoint;
 
                 message = point;
             }
             else if (aggregated is AggregatedArc)
             {
-                MicroPlannerMessageArc arc = new MicroPlannerMessageArc();
+                var arc = new MicroPlannerMessageArc(route);
                 arc.Arc = aggregated as AggregatedArc;
 
                 message = arc;
@@ -152,14 +154,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Initializes the list of machines.
         /// </summary>
-        private void InitializeMachines()
+        protected virtual void InitializeMachines(List<MicroPlannerMachine> machines)
         {
-            _machines = new List<MicroPlannerMachine>();
-            _machines.Add(new TurnMachine(this));
-            _machines.Add(new PoiMachine(this));
-            _machines.Add(new PoiWithTurnMachine(this));
-            _machines.Add(new ImmidateTurnMachine(this));
-            _machines.Add(new RoundaboutMachine(this));
+            machines.Add(new TurnMachine(this));
+            machines.Add(new PoiMachine(this));
+            machines.Add(new PoiWithTurnMachine(this));
+            machines.Add(new ImmidateTurnMachine(this));
+            machines.Add(new RoundaboutMachine(this));
         }
 
         /// <summary>
@@ -242,7 +243,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             _messagesStack.Add(message);
 
             // put the message through the machine.
-            foreach (MicroPlannerMachine machine in _machines)
+            foreach (var machine in _machines)
             {
                 if (!_invalidMachines.Contains(machine)
                     && !_validMachines.Contains(machine))
@@ -291,7 +292,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             machine.Succes();
 
             // re-initialize the machines.
-            this.InitializeMachines();
+            _machines.Clear();
+            this.InitializeMachines(_machines);
 
             _succes = true;
         }
@@ -303,7 +305,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             // check the other machines and their priorities.
             int priority = machine.Priority;
-            foreach (MicroPlannerMachine other_machine in _machines)
+            foreach (var other_machine in _machines)
             {
                 if (!_invalidMachines.Contains(other_machine))
                 {

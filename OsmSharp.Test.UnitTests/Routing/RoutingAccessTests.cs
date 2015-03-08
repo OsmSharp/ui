@@ -28,6 +28,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
 using NUnit.Framework;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -44,7 +45,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
+        public abstract Router BuildRouter(IRoutingAlgorithmData<TEdgeData> data,
             IOsmRoutingInterpreter interpreter, IRoutingAlgorithm<TEdgeData> basicRouter);
 
         /// <summary>
@@ -52,13 +53,13 @@ namespace OsmSharp.Test.Unittests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
+        public abstract IRoutingAlgorithm<TEdgeData> BuildBasicRouter(IRoutingAlgorithmData<TEdgeData> data);
 
         /// <summary>
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter,
+        public abstract IRoutingAlgorithmData<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString, Vehicle vehicle);
 
         /// <summary>
@@ -364,7 +365,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected bool DoTestForVehicle(Vehicle vehicle, GeoCoordinate from, GeoCoordinate to,
             IOsmRoutingInterpreter interpreter)
         {
-            IBasicRouterDataSource<TEdgeData> data = 
+            IRoutingAlgorithmData<TEdgeData> data = 
                 this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_segments.osm", vehicle);
             IRoutingAlgorithm<TEdgeData> basicRouter = 
                 this.BuildBasicRouter(data);

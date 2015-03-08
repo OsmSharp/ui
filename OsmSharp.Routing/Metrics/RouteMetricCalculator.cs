@@ -16,14 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using OsmSharp.Routing.ArcAggregation.Output;
-using OsmSharp.Routing;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Vehicles;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Metrics
 {
@@ -53,7 +49,7 @@ namespace OsmSharp.Routing.Metrics
         /// <returns></returns>
         public Dictionary<string, double> Calculate(Route route)
         {
-            var aggregator =  new OsmSharp.Routing.ArcAggregation.ArcAggregator(_interpreter);
+            var aggregator =  new OsmSharp.Routing.Instructions.ArcAggregation.ArcAggregator(_interpreter);
             var p = aggregator.Aggregate(route);
             return this.Calculate(Vehicle.GetByUniqueName(route.Vehicle), p);
         }

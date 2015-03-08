@@ -22,9 +22,9 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Graphs.PreProcessing;
+using OsmSharp.Routing.Graphs.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -69,11 +69,11 @@ namespace OsmSharp.Test.Unittests.Routing
             var vertex3Coordinate = new GeoCoordinate(latitude, longitude);
 
             // execute pre-processor.
-            var preProcessor = new EdgePreprocessor(graph);
+            var preProcessor = new GraphSimplificationPreprocessor(graph);
             preProcessor.Start();
 
             // create router.
-            var source = new DynamicGraphRouterDataSource<Edge>(
+            var source = new RouterDataSource<Edge>(
                 graph, tagsIndex);
             var router = Router.CreateFrom(source, new OsmRoutingInterpreter());
 

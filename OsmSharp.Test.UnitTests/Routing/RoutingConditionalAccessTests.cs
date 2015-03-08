@@ -24,6 +24,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -40,7 +41,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
+        public abstract Router BuildRouter(IRoutingAlgorithmData<EdgeData> data,
             IRoutingInterpreter interpreter, IRoutingAlgorithm<EdgeData> basicRouter);
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="data"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public abstract IRoutingAlgorithm<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
+        public abstract IRoutingAlgorithm<EdgeData> BuildBasicRouter(IRoutingAlgorithmData<EdgeData> data, 
             Vehicle vehicle);
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="vehicle"></param>
         /// <param name="accessTags"></param>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter, 
+        public abstract IRoutingAlgorithmData<EdgeData> BuildData(IRoutingInterpreter interpreter, 
             Vehicle vehicle, List<KeyValuePair<string, string>> accessTags);
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestWithAccess(Vehicle vehicle, List<KeyValuePair<string, string>> accessTags)
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
+            IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
             IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -111,7 +112,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortestWithoutAccess(Vehicle vehicle, List<KeyValuePair<string, string>> access_tags)
         {
             var interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
+            IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
             IRoutingAlgorithm<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
             Router router = this.BuildRouter(
                 data, interpreter, basicRouter);
@@ -160,7 +161,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //protected void DoTestManyToMany1()
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-        //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+        //    IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter);
         //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
@@ -189,7 +190,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //protected void DoTestConnectivity1()
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-        //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+        //    IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter);
         //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
@@ -217,7 +218,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //protected void DoTestResolveAllNodes()
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-        //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+        //    IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter);
         //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
         //    IRouter<ResolvedType> router = this.BuildRouter(
         //        data, interpreter, basic_router);
@@ -238,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing
         //protected void DoTestResolveBetweenNodes()
         //{
         //    OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-        //    IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+        //    IRoutingAlgorithmData<EdgeData> data = this.BuildData(interpreter);
         //    IRoutingAlgorithm<EdgeData> basic_router = this.BuildBasicRouter(data);
 
         //    float delta = 0.001f;

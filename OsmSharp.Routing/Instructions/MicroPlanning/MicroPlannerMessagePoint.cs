@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,12 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerMessagePoint : MicroPlannerMessage
+    /// <summary>
+    /// A micro message that holds a point.
+    /// </summary>
+    public class MicroPlannerMessagePoint : MicroPlannerMessage
     {
+        /// <summary>
+        /// Creates new microplanner point.
+        /// </summary>
+        /// <param name="route"></param>
+        public MicroPlannerMessagePoint(Route route)
+            : base(route)
+        {
+
+        }
+
         /// <summary>
         /// Gets or sets the aggregated point.
         /// </summary>

@@ -16,10 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using NUnit.Framework;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
-using NUnit.Framework;
 
 namespace OsmSharp.Test.Unittests.Osm.API
 {

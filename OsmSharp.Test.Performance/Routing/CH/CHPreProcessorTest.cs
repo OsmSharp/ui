@@ -20,6 +20,7 @@ using OsmSharp.Routing;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 namespace OsmSharp.Test.Performance.Routing.CH
 {
     /// <summary>

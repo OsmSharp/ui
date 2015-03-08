@@ -39,7 +39,7 @@
 //        /// Builds a router.
 //        /// </summary>
 //        /// <returns></returns>
-//        public override Router BuildRouter(IBasicRouterDataSource<Edge> data,
+//        public override Router BuildRouter(IRoutingAlgorithmData<Edge> data,
 //            IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
 //        {
 //            // initialize the router.
@@ -51,7 +51,7 @@
 //        /// </summary>
 //        /// <param name="data"></param>
 //        /// <returns></returns>
-//        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IBasicRouterDataSource<Edge> data)
+//        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IRoutingAlgorithmData<Edge> data)
 //        {
 //            return new Dykstra(data.TagsIndex);
 //        }
@@ -62,7 +62,7 @@
 //        /// <param name="interpreter"></param>
 //        /// <param name="embeddedString"></param>
 //        /// <returns></returns>
-//        public override IBasicRouterDataSource<Edge> BuildData(IRoutingInterpreter interpreter,
+//        public override IRoutingAlgorithmData<Edge> BuildData(IRoutingInterpreter interpreter,
 //            string embeddedString)
 //        {
 //            var tagsIndex = new SimpleTagsIndex();

@@ -19,7 +19,6 @@
 using NUnit.Framework;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.WinForms.UI;
 using System;
 using System.Collections.Generic;
@@ -37,7 +36,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests argument out of range.
         /// </summary>
         [Test]
-        public void TestDynamicGraphArguments()
+        public void TestArguments()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -94,7 +93,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding a vertex.
         /// </summary>
         [Test]
-        public void TestDynamicGraphVertex()
+        public void TestVertex()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -109,8 +108,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Assert.AreEqual(52, latitude);
                 Assert.AreEqual(5, longitude);
 
-                var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
-                Assert.AreEqual(0, arcs.Length);
+                var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
+                Assert.AreEqual(0, edges.Length);
 
                 Assert.IsFalse(graph.GetVertex(100, out latitude, out longitude));
             }
@@ -120,7 +119,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 vertices.
         /// </summary>
         [Test]
-        public void TestDynamicGraphVertex10000()
+        public void TestVertex10000()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -135,8 +134,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                     Assert.AreEqual(51, latitude);
                     Assert.AreEqual(4, longitude);
 
-                    var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
-                    Assert.AreEqual(0, arcs.Length);
+                    var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
+                    Assert.AreEqual(0, edges.Length);
 
                     count--;
                 }
@@ -149,7 +148,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge.
         /// </summary>
         [Test]
-        public void TestDynamicGraphEdge()
+        public void TestEdge()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -162,15 +161,15 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                                                        Tags = 0
                                                    }, null);
 
-                var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(0, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex2, arcs[0].Key);
+                var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(0, edges[0].Value.Tags);
+                Assert.AreEqual(vertex2, edges[0].Key);
 
-                arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(0, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex1, arcs[0].Key);
+                edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(0, edges[0].Value.Tags);
+                Assert.AreEqual(vertex1, edges[0].Key);
 
                 Edge edge;
                 Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
@@ -186,7 +185,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding 10000 edges.
         /// </summary>
         [Test]
-        public void TestDynamicGraphEdge10000()
+        public void TestEdge10000()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -203,13 +202,13 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                                                            Forward = true
                                                        }, null);
 
-                    var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                    Assert.AreEqual(10000 - count + 1, arcs.Length);
+                    var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+                    Assert.AreEqual(10000 - count + 1, edges.Length);
 
-                    arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-                    Assert.AreEqual(1, arcs.Length);
-                    Assert.AreEqual(0, arcs[0].Value.Tags);
-                    Assert.AreEqual(vertex1, arcs[0].Key);
+                    edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+                    Assert.AreEqual(1, edges.Length);
+                    Assert.AreEqual(0, edges[0].Value.Tags);
+                    Assert.AreEqual(vertex1, edges[0].Key);
 
                     count--;
                 }
@@ -220,7 +219,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding an edge and the reverse edge.
         /// </summary>
         [Test]
-        public void TestDynamicGraphEdge1()
+        public void TestEdge1()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -235,18 +234,18 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 }, null);
 
                 // test forward edge.
-                var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex2, arcs[0].Key);
-                Assert.AreEqual(true, arcs[0].Value.Forward);
+                var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(tagsId, edges[0].Value.Tags);
+                Assert.AreEqual(vertex2, edges[0].Key);
+                Assert.AreEqual(true, edges[0].Value.Forward);
 
                 // test backward edge: backward edge is added automatically.
-                arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex1, arcs[0].Key);
-                Assert.AreEqual(false, arcs[0].Value.Forward);
+                edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(tagsId, edges[0].Value.Tags);
+                Assert.AreEqual(vertex1, edges[0].Key);
+                Assert.AreEqual(false, edges[0].Value.Forward);
 
                 // add a third vertex.
                 var vertex3 = graph.AddVertex(51, 2);
@@ -258,21 +257,21 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 graph.AddEdge(vertex1, vertex3, edge, null);
 
                 // test forward edges.
-                arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(2, arcs.Length);
-                Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex2, arcs[0].Key);
-                Assert.AreEqual(true, arcs[0].Value.Forward);
-                Assert.AreEqual(tagsId, arcs[1].Value.Tags);
-                Assert.AreEqual(vertex3, arcs[1].Key);
-                Assert.AreEqual(true, arcs[1].Value.Forward);
+                edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(2, edges.Length);
+                Assert.AreEqual(tagsId, edges[0].Value.Tags);
+                Assert.AreEqual(vertex2, edges[0].Key);
+                Assert.AreEqual(true, edges[0].Value.Forward);
+                Assert.AreEqual(tagsId, edges[1].Value.Tags);
+                Assert.AreEqual(vertex3, edges[1].Key);
+                Assert.AreEqual(true, edges[1].Value.Forward);
 
                 // test backward edge: backward edge is added automatically.
-                arcs = graph.GetEdges(vertex3).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex1, arcs[0].Key);
-                Assert.AreEqual(false, arcs[0].Value.Forward);
+                edges = graph.GetEdges(vertex3).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(tagsId, edges[0].Value.Tags);
+                Assert.AreEqual(vertex1, edges[0].Key);
+                Assert.AreEqual(false, edges[0].Value.Forward);
             }
         }
 
@@ -280,7 +279,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing one edge.
         /// </summary>
         [Test]
-        public void TestDynamicGraphAddRemove1()
+        public void TestAddRemove1()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -295,18 +294,18 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 }, null);
 
                 // test forward edge.
-                var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex2, arcs[0].Key);
-                Assert.AreEqual(true, arcs[0].Value.Forward);
+                var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(tagsId, edges[0].Value.Tags);
+                Assert.AreEqual(vertex2, edges[0].Key);
+                Assert.AreEqual(true, edges[0].Value.Forward);
 
                 // remove edge again.
                 graph.RemoveEdge(vertex1, vertex2);
 
                 // check if the edge is gone.
-                arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(0, arcs.Length);
+                edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(0, edges.Length);
             }
         }
 
@@ -314,7 +313,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and removing two edges.
         /// </summary>
         [Test]
-        public void TestDynamicGraphAddRemove2()
+        public void TestAddRemove2()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -336,7 +335,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 }, null);
 
                 // test edges.
-                var edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+                var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
                 Assert.AreEqual(1, edges.Length);
                 Assert.AreEqual(tagsId, edges[0].Value.Tags);
                 Assert.AreEqual(vertex2, edges[0].Key);
@@ -373,7 +372,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests adding and remove an arbitrary number of edges.
         /// </summary>
         [Test]
-        public void TestDynamicGraphAddRemoveX()
+        public void TestAddRemoveX()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, 
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -448,7 +447,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge at the end.
         /// </summary>
         [Test]
-        public void TestDynamicGraphRemoveEnd()
+        public void TestRemoveEnd()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -494,7 +493,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the middle.
         /// </summary>
         [Test]
-        public void TestDynamicGraphRemoveMiddle()
+        public void TestRemoveMiddle()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -541,7 +540,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestDynamicGraphRemoveBegin()
+        public void TestRemoveBegin()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000, Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
             {
@@ -587,7 +586,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Test removing an edge in the beginning.
         /// </summary>
         [Test]
-        public void TestDynamicGraphRemoveAll()
+        public void TestRemoveAll()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -634,7 +633,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests removing all edges for one vertex.
         /// </summary>
         [Test]
-        public void TestDynamicGraphRemoveAllOneVertex()
+        public void TestRemoveAllOneVertex()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -678,7 +677,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests trimming the graph but edges only (all vertices are stull used).
         /// </summary>
         [Test]
-        public void TestDynamicGraphCompressEdges()
+        public void TestCompressEdges()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -779,7 +778,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests trimming the graph but edges only (all vertices are stull used).
         /// </summary>
         [Test]
-        public void TestDynamicGraphCompressVertices()
+        public void TestCompressVertices()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))
@@ -828,7 +827,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
         /// Tests overwrite an edge with a reverse edge.
         /// </summary>
         [Test]
-        public void TestDynamicGraphAddReverse()
+        public void TestAddReverse()
         {
             using (var graph = new Graph<Edge>(new MemoryMappedStream(new MemoryStream()), 1000,
                 Edge.MapFromDelegate, Edge.MapToDelegate, Edge.SizeUints))

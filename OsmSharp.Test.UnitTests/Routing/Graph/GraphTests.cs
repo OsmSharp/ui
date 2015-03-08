@@ -19,9 +19,8 @@
 using NUnit.Framework;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 using System;
 using System.IO;
 using System.Reflection;
@@ -107,8 +106,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             Assert.AreEqual(52, latitude);
             Assert.AreEqual(5, longitude);
 
-            var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
-            Assert.AreEqual(0, arcs.Length);
+            var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
+            Assert.AreEqual(0, edges.Length);
 
             Assert.IsFalse(graph.GetVertex(100, out latitude, out longitude));
         }
@@ -131,8 +130,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Assert.AreEqual(51, latitude);
                 Assert.AreEqual(4, longitude);
 
-                var arcs = graph.GetEdges(vertex).ToKeyValuePairs();
-                Assert.AreEqual(0, arcs.Length);
+                var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
+                Assert.AreEqual(0, edges.Length);
 
                 count--;
             }
@@ -156,15 +155,15 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                                                    Tags = 0
                                                }, null);
 
-            var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(0, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex2, arcs[0].Key);
+            var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(0, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
 
-            arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(0, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex1, arcs[0].Key);
+            edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(0, edges[0].Value.Tags);
+            Assert.AreEqual(vertex1, edges[0].Key);
 
             Edge edge;
             Assert.IsTrue(graph.GetEdge(vertex1, vertex2, out edge));
@@ -194,13 +193,13 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                                                        Forward =  true
                                                    }, null);
 
-                var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-                Assert.AreEqual(1001 - count + 1, arcs.Length);
+                var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+                Assert.AreEqual(1001 - count + 1, edges.Length);
 
-                arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-                Assert.AreEqual(1, arcs.Length);
-                Assert.AreEqual(0, arcs[0].Value.Tags);
-                Assert.AreEqual(vertex1, arcs[0].Key);
+                edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+                Assert.AreEqual(1, edges.Length);
+                Assert.AreEqual(0, edges[0].Value.Tags);
+                Assert.AreEqual(vertex1, edges[0].Key);
 
                 count--;
             }
@@ -224,18 +223,18 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             // test forward edge.
-            var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex2, arcs[0].Key);
-            Assert.AreEqual(true, arcs[0].Value.Forward);
+            var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(true, edges[0].Value.Forward);
 
             // test backward edge: backward edge is added automatically.
-            arcs = graph.GetEdges(vertex2).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex1, arcs[0].Key);
-            Assert.AreEqual(false, arcs[0].Value.Forward);
+            edges = graph.GetEdges(vertex2).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex1, edges[0].Key);
+            Assert.AreEqual(false, edges[0].Value.Forward);
 
             // add a third vertex.
             var vertex3 = graph.AddVertex(51, 2);
@@ -247,21 +246,21 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             graph.AddEdge(vertex1, vertex3, edge, null);
 
             // test forward edges.
-            arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-            Assert.AreEqual(2, arcs.Length);
-            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex2, arcs[0].Key);
-            Assert.AreEqual(true, arcs[0].Value.Forward);
-            Assert.AreEqual(tagsId, arcs[1].Value.Tags);
-            Assert.AreEqual(vertex3, arcs[1].Key);
-            Assert.AreEqual(true, arcs[1].Value.Forward);
+            edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(2, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(true, edges[0].Value.Forward);
+            Assert.AreEqual(tagsId, edges[1].Value.Tags);
+            Assert.AreEqual(vertex3, edges[1].Key);
+            Assert.AreEqual(true, edges[1].Value.Forward);
 
             // test backward edge: backward edge is added automatically.
-            arcs = graph.GetEdges(vertex3).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex1, arcs[0].Key);
-            Assert.AreEqual(false, arcs[0].Value.Forward);
+            edges = graph.GetEdges(vertex3).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex1, edges[0].Key);
+            Assert.AreEqual(false, edges[0].Value.Forward);
         }
 
         /// <summary>
@@ -282,18 +281,18 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             // test forward edge.
-            var arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-            Assert.AreEqual(1, arcs.Length);
-            Assert.AreEqual(tagsId, arcs[0].Value.Tags);
-            Assert.AreEqual(vertex2, arcs[0].Key);
-            Assert.AreEqual(true, arcs[0].Value.Forward);
+            var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(1, edges.Length);
+            Assert.AreEqual(tagsId, edges[0].Value.Tags);
+            Assert.AreEqual(vertex2, edges[0].Key);
+            Assert.AreEqual(true, edges[0].Value.Forward);
 
             // remove edge again.
             graph.RemoveEdge(vertex1, vertex2);
 
             // check if the edge is gone.
-            arcs = graph.GetEdges(vertex1).ToKeyValuePairs();
-            Assert.AreEqual(0, arcs.Length);
+            edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+            Assert.AreEqual(0, edges.Length);
         }
 
         /// <summary>
@@ -321,7 +320,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
             }, null);
 
             // test edges.
-            var edges = graph.GetEdges(vertex1).ToKeyValuePairs();
+            var edges =  graph.GetEdges(vertex1).ToKeyValuePairs();
             Assert.AreEqual(1, edges.Length);
             Assert.AreEqual(tagsId, edges[0].Value.Tags);
             Assert.AreEqual(vertex2, edges[0].Key);
@@ -847,7 +846,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 Tags = 2
             }, null);
 
-            var edges = graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+            var edges =  graph.GetEdges(vertex1, vertex2).ToKeyValuePairs();
             Assert.AreEqual(1, edges.Length);
             Assert.AreEqual(2, edges[0].Value.Tags);
             
@@ -901,7 +900,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                         Assert.AreEqual(longitude1, longitude2, 0.000001);
                     }
                 }
-                var edges = graphDeserialized.GetEdges(vertex1, vertex2).ToKeyValuePairs();
+                var edges =  graphDeserialized.GetEdges(vertex1, vertex2).ToKeyValuePairs();
                 Assert.AreEqual(1, edges.Length);
                 Assert.AreEqual(1, edges[0].Value.Tags);
             }
@@ -929,7 +928,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
+                var graphDeserialized = RouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -942,7 +941,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                         Assert.AreEqual(latitude1, latitude2, 0.000001);
                         Assert.AreEqual(longitude1, longitude2, 0.000001);
                     }
-                    var edges = graph.GetEdges(vertex).ToKeyValuePairs();
+                    var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
                     var edgesDeserialized = graphDeserialized.GetEdges(vertex).ToKeyValuePairs();
                     Assert.AreEqual(edges.Length, edgesDeserialized.Length);
                     for (int idx = 0; idx < edges.Length; idx++)
@@ -977,7 +976,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
                 // deserialize.
                 stream.Seek(0, SeekOrigin.Begin);
-                var graphDeserialized = DynamicGraphRouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
+                var graphDeserialized = RouterDataSource<Edge>.Deserialize(stream, Edge.SizeUints, Edge.MapFromDelegate, Edge.MapToDelegate, false);
 
                 // compare.
                 Assert.AreEqual(graph.VertexCount, graphDeserialized.VertexCount);
@@ -990,7 +989,7 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                         Assert.AreEqual(latitude1, latitude2, 0.000001);
                         Assert.AreEqual(longitude1, longitude2, 0.000001);
                     }
-                    var edges = graph.GetEdges(vertex).ToKeyValuePairs();
+                    var edges =  graph.GetEdges(vertex).ToKeyValuePairs();
                     var edgesDeserialized = graphDeserialized.GetEdges(vertex).ToKeyValuePairs();
                     Assert.AreEqual(edges.Length, edgesDeserialized.Length);
                     for (int idx = 0; idx < edges.Length; idx++)

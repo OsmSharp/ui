@@ -18,7 +18,8 @@
 
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -33,7 +34,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterEdge(IBasicRouterDataSource<Edge> graph, IRoutingInterpreter interpreter,
+        public TypedRouterEdge(IRoutingAlgorithmData<Edge> graph, IRoutingInterpreter interpreter,
                            IRoutingAlgorithm<Edge> router)
             :base(graph, interpreter, router)
         {

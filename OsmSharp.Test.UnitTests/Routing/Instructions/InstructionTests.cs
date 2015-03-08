@@ -22,6 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {

@@ -6,8 +6,8 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
 {
@@ -226,7 +226,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             uint vertexNoname1 = data.AddVertex((float)fromNoname.Latitude, (float)fromNoname.Longitude);
             uint vertexNoname2 = data.AddVertex((float)toNoname.Latitude, (float)toNoname.Longitude);
             data.AddEdge(vertexNoname1, vertexNoname2, new Edge()

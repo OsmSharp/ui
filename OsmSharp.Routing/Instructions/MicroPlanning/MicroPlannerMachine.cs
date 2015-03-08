@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,6 +22,9 @@ using OsmSharp.Math.StateMachines;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
+    /// <summary>
+    /// An abstract micro planner machine.
+    /// </summary>
     public abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {
         /// <summary>
@@ -37,20 +40,24 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Creates a new event machine.
         /// </summary>
-        /// <param name="initial"></param>
         /// <param name="planner"></param>
         /// <param name="priority"></param>
-        protected MicroPlannerMachine(FiniteStateMachineState<MicroPlannerMessage> initial, MicroPlanner planner, int priority)
-            :base(initial)
+        protected MicroPlannerMachine(MicroPlanner planner, int priority)
         {
             _planner = planner;
             _priority = priority;
         }
 
         /// <summary>
+        /// Builds the initial state.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract override FiniteStateMachineState<MicroPlannerMessage> BuildStates();
+
+        /// <summary>
         /// Returns the microplanner.
         /// </summary>
-        internal MicroPlanner Planner
+        public MicroPlanner Planner
         {
             get
             {
@@ -69,9 +76,15 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             }
         }
 
+        /// <summary>
+        /// Holds the consumed messages.
+        /// </summary>
 
         private IList<MicroPlannerMessage> _messages;
 
+        /// <summary>
+        /// Returns the message consumed.
+        /// </summary>
         public IList<MicroPlannerMessage> FinalMessages
         {
             get

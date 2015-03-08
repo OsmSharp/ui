@@ -24,9 +24,9 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private Dictionary<string, DynamicGraphRouterDataSource<Edge>> _data = null;
+        private Dictionary<string, RouterDataSource<Edge>> _data = null;
 
         /// <summary>
         /// Returns a new router.
@@ -54,15 +54,15 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             if (_data == null)
             {
-                _data = new Dictionary<string, DynamicGraphRouterDataSource<Edge>>();
+                _data = new Dictionary<string, RouterDataSource<Edge>>();
             }
-            DynamicGraphRouterDataSource<Edge> data = null;
+            RouterDataSource<Edge> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
                 var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
-                data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+                data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
                 var targetData = new GraphOsmStreamTarget(
                     data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car }, false);
                 var dataProcessorSource = new XmlOsmStreamSource(

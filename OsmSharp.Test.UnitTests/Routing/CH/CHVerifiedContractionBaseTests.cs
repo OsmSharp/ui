@@ -28,9 +28,9 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private DynamicGraphRouterDataSource<CHEdgeData> _data;
+        private RouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the interpreter.
@@ -90,7 +90,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
@@ -133,7 +133,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -178,7 +178,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -232,7 +232,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
+                    var route = router.Calculate(_data, _interpreter, Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
                         (fromDic[to.Neighbour] != null && route == null))
                     { // the route match!
@@ -382,7 +382,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                     // calculate the route.
                     fromDic[to.Neighbour] = router.Calculate(_data, _interpreter,
-                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null); ;
+                        Vehicle.Car, fromList, toList, double.MaxValue, null); ;
                 }
             }
         }

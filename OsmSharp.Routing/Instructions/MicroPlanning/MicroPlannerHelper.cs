@@ -16,15 +16,24 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
-    internal class MicroPlannerHelper
+    /// <summary>
+    /// Holds helper methods for microplanners.
+    /// </summary>
+    public static class MicroPlannerHelper
     {
+        /// <summary>
+        /// Returns true if the given direction can be considered 'left'.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <returns></returns>
         public static bool IsLeft(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
@@ -37,6 +46,12 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the given direction can be considered 'right'.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <returns></returns>
         public static bool IsRight(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
@@ -49,6 +64,12 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the given direction can be considered 'turning'.
+        /// </summary>
+        /// <param name="direction">The direction.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <returns></returns>
         public static bool IsTurn(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
@@ -57,20 +78,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                     return false;
             }
             return true;
-        }
-
-        public static int GetStraightOn(IList<MicroPlannerMessage> messages, IRoutingInterpreter interpreter)
-        {
-            int straight = 0;
-            foreach (MicroPlannerMessage message in messages)
-            {
-                if (message is MicroPlannerMessagePoint)
-                {
-                    MicroPlannerMessagePoint point = (message as MicroPlannerMessagePoint);
-                    straight = straight + MicroPlannerHelper.GetStraightOn(point, interpreter);
-                }
-            }
-            return straight;
         }
 
         public static int GetStraightOn(MicroPlannerMessagePoint point, IRoutingInterpreter interpreter)

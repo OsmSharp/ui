@@ -24,8 +24,7 @@ using OsmSharp.Osm.Streams.Filters;
 using System;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -61,7 +60,7 @@ namespace OsmSharp.Test.Performance.Routing
             var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
-            var memoryData = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var targetData = new GraphOsmStreamTarget(memoryData, new OsmRoutingInterpreter(), tagsIndex);
             targetData.RegisterSource(progress);
             targetData.Pull();

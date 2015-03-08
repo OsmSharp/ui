@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+
 namespace OsmSharp.Data.SQLite
 {
     /// <summary>

@@ -67,7 +67,7 @@
 //            // try to do some routing on the deserialized version.
 //            var basicRouter = new CHRouter();
 //            Router router = Router.CreateCHFrom(
-//                new DynamicGraphRouterDataSource<CHEdgeData>(sortedGraph, original.TagsIndex), basicRouter, interpreter);
+//                new RouterDataSource<CHEdgeData>(sortedGraph, original.TagsIndex), basicRouter, interpreter);
 
 //            // loop over all nodes and resolve their locations.
 //            var resolvedReference = new RouterPoint[original.VertexCount];

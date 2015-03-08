@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,11 +15,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using OsmSharp.Math.Automata;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.Automata;
 
 namespace OsmSharp.Math.StateMachines
 {
@@ -49,18 +48,30 @@ namespace OsmSharp.Math.StateMachines
         public bool Inverted { get; private set; }
 
         /// <summary>
+        /// The delegate code.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public delegate void TransitionFinishedDelegate(object message);
+
+        /// <summary>
+        /// Checks the actual condition.
+        /// </summary>
+        public TransitionFinishedDelegate Finished { get; private set; }
+
+        /// <summary>
         /// Returns true if the given event triggers a response in this transition.
         /// </summary>
         /// <param name="machine"></param>
-        /// <param name="even"></param>
+        /// <param name="message"></param>
         /// <returns></returns>
-        internal bool Match(FiniteStateMachine<EventType> machine, object even)
+        internal bool Match(FiniteStateMachine<EventType> machine, object message)
         {
             // get the value of the match.
             bool val = false;
-            foreach (FiniteStateMachineTransitionCondition<EventType> condition in this.TransitionConditions)
+            foreach (var condition in this.TransitionConditions)
             {
-                if (condition.Check(machine, even))
+                if (condition.Check(machine, message))
                 {
                     val = true;
                     break;
@@ -78,6 +89,18 @@ namespace OsmSharp.Math.StateMachines
             }
         }
 
+        /// <summary>
+        /// Notifies this transition that it was successfull.
+        /// </summary>
+        /// <param name="message"></param>
+        internal void NotifySuccessfull(object message)
+        {
+            if(this.Finished != null)
+            {
+                this.Finished(message);
+            }
+        }
+
         #region Generation
 
         /// <summary>
@@ -86,11 +109,11 @@ namespace OsmSharp.Math.StateMachines
         /// <param name="states"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="event_types"></param>
+        /// <param name="eventTypes"></param>
         /// <returns></returns>
-        public static FiniteStateMachineTransition<EventType> Generate(List<FiniteStateMachineState<EventType>> states, int start, int end, params Type[] event_types)
+        public static FiniteStateMachineTransition<EventType> Generate(List<FiniteStateMachineState<EventType>> states, int start, int end, params Type[] eventTypes)
         {
-            return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, event_types);
+            return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, eventTypes);
         }
 
         /// <summary>
@@ -99,14 +122,32 @@ namespace OsmSharp.Math.StateMachines
         /// <param name="states"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="event_type"></param>
-        /// <param name="check_delegate"></param>
+        /// <param name="eventType"></param>
+        /// <param name="checkDelegate"></param>
         /// <returns></returns>
         public static FiniteStateMachineTransition<EventType> Generate(
-            List<FiniteStateMachineState<EventType>> states, int start, int end, Type event_type,
-            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            List<FiniteStateMachineState<EventType>> states, int start, int end, Type eventType,
+            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate checkDelegate)
         {
-            return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, event_type, check_delegate);
+            return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, eventType, checkDelegate, null);
+        }
+
+        /// <summary>
+        /// Generates a non-inverted transition with an extra check-delegate!
+        /// </summary>
+        /// <param name="states"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="eventType"></param>
+        /// <param name="checkDelegate"></param>
+        /// <param name="finishedDelegate"></param>
+        /// <returns></returns>
+        public static FiniteStateMachineTransition<EventType> Generate(
+            List<FiniteStateMachineState<EventType>> states, int start, int end, Type eventType,
+            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate checkDelegate, 
+            TransitionFinishedDelegate finishedDelegate)
+        {
+            return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, eventType, checkDelegate, finishedDelegate);
         }
 
         /// <summary>
@@ -116,25 +157,28 @@ namespace OsmSharp.Math.StateMachines
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <param name="inverted"></param>
-        /// <param name="event_type"></param>
-        /// <param name="check_delegate"></param>
+        /// <param name="eventType"></param>
+        /// <param name="checkDelegate"></param>
+        /// <param name="finishedDelegate"></param>
         /// <returns></returns>
         public static FiniteStateMachineTransition<EventType> Generate(
-            List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, Type event_type,
-            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, Type eventType,
+            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate checkDelegate,
+            TransitionFinishedDelegate finishedDelegate)
         {
-            List<FiniteStateMachineTransitionCondition<EventType>> conditions = new List<FiniteStateMachineTransitionCondition<EventType>>();
-
+            var conditions = new List<FiniteStateMachineTransitionCondition<EventType>>();
             conditions.Add(new FiniteStateMachineTransitionCondition<EventType>()
             {
-                EventTypeObject = event_type,
-                CheckDelegate = check_delegate
+                EventTypeObject = eventType,
+                CheckDelegate = checkDelegate
             });
-            FiniteStateMachineTransition<EventType> trans = new FiniteStateMachineTransition<EventType>()
+
+            var trans = new FiniteStateMachineTransition<EventType>()
             {
                 SourceState = states[start],
                 TargetState = states[end],
                 TransitionConditions = conditions,
+                Finished = finishedDelegate,
                 Inverted = inverted
             };
             states[start].Outgoing.Add(trans);
@@ -148,12 +192,13 @@ namespace OsmSharp.Math.StateMachines
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <param name="inverted"></param>
-        /// <param name="event_types"></param>
+        /// <param name="eventTypes"></param>
         /// <returns></returns>
-        public static FiniteStateMachineTransition<EventType> Generate(List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, params Type[] event_types)
+        public static FiniteStateMachineTransition<EventType> Generate(List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, 
+            params Type[] eventTypes)
         {
             List<FiniteStateMachineTransitionCondition<EventType>> conditions = new List<FiniteStateMachineTransitionCondition<EventType>>();
-            foreach (Type type in event_types)
+            foreach (Type type in eventTypes)
             {
                 conditions.Add(new FiniteStateMachineTransitionCondition<EventType>()
                 {

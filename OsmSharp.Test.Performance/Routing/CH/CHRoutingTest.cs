@@ -24,9 +24,10 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using System.IO;
 using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -52,6 +53,62 @@ namespace OsmSharp.Test.Performance.Routing.CH
         }
 
         /// <summary>
+        /// Tests routing from a serialized routing file.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="testCount"></param>
+        public static void TestSerializedResolved(Stream stream, bool lazy = true, int testCount = 100)
+        {
+            var routingSerializer = new CHEdgeSerializer();
+            var data = routingSerializer.Deserialize(stream, lazy);
+
+            CHRoutingTest.TestSerializedResolved(data, new GeoCoordinateBox(new GeoCoordinate(51.20190, 4.66540),
+                 new GeoCoordinate(51.30720, 4.89820)), testCount);
+        }
+
+        /// <summary>
+        /// Tests routing from a serialized routing file.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="box"></param>
+        /// <param name="testCount"></param>
+        public static void TestSerializedResolved(RouterDataSource<CHEdgeData> data, 
+            GeoCoordinateBox box, int testCount = 100)
+        {
+            var successCount = 0;
+            var totalCount = testCount;
+
+            var router = Router.CreateCHFrom(data, new CHRouter(), new OsmRoutingInterpreter());
+
+            var performanceInfo = new PerformanceInfoConsumer("CHRouting");
+            performanceInfo.Start();
+            performanceInfo.Report("Routing {0} routes...", testCount);
+
+            while (testCount > 0)
+            {
+                var point1 = router.Resolve(Vehicle.Car, box.GenerateRandomIn());
+                var point2 = router.Resolve(Vehicle.Car, box.GenerateRandomIn());
+
+                Route route = null;
+                if (point1 != null && point2 != null)
+                {
+                    route = router.Calculate(Vehicle.Car, point1, point2);
+                }
+
+                if (route != null)
+                {
+                    successCount++;
+                }
+                testCount--;
+            }
+
+            performanceInfo.Stop();
+
+            OsmSharp.Logging.Log.TraceEvent("CHRouting", OsmSharp.Logging.TraceEventType.Information,
+                string.Format("{0}/{1} routes successfull!", successCount, totalCount));
+        }
+
+        /// <summary>
         /// Tests routing from a serialized file.
         /// </summary>
         /// <param name="stream"></param>
@@ -67,7 +124,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             //// copy.
             //var graphCopy = new DirectedGraph<CHEdgeData>();
             //graphCopy.CopyFrom(data);
-            //var dataCopy = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
+            //var dataCopy = new RouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
 
             CHRoutingTest.Test(data, testCount);
         }
@@ -117,8 +174,12 @@ namespace OsmSharp.Test.Performance.Routing.CH
             CHRoutingTest.Test(data, testCount);
         }
 
-
-        public static void Test(DynamicGraphRouterDataSource<CHEdgeData> data, int testCount)
+        /// <summary>
+        /// Tests routing from a serialized routing file.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="testCount"></param>
+        public static void Test(RouterDataSource<CHEdgeData> data, int testCount)
         {
             var router = new CHRouter();
 

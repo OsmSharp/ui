@@ -504,7 +504,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex"></param>
         public override void RemoveEdges(uint vertex)
         {
-            var edges = this.GetEdges(vertex);
+            var edges =  this.GetEdges(vertex);
             while (edges.MoveNext())
             {
                 this.RemoveEdge(vertex, edges.Neighbour);

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,11 +18,8 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Routing.ArcAggregation.Output;
-using System;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {

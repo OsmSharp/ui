@@ -27,10 +27,10 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Streams.Graphs;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Graph.Serialization;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Performance.Routing
 {
@@ -85,7 +85,7 @@ namespace OsmSharp.Test.Performance.Routing
             // read from the OSM-stream.
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
             var interpreter = new OsmRoutingInterpreter();
-            var data = new DynamicGraphRouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             data.DropVertexIndex();
             var targetData = new GraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
@@ -101,14 +101,14 @@ namespace OsmSharp.Test.Performance.Routing
         /// <param name="stream"></param>
         public static void TestSerialized(Stream stream, bool lazy = true)
         {
-            var routingSerializer = new EdgeSerializer();
+            var routingSerializer = new RoutingDataSourceSerializer();
             var data = routingSerializer.Deserialize(stream, lazy);
 
             uint vertex = 1;
             uint significantVertices = 0;
             while(vertex < data.VertexCount)
             {
-                var edges = data.GetEdges(vertex).ToKeyValuePairs();
+                var edges =  data.GetEdges(vertex).ToKeyValuePairs();
                 if(edges.Length > 2)
                 {
                     significantVertices++;
@@ -121,12 +121,12 @@ namespace OsmSharp.Test.Performance.Routing
             // copy.
             var graphCopy = new Graph<Edge>();
             graphCopy.CopyFrom(data);
-            var dataCopy = new DynamicGraphRouterDataSource<Edge>(graphCopy, data.TagsIndex);
+            var dataCopy = new RouterDataSource<Edge>(graphCopy, data.TagsIndex);
 
             RoutingTest.Test(dataCopy, Vehicle.Pedestrian, 50);
         }
 
-        public static void Test(IBasicRouterDataSource<Edge> data, Vehicle vehicle, int testCount)
+        public static void Test(IRoutingAlgorithmData<Edge> data, Vehicle vehicle, int testCount)
         {
             // creates the edge router.
             var router = new Dykstra();

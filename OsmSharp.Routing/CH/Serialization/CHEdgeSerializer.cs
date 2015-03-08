@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.CH.Serialization
     /// <summary>
     /// Serializes/deserializes a graph.
     /// </summary>
-    public class CHEdgeSerializer : GraphSerializer<CHEdgeData>
+    public class CHEdgeSerializer : RoutingDataSourceSerializerBase<CHEdgeData>
     {
         /// <summary>
         /// Returns the version string.
@@ -47,7 +47,7 @@ namespace OsmSharp.Routing.CH.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected override void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<CHEdgeData> graph)
+        protected override void DoSerialize(LimitedStream stream, RouterDataSource<CHEdgeData> graph)
         {
             graph.Serialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate);
         }
@@ -59,9 +59,9 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <param name="lazy"></param>
         /// <param name="vehicles"></param>
         /// <returns></returns>
-        protected override DynamicGraphRouterDataSource<CHEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
+        protected override RouterDataSource<CHEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return DynamicGraphRouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, !lazy);
+            return RouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, !lazy);
         }
     }
 }

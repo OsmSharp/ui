@@ -24,7 +24,8 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.IO;
 
 namespace OsmSharp.Test.Performance.Routing.CH
@@ -37,7 +38,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <summary>
         /// Tests the CH serializer.
         /// </summary>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Test()
+        public static RouterDataSource<CHEdgeData> Test()
         {
             return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "kempen-big.osm.pbf");
         }
@@ -47,7 +48,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pbfFile"></param>
-        public static DynamicGraphRouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
+        public static RouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
         {
             var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
             var stream = testFile.OpenRead();
@@ -69,7 +70,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             //var graphCopy = new DirectedGraph<CHEdgeData>();
             //graphCopy.CopyFrom(data);
-            //data = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
+            //data = new RouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
 
             var metaData = new TagsCollection();
             metaData.Add("some_key", "some_value");
