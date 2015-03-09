@@ -27,6 +27,7 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing.Vehicles;
 using System.IO;
+using System.Reflection;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -50,7 +51,11 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// <param name="pbfFile"></param>
         public static RouterDataSource<CHEdgeData> TestSerialization(string name, string pbfFile)
         {
-            var testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfFile));
+			var testFilePath = Path.Combine (
+				Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+				"TestFiles", pbfFile);
+			//var testFilePath = @"/Users/xivk/work/OSM/bin/africa-latest.osm.pbf";
+			var testFile = new FileInfo(testFilePath);
             var stream = testFile.OpenRead();
             var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();
             source.RegisterSource(new PBFOsmStreamSource(stream));

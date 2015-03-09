@@ -21,10 +21,12 @@
     <ConsolePause>false</ConsolePause>
     <MtouchArch>i386</MtouchArch>
     <MtouchLink>None</MtouchLink>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements>Info.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchProfiling>true</MtouchProfiling>
+    <MtouchI18n>
+    </MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -48,10 +50,14 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchProfiling>true</MtouchProfiling>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Ben Abelshausen (KB222ZJG5Z)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
+    <IpaPackageName>
+    </IpaPackageName>
+    <MtouchI18n>
+    </MtouchI18n>
+    <CodesignProvision>4975f89e-fea6-405a-9b1a-54ffadfc0b59</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -97,47 +103,41 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
-      <InProject>false</InProject>
-    </ImageAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
-    <InterfaceDefinition Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.xib">
+    <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib">
       <Link>OsmSharp_iOS_UI_SampleViewController.xib</Link>
     </InterfaceDefinition>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="..\OsmSharp.iOS.Test.Performance\OsmSharp.iOS.Test.Performance.csproj">
+    <None Include="OsmSharp.iOS.Test.Performance.csproj">
       <Link>OsmSharp.iOS.Test.Performance.csproj</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\AppDelegate.cs">
+    <Compile Include="AppDelegate.cs">
       <Link>AppDelegate.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.cs">
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.cs">
       <Link>OsmSharp_iOS_UI_SampleViewController.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\OsmSharp_iOS_UI_SampleViewController.designer.cs">
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.designer.cs">
       <Link>OsmSharp_iOS_UI_SampleViewController.designer.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.Test.Performance\Main.cs">
+    <Compile Include="Main.cs">
       <Link>Main.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308af80-af15-4cbe-8222-e499df12dcc4}</Project>
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
       <Name>OsmSharp.iOS.UI</Name>
-      <IsAppExtension>false</IsAppExtension>
+      <IsAppExtension>False</IsAppExtension>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Test.Performance\OsmSharp.Test.Performance.iOS.csproj">
-      <Project>{5627e042-8851-48ac-8399-8fe48b69d5fd}</Project>
+      <Project>{5627E042-8851-48AC-8399-8FE48B69D5FD}</Project>
       <Name>OsmSharp.Test.Performance.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
+      <IsAppExtension>False</IsAppExtension>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
@@ -157,11 +157,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
-      <Link>kempen-big.osm.pbf.routing</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\OsmSharpTestFiles\map\default.map">
       <Link>default.map</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.contracted.mobile.routing">
+      <Link>kempen-big.osm.pbf.contracted.mobile.routing</Link>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
