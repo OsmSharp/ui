@@ -73,6 +73,9 @@ namespace OsmSharp.Routing.Graph
             _tagsIndex = tagsIndex;
 
             _supportedVehicles = new HashSet<Vehicle>();
+
+            this.RebuildVertexIndex();
+            this.BuildReverse();
         }
 
         /// <summary>

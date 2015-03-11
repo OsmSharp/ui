@@ -41,7 +41,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static RouterDataSource<CHEdgeData> Test()
         {
-            return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "kempen-big.osm.pbf");
+            return CHEdgeGraphSerializerTests.TestSerialization("CHSerializerFlatFile", "belgium-latest.osm.pbf");
         }
 
         /// <summary>

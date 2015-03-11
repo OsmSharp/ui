@@ -60,14 +60,8 @@ namespace OsmSharp.Android.Test.Performance
             OsmSharp.Logging.Log.RegisterListener(
                 new TextViewTraceListener(this, FindViewById<TextView>(Resource.Id.textView1)));
 
-            //var directory = new DirectoryInfo(@"/storage/emulated/0/Download/");
-            //if(directory.Exists)
-            //{
-            //    var file = new FileInfo("/storage/emulated/0/Download/qvma_1.0.0.17.apk");
-            //}
-
             // do some testing here.
-            Thread thread = new Thread(
+            var thread = new Thread(
                 new ThreadStart(Test));
             thread.Start();
 		}
@@ -89,9 +83,9 @@ namespace OsmSharp.Android.Test.Performance
             //    new GeoCoordinate(51.30720, 4.89820)), 1);
             //}
 
-            //this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+            this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+            //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
@@ -107,10 +101,9 @@ namespace OsmSharp.Android.Test.Performance
         {
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 1 route.");
-            using(var stream = new FileInfo("/storage/emulated/0/Download/test.germany.routing").OpenRead())
-            {
-                OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(stream, true, 1);
-            }
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), true, 1);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 2 routes.");
             OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
