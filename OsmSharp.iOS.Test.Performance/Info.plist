@@ -5,7 +5,6 @@
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-		<integer>2</integer>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -13,10 +12,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array/>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>8.1</string>
 	<key>CFBundleDisplayName</key>
 	<string>OsmSharp.iOS.Test.Performance</string>
 	<key>CFBundleIdentifier</key>

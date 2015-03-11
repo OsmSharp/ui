@@ -42,13 +42,14 @@
     <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
     <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
     <Compile Include="PerformanceInfoConsumer.cs" />
+    <Compile Include="Routing\CH\CHRoutingTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308af80-af15-4cbe-8222-e499df12dcc4}</Project>
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
       <Name>OsmSharp.iOS.UI</Name>
-      <IsAppExtension>false</IsAppExtension>
+      <IsAppExtension>False</IsAppExtension>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>

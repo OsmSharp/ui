@@ -21,7 +21,6 @@ using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Random;
-using OsmSharp.WinForms.UI;
 using System;
 using System.IO;
 
