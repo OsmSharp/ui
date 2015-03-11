@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
+using System;
 
 namespace OsmSharp.Routing.Graph
 {
@@ -93,9 +94,65 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Holds the distance but also the shape-in-box flag. (>=0: no (out box) else: yes (in box)).
+        /// </summary>
+        private float _distance;
+
+        /// <summary>
         /// Gets/or sets the total distance of this edge.
         /// </summary>
-        public float Distance { get; set; }
+        public float Distance
+        {
+            get
+            {
+                if(_distance < 0)
+                {
+                    return -_distance;
+                }
+                return _distance;
+            }
+            set
+            {
+                if (value < 0) { throw new ArgumentOutOfRangeException(); }
+
+                if(_distance >= 0)
+                { // current state: out box, keep it this way.
+                    _distance = value;
+                }
+                else
+                { // current state: in box, keep it this way.
+                    _distance = -value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the shape of this edge is within the bounding box formed by it's two vertices.
+        /// </summary>
+        public bool ShapeInBox
+        {
+            get
+            {
+                return _distance < 0;
+            }
+            set
+            {
+                if(value)
+                {
+                   if(_distance >= 0)
+                   { // make in box.
+                       _distance = -_distance;
+                   }
+                }
+                else
+                {
+                    if (_distance < 0)
+                    { // make out box.
+                        _distance = -_distance;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Returns true if this edge represents a neighbour-relation.

@@ -117,21 +117,30 @@ namespace OsmSharp.Routing.Osm.Streams
             }
 
             // calculate weight including intermediates.
+            var shapeInBox = true;
             float weight = 0;
             var previous = from;
             if (intermediates != null)
             {
+                var box = new GeoCoordinateBox(from, to);
                 for (int idx = 0; idx < intermediates.Count; idx++)
                 {
                     var current = new GeoCoordinate(intermediates[idx].Latitude, intermediates[idx].Longitude);
                     weight = weight + (float)_vehicle.Weight(tags, previous, current);
                     previous = current;
+
+                    if (!box.Contains(intermediates[idx].Longitude, intermediates[idx].Latitude))
+                    { // shape not in box.
+                        shapeInBox = false;
+                    }
                 }
             }
             weight = weight + (float)_vehicle.Weight(tags, previous, to);
 
             // initialize the edge data.
-            return new CHEdgeData(tagsId, tagsForward, forward, backward, weight);
+            var edge = new CHEdgeData(tagsId, tagsForward, forward, backward, weight);
+            edge.ShapeInBox = shapeInBox;
+            return edge;
         }
 
         /// <summary>
@@ -145,6 +154,17 @@ namespace OsmSharp.Routing.Osm.Streams
             ITagsCollectionIndex tagsIndex, TagsCollectionBase tags)
         {
             return _vehicle.CanTraverse(tags);
+        }
+
+        /// <summary>
+        /// Returns the preprocessor.
+        /// </summary>
+        /// <returns></returns>
+        public override Graph.PreProcessor.IPreProcessor GetPreprocessor()
+        {
+            var witnessCalculator = new DykstraWitnessCalculator();
+            var edgeDifference = new EdgeDifferenceContractedSearchSpace(this.Graph, witnessCalculator);
+            return new CHPreProcessor(this.Graph, edgeDifference, witnessCalculator);
         }
 
         #region Static Processing Functions
@@ -166,12 +186,6 @@ namespace OsmSharp.Routing.Osm.Streams
                 graph, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
             targetData.Pull();
-
-            // compress the graph.
-            var witnessCalculator = new DykstraWitnessCalculator();
-            var edgeDifference = new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator);
-            var preProcessor = new CHPreProcessor(graph, edgeDifference, witnessCalculator);
-            preProcessor.Start();
 
             return graph;
         }

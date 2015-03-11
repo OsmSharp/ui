@@ -27,6 +27,11 @@ namespace OsmSharp.Routing.Graph
     public static class IGraphExtensions
     {
         /// <summary>
+        /// Holds the default hilbert steps.
+        /// </summary>
+        private static int DefaultHilbertSteps = 8;
+
+        /// <summary>
         /// Copies all data from the given graph.
         /// </summary>
         /// <typeparam name="TEdgeData"></typeparam>
@@ -54,6 +59,18 @@ namespace OsmSharp.Routing.Graph
                     copyTo.AddEdge(vertex, edge.Neighbour, edge.EdgeData, edge.Intermediates);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sorts the vertices in the given graph based on a hilbert curve using the default step count.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        /// <param name="graph"></param>
+        /// <param name="n"></param>
+        public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph)
+            where TEdgeData : struct, IGraphEdgeData
+        {
+            graph.SortHilbert(IGraphExtensions.DefaultHilbertSteps);
         }
 
         /// <summary>

@@ -871,15 +871,22 @@ namespace OsmSharp.Routing.Osm.Streams
         {
             base.OnAfterPull();
 
+            // sort vertices.
+            OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
+                "Spatially sorting vertices...");
+            _graph.SortHilbert();
+
             // execute pre-processor.
             var preProcessor = this.GetPreprocessor();
             if(preProcessor != null)
             { // there is a pre-processor, trigger execution.
+                OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
+                    "Starting preprocessing...");
                 preProcessor.Start();
             }
 
             // trim the graph.
-            _graph.Trim();
+            _graph.Compress();
         }
 
         /// <summary>

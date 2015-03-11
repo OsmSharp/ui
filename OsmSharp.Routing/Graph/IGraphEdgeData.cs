@@ -37,6 +37,12 @@ namespace OsmSharp.Routing.Graph
         bool RepresentsNeighbourRelations { get; }
 
         /// <summary>
+        /// Returns true if the shape of this edge is within the bounding box formed by it's two vertices.
+        /// </summary>
+        /// <remarks>False by default, only true when explicitly checked.</remarks>
+        bool ShapeInBox { get; }
+
+        /// <summary>
         /// Returns the tag id.
         /// </summary>
         uint Tags

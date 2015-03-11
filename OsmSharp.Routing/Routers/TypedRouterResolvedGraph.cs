@@ -357,6 +357,15 @@ namespace OsmSharp.Routing.Routers
                 }
                 return false;
             }
+
+            /// <summary>
+            /// Returns true if the shape of this edge is within the bounding box formed by it's two vertices.
+            /// </summary>
+            /// <remarks>False by default, only true when explicitly checked.</remarks>
+            public bool ShapeInBox
+            {
+                get { return false; }
+            }
         }
     }
 }

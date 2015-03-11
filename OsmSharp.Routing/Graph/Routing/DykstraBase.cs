@@ -79,7 +79,9 @@ namespace OsmSharp.Routing.Graph.Routing
             Meter distanceEpsilon = .1; // 10cm is the tolerance to distinguish points.
 
             var closestWithMatch = new SearchClosestResult<TEdgeData>(double.MaxValue, 0);
+            GeoCoordinateBox closestWithMatchBox = null;
             var closestWithoutMatch = new SearchClosestResult<TEdgeData>(double.MaxValue, 0);
+            GeoCoordinateBox closestWithoutMatchBox = null;
 
             double searchBoxSize = delta;
             // create the search box.
@@ -94,44 +96,62 @@ namespace OsmSharp.Routing.Graph.Routing
             if (!verticesOnly)
             { // find both closest arcs and vertices.
                 // loop over all.
-                while(edges.MoveNext())
+                while (edges.MoveNext())
                 {
                     if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
                     { // skip this edge, no valid tags found.
                         continue;
                     }
-                    var arcTags = graph.TagsIndex.Get(edges.EdgeData.Tags);
-                    var canBeTraversed = vehicle.CanTraverse(arcTags);
-                    if (canBeTraversed)
-                    { // the edge can be traversed.
-                        // test the two points.
-                        float fromLatitude, fromLongitude;
-                        float toLatitude, toLongitude;
-                        double distance;
-                        if (graph.GetVertex(edges.Vertex1, out fromLatitude, out fromLongitude) &&
-                            graph.GetVertex(edges.Vertex2, out toLatitude, out toLongitude))
-                        { // return the vertex.
-                            var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                            distance = coordinate.DistanceReal(fromCoordinates).Value;
-                            ICoordinateCollection coordinates;
-                            ICoordinate[] coordinatesArray = null;
-                            if (!graph.GetEdgeShape(edges.Vertex1, edges.Vertex2, out coordinates))
-                            {
-                                coordinates = null;
-                            }
-                            if (coordinates != null)
-                            {
-                                coordinatesArray = coordinates.ToArray();
-                            }
 
+                    // test the two points.
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
+                    double distance;
+                    if (graph.GetVertex(edges.Vertex1, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(edges.Vertex2, out toLatitude, out toLongitude))
+                    { // return the vertex.
+                        var vertex1Coordinate = new GeoCoordinate(fromLatitude, fromLongitude);
+                        var vertex2Coordinate = new GeoCoordinate(toLatitude, toLongitude);
+
+                        if (edges.EdgeData.ShapeInBox)
+                        { // ok, check if it is needed to even check this edge.
+                            var edgeBox = new GeoCoordinateBox(vertex1Coordinate, vertex2Coordinate);
+                            var edgeBoxOverlap = false;
+                            if (closestWithoutMatchBox == null ||
+                                closestWithoutMatchBox.Overlaps(edgeBox))
+                            { // edge box overlap.
+                                edgeBoxOverlap = true;
+                            }
+                            else if (closestWithMatchBox == null ||
+                                closestWithMatchBox.Overlaps(edgeBox))
+                            { // edge box overlap.
+                                edgeBoxOverlap = true;
+                            }
+                            if (!edgeBoxOverlap)
+                            { // no overlap, impossible this edge is a candidate.
+                                continue;
+                            }
+                        }
+
+                        var arcTags = graph.TagsIndex.Get(edges.EdgeData.Tags);
+                        var canBeTraversed = vehicle.CanTraverse(arcTags);
+                        if (canBeTraversed)
+                        { // the edge can be traversed.
+
+                            distance = coordinate.DistanceEstimate(vertex1Coordinate).Value;
                             if (distance < distanceEpsilon.Value)
                             { // the distance is smaller than the tolerance value.
+                                var diff = coordinate - vertex1Coordinate;
+                                closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                    new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, edges.Vertex1);
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
+                                    closestWithMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                        new GeoCoordinate(coordinate - diff));
                                     closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, edges.Vertex1);
                                     break;
@@ -140,6 +160,9 @@ namespace OsmSharp.Routing.Graph.Routing
 
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller for the without match.
+                                var diff = coordinate - vertex1Coordinate;
+                                closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                    new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, edges.Vertex1);
                             }
@@ -149,15 +172,20 @@ namespace OsmSharp.Routing.Graph.Routing
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(edges.EdgeData.Tags)))
                                 {
+                                    var diff = coordinate - vertex1Coordinate;
+                                    closestWithMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                        new GeoCoordinate(coordinate - diff));
                                     closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, edges.Vertex1);
                                 }
                             }
-                            var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                            distance = coordinate.DistanceReal(toCoordinates).Value;
 
+                            distance = coordinate.DistanceEstimate(vertex2Coordinate).Value;
                             if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller for the without match.
+                                var diff = coordinate - vertex2Coordinate;
+                                closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                    new GeoCoordinate(coordinate - diff));
                                 closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                     distance, edges.Vertex2);
                             }
@@ -167,41 +195,47 @@ namespace OsmSharp.Routing.Graph.Routing
                                     (pointTags == null || pointTags.Count == 0) ||
                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                 {
+                                    var diff = coordinate - vertex2Coordinate;
+                                    closestWithMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                        new GeoCoordinate(coordinate - diff));
                                     closestWithMatch = new SearchClosestResult<TEdgeData>(
                                         distance, edges.Vertex2);
                                 }
                             }
-
                             // search along the line.
+                            var coordinatesArray = new ICoordinate[0];
                             var distanceTotal = 0.0;
-                            var previous = fromCoordinates;
                             var arcValueValueCoordinates = edges.Intermediates;
                             if (arcValueValueCoordinates != null)
                             { // calculate distance along all coordinates.
-                                var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
-                                for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
-                                {
-                                    var current = new GeoCoordinate(arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                    distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
-                                    previous = current;
-                                }
+                                coordinatesArray = arcValueValueCoordinates.ToArray();
                             }
-                            distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
-                            if (distanceTotal > 0)
-                            { // the from/to are not the same location.
-                                // loop over all edges that are represented by this arc (counting intermediate coordinates).
-                                previous = fromCoordinates;
-                                GeoCoordinateLine line;
-                                var distanceToSegment = 0.0;
-                                if (arcValueValueCoordinates != null)
-                                {
-                                    var arcValueValueCoordinatesArray = arcValueValueCoordinates.ToArray();
-                                    for (int idx = 0; idx < arcValueValueCoordinatesArray.Length; idx++)
-                                    {
-                                        var current = new GeoCoordinate(
-                                            arcValueValueCoordinatesArray[idx].Latitude, arcValueValueCoordinatesArray[idx].Longitude);
-                                        line = new GeoCoordinateLine(previous, current, true, true);
 
+                            // loop over all edges that are represented by this arc (counting intermediate coordinates).
+                            var previous = vertex1Coordinate;
+                            GeoCoordinateLine line;
+                            var distanceToSegment = 0.0;
+                            if (arcValueValueCoordinates != null)
+                            {
+                                for (int idx = 0; idx < coordinatesArray.Length; idx++)
+                                {
+                                    var current = new GeoCoordinate(
+                                        coordinatesArray[idx].Latitude, coordinatesArray[idx].Longitude);
+                                    var edgeBox = new GeoCoordinateBox(previous, current);
+                                    var edgeBoxOverlap = false;
+                                    if (closestWithoutMatchBox == null ||
+                                        closestWithoutMatchBox.Overlaps(edgeBox))
+                                    { // edge box overlap.
+                                        edgeBoxOverlap = true;
+                                    }
+                                    else if (closestWithMatchBox == null ||
+                                        closestWithMatchBox.Overlaps(edgeBox))
+                                    { // edge box overlap.
+                                        edgeBoxOverlap = true;
+                                    }
+                                    if (edgeBoxOverlap)
+                                    { // overlap, possible this edge is a candidate.
+                                        line = new GeoCoordinateLine(previous, current, true, true);
                                         distance = line.DistanceReal(coordinate).Value;
 
                                         if (distance < closestWithoutMatch.Distance)
@@ -210,10 +244,25 @@ namespace OsmSharp.Routing.Graph.Routing
 
                                             // calculate the position.
                                             if (projectedPoint != null)
-                                            { // calculate the distance
+                                            { // calculate the distance.
+                                                if (distanceTotal == 0)
+                                                { // calculate total distance.
+                                                    var pCoordinate = vertex1Coordinate;
+                                                    for (int cIdx = 0; cIdx < coordinatesArray.Length; cIdx++)
+                                                    {
+                                                        var cCoordinate = new GeoCoordinate(coordinatesArray[cIdx].Latitude, coordinatesArray[cIdx].Longitude);
+                                                        distanceTotal = distanceTotal + cCoordinate.DistanceReal(pCoordinate).Value;
+                                                        pCoordinate = cCoordinate;
+                                                    }
+                                                    distanceTotal = distanceTotal + vertex2Coordinate.DistanceReal(pCoordinate).Value;
+                                                }
+
                                                 var distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
                                                 var position = distancePoint / distanceTotal;
 
+                                                var diff = coordinate - new GeoCoordinate(projectedPoint);
+                                                closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                                    new GeoCoordinate(coordinate - diff));
                                                 closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                                     distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                             }
@@ -225,6 +274,18 @@ namespace OsmSharp.Routing.Graph.Routing
                                             // calculate the position.
                                             if (projectedPoint != null)
                                             { // calculate the distance
+                                                if (distanceTotal == 0)
+                                                { // calculate total distance.
+                                                    var pCoordinate = vertex1Coordinate;
+                                                    for (int cIdx = 0; cIdx < coordinatesArray.Length; cIdx++)
+                                                    {
+                                                        var cCoordinate = new GeoCoordinate(coordinatesArray[cIdx].Latitude, coordinatesArray[cIdx].Longitude);
+                                                        distanceTotal = distanceTotal + cCoordinate.DistanceReal(pCoordinate).Value;
+                                                        pCoordinate = cCoordinate;
+                                                    }
+                                                    distanceTotal = distanceTotal + vertex2Coordinate.DistanceReal(pCoordinate).Value;
+                                                }
+
                                                 var distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
                                                 var position = distancePoint / distanceTotal;
 
@@ -232,60 +293,91 @@ namespace OsmSharp.Routing.Graph.Routing
                                                     (pointTags == null || pointTags.Count == 0) ||
                                                     matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                                 {
-
+                                                    var diff = coordinate - new GeoCoordinate(projectedPoint);
+                                                    closestWithMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                                        new GeoCoordinate(coordinate - diff));
                                                     closestWithMatch = new SearchClosestResult<TEdgeData>(
                                                         distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                                 }
                                             }
                                         }
-
-                                        // add current segment distance to distanceToSegment for the next segment.
-                                        distanceToSegment = distanceToSegment + line.LengthReal.Value;
-
-                                        // set previous.
-                                        previous = current;
                                     }
+
+                                    // add current segment distance to distanceToSegment for the next segment.
+                                    distanceToSegment = distanceToSegment + previous.DistanceEstimate(current).Value;
+
+                                    // set previous.
+                                    previous = current;
                                 }
+                            }
 
-                                // check the last segment.
-                                line = new GeoCoordinateLine(previous, toCoordinates, true, true);
+                            // check the last segment.
+                            line = new GeoCoordinateLine(previous, vertex2Coordinate, true, true);
 
-                                distance = line.DistanceReal(coordinate).Value;
+                            distance = line.DistanceReal(coordinate).Value;
 
-                                if (distance < closestWithoutMatch.Distance)
-                                { // the distance is smaller.
-                                    var projectedPoint = line.ProjectOn(coordinate);
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance is smaller.
+                                var projectedPoint = line.ProjectOn(coordinate);
 
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    if (distanceTotal == 0)
+                                    { // calculate total distance.
+                                        var pCoordinate = vertex1Coordinate;
+                                        for (int cIdx = 0; cIdx < coordinatesArray.Length; cIdx++)
+                                        {
+                                            var cCoordinate = new GeoCoordinate(coordinatesArray[cIdx].Latitude, coordinatesArray[cIdx].Longitude);
+                                            distanceTotal = distanceTotal + cCoordinate.DistanceReal(pCoordinate).Value;
+                                            pCoordinate = cCoordinate;
+                                        }
+                                        distanceTotal = distanceTotal + vertex2Coordinate.DistanceReal(pCoordinate).Value;
+                                    }
 
-                                        closestWithoutMatch = new SearchClosestResult<TEdgeData>(
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
+
+                                    var diff = coordinate - new GeoCoordinate(projectedPoint);
+                                    closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                        new GeoCoordinate(coordinate - diff));
+                                    closestWithoutMatch = new SearchClosestResult<TEdgeData>(
+                                        distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
+                                }
+                            }
+                            if (distance < closestWithMatch.Distance)
+                            {
+                                var projectedPoint = line.ProjectOn(coordinate);
+
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    if (distanceTotal == 0)
+                                    { // calculate total distance.
+                                        var pCoordinate = vertex1Coordinate;
+                                        for (int cIdx = 0; cIdx < coordinatesArray.Length; cIdx++)
+                                        {
+                                            var cCoordinate = new GeoCoordinate(coordinatesArray[cIdx].Latitude, coordinatesArray[cIdx].Longitude);
+                                            distanceTotal = distanceTotal + cCoordinate.DistanceReal(pCoordinate).Value;
+                                            pCoordinate = cCoordinate;
+                                        }
+                                        distanceTotal = distanceTotal + vertex2Coordinate.DistanceReal(pCoordinate).Value;
+                                    }
+
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
+
+                                    if (matcher == null ||
+                                        (pointTags == null || pointTags.Count == 0) ||
+                                        matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                                    {
+                                        var diff = coordinate - new GeoCoordinate(projectedPoint);
+                                        closestWithMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                            new GeoCoordinate(coordinate - diff));
+                                        closestWithMatch = new SearchClosestResult<TEdgeData>(
                                             distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
                                     }
                                 }
-                                if (distance < closestWithMatch.Distance)
-                                {
-                                    var projectedPoint = line.ProjectOn(coordinate);
-
-                                    // calculate the position.
-                                    if (projectedPoint != null)
-                                    { // calculate the distance
-                                        double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                        double position = distancePoint / distanceTotal;
-
-                                        if (matcher == null ||
-                                            (pointTags == null || pointTags.Count == 0) ||
-                                            matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                                        {
-
-                                            closestWithMatch = new SearchClosestResult<TEdgeData>(
-                                                distance, edges.Vertex1, edges.Vertex2, position, edges.EdgeData, coordinatesArray);
-                                        }
-                                    }
-                                }                               
                             }
                         }
                     }
@@ -294,7 +386,7 @@ namespace OsmSharp.Routing.Graph.Routing
             else
             { // only find closest vertices.
                 // loop over all.
-                while(edges.MoveNext())
+                while (edges.MoveNext())
                 {
                     float fromLatitude, fromLongitude;
                     float toLatitude, toLongitude;
@@ -305,6 +397,9 @@ namespace OsmSharp.Routing.Graph.Routing
                         double distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
+                            var diff = coordinate - vertexCoordinate;
+                            closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                new GeoCoordinate(coordinate - diff));
                             closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                 distance, edges.Vertex1);
                         }
@@ -313,6 +408,9 @@ namespace OsmSharp.Routing.Graph.Routing
                         distance = coordinate.DistanceReal(vertexCoordinate).Value;
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance found is closer.
+                            var diff = coordinate - vertexCoordinate;
+                            closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                new GeoCoordinate(coordinate - diff));
                             closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                 distance, edges.Vertex2);
                         }
@@ -329,6 +427,9 @@ namespace OsmSharp.Routing.Graph.Routing
                                 distance = coordinate.DistanceReal(vertexCoordinate).Value;
                                 if (distance < closestWithoutMatch.Distance)
                                 { // the distance found is closer.
+                                    var diff = coordinate - vertexCoordinate;
+                                    closestWithoutMatchBox = new GeoCoordinateBox(new GeoCoordinate(coordinate + diff),
+                                        new GeoCoordinate(coordinate - diff));
                                     closestWithoutMatch = new SearchClosestResult<TEdgeData>(
                                         distance, edges.Vertex1, edges.Vertex2, idx, edges.EdgeData, arcValueValueCoordinatesArray);
                                 }

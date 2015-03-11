@@ -32,6 +32,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using OsmSharp.Test.Performance.Routing.CH;
 
 namespace OsmSharp.Test.Performance
 {
@@ -84,12 +85,13 @@ namespace OsmSharp.Test.Performance
                 //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead());
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), false);
+                //RoutingResolveTest.Test(box);
                 //Routing.RoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
-                //Routing.CH.CHEdgeGraphSerializerTests.Test();
+                Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
                 //Routing.CH.CHRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), true);
-                Routing.CH.CHRoutingResolveTest.TestSerializedResolved(new FileInfo("test.routing").OpenRead(), box, false, 1000);
+                Routing.CH.CHRoutingResolveTest.Test(box);
                 //Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();

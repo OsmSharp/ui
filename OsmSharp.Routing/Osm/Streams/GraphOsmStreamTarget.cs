@@ -148,11 +148,26 @@ namespace OsmSharp.Routing.Osm.Streams
 
             uint tagsId = tagsIndex.Add(tags);
 
+            var shapeInBox = true;
+            if (intermediates != null)
+            { // verify shape-in-box.
+                var box = new GeoCoordinateBox(from, to);
+                for (int idx = 0; idx < intermediates.Count; idx++)
+                {
+                    if (!box.Contains(intermediates[idx].Longitude, intermediates[idx].Latitude))
+                    { // shape not in box.
+                        shapeInBox = false;
+                        break;
+                    }
+                }
+            }
+
             return new Edge()
             {
                 Forward = tagsForward,
                 Tags = tagsId,
-                Distance = (float)from.DistanceEstimate(to).Value
+                Distance = (float)from.DistanceEstimate(to).Value,
+                ShapeInBox = shapeInBox
             };
         }
 

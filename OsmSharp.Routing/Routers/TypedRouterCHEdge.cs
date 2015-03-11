@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Routers
         public TypedRouterCHEdge(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> router)
             : base(graph, interpreter, router)
         {
-            DefaultSearchDelta = 0.1f;
+            DefaultSearchDelta = 0.0125f;
         }
 
         /// <summary>
