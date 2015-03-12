@@ -327,27 +327,33 @@ namespace OsmSharp.Android.UI.Controls
             { // keep location the same and move with map.
                 if (this.Location != null)
                 { // only set layout if there is a location set.
+                    var layoutParams = this.View.LayoutParameters as FrameLayout.LayoutParams;
                     var projected = projection.ToPixel(this.Location);
                     double leftMargin, topMargin;
                     var fromMatrix = view.CreateToViewPort(pixelsWidth, pixelsHeight);
                     fromMatrix.Apply(projected[0], projected[1], out leftMargin, out topMargin);
 
-                    leftMargin = leftMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                    //leftMargin = leftMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0;
+                    leftMargin = leftMargin - layoutParams.Width/2;
 
                     switch (_alignment)
                     {
                         case MapControlAlignmentType.Center:
-                            topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+                            //topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+                            topMargin = topMargin - layoutParams.Height/2;
                             break;
                         case MapControlAlignmentType.CenterTop:
                             break;
                         case MapControlAlignmentType.CenterBottom:
-                            topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            //topMargin = topMargin - (this.View.LayoutParameters as FrameLayout.LayoutParams).Height;
+                            topMargin = topMargin - layoutParams.Height;
                             break;
                     }
-
-                    (this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
-                    (this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
+                    layoutParams.LeftMargin = (int)leftMargin;
+                    layoutParams.TopMargin = (int)topMargin;
+                    //(this.View.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
+                    //(this.View.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
+                    this.View.LayoutParameters = layoutParams;
                 }
             }
             else
