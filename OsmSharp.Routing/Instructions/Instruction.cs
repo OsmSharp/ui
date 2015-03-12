@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Instructions
             this.MetaData = metaData;
             this.Text = text;
 
-            this.Pois = new List<PointPoi>();
+            this.Pois = new List<PointPoi>(pois);
         }
 
         /// <summary>
