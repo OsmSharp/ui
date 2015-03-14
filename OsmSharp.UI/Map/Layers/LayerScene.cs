@@ -78,7 +78,15 @@ namespace OsmSharp.UI.Map.Layers
         {
             get
             {
+                if (base.BackColor.HasValue)
+                { // backcolor overridden.
+                    return base.BackColor;
+                }
                 return _index.BackColor;
+            }
+            set
+            {
+                base.BackColor = value;
             }
         }
 

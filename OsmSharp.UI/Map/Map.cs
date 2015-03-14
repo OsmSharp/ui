@@ -105,6 +105,10 @@ namespace OsmSharp.UI.Map
                 }
                 return null;
             }
+            set
+            {
+                _backcolor = value;
+            }
         }
 
         /// <summary>
