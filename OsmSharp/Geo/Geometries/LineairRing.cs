@@ -93,69 +93,32 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
-        /// Returns true if the given coordinate is contained in this ring.
-        /// 
-        /// See: http://geomalgorithms.com/a03-_inclusion.html
+        /// Returns true if the given coordinate is contained in the inner area of the ring or lying on the border of the ring.
+        /// Fast way based on the winding number aproach.        
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
         public bool Contains(GeoCoordinate coordinate)
         {
-            int number = 0;
-            if (this.Coordinates[0] == coordinate)
-            { // the given point is one of the corners.
-                return true;
-            }
-            // loop over all edges and calculate if they possibly intersect.
-            for (int idx = 0; idx < this.Coordinates.Count - 1; idx++)
+            bool flipflop = false;
+            const bool includeBorder = true; // Algoritm could be parameterized to optionally include the border.
+
+            for (int i = 0, j = Coordinates.Count - 1; i < Coordinates.Count; j = i++)
             {
-                if (this.Coordinates[idx + 1] == coordinate)
-                { // the given point is one of the corners.
-                    return true;
-                }
-                bool idxRight = this.Coordinates[idx].Longitude > coordinate.Longitude;
-                bool idx1Right = this.Coordinates[idx + 1].Longitude > coordinate.Longitude;
-                if (idxRight || idx1Right)
-                { // at least on of the coordinates is to the right of the point to calculate for.
-                    if ((this.Coordinates[idx].Latitude <= coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude >= coordinate.Latitude) && 
-                        !(this.Coordinates[idx].Latitude == coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude == coordinate.Latitude))
-                    { // idx is lower than idx+1
-                        if (idxRight && idx1Right)
-                        { // no need for the left/right algorithm the result is already known.
-                            number++;
-                        }
-                        else
-                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
-                            LineF2D localLine = new LineF2D(this.Coordinates[idx], this.Coordinates[idx + 1]);
-                            if (localLine.PositionOfPoint(coordinate) == LinePointPosition.Left)
-                            {
-                                number++;
-                            }
-                        }
-                    }
-                    else if ((this.Coordinates[idx].Latitude >= coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude <= coordinate.Latitude) &&
-                        !(this.Coordinates[idx].Latitude == coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude == coordinate.Latitude))
-                    { // idx is higher than idx+1
-                        if (idxRight && idx1Right)
-                        { // no need for the left/right algorithm the result is already known.
-                            number--;
-                        }
-                        else
-                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
-                            LineF2D localLine = new LineF2D(this.Coordinates[idx], this.Coordinates[idx + 1]);
-                            if (localLine.PositionOfPoint(coordinate) == LinePointPosition.Right)
-                            {
-                                number--;
-                            }
-                        }
-                    }
+                if (Coordinates[j].Equals(coordinate))
+                    return includeBorder;
+
+                bool b = Coordinates[i].Latitude <= coordinate.Latitude;
+                if (b != (Coordinates[j].Latitude <= coordinate.Latitude))
+                {
+                    var triangularOrientation = (Coordinates[j].Longitude - Coordinates[i].Longitude) * (coordinate.Latitude - Coordinates[i].Latitude) - (Coordinates[j].Latitude - Coordinates[i].Latitude) * (coordinate.Longitude - Coordinates[i].Longitude);
+                    if (triangularOrientation > 0 && b || triangularOrientation < 0 && !b)
+                        flipflop = !flipflop;
+                    else if (triangularOrientation == 0)
+                        return includeBorder;
                 }
             }
-            return number != 0;
+            return flipflop;
         }
 
         /// <summary>
