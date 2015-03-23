@@ -190,9 +190,13 @@ namespace OsmSharp.Routing
                 mergedEntry.Type = RouteSegmentType.Along;
                 if (route2.Segments[0].Points != null && route2.Segments[0].Points.Length > 0)
                 { // merge in important points from the second route too but do not keep duplicates.
-                    List<RoutePoint> points = new List<RoutePoint>(mergedEntry.Points);
+                    var points = new List<RoutePoint>();
+                    if (mergedEntry.Points != null)
+                    { // keep originals.
+                        points.AddRange(mergedEntry.Points);
+                    }
                     for (int otherIdx = 0; otherIdx < route2.Segments[0].Points.Length; otherIdx++)
-                    {
+                    { // remove duplicates.
                         bool found = false;
                         for (int idx = 0; idx < points.Count; idx++)
                         {
