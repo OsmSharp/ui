@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,27 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.WinForms.UI.Renderer.Images;
-using System.IO;
-
-namespace OsmSharp.WinForms.UI
+namespace OsmSharp.Collections.Indexes
 {
     /// <summary>
-    /// Class responsable for creating native hooks for platform-specific functionality.
+    /// An readonly-index of objects linked to a unique id.
     /// </summary>
-    public static class Native
+    public abstract class IndexReadonly<T>
+        where T : struct
     {
         /// <summary>
-        /// Initializes some platform-specifics for OsmSharp to use.
+        /// Tries to get an element with the given id.
         /// </summary>
-        public static void Initialize()
-        {
-            // intialize the native image cache factory.
-            OsmSharp.UI.Renderer.Images.NativeImageCacheFactory.SetDelegate(
-                () =>
-                {
-                    return new NativeImageCache();
-                });
-        }
+        /// <param name="id">The id.</param>
+        /// <param name="element">The element.</param>
+        /// <returns>True if an element with the given id was found.</returns>
+        public abstract bool TryGet(long id, out T element);
+
+        /// <summary>
+        /// Gets the element with the given id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>The element.</returns>
+        public abstract T Get(long id);
     }
 }

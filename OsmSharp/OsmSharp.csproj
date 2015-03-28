@@ -76,6 +76,9 @@
     <Compile Include="Collections\Arrays\HugeArray.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\HugeHashSet.cs" />
+    <Compile Include="Collections\Indexes\Index.cs" />
+    <Compile Include="Collections\Indexes\IndexReadonly.cs" />
+    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndex.cs" />
     <Compile Include="Collections\ISet.cs" />
     <Compile Include="Collections\LargeBitArray32.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\FastBitConverter.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorVariable.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedStream.cs" />

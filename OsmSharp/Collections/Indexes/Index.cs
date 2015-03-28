@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,27 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.WinForms.UI.Renderer.Images;
-using System.IO;
-
-namespace OsmSharp.WinForms.UI
+namespace OsmSharp.Collections.Indexes
 {
     /// <summary>
-    /// Class responsable for creating native hooks for platform-specific functionality.
+    /// An index of objects linked to a unique id.
     /// </summary>
-    public static class Native
+    /// <typeparam name="T"></typeparam>
+    public abstract class Index<T> : IndexReadonly<T>
+        where T : struct
     {
         /// <summary>
-        /// Initializes some platform-specifics for OsmSharp to use.
+        /// Adds a new element to this index.
         /// </summary>
-        public static void Initialize()
-        {
-            // intialize the native image cache factory.
-            OsmSharp.UI.Renderer.Images.NativeImageCacheFactory.SetDelegate(
-                () =>
-                {
-                    return new NativeImageCache();
-                });
-        }
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public abstract long Add(T element);
     }
 }

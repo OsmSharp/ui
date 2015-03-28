@@ -32,7 +32,7 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
         /// <param name="file"></param>
         /// <param name="stream"></param>
         internal MemoryMappedAccessorUInt32(MemoryMappedFile file, Stream stream)
-            :base(file, stream, 4)
+            : base(file, stream, 4)
         {
 
         }
@@ -51,9 +51,10 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
         /// Writes to the stream.
         /// </summary>
         /// <param name="structure"></param>
-        protected sealed override void WriteTo(uint structure)
+        protected sealed override long WriteTo(uint structure)
         {
             _stream.Write(BitConverter.GetBytes(structure), 0, _elementSize);
+            return _elementSize;
         }
     }
 }

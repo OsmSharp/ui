@@ -43,33 +43,46 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// Creates a new memory mapped file based on the given stream and the given size in bytes.
         /// </summary>
         /// <param name="position">The position to start at.</param>
-        /// <param name="sizeInByte">The size.</param>
+        /// <param name="sizeInBytes">The size.</param>
         /// <returns></returns>
-        protected override MemoryMappedAccessor<uint> DoCreateNewUInt32(long position, long sizeInByte)
+        protected override MemoryMappedAccessor<uint> DoCreateNewUInt32(long position, long sizeInBytes)
         {
-            return new Accessors.MemoryMappedAccessorUInt32(this, new CappedStream(_stream, position, sizeInByte));
+            return new Accessors.MemoryMappedAccessorUInt32(this, new CappedStream(_stream, position, sizeInBytes));
         }
 
         /// <summary>
         /// Creates a new memory mapped file based on the given stream and the given size in bytes.
         /// </summary>
         /// <param name="position">The position to start at.</param>
-        /// <param name="sizeInByte">The size.</param>
+        /// <param name="sizeInBytes">The size.</param>
         /// <returns></returns>
-        protected override MemoryMappedAccessor<float> DoCreateNewSingle(long position, long sizeInByte)
+        protected override MemoryMappedAccessor<float> DoCreateNewSingle(long position, long sizeInBytes)
         {
-            return new Accessors.MemoryMappedAccessorSingle(this, new CappedStream(_stream, position, sizeInByte));
+            return new Accessors.MemoryMappedAccessorSingle(this, new CappedStream(_stream, position, sizeInBytes));
         }
 
         /// <summary>
         /// Creates a new memory mapped file based on the given stream and the given size in bytes.
         /// </summary>
         /// <param name="position">The position to start at.</param>
-        /// <param name="sizeInByte">The size.</param>
+        /// <param name="sizeInBytes">The size.</param>
         /// <returns></returns>
-        protected override MemoryMappedAccessor<ulong> DoCreateNewUInt64(long position, long sizeInByte)
+        protected override MemoryMappedAccessor<ulong> DoCreateNewUInt64(long position, long sizeInBytes)
         {
-            return new Accessors.MemoryMappedAccessorUInt64(this, new CappedStream(_stream, position, sizeInByte));
+            return new Accessors.MemoryMappedAccessorUInt64(this, new CappedStream(_stream, position, sizeInBytes));
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the given stream and the given size in bytes.
+        /// </summary>
+        /// <param name="position">The position to start at.</param>
+        /// <param name="sizeInBytes">The size.</param>
+        /// <param name="readFrom"></param>
+        /// <param name="writeTo"></param>
+        /// <returns></returns>
+        protected override MemoryMappedAccessor<T> DoCreateVariable<T>(long position, long sizeInBytes, MemoryMappedFile.ReadFromDelegate<T> readFrom, MemoryMappedFile.WriteToDelegate<T> writeTo)
+        {
+            return new Accessors.MemoryMappedAccessorVariable<T>(this, new CappedStream(_stream, position, sizeInBytes), readFrom, writeTo);
         }
     }
 }

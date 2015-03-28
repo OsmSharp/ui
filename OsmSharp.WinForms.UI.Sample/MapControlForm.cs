@@ -64,7 +64,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize mapcss interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\static\default.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+                new FileInfo(@"dark_roads.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
@@ -77,8 +77,8 @@ namespace OsmSharp.WinForms.UI.Sample
                 16, 14, 12, 10 }));
             var target = new StyleOsmStreamSceneTarget(
                 mapCSSInterpreter, scene, new WebMercator());
-            var source = new XmlOsmStreamSource(
-                new FileInfo(@"D:\Dropbox\Dropbox\SharpSoftware\Projects\Eurostation ReLive\Server_Dropbox\OSM\relive_mechelen\mechelen_new.osm").OpenRead());
+            var source = new PBFOsmStreamSource(
+                new FileInfo(@"kempen.osm.pbf").OpenRead());
             var progress = new OsmStreamFilterProgress();
             progress.RegisterSource(source);
             target.RegisterSource(progress);
@@ -107,7 +107,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
-            this.mapControl1.MapCenter = new GeoCoordinate(51.0167, 4.4914); // wechel
+            this.mapControl1.MapCenter = new GeoCoordinate(51.262, 4.7880); // wechel
             this.mapControl1.MapZoom = 14;
             this.mapControl1.MapMouseClick += mapControl1_MapMouseClick;
             this.mapControl1.MapMouseMove += mapControl1_MapMouseMove;

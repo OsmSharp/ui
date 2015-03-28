@@ -51,9 +51,10 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
         /// Writes to the stream.
         /// </summary>
         /// <param name="structure">The structure to write.</param>
-        protected sealed override void WriteTo(ulong structure)
+        protected sealed override long WriteTo(ulong structure)
         {
             _stream.Write(BitConverter.GetBytes(structure), 0, _elementSize);
+            return _elementSize;
         }
     }
 }

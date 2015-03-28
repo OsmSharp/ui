@@ -147,6 +147,7 @@
     <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
     <Compile Include="Collections\Coordinates\HugeCoordinateCollectionIndexTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
+    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndexTests.cs" />
     <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />

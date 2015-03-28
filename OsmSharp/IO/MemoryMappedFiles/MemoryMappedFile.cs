@@ -177,6 +177,54 @@ namespace OsmSharp.IO.MemoryMappedFiles
         protected abstract MemoryMappedAccessor<ulong> DoCreateNewUInt64(long position, long sizeInByte);
 
         /// <summary>
+        /// A delegate to facilitate reading a variable-sized object.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="position">The position to start reading at.</param>
+        /// <returns></returns>
+        public delegate T ReadFromDelegate<T>(Stream stream, long position);
+
+        /// <summary>
+        /// A delegate to facilitate writing a variable-sized object.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="position">The position to start reading at.</param>
+        /// <param name="structure">The structure to write.</param>
+        /// <returns></returns>
+        public delegate long WriteToDelegate<T>(Stream stream, long position, T structure);
+
+        /// <summary>
+        /// Creates a new empty memory mapped accessor with given size in bytes.
+        /// </summary>
+        /// <param name="sizeInBytes">The size of this accessor.</param>
+        /// <param name="readFrom">The delegate to read a structure.</param>
+        /// <param name="writeTo">The delegate to write a structure.</param>
+        /// <returns></returns>
+        public MemoryMappedAccessor<T> CreateVariable<T>(long sizeInBytes, 
+            ReadFromDelegate<T> readFrom, WriteToDelegate<T> writeTo)
+            where T : struct
+        {
+            var accessor = this.DoCreateVariable<T>(_nextPosition, sizeInBytes, readFrom, writeTo);
+            _accessors.Add(accessor);
+
+            _nextPosition = _nextPosition + sizeInBytes;
+
+            return accessor;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the given stream and the given size in bytes.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="_nextPosition"></param>
+        /// <param name="sizeInBytes"></param>
+        /// <param name="readFrom"></param>
+        /// <param name="writeTo"></param>
+        /// <returns></returns>
+        protected abstract MemoryMappedAccessor<T> DoCreateVariable<T>(long _nextPosition, long sizeInBytes, ReadFromDelegate<T> readFrom, WriteToDelegate<T> writeTo)
+            where T : struct;
+
+        /// <summary>
         /// Notifies this factory that the given file was already disposed. This given the opportunity to dispose of files without disposing the entire factory.
         /// </summary>
         /// <typeparam name="T"></typeparam>

@@ -112,20 +112,27 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="position">The position to read from.</param>
         /// <returns></returns>
-        protected abstract T ReadFrom(int position);
+        protected virtual T ReadFrom(int position)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Writes to the stream.
         /// </summary>
         /// <param name="structure">The structure to write to.</param>
-        protected abstract void WriteTo(T structure);
+        /// <rereturns>The number of bytes written.</rereturns>
+        protected virtual long WriteTo(T structure)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Reads one element at the given position.
         /// </summary>
         /// <param name="position">The position to read from.</param>
         /// <param name="structure">The resulting structure.</param>
-        public void Read(long position, out T structure)
+        public virtual void Read(long position, out T structure)
         {
             _stream.Seek(position, SeekOrigin.Begin);
             _stream.Read(_buffer, 0, _elementSize);
@@ -140,7 +147,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="offset">The offset to start filling the array.</param>
         /// <param name="count">The number of elements to read.</param>
         /// <returns></returns>
-        public int ReadArray(long position, T[] array, int offset, int count)
+        public virtual int ReadArray(long position, T[] array, int offset, int count)
         {
             if (_buffer.Length < count * _elementSize)
             { // increase buffer if needed.
@@ -160,10 +167,10 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="position">The position to write to.</param>
         /// <param name="structure">The structure.</param>
-        public void Write(long position, ref T structure)
+        public virtual long Write(long position, ref T structure)
         {
             _stream.Seek(position, SeekOrigin.Begin);
-            this.WriteTo(structure);
+            return this.WriteTo(structure);
         }
 
         /// <summary>
@@ -173,13 +180,15 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="array">The array to with the data.</param>
         /// <param name="offset">The offset to start using the array at.</param>
         /// <param name="count">The number of elements to write.</param>
-        public void WriteArray(long position, T[] array, int offset, int count)
+        public virtual long WriteArray(long position, T[] array, int offset, int count)
         {
+            long size = 0;
             _stream.Seek(position, SeekOrigin.Begin);
             for (int i = 0; i < count; i++)
             {
-                this.WriteTo(array[i + offset]);
+                size = size + this.WriteTo(array[i + offset]);
             }
+            return size;
         }
 
         /// <summary>
