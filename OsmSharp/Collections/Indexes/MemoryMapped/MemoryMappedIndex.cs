@@ -26,7 +26,7 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
     /// A memory-mapped implementation of an index.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class MemoryMappedIndex<T> : Index<T>
+    public sealed class MemoryMappedIndex<T> : Index<T>, IDisposable
         where T : struct
     {
         /// <summary>
@@ -151,6 +151,18 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
                 throw new KeyNotFoundException();
             }
             return element;
+        }
+
+        /// <summary>
+        /// Disposes of all native resources associated with this index.
+        /// </summary>
+        public void Dispose()
+        {
+            // dispose only the accessors, the file may still be in use.
+            foreach (var accessor in _accessors)
+            {
+                accessor.Dispose();
+            }
         }
     }
 }

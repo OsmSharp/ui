@@ -24,15 +24,15 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
     /// <summary>
     /// A memory mapped accessor that stores uints.
     /// </summary>
-    internal sealed class MemoryMappedAccessorInt32 : MemoryMappedAccessor<int>
+    internal sealed class MemoryMappedAccessorInt64 : MemoryMappedAccessor<long>
     {
         /// <summary>
         /// Creates a new memory mapped file.
         /// </summary>
         /// <param name="file"></param>
         /// <param name="stream"></param>
-        internal MemoryMappedAccessorInt32(MemoryMappedFile file, Stream stream)
-            : base(file, stream, 4)
+        internal MemoryMappedAccessorInt64(MemoryMappedFile file, Stream stream)
+            : base(file, stream, 8)
         {
 
         }
@@ -42,16 +42,16 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
         /// </summary>
         /// <param name="position">The position to read from.</param>
         /// <returns></returns>
-        protected sealed override int ReadFrom(int position)
+        protected sealed override long ReadFrom(int position)
         {
-            return BitConverter.ToInt32(_buffer, position);
+            return BitConverter.ToInt64(_buffer, position);
         }
 
         /// <summary>
         /// Writes to the stream.
         /// </summary>
         /// <param name="structure"></param>
-        protected sealed override long WriteTo(int structure)
+        protected sealed override long WriteTo(long structure)
         {
             _stream.Write(BitConverter.GetBytes(structure), 0, _elementSize);
             return _elementSize;

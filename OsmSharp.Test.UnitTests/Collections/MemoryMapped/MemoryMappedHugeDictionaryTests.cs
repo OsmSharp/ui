@@ -17,42 +17,31 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Collections.Indexes.MemoryMapped;
+using OsmSharp.Collections.MemoryMapped;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Random;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OsmSharp.Test.Unittests.Collections.Indexes.MemoryMapped
+namespace OsmSharp.Test.Unittests.Collections.MemoryMapped
 {
     /// <summary>
-    /// Contains test for a memory-mapped index.
+    /// Contains tests for the memory-mapped huge dictionary.
     /// </summary>
     [TestFixture]
-    public class MemoryMappedIndexTests
+    public class MemoryMappedHugeDictionaryTests
     {
         /// <summary>
-        /// Test structure.
-        /// </summary>
-        private struct TestStruct
-        {
-            /// <summary>
-            /// Gets or sets field1.
-            /// </summary>
-            public string Field1 { get; set; }
-        }
-
-        /// <summary>
-        /// Tests using a structure with a variable-sized string.
+        /// Test small.
         /// </summary>
         [Test]
-        public void TestString()
+        public void TestSmall()
         {
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
 
             var buffer = new byte[255];
-            var readFrom = new MemoryMappedFile.ReadFromDelegate<TestStruct>((stream, position) =>
+            var readFrom = new MemoryMappedFile.ReadFromDelegate<string>((stream, position) =>
             {
                 stream.Seek(position, System.IO.SeekOrigin.Begin);
                 var size = stream.ReadByte();
@@ -69,15 +58,12 @@ namespace OsmSharp.Test.Unittests.Collections.Indexes.MemoryMapped
                     stream.Read(buffer, pos, size);
                 }
                 pos = pos + size;
-                return new TestStruct()
-                {
-                    Field1 = System.Text.Encoding.Unicode.GetString(buffer, 0, pos)
-                };
+                return System.Text.Encoding.Unicode.GetString(buffer, 0, pos);
             });
-            var writeTo = new MemoryMappedFile.WriteToDelegate<TestStruct>((stream, position, structure) =>
+            var writeTo = new MemoryMappedFile.WriteToDelegate<string>((stream, position, structure) =>
             {
                 stream.Seek(position, System.IO.SeekOrigin.Begin);
-                var bytes = System.Text.Encoding.Unicode.GetBytes(structure.Field1);
+                var bytes = System.Text.Encoding.Unicode.GetBytes(structure);
                 var length = bytes.Length;
                 for(int idx = 0; idx < bytes.Length; idx = idx + 255)
                 {
@@ -94,28 +80,29 @@ namespace OsmSharp.Test.Unittests.Collections.Indexes.MemoryMapped
                 return length;
             });
 
-            var index = new MemoryMappedIndex<TestStruct>(new MemoryMappedStream(new MemoryStream()), 
-                readFrom, writeTo);
-            var indexRef = new Dictionary<long, string>();
+            var dictionary = new MemoryMappedHugeDictionary<string, string>(new MemoryMappedStream(new MemoryStream()),
+                readFrom, writeTo, readFrom, writeTo);
+            var reference = new Dictionary<string, string>();
 
-            // add the data.
+            var keys = new string[] { "key1", "key2", "key3", "key4", "key5", "key6", "key7", "key8" };
             var testCount = 10;
             while(testCount > 0)
             {
-                var data = randomGenerator.GenerateString(
+                var keyIdx = randomGenerator.Generate(keys.Length);
+                var value = randomGenerator.GenerateString(
                     randomGenerator.Generate(256) + 32);
-                indexRef.Add(index.Add(new TestStruct()
-                {
-                    Field1 = data
-                }), data);
+                dictionary[keys[keyIdx]] = value;
+                reference[keys[keyIdx]] = value;
                 testCount--;
             }
 
-            // get the data and check.
-            foreach(var entry in indexRef)
+            foreach(var pair in reference)
             {
-                var data = index.Get(entry.Key);
-                Assert.AreEqual(indexRef[entry.Key], data.Field1);
+                var value = dictionary[pair.Key];
+                Assert.AreEqual(pair.Value, value);
+
+                Assert.IsTrue(dictionary.TryGetValue(pair.Key, out value));
+                Assert.AreEqual(pair.Value, value);
             }
         }
     }

@@ -88,6 +88,29 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="position">The position to start at.</param>
         /// <param name="sizeInByte">The size.</param>
         /// <returns></returns>
+        protected abstract MemoryMappedAccessor<int> DoCreateNewInt32(long position, long sizeInByte);
+
+        /// <summary>
+        /// Creates a new empty memory mapped accessor with given size in bytes.
+        /// </summary>
+        /// <param name="sizeInBytes">The size of this accessor.</param>
+        /// <returns></returns>
+        public MemoryMappedAccessor<int> CreateInt32(long sizeInBytes)
+        {
+            var accessor = this.DoCreateNewInt32(_nextPosition, sizeInBytes);
+            _accessors.Add(accessor);
+
+            _nextPosition = _nextPosition + sizeInBytes;
+
+            return accessor;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the given stream and the given size in bytes.
+        /// </summary>
+        /// <param name="position">The position to start at.</param>
+        /// <param name="sizeInByte">The size.</param>
+        /// <returns></returns>
         protected abstract MemoryMappedAccessor<uint> DoCreateNewUInt32(long position, long sizeInByte);
 
         /// <summary>
@@ -175,6 +198,29 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="sizeInByte">The size.</param>
         /// <returns></returns>
         protected abstract MemoryMappedAccessor<ulong> DoCreateNewUInt64(long position, long sizeInByte);
+
+        /// <summary>
+        /// Creates a new empty memory mapped accessor with given size in bytes.
+        /// </summary>
+        /// <param name="sizeInBytes">The size of this accessor.</param>
+        /// <returns></returns>
+        public MemoryMappedAccessor<long> CreateInt64(long sizeInBytes)
+        {
+            var accessor = this.DoCreateNewInt64(_nextPosition, sizeInBytes);
+            _accessors.Add(accessor);
+
+            _nextPosition = _nextPosition + sizeInBytes;
+
+            return accessor;
+        }
+
+        /// <summary>
+        /// Creates a new memory mapped file based on the given stream and the given size in bytes.
+        /// </summary>
+        /// <param name="position">The position to start at.</param>
+        /// <param name="sizeInByte">The size.</param>
+        /// <returns></returns>
+        protected abstract MemoryMappedAccessor<long> DoCreateNewInt64(long position, long sizeInByte);
 
         /// <summary>
         /// A delegate to facilitate reading a variable-sized object.

@@ -131,6 +131,11 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <param name="size"></param>
         public override void Resize(long size)
         {
+            if (size < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
             // clear cache (and save dirty blocks).
             _cachedBuffers.Clear();
             _cachedBuffer = null;
@@ -168,6 +173,11 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         {
             get
             {
+                if (idx < 0 || idx >= _length)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
                 // sync buffer.
                 var relativePosition = this.SyncBuffer(idx);
 
@@ -175,6 +185,11 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
             }
             set
             {
+                if (idx < 0 || idx >= _length)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
                 // sync buffer.
                 var relativePosition = this.SyncBuffer(idx);
 

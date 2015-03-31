@@ -36,7 +36,37 @@ namespace OsmSharp.Test.Unittests.Collections.Arrays
         /// A simple test for the huge array.
         /// </summary>
         [Test]
-        public void MemoryMappedHugeArraySimpleTest()
+        public void MemoryMappedHugeArrayArgumentTest()
+        {
+            using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
+            {
+                Assert.AreEqual(1000, intArray.Length);
+                Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    intArray[1001] = 10;
+                });
+                Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    intArray[-1] = 10;
+                });
+
+                uint value;
+                Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    value = intArray[1001];
+                });
+                Assert.Catch<ArgumentOutOfRangeException>(() =>
+                {
+                    value = intArray[-1];
+                });
+            }
+        }
+
+        /// <summary>
+        /// A simple test for the huge array.
+        /// </summary>
+        [Test]
+        public void MemoryMappedHugeArrayTest()
         {
             using (var intArray = new MemoryMappedHugeArrayUInt32(new MemoryMappedStream(new MemoryStream()), 1000, 1024))
             {

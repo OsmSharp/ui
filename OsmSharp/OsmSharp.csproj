@@ -64,6 +64,8 @@
     <Compile Include="Collections\Arrays\HugeArrayBase.cs" />
     <Compile Include="Collections\Arrays\MappedHugeArray.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArray.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayInt64.cs" />
+    <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayInt32.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArraySingle.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt64.cs" />
     <Compile Include="Collections\Arrays\MemoryMapped\MemoryMappedHugeArrayUInt32.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\LongIndex\ILongIndex.cs" />
     <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionary.cs" />
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\PermutationEnumerator.cs" />
@@ -165,11 +168,13 @@
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="IO\FastBitConverter.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt64.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt32.cs" />
     <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorVariable.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedAccessor.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedFile.cs" />
     <Compile Include="IO\MemoryMappedFiles\MemoryMappedStream.cs" />
-    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorInt32.cs" />
+    <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt32.cs" />
     <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorSingle.cs" />
     <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt64.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
