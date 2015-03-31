@@ -148,6 +148,12 @@ namespace OsmSharp.Collections.MemoryMapped
                 _pairs[lastPairId + 2] = nextPairId;
             }
 
+            // increase pairs if needed.
+            if(nextPairId + 2 >= _pairs.Length)
+            { // increase pairs.
+                _pairs.Resize(_pairs.Length + 1000);
+            }
+
             // add pair.
             _pairs[nextPairId + 0] = _keys.Add(new KeyStruct() { Key = key });
             _pairs[nextPairId + 1] = _values.Add(new ValueStruct() { Value = value });
@@ -272,7 +278,11 @@ namespace OsmSharp.Collections.MemoryMapped
             public TKey Key { get; set; }
         }
 
-
+        /// <summary>
+        /// Adds an element with the provided key and value.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(TKey key, TValue value)
         {
             long keyId, valueId, pairId;
@@ -284,22 +294,42 @@ namespace OsmSharp.Collections.MemoryMapped
             this.Add(hash, key, value);
         }
 
+        /// <summary>
+        /// Determines whether this dictionary contains the specified key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(TKey key)
         {
             long keyId, valueId, pairId;
             return this.Get(this.Hash(key), key, out keyId, out valueId, out pairId);
         }
 
+        /// <summary>
+        /// Gets an System.Collections.Generic.ICollection<T> containing the keys of
+        ///     the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// </summary>
         public ICollection<TKey> Keys
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Removes the element with the specified key from the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(TKey key)
         {
             return this.Remove(this.Hash(key), key);
         }
 
+        /// <summary>
+        /// Gets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetValue(TKey key, out TValue value)
         {
             long keyId, valueId, pairId;
@@ -313,11 +343,20 @@ namespace OsmSharp.Collections.MemoryMapped
             return false;
         }
 
+        /// <summary>
+        /// Gets an System.Collections.Generic.ICollection<T> containing the values in
+        ///     the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// </summary>
         public ICollection<TValue> Values
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Gets or sets the element with the specified key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public TValue this[TKey key]
         {
             get
@@ -336,11 +375,18 @@ namespace OsmSharp.Collections.MemoryMapped
             }
         }
 
+        /// <summary>
+        /// Adds an element with the provided key and value.
+        /// </summary>
+        /// <param name="item"></param>
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             this.Add(item.Key, item.Value);
         }
 
+        /// <summary>
+        /// Removes all items from the System.Collections.Generic.ICollection<T>.
+        /// </summary>
         public void Clear()
         {
             for (int idx = 0; idx < _hashes.Length; idx++)
@@ -349,6 +395,12 @@ namespace OsmSharp.Collections.MemoryMapped
             }
         }
 
+        /// <summary>
+        /// Determines whether the System.Collections.Generic.ICollection<T> contains
+        ///     a specific value.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
             TValue value;
@@ -359,31 +411,57 @@ namespace OsmSharp.Collections.MemoryMapped
             return false;
         }
 
+        /// <summary>
+        /// Copies the elements of the System.Collections.Generic.ICollection<T> to an
+        ///     System.Array, starting at a particular System.Array index.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the number of elements contained in the System.Collections.Generic.ICollection<T>.
+        /// </summary>
         public int Count
         {
             get { return _size; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the System.Collections.Generic.ICollection<T>
+        ///     is read-only.
+        /// </summary>
         public bool IsReadOnly
         {
             get { return false; }
         }
 
+        /// <summary>
+        /// Removes the first occurrence of a specific object from the System.Collections.Generic.ICollection<T>.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
             return this.Remove(item.Key);
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();

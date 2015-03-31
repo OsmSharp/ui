@@ -45,6 +45,11 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         public static long DefaultFileSize = (long)1024 * (long)1024 * (long)64;
 
         /// <summary>
+        /// Holds the accessor size.
+        /// </summary>
+        private long _accessorSizeInBytes;
+
+        /// <summary>
         /// Holds the read-from delegate.
         /// </summary>
         private MemoryMappedFile.ReadFromDelegate<T> _readFrom;
@@ -62,6 +67,20 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         /// <param name="writeTo"></param>
         public MemoryMappedIndex(MemoryMappedFile file, MemoryMappedFile.ReadFromDelegate<T> readFrom,
             MemoryMappedFile.WriteToDelegate<T> writeTo)
+            : this(file, readFrom, writeTo, DefaultFileSize)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new memory-mapped index.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="readFrom"></param>
+        /// <param name="writeTo"></param>
+        /// <param name="sizeInBytes"></param>
+        public MemoryMappedIndex(MemoryMappedFile file, MemoryMappedFile.ReadFromDelegate<T> readFrom,
+            MemoryMappedFile.WriteToDelegate<T> writeTo, long sizeInBytes)
         {
             if (file == null) { throw new ArgumentNullException("file"); }
             if (readFrom == null) { throw new ArgumentNullException("readFrom"); }
@@ -71,9 +90,10 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
             _readFrom = readFrom;
             _writeTo = writeTo;
             _position = 0;
+            _accessorSizeInBytes = sizeInBytes;
 
             _accessors = new List<MemoryMappedAccessor<T>>();
-            _accessors.Add(this.CreateAccessor(_file, DefaultFileSize));
+            _accessors.Add(this.CreateAccessor(_file, _accessorSizeInBytes));
         }
 
         /// <summary>
@@ -100,20 +120,25 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         public override long Add(T element)
         {
             var id = _position;
-            var accessorId = (int)System.Math.Floor(_position / DefaultFileSize);
+            var accessorId = (int)System.Math.Floor(_position / _accessorSizeInBytes);
             if (accessorId == _accessors.Count)
             { // add new accessor.
-                _accessors.Add(this.CreateAccessor(_file, DefaultFileSize));
+                _accessors.Add(this.CreateAccessor(_file, _accessorSizeInBytes));
             }
             var accessor = _accessors[accessorId];
-            var size = accessor.Write(_position, ref element);
+            var localPosition = _position - (accessorId * _accessorSizeInBytes);
+            var size = accessor.Write(localPosition, ref element);
             if(size < 0)
             { // writing failed.
+                _position = (_accessors.Count * _accessorSizeInBytes);
+                id = _position;
+                localPosition = 0;
+
                 // add new accessor.
-                _accessors.Add(this.CreateAccessor(_file, DefaultFileSize));
+                _accessors.Add(this.CreateAccessor(_file, _accessorSizeInBytes));
                 accessorId++;
                 accessor = _accessors[accessorId];
-                size = accessor.Write(_position, ref element);
+                size = accessor.Write(localPosition, ref element);
             }
             _position = _position + size;
             return id;
@@ -127,13 +152,13 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         /// <returns>True if an element with the given id was found.</returns>
         public override bool TryGet(long id, out T element)
         {
-            var accessorId = (int)System.Math.Floor(id / DefaultFileSize);
+            var accessorId = (int)System.Math.Floor(id / _accessorSizeInBytes);
             if (accessorId >= _accessors.Count)
             {
                 element = default(T);
                 return false;
             }
-            var localPosition = (id - (DefaultFileSize * accessorId));
+            var localPosition = (id - (_accessorSizeInBytes * accessorId));
             _accessors[accessorId].Read(localPosition, out element);
             return true;
         }

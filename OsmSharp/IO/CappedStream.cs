@@ -149,6 +149,32 @@ namespace OsmSharp.IO
         }
 
         /// <summary>
+        ///  Tests if it's possible to write a sequence of bytes to the current
+        ///     stream and advance the current position within this stream by the number
+        ///     of bytes.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public bool WriteBytePossible()
+        {
+            return !(this.Position + 1 > this.Length);
+        }
+
+        /// <summary>
+        ///  Tests if it's possible to write a sequence of bytes to the current
+        ///     stream and advance the current position within this stream by the number
+        ///     of bytes.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public bool WritePossible(int offset, int count)
+        {
+            return !(this.Position + count > this.Length);
+        }
+
+        /// <summary>
         ///  Writes a sequence of bytes to the current
         ///     stream and advances the current position within this stream by the number
         ///     of bytes written.

@@ -118,5 +118,85 @@ namespace OsmSharp.Test.Unittests.Collections.Indexes.MemoryMapped
                 Assert.AreEqual(indexRef[entry.Key], data.Field1);
             }
         }
+
+        /// <summary>
+        /// Tests using a structure with a variable-sized string.
+        /// </summary>
+        [Test]
+        public void TestStringHuge()
+        {
+            var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+
+            var buffer = new byte[255];
+            var readFrom = new MemoryMappedFile.ReadFromDelegate<TestStruct>((stream, position) =>
+            {
+                stream.Seek(position, System.IO.SeekOrigin.Begin);
+                var size = stream.ReadByte();
+                int pos = 0;
+                stream.Read(buffer, pos, size);
+                while (size == 255)
+                {
+                    pos = pos + size;
+                    size = stream.ReadByte();
+                    if (buffer.Length < size + pos)
+                    {
+                        Array.Resize(ref buffer, size + pos);
+                    }
+                    stream.Read(buffer, pos, size);
+                }
+                pos = pos + size;
+                return new TestStruct()
+                {
+                    Field1 = System.Text.Encoding.Unicode.GetString(buffer, 0, pos)
+                };
+            });
+            var writeTo = new MemoryMappedFile.WriteToDelegate<TestStruct>((stream, position, structure) =>
+            {
+                stream.Seek(position, System.IO.SeekOrigin.Begin);
+                var bytes = System.Text.Encoding.Unicode.GetBytes(structure.Field1);
+                var length = bytes.Length;
+                for (int idx = 0; idx <= bytes.Length; idx = idx + 255)
+                {
+                    var size = bytes.Length - idx;
+                    if (size > 255)
+                    {
+                        size = 255;
+                    }
+
+                    if (stream.Length <= stream.Position + size + 1)
+                    { // past end of stream.
+                        return -1;
+                    }
+                    stream.WriteByte((byte)size);
+                    stream.Write(bytes, idx, size);
+                    length++;
+                }
+                return length;
+            });
+
+            var index = new MemoryMappedIndex<TestStruct>(new MemoryMappedStream(new MemoryStream()),
+                readFrom, writeTo, 1024);
+            var indexRef = new Dictionary<long, string>();
+
+            // add the data.
+            var testCount = 1000;
+            while (testCount > 0)
+            {
+                var data = randomGenerator.GenerateString(
+                    randomGenerator.Generate(256) + 32);
+                indexRef.Add(index.Add(new TestStruct()
+                {
+                    Field1 = data
+                }), data);
+                testCount--;
+            }
+
+            // get the data and check.
+            foreach (var entry in indexRef)
+            {
+                var data = index.Get(entry.Key);
+                Assert.AreEqual(indexRef[entry.Key], data.Field1);
+            }
+        }
     }
 }
