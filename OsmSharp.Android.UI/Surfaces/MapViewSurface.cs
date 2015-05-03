@@ -1134,10 +1134,32 @@ namespace OsmSharp.Android.UI
         /// <param name="mapZoom">Map zoom.</param>
         public void SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
         {
-            this.MapCenter = center;
-            this.MapTilt = mapTilt;
-            this.MapZoom = mapZoom;
-
+            //this.MapCenter = center;
+            if (this.Width == 0 || this.MapBoundingBox == null)
+            {
+                _mapCenter = center;
+            }
+            else
+            {
+                _mapCenter = this.Map.EnsureViewWithinBoundingBox(center, this.MapBoundingBox, this.CurrentView);
+            }
+            //this.MapTilt = mapTilt;
+            _mapTilt = mapTilt;
+            //this.MapZoom = mapZoom;
+            if (mapZoom > this.MapMaxZoomLevel)
+            {
+                _mapZoomLevel = this.MapMaxZoomLevel;
+            }
+            else if (mapZoom < this.MapMinZoomLevel)
+            {
+                _mapZoomLevel = this.MapMinZoomLevel;
+            }
+            else
+            {
+                _mapZoomLevel = mapZoom;
+            }
+            _previouslyRenderedView = null;
+            _previouslyChangedView = null;
             (this.Context as Activity).RunOnUiThread(NotifyMovement);
         }
 
