@@ -1161,6 +1161,9 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		void IMapView.Invalidate()
 		{
+            // forget about any previous renderings.
+            _previouslyRenderedView = null;
+
 			this.TriggerRendering();
 		}
 
