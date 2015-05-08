@@ -205,7 +205,8 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
             List<int> result = new List<int>(best.Genomes);
             result.Insert(0, 0);
             //return new SimpleAsymmetricRoute(result, true);
-            return DynamicAsymmetricRoute.CreateFrom(result);
+            // Parameter problem.Symmetric inserted otherwise Tour is still round
+            return DynamicAsymmetricRoute.CreateFrom(result, problem.Symmetric); 
         }
 
         /// <summary>
