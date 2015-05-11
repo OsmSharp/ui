@@ -75,7 +75,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 key);
             if (data == null)
             {
-                var tagsIndex = new TagsTableCollectionIndex();
+                var tagsIndex = new TagsIndex();
 
                 // do the data processing.
                 var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);

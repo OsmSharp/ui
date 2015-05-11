@@ -26,7 +26,6 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
     /// A memory mapped accessor that stores objects of a variable size in bytes.
     /// </summary>
     internal sealed class MemoryMappedAccessorVariable<T> : MemoryMappedAccessor<T>
-        where T : struct
     {
         /// <summary>
         /// Holds the read-from delegate.
@@ -47,7 +46,7 @@ namespace OsmSharp.IO.MemoryMappedFiles.Accessors
         /// <param name="writeTo"></param>
         internal MemoryMappedAccessorVariable(MemoryMappedFile file, Stream stream, 
             MemoryMappedFile.ReadFromDelegate<T> readFrom, MemoryMappedFile.WriteToDelegate<T> writeTo)
-            : base(file, stream, 0)
+            : base(file, stream, -1)
         {
             _readFrom = readFrom;
             _writeTo = writeTo;

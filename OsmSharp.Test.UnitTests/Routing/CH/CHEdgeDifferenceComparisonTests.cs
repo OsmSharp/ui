@@ -61,7 +61,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             RouterDataSource<CHEdgeData> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
-                var tagsIndex = new TagsTableCollectionIndex();
+                var tagsIndex = new TagsIndex();
 
                 // do the data processing.
                 data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);

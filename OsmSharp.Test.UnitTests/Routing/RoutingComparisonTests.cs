@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing
             RouterDataSource<Edge> data = null;
             if (!_data.TryGetValue(embeddedName, out data))
             {
-                var tagsIndex = new TagsTableCollectionIndex();
+                var tagsIndex = new TagsIndex();
 
                 // do the data processing.
                 data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);

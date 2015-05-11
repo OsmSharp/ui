@@ -58,7 +58,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
             // create the tags index.
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();

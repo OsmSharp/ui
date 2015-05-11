@@ -306,8 +306,8 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Gets an System.Collections.Generic.ICollection<T> containing the keys of
-        ///     the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// Gets an System.Collections.Generic.ICollection containing the keys of
+        ///     the System.Collections.Generic.IDictionary.
         /// </summary>
         public ICollection<TKey> Keys
         {
@@ -315,7 +315,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Removes the element with the specified key from the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// Removes the element with the specified key from the System.Collections.Generic.IDictionary.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -344,8 +344,8 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Gets an System.Collections.Generic.ICollection<T> containing the values in
-        ///     the System.Collections.Generic.IDictionary<TKey,TValue>.
+        /// Gets an System.Collections.Generic.ICollection containing the values in
+        ///     the System.Collections.Generic.IDictionary.
         /// </summary>
         public ICollection<TValue> Values
         {
@@ -385,7 +385,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Removes all items from the System.Collections.Generic.ICollection<T>.
+        /// Removes all items from the System.Collections.Generic.ICollection.
         /// </summary>
         public void Clear()
         {
@@ -396,7 +396,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Determines whether the System.Collections.Generic.ICollection<T> contains
+        /// Determines whether the System.Collections.Generic.ICollection contains
         ///     a specific value.
         /// </summary>
         /// <param name="item"></param>
@@ -412,7 +412,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Copies the elements of the System.Collections.Generic.ICollection<T> to an
+        /// Copies the elements of the System.Collections.Generic.ICollection to an
         ///     System.Array, starting at a particular System.Array index.
         /// </summary>
         /// <param name="array"></param>
@@ -423,7 +423,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Gets the number of elements contained in the System.Collections.Generic.ICollection<T>.
+        /// Gets the number of elements contained in the System.Collections.Generic.ICollection.
         /// </summary>
         public int Count
         {
@@ -431,7 +431,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Gets a value indicating whether the System.Collections.Generic.ICollection<T>
+        /// Gets a value indicating whether the System.Collections.Generic.ICollection
         ///     is read-only.
         /// </summary>
         public bool IsReadOnly
@@ -440,7 +440,7 @@ namespace OsmSharp.Collections.MemoryMapped
         }
 
         /// <summary>
-        /// Removes the first occurrence of a specific object from the System.Collections.Generic.ICollection<T>.
+        /// Removes the first occurrence of a specific object from the System.Collections.Generic.ICollection.
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>

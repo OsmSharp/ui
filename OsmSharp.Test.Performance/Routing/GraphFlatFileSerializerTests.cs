@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Performance.Routing
             testOutputFile.Delete();
             var writeStream = testOutputFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
             var interpreter = new OsmRoutingInterpreter();
             var graph = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
             var routingSerializer = new RoutingDataSourceSerializer();

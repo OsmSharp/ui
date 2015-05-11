@@ -51,7 +51,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public RouterDataSource<Edge> BuildDykstraDataSource(
             IOsmRoutingInterpreter interpreter, string embeddedName)
         {
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);

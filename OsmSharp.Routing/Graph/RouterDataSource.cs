@@ -19,7 +19,6 @@
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
-using OsmSharp.Collections.Tags.Serializer.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
@@ -50,7 +49,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsCollectionIndexReadonly _tagsIndex;
+        private readonly ITagsIndex _tagsIndex;
 
         /// <summary>
         /// Holds the supported vehicle profiles.
@@ -63,7 +62,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public RouterDataSource(GraphBase<TEdgeData> graph, ITagsCollectionIndexReadonly tagsIndex)
+        public RouterDataSource(GraphBase<TEdgeData> graph, ITagsIndex tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -424,7 +423,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public override ITagsCollectionIndexReadonly TagsIndex
+        public override ITagsIndex TagsIndex
         {
             get
             {
@@ -887,7 +886,7 @@ namespace OsmSharp.Routing.Graph
             stream.Seek(position, System.IO.SeekOrigin.Begin);
 
             // serialize tags.
-            var tagsSize = TagIndexSerializer.Serialize(stream, _tagsIndex);
+            var tagsSize = _tagsIndex.Serialize(stream);
             position = position + tagsSize;
                 
             return position;
@@ -914,7 +913,7 @@ namespace OsmSharp.Routing.Graph
 
             // deserialize tags.
             stream.Seek(position, System.IO.SeekOrigin.Begin);
-            var tagsIndex = TagIndexSerializer.Deserialize(stream);
+            var tagsIndex = global::OsmSharp.Collections.Tags.Index.TagsIndex.Deserialize(stream);
 
             return new RouterDataSource<TEdgeData>(graph, tagsIndex);
         }

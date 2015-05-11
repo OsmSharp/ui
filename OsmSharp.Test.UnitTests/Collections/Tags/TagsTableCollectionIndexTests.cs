@@ -34,7 +34,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         [Test]
         public void SimpleTestTagsCollectionIndex()
         {
-            this.TestTagsCollectionIndex(new TagsTableCollectionIndex());
+            this.TestTagsCollectionIndex(new TagsIndex());
         }
     }
 }

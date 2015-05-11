@@ -93,6 +93,22 @@ namespace OsmSharp.Math.Random
             return Encoding.Unicode.GetString(str);
         }
 
+        /// <summary>
+        /// Generates an array of random size and with random values.
+        /// </summary>
+        /// <param name="maxSize"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public int[] GenerateArray(int maxSize, int max)
+        {
+            var array = new int[this.Generate(maxSize)];
+            for(int i= 0; i < array.Length; i++)
+            {
+                array[i] = this.Generate(max);
+            }
+            return array;
+        }
+
         #endregion
     }
 }

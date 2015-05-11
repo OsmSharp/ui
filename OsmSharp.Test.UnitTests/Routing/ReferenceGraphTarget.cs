@@ -45,7 +45,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicles"></param>
-        public ReferenceGraphTarget(RouterDataSourceBase<Edge> graph, IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, IEnumerable<Vehicle> vehicles)
+        public ReferenceGraphTarget(RouterDataSourceBase<Edge> graph, IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, IEnumerable<Vehicle> vehicles)
             : base(graph, interpreter, tagsIndex, vehicles, false)
         {
 

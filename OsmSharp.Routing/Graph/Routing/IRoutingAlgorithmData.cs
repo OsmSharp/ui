@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,12 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Vehicles;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Graph.Routing
 {
@@ -67,7 +65,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        ITagsCollectionIndexReadonly TagsIndex
+        ITagsIndex TagsIndex
         {
             get;
         }

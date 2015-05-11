@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(RouterDataSourceBase<CHEdgeData> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
             : base(graph, interpreter, tagsIndex)
         {
             if (!graph.IsDirected) { throw new ArgumentOutOfRangeException("Only directed graphs can be used for contraction hiearchies."); }
@@ -84,7 +84,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="to"></param>
         /// <param name="intermediates"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
+        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex,
             TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             var direction = _vehicle.IsOneWay(tags);
@@ -151,7 +151,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tags"></param>
         /// <returns></returns>
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, 
-            ITagsCollectionIndex tagsIndex, TagsCollectionBase tags)
+            ITagsIndex tagsIndex, TagsCollectionBase tags)
         {
             return _vehicle.CanTraverse(tags);
         }
@@ -178,7 +178,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="vehicle"></param>
         /// <returns></returns>
         public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
+            ITagsIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
             // pull in the data.
             var graph = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
@@ -200,7 +200,7 @@ namespace OsmSharp.Routing.Osm.Streams
         public static RouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
             IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsIndex(), interpreter, vehicle);
         }
 
         #endregion

@@ -223,7 +223,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             tags["highway"] = highway;
             //tags["name"] = name;
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);

@@ -248,7 +248,6 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <returns></returns>
         public MemoryMappedAccessor<T> CreateVariable<T>(long sizeInBytes, 
             ReadFromDelegate<T> readFrom, WriteToDelegate<T> writeTo)
-            where T : struct
         {
             var accessor = this.DoCreateVariable<T>(_nextPosition, sizeInBytes, readFrom, writeTo);
             _accessors.Add(accessor);
@@ -267,8 +266,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <param name="readFrom"></param>
         /// <param name="writeTo"></param>
         /// <returns></returns>
-        protected abstract MemoryMappedAccessor<T> DoCreateVariable<T>(long _nextPosition, long sizeInBytes, ReadFromDelegate<T> readFrom, WriteToDelegate<T> writeTo)
-            where T : struct;
+        protected abstract MemoryMappedAccessor<T> DoCreateVariable<T>(long _nextPosition, long sizeInBytes, ReadFromDelegate<T> readFrom, WriteToDelegate<T> writeTo);
 
         /// <summary>
         /// Notifies this factory that the given file was already disposed. This given the opportunity to dispose of files without disposing the entire factory.
@@ -276,7 +274,6 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <typeparam name="T"></typeparam>
         /// <param name="fileToDispose"></param>
         internal void Disposed<T>(MemoryMappedAccessor<T> fileToDispose)
-            where T : struct
         {
             _accessors.Remove(fileToDispose);
         }

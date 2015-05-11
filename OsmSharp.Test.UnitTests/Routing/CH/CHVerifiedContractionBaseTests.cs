@@ -87,7 +87,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         public void BuildDykstraRouter(string embeddedName,
             IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             _pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, Dictionary<uint, PathSegment<long>>>>();
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
@@ -175,7 +175,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);

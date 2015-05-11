@@ -56,7 +56,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsCollectionIndex _tagsIndex;
+        private ITagsIndex _tagsIndex;
 
         /// <summary>
         /// Holds the osm data cache.
@@ -85,7 +85,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="tagsIndex"></param>
         protected GraphOsmStreamTargetBase(RouterDataSourceBase<TEdgeData> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex)
             : this(graph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
 
@@ -102,7 +102,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="coordinates"></param>
         protected GraphOsmStreamTargetBase(
             RouterDataSourceBase<TEdgeData> graph, IOsmRoutingInterpreter interpreter,
-            ITagsCollectionIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
+            ITagsIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
         {
             _graph = graph;
             _interpreter = interpreter;
@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsCollectionIndex TagsIndex
+        public ITagsIndex TagsIndex
         {
             get
             {
@@ -640,7 +640,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags, 
+        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, TagsCollectionBase tags, 
             bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates);
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
+        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex,
                                               TagsCollectionBase tags);
 
         /// <summary>

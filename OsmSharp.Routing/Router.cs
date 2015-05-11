@@ -64,7 +64,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public static Router CreateFrom(OsmStreamSource reader, IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -140,7 +140,7 @@ namespace OsmSharp.Routing
         public static Router CreateCHFrom(OsmStreamSource reader,
             IOsmRoutingInterpreter interpreter, Vehicle vehicle)
         {
-            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(

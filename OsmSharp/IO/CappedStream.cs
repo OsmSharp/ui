@@ -153,8 +153,6 @@ namespace OsmSharp.IO
         ///     stream and advance the current position within this stream by the number
         ///     of bytes.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         /// <returns></returns>
         public bool WriteBytePossible()
         {

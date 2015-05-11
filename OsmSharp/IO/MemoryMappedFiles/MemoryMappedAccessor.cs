@@ -25,7 +25,6 @@ namespace OsmSharp.IO.MemoryMappedFiles
     /// Abstract representation of a memory-mapped accessor: Provides random access to unmanaged blocks of memory from managed code.
     /// </summary>
     public abstract class MemoryMappedAccessor<T> : IDisposable
-        where T : struct
     {
         /// <summary>
         /// Holds the file that created this accessor.
@@ -59,11 +58,19 @@ namespace OsmSharp.IO.MemoryMappedFiles
             if (file == null) { throw new ArgumentNullException("file"); }
             if (stream == null) { throw new ArgumentNullException("stream"); }
             if (!stream.CanSeek) { throw new ArgumentException("Stream to create a memory mapped file needs to be seekable."); }
+            if (elementSize == 0 || elementSize < -1) { throw new ArgumentOutOfRangeException("elementSize need to be -1 or in the range of ]0-n]."); }
 
             _file = file;
             _stream = stream;
             _elementSize = elementSize;
-            _buffer = new byte[64 * elementSize];
+            if(_elementSize > 0)
+            { // 64 element in buffer by default.
+                _buffer = new byte[64 * elementSize];
+            }
+            else
+            { // use a default size when element size is variable.
+                _buffer = new byte[1024];
+            }
         }
 
         /// <summary>
@@ -189,6 +196,47 @@ namespace OsmSharp.IO.MemoryMappedFiles
                 size = size + this.WriteTo(array[i + offset]);
             }
             return size;
+        }
+
+        /// <summary>
+        /// Copies the data in this accessor to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        public void CopyTo(Stream stream)
+        {
+            this.CopyTo(stream, 0, (int)_stream.Length);
+        }
+
+        /// <summary>
+        /// Copies the data in this accessor to the given stream starting at the given position until position + length.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="position"></param>
+        /// <param name="length"></param>
+        public void CopyTo(Stream stream, long position, int length)
+        {
+            this.CopyTo(stream, position, length, _buffer);
+        }
+
+        /// <summary>
+        /// Copies the data in this accessor to the given stream starting at the given position until position + length.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="position"></param>
+        /// <param name="length"></param>
+        /// <param name="buffer"></param>
+        public void CopyTo(Stream stream, long position, int length, byte[] buffer)
+        {
+            _stream.Seek(position, SeekOrigin.Begin);
+            while (length > buffer.Length)
+            {
+                _stream.Read(buffer, 0, buffer.Length);
+                stream.Write(buffer, 0, buffer.Length);
+
+                length = length - buffer.Length;
+            }
+            _stream.Read(buffer, 0, length);
+            stream.Write(buffer, 0, length);
         }
 
         /// <summary>

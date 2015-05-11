@@ -65,7 +65,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         {
             var vehicle = Vehicle.Car;
 
-            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var source = new OsmSharp.Osm.Streams.Filters.OsmStreamFilterProgress();

@@ -135,6 +135,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="edgeDataSize"></param>
         /// <param name="mapFrom"></param>
         /// <param name="mapTo"></param>
+        /// <param name="copy"></param>
         /// <returns></returns>
         public static GraphBase<TEdgeData> Deserialize(Stream stream, int edgeDataSize, MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom,
             MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)

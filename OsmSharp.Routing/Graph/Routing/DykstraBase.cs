@@ -98,10 +98,10 @@ namespace OsmSharp.Routing.Graph.Routing
                 // loop over all.
                 while (edges.MoveNext())
                 {
-                    if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
-                    { // skip this edge, no valid tags found.
-                        continue;
-                    }
+                    //if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
+                    //{ // skip this edge, no valid tags found.
+                    //    continue;
+                    //}
 
                     // test the two points.
                     float fromLatitude, fromLongitude;

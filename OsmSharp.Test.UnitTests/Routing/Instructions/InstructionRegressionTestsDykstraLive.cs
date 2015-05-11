@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         protected override Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
-            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
+            TagsIndex tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData =

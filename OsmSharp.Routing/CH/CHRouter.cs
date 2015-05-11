@@ -1620,10 +1620,10 @@ namespace OsmSharp.Routing.CH
                     { // skip this edge, does not represent neighbours.
                         continue;
                     }
-                    if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
-                    { // skip this edge, no valid tags found.
-                        continue;
-                    }
+                    //if (!graph.TagsIndex.Contains(edges.EdgeData.Tags))
+                    //{ // skip this edge, no valid tags found.
+                    //    continue;
+                    //}
                     TagsCollectionBase arcTags = null;
                     if (matcher != null)
                     {

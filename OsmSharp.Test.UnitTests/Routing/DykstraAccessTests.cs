@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public override IRoutingAlgorithmData<Edge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData =

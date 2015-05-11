@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void TestSparseRemoval1Routing()
         {
             // use one edge definition everywhere.
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
             var tags = new TagsCollection(new Tag("highway","residential"));
             var edge = new Edge();
             edge.Forward = true;

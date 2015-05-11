@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,22 +21,15 @@ namespace OsmSharp.Collections.Tags.Index
     /// <summary>
     /// Abstracts an index containing tags.
     /// </summary>
-    public interface ITagsCollectionIndexReadonly
+    public interface ITagsIndex
     {
         /// <summary>
-        /// Returns the maxium possible number of tags in this index.
+        /// Returns true if this collection is readonly.
         /// </summary>
-        uint Max
+        bool IsReadonly
         {
             get;
         }
-
-        /// <summary>
-        /// Returns true if the tags with the given id are in this collection.
-        /// </summary>
-        /// <param name="tagsId"></param>
-        /// <returns></returns>
-        bool Contains(uint tagsId);
 
         /// <summary>
         /// Returns the tags that belong to the given id.
@@ -44,5 +37,19 @@ namespace OsmSharp.Collections.Tags.Index
         /// <param name="tagsId"></param>
         /// <returns></returns>
         TagsCollectionBase Get(uint tagsId);
+
+        /// <summary>
+        /// Adds new tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        uint Add(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Serializes this tags index to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        long Serialize(System.IO.Stream stream);
     }
 }

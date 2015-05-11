@@ -57,7 +57,7 @@ namespace OsmSharp.Test.Performance.Routing
             performanceInfo.Start();
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
-            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);

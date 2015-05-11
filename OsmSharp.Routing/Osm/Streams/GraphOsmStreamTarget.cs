@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex)
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex)
             : this(graph, interpreter, tagsIndex, null, true, new CoordinateIndex())
         {
 
@@ -65,7 +65,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="coordinates"></param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, ICoordinateIndex coordinates)
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, ICoordinateIndex coordinates)
             : this(graph, interpreter, tagsIndex, null, true, coordinates)
         {
 
@@ -79,7 +79,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tagsIndex">Holds all the tags.</param>
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
             IEnumerable<Vehicle> vehicles)
             : this(graph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
         {
@@ -95,7 +95,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         /// <param name="collectIntermediates">The collect intermediates flag.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates)
             : this(graph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
         {
@@ -112,7 +112,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="collectIntermediates">The collect intermediates flag.</param>
         /// <param name="coordinates">The coordinates index.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
-            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
             : base(graph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
         {
@@ -137,7 +137,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="edgeInterpreter"></param>
         /// <param name="intermediates"></param>
         /// <returns></returns>
-        protected override Edge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
+        protected override Edge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex,
             TagsCollectionBase tags, bool tagsForward, GeoCoordinate from, GeoCoordinate to, List<GeoCoordinateSimple> intermediates)
         {
             if (edgeInterpreter == null) throw new ArgumentNullException("edgeInterpreter");
@@ -179,7 +179,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tags"></param>
         /// <returns></returns>
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter,
-            ITagsCollectionIndex tagsIndex, TagsCollectionBase tags)
+            ITagsIndex tagsIndex, TagsCollectionBase tags)
         {
             if (_vehicles.Count > 0)
             { // limit only to vehicles in this list.
@@ -213,7 +213,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="tagsIndex">The tags index.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static RouterDataSource<Edge> Preprocess(OsmStreamSource source, ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter)
+        public static RouterDataSource<Edge> Preprocess(OsmStreamSource source, ITagsIndex tagsIndex, IOsmRoutingInterpreter interpreter)
         {
             var routerDataSource =
                 new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -233,7 +233,7 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <returns></returns>
         public static RouterDataSource<Edge> Preprocess(OsmStreamSource source, IOsmRoutingInterpreter interpreter)
         {
-            return GraphOsmStreamTarget.Preprocess(source, new TagsTableCollectionIndex(), interpreter);
+            return GraphOsmStreamTarget.Preprocess(source, new TagsIndex(), interpreter);
         }
 
         #endregion

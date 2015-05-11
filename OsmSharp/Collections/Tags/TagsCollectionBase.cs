@@ -33,6 +33,11 @@ namespace OsmSharp.Collections.Tags
         public abstract int Count { get; }
 
         /// <summary>
+        /// Returns true if this collection is readonly.
+        /// </summary>
+        public abstract bool IsReadonly { get; }
+
+        /// <summary>
         /// Adds a key-value pair to this tags collection.
         /// </summary>
         /// <param name="key"></param>
@@ -105,7 +110,6 @@ namespace OsmSharp.Collections.Tags
             }
             return false;
         }
-
 
         /// <summary>
         /// Returns true if the given tag exists.

@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest2()
         {
             var interpreter = new OsmRoutingInterpreter();
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -171,7 +171,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest3()
         {
             var interpreter = new OsmRoutingInterpreter();
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -252,7 +252,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest4()
         {
             var interpreter = new OsmRoutingInterpreter();
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
@@ -696,7 +696,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest9ResolvingReverse()
         {
             // build a graph to encode from.
-            var tags = new TagsTableCollectionIndex();
+            var tags = new TagsIndex();
             var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
@@ -749,7 +749,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest10ResolvingReverse()
         {
             // build a graph to encode from.
-            var tags = new TagsTableCollectionIndex();
+            var tags = new TagsIndex();
             var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
@@ -852,7 +852,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public void RoutingRegressionTest11ResolvingReverse()
         {
             // build a graph to encode from.
-            var tags = new TagsTableCollectionIndex();
+            var tags = new TagsIndex();
             var graphDataSource = new RouterDataSource<Edge>(new Graph<Edge>(), tags);
             var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);

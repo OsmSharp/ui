@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Graph
 
         public abstract System.Collections.Generic.IEnumerable<Edge<TEdgeData>> GetDirectNeighbours(uint vertex);
 
-        public abstract Collections.Tags.Index.ITagsCollectionIndexReadonly TagsIndex
+        public abstract Collections.Tags.Index.ITagsIndex TagsIndex
         {
             get;
         }

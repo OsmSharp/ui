@@ -80,7 +80,7 @@ namespace OsmSharp.Test.Performance.Routing
         {
             var vehicle = Vehicle.Pedestrian;
 
-            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);

@@ -80,7 +80,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 key);
             if (data == null)
             {
-                var tagsIndex = new TagsTableCollectionIndex();
+                var tagsIndex = new TagsIndex();
 
                 // do the data processing.
                 var memoryData = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);

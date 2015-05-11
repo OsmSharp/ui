@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         /// Tests the given tags collection index.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
-        protected void TestTagsCollectionIndex(ITagsCollectionIndex tagsCollectionIndex)
+        protected void TestTagsCollectionIndex(ITagsIndex tagsCollectionIndex)
         {
             List<KeyValuePair<uint, TagsCollectionBase>> addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
             for (int i = 0; i < 100; i++)
