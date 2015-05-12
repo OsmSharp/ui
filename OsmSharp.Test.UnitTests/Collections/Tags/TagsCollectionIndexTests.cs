@@ -37,7 +37,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         [Test]
         public void TestTagsIndex()
         {
-            this.TestTagsCollectionIndex(new TagsIndex());
+            this.TestTagIndex(new TagsIndex());
         }
 
         /// <summary>
@@ -46,14 +46,56 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         [Test]
         public void TestTagsIndexMemoryMapped()
         {
-            this.TestTagsCollectionIndex(new TagsIndex(new MemoryMappedStream(new MemoryStream())));
+            this.TestTagIndex(new TagsIndex(new MemoryMappedStream(new MemoryStream())));
+        }
+
+        /// <summary>
+        /// Tests a simple tag serialization.
+        /// </summary>
+        [Test]
+        public void TestTagIndexSerializaton()
+        {
+            // build a tags index and keep what was added.
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
+            var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
+            for (int i = 0; i < 100; i++)
+            {
+                var tagsCollection = new TagsCollection();
+                var tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
+                for (int idx = 0; idx < tagCollectionSize; idx++)
+                {
+                    var tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3);
+                    tagsCollection.Add(
+                        string.Format("key_{0}", tagValue),
+                        string.Format("value_{0}", tagValue));
+                }
+                var addCount = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) + 1;
+                for (int idx = 0; idx < addCount; idx++)
+                {
+                    var tagsId = tagsIndex.Add(tagsCollection);
+                    addedTags.Add(new KeyValuePair<uint, TagsCollectionBase>(tagsId, tagsCollection));
+
+                    var indexTags = tagsIndex.Get(tagsId);
+                    Assert.AreEqual(tagsCollection.Count, indexTags.Count);
+                    foreach (var tag in tagsCollection)
+                    {
+                        Assert.IsTrue(indexTags.ContainsKeyValue(tag.Key, tag.Value));
+                    }
+                }
+            }
+
+            // serialize/deserialize.
+            var deserializedTagsIndex = this.SerializeDeserialize(tagsIndex);
+
+            // verify if what was added is still there.
+            this.TestTagIndexContent(deserializedTagsIndex, addedTags);
         }
 
         /// <summary>
         /// Tests the given tags collection index.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
-        protected void TestTagsCollectionIndex(ITagsIndex tagsCollectionIndex)
+        protected void TestTagIndex(ITagsIndex tagsCollectionIndex)
         {
             var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
             for (int i = 0; i < 100; i++)
@@ -82,20 +124,44 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
                 }
             }
 
+            // test complete content.
+            this.TestTagIndexContent(tagsCollectionIndex, addedTags);
+        }
+
+        /// <summary>
+        /// Verifies the content of the given tags index agains the expected content list.
+        /// </summary>
+        /// <param name="tagsCollectionIndex"></param>
+        /// <param name="expectedContent"></param>
+        private void TestTagIndexContent(ITagsIndex tagsCollectionIndex, List<KeyValuePair<uint, TagsCollectionBase>> expectedContent)
+        {
             // check the index.
-            foreach (KeyValuePair<uint, TagsCollectionBase> pair in addedTags)
+            foreach (var pair in expectedContent)
             {
-                TagsCollectionBase indexTags = tagsCollectionIndex.Get(pair.Key);
+                var indexTags = tagsCollectionIndex.Get(pair.Key);
                 Assert.AreEqual(pair.Value.Count, indexTags.Count);
-                foreach (Tag tag in pair.Value)
+                foreach (var tag in pair.Value)
                 {
                     Assert.IsTrue(indexTags.ContainsKeyValue(tag.Key, tag.Value));
                 }
-                foreach (Tag tag in indexTags)
+                foreach (var tag in indexTags)
                 {
                     Assert.IsTrue(pair.Value.ContainsKeyValue(tag.Key, tag.Value));
                 }
             }
+        }
+
+        /// <summary>
+        /// Serialize/deserialize index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private TagsIndex SerializeDeserialize(TagsIndex index)
+        {
+            var stream = new MemoryStream();
+            index.Serialize(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            return TagsIndex.Deserialize(stream);
         }
     }
 }

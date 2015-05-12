@@ -488,7 +488,9 @@ namespace OsmSharp.Collections.Tags.Index
         /// <param name="stream">The stream to write to. Writing will start at position 0.</param>
         public long Serialize(System.IO.Stream stream)
         { // serialize the tags and strings index.
-            return _tagsIndex.Serialize(stream) + _stringIndex.Serialize(stream);
+            var size = _tagsIndex.Serialize(stream);
+            var limitedStream = new LimitedStream(stream);
+            return _stringIndex.Serialize(limitedStream) + size;
         }
 
         /// <summary>
@@ -502,7 +504,7 @@ namespace OsmSharp.Collections.Tags.Index
             var tagsIndex = MemoryMappedIndex<int[]>.Deserialize(stream, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray, false, out size);
             stream.Seek(size, System.IO.SeekOrigin.Begin);
             var limitedStream = new LimitedStream(stream);
-            var stringIndex = MemoryMappedIndex<string>.Deserialize(stream, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString, false);
+            var stringIndex = MemoryMappedIndex<string>.Deserialize(limitedStream, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString, false);
 
             return new TagsIndex(stringIndex, tagsIndex);
         }

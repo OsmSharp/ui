@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,15 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.IO;
-using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Collections.Tags.Serializer;
-using OsmSharp.IO;
-using OsmSharp.Test.Unittests.Osm;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
+using System.IO;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
 {
@@ -32,25 +28,8 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
     /// Tests tag index serializer.
     /// </summary>
     [TestFixture]
-    public class TagsCollectionIndexSerializerTests
+    public class TagsIndexSerializerTests
     {
-        /// <summary>
-        /// Tests a simple tag serialization.
-        /// </summary>
-        [Test]
-        public void TestSimpleTagSerializaton()
-        {
-            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
-
-            var tagsCollection = new TagsCollection();
-            tagsCollection.Add("key1", "value1");
-            var tagsCollectionId = tagsIndex.Add(tagsCollection);
-
-            var deserializedTagsIndex = this.SerializeDeserialize(tagsIndex);
-            var deserializedTagsCollection = deserializedTagsIndex.Get(tagsCollectionId);
-
-
-        }
 
         ///// <summary>
         ///// Tests a simple tag serialization using a limited stream..
@@ -358,19 +337,6 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         //            tagsIndexReadonly.Get(idx));
         //    }
         //}
-
-        /// <summary>
-        /// Serialize/deserialize index.
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        private TagsIndex SerializeDeserialize(TagsIndex index)
-        {
-            var stream = new MemoryStream();
-            index.Serialize(stream);
-            stream.Seek(0, SeekOrigin.Begin);
-            return TagsIndex.Deserialize(stream);
-        }
 
         ///// <summary>
         ///// Serialize/deserialize index.

@@ -47,7 +47,7 @@ namespace OsmSharp.Collections.Arrays.MemoryMapped
         /// <summary>
         /// Holds the default file element size.
         /// </summary>
-        public static long DefaultFileElementSize = (long)1024 * (long)1024;
+        public static long DefaultFileElementSize = (long)1024;
 
         /// <summary>
         /// Holds the default buffer size.
