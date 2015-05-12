@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,45 +16,66 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.IO.MemoryMappedFiles;
+using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags
 {
     /// <summary>
-    /// Abstract class containing tests for the tags collection index.
+    /// Contains tests for the SimpleTagsCollectionIndexTests.
     /// </summary>
-    public abstract class TagsCollectionIndexBaseTests
+    [TestFixture]
+    public class TagsCollectionIndexTests
     {
+        /// <summary>
+        /// Tests the tags collection index.
+        /// </summary>
+        [Test]
+        public void TestTagsIndex()
+        {
+            this.TestTagsCollectionIndex(new TagsIndex());
+        }
+
+        /// <summary>
+        /// Tests the tags collection index but memory mapped.
+        /// </summary>
+        [Test]
+        public void TestTagsIndexMemoryMapped()
+        {
+            this.TestTagsCollectionIndex(new TagsIndex(new MemoryMappedStream(new MemoryStream())));
+        }
+
         /// <summary>
         /// Tests the given tags collection index.
         /// </summary>
         /// <param name="tagsCollectionIndex"></param>
         protected void TestTagsCollectionIndex(ITagsIndex tagsCollectionIndex)
         {
-            List<KeyValuePair<uint, TagsCollectionBase>> addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
+            var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
             for (int i = 0; i < 100; i++)
             {
-                TagsCollection tagsCollection = new TagsCollection();
-                int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
+                var tagsCollection = new TagsCollection();
+                var tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
                 for (int idx = 0; idx < tagCollectionSize; idx++)
                 {
-                    int tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3);
+                    var tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3);
                     tagsCollection.Add(
                         string.Format("key_{0}", tagValue),
                         string.Format("value_{0}", tagValue));
                 }
-                int addCount = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) + 1;
+                var addCount = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(2) + 1;
                 for (int idx = 0; idx < addCount; idx++)
                 {
-                    uint tagsId = tagsCollectionIndex.Add(tagsCollection);
+                    var tagsId = tagsCollectionIndex.Add(tagsCollection);
                     addedTags.Add(new KeyValuePair<uint, TagsCollectionBase>(tagsId, tagsCollection));
 
-                    TagsCollectionBase indexTags = tagsCollectionIndex.Get(tagsId);
+                    var indexTags = tagsCollectionIndex.Get(tagsId);
                     Assert.AreEqual(tagsCollection.Count, indexTags.Count);
-                    foreach (Tag tag in tagsCollection)
+                    foreach (var tag in tagsCollection)
                     {
                         Assert.IsTrue(indexTags.ContainsKeyValue(tag.Key, tag.Value));
                     }

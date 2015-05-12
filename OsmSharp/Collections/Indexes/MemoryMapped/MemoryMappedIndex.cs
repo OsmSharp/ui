@@ -290,14 +290,30 @@ namespace OsmSharp.Collections.Indexes.MemoryMapped
         public static MemoryMappedIndex<T> Deserialize(System.IO.Stream stream, MemoryMappedFile.ReadFromDelegate<T> readFrom,
             MemoryMappedFile.WriteToDelegate<T> writeTo, bool copy)
         {
+            long size;
+            return MemoryMappedIndex<T>.Deserialize(stream, readFrom, writeTo, copy, out size);
+        }
+
+        /// <summary>
+        /// Deserializes an index from the given stream.
+        /// </summary>
+        /// <param name="stream">The stream to read from. Reading will start at position 0.</param>
+        /// <param name="readFrom"></param>
+        /// <param name="writeTo"></param>
+        /// <param name="copy">Flag to make an in-memory copy.</param>
+        /// <param name="size">The total size in bytes of the deserialized data.</param>
+        /// <returns></returns>
+        public static MemoryMappedIndex<T> Deserialize(System.IO.Stream stream, MemoryMappedFile.ReadFromDelegate<T> readFrom,
+            MemoryMappedFile.WriteToDelegate<T> writeTo, bool copy, out long size)
+        {
             if (copy) { throw new NotSupportedException("Deserializing a memory mapped index with copy option is not supported."); }
             stream.Seek(0, System.IO.SeekOrigin.Begin);
             var longBytes = new byte[8];
             stream.Read(longBytes, 0, 8);
-            var size = BitConverter.ToInt64(longBytes, 0);
+            size = BitConverter.ToInt64(longBytes, 0) + 8;
 
             var file = new MemoryMappedStream(new LimitedStream(stream));
-            return new MemoryMappedIndex<T>(file, readFrom, writeTo, size);
+            return new MemoryMappedIndex<T>(file, readFrom, writeTo, size - 8);
         }
     }
 }

@@ -140,7 +140,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
             stream.Seek(position, System.IO.SeekOrigin.Begin);
             var structBytes = new byte[4];
             stream.Read(structBytes, 0, 4);
-            return BitConverter.ToInt32(structBytes, 4);
+            return BitConverter.ToInt32(structBytes, 0);
         });
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
             stream.Seek(position, System.IO.SeekOrigin.Begin);
             var structBytes = new byte[4];
             stream.Read(structBytes, 0, 4);
-            return BitConverter.ToUInt32(structBytes, 4);
+            return BitConverter.ToUInt32(structBytes, 0);
         });
 
         /// <summary>

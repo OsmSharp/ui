@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Indexes;
 using OsmSharp.Collections.Indexes.MemoryMapped;
 using OsmSharp.Collections.MemoryMapped;
+using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using System;
 using System.Collections.Generic;
@@ -163,32 +164,32 @@ namespace OsmSharp.Collections.Tags.Index
             }
             else
             { // add new collection.
-                var sortedDictionary = new SortedDictionary<int, int>();
+                var sortedSet = new SortedSet<long>();
                 foreach(var tag in tags)
                 {
                     int keyId;
                     if(!_stringReverseIndex.TryGetValue(tag.Key, out keyId))
                     { // the key doesn't exist yet.
-                        keyId = _stringReverseIndex.Count;
+                        keyId = (int)_stringIndex.Add(tag.Key);
                         _stringReverseIndex.Add(tag.Key, keyId);
                     }
                     int valueId;
                     if (!_stringReverseIndex.TryGetValue(tag.Value, out valueId))
                     { // the key doesn't exist yet.
-                        valueId = _stringReverseIndex.Count;
+                        valueId = (int)_stringIndex.Add(tag.Value);
                         _stringReverseIndex.Add(tag.Value, valueId);
                     }
-                    sortedDictionary[keyId] = valueId;
+                    sortedSet.Add((long)keyId + (long)int.MaxValue * (long)valueId);
                 }
 
                 // sort keys.
-                var sorted = new int[sortedDictionary.Count * 2];
+                var sorted = new int[sortedSet.Count * 2];
                 var idx = 0;
-                foreach (var pair in sortedDictionary)
+                foreach (var pair in sortedSet)
                 {
-                    sorted[idx] = pair.Key;
+                    sorted[idx] = (int)(pair % int.MaxValue);
                     idx++;
-                    sorted[idx] = pair.Value;
+                    sorted[idx] = (int)(pair / int.MaxValue);
                     idx++;
                 }
 
@@ -497,7 +498,13 @@ namespace OsmSharp.Collections.Tags.Index
         /// <returns></returns>
         public static TagsIndex Deserialize(System.IO.Stream stream)
         {
-            throw new NotImplementedException();
+            long size;
+            var tagsIndex = MemoryMappedIndex<int[]>.Deserialize(stream, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray, false, out size);
+            stream.Seek(size, System.IO.SeekOrigin.Begin);
+            var limitedStream = new LimitedStream(stream);
+            var stringIndex = MemoryMappedIndex<string>.Deserialize(stream, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString, false);
+
+            return new TagsIndex(stringIndex, tagsIndex);
         }
 
         #endregion

@@ -243,8 +243,7 @@
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
     <Compile Include="IntegrationTests\GZipStreamTests.cs" />
-    <Compile Include="Collections\Tags\TagsCollectionIndexBaseTests.cs" />
-    <Compile Include="Collections\Tags\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexTests.cs" />
     <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
