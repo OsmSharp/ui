@@ -374,15 +374,18 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Notifies change
 		/// </summary>
-		internal void TriggerRendering()
+		internal void TriggerRendering(bool force)
 		{
 			if (_rect.Width == 0)
 			{
 				return;
 			}
 
-			if (Monitor.TryEnter(_cacheRenderer, 1000))
-			{ // entered the exclusive lock area.
+			OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
+				"Rendering triggered!");
+
+//			if (Monitor.TryEnter(_cacheRenderer, 300))
+//			{ // entered the exclusive lock area.
 				try
 				{
 					// create the view that would be use for rendering.
@@ -393,7 +396,8 @@ namespace OsmSharp.iOS.UI
 
 					// ... and compare to the previous rendered view.
 					if (_previouslyRenderedView != null &&
-						view.Equals(_previouslyRenderedView))
+						view.Equals(_previouslyRenderedView) &&
+						!force)
 					{
 						_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
 						return;
@@ -413,12 +417,20 @@ namespace OsmSharp.iOS.UI
 					// start new rendering thread.
 					_renderingThread = new Thread(new ThreadStart(Render));
 					_renderingThread.Start();
+
+					OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
+						"Rendering thread started!");
 				}
-				finally
+				catch
 				{
-					Monitor.Exit(_cacheRenderer);
+					OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
+						"Exception Occured: Rendering thread not started!");
 				}
-			}
+//				finally
+//				{
+//					Monitor.Exit(_cacheRenderer);
+//				}
+//			}
 		}
 
 		/// <summary>
@@ -459,15 +471,15 @@ namespace OsmSharp.iOS.UI
 		{
 			try
 			{
-				if (Monitor.TryEnter(_cacheRenderer, 1000))
+				if (Monitor.TryEnter(_cacheRenderer, 100))
 				{
 					try
 					{
 						// use object
-						CGRect rect = _rect;
+						var rect = _rect;
 
 						// create the view.
-						float size = (float)System.Math.Max(_rect.Width, _rect.Height);
+						var size = (float)System.Math.Max(_rect.Width, _rect.Height);
 						var view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
 							this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
 							this.MapCenter, _invertX, _invertY, this.MapTilt);
@@ -477,17 +489,17 @@ namespace OsmSharp.iOS.UI
 						}
 
 						// calculate width/height.
-						int imageWidth = (int)(size * _extra * _scaleFactor);
-						int imageHeight = (int)(size * _extra * _scaleFactor);
+						var imageWidth = (int)(size * _extra * _scaleFactor);
+						var imageHeight = (int)(size * _extra * _scaleFactor);
 
 						// create a new bitmap context.
-						CGColorSpace space = CGColorSpace.CreateDeviceRGB();
+						var space = CGColorSpace.CreateDeviceRGB();
 						int bytesPerPixel = 4;
 						int bytesPerRow = bytesPerPixel * imageWidth;
 						int bitsPerComponent = 8;
 
 						// get old image if available.
-						CGBitmapContext image = new CGBitmapContext(null, imageWidth, imageHeight,
+						var image = new CGBitmapContext(null, imageWidth, imageHeight,
 							bitsPerComponent, bytesPerRow,
 							space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
 							CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
@@ -854,7 +866,7 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		void IInvalidatableMapSurface.Render()
 		{
-			this.TriggerRendering();
+			this.TriggerRendering(false);
 		}
 
 		/// <summary>
@@ -1161,7 +1173,7 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		void IMapView.Invalidate()
 		{
-			this.TriggerRendering();
+			this.TriggerRendering(true);
 		}
 
 		#endregion
@@ -1730,12 +1742,21 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private void MapChanged()
 		{
+			OsmSharp.Logging.Log.TraceEvent("MapView.MapChanged", Logging.TraceEventType.Information, 
+				"Map changed called.");
+
 			if (_listener != null)
 			{
 				_listener.Invalidate();
 			}
 			_previouslyRenderedView = null;
-			this.NotifyMovementByInvoke();
+			_triggeredNotifyMovement = false;
+			_previouslyRenderedView = null;
+			//_cacheRenderer.CancelAndWait ();
+			//this.NotifyMovementByInvoke();
+
+			(this as IMapView).Invalidate ();
+			//this.TriggerRendering (true);
 		}
 
 		/// <summary>
