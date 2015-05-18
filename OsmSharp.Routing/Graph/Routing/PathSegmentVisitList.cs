@@ -52,6 +52,25 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <summary>
         /// Creates a new visit list.
         /// </summary>
+        public PathSegmentVisitList(PathSegment<long> route)
+            : this()
+        {
+            this.UpdateVertex(route);
+        }
+
+        /// <summary>
+        /// Creates a new visit list with just one vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public PathSegmentVisitList(long vertex)
+            : this(new PathSegment<long>(vertex))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new visit list.
+        /// </summary>
         /// <param name="neighbour1"></param>
         /// <param name="neighbour2"></param>
         public PathSegmentVisitList(long neighbour1, long neighbour2)
