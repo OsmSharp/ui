@@ -102,7 +102,7 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-			map.AddLayer(new LayerTile(@"http://192.168.69.249:1234/default/{0}/{1}/{2}.png"));
+			map.AddLayer(new LayerTile(@"http://192.168.43.155:1234/default/{0}/{1}/{2}.png"));
 			//            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
 			//                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
 
