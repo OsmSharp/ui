@@ -471,7 +471,8 @@ namespace OsmSharp.iOS.UI
 		{
 			try
 			{
-				if (Monitor.TryEnter(_cacheRenderer, 100))
+				//if (Monitor.TryEnter(_cacheRenderer, 10))
+				lock(_cacheRenderer)
 				{
 					try
 					{
