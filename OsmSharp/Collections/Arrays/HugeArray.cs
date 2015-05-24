@@ -23,7 +23,7 @@ namespace OsmSharp.Collections.Arrays
     /// <summary>
     /// An array working around the pre .NET 4.5 memory limitations for one object.
     /// </summary>
-    public class HugeArray<T> : IHugeArray<T>
+    public class HugeArray<T> : HugeArrayBase<T>
     {
         /// <summary>
         /// Holds the arrays.
@@ -45,25 +45,6 @@ namespace OsmSharp.Collections.Arrays
         /// </summary>
         private long _size;
 
-        ///// <summary>
-        ///// Creates a new huge array.
-        ///// </summary>
-        ///// <param name="size"></param>
-        ///// <param name="arraySize"></param>
-        //public HugeArray(long size, int arraySize)
-        //{
-        //    _arraySize = arraySize;
-        //    _size = size;
-
-        //    long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
-        //    _arrays = new T[arrayCount][];
-        //    for (int arrayIdx = 0; arrayIdx < arrayCount - 1; arrayIdx++)
-        //    {
-        //        _arrays[arrayIdx] = new T[_arraySize];
-        //    }
-        //    _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
-        //}
-
         /// <summary>
         /// Creates a new huge array.
         /// </summary>
@@ -82,33 +63,18 @@ namespace OsmSharp.Collections.Arrays
             _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
         }
 
-        private long _latestArrayIdx = -1;
-
-        private T[] _latestArray;
-
         /// <summary>
         /// Gets or sets the element at the given idx.
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public T this[long idx]
+        public override T this[long idx]
         {
             get
             {
-                //long arrayIdx = (long)System.Math.(idx / _arraySize);
-                //long localIdx = idx % _arraySize;
                 long arrayIdx = idx >> _arrayPow;
                 long localIdx = idx - (arrayIdx << _arrayPow);
-                if (_latestArrayIdx == arrayIdx)
-                {
-                    return _latestArray[localIdx];
-                }
-                else
-                {
-                    _latestArray = _arrays[arrayIdx];
-                    _latestArrayIdx = arrayIdx;
-                }
-                return _latestArray[localIdx];
+                return _arrays[arrayIdx][localIdx];
             }
             set
             {
@@ -122,11 +88,11 @@ namespace OsmSharp.Collections.Arrays
         /// Resizes this array.
         /// </summary>
         /// <param name="size"></param>
-        public void Resize(long size)
+        public override void Resize(long size)
         {
+            if (size <= 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
+
             _size = size;
-            _latestArrayIdx = -1;
-            _latestArray = null;
 
             long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
             if (arrayCount != _arrays.Length)
@@ -162,7 +128,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Returns the length of this array.
         /// </summary>
-        public long Length
+        public override long Length
         {
             get
             {
@@ -173,7 +139,7 @@ namespace OsmSharp.Collections.Arrays
         /// <summary>
         /// Diposes of all associated native resources held by this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
 
         }

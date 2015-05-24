@@ -19,6 +19,7 @@
 using OsmSharp.Routing;
 using OsmSharp.Collections.Tags;
 using NUnit.Framework;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing
 {

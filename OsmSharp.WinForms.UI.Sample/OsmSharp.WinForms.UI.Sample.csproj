@@ -3,14 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{44DF24BF-879E-41D5-84B2-88CD7F560CB6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.WinForms.UI.Sample</RootNamespace>
     <AssemblyName>OsmSharp.WinForms.UI.Sample</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -172,15 +170,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{e20dc51a-431e-49f7-8018-53fe0de80386}</Project>
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
-      <Project>{2f4d2b40-d557-4640-96e1-693d598012a6}</Project>
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
-      <Project>{1524c255-2ee5-4c0c-a64c-56ce39a062e3}</Project>
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.WinForms.UI\OsmSharp.WinForms.UI.csproj">
@@ -188,7 +186,7 @@
       <Name>OsmSharp.WinForms.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997fd-a61d-4dc0-b4b0-7429bf9824e8}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>

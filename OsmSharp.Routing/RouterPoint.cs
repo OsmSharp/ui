@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using OsmSharp.Math;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing
 {

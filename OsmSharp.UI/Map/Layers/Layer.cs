@@ -113,7 +113,11 @@ namespace OsmSharp.UI.Map.Layers
         {
             if (this.LayerChanged != null)
             {
-                this.LayerChanged(this);
+				OsmSharp.Logging.Log.TraceEvent("Layer.RaiseLayerChanged (Before)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
+				this.LayerChanged(this);
+				OsmSharp.Logging.Log.TraceEvent("Layer.RaiseLayerChanged (After)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
             }
         }
 

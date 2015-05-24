@@ -28,9 +28,9 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -68,7 +68,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private DynamicGraphRouterDataSource<CHEdgeData> _data;
+        private RouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the interpreter.
@@ -87,11 +87,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         public void BuildDykstraRouter(string embeddedName,
             IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
-            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(
+            var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var targetData = new GraphOsmStreamTarget(
                 data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedName));
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // initialize the router.
-            _referenceRouter = Router.CreateLiveFrom(data, new Dykstra(), interpreter);
+            _referenceRouter = Router.CreateFrom(data, new Dykstra(), interpreter);
         }
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             _pathsBeforeContraction = new Dictionary<uint, Dictionary<uint, Dictionary<uint, PathSegment<long>>>>();
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+            _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -142,13 +142,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            // do the pre-processing part.
-            var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(_data,
-                new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
-            preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
-            preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
-            preProcessor.Start();
+            //// do the pre-processing part.
+            //var witnessCalculator = new DykstraWitnessCalculator();
+            //var preProcessor = new CHPreProcessor(_data,
+            //    new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
+            //preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            //preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            //preProcessor.Start();
         }
 
         /// <summary>
@@ -175,10 +175,10 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new TagsTableCollectionIndex();
+            var tagsIndex = new TagsIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            _data = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
@@ -232,7 +232,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Neighbour));
 
                     // calculate the route.
-                    var route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null);
+                    var route = router.Calculate(_data, _interpreter, Vehicle.Car, fromList, toList, double.MaxValue, null);
                     if ((fromDic[to.Neighbour] == null && route != null) ||
                         (fromDic[to.Neighbour] != null && route == null))
                     { // the route match!
@@ -382,7 +382,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                     // calculate the route.
                     fromDic[to.Neighbour] = router.Calculate(_data, _interpreter,
-                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue, null); ;
+                        Vehicle.Car, fromList, toList, double.MaxValue, null); ;
                 }
             }
         }

@@ -75,7 +75,7 @@
 //            _contraction_count.TryGetValue(vertex, out contracted);
 
 //            // get all information from the source.
-//            var edges = _data.GetEdges(vertex).ToList();
+//            var edges =  _data.GetEdges(vertex).ToList();
 
 //            // build the list of edges to replace.
 //            var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);

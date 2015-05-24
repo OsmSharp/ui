@@ -20,8 +20,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
@@ -332,8 +332,15 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         void layer_LayerChanged(Layer sender)
-        {
-            if (this.MapChanged != null) { this.MapChanged(); }
+		{
+			if (this.MapChanged != null) 
+			{ 
+				OsmSharp.Logging.Log.TraceEvent("Map.layer_LayerChanged (Before)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
+				this.MapChanged(); 
+				OsmSharp.Logging.Log.TraceEvent("Map.layer_LayerChanged (After)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
+			}
         }
 
         #region Layer Helpers
@@ -374,28 +381,16 @@ namespace OsmSharp.UI.Map
             return layerRoute;
         }
 
-        ///// <summary>
-        ///// Adds a new scene layer with the given primitives source as it's source.
-        ///// </summary>
-        ///// <param name="scene"></param>
-        ///// <returns></returns>
-        //public LayerScene AddLayerScene(IScene2DPrimitivesSource scene)
-        //{
-        //    LayerScene layerScene = new LayerScene(scene);
-        //    this.AddLayer(layerScene);
-        //    return layerScene;
-        //}
-
         /// <summary>
         /// Adds a graph layer with the given data and style.
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
         /// <returns></returns>
-        public LayerDynamicGraphLiveEdge AddLayerGraph(IBasicRouterDataSource<LiveEdge> dataSource,
+        public LayerGraph AddLayerGraph(IRoutingAlgorithmData<Edge> dataSource,
             StyleInterpreter styleInterpreter)
         {
-            LayerDynamicGraphLiveEdge layerGraph = new LayerDynamicGraphLiveEdge(dataSource, styleInterpreter);
+            var layerGraph = new LayerGraph(dataSource, styleInterpreter);
             this.AddLayer(layerGraph);
             return layerGraph;
         }

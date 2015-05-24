@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -134,7 +134,7 @@ namespace OsmSharp.IO
         {
             if (offset > _length)
             {
-                throw new Exception();
+                throw new Exception("Cannot read past end of capped stream.");
             }
             return _stream.Seek(offset + _offset, origin);
         }
@@ -149,6 +149,30 @@ namespace OsmSharp.IO
         }
 
         /// <summary>
+        ///  Tests if it's possible to write a sequence of bytes to the current
+        ///     stream and advance the current position within this stream by the number
+        ///     of bytes.
+        /// </summary>
+        /// <returns></returns>
+        public bool WriteBytePossible()
+        {
+            return !(this.Position + 1 > this.Length);
+        }
+
+        /// <summary>
+        ///  Tests if it's possible to write a sequence of bytes to the current
+        ///     stream and advance the current position within this stream by the number
+        ///     of bytes.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public bool WritePossible(int offset, int count)
+        {
+            return !(this.Position + count > this.Length);
+        }
+
+        /// <summary>
         ///  Writes a sequence of bytes to the current
         ///     stream and advances the current position within this stream by the number
         ///     of bytes written.
@@ -158,7 +182,11 @@ namespace OsmSharp.IO
         /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotSupportedException("Writing to a CappedStream is not possible.");
+            if (this.Position + count > this.Length)
+            {
+                throw new Exception("Cannot write past end of capped stream.");
+            }
+            _stream.Write(buffer, offset, count);
         }
     }
 }

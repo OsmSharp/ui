@@ -35,14 +35,14 @@
 //        /// <summary>
 //        /// Holds the data.
 //        /// </summary>
-//        private IDynamicGraphRouterDataSource<CHEdgeData> _data;
+//        private IRouterDataSource<CHEdgeData> _data;
 
 //        /// <summary>
 //        /// Creates a new edge difference calculator.
 //        /// </summary>
 //        /// <param name="data"></param>
 //        /// <param name="witnessCalculator"></param>
-//        public EdgeDifference(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
+//        public EdgeDifference(IRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
 //        {
 //            _data = data;
 //            _witnessCalculator = witnessCalculator;

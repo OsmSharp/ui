@@ -19,7 +19,7 @@
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.StateMachines;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines

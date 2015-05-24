@@ -19,6 +19,7 @@
 using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Time;
 

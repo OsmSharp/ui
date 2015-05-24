@@ -20,7 +20,7 @@ using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Math.StateMachines;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
@@ -145,7 +145,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
             // calculate the box.
             var coordinates = new List<GeoCoordinate>();
-            foreach (Routing.ArcAggregation.Output.PointPoi poi in pois)
+            foreach (ArcAggregation.Output.PointPoi poi in pois)
             {
                 coordinates.Add(poi.Location);
             }

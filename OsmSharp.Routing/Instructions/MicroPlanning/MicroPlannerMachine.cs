@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.StateMachines;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {

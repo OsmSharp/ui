@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Interpreter.Roads;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Osm.Interpreter.Edge
 {

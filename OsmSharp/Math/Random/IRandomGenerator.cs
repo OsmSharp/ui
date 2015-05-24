@@ -46,5 +46,12 @@ namespace OsmSharp.Math.Random
         /// </summary>
         /// <param name="buffer"></param>
         void Generate(byte[] buffer);
+
+        /// <summary>
+        /// Generates a random unicode string.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        string GenerateString(int length);
     }
 }

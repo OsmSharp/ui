@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -196,15 +197,13 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
                     stagnation++;
                 }
 
-                //// report progress.
-                //OsmSharp.IO.Output.OutputStreamHost.ReportProgress(stagnation,_stagnation,
-                //    "OsmSharp.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver",
-                //    "Solving using EAX...");
+                // report progress.
+                OsmSharp.Logging.Log.TraceEvent("EdgeAssemblyCrossOverSolver", Logging.TraceEventType.Information,
+                    string.Format("Solving using EAX: Stagnation {0}.", stagnation));
             }
 
-            List<int> result = new List<int>(best.Genomes);
+            var result = new List<int>(best.Genomes);
             result.Insert(0, 0);
-            //return new SimpleAsymmetricRoute(result, true);
             return DynamicAsymmetricRoute.CreateFrom(result);
         }
 
@@ -213,7 +212,7 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
         /// </summary>
         public override void Stop()
         {
-            //_stopped = true;
+
         }
     }
 }

@@ -33,17 +33,17 @@
 //    /// Does some tests on an OsmSource routing implementation.
 //    /// </summary>
 //    [TestFixture]
-//    public class OsmSourceRoutingTests : SimpleRoutingTests<LiveEdge>
+//    public class OsmSourceRoutingTests : SimpleRoutingTests<Edge>
 //    {
 //        /// <summary>
 //        /// Builds a router.
 //        /// </summary>
 //        /// <returns></returns>
-//        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
-//            IRoutingInterpreter interpreter, IRoutingAlgorithm<LiveEdge> basicRouter)
+//        public override Router BuildRouter(IRoutingAlgorithmData<Edge> data,
+//            IRoutingInterpreter interpreter, IRoutingAlgorithm<Edge> basicRouter)
 //        {
 //            // initialize the router.
-//            return Router.CreateLiveFrom(data, basicRouter, interpreter);
+//            return Router.CreateFrom(data, basicRouter, interpreter);
 //        }
 
 //        /// <summary>
@@ -51,7 +51,7 @@
 //        /// </summary>
 //        /// <param name="data"></param>
 //        /// <returns></returns>
-//        public override IRoutingAlgorithm<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
+//        public override IRoutingAlgorithm<Edge> BuildBasicRouter(IRoutingAlgorithmData<Edge> data)
 //        {
 //            return new Dykstra(data.TagsIndex);
 //        }
@@ -62,7 +62,7 @@
 //        /// <param name="interpreter"></param>
 //        /// <param name="embeddedString"></param>
 //        /// <returns></returns>
-//        public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
+//        public override IRoutingAlgorithmData<Edge> BuildData(IRoutingInterpreter interpreter,
 //            string embeddedString)
 //        {
 //            var tagsIndex = new SimpleTagsIndex();

@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -355,6 +356,15 @@ namespace OsmSharp.Routing.Routers
                     }
                 }
                 return false;
+            }
+
+            /// <summary>
+            /// Returns true if the shape of this edge is within the bounding box formed by it's two vertices.
+            /// </summary>
+            /// <remarks>False by default, only true when explicitly checked.</remarks>
+            public bool ShapeInBox
+            {
+                get { return false; }
             }
         }
     }

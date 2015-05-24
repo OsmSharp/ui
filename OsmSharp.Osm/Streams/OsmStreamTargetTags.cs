@@ -29,13 +29,13 @@ namespace OsmSharp.Osm.Streams
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsCollectionIndex _tagsIndex;
+        private ITagsIndex _tagsIndex;
 
         /// <summary>
         /// Creates a new OSM stream target.
         /// </summary>
         /// <param name="tagsIndex"></param>
-        public OsmStreamTargetTags(ITagsCollectionIndex tagsIndex)
+        public OsmStreamTargetTags(ITagsIndex tagsIndex)
         {
             _tagsIndex = tagsIndex;
         }

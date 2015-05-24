@@ -76,6 +76,39 @@ namespace OsmSharp.Math.Random
             _random.NextBytes(buffer);
         }
 
+        /// <summary>
+        /// Generates a random unicode string.
+        /// </summary>
+        /// <param name="length">The length of the string to generate.</param>
+        /// <returns></returns>
+        public string GenerateString(int length)
+        {
+            var str = new byte[length * 2];
+            for (int i = 0; i < length * 2; i += 2)
+            {
+                int chr = this.Generate(0xD7FF);
+                str[i + 1] = (byte)((chr & 0xFF00) >> 8);
+                str[i] = (byte)(chr & 0xFF);
+            }
+            return Encoding.Unicode.GetString(str);
+        }
+
+        /// <summary>
+        /// Generates an array of random size and with random values.
+        /// </summary>
+        /// <param name="maxSize"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public int[] GenerateArray(int maxSize, int max)
+        {
+            var array = new int[this.Generate(maxSize)];
+            for(int i= 0; i < array.Length; i++)
+            {
+                array[i] = this.Generate(max);
+            }
+            return array;
+        }
+
         #endregion
     }
 }

@@ -59,46 +59,46 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\OsmSharp.iOS.UI\MapView.cs">
-      <Link>MapView.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Renderer\CGContextRenderer.cs">
-      <Link>Renderer\CGContextRenderer.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Renderer\CGContextWrapper.cs">
-      <Link>Renderer\CGContextWrapper.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Controls\MapControl.cs">
-      <Link>Controls\MapControl.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Controls\IMapControlHost.cs">
-      <Link>Controls\IMapControlHost.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Controls\MapControlAlignmentType.cs">
-      <Link>Controls\MapControlAlignmentType.cs</Link>
-    </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Data\SQLite\SQLiteConnection.cs">
-      <Link>Data\SQLite\SQLiteConnection.cs</Link>
-    </Compile>
     <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
       <Link>Data\SQLite\SQLite.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Log\ConsoleTraceListener.cs">
+    <Compile Include="MapView.cs">
+      <Link>MapView.cs</Link>
+    </Compile>
+    <Compile Include="Renderer\CGContextRenderer.cs">
+      <Link>Renderer\CGContextRenderer.cs</Link>
+    </Compile>
+    <Compile Include="Renderer\CGContextWrapper.cs">
+      <Link>Renderer\CGContextWrapper.cs</Link>
+    </Compile>
+    <Compile Include="Controls\MapControl.cs">
+      <Link>Controls\MapControl.cs</Link>
+    </Compile>
+    <Compile Include="Controls\IMapControlHost.cs">
+      <Link>Controls\IMapControlHost.cs</Link>
+    </Compile>
+    <Compile Include="Controls\MapControlAlignmentType.cs">
+      <Link>Controls\MapControlAlignmentType.cs</Link>
+    </Compile>
+    <Compile Include="Data\SQLite\SQLiteConnection.cs">
+      <Link>Data\SQLite\SQLiteConnection.cs</Link>
+    </Compile>
+    <Compile Include="Log\ConsoleTraceListener.cs">
       <Link>Log\ConsoleTraceListener.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Log\TextViewTraceListener.cs">
+    <Compile Include="Log\TextViewTraceListener.cs">
       <Link>Log\TextViewTraceListener.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Markers\MapMarker.cs">
+    <Compile Include="Markers\MapMarker.cs">
       <Link>Markers\MapMarker.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Renderer\Images\NativeImage.cs">
+    <Compile Include="Renderer\Images\NativeImage.cs">
       <Link>Renderer\Images\NativeImage.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Renderer\Images\NativeImageCache.cs">
+    <Compile Include="Renderer\Images\NativeImageCache.cs">
       <Link>Renderer\Images\NativeImageCache.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI\Native.cs">
+    <Compile Include="Native.cs">
       <Link>Native.cs</Link>
     </Compile>
   </ItemGroup>
@@ -111,16 +111,16 @@
     <Folder Include="Renderer\Images\" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\OsmSharp.iOS.UI\Images\layers.png">
+    <BundleResource Include="Images\layers.png">
       <Link>Images\layers.png</Link>
     </BundleResource>
-    <BundleResource Include="..\OsmSharp.iOS.UI\Images\layers%402x.png">
+    <BundleResource Include="Images\layers%402x.png">
       <Link>Images\layers%402x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\OsmSharp.iOS.UI\Images\marker-and-shadow.png">
+    <BundleResource Include="Images\marker-and-shadow.png">
       <Link>Images\marker-and-shadow.png</Link>
     </BundleResource>
-    <BundleResource Include="..\OsmSharp.iOS.UI\Images\marker-and-shadow%402x.png">
+    <BundleResource Include="Images\marker-and-shadow%402x.png">
       <Link>Images\marker-and-shadow%402x.png</Link>
     </BundleResource>
   </ItemGroup>

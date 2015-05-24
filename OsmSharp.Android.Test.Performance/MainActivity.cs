@@ -29,6 +29,7 @@ using OsmSharp.Test.Performance.UI.Rendering;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing;
+using System.IO;
 
 namespace OsmSharp.Android.Test.Performance
 {
@@ -39,6 +40,8 @@ namespace OsmSharp.Android.Test.Performance
 		{
 			base.OnCreate (bundle);
 
+
+
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
@@ -47,7 +50,7 @@ namespace OsmSharp.Android.Test.Performance
             
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
-            OsmSharp.Logging.Log.Ignore("CHRouting");
+            //OsmSharp.Logging.Log.Ignore("CHRouting");
             OsmSharp.Logging.Log.Ignore("CHPreProcessor");
             OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
             OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
@@ -58,7 +61,7 @@ namespace OsmSharp.Android.Test.Performance
                 new TextViewTraceListener(this, FindViewById<TextView>(Resource.Id.textView1)));
 
             // do some testing here.
-            Thread thread = new Thread(
+            var thread = new Thread(
                 new ThreadStart(Test));
             thread.Start();
 		}
@@ -80,8 +83,11 @@ namespace OsmSharp.Android.Test.Performance
             //    new GeoCoordinate(51.30720, 4.89820)), 1);
             //}
 
+            this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+            //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
+
+            //this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
@@ -95,28 +101,64 @@ namespace OsmSharp.Android.Test.Performance
         {
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 1 route.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    1);
+                    embeddedResource), true, 1);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 2 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    2);
+                    embeddedResource), true, 2);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 10 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    10);
+                    embeddedResource), true, 10);
             Log.TraceEvent("Test", TraceEventType.Information,
                 "Testing: 100 routes.");
-            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    embeddedResource),
-                    100);
+                    embeddedResource), true, 100);
+            //Log.TraceEvent("Test", TraceEventType.Information,
+            //    "Testing: 1000 routes.");
+            //OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerialized(
+            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            //        embeddedResource), true, 1000);
+        }
+
+        /// <summary>
+        /// Executes routing performance tests.
+        /// </summary>
+        private void TestRoutingResolved(string embeddedResource)
+        {
+            var box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 1 route.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 1);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 2 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 2);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 10 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 10);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 100 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 100);
+            Log.TraceEvent("Test", TraceEventType.Information,
+                "Testing: 1000 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHRoutingTest.TestSerializedResolved(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource), box, true, 1000);
         }
 
         /// <summary>

@@ -113,9 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.Classic.csproj">
-      <Project>{fc72e8bf-3daf-4265-a693-e988f923c7dc}</Project>
+      <Project>{FC72E8BF-3DAF-4265-A693-E988F923C7DC}</Project>
       <Name>OsmSharp.iOS.UI.Classic</Name>
-      <IsAppExtension>false</IsAppExtension>
+      <IsAppExtension>False</IsAppExtension>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>

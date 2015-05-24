@@ -3,9 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73BE366F-133A-4C7B-8775-6FA3E7C8452F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -124,9 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
@@ -152,13 +147,15 @@
     <Compile Include="Collections\Arrays\HugeArrayTests.cs" />
     <Compile Include="Collections\Coordinates\HugeCoordinateCollectionIndexTests.cs" />
     <Compile Include="Collections\HugeHashSetTests.cs" />
+    <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndexTests.cs" />
+    <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionaryTests.cs" />
     <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
-    <Compile Include="Collections\Tags\Serializer\TagsCollectionIndexSerializerTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexSerializerTests.cs" />
     <Compile Include="Geo\GeoCoordinateTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />
     <Compile Include="Geo\Geometries\PolygonTests.cs" />
@@ -182,59 +179,57 @@
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterSortTest.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
     <Compile Include="Osm\TagParsingTests.cs" />
-    <Compile Include="Routes\DepotRouteTests.cs" />
-    <Compile Include="API\APITests.cs" />
-    <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
-    <Compile Include="Routes\DynamicAsymmetricRouteTests.cs" />
-    <Compile Include="Routes\MultiRouteTest.cs" />
-    <Compile Include="Routes\RouteTest.cs" />
-    <Compile Include="Routes\SimpleAsymmetricRouteTests.cs" />
+    <Compile Include="Math\VRP\Core\Routes\DepotRouteTests.cs" />
+    <Compile Include="Osm\API\APITests.cs" />
+    <Compile Include="Math\VRP\Core\Routes\DynamicAsymmetricMultiRouteTests.cs" />
+    <Compile Include="Math\VRP\Core\Routes\DynamicAsymmetricRouteTests.cs" />
+    <Compile Include="Math\VRP\Core\Routes\MultiRouteTest.cs" />
+    <Compile Include="Math\VRP\Core\Routes\RouteTest.cs" />
+    <Compile Include="Math\VRP\Core\Routes\SimpleAsymmetricRouteTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDataTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceComparisonTests.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionBaseTests.cs" />
-    <Compile Include="Data\NodeTests.cs" />
-    <Compile Include="Data\PBFTests.cs" />
+    <Compile Include="Osm\NodeTests.cs" />
     <Compile Include="Osm\PBF\Streams\PBFDataProcessingSourceTests.cs" />
     <Compile Include="Osm\Xml\Streams\XmlDataProcessorSourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\MemoryDataSourceTests.cs" />
+    <Compile Include="Osm\Data\MemoryDataSourceTests.cs" />
     <Compile Include="Routing\CH\CHPriorityCalculationTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDataSourceSerializeSortTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
-    <Compile Include="Routing\Graph\MemoryDirectedGraphTests.cs" />
-    <Compile Include="Routing\Graph\MemoryMappedFileDynamicGraphTests.cs" />
+    <Compile Include="Routing\Graph\DirectedGraphTests.cs" />
+    <Compile Include="Routing\Graph\MemoryMappedGraphTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionSerializedContractedTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />
     <Compile Include="Routing\Instructions\InstructionTests.cs" />
     <Compile Include="Routing\Instructions\LanguageGenerator\LanguageTestGenerator.cs" />
-    <Compile Include="Routing\Live\LiveEdgePreProcessorRoutingTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgePreProcessorTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgeRoutingComparisonTests.cs" />
-    <Compile Include="Routing\Live\LiveEdgeRoutingTest.cs" />
+    <Compile Include="Routing\PreProcessorRoutingTests.cs" />
+    <Compile Include="Routing\PreProcessorTests.cs" />
+    <Compile Include="Routing\RoutingComparisonTests.cs" />
+    <Compile Include="Routing\RoutingTest.cs" />
     <Compile Include="Routing\Navigation\RouterTrackerTests.cs" />
     <Compile Include="Routing\ReferenceGraphTarget.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
-    <Compile Include="Routing\DykstraLiveRoutingTests.cs" />
-    <Compile Include="Routing\Graph\MemoryGraphTests.cs" />
+    <Compile Include="Routing\DykstraRoutingTests.cs" />
+    <Compile Include="Routing\Graph\GraphTests.cs" />
     <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
-    <Compile Include="Routing\DykstraLiveAccessTests.cs">
+    <Compile Include="Routing\DykstraAccessTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Routing\RoutingAccessTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\RouteTests.cs" />
     <Compile Include="Routing\OsmSourceRoutingTest.cs" />
-    <Compile Include="Routing\RoutingComparisonTests.cs" />
+    <Compile Include="Routing\RoutingComparisonTestsBase.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
-    <Compile Include="Routing\Serialization\RoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
     <Compile Include="Routing\VehicleBaseTests.cs" />
@@ -250,24 +245,21 @@
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
     <Compile Include="IntegrationTests\GZipStreamTests.cs" />
-    <Compile Include="Collections\Tags\TagsCollectionIndexBaseTests.cs" />
-    <Compile Include="Collections\Tags\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexTests.cs" />
     <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
-    <Compile Include="Xml\Gpx\GpxXmlTest.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxXmlTest.cs" />
     <Compile Include="Collections\HugeDictionaryTests.cs" />
-    <Compile Include="Xml\Kml\KmlXmlTest.cs" />
+    <Compile Include="IO\Xml\Kml\KmlXmlTest.cs" />
     <Compile Include="Math\Structures\LocatedObjectIndexTest.cs" />
     <Compile Include="Math\Structures\LocatedObjectQTTests.cs" />
     <Compile Include="Math\MathTest.cs" />
-    <Compile Include="GeoCoding\Nominatim\NomatimXmlTest.cs" />
     <Compile Include="Osm\API\OsmApiXmlTest.cs" />
     <Compile Include="Collections\PermutationEnumerationTests.cs" />
     <Compile Include="Collections\StringTableTests.cs" />
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionaryTest.cs" />
     <Compile Include="Collections\Tags\TagsCollectionTests.cs" />
-    <Compile Include="Collections\Tags\TagsCollectionBaseTests.cs" />
     <Compile Include="Routing\TSP\BruteForceTSPTest.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
     <Compile Include="Math\Primitives\BoxF2DTests.cs" />
@@ -324,23 +316,23 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
-      <Project>{1524c255-2ee5-4c0c-a64c-56ce39a062e3}</Project>
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.WinForms.UI\OsmSharp.WinForms.UI.csproj">
-      <Project>{1433d177-b342-463c-8128-8399720a35af}</Project>
+      <Project>{1433D177-B342-463C-8128-8399720A35AF}</Project>
       <Name>OsmSharp.WinForms.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>

@@ -20,6 +20,7 @@ using OsmSharp.Routing;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Vehicles;
 namespace OsmSharp.Test.Performance.Routing.CH
 {
     /// <summary>
@@ -32,7 +33,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
         /// </summary>
         public static void Test()
         {
-            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "belgium-latest.osm.pbf");
+            CHPreProcessorTest.TestPreprocessing("CHPreProcessor", "kempen-big.osm.pbf");
         }
 
         /// <summary>

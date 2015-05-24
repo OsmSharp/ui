@@ -24,7 +24,6 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.WinForms.UI;
@@ -33,6 +32,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using OsmSharp.Test.Performance.Routing.CH;
 
 namespace OsmSharp.Test.Performance
 {
@@ -45,6 +45,10 @@ namespace OsmSharp.Test.Performance
         static void Main(string[] args)
         {
             Native.Initialize();
+
+            var box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
 
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
@@ -74,12 +78,22 @@ namespace OsmSharp.Test.Performance
                 //Tags.Collections.TagsTableCollectionIndexTests.Test();
                 //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-                //// test the routing preprocessor.
-                //Routing.LivePreProcessorTest.Test();
-                //Routing.LiveEdgeGraphFlatFileSerializerTests.Test();
-                Routing.LiveRoutingTest.Test();
+                // test routing.
+                //Routing.PreProcessorTest.Test();
+                //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+                //Routing.GraphFlatFileSerializerTests.Test();
+                //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead());
+                //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+                //Routing.RoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), false);
+                //RoutingResolveTest.Test(box);
+                //Routing.RoutingTest.Test();
                 //Routing.CH.CHPreProcessorTest.Test();
-                //Routing.CH.CHEdgeGraphFlatFileSerializerTests.Test();
+                //Routing.CH.CHEdgeGraphSerializerTests.Test();
+                //OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+                //Routing.CH.CHRoutingTest.TestSerialized(new FileInfo("test.routing").OpenRead(), true);
+                //Routing.CH.CHRoutingResolveTest.Test(box);
+                //Routing.CH.CHRoutingResolveTest.TestSerializedResolved(new FileInfo("test.routing").OpenRead(), box, false, 1000);
+                Routing.CH.CHEdgeGraphSerializerTests.Test();
                 //Routing.CH.CHSerializedRoutingTest.Test();
                 //Routing.CH.CHRoutingTest.Test();
 

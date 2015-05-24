@@ -92,6 +92,14 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Returns true if this collection is readonly.
+        /// </summary>
+        public override bool IsReadonly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// Adds a new tag (key-value pair) to this tags collection.
         /// </summary>
         /// <param name="key"></param>
@@ -223,6 +231,15 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Removes all tags that matches the given predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        public override void RemoveAll(System.Predicate<Tag> predicate)
+        {
+            _tags.RemoveAll(predicate);
+        }
+
+        /// <summary>
         /// Returns a string that represents this tags collection.
         /// </summary>
         /// <returns></returns>
@@ -239,15 +256,6 @@ namespace OsmSharp.Collections.Tags
                 return tags.ToString(0, tags.Length - 1);
             }
             return "empty";
-        }
-
-        /// <summary>
-        /// Removes all tags that matches the given predicate.
-        /// </summary>
-        /// <param name="predicate"></param>
-        public override void RemoveAll(System.Predicate<Tag> predicate)
-        {
-            _tags.RemoveAll(predicate);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2014 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
@@ -32,7 +33,7 @@ namespace OsmSharp.Collections.Coordinates
         /// <summary>
         /// Holds all coordinates.
         /// </summary>
-        private IHugeArray<float> _coordinates;
+        private HugeArrayBase<float> _coordinates;
 
         /// <summary>
         /// Holds the count.
@@ -42,6 +43,7 @@ namespace OsmSharp.Collections.Coordinates
         /// <summary>
         /// Creates a new huge coordinate index.
         /// </summary>
+        /// <param name="size">The initial size.</param>
         public HugeCoordinateIndex(long size)
             : this(new HugeArray<float>(size * 2))
         {
@@ -49,12 +51,12 @@ namespace OsmSharp.Collections.Coordinates
         }
 
         /// <summary>
-        /// Creates a new huge coordinate index.
+        /// Creates a new, memory mapped, huge coordinate index.
         /// </summary>
-        /// <param name="factory"></param>
-        /// <param name="size"></param>
-        public HugeCoordinateIndex(MemoryMappedFileFactory factory, long size)
-            : this(new MemoryMappedHugeArray<float>(factory, size * 2))
+        /// <param name="size">The initial size.</param>
+        /// <param name="file">The file.</param>
+        public HugeCoordinateIndex(MemoryMappedFile file, long size)
+            : this(new MemoryMappedHugeArraySingle(file, size * 2))
         {
 
         }
@@ -63,7 +65,7 @@ namespace OsmSharp.Collections.Coordinates
         /// Creates a new huge coordinate index.
         /// </summary>
         /// <param name="coordinates"></param>
-        private HugeCoordinateIndex(IHugeArray<float> coordinates)
+        private HugeCoordinateIndex(HugeArrayBase<float> coordinates)
         {
             _coordinates = coordinates;
 

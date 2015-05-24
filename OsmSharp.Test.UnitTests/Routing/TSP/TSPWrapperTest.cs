@@ -22,11 +22,12 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.TSP;
-using OsmSharp.Routing.TSP.Genetic;
+using OsmSharp.Routing.Optimization.TSP;
+using OsmSharp.Routing.Optimization.TSP.Genetic;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.TSP
 {
@@ -105,13 +106,13 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         /// <param name="dataStream"></param>
         /// <param name="csvStream"></param>
         /// <param name="pbf"></param>
-        /// <param name="vehicleEnum"></param>
+        /// <param name="vehicle"></param>
         /// <returns></returns>
-        private Route CalculateTSP(Stream dataStream, Stream csvStream, bool pbf, Vehicle vehicleEnum)
+        private Route CalculateTSP(Stream dataStream, Stream csvStream, bool pbf, Vehicle vehicle)
         {
             // create the router.
             var interpreter = new OsmRoutingInterpreter();
-            var router = Router.CreateLiveFrom(
+            var router = Router.CreateFrom(
                 new XmlOsmStreamSource(dataStream), interpreter);
 
             // read the source files.
@@ -164,7 +165,7 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
             // create and execute solver.
             var tspSolver = new RouterTSPWrapper<RouterTSP>(
                 new RouterTSPAEXGenetic(), router, interpreter);
-            return tspSolver.CalculateTSP(vehicleEnum, points.ToArray());
+            return tspSolver.CalculateTSP(vehicle, points.ToArray());
         }
     }
 }

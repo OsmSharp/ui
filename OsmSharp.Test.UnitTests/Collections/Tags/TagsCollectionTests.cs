@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -22,27 +22,20 @@ using OsmSharp.Collections.Tags;
 namespace OsmSharp.Test.Unittests.Collections.Tags
 {
     /// <summary>
-    /// Contains tests for the SimpleTagsCollection.
+    /// Contains tests for tags collections.
     /// </summary>
     [TestFixture]
-    public class TagsCollectionTests : TagsCollectionBaseTests
+    public class TagsCollectionTests
     {
-        /// <summary>
-        /// Creates a test tags collection.
-        /// </summary>
-        /// <returns></returns>
-        protected override TagsCollectionBase CreateTagsCollection()
-        {
-            return new TagsCollection();
-        }
-
         /// <summary>
         /// Tests a simple tags collection.
         /// </summary>
         [Test]
         public void TestSimpleTagsCollectionEmpty()
         {
-            this.TestTagsCollectionEmpty();
+            var collection = new TagsCollection();
+
+            Assert.AreEqual(0, collection.Count);
         }
 
         /// <summary>
@@ -51,7 +44,14 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         [Test]
         public void TestSimpleTagsCollectionSimple()
         {
-            this.TestTagsCollectionSimple();
+            var collection = new TagsCollection();
+
+            collection["simple"] = "yes";
+
+            Assert.IsTrue(collection.ContainsKey("simple"));
+            Assert.IsTrue(collection.ContainsKeyValue("simple", "yes"));
+            Assert.AreEqual("yes", collection["simple"]);
+            Assert.AreEqual(1, collection.Count);
         }
     }
 }

@@ -24,21 +24,20 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.Tags.Index;
 using System.Collections.Generic;
 using OsmSharp.Collections;
+using OsmSharp.Routing.Osm.Streams;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
     /// <summary>
-    /// Holds regression tests based on dykstra routing live.
+    /// Holds regression tests based on dykstra routing.
     /// </summary>
     [TestFixture]
-    public class InstructionRegressionTestsDykstraLive : InstructionRegressionTestsBase
+    public class InstructionRegressionTestsDykstra : InstructionRegressionTestsBase
     {
         /// <summary>
         /// Creates a router.
@@ -48,22 +47,22 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         protected override Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
-            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
+            TagsIndex tagsIndex = new TagsIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<LiveEdge> memoryData =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
+            var memoryData =
+                new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
+            var targetData = new GraphOsmStreamTarget(
                 memoryData, interpreter, tagsIndex, null, false);
-            XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(
+            var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceName));
-            OsmStreamFilterSort sorter = new OsmStreamFilterSort();
+            var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
-            IRoutingAlgorithm<LiveEdge> basicRouter = new Dykstra();
-            return Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
+            IRoutingAlgorithm<Edge> basicRouter = new Dykstra();
+            return Router.CreateFrom(memoryData, basicRouter, interpreter);
         }
 
         ///// <summary>
@@ -71,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         ///// Some streetnames are missing from the instructions.
         ///// </summary>
         //[Test]
-        //public void InstructionRegressionDykstraLiveTest1()
+        //public void InstructionRegressionDykstraTest1()
         //{
         //    this.DoInstructionRegressionTest1();
         //}
@@ -80,7 +79,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// Issue with generating instructions.
         /// </summary>
         [Test]
-        public void InstructionRegressionDykstraLiveTest2()
+        public void InstructionRegressionDykstraTest2()
         {
             this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm",
                 new GeoCoordinate(51.01257, 4.000753),
@@ -91,7 +90,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// Issue with generating instructions.
         /// </summary>
         [Test]
-        public void InstructionRegressionDykstraLiveTest3()
+        public void InstructionRegressionDykstraTest3()
         {
             this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm",
                 new GeoCoordinate(51.01177, 4.00249),

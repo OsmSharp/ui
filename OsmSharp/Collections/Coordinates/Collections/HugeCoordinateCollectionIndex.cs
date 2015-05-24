@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2014 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,11 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
+using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OsmSharp.Collections.Coordinates.Collections
 {
@@ -43,12 +46,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <summary>
         /// Holds the coordinates index position and count.
         /// </summary>
-        private IHugeArray<ulong> _index;
+        private HugeArrayBase<ulong> _index;
 
         /// <summary>
         /// Holds the coordinates in linked-list form.
         /// </summary>
-        private IHugeArray<float> _coordinates;
+        private HugeArrayBase<float> _coordinates;
 
         /// <summary>
         /// Holds the next idx.
@@ -56,9 +59,14 @@ namespace OsmSharp.Collections.Coordinates.Collections
         private long _nextIdx = 0;
 
         /// <summary>
+        /// Holds the max id.
+        /// </summary>
+        private long _maxId = 0;
+
+        /// <summary>
         /// Creates a new huge coordinate index.
         /// </summary>
-        /// <param name="size"></param>
+        /// <param name="size">The original size.</param>
         public HugeCoordinateCollectionIndex(long size)
         {
             _index = new HugeArray<ulong>(size);
@@ -76,14 +84,28 @@ namespace OsmSharp.Collections.Coordinates.Collections
         }
 
         /// <summary>
-        /// Creates a new huge coordinate index.
+        /// Creates a huge coordinate index based on exisiting data.
         /// </summary>
-        /// <param name="factory"></param>
-        /// <param name="size"></param>
-        public HugeCoordinateCollectionIndex(MemoryMappedFileFactory factory, long size)
+        /// <param name="size">The size.</param>
+        /// <param name="index">The index array.</param>
+        /// <param name="coordinates">The coordinates array.</param>
+        public HugeCoordinateCollectionIndex(long size, 
+            HugeArrayBase<ulong> index, HugeArrayBase<float> coordinates)
         {
-            _index = new MemoryMappedHugeArray<ulong>(factory, size);
-            _coordinates = new MemoryMappedHugeArray<float>(factory, size * 2 * ESTIMATED_SIZE);
+            _nextIdx = size;
+            _index = index;
+            _coordinates = coordinates;
+        }
+
+        /// <summary>
+        /// Creates a new, memory mapped, huge coordinate index.
+        /// </summary>
+        /// <param name="file">The memory mapped file.</param>
+        /// <param name="size">The original size.</param>
+        public HugeCoordinateCollectionIndex(MemoryMappedFile file, long size)
+        {
+            _index = new MemoryMappedHugeArrayUInt64(file, size);
+            _coordinates = new MemoryMappedHugeArraySingle(file, size * 2 * ESTIMATED_SIZE);
 
             for (long idx = 0; idx < _index.Length; idx++)
             {
@@ -182,15 +204,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
                 {
                     this.Add(id, value);
                 }
+
+                if(_maxId < id)
+                { // update max id.
+                    _maxId = id;
+                }
             }
-        }
-
-        /// <summary>
-        /// Trims the size of this collection index to it's smallest possible size.
-        /// </summary>
-        public void Compress()
-        {
-
         }
 
         /// <summary>
@@ -200,13 +219,34 @@ namespace OsmSharp.Collections.Coordinates.Collections
         public void Resize(long size)
         {
             _index.Resize(size);
-
-            long bestSize = size * 2 * ESTIMATED_SIZE;
-            if (bestSize < _coordinates.Length)
-            { // make sure all coordinate data is saved.
-                bestSize = _coordinates.Length;
+            if(_maxId >= size)
+            { 
+                _maxId = size - 1;
             }
-            _coordinates.Resize(bestSize);
+
+            //this.Trim();
+        }
+
+        /// <summary>
+        /// Returns the length of the coordinates index.
+        /// </summary>
+        public long LengthIndex
+        {
+            get
+            {
+                return _index.Length;
+            }
+        }
+
+        /// <summary>
+        /// Returns the length of the coordinates.
+        /// </summary>
+        public long LengthCoordinates
+        {
+            get
+            {
+                return _coordinates.Length;
+            }
         }
 
         #region Helper Methods
@@ -230,6 +270,12 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// <returns></returns>
         private bool TryGetIndexAndSize(long id, out long index, out long size)
         {
+            if (id >= _index.Length)
+            {
+                index = 0;
+                size = 0;
+                return false;
+            }
             var data = _index[id];
             if(data == 0)
             {
@@ -319,7 +365,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <summary>
             /// Holds the coordinates.
             /// </summary>
-            private IHugeArray<float> _coordinates;
+            private HugeArrayBase<float> _coordinates;
 
             /// <summary>
             /// Holds the reverse flag.
@@ -332,7 +378,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <param name="coordinates"></param>
             /// <param name="startIdx"></param>
             /// <param name="size"></param>
-            public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size)
+            public HugeCoordinateCollection(HugeArrayBase<float> coordinates, long startIdx, long size)
                 : this(coordinates, startIdx, size, false)
             {
 
@@ -345,7 +391,7 @@ namespace OsmSharp.Collections.Coordinates.Collections
             /// <param name="startIdx"></param>
             /// <param name="size"></param>
             /// <param name="reverse"></param>
-            public HugeCoordinateCollection(IHugeArray<float> coordinates, long startIdx, long size, bool reverse)
+            public HugeCoordinateCollection(HugeArrayBase<float> coordinates, long startIdx, long size, bool reverse)
             {
                 _startIdx = startIdx;
                 _size = size;
@@ -476,6 +522,140 @@ namespace OsmSharp.Collections.Coordinates.Collections
             {
                 return new HugeCoordinateCollection(_coordinates, _startIdx, _size, !_reverse);
             }
+        }
+
+        /// <summary>
+        /// Compresses the data in this index.
+        /// </summary>
+        public void Compress()
+        {
+            // reorganizes the data in the coordinate array and resizes it.
+            var offset = _nextIdx;
+            var nextIdx = offset * 2;
+            for(int idx = 0; idx < _maxId + 1; idx++)
+            {
+                var data = _index[idx];
+                var index = ((long)(data / (ulong)MAX_COLLECTION_SIZE)) * 2;
+                var size = (long)(data % (ulong)MAX_COLLECTION_SIZE) * 2;
+                var newId = (ulong)(((nextIdx / 2) - offset) * MAX_COLLECTION_SIZE) + (ulong)(size / 2);
+                for(var localIdx = index; localIdx < index + size; localIdx = localIdx + 2)
+                {
+                    if(nextIdx >= _coordinates.Length)
+                    { // increase the index.
+                        this.IncreaseCoordinates();
+                    }
+                    _coordinates[nextIdx] = _coordinates[localIdx];
+                    _coordinates[nextIdx + 1] = _coordinates[localIdx + 1];
+                    nextIdx = nextIdx + 2;
+                }
+
+                _index[idx] = newId;
+            }
+
+            // copy to the beginning.
+            for(int idx = 0; idx < nextIdx - (offset * 2); idx++)
+            {
+                _coordinates[idx] = _coordinates[idx + (offset * 2)];
+            }
+            var newSize = nextIdx - (offset * 2);
+            if (newSize <= 0)
+            { // don't resize to zero, leave things a mess.
+                newSize = 1;
+            }
+            _coordinates.Resize(newSize);
+        }
+
+        /// <summary>
+        /// Trims the size of the index and of the coordinate array to the exact size needed.
+        /// </summary>
+        /// <returns></returns>
+        public void Trim()
+        {
+            // find the highest index where the index-entry is non-null.
+            var maxIndex = _maxId;
+            _index.Resize(maxIndex + 1);
+
+            //// resize accordingly.
+            //if (_maxId > 0)
+            //{ // only compress.
+            //    this.Compress();
+            //}
+        }
+
+        /// <summary>
+        /// Serializes this huge collection index to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        public long Serialize(Stream stream)
+        {
+            // first trim to minimize the amount of useless data store.
+            this.Trim();
+
+            // start writing.
+            long indexSize = _index.Length;
+            long coordinatesCount = _coordinates.Length;
+            
+            long position = 0;
+            stream.Write(BitConverter.GetBytes(indexSize), 0, 8); // write the actual index size.
+            position = position + 8;
+            stream.Write(BitConverter.GetBytes(coordinatesCount), 0, 8); // write the actual number of coordinates.
+            position = position + 8;
+
+            // write in this order: index, shapes.
+            using (var file = new MemoryMappedStream(new LimitedStream(stream)))
+            {
+                // write index.
+                var indexArray = new MemoryMappedHugeArrayUInt64(file, indexSize, indexSize, 1024);
+                indexArray.CopyFrom(_index, indexSize);
+                indexArray.Dispose();
+                position = position + (indexSize * 8);
+
+                // write coordinates.
+                var coordinatesArray = new MemoryMappedHugeArraySingle(file, coordinatesCount * 2, coordinatesCount * 2, 1024);
+                coordinatesArray.CopyFrom(_coordinates);
+                coordinatesArray.Dispose();
+                position = position + (coordinatesCount * 2 * 4);
+            }
+
+            return position;
+        }
+
+        /// <summary>
+        /// Deserializes a huge collection index from the given stream.
+        /// </summary>
+        /// <param name="stream">The source stream.</param>
+        /// <param name="copy">The copy flag. When true all data is copied into memory, otherwise the source-stream is used as a memorymapped file.</param>
+        /// <returns></returns>
+        public static HugeCoordinateCollectionIndex Deserialize(Stream stream, bool copy = false)
+        {
+            // read sizes.
+            long position = 0;
+            var longBytes = new byte[8];
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var indexLength = BitConverter.ToInt64(longBytes, 0);
+            stream.Read(longBytes, 0, 8);
+            position = position + 8;
+            var coordinateLength = BitConverter.ToInt64(longBytes, 0);
+
+            var file = new MemoryMappedStream(new LimitedStream(stream));
+            var indexArray = new MemoryMappedHugeArrayUInt64(file, indexLength, indexLength, 1024);
+            var coordinateArray = new MemoryMappedHugeArraySingle(file, coordinateLength * 2, coordinateLength * 2, 1024);
+
+            if (copy)
+            { // copy the data.
+                var indexArrayCopy = new HugeArray<ulong>(indexLength);
+                indexArrayCopy.CopyFrom(indexArray);
+
+                var coordinateArrayCopy = new HugeArray<float>(coordinateLength * 2);
+                coordinateArrayCopy.CopyFrom(coordinateArray);
+
+                file.Dispose();
+
+                return new HugeCoordinateCollectionIndex(indexLength, indexArrayCopy, coordinateArrayCopy);
+            }
+
+            return new HugeCoordinateCollectionIndex(indexLength, indexArray, coordinateArray);
         }
 
         /// <summary>

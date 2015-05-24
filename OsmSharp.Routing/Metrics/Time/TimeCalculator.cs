@@ -22,10 +22,11 @@ using System.Text;
 using OsmSharp.Units.Speed;
 using OsmSharp.Units.Time;
 using OsmSharp.Routing;
-using OsmSharp.Routing.ArcAggregation.Output;
-using OsmSharp.Routing.ArcAggregation;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Routing.Metrics.Time
 {

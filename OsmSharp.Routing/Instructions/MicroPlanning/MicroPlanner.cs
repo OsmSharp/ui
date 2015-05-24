@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Instructions.MicroPlanning.Machines;
 using OsmSharp.Routing.Interpreter;

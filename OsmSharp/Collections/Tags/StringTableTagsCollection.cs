@@ -69,6 +69,14 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Returns true if this collection is readonly.
+        /// </summary>
+        public override bool IsReadonly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// Adds a tag.
         /// </summary>
         /// <param name="tag"></param>

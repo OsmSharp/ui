@@ -102,16 +102,16 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize map.
 			var map = new Map();
 			// add a tile layer.
-			//            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+			map.AddLayer(new LayerTile(@"http://192.168.43.155:1234/default/{0}/{1}/{2}.png"));
 			//            map.AddLayer(new LayerMBTile(SQLiteConnection.CreateFrom(
 			//                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.iOS.UI.Sample.kempen.mbtiles"), "map")));
 
 			// add an online osm-data->mapCSS translation layer.
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			// add a pre-processed vector data file.
-			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
-				"OsmSharp.iOS.UI.Sample.default.map");
-			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
+//			var sceneStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+//				"OsmSharp.iOS.UI.Sample.default.map");
+//			map.AddLayer(new LayerScene(Scene2D.Deserialize(sceneStream, true)));
 
 			//            var primitivesLayer = new LayerPrimitives(map.Projection);
 			//            primitivesLayer.AddPoint(new GeoCoordinate(51.26371, 4.78601), 10,
@@ -154,7 +154,7 @@ namespace OsmSharp.iOS.UI.Sample
 			_mapView.MapMaxZoomLevel = 19;
 			_mapView.MapMinZoomLevel = 0;
 			_mapView.MapTilt = 0;
-			_mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
+			_mapView.MapCenter = new GeoCoordinate(51.2633, 4.7853);
 			_mapView.MapZoom = 18;
 			_mapView.MapInitialized += _mapView_MapInitialized;
 

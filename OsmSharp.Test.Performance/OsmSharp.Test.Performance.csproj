@@ -3,20 +3,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{4BBD434F-58EE-4E40-BE7B-C244B6026804}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.Test.Performance</RootNamespace>
     <AssemblyName>OsmSharp.Test.Performance</AssemblyName>
-    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -59,6 +57,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>..\Output\Release\Any CPU\</OutputPath>
@@ -77,6 +77,7 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -93,6 +94,8 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\Output\Release\x64\</OutputPath>
@@ -109,6 +112,7 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -132,20 +136,22 @@
     <Compile Include="PerformanceInfoConsumer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\CH\CHRoutingTest.cs" />
-    <Compile Include="Routing\LiveGraphFlatFileSerializerTests.cs" />
-    <Compile Include="Routing\CH\CHEdgeGraphFlatFileSerializerTests.cs" />
-    <Compile Include="Routing\LiveRoutingTest.cs" />
+    <Compile Include="Routing\RoutingResolveTests.cs" />
+    <Compile Include="Routing\CH\CHRoutingResolveTests.cs" />
+    <Compile Include="Routing\GraphFlatFileSerializerTests.cs" />
+    <Compile Include="Routing\CH\CHEdgeGraphSerializerTests.cs" />
+    <Compile Include="Routing\RoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeGraphFileStreamTargetTests.cs" />
     <Compile Include="Routing\CH\CHPreProcessorTest.cs" />
     <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
-    <Compile Include="Routing\LivePreProcessorTest.cs" />
+    <Compile Include="Routing\PreProcessorTest.cs" />
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />
     <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
     <Compile Include="UI\Scene\Scene2DTests.cs" />
     <Compile Include="UI\Styles\MapCSS\MapCSSInterpreterTests.cs" />
+    <Compile Include="Routing\CH\CHRoutingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
@@ -205,15 +211,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
-      <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
+      <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.WinForms.UI\OsmSharp.WinForms.UI.csproj">
@@ -221,7 +227,7 @@
       <Name>OsmSharp.WinForms.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>

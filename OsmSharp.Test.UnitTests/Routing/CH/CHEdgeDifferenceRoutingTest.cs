@@ -30,8 +30,9 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Routing.Osm.Streams;
+using OsmSharp.Routing.Vehicles;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -48,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
+        public override Router BuildRouter(IRoutingAlgorithmData<CHEdgeData> data,
             IRoutingInterpreter interpreter, IRoutingAlgorithm<CHEdgeData> basicRouter)
         {
             return Router.CreateCHFrom(data, basicRouter, interpreter);
@@ -59,7 +60,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IRoutingAlgorithm<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        public override IRoutingAlgorithm<CHEdgeData> BuildBasicRouter(IRoutingAlgorithmData<CHEdgeData> data)
         {
             return new CHRouter();
         }
@@ -70,19 +71,19 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
+        public override IRoutingAlgorithmData<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString)
         {
-            string key = string.Format("CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM.{0}",
+            string key = string.Format("CHEdgeDifference.Routing.IRoutingAlgorithmData<CHEdgeData>.OSM.{0}",
                 embeddedString);
-            var data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
+            var data = StaticDictionary.Get<IRoutingAlgorithmData<CHEdgeData>>(
                 key);
             if (data == null)
             {
-                var tagsIndex = new TagsTableCollectionIndex();
+                var tagsIndex = new TagsIndex();
 
                 // do the data processing.
-                var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(new MemoryDirectedGraph<CHEdgeData>(), tagsIndex);
+                var memoryData = new RouterDataSource<CHEdgeData>(new DirectedGraph<CHEdgeData>(), tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
                     memoryData, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
@@ -92,14 +93,8 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 targetData.RegisterSource(sorter);
                 targetData.Pull();
 
-                // do the pre-processing part.
-                var witnessCalculator = new DykstraWitnessCalculator();
-                var preProcessor = new CHPreProcessor(memoryData,
-                    new EdgeDifferenceContractedSearchSpace(memoryData, witnessCalculator), witnessCalculator);
-                preProcessor.Start();
-
                 data = memoryData;
-                StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
+                StaticDictionary.Add<IRoutingAlgorithmData<CHEdgeData>>(key, data);
             }
             return data;
         }
@@ -123,12 +118,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         }
 
         /// <summary>
-        /// Tests if the raw router preserves tags on arcs/ways.
+        /// Tests if the raw router preserves tags on ways.
         /// </summary>
         [Test]
-        public void TestCHEdgeDifferenceArcTags()
+        public void TestCHEdgeDifferenceEdgeTags()
         {
-            this.DoTestArcTags();
+            this.DoTestEdgeTags();
         }
 
         /// <summary>

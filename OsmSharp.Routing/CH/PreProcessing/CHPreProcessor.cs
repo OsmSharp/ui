@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the data target.
         /// </summary>
-        private IGraph<CHEdgeData> _target;
+        private GraphBase<CHEdgeData> _target;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        public CHPreProcessor(IGraph<CHEdgeData> target,
+        public CHPreProcessor(GraphBase<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
         {
@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                             if (!this.IsContracted(v))
                             {
                                 neighbourCount.Clear();
-                                var edges = _target.GetEdges(v);
+                                var edges =  _target.GetEdges(v);
                                 if (edges != null)
                                 {
                                     int edgesCount = edges.Count;
@@ -251,7 +251,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
 
             // get all information from the source.
-            var edges = _target.GetEdges(vertex).ToList();
+            var edges =  _target.GetEdges(vertex).ToList();
 
             // report the before contraction event.
             this.OnBeforeContraction(vertex, edges);
@@ -724,7 +724,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     //int totalCadinality = 0;
                     //for (uint vertex = 0; vertex < _target.VertexCount; vertex++)
                     //{
-                    //    var arcs = _target.GetEdges(vertex);
+                    //    var edges =  _target.GetEdges(vertex);
                     //    if (arcs != null)
                     //    {
                     //        totalCadinality = arcs.Count() + totalCadinality;

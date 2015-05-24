@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IGraph<CHEdgeData> _data;
+        private GraphBase<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the contracted count.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// </summary>
         /// <param name="data"></param>
         /// <param name="witnessCalculator"></param>
-        public EdgeDifferenceContractedSearchSpace(IGraph<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
+        public EdgeDifferenceContractedSearchSpace(GraphBase<CHEdgeData> data, INodeWitnessCalculator witnessCalculator)
         {
             _data = data;
             _witnessCalculator = witnessCalculator;
@@ -88,7 +88,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             _contractionCount.TryGetValue(vertex, out contracted);
 
             // get all information from the source.
-            var edges = _data.GetEdges(vertex).ToList();
+            var edges =  _data.GetEdges(vertex).ToList();
 
             // build the list of edges to replace.
             var edgesForContractions = new List<Edge<CHEdgeData>>(edges.Count);

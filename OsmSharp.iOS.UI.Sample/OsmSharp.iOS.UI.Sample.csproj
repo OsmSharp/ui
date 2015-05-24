@@ -100,32 +100,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="Entitlements.plist" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="..\OsmSharp.iOS.UI.Sample\Resources\Default-568h%402x.png">
+    <BundleResource Include="Resources\Default-568h%402x.png">
       <Link>Resources\Default-568h%402x.png</Link>
     </BundleResource>
-    <BundleResource Include="..\OsmSharp.iOS.UI.Sample\Resources\Default.png">
+    <BundleResource Include="Resources\Default.png">
       <Link>Resources\Default.png</Link>
     </BundleResource>
-    <BundleResource Include="..\OsmSharp.iOS.UI.Sample\Resources\Default%402x.png">
+    <BundleResource Include="Resources\Default%402x.png">
       <Link>Resources\Default%402x.png</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\OsmSharp.iOS.UI.Sample\AppDelegate.cs">
+    <Compile Include="AppDelegate.cs">
       <Link>AppDelegate.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI.Sample\Main.cs">
+    <Compile Include="Main.cs">
       <Link>Main.cs</Link>
     </Compile>
-    <Compile Include="..\OsmSharp.iOS.UI.Sample\SampleViewController.cs">
+    <Compile Include="SampleViewController.cs">
       <Link>SampleViewController.cs</Link>
     </Compile>
   </ItemGroup>
@@ -142,9 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308af80-af15-4cbe-8222-e499df12dcc4}</Project>
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
       <Name>OsmSharp.iOS.UI</Name>
-      <IsAppExtension>false</IsAppExtension>
+      <IsAppExtension>False</IsAppExtension>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
