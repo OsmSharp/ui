@@ -16,16 +16,166 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.IO.Json;
+using OsmSharp.IO.Json.Linq;
 
 namespace OsmSharp.Geo.Streams.GeoJson
 {
-
-    public class GeoJsonConverter
+    /// <summary>
+    /// A GeoJson converter. Converts GeoJson strings from/to Features.
+    /// </summary>
+    public static class GeoJsonConverter
     {
+        /// <summary>
+        /// Generates GeoJson for this geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static string ToGeoJson(this LineairRing geometry)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, geometry);
+            return jsonWriter.Token.ToString();
+        }
 
+        /// <summary>
+        /// Generates GeoJson for the given geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        internal static void Write(JsonWriter jsonWriter, LineairRing geometry)
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WritePropertyName("type");
+            jsonWriter.WriteValue("Polygon");
+            jsonWriter.WritePropertyName("coordinates");
+            jsonWriter.WriteStartArray();
+            jsonWriter.WriteStartArray();
+            foreach(var coordinate in geometry.Coordinates)
+            {
+                jsonWriter.WriteStartArray();
+                jsonWriter.WriteValue(coordinate.Longitude);
+                jsonWriter.WriteValue(coordinate.Latitude);
+                jsonWriter.WriteEndArray();
+            }
+            jsonWriter.WriteEndArray();
+            jsonWriter.WriteEndArray();
+            jsonWriter.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for this geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static string ToGeoJson(this Polygon geometry)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, geometry);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        internal static void Write(JsonWriter jsonWriter, Polygon geometry)
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WritePropertyName("type");
+            jsonWriter.WriteValue("Polygon");
+            jsonWriter.WritePropertyName("coordinates");
+            jsonWriter.WriteStartArray();
+            jsonWriter.WriteStartArray();
+            foreach (var coordinate in geometry.Ring.Coordinates)
+            {
+                jsonWriter.WriteStartArray();
+                jsonWriter.WriteValue(coordinate.Longitude);
+                jsonWriter.WriteValue(coordinate.Latitude);
+                jsonWriter.WriteEndArray();
+            }
+            jsonWriter.WriteEndArray();
+            foreach(var hole in geometry.Holes)
+            {
+                jsonWriter.WriteStartArray();
+                foreach (var coordinate in hole.Coordinates)
+                {
+                    jsonWriter.WriteStartArray();
+                    jsonWriter.WriteValue(coordinate.Longitude);
+                    jsonWriter.WriteValue(coordinate.Latitude);
+                    jsonWriter.WriteEndArray();
+                }
+                jsonWriter.WriteEndArray();
+            }
+            jsonWriter.WriteEndArray();
+            jsonWriter.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for this geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static string ToGeoJson(this LineString geometry)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, geometry);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        internal static void Write(JsonWriter jsonWriter, LineString geometry)
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WritePropertyName("type");
+            jsonWriter.WriteValue("LineString");
+            jsonWriter.WritePropertyName("coordinates");
+            jsonWriter.WriteStartArray();
+            foreach (var coordinate in geometry.Coordinates)
+            {
+                jsonWriter.WriteStartArray();
+                jsonWriter.WriteValue(coordinate.Longitude);
+                jsonWriter.WriteValue(coordinate.Latitude);
+                jsonWriter.WriteEndArray();
+            }
+            jsonWriter.WriteEndArray();
+            jsonWriter.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for this geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static string ToGeoJson(this Point geometry)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, geometry);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        internal static void Write(JsonWriter jsonWriter, Point geometry)
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WritePropertyName("type");
+            jsonWriter.WriteValue("Point");
+            jsonWriter.WritePropertyName("coordinates");
+            jsonWriter.WriteStartArray();
+            jsonWriter.WriteValue(geometry.Coordinate.Longitude);
+            jsonWriter.WriteValue(geometry.Coordinate.Latitude);
+            jsonWriter.WriteEndArray();
+            jsonWriter.WriteEndObject();
+        }
     }
 }

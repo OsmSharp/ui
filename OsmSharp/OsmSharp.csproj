@@ -155,6 +155,7 @@
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Geo\Streams\FeatureCollectionStreamSource.cs" />
     <Compile Include="Geo\Streams\GeoJson\GeoJsonConverter.cs" />
+    <Compile Include="Geo\Streams\GeoJson\GeoJsonFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\IFeatureStreamSource.cs" />
     <Compile Include="Geo\Streams\IFeatureStreamTarget.cs" />

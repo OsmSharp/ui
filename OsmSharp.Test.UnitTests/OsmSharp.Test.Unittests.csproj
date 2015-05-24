@@ -159,9 +159,9 @@
     <Compile Include="Geo\GeoCoordinateTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />
     <Compile Include="Geo\Geometries\PolygonTests.cs" />
+    <Compile Include="Geo\Streams\GeoJson\GeoJsonConverterTests.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeometryTests.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeometryTests.cs" />
-    <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
     <Compile Include="IO\Json\JsonConvertTest.cs" />
     <Compile Include="Math\Algorithms\HilbertCurveTests.cs" />
     <Compile Include="Math\Primitives\Line2DTests.cs" />

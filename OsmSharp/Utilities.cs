@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace OsmSharp
@@ -454,6 +455,18 @@ namespace OsmSharp
                 return string.Empty;
             }
             return obj.ToString();
+        }
+
+        /// <summary>
+        /// Remove whitespaces.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string RemoveWhitespace(this string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
         }
 
         /// <summary>
