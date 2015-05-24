@@ -17,9 +17,12 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Arrays;
+using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.MemoryMapped;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
@@ -131,6 +134,25 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public void RebuildIndexes()
         {
+            this.DropVertexIndex();
+            this.RebuildVertexIndex();
+            _reverseDirectNeighbours = null;
+            this.BuildReverse();
+        }
+
+        /// <summary>
+        /// Holds the memory mapped file last used to store the indexes.
+        /// </summary>
+        private MemoryMappedFile _file;
+
+        /// <summary>
+        /// Rebuilds indexes.
+        /// </summary>
+        /// <param name="file">The memory mapped file to use to store the indexes.</param>
+        public void RebuildIndexes(MemoryMappedFile file)
+        {
+            _file = file;
+
             this.DropVertexIndex();
             this.RebuildVertexIndex();
             _reverseDirectNeighbours = null;
@@ -622,24 +644,34 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the first reverse neighbour for each vertex.
         /// </summary>
-        private HugeArray<uint> _reverseDirectNeighbours;
+        private HugeArrayBase<uint> _reverseDirectNeighbours;
 
         /// <summary>
         /// Holds additional reverse neighbours.
         /// </summary>
-        private Dictionary<uint, uint[]> _additionalReverseNeighbours;
+        private IDictionary<uint, uint[]> _additionalReverseNeighbours;
 
         /// <summary>
         /// Initializes the reverse index.
         /// </summary>
         private void BuildReverse()
         {
-            _reverseDirectNeighbours = new HugeArray<uint>(_graph.VertexCount + 1);
-            _additionalReverseNeighbours = new Dictionary<uint, uint[]>();
+            if (_file == null)
+            { // just use in-memory data structures.
+                _reverseDirectNeighbours = new HugeArray<uint>(_graph.VertexCount + 1);
+                _additionalReverseNeighbours = new Dictionary<uint, uint[]>();
+            }
+            else
+            { // use memory-mapped data structures.
+                _reverseDirectNeighbours = new MemoryMappedHugeArrayUInt32(_file, _graph.VertexCount + 1);
+                _additionalReverseNeighbours = new MemoryMappedHugeDictionary<uint, uint[]>(_file,
+                    MemoryMappedDelegates.ReadFromUInt32, MemoryMappedDelegates.WriteToUInt32,
+                    MemoryMappedDelegates.ReadFromUIntArray, MemoryMappedDelegates.WriteToUIntArray);
+            }
 
             for (uint currentVertex = 1; currentVertex <= _graph.VertexCount; currentVertex++)
             {
-                var edges =  _graph.GetEdges(currentVertex);
+                var edges = _graph.GetEdges(currentVertex);
                 while (edges.MoveNext())
                 {
                     uint neighbour = edges.Neighbour;

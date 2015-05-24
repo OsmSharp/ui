@@ -140,14 +140,6 @@ namespace OsmSharp.Test.Performance.Routing.CH
 		{
 			var routingSerializer = new CHEdgeSerializer();
 			var data = routingSerializer.Deserialize(stream, lazy);
-            data.RebuildIndexes();
-
-			//data.SortHilbert(1000);
-
-			//// copy.
-			//var graphCopy = new DirectedGraph<CHEdgeData>();
-			//graphCopy.CopyFrom(data);
-			//var dataCopy = new DynamicGraphRouterDataSource<CHEdgeData>(graphCopy, data.TagsIndex);
 
 			CHRoutingTest.TestResolved(data, testCount, box);
 		}

@@ -83,9 +83,6 @@ namespace OsmSharp.Android.Test.Performance
             //    new GeoCoordinate(51.30720, 4.89820)), 1);
             //}
 
-            var cacheDir = this.ApplicationContext.CacheDir.AbsoluteFile;
-            var tempFile = new FileStream(cacheDir.AbsoluteFile.ToString() + "temp.memorymap", FileMode.CreateNew, FileAccess.ReadWrite);
-
             this.TestRoutingResolved("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");
 
             //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.contracted.mobile.routing");

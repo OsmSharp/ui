@@ -134,6 +134,63 @@ namespace OsmSharp.IO.MemoryMappedFiles
         });
 
         /// <summary>
+        /// A default delegate that can be use to read arrays of unsigned integers from a stream.
+        /// </summary>
+        public static MemoryMappedFile.ReadFromDelegate<uint[]> ReadFromUIntArray = new MemoryMappedFile.ReadFromDelegate<uint[]>((stream, position) =>
+        {
+            var buffer = new byte[255 * 4]; // TODO: make sure this is not needed here anymore!
+            stream.Seek(position, System.IO.SeekOrigin.Begin);
+            var size = stream.ReadByte();
+            var result = new uint[size];
+            int pos = 0;
+            stream.Read(buffer, pos, size * 4);
+            int idx = 0;
+            for (int offset = 0; offset < size * 4; offset = offset + 4)
+            {
+                result[idx] = BitConverter.ToUInt32(buffer, offset);
+                idx++;
+            }
+            while (size == 255)
+            {
+                pos = pos + size;
+                size = stream.ReadByte();
+                Array.Resize<uint>(ref result, result.Length + size);
+                stream.Read(buffer, 0, size * 4);
+                for (int offset = 0; offset < size * 4; offset = offset + 4)
+                {
+                    result[idx] = BitConverter.ToUInt32(buffer, offset);
+                    idx++;
+                }
+            }
+            return result;
+        });
+
+        /// <summary>
+        /// A default delegate that can be use to write arrays of unsigned integers to a stream.
+        /// </summary>
+        public static MemoryMappedFile.WriteToDelegate<uint[]> WriteToUIntArray = new MemoryMappedFile.WriteToDelegate<uint[]>((stream, position, structure) =>
+        {
+            stream.Seek(position, System.IO.SeekOrigin.Begin);
+            var length = structure.Length * 4;
+            for (int idx = 0; idx < structure.Length; idx = idx + 255)
+            {
+                var size = structure.Length - idx;
+                if (size > 255)
+                {
+                    size = 255;
+                }
+
+                stream.WriteByte((byte)size);
+                for (int offset = 0; offset < size; offset++)
+                {
+                    stream.Write(BitConverter.GetBytes(structure[idx + offset]), 0, 4);
+                }
+                length++;
+            }
+            return length;
+        });
+
+        /// <summary>
         /// A default delegate that can be used to read an integer from a stream.
         /// </summary>
         public static MemoryMappedFile.ReadFromDelegate<int> ReadFromInt32 = new MemoryMappedFile.ReadFromDelegate<int>((stream, position) => {

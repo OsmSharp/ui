@@ -103,6 +103,8 @@ namespace OsmSharp.Collections.MemoryMapped
         /// <param name="writeToKey"></param>
         /// <param name="readValueFrom"></param>
         /// <param name="writeValueTo"></param>
+        /// <param name="hashKey"></param>
+        /// <param name="compareKey"></param>
         public MemoryMappedHugeDictionary(MemoryMappedFile file, 
             MemoryMappedFile.ReadFromDelegate<TKey> readKeyFrom, MemoryMappedFile.WriteToDelegate<TKey> writeToKey,
             MemoryMappedFile.ReadFromDelegate<TValue> readValueFrom, MemoryMappedFile.WriteToDelegate<TValue> writeValueTo,
