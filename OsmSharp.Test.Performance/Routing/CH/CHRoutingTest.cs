@@ -140,6 +140,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 		{
 			var routingSerializer = new CHEdgeSerializer();
 			var data = routingSerializer.Deserialize(stream, lazy);
+            data.RebuildIndexes();
 
 			//data.SortHilbert(1000);
 

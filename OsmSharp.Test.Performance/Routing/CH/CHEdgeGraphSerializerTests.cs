@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -69,7 +70,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
             performanceInfo.Report("Pulling from {0}...", testFile.Name);
 
             var data = CHEdgeGraphOsmStreamTarget.Preprocess(
-                source, new OsmRoutingInterpreter(), Vehicle.Car);
+                source, new TagsIndex(new MemoryMappedStream(new MemoryStream())),
+                new OsmRoutingInterpreter(), Vehicle.Car);
 
             (data.Graph as DirectedGraph<CHEdgeData>).Compress(true);
 

@@ -113,8 +113,31 @@ namespace OsmSharp.Collections.Tags.Index
             _stringIndex = new MemoryMappedIndex<string>(file, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString);
             _tagsIndex = new MemoryMappedIndex<int[]>(file, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray);
 
-            _tagsReverseIndex = new MemoryMappedHugeDictionary<int[], uint>(file, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray, 
-                MemoryMappedDelegates.ReadFromUInt32, MemoryMappedDelegates.WriteToUInt32);
+            _tagsReverseIndex = new MemoryMappedHugeDictionary<int[], uint>(file, MemoryMappedDelegates.ReadFromIntArray, MemoryMappedDelegates.WriteToIntArray,
+                MemoryMappedDelegates.ReadFromUInt32, MemoryMappedDelegates.WriteToUInt32, (x) =>
+            {
+                var hash = 0;
+                for (int idx = 0; idx < x.Length; idx++)
+                {
+                    hash = hash ^ x[idx].GetHashCode();
+                }
+                return hash;
+            },
+            (x, y) =>
+            {
+                if(x.Length == y.Length)
+                {
+                    for (int idx = 0; idx < x.Length; idx++)
+                    {
+                        var comp = x[idx].CompareTo(y[idx]);
+                        if(comp != 0)
+                        {
+                            return comp;
+                        }
+                    }
+                }
+                return 0;
+            });
             _stringReverseIndex = new MemoryMappedHugeDictionary<string, int>(file, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString,
                 MemoryMappedDelegates.ReadFromInt32, MemoryMappedDelegates.WriteToInt32);
         }

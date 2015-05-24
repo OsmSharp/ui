@@ -191,5 +191,41 @@ namespace OsmSharp.Test.Unittests.Collections.MemoryMapped
                 Assert.AreEqual(pair.Value, value);
             }
         }
+
+        /// <summary>
+        /// Tests the hash and comparer.
+        /// </summary>
+        [Test]
+        public void TestHashAndComparer()
+        {
+            var dictionary = new MemoryMappedHugeDictionary<string, string>(new MemoryMappedStream(new MemoryStream()),
+                MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString,
+                MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString,
+                (x) =>
+                {
+                    return x[0].GetHashCode();
+                },
+                (x, y) =>
+                {
+                    return x[0].CompareTo(y[0]);
+                });
+
+            // add string but only the first char counts in equals and hash.
+            dictionary.Add("ben", "ben");
+            Assert.Catch<ArgumentException>(() => {
+                dictionary.Add("ban", "ban");
+            });
+            dictionary.Add("kan", "kan");
+
+            Assert.AreEqual("ben", dictionary["ben"]);
+            Assert.AreEqual("kan", dictionary["kan"]);
+
+            dictionary["ban"] = "ban";
+
+            Assert.AreEqual("ban", dictionary["ban"]);
+            Assert.AreEqual("ban", dictionary["ben"]);
+            Assert.AreEqual("ban", dictionary["b"]);
+            Assert.AreEqual("kan", dictionary["kan"]);
+        }
     }
 }

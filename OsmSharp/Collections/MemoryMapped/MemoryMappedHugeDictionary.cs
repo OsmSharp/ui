@@ -70,6 +70,16 @@ namespace OsmSharp.Collections.MemoryMapped
         private long _nextPairId;
 
         /// <summary>
+        /// Holds the hash key function.
+        /// </summary>
+        private Func<TKey, int> _hashKey;
+
+        /// <summary>
+        /// Holds the compare key function.
+        /// </summary>
+        private Func<TKey, TKey, int> _compareKey;
+
+        /// <summary>
         /// Creates a new dictionary.
         /// </summary>
         /// <param name="file">A memory mapped file.</param>
@@ -80,12 +90,34 @@ namespace OsmSharp.Collections.MemoryMapped
         public MemoryMappedHugeDictionary(MemoryMappedFile file, 
             MemoryMappedFile.ReadFromDelegate<TKey> readKeyFrom, MemoryMappedFile.WriteToDelegate<TKey> writeToKey,
             MemoryMappedFile.ReadFromDelegate<TValue> readValueFrom, MemoryMappedFile.WriteToDelegate<TValue> writeValueTo)
+            : this(file, readKeyFrom, writeToKey, readValueFrom, writeValueTo, null, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new dictionary.
+        /// </summary>
+        /// <param name="file">A memory mapped file.</param>
+        /// <param name="readKeyFrom"></param>
+        /// <param name="writeToKey"></param>
+        /// <param name="readValueFrom"></param>
+        /// <param name="writeValueTo"></param>
+        public MemoryMappedHugeDictionary(MemoryMappedFile file, 
+            MemoryMappedFile.ReadFromDelegate<TKey> readKeyFrom, MemoryMappedFile.WriteToDelegate<TKey> writeToKey,
+            MemoryMappedFile.ReadFromDelegate<TValue> readValueFrom, MemoryMappedFile.WriteToDelegate<TValue> writeValueTo,
+            Func<TKey, int> hashKey, Func<TKey, TKey, int> compareKey)
         {
             _file = file;
             _size = 0;
             _nextPairId = 0;
+            _hashKey = hashKey;
+            _compareKey = compareKey;
 
-            _hashes = new MemoryMappedHugeArrayInt64(_file, 16);
+            _hashes = new MemoryMappedHugeArrayInt64(_file, 1024 * 1024, 
+                MemoryMappedHugeArrayInt64.DefaultFileElementSize,
+                (int)MemoryMappedHugeArrayInt64.DefaultFileElementSize / MemoryMappedHugeArrayInt64.DefaultBufferSize,
+                MemoryMappedHugeArrayInt64.DefaultCacheSize);
             for (int idx = 0; idx < _hashes.Length; idx++)
             {
                 _hashes[idx] = -1;
@@ -176,7 +208,8 @@ namespace OsmSharp.Collections.MemoryMapped
             {
                 var keyId = _pairs[pairId];
                 var currentKey = _keys.Get(keyId).Key;
-                if (currentKey.Equals(key))
+                if ((_compareKey == null && currentKey.Equals(key)) ||
+                    (_compareKey != null && _compareKey(currentKey, key) == 0))
                 { // key was found.
                     _pairs[pairId + 1] = _values.Add(new ValueStruct() { Value = value });
                     return;
@@ -203,7 +236,8 @@ namespace OsmSharp.Collections.MemoryMapped
             {
                 keyId = _pairs[pairId];
                 var currentKey = _keys.Get(keyId).Key;
-                if (currentKey.Equals(key))
+                if ((_compareKey == null && currentKey.Equals(key)) ||
+                    (_compareKey != null && _compareKey(currentKey, key) == 0))
                 { // key was found.
                     valueId = _pairs[pairId + 1];
                     return true;
@@ -230,7 +264,8 @@ namespace OsmSharp.Collections.MemoryMapped
                 if(_pairs[pairId + 2] < 0)
                 { // no next one in the first entry, remove everything.
                     var potentialKey = _keys.Get(_pairs[pairId + 0]);
-                    if (potentialKey.Equals(key))
+                    if ((_compareKey == null && potentialKey.Equals(key)) ||
+                        (_compareKey != null && _compareKey(potentialKey.Key, key) == 0))
                     { // key was found.
                         _hashes[hash] = -1;
                         _size--;
@@ -246,7 +281,8 @@ namespace OsmSharp.Collections.MemoryMapped
                         var potentialKey = _keys.Get(_pairs[pairId + 0]);
                         lastPairId = pairId;
                         pairId = _pairs[pairId + 2];
-                        if (potentialKey.Equals(key))
+                        if ((_compareKey == null && potentialKey.Equals(key)) ||
+                            (_compareKey != null && _compareKey(potentialKey.Key, key) == 0))
                         { // key was found.
                             _pairs[lastPairId + 2] = pairId;
                             _size--;
@@ -265,6 +301,10 @@ namespace OsmSharp.Collections.MemoryMapped
         /// <returns></returns>
         private long Hash(TKey key)
         {
+            if(_hashKey != null)
+            {
+                return (_hashKey(key) % (_hashes.Length / 2)) + (_hashes.Length / 2);
+            }
             return (key.GetHashCode() % (_hashes.Length / 2)) + (_hashes.Length / 2);
         }
 
