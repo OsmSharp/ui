@@ -117,6 +117,8 @@ namespace OsmSharp.Routing.Vehicles
         /// <returns></returns>
         public static Vehicle GetByUniqueName(string uniqueName)
         {
+            if (uniqueName == null) { throw new ArgumentNullException("uniqueName"); }
+
             Vehicle vehicle = null;
             if(VehiclesByName == null)
             { // no vehicles have been registered.

@@ -30,9 +30,30 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation.Output
     public class AggregatedArc : Aggregated
     {
         /// <summary>
-        /// The end point of this arc.
+        /// Holds the next point.
         /// </summary>
-        public AggregatedPoint Next { get; set; }
+        private AggregatedPoint _next;
+
+        /// <summary>
+        /// The arc following this point.
+        /// </summary>
+        public AggregatedPoint Next
+        {
+            get
+            {
+                return _next;
+            }
+            set
+            {
+                _next = value;
+                _next.Previous = this;
+            }
+        }
+
+        /// <summary>
+        /// The arc before this point.
+        /// </summary>
+        public AggregatedPoint Previous { get; internal set; }
 
         /// <summary>
         /// Returns the next aggregated.
@@ -54,6 +75,11 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation.Output
         /// The default name.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The vehicle unique name.
+        /// </summary>
+        public string Vehicle { get; set; }
         
         /// <summary>
         /// The name in different languages.

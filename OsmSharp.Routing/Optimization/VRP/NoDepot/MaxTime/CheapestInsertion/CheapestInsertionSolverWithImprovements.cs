@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,21 +15,19 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Units.Time;
+
+using OsmSharp.Collections;
+using OsmSharp.Logging;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Math.VRP.Core;
 using OsmSharp.Math.VRP.Core.BestPlacement;
-using OsmSharp.Math.VRP.Core.Routes;
-using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Math.TSP;
-using OsmSharp.Routing;
 using OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts;
+using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing.Optimization.VRP.NoDepot.MaxTime.InterImprovements;
-using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
-using OsmSharp.Logging;
+using OsmSharp.Units.Time;
+using System;
+using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Optimization.VRP.NoDepot.MaxTime.CheapestInsertion
 {
@@ -339,22 +337,6 @@ namespace OsmSharp.Routing.Optimization.VRP.NoDepot.MaxTime.CheapestInsertion
                             break;
                         }
                     }
-                    //else
-                    //{// ok we are done!
-                    //    solution[solution.Count - 1] = this.ImproveIntraRoute(problem,
-                    //        current_route, solution[solution.Count - 1]);
-
-                    //    if (!solution.IsValid())
-                    //    {
-                    //        throw new Exception();
-                    //    }
-                    //    int count_after = solution.Route(solution.Count - 1).Count;
-
-                    //    this.Improve(problem, solution, max, solution.Count - 1);
-
-                    //    // break the route.
-                    //    break;
-                    //}
                 }
             }
 
@@ -418,7 +400,7 @@ namespace OsmSharp.Routing.Optimization.VRP.NoDepot.MaxTime.CheapestInsertion
             double max_distance = double.MaxValue;
             foreach (int customer_to_check in customers)
             {
-                SortedDictionary<double, List<int>> neighbours = new SortedDictionary<double, List<int>>();
+                var neighbours = new SortedDictionary<double, List<int>>();
                 for (int idx = 0; idx < customers.Count; idx++)
                 {
                     int customer = customers[idx];

@@ -190,9 +190,13 @@ namespace OsmSharp.Routing
                 mergedEntry.Type = RouteSegmentType.Along;
                 if (route2.Segments[0].Points != null && route2.Segments[0].Points.Length > 0)
                 { // merge in important points from the second route too but do not keep duplicates.
-                    List<RoutePoint> points = new List<RoutePoint>(mergedEntry.Points);
+                    var points = new List<RoutePoint>();
+                    if (mergedEntry.Points != null)
+                    { // keep originals.
+                        points.AddRange(mergedEntry.Points);
+                    }
                     for (int otherIdx = 0; otherIdx < route2.Segments[0].Points.Length; otherIdx++)
-                    {
+                    { // remove duplicates.
                         bool found = false;
                         for (int idx = 0; idx < points.Count; idx++)
                         {
@@ -681,6 +685,31 @@ namespace OsmSharp.Routing
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a string representation of this segment.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if(this.Vehicle != null && this.Name != null)
+            {
+                return string.Format("Segment: {0} for {1} @{2}s {3}m",
+                    this.Name, this.Vehicle, this.Time, this.Distance);
+            }
+            else if(this.Vehicle != null)
+            {
+                return string.Format("Segment: for {0} @{1}s {2}m",
+                    this.Vehicle, this.Time, this.Distance);
+            }
+            else if (this.Name != null)
+            {
+                return string.Format("Segment: {0} @{1}s {2}m",
+                    this.Name, this.Time, this.Distance);
+            }
+            return string.Format("Segment: @{0}s {1}m",
+                this.Time, this.Distance);
+        }
     }
 
     /// <summary>

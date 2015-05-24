@@ -31,11 +31,12 @@ namespace OsmSharp.Routing.Instructions
         /// Creates a new instruction with only a location.
         /// </summary>
         /// <param name="metaData"></param>
-        /// <param name="segmentIdx"></param>
+        /// <param name="firstSegmentIdx"></param>
+        /// <param name="lastSegmentIdx"></param>
         /// <param name="location"></param>
         /// <param name="text"></param>
-        public Instruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox location, string text)
-            : this(metaData, segmentIdx, location, text, new List<PointPoi>())
+        public Instruction(Dictionary<string, object> metaData, int firstSegmentIdx, int lastSegmentIdx, GeoCoordinateBox location, string text)
+            : this(metaData, firstSegmentIdx, lastSegmentIdx, location, text, new List<PointPoi>())
         {
 
         }
@@ -44,19 +45,21 @@ namespace OsmSharp.Routing.Instructions
         /// Creates a new instruction with a location and points of interest.
         /// </summary>
         /// <param name="metaData"></param>
-        /// <param name="segmentIdx"></param>
+        /// <param name="firstSegmentIdx"></param>
+        /// <param name="lastSegmentIdx"></param>
         /// <param name="location"></param>
         /// <param name="text"></param>
         /// <param name="pois"></param>
-        public Instruction(Dictionary<string, object> metaData, int segmentIdx, GeoCoordinateBox location, string text, List<PointPoi> pois)
+        public Instruction(Dictionary<string, object> metaData, int firstSegmentIdx, int lastSegmentIdx, GeoCoordinateBox location, string text, List<PointPoi> pois)
         {
-            this.SegmentIdx = segmentIdx;
+            this.FirstSegmentIdx = firstSegmentIdx;
+            this.LastSegmentIdx = lastSegmentIdx;
             this.Location = location;
             this.Pois = pois;
             this.MetaData = metaData;
             this.Text = text;
 
-            this.Pois = new List<PointPoi>();
+            this.Pois = new List<PointPoi>(pois);
         }
 
         /// <summary>
@@ -70,9 +73,14 @@ namespace OsmSharp.Routing.Instructions
         public virtual GeoCoordinateBox Location { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the entry idx.
+        /// Gets the first segment idx.
         /// </summary>
-        public virtual int SegmentIdx { get; protected set; }
+        public virtual int FirstSegmentIdx { get; protected set; }
+
+        /// <summary>
+        /// Gets the last segment idx.
+        /// </summary>
+        public virtual int LastSegmentIdx { get; protected set; }
 
         /// <summary>
         /// Gets the instruction text.

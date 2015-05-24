@@ -107,7 +107,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                         _current = _current.GetNext();
                     }
                 }
-                else if(_messagesStack.Count > 0)
+                else if (_messagesStack.Count > 0)
                 { // no machine matches everything until the end of the route.
                     throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messagesStack);
                 }
@@ -145,7 +145,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         }
 
         #region Machines
-        
+
         /// <summary>
         /// Keeps a list of microplanners.
         /// </summary>
@@ -187,7 +187,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// Holds the current list of invalid machines.
         /// </summary>
         private List<MicroPlannerMachine> _invalidMachines;
-        
+
         /// <summary>
         /// Holds the current list of machines that reached a final machine.
         /// </summary>
@@ -239,6 +239,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="message"></param>
         private void Plan(MicroPlannerMessage message)
         {
+            _succes = false;
+            _error = false;
             // add the message to the stack.
             _messagesStack.Add(message);
 
@@ -278,7 +280,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 if (message is MicroPlannerMessageArc)
                 {
                     _current = (message as MicroPlannerMessageArc).Arc;
-                }                
+                }
                 if (message is MicroPlannerMessagePoint)
                 {
                     _current = (message as MicroPlannerMessagePoint).Point;
@@ -290,6 +292,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
 
             // tell the machine again it was successfull.
             machine.Succes();
+            machine.IsSuccesfull = true;
 
             // re-initialize the machines.
             _machines.Clear();
@@ -364,7 +367,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             // check to see if not all machine are invalid! 
             if (_invalidMachines.Count == _machines.Count)
             {
-                if(_latestMachine == null)
+                if (_latestMachine == null)
                 { // all machine went in error!
                     throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messagesStack);
                 }

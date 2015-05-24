@@ -99,15 +99,15 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
                     p = new AggregatedPoint();
                     p.Angle = null;
                     p.ArcsNotTaken = null;
-                    p.Location = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
+                    p.Location = new GeoCoordinate(current.Segment.Latitude, current.Segment.Longitude);
                     p.Points = new List<PointPoi>();
-                    p.EntryIdx = current.EntryIndex;
+                    p.SegmentIdx = current.SegmentIndex;
 
-                    if (current.Entry.Points != null)
+                    if (current.Segment.Points != null)
                     {
-                        foreach (RoutePoint routePoint in current.Entry.Points)
+                        foreach (var routePoint in current.Segment.Points)
                         {
-                            PointPoi poi = new PointPoi();
+                            var poi = new PointPoi();
                             poi.Name = routePoint.Name;
                             poi.Tags = routePoint.Tags.ConvertTo();
                             poi.Location = new GeoCoordinate(routePoint.Latitude, routePoint.Longitude);
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
                 }
                 else
                 { // test if point is significant.
-                    var nextArc = this.CreateArcAndPoint(previous, current, next);
+                    var nextArc = this.CreateArcAndPoint(route, previous, current, next);
 
                     // test if the next point is significant.
                     if (previousArc == null)
@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
                     }
                     else
                     { // there is a previous arc; a test can be done if the current point is significant.
-                        if (this.IsSignificant(Vehicle.GetByUniqueName(route.Vehicle), previousArc, nextArc))
+                        if (this.IsSignificant(previousArc, nextArc))
                         { // the arc is significant; append it to the previous arc.
                             previousArc.Next.Next = nextArc;
                             previousArc = nextArc;
@@ -141,8 +141,8 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
                             // THIS IS THE AGGREGATION STEP!
 
                             // add distance.
-                            Meter distance_to_next = previousArc.Next.Location.DistanceReal(nextArc.Next.Location);
-                            previousArc.Distance = previousArc.Distance + distance_to_next;
+                            var distanceToNext = previousArc.Next.Location.DistanceReal(nextArc.Next.Location);
+                            previousArc.Distance = previousArc.Distance + distanceToNext;
 
                             // set point.
                             previousArc.Next = nextArc.Next;
@@ -155,40 +155,50 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         /// <summary>
         /// Returns true if the point between the two arcs represents a significant step in the route.
         /// </summary>
-        /// <param name="previous_arc"></param>
-        /// <param name="next_arc"></param>
-        /// <param name="vehicle"></param>
+        /// <param name="previousArc"></param>
+        /// <param name="nextArc"></param>
         /// <returns></returns>
-        protected virtual bool IsSignificant(Vehicle vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
+        protected virtual bool IsSignificant(AggregatedArc previousArc, AggregatedArc nextArc)
         {
-            if (previous_arc.Next.Points != null && previous_arc.Next.Points.Count > 0)
+            if (previousArc.Next.Points != null && previousArc.Next.Points.Count > 0)
             { // the point has at least one important point.
                 return true;
             }
-            if (previous_arc.Next.ArcsNotTaken != null && previous_arc.Next.ArcsNotTaken.Count > 0)
+            if (previousArc.Next.ArcsNotTaken != null && previousArc.Next.ArcsNotTaken.Count > 0)
             { // the point has at least one arc not taken.
                 return true;
             }
+
+            // a vehicle change is also always significant.
+            if(previousArc.Vehicle != nextArc.Vehicle)
+            { // there is a vehicle change.
+                return true;
+            }
+
             // create tag interpreters for arcs to try and work out if the arcs are different for the given vehicle.
             var previousTagsDic = new TagsCollection();
-            if (previous_arc.Tags != null)
+            if (previousArc.Tags != null)
             {
-                foreach (Tag pair in previous_arc.Tags)
+                foreach (var pair in previousArc.Tags)
                 {
                     previousTagsDic.Add(pair.Key, pair.Value);
                 }
             }
             var nextTagsDic = new TagsCollection();
-            if (next_arc.Tags != null)
+            if (nextArc.Tags != null)
             {
-                foreach (Tag pair in next_arc.Tags)
+                foreach (var pair in nextArc.Tags)
                 {
                     nextTagsDic.Add(pair.Key, pair.Value);
                 }
             }
-            if (!vehicle.IsEqualFor(previousTagsDic, nextTagsDic))
-            { // the previous and the next edge do not represent a change for the given vehicle.
-                return true;
+            if (!string.IsNullOrWhiteSpace(previousArc.Vehicle))
+            { // there is a vehicle set on the previous arc.
+                var vehicle = Vehicle.GetByUniqueName(previousArc.Vehicle);
+                if (!vehicle.IsEqualFor(previousTagsDic, nextTagsDic))
+                { // the previous and the next edge do not represent a change for the given vehicle.
+                    return true;
+                }
             }
             return false;
         }
@@ -196,79 +206,75 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         /// <summary>
         /// Generates an arc and it's next point from the current aggregated point.
         /// </summary>
+        /// <param name="route"></param>
         /// <param name="previous"></param>
         /// <param name="current"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        internal AggregatedArc CreateArcAndPoint(AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
+        internal AggregatedArc CreateArcAndPoint(Route route, AggregatedRoutePoint previous, 
+            AggregatedRoutePoint current, AggregatedRoutePoint next)
         {
             // create the arc.
-            AggregatedArc a = new AggregatedArc();
-            a.Name = current.Entry.Name;
-            a.Names = current.Entry.Names.ConvertTo();
-            a.Tags = current.Entry.Tags.ConvertToTagsCollection();
+            var a = new AggregatedArc();
+            a.Name = current.Segment.Name;
+            a.Names = current.Segment.Names.ConvertTo();
+            a.Tags = current.Segment.Tags.ConvertToTagsCollection();
+            a.Vehicle = string.IsNullOrWhiteSpace(route.Vehicle) ? current.Segment.Vehicle : route.Vehicle;
             if (previous != null)
             {
-                GeoCoordinate previous_coordinate =
-                    new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
-                GeoCoordinate currentCoordinate = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
+                var previousCoordinate = new GeoCoordinate(previous.Segment.Latitude, previous.Segment.Longitude);
+                var currentCoordinate = new GeoCoordinate(current.Segment.Latitude, current.Segment.Longitude);
 
-                Meter distance = previous_coordinate.DistanceReal(currentCoordinate);
+                var distance = previousCoordinate.DistanceReal(currentCoordinate);
                 a.Distance = distance;
             }
 
-
             // create the point.
-            AggregatedPoint p = new AggregatedPoint();
-            p.Location = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
+            var p = new AggregatedPoint();
+            p.Location = new GeoCoordinate(current.Segment.Latitude, current.Segment.Longitude);
             p.Points = new List<PointPoi>();
-            p.EntryIdx = current.EntryIndex;
-            if (previous != null && next != null && next.Entry != null)
+            p.SegmentIdx = current.SegmentIndex;
+            if (previous != null && next != null && next.Segment != null)
             {
-                GeoCoordinate previous_coordinate =
-                    new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
-                GeoCoordinate next_coordinate =
-                    new GeoCoordinate(next.Entry.Latitude, next.Entry.Longitude);
+                var previousCoordinate = new GeoCoordinate(previous.Segment.Latitude, previous.Segment.Longitude);
+                var nextCoordinate = new GeoCoordinate(next.Segment.Latitude, next.Segment.Longitude);
 
-                p.Angle = RelativeDirectionCalculator.Calculate(previous_coordinate, p.Location, next_coordinate);
+                p.Angle = RelativeDirectionCalculator.Calculate(previousCoordinate, p.Location, nextCoordinate);
             }
-            if (current.Entry.SideStreets != null && current.Entry.SideStreets.Length > 0)
+            if (current.Segment.SideStreets != null && current.Segment.SideStreets.Length > 0)
             {
                 p.ArcsNotTaken = new List<KeyValuePair<RelativeDirection, AggregatedArc>>();
-                foreach (RouteSegmentBranch sideStreet in current.Entry.SideStreets)
+                foreach (var sideStreet in current.Segment.SideStreets)
                 {
-                    AggregatedArc side = new AggregatedArc();
+                    var side = new AggregatedArc();
                     side.Name = sideStreet.Name;
                     side.Names = sideStreet.Names.ConvertTo();
                     side.Tags = sideStreet.Tags.ConvertToTagsCollection();
 
-                    RelativeDirection side_direction = null;
+                    RelativeDirection sideDirection = null;
                     if (previous != null)
                     {
-                        GeoCoordinate previous_coordinate =
-                            new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
-                        GeoCoordinate next_coordinate =
-                            new GeoCoordinate(sideStreet.Latitude, sideStreet.Longitude);
+                        var previousCoordinate = new GeoCoordinate(previous.Segment.Latitude, previous.Segment.Longitude);
+                        var nextCoordinate = new GeoCoordinate(sideStreet.Latitude, sideStreet.Longitude);
 
-                        side_direction = RelativeDirectionCalculator.Calculate(previous_coordinate, p.Location, next_coordinate);
+                        sideDirection = RelativeDirectionCalculator.Calculate(previousCoordinate, p.Location, nextCoordinate);
                     }
 
-                    p.ArcsNotTaken.Add(new KeyValuePair<RelativeDirection, AggregatedArc>(side_direction, side));
+                    p.ArcsNotTaken.Add(new KeyValuePair<RelativeDirection, AggregatedArc>(sideDirection, side));
                 }
             }
-            if (current.Entry.Points != null)
+            if (current.Segment.Points != null)
             {
-                foreach (RoutePoint route_point in current.Entry.Points)
+                foreach (var routePoint in current.Segment.Points)
                 {
-                    PointPoi poi = new PointPoi();
-                    poi.Name = route_point.Name;
-                    poi.Tags = route_point.Tags.ConvertTo();
-                    poi.Location = new GeoCoordinate(route_point.Latitude, route_point.Longitude);
+                    var poi = new PointPoi();
+                    poi.Name = routePoint.Name;
+                    poi.Tags = routePoint.Tags.ConvertTo();
+                    poi.Location = new GeoCoordinate(routePoint.Latitude, routePoint.Longitude);
 
-                    GeoCoordinate previous_coordinate =
-                        new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
-                    GeoCoordinate current_coordinate = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
-                    poi.Angle = RelativeDirectionCalculator.Calculate(previous_coordinate, current_coordinate, poi.Location);
+                    var previousCoordinate = new GeoCoordinate(previous.Segment.Latitude, previous.Segment.Longitude);
+                    var currentCoordinate = new GeoCoordinate(current.Segment.Latitude, current.Segment.Longitude);
+                    poi.Angle = RelativeDirectionCalculator.Calculate(previousCoordinate, currentCoordinate, poi.Location);
 
                     p.Points.Add(poi);
                 }
@@ -289,7 +295,7 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         /// <summary>
         /// Holds the entry index.
         /// </summary>
-        private int _entryIdx;
+        private int _segmentIdx;
 
         /// <summary>
         /// Holds the route.
@@ -302,7 +308,7 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         /// <param name="route"></param>
         public AggregatedPointEnumerator(Route route)
         {
-            _entryIdx = -1;
+            _segmentIdx = -1;
 
             _route = route;
             _current = null;
@@ -325,8 +331,8 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
                 if (_current == null)
                 {
                     _current = new AggregatedRoutePoint();
-                    _current.EntryIndex = _entryIdx;
-                    _current.Entry = _route.Segments[_entryIdx];                    
+                    _current.SegmentIndex = _segmentIdx;
+                    _current.Segment = _route.Segments[_segmentIdx];                    
                 }
                 return _current;
             }
@@ -367,8 +373,8 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
             {
                 return false;
             }
-            _entryIdx++;
-            return _route.Segments.Length > _entryIdx;
+            _segmentIdx++;
+            return _route.Segments.Length > _segmentIdx;
         }
 
         /// <summary>
@@ -378,7 +384,7 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         {
             _current = null;
 
-            _entryIdx = -1;
+            _segmentIdx = -1;
         }
 
         #endregion
@@ -392,11 +398,11 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation
         /// <summary>
         /// Gets or sets the entry index.
         /// </summary>
-        public int EntryIndex { get; set; }
+        public int SegmentIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the route point entry.
         /// </summary>
-        public RouteSegment Entry { get; set; }
+        public RouteSegment Segment { get; set; }
     }
 }

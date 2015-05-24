@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,52 @@ namespace OsmSharp.Collections.Coordinates.Collections
         /// Holds the longitude.
         /// </summary>
         float Longitude { get; }
+    }
+
+    /// <summary>
+    /// Contains extension for ICoordinate and ICoordinateCollections.
+    /// </summary>
+    public static class ICoordinateExtensions
+    {
+        /// <summary>
+        /// Calculates the distance in meter starting at location1 along the coordinates to location2.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="location1"></param>
+        /// <param name="location2"></param>
+        /// <returns></returns>
+        public static double DistanceInMeter(this IEnumerable<ICoordinate> coordinates, ICoordinate location1, ICoordinate location2)
+        {
+            return coordinates.DistanceInMeter(location1.Latitude, location1.Longitude, location2.Latitude, location2.Longitude);
+        }
+
+        /// <summary>
+        /// Calculates the distance in meter starting at lat1/lon1 along the coordinates to lat2/lon2
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="latitude1"></param>
+        /// <param name="longitude1"></param>
+        /// <param name="latitude2"></param>
+        /// <param name="longitude2"></param>
+        /// <returns></returns>
+        public static double DistanceInMeter(this IEnumerable<ICoordinate> coordinates, double latitude1, double longitude1,
+            double latitude2, double longitude2)
+        {
+            var latitude = latitude1;
+            var longitude = longitude1;
+            var distance = 0.0;
+            foreach(var coordinate in coordinates)
+            {
+                var cLatitude = coordinate.Latitude;
+                var cLongitude = coordinate.Longitude;
+                distance = distance + GeoCoordinate.DistanceEstimateInMeter(latitude, longitude, 
+                    cLatitude, cLongitude);
+                latitude = cLatitude;
+                longitude = cLongitude;
+            }
+            return distance + GeoCoordinate.DistanceEstimateInMeter(latitude, longitude,
+                latitude2, longitude2);
+        }
     }
 
     /// <summary>

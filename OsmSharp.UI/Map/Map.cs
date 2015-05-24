@@ -81,17 +81,33 @@ namespace OsmSharp.UI.Map
         public IProjection Projection { get; private set; }
 
         /// <summary>
+        /// Holds the explicitly set backcolor.
+        /// </summary>
+        private int? _backcolor;
+
+        /// <summary>
         /// Returns the backcolor of this map.
         /// </summary>
         public int? BackColor
         {
             get
             {
-                if (_layers != null && _layers.Count > 0 && _layers[0] != null)
-                {
-                    return _layers[0].BackColor;
+                if (_backcolor.HasValue)
+                { // backcolor overridden.
+                    return _backcolor;
+                }
+                else
+                { // get backcolor from first layer.
+                    if (_layers != null && _layers.Count > 0 && _layers[0] != null)
+                    {
+                        return _layers[0].BackColor;
+                    }
                 }
                 return null;
+            }
+            set
+            {
+                _backcolor = value;
             }
         }
 

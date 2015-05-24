@@ -192,13 +192,22 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
-        /// Returns the backcolor of this layer.
+        /// Holds the backcolor.
+        /// </summary>
+        private int? _backcolor;
+
+        /// <summary>
+        /// Gets or sets the backcolor of this layer.
         /// </summary>
         public virtual int? BackColor
         {
             get
             {
-                return null;
+                return _backcolor;
+            }
+            set
+            {
+                _backcolor = value;
             }
         }
 

@@ -31,6 +31,11 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation.Output
     public class AggregatedPoint : Aggregated
     {
         /// <summary>
+        /// Holds the next arc.
+        /// </summary>
+        private AggregatedArc _next;
+
+        /// <summary>
         /// The physical location of this point.
         /// </summary>
         public GeoCoordinate Location { get; set; }
@@ -38,7 +43,23 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation.Output
         /// <summary>
         /// The arc following this point.
         /// </summary>
-        public AggregatedArc Next { get; set; }
+        public AggregatedArc Next
+        {
+            get
+            {
+                return _next;
+            }
+            set
+            {
+                _next = value;
+                _next.Previous = this;
+            }
+        }
+
+        /// <summary>
+        /// The arc before this point.
+        /// </summary>
+        public AggregatedArc Previous { get; internal set; }
 
         /// <summary>
         /// Returns the next aggregated.
@@ -57,9 +78,9 @@ namespace OsmSharp.Routing.Instructions.ArcAggregation.Output
         public RelativeDirection Angle { get; set; }
 
         /// <summary>
-        /// The entry index.
+        /// The segment index.
         /// </summary>
-        public int EntryIdx { get; set; }
+        public int SegmentIdx { get; set; }
 
         /// <summary>
         /// The point of points at this location.

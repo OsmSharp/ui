@@ -19,6 +19,7 @@
 using OsmSharp.Math.Automata;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.StateMachines;
+using OsmSharp.Routing.Instructions.ArcAggregation.Output;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
@@ -146,6 +147,17 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         public override void Succes()
         {
+            // get first point.
+            AggregatedPoint firstPoint = null;
+            if (this.FinalMessages[0] is MicroPlannerMessagePoint)
+            { // machine started on a point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessagePoint).Point;
+            }
+            else
+            { // get the previous point.
+                firstPoint = (this.FinalMessages[0] as MicroPlannerMessageArc).Arc.Previous;
+            }
+
             var poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
             
             var pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
@@ -161,7 +173,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             metaData["direction"] = null;
             metaData["pois"] = pois;
             metaData["type"] = "poi";
-            this.Planner.SentencePlanner.GenerateInstruction(metaData, poisPoint.EntryIdx, box, pois);
+            this.Planner.SentencePlanner.GenerateInstruction(metaData, firstPoint.SegmentIdx, poisPoint.SegmentIdx, box, pois);
         }
 
         /// <summary>

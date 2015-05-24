@@ -83,8 +83,8 @@ namespace OsmSharp.Math.Automata
         /// <summary>
         /// Consumes the given event.
         /// </summary>
-        /// <param name="even"></param>
-        /// <returns></returns>
+        /// <param name="even">The event.</param>
+        /// <returns>True if the machine is in a final state.</returns>
         public bool Consume(EventType even)
         {
             var oldState = _currentState;
