@@ -55,6 +55,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         [Test]
         public void TestTagIndexSerializaton()
         {
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+
             // build a tags index and keep what was added.
             var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
             var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
@@ -97,6 +100,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags
         /// <param name="tagsCollectionIndex"></param>
         protected void TestTagIndex(ITagsIndex tagsCollectionIndex)
         {
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+
             var addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
             for (int i = 0; i < 100; i++)
             {

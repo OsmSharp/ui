@@ -125,18 +125,20 @@ namespace OsmSharp.Collections.Tags.Index
             },
             (x, y) =>
             {
-                if(x.Length == y.Length)
+                var comp = x.Length.CompareTo(y.Length);
+                if(comp == 0)
                 {
                     for (int idx = 0; idx < x.Length; idx++)
                     {
-                        var comp = x[idx].CompareTo(y[idx]);
+                        comp = x[idx].CompareTo(y[idx]);
                         if(comp != 0)
                         {
                             return comp;
                         }
                     }
+                    return 0;
                 }
-                return 0;
+                return comp;
             });
             _stringReverseIndex = new MemoryMappedHugeDictionary<string, int>(file, MemoryMappedDelegates.ReadFromString, MemoryMappedDelegates.WriteToString,
                 MemoryMappedDelegates.ReadFromInt32, MemoryMappedDelegates.WriteToInt32);
