@@ -50,7 +50,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="embeddedName"></param>
         /// <param name="contract"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
+        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             if (_data == null)
             {
@@ -84,7 +84,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestAgainstReference()
         {
-            this.TestCompareAll("test_network.osm", true);
+            this.TestCompareAll("test_network.osm");
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestAgainstReferenceBig()
         {
-            this.TestCompareAll("test_network_big.osm", true);
+            this.TestCompareAll("test_network_big.osm");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestOneWayAgainstReference()
         {
-            this.TestCompareAll("test_network_oneway.osm", true);
+            this.TestCompareAll("test_network_oneway.osm");
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestRegression1()
         {
-            this.TestCompareAll("test_routing_regression1.osm", true);
+            this.TestCompareAll("test_routing_regression1.osm");
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestRegression2Regression1()
         {
-            this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
+            this.TestCompareOne("test_routing_regression2.osm", new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
                 new OsmSharp.Math.Geo.GeoCoordinate(51.0206158, 3.9932989));
         }
 
@@ -130,7 +130,8 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestRegression2Regression2()
         {
-            this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
+            this.TestCompareOne("test_routing_regression2.osm", 
+                new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
                 new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
         }
 
@@ -140,7 +141,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestRegression2()
         {
-            this.TestCompareAll("test_routing_regression2.osm", true);
+            this.TestCompareAll("test_routing_regression2.osm");
         }
 
         /// <summary>
@@ -149,7 +150,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestBig()
         {
-            this.TestCompareAll("test_network_big.osm", true);
+            this.TestCompareAll("test_network_big.osm");
         }
 
         /// <summary>
@@ -158,7 +159,7 @@ namespace OsmSharp.Test.Unittests.Routing
         [Test]
         public void TestAgainstReferenceRealNetwork()
         {
-            this.TestCompareAll("test_network_real1.osm", true);
+            this.TestCompareAll("test_network_real1.osm");
         }
     }
 }

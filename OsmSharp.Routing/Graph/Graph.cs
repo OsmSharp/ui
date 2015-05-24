@@ -516,7 +516,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        public override void RemoveEdge(uint vertex1, uint vertex2)
+        public override bool RemoveEdge(uint vertex1, uint vertex2)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -524,10 +524,11 @@ namespace OsmSharp.Routing.Graph
             if (_vertices[vertex1] == NO_EDGE ||
                 _vertices[vertex2] == NO_EDGE)
             { // no edge to remove here!
-                return;
+                return false;
             }
 
             // remove for vertex1.
+            var removed = false;
             var nextEdgeId = _vertices[vertex1];
             uint nextEdgeSlot = 0;
             uint previousEdgeSlot = 0;
@@ -561,56 +562,61 @@ namespace OsmSharp.Routing.Graph
                         // set the previous edge slot to the current edge id being the next one.
                         _edges[previousEdgeSlot] = nextEdgeId;
                     }
+                    removed = true;
                     break;
                 }
             }
 
             // remove for vertex2.
-            nextEdgeId = _vertices[vertex2];
-            nextEdgeSlot = 0;
-            previousEdgeSlot = 0;
-            currentEdgeId = 0;
-            while (nextEdgeId != NO_EDGE)
-            { // keep looping.
-                uint otherVertexId = 0;
-                currentEdgeId = nextEdgeId;
-                previousEdgeSlot = nextEdgeSlot;
-                if (_edges[nextEdgeId + NODEA] == vertex2)
-                {
-                    otherVertexId = _edges[nextEdgeId + NODEB];
-                    nextEdgeSlot = nextEdgeId + NEXTNODEA;
-                    nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
-                }
-                else
-                {
-                    otherVertexId = _edges[nextEdgeId + NODEA];
-                    nextEdgeSlot = nextEdgeId + NEXTNODEB;
-                    nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
-                }
-                if (otherVertexId == vertex1)
-                { // this is the edge we need.
-                    if (_vertices[vertex2] == currentEdgeId)
-                    { // the edge being remove if the 'first' edge.
-                        // point to the next edge.
-                        _vertices[vertex2] = nextEdgeId;
+            if (removed)
+            {
+                nextEdgeId = _vertices[vertex2];
+                nextEdgeSlot = 0;
+                previousEdgeSlot = 0;
+                currentEdgeId = 0;
+                while (nextEdgeId != NO_EDGE)
+                { // keep looping.
+                    uint otherVertexId = 0;
+                    currentEdgeId = nextEdgeId;
+                    previousEdgeSlot = nextEdgeSlot;
+                    if (_edges[nextEdgeId + NODEA] == vertex2)
+                    {
+                        otherVertexId = _edges[nextEdgeId + NODEB];
+                        nextEdgeSlot = nextEdgeId + NEXTNODEA;
+                        nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
                     }
                     else
-                    { // the edge being removed is not the 'first' edge.
-                        // set the previous edge slot to the current edge id being the next one.
-                        _edges[previousEdgeSlot] = nextEdgeId;
+                    {
+                        otherVertexId = _edges[nextEdgeId + NODEA];
+                        nextEdgeSlot = nextEdgeId + NEXTNODEB;
+                        nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
                     }
+                    if (otherVertexId == vertex1)
+                    { // this is the edge we need.
+                        if (_vertices[vertex2] == currentEdgeId)
+                        { // the edge being remove if the 'first' edge.
+                            // point to the next edge.
+                            _vertices[vertex2] = nextEdgeId;
+                        }
+                        else
+                        { // the edge being removed is not the 'first' edge.
+                            // set the previous edge slot to the current edge id being the next one.
+                            _edges[previousEdgeSlot] = nextEdgeId;
+                        }
 
-                    // reset everything about this edge.
-                    _edges[currentEdgeId + NODEA] = NO_EDGE;
-                    _edges[currentEdgeId + NODEB] = NO_EDGE;
-                    _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
-                    _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
-                    _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
-                    _edgeShapes[currentEdgeId / EDGE_SIZE] = null;
-                    return;
+                        // reset everything about this edge.
+                        _edges[currentEdgeId + NODEA] = NO_EDGE;
+                        _edges[currentEdgeId + NODEB] = NO_EDGE;
+                        _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
+                        _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
+                        _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
+                        _edgeShapes[currentEdgeId / EDGE_SIZE] = null;
+                        return true;
+                    }
                 }
+                throw new Exception("Edge could not be reached from vertex2. Data in graph is invalid.");
             }
-            throw new Exception("Edge could not be reached from vertex2. Data in graph is invalid.");
+            return removed;
         }
 
         /// <summary>
@@ -619,7 +625,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
-        public override void RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
+        public override bool RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
@@ -627,10 +633,11 @@ namespace OsmSharp.Routing.Graph
             if (_vertices[vertex1] == NO_EDGE ||
                 _vertices[vertex2] == NO_EDGE)
             { // no edge to remove here!
-                return;
+                return false;
             }
 
             // remove for vertex1.
+            var removed = false;
             var nextEdgeId = _vertices[vertex1];
             uint nextEdgeSlot = 0;
             uint previousEdgeSlot = 0;
@@ -664,56 +671,61 @@ namespace OsmSharp.Routing.Graph
                         // set the previous edge slot to the current edge id being the next one.
                         _edges[previousEdgeSlot] = nextEdgeId;
                     }
+                    removed = true;
                     break;
                 }
             }
 
             // remove for vertex2.
-            nextEdgeId = _vertices[vertex2];
-            nextEdgeSlot = 0;
-            previousEdgeSlot = 0;
-            currentEdgeId = 0;
-            while (nextEdgeId != NO_EDGE)
-            { // keep looping.
-                uint otherVertexId = 0;
-                currentEdgeId = nextEdgeId;
-                previousEdgeSlot = nextEdgeSlot;
-                if (_edges[nextEdgeId + NODEA] == vertex2)
-                {
-                    otherVertexId = _edges[nextEdgeId + NODEB];
-                    nextEdgeSlot = nextEdgeId + NEXTNODEA;
-                    nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
-                }
-                else
-                {
-                    otherVertexId = _edges[nextEdgeId + NODEA];
-                    nextEdgeSlot = nextEdgeId + NEXTNODEB;
-                    nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
-                }
-                if (otherVertexId == vertex1)
-                { // this is the edge we need.           
-                    if (_vertices[vertex2] == currentEdgeId)
-                    { // the edge being remove if the 'first' edge.
-                        // point to the next edge.
-                        _vertices[vertex2] = nextEdgeId;
+            if (removed)
+            {
+                nextEdgeId = _vertices[vertex2];
+                nextEdgeSlot = 0;
+                previousEdgeSlot = 0;
+                currentEdgeId = 0;
+                while (nextEdgeId != NO_EDGE)
+                { // keep looping.
+                    uint otherVertexId = 0;
+                    currentEdgeId = nextEdgeId;
+                    previousEdgeSlot = nextEdgeSlot;
+                    if (_edges[nextEdgeId + NODEA] == vertex2)
+                    {
+                        otherVertexId = _edges[nextEdgeId + NODEB];
+                        nextEdgeSlot = nextEdgeId + NEXTNODEA;
+                        nextEdgeId = _edges[nextEdgeId + NEXTNODEA];
                     }
                     else
-                    { // the edge being removed is not the 'first' edge.
-                        // set the previous edge slot to the current edge id being the next one.
-                        _edges[previousEdgeSlot] = nextEdgeId;
+                    {
+                        otherVertexId = _edges[nextEdgeId + NODEA];
+                        nextEdgeSlot = nextEdgeId + NEXTNODEB;
+                        nextEdgeId = _edges[nextEdgeId + NEXTNODEB];
                     }
+                    if (otherVertexId == vertex1)
+                    { // this is the edge we need.           
+                        if (_vertices[vertex2] == currentEdgeId)
+                        { // the edge being remove if the 'first' edge.
+                            // point to the next edge.
+                            _vertices[vertex2] = nextEdgeId;
+                        }
+                        else
+                        { // the edge being removed is not the 'first' edge.
+                            // set the previous edge slot to the current edge id being the next one.
+                            _edges[previousEdgeSlot] = nextEdgeId;
+                        }
 
-                    // reset everything about this edge.
-                    _edges[currentEdgeId + NODEA] = NO_EDGE;
-                    _edges[currentEdgeId + NODEB] = NO_EDGE;
-                    _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
-                    _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
-                    _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
-                    _edgeShapes[currentEdgeId / EDGE_SIZE] = null;
-                    return;
+                        // reset everything about this edge.
+                        _edges[currentEdgeId + NODEA] = NO_EDGE;
+                        _edges[currentEdgeId + NODEB] = NO_EDGE;
+                        _edges[currentEdgeId + NEXTNODEA] = NO_EDGE;
+                        _edges[currentEdgeId + NEXTNODEB] = NO_EDGE;
+                        _edgeData[currentEdgeId / EDGE_SIZE] = default(TEdgeData);
+                        _edgeShapes[currentEdgeId / EDGE_SIZE] = null;
+                        return false;
+                    }
                 }
+                throw new Exception("Edge could not be reached from vertex2. Data in graph is invalid.");
             }
-            throw new Exception("Edge could not be reached from vertex2. Data in graph is invalid.");
+            return removed;
         }
 
         /// <summary>

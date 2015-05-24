@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Returns a router test object.
         /// </summary>
         /// <returns></returns>
-        public abstract Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract);
+        public abstract Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName);
 
         /// <summary>
         /// Builds a raw data source.
@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="contract"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        protected void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
+        protected void TestCompareOne(string embeddedName, GeoCoordinate from, GeoCoordinate to)
         {
             // build the routing settings.
             var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing
                     new Dykstra());
 
             // build the router to be tested.
-            var router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName);
 
             var referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
             var referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
@@ -116,7 +116,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Compares all routes against the reference router.
         /// </summary>
-        protected void TestCompareAll(string embeddedName, bool contract)
+        protected void TestCompareAll(string embeddedName)
         {
             // build the routing settings.
             var interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing
                     new Dykstra());
 
             // build the router to be tested.
-            var router = this.BuildRouter(interpreter, embeddedName, contract);
+            var router = this.BuildRouter(interpreter, embeddedName);
 
             this.TestCompareAll(data, referenceRouter, router);
         }

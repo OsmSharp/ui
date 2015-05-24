@@ -73,8 +73,8 @@ namespace OsmSharp.Routing.Graph
 
             _supportedVehicles = new HashSet<Vehicle>();
 
-            this.RebuildVertexIndex();
-            this.BuildReverse();
+            //this.RebuildVertexIndex();
+            //this.BuildReverse();
         }
 
         /// <summary>
@@ -404,9 +404,9 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public override void RemoveEdge(uint from, uint to)
+        public override bool RemoveEdge(uint from, uint to)
         {
-            _graph.RemoveEdge(from, to);
+            return _graph.RemoveEdge(from, to);
         }
 
         /// <summary>
@@ -415,9 +415,9 @@ namespace OsmSharp.Routing.Graph
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public override void RemoveEdge(uint from, uint to, TEdgeData data)
+        public override bool RemoveEdge(uint from, uint to, TEdgeData data)
         {
-            _graph.RemoveEdge(from, to, data);
+            return _graph.RemoveEdge(from, to, data);
         }
 
         /// <summary>
@@ -886,7 +886,7 @@ namespace OsmSharp.Routing.Graph
             stream.Seek(position, System.IO.SeekOrigin.Begin);
 
             // serialize tags.
-            var tagsSize = _tagsIndex.Serialize(stream);
+            var tagsSize = _tagsIndex.Serialize(new LimitedStream(stream));
             position = position + tagsSize;
                 
             return position;
@@ -913,7 +913,8 @@ namespace OsmSharp.Routing.Graph
 
             // deserialize tags.
             stream.Seek(position, System.IO.SeekOrigin.Begin);
-            var tagsIndex = global::OsmSharp.Collections.Tags.Index.TagsIndex.Deserialize(stream);
+            var tagsIndex = global::OsmSharp.Collections.Tags.Index.TagsIndex.Deserialize(
+                new LimitedStream(stream));
 
             return new RouterDataSource<TEdgeData>(graph, tagsIndex);
         }

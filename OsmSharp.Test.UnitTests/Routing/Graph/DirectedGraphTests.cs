@@ -17,6 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Collections.Tags.Index;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
@@ -980,7 +982,8 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
 
             // do the data processing.
             var graph = OsmSharp.Routing.Osm.Streams.CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), interpreter, Vehicle.Car);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)),
+                new TagsIndex(new MemoryMappedStream(new MemoryStream())), interpreter, Vehicle.Car);
 
             // serialize.
             using (var stream = new MemoryStream())

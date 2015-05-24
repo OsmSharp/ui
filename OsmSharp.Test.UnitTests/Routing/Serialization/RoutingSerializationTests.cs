@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,16 +17,13 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Collections;
-using OsmSharp.Collections.Coordinates;
 using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
@@ -35,7 +32,6 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
 using OsmSharp.Routing.Vehicles;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -57,8 +53,8 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
-            // create the tags index.
-            var tagsIndex = new TagsIndex();
+            // create the tags index (and make sure it's serializable).
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
@@ -148,13 +144,17 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
+            // create the tags index (and make sure it's serializable).
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
+
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
             var original = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
-                                                                           .GetManifestResourceStream(embeddedString)),
+                                                                           .GetManifestResourceStream(embeddedString)), 
+                                                                           tagsIndex,
                                                                interpreter);
 
             // create serializer.
@@ -185,11 +185,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 routingSerializer.Deserialize(new MemoryStream(byteArray), out metaData);
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
-            //            // try to do some routing on the deserialized version.
-            //            var basicRouter =
-            //                new Dykstra(deserializedVersion.TagsIndex);
-            //            Router router = Router.CreateFrom(
-            //                deserializedVersion, basicRouter, interpreter);
+            //// try to do some routing on the deserialized version.
+            //var basicRouter =
+            //    new Dykstra();
+            //var router = Router.CreateFrom(
+            //    deserializedVersion, basicRouter, interpreter);
+            //var referenceRouter = Router.CreateFrom(
+            //    original, basicRouter, interpreter);
 
             //// loop over all nodes and resolve their locations.
             //var resolvedReference = new RouterPoint[original.VertexCount];
@@ -212,23 +214,23 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             //        resolved[idx - 1].Location.Longitude, 0.0001);
             //}
 
-            //    // check all the routes having the same weight(s).
-            //    for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
+            //// check all the routes having the same weight(s).
+            //for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
+            //{
+            //    for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
             //    {
-            //        for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
-            //        {
-            //            OsmSharpRoute referenceRoute = referenceRouter.Calculate(VehicleEnum.Car,
-            //                resolvedReference[fromIdx], resolvedReference[toIdx]);
-            //            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
-            //                resolved[fromIdx], resolved[toIdx]);
+            //        var referenceRoute = referenceRouter.Calculate(Vehicle.Car,
+            //            resolvedReference[fromIdx], resolvedReference[toIdx]);
+            //        var route = router.Calculate(Vehicle.Car,
+            //            resolved[fromIdx], resolved[toIdx]);
 
-            //            Assert.IsNotNull(referenceRoute);
-            //            Assert.IsNotNull(route);
-            //            //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
-            //            // TODO: meta data is missing in some CH routing; see issue 
-            //            //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
-            //        }
+            //        Assert.IsNotNull(referenceRoute);
+            //        Assert.IsNotNull(route);
+            //        //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
+            //        // TODO: meta data is missing in some CH routing; see issue 
+            //        //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
             //    }
+            //}
         }
 
         /// <summary>
@@ -239,9 +241,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
+            // create the tags index (and make sure it's serializable).
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
+
             // load the network.
             var referenceNetwork = GraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter());
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), 
+                tagsIndex, new OsmRoutingInterpreter());
 
             // serialize network.
             var routingSerializer = new RoutingDataSourceSerializer();
@@ -336,9 +342,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
+            // create the tags index (and make sure it's serializable).
+            var tagsIndex = new TagsIndex(new MemoryMappedStream(new MemoryStream()));
+
             // load the network.
             var referenceNetwork = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), new OsmRoutingInterpreter(), Vehicle.Car);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)), tagsIndex, 
+                new OsmRoutingInterpreter(), Vehicle.Car);
 
             // serialize network.
             var routingSerializer = new CHEdgeSerializer();

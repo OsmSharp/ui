@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public abstract void RemoveEdge(uint from, uint to);
+        public abstract bool RemoveEdge(uint from, uint to);
 
         /// <summary>
         /// Removes the edge between the two given vertices and with matching data.
@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public abstract void RemoveEdge(uint from, uint to, TEdgeData data);
+        public abstract bool RemoveEdge(uint from, uint to, TEdgeData data);
 
         public abstract uint AddVertex(float latitude, float longitude);
 

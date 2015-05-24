@@ -93,12 +93,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 targetData.RegisterSource(sorter);
                 targetData.Pull();
 
-                // do the pre-processing part.
-                var witnessCalculator = new DykstraWitnessCalculator();
-                var preProcessor = new CHPreProcessor(memoryData,
-                    new EdgeDifferenceContractedSearchSpace(memoryData, witnessCalculator), witnessCalculator);
-                preProcessor.Start();
-
                 data = memoryData;
                 StaticDictionary.Add<IRoutingAlgorithmData<CHEdgeData>>(key, data);
             }

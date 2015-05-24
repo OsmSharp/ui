@@ -459,12 +459,13 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
-        public override void RemoveEdge(uint vertex1, uint vertex2)
+        public override bool RemoveEdge(uint vertex1, uint vertex2)
         {
             if (_readonly) { throw new Exception("Graph is readonly."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
             if (_nextVertexId <= vertex2) { throw new ArgumentOutOfRangeException("vertex2", "vertex2 is not part of this graph."); }
 
+            var removed = false;
             var vertex1Idx = vertex1 * VERTEX_SIZE;
             var edgeCount = _vertices[vertex1Idx + EDGE_COUNT];
             var edgeId = _vertices[vertex1Idx + FIRST_EDGE];
@@ -477,9 +478,11 @@ namespace OsmSharp.Routing.Graph
                     _edges[removeIdx] = _edges[edgeId + edgeCount];
                     _edgeData[removeIdx] = _edgeData[edgeId + edgeCount];
                     _edgeShapes[removeIdx] = _edgeShapes[edgeId + edgeCount];
+                    removed = true;
                 }
             }
             _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
+            return removed;
         }
 
         /// <summary>
@@ -489,7 +492,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertex2"></param>
         /// <param name="data"></param>
         /// <remarks>Only deletes edge vertex1->vertex2 NOT vertex2 -> vertex1.</remarks>
-        public override void RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
+        public override bool RemoveEdge(uint vertex1, uint vertex2, TEdgeData data)
         {
             if (_readonly) { throw new Exception("Graph is readonly."); }
             if (_nextVertexId <= vertex1) { throw new ArgumentOutOfRangeException("vertex1", "vertex1 is not part of this graph."); }
@@ -513,11 +516,7 @@ namespace OsmSharp.Routing.Graph
                 }
             }
             _vertices[vertex1Idx + EDGE_COUNT] = edgeCount;
-
-            if(!removed)
-            {
-                throw new Exception();
-            }
+            return removed;
         }
 
         /// <summary>

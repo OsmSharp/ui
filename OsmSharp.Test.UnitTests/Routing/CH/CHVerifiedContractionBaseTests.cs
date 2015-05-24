@@ -142,13 +142,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.RegisterSource(sorter);
             targetData.Pull();
 
-            // do the pre-processing part.
-            var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(_data,
-                new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
-            preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
-            preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
-            preProcessor.Start();
+            //// do the pre-processing part.
+            //var witnessCalculator = new DykstraWitnessCalculator();
+            //var preProcessor = new CHPreProcessor(_data,
+            //    new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
+            //preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            //preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            //preProcessor.Start();
         }
 
         /// <summary>
