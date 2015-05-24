@@ -103,15 +103,6 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-=======
-    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json">
-      <InProject>false</InProject>
-    </ImageAsset>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
->>>>>>> master
     <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib">
       <Link>OsmSharp_iOS_UI_SampleViewController.xib</Link>
     </InterfaceDefinition>
