@@ -63,10 +63,6 @@ namespace OsmSharp.Collections.Arrays
             _arrays[arrayCount - 1] = new T[size - ((arrayCount - 1) * _arraySize)];
         }
 
-        private long _latestArrayIdx = -1;
-
-        private T[] _latestArray;
-
         /// <summary>
         /// Gets or sets the element at the given idx.
         /// </summary>
@@ -78,16 +74,7 @@ namespace OsmSharp.Collections.Arrays
             {
                 long arrayIdx = idx >> _arrayPow;
                 long localIdx = idx - (arrayIdx << _arrayPow);
-                if (_latestArrayIdx == arrayIdx)
-                {
-                    return _latestArray[localIdx];
-                }
-                else
-                {
-                    _latestArray = _arrays[arrayIdx];
-                    _latestArrayIdx = arrayIdx;
-                }
-                return _latestArray[localIdx];
+                return _arrays[arrayIdx][localIdx];
             }
             set
             {
@@ -106,8 +93,6 @@ namespace OsmSharp.Collections.Arrays
             if (size <= 0) { throw new ArgumentOutOfRangeException("Cannot resize a huge array to a size of zero or smaller."); }
 
             _size = size;
-            _latestArrayIdx = -1;
-            _latestArray = null;
 
             long arrayCount = (long)System.Math.Ceiling((double)size / _arraySize);
             if (arrayCount != _arrays.Length)

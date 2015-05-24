@@ -92,7 +92,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="tilesURL">The tiles URL.</param>
         public LayerTile(string tilesURL)
-            : this(tilesURL, 80)
+            : this(tilesURL, 160)
         {
 
         }
@@ -143,33 +143,29 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="status">Status.</param>
         private void LoadQueuedTiles(object status)
-        {
-            try
-            {
-                if (_suspended)
-                { // stop loading tiles.
-                    return;
-                }
+		{
+			try {
+				if (_suspended) { // stop loading tiles.
+					return;
+				}
 
-                lock (_stack)
-                { // make sure that access to the queue is synchronized.
-                    int queue = _stack.Count;
-                    while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
-                    { // there are queued items.
-                        LoadTile(_stack.Pop());
-                    }
+				var toLoad = new List<Tile> ();
+				lock (_stack) 
+				{ // make sure that access to the queue is synchronized.
+					int queue = _stack.Count;
+					while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0) { // there are queued items.
+						toLoad.Add (_stack.Pop ());
+					}
+				}
 
-                    if (_stack.Count == 0)
-                    { // dispose of timer.
-                        _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                    }
-                }
-            }
-            catch (Exception ex)
-            { // don't worry about exceptions here.
-                OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
-            }
-        }
+				foreach(var tile in toLoad) 
+				{
+					LoadTile (tile);
+				}
+			} catch (Exception ex) { // don't worry about exceptions here.
+				OsmSharp.Logging.Log.TraceEvent ("LayerTile", Logging.TraceEventType.Error, ex.Message);
+			}
+		}
 
         /// <summary>
         /// Holds the tiles that are currently loading.
@@ -189,7 +185,7 @@ namespace OsmSharp.UI.Map.Layers
                 }
 
                 // a tile was found to load.
-                Tile tile = state as Tile;
+                var tile = state as Tile;
 
                 // only load tiles from the same zoom-level.
                 if (tile.Zoom != _currentZoom)
@@ -240,6 +236,10 @@ namespace OsmSharp.UI.Map.Layers
                         }
                         catch (WebException ex)
                         { // catch webexceptions.
+							
+							OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+									ex.Message);
+
                             if (ex.Response is HttpWebResponse &&
                                 ((ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.NotFound ||
                                 (ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.Forbidden))
@@ -321,7 +321,7 @@ namespace OsmSharp.UI.Map.Layers
             if (_cache == null) { return; }
             try
             {
-                Stream stream = myResp.GetResponseStream();
+                var stream = myResp.GetResponseStream();
                 byte[] image = null;
                 if (stream != null)
                 {
@@ -345,10 +345,22 @@ namespace OsmSharp.UI.Map.Layers
                         }
                     }
 
+					OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+						string.Format("RaiseLayerChanged (Before): {0}", tile.ToString()));
                     if (!_suspended)
-                    { // only raise the event when not suspended but do no throw away a tile, that would be a waste.
-                        this.RaiseLayerChanged();
-                    }
+					{ // only raise the event when not suspended but do no throw away a tile, that would be a waste.
+						this.RaiseLayerChanged();
+						OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+							string.Format("Layer not suspended (After): {0}", tile.ToString()));
+					} else {
+						OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+							string.Format("Layer suspended (After): {0}", tile.ToString()));
+					}
+					OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+						string.Format("RaiseLayerChanged (After): {0}", tile.ToString()));
+
+					OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+						string.Format("Tile loaded: {0}", tile.ToString()));
                 }
                 else
                 {
@@ -400,7 +412,7 @@ namespace OsmSharp.UI.Map.Layers
 
                     var primitivePerTile = new Dictionary<Tile, Primitive2D>();
                     lock (_cache)
-                    {
+					{
                         Image2D temp;
                         foreach (var tile in _cache)
                         {
@@ -466,8 +478,10 @@ namespace OsmSharp.UI.Map.Layers
                                 primitives.Add(primitive);
                             }
                         }
-                    }
-                }
+					}
+				}
+				OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+					string.Format("LayerTile returned {0} primitives.", primitives.Count));
                 return primitives;
             }
             catch (Exception ex)
@@ -546,7 +560,8 @@ namespace OsmSharp.UI.Map.Layers
                                     { // not cached and not loading.
                                         _stack.Push(tile);
 
-                                        OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Queued tile:" + tile.ToString());
+                                        OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, 
+											"Queued tile: " + tile.ToString());
                                     }
                                 }
                             }

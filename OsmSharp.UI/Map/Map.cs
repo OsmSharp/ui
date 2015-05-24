@@ -332,8 +332,15 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         void layer_LayerChanged(Layer sender)
-        {
-            if (this.MapChanged != null) { this.MapChanged(); }
+		{
+			if (this.MapChanged != null) 
+			{ 
+				OsmSharp.Logging.Log.TraceEvent("Map.layer_LayerChanged (Before)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
+				this.MapChanged(); 
+				OsmSharp.Logging.Log.TraceEvent("Map.layer_LayerChanged (After)", Logging.TraceEventType.Information, 
+					"RaiseLayerChanged");
+			}
         }
 
         #region Layer Helpers
