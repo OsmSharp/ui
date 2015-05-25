@@ -17,11 +17,14 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Vehicles;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Time;
+using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -435,6 +438,140 @@ namespace OsmSharp.Test.Unittests.Routing
             location = route1.PositionAfter(distanceFromStart);
             Assert.AreEqual(location.Latitude, projected.Latitude, delta);
             Assert.AreEqual(location.Longitude, projected.Longitude, delta);
+        }
+
+        /// <summary>
+        /// Tests the conversion of a route to a feature collection.
+        /// </summary>
+        [Test]
+        public void RouteToFeatureCollection()
+        {
+            // build a test route.
+            var route = new Route();
+            route.Vehicle = Vehicle.Car.UniqueName;
+            var route1entry1 = new RouteSegment();
+            route1entry1.Distance = 10;
+            route1entry1.Latitude = -1;
+            route1entry1.Longitude = -1;
+            route1entry1.Metrics = null;
+            route1entry1.Points = new RoutePoint[1];
+            route1entry1.Points[0] = new RoutePoint();
+            route1entry1.Points[0].Name = "TestPoint1";
+            route1entry1.Points[0].Tags = new RouteTags[1];
+            route1entry1.Points[0].Tags[0] = new RouteTags();
+            route1entry1.Points[0].Tags[0].Value = "TestValue1";
+            route1entry1.Points[0].Tags[0].Key = "TestKey1";
+            route1entry1.SideStreets = null;
+            route1entry1.Tags = new RouteTags[1];
+            route1entry1.Tags[0] = new RouteTags();
+            route1entry1.Tags[0].Key = "highway";
+            route1entry1.Tags[0].Value = "residential";
+            route1entry1.Time = 10;
+            route1entry1.Type = RouteSegmentType.Start;
+            route1entry1.Name = string.Empty;
+            route1entry1.Names = null;
+
+            var route1entry2 = new RouteSegment();
+            route1entry2.Distance = 10;
+            route1entry2.Latitude = -1;
+            route1entry2.Longitude = -1;
+            route1entry2.Metrics = null;
+            route1entry2.Points = new RoutePoint[1];
+            route1entry2.Points[0] = new RoutePoint();
+            route1entry2.Points[0].Name = "TestPoint2";
+            route1entry2.Points[0].Tags = new RouteTags[1];
+            route1entry2.Points[0].Tags[0] = new RouteTags();
+            route1entry2.Points[0].Tags[0].Value = "TestValue2";
+            route1entry2.Points[0].Tags[0].Key = "TestKey2";
+            route1entry2.SideStreets = null;
+            route1entry2.Tags = new RouteTags[1];
+            route1entry2.Tags[0] = new RouteTags();
+            route1entry2.Tags[0].Key = "highway";
+            route1entry2.Tags[0].Value = "residential";
+            route1entry2.Time = 10;
+            route1entry2.Type = RouteSegmentType.Start;
+            route1entry2.Name = string.Empty;
+            route1entry2.Names = null;
+
+            route.Segments = new RouteSegment[2];
+            route.Segments[0] = route1entry1;
+            route.Segments[1] = route1entry2;
+
+            // execute the conversion.
+            var features = route.ToFeatureCollection();
+
+            // check result, two points, one linestring.
+            Assert.IsNotNull(features);
+            Assert.AreEqual(3, features.Count); 
+            var featuresList = new List<Feature>(features);
+            Assert.IsInstanceOf<Point>(featuresList[0].Geometry);
+            Assert.IsInstanceOf<LineString>(featuresList[1].Geometry);
+            Assert.IsInstanceOf<Point>(featuresList[2].Geometry);
+        }
+
+        /// <summary>
+        /// Tests the conversion of a route to GeoJson.
+        /// </summary>
+        [Test]
+        public void RouteToGeoJson()
+        {
+            // build a test route.
+            var route = new Route();
+            route.Vehicle = Vehicle.Car.UniqueName;
+            var route1entry1 = new RouteSegment();
+            route1entry1.Distance = 0;
+            route1entry1.Latitude = 1;
+            route1entry1.Longitude = 1;
+            route1entry1.Metrics = null;
+            route1entry1.Points = new RoutePoint[1];
+            route1entry1.Points[0] = new RoutePoint();
+            route1entry1.Points[0].Name = "TestPoint1";
+            route1entry1.Points[0].Tags = new RouteTags[1];
+            route1entry1.Points[0].Tags[0] = new RouteTags();
+            route1entry1.Points[0].Tags[0].Value = "TestValue1";
+            route1entry1.Points[0].Tags[0].Key = "TestKey1";
+            route1entry1.SideStreets = null;
+            route1entry1.Tags = new RouteTags[1];
+            route1entry1.Tags[0] = new RouteTags();
+            route1entry1.Tags[0].Key = "highway";
+            route1entry1.Tags[0].Value = "residential";
+            route1entry1.Time = 0;
+            route1entry1.Type = RouteSegmentType.Start;
+            route1entry1.Name = string.Empty;
+            route1entry1.Names = null;
+
+            var route1entry2 = new RouteSegment();
+            route1entry2.Distance = 10;
+            route1entry2.Latitude = 2;
+            route1entry2.Longitude = 2;
+            route1entry2.Metrics = null;
+            route1entry2.Points = new RoutePoint[1];
+            route1entry2.Points[0] = new RoutePoint();
+            route1entry2.Points[0].Name = "TestPoint2";
+            route1entry2.Points[0].Tags = new RouteTags[1];
+            route1entry2.Points[0].Tags[0] = new RouteTags();
+            route1entry2.Points[0].Tags[0].Value = "TestValue2";
+            route1entry2.Points[0].Tags[0].Key = "TestKey2";
+            route1entry2.SideStreets = null;
+            route1entry2.Tags = new RouteTags[1];
+            route1entry2.Tags[0] = new RouteTags();
+            route1entry2.Tags[0].Key = "highway";
+            route1entry2.Tags[0].Value = "residential";
+            route1entry2.Time = 20;
+            route1entry2.Type = RouteSegmentType.Start;
+            route1entry2.Name = string.Empty;
+            route1entry2.Names = null;
+
+            route.Segments = new RouteSegment[2];
+            route.Segments[0] = route1entry1;
+            route.Segments[1] = route1entry2;
+
+            // execute the conversion.
+            var geojson = route.ToGeoJson();
+            geojson = geojson.RemoveWhitespace();
+
+            Assert.AreEqual("{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"properties\":{\"TestKey1\":\"TestValue1\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[0.0,0.0]}},{\"type\":\"Feature\",\"properties\":{\"highway\":\"residential\",\"time\":20.0,\"distance\":10.0},\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[1.0,1.0],[2.0,2.0]]}},{\"type\":\"Feature\",\"properties\":{\"TestKey2\":\"TestValue2\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[0.0,0.0]}}]}",
+                geojson);
         }
     }
 }

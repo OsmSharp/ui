@@ -17,6 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Time;
@@ -126,6 +129,85 @@ namespace OsmSharp.Routing
         public void SaveAsGpx(Stream stream)
         {
             OsmSharp.Routing.Gpx.RouteGpx.Save(stream, this);
+        }
+
+        /// <summary>
+        /// Save the route as GeoJson.
+        /// </summary>
+        /// <param name="stream"></param>
+        public void SaveAsGeoJson(Stream stream)
+        {
+            var streamWriter = new StreamWriter(stream);
+            streamWriter.Write(this.ToGeoJson());
+            streamWriter.Flush();
+        }
+
+        /// <summary>
+        /// Returns this route in GeoJson.
+        /// </summary>
+        /// <returns></returns>
+        public string ToGeoJson()
+        {
+            return OsmSharp.Geo.Streams.GeoJson.GeoJsonConverter.ToGeoJson(this.ToFeatureCollection());
+        }
+
+        /// <summary>
+        /// Converts this route to a feature collection.
+        /// </summary>
+        /// <returns></returns>
+        public FeatureCollection ToFeatureCollection()
+        {
+            var featureCollection = new FeatureCollection();
+            for (int i = 0; i < this.Segments.Length; i++)
+            {
+                // create a line string for the current segment.
+                if (i > 0)
+                { // but only do so when there is a previous point available.
+                    var segmentLineString = new LineString(
+                        new GeoCoordinate(this.Segments[i - 1].Latitude, this.Segments[i - 1].Longitude),
+                        new GeoCoordinate(this.Segments[i].Latitude, this.Segments[i].Longitude));
+
+                    var segmentTags = this.Segments[i].Tags;
+                    var attributesTable = new SimpleGeometryAttributeCollection();
+                    if (segmentTags != null)
+                    { // there are tags.
+                        foreach (var tag in segmentTags)
+                        {
+                            attributesTable.Add(tag.Key, tag.Value);
+                        }
+                    }
+                    attributesTable.Add("time", this.Segments[i].Time);
+                    attributesTable.Add("distance", this.Segments[i].Distance);
+                    if (this.Segments[i].Vehicle != null)
+                    {
+                        attributesTable.Add("vehicle", this.Segments[i].Vehicle);
+                    }
+                    featureCollection.Add(new Feature(segmentLineString, attributesTable));
+                }
+
+                // create points.
+                if (this.Segments[i].Points != null)
+                {
+                    foreach (var point in this.Segments[i].Points)
+                    {
+                        // build attributes.
+                        var currentPointTags = point.Tags;
+                        var attributesTable = new SimpleGeometryAttributeCollection();
+                        if (currentPointTags != null)
+                        { // there are tags.
+                            foreach (var tag in currentPointTags)
+                            {
+                                attributesTable.Add(tag.Key, tag.Value);
+                            }
+                        }
+
+                        // build feature.
+                        var pointGeometry = new Point(new GeoCoordinate(point.Latitude, point.Longitude));
+                        featureCollection.Add(new Feature(pointGeometry, attributesTable));
+                    }
+                }
+            }
+            return featureCollection;
         }
 
 		#endregion
