@@ -29,7 +29,7 @@ namespace OsmSharp.iOS.UI
         /// <summary>
         /// Holds the 'native' or platform-specific connection.
         /// </summary>
-        private global::SQLite.SQLiteConnection _nativeConnection;
+        private OsmSharp.iOS.SQLite.SQLiteConnection _nativeConnection;
 
         /// <summary>
         /// Creates a new SQLite connection.
@@ -37,7 +37,7 @@ namespace OsmSharp.iOS.UI
         /// <param name="databasePath"></param>
         public SQLiteConnection(string databasePath)
         {
-            _nativeConnection = new global::SQLite.SQLiteConnection(databasePath);
+            _nativeConnection = new OsmSharp.iOS.SQLite.SQLiteConnection(databasePath);
         }
 
         /// <summary>

@@ -45,7 +45,7 @@ using Sqlite3DatabaseHandle = System.IntPtr;
 using Sqlite3Statement = System.IntPtr;
 #endif
 
-namespace SQLite
+namespace OsmSharp.Android.SQLite
 {
     public class SQLiteException : Exception
     {

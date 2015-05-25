@@ -30,7 +30,7 @@ namespace OsmSharp.Android.UI.Data.SQLite
         /// <summary>
         /// Holds the 'native' or platform-specific connection.
         /// </summary>
-        private global::SQLite.SQLiteConnection _nativeConnection;
+        private OsmSharp.Android.SQLite.SQLiteConnection _nativeConnection;
 
         /// <summary>
         /// Creates a new SQLite connection.
@@ -38,7 +38,7 @@ namespace OsmSharp.Android.UI.Data.SQLite
         /// <param name="databasePath"></param>
         public SQLiteConnection(string databasePath)
         {
-            _nativeConnection = new global::SQLite.SQLiteConnection(databasePath);
+            _nativeConnection = new OsmSharp.Android.SQLite.SQLiteConnection(databasePath);
         }
 
         /// <summary>
