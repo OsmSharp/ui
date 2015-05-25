@@ -172,6 +172,43 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Tests deserializing a linestring.
+        /// </summary>
+        [Test]
+        public void TestLineStringDeserialization()
+        {
+            var geometry = "{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<LineString>(geometry);
+            var linestring = geometry as LineString;
+            Assert.AreEqual(4, linestring.Coordinates.Count);
+            Assert.AreEqual(0, linestring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, linestring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, linestring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, linestring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, linestring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestring.Coordinates[3].Longitude);
+
+            geometry = "{\"coordinates\":[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]],\"type\":\"LineString\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<LineString>(geometry);
+            linestring = geometry as LineString;
+            Assert.AreEqual(4, linestring.Coordinates.Count);
+            Assert.AreEqual(0, linestring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, linestring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, linestring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, linestring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, linestring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestring.Coordinates[3].Longitude);
+        }
+
+        /// <summary>
         /// Tests serializing a multilinestring.
         /// </summary>
         [Test]
@@ -223,7 +260,7 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
 
             Assert.AreEqual("{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}",
                 serialized);
-        }        
+        }
         
         /// <summary>
         /// Tests deserializing a point.
@@ -231,11 +268,19 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         [Test]
         public void TestPointDeserialization()
         {
-            var geometry = "{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}".ToPoint();
+            var geometry = "{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}".ToGeometry();
 
             Assert.IsNotNull(geometry);
             Assert.IsInstanceOf<Point>(geometry);
             var point = geometry as Point;
+            Assert.AreEqual(0, point.Coordinate.Latitude);
+            Assert.AreEqual(1, point.Coordinate.Longitude);
+
+            geometry = "{\"coordinates\":[1.0,0.0],\"type\":\"Point\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Point>(geometry);
+            point = geometry as Point;
             Assert.AreEqual(0, point.Coordinate.Latitude);
             Assert.AreEqual(1, point.Coordinate.Longitude);
         }

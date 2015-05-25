@@ -21,6 +21,7 @@ using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.IO.Json;
 using OsmSharp.IO.Json.Linq;
+using OsmSharp.Math.Geo;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -482,16 +483,17 @@ namespace OsmSharp.Geo.Streams.GeoJson
             writer.WriteValue(geometry.Coordinate.Latitude);
             writer.WriteEndArray();
             writer.WriteEndObject();
-        } /// <summary>
+        } 
+        
+        /// <summary>
         /// Reads GeoJson and returns the geometry.
         /// </summary>
-        /// <param name="geometry"></param>
+        /// <param name="geoJson"></param>
         /// <returns></returns>
-        public static Point ToPoint(this string geoJson)
+        public static Geometry ToGeometry(this string geoJson)
         {
             var jsonReader = new JsonTextReader(new StringReader(geoJson));
-            jsonReader.Read();
-            return (Point)GeoJsonConverter.Read(jsonReader);
+            return GeoJsonConverter.Read(jsonReader);
         }
 
         /// <summary>
@@ -523,6 +525,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
                     }
                     else if ((string)jsonReader.Value == "coordinates")
                     { // the coordinates.
+                        jsonReader.Read(); // move to first array start.
                         coordinates = GeoJsonConverter.ReadCoordinateArrays(jsonReader);
                     }
                 }
@@ -576,12 +579,16 @@ namespace OsmSharp.Geo.Streams.GeoJson
         internal static List<object> ReadCoordinateArrays(JsonReader jsonReader)
         {
             var coordinates = new List<object>();
-            jsonReader.Read();
-            if(jsonReader.TokenType == JsonToken.StartArray)
+            jsonReader.Read(); // move to next array start.
+            if (jsonReader.TokenType == JsonToken.StartArray)
             {
-                coordinates.Add(GeoJsonConverter.ReadCoordinateArrays(jsonReader));
+                while (jsonReader.TokenType == JsonToken.StartArray)
+                {
+                    coordinates.Add(GeoJsonConverter.ReadCoordinateArrays(jsonReader));
+                    jsonReader.Read(); // move to next array start.
+                }
             }
-            else if(jsonReader.TokenType == JsonToken.Float)
+            else if(jsonReader.TokenType == JsonToken.Float) 
             {
                 while(jsonReader.TokenType != JsonToken.EndArray)
                 {
@@ -604,17 +611,13 @@ namespace OsmSharp.Geo.Streams.GeoJson
         internal static Point BuildPoint(List<object> coordinates)
         {
             if (coordinates == null) { throw new ArgumentNullException(); }
-            if(coordinates.Count == 1)
+            if (coordinates != null &&
+                coordinates.Count == 2 &&
+                coordinates[0] is double &&
+                coordinates[1] is double)
             {
-                var pointCoordinate = coordinates[0] as List<object>;
-                if(pointCoordinate != null &&
-                    pointCoordinate.Count == 2 &&
-                    pointCoordinate[0] is double &&
-                    pointCoordinate[1] is double)
-                {
-                    return new Point(new Math.Geo.GeoCoordinate(
-                        (double)pointCoordinate[1], (double)pointCoordinate[0]));
-                }
+                return new Point(new Math.Geo.GeoCoordinate(
+                    (double)coordinates[1], (double)coordinates[0]));
             }
             throw new Exception("Invalid coordinate collection.");
         }
@@ -626,6 +629,24 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <returns></returns>
         internal static LineString BuildLineString(List<object> coordinates)
         {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if (coordinates.Count > 1)
+            {
+                var lineStringCoordinates = new List<GeoCoordinate>();
+                for (int idx = 0; idx < coordinates.Count; idx++)
+                {
+                    var pointCoordinate = coordinates[idx] as List<object>;
+                    if (pointCoordinate != null &&
+                        pointCoordinate.Count == 2 &&
+                        pointCoordinate[0] is double &&
+                        pointCoordinate[1] is double)
+                    {
+                        lineStringCoordinates.Add(new Math.Geo.GeoCoordinate(
+                            (double)pointCoordinate[1], (double)pointCoordinate[0]));
+                    }
+                }
+                return new LineString(lineStringCoordinates);
+            }
             throw new Exception("Invalid coordinate collection.");
         }
 
