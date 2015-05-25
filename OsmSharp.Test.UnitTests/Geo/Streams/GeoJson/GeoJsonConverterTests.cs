@@ -247,7 +247,7 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
             var serialized = geometryCollection.ToGeoJson();
             serialized = serialized.RemoveWhitespace();
 
-            Assert.AreEqual("[{\"type\":\"Point\",\"coordinates\":[1.0,0.0]},{\"type\":\"Point\",\"coordinates\":[1.0,1.0]},{\"type\":\"Point\",\"coordinates\":[0.0,1.0]}]",
+            Assert.AreEqual("{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,0.0],[1.0,1.0],[0.0,1.0]]}",
                 serialized);
         }
 
