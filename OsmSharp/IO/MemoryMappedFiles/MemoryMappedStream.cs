@@ -31,6 +31,15 @@ namespace OsmSharp.IO.MemoryMappedFiles
         private Stream _stream;
 
         /// <summary>
+        /// Creates a new memory mapped stream using a memory stream.
+        /// </summary>
+        public MemoryMappedStream()
+            :this(new MemoryStream())
+        {
+
+        }
+
+        /// <summary>
         /// Creates a new memory mapped stream.
         /// </summary>
         /// <param name="stream">The stream to read/write.</param>
