@@ -552,7 +552,7 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
-        /// Tests serializing a multipoint.
+        /// Tests serializing a geometrycollection.
         /// </summary>
         [Test]
         public void TestGeometryCollectionSerialization()
@@ -620,6 +620,20 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
 
             Assert.AreEqual("{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]]]},{\"type\":\"Point\",\"coordinates\":[1.0,0.0]},{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,0.0],[2.0,0.0]]}]}",
                 serialized);
+        }
+
+        /// <summary>
+        /// Tests deserializing a geometrycollection.
+        /// </summary>
+        [Test]
+        public void TestGeometryCollectionDeserialization()
+        {
+            var geometry = "{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]]]},{\"type\":\"Point\",\"coordinates\":[1.0,0.0]},{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,0.0],[2.0,0.0]]}]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<GeometryCollection>(geometry);
+            var geometries = new List<Geometry>(geometry as GeometryCollection);
+            Assert.AreEqual(8, geometries.Count);
         }
 
         /// <summary>

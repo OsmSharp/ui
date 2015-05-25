@@ -565,6 +565,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
             while(jsonReader.TokenType != JsonToken.EndArray)
             {
                 geometries.Add(GeoJsonConverter.Read(jsonReader));
+                jsonReader.Read();
             }
             return geometries;
         }
