@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,20 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Geo.Geometries
 {
     /// <summary>
     /// A multi point, a collection of zero or more points.
     /// </summary>
-    public class MultiPoint : GeometryCollection
+    public class MultiPoint : GeometryCollectionBase<Point>
     {
         /// <summary>
-        /// Creates a new multipoint string.
+        /// Creates a new multipoint.
         /// </summary>
         public MultiPoint()
         {
@@ -37,11 +34,21 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
-        /// Creates a new multipoint string.
+        /// Creates a new multipoint.
+        /// </summary>
+        /// <param name="points"></param>
+        public MultiPoint(params Point[] points)
+            :base(points)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new multipoint.
         /// </summary>
         /// <param name="points"></param>
         public MultiPoint(IEnumerable<Point> points)
-            : base(points.Cast<Geometry>())
+            : base(points)
         {
 
         }

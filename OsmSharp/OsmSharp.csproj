@@ -131,6 +131,7 @@
     <Compile Include="Geo\GeoCoordinateLine.cs" />
     <Compile Include="Geo\Geometries\Geometry.cs" />
     <Compile Include="Geo\Geometries\GeometryCollection.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollectionBase.cs" />
     <Compile Include="Geo\Geometries\LineairRing.cs" />
     <Compile Include="Geo\Geometries\LineString.cs" />
     <Compile Include="Geo\Geometries\MultiLineString.cs" />

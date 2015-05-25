@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -24,7 +24,7 @@ namespace OsmSharp.Geo.Geometries
     /// <summary>
     /// A multi polygon, a collection of zero or more polygons.
     /// </summary>
-    public class MultiPolygon : GeometryCollection
+    public class MultiPolygon : GeometryCollectionBase<Polygon>
     {
         /// <summary>
         /// Creates a new multipolygon string.
@@ -39,7 +39,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="polygons"></param>
         public MultiPolygon(params Polygon[] polygons)
-            : base(polygons.Cast<Geometry>())
+            : base(polygons)
         {
 
         }
@@ -49,7 +49,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="polygons"></param>
         public MultiPolygon(IEnumerable<Polygon> polygons)
-            : base(polygons.Cast<Geometry>())
+            : base(polygons)
         {
 
         }

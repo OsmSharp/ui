@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,20 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace OsmSharp.Geo.Geometries
 {
     /// <summary>
     /// A multi line string, a collection of one or more linestring instances.
     /// </summary>
-    public class MultiLineString : GeometryCollection
+    public class MultiLineString : GeometryCollectionBase<LineString>
     {
         /// <summary>
-        /// Creates a new multiline string.
+        /// Creates a new multilinestring.
         /// </summary>
         public MultiLineString()
         {
@@ -37,11 +35,21 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
-        /// Creates a new multiline string.
+        /// Creates a new multilinestring.
+        /// </summary>
+        /// <param name="lineStrings"></param>
+        public MultiLineString(params LineString[] lineStrings)
+            :base(lineStrings)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new multilinestring.
         /// </summary>
         /// <param name="lineStrings"></param>
         public MultiLineString(IEnumerable<LineString> lineStrings)
-            : base(lineStrings.Cast<Geometry>())
+            : base(lineStrings)
         {
 
         }

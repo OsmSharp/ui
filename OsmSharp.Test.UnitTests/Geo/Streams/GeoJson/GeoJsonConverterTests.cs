@@ -229,6 +229,77 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         /// Tests serializing a multipoint.
         /// </summary>
         [Test]
+        public void TestGeometryCollectionSerialization()
+        {
+            var geometry1 = new LineString(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(1, 1),
+                    new GeoCoordinate(1, 0)
+                });
+            var geometry2 = new LineString(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 2),
+                    new GeoCoordinate(2, 2),
+                    new GeoCoordinate(2, 0)
+                });
+            var geometry3 = new LineString(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 3),
+                    new GeoCoordinate(3, 3),
+                    new GeoCoordinate(3, 0)
+                });
+            var geometry4 = new LineairRing(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(1, 1),
+                    new GeoCoordinate(1, 0),
+                    new GeoCoordinate(0, 0)
+                });
+            var geometry5 = new Polygon(new LineairRing(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 1),
+                    new GeoCoordinate(1, 1),
+                    new GeoCoordinate(1, 0),
+                    new GeoCoordinate(0, 0)
+                }));
+            var geometry6 = new MultiPolygon(geometry5, new Polygon(new LineairRing(
+                new GeoCoordinate[]
+                {
+                    new GeoCoordinate(0, 0),
+                    new GeoCoordinate(0, 2),
+                    new GeoCoordinate(2, 2),
+                    new GeoCoordinate(2, 0),
+                    new GeoCoordinate(0, 0)
+                })));
+            var geometry7 = new Point(new GeoCoordinate(0, 1));
+            var geometry8 = new MultiPoint(geometry7, new Point(new GeoCoordinate(0, 2)));
+            var geometryCollection = new GeometryCollection(
+                geometry1, geometry2, geometry3,
+                geometry4, geometry5, geometry6,
+                geometry7, geometry8);
+
+            var serialized = geometryCollection.ToGeoJson();
+            serialized = serialized.RemoveWhitespace();
+
+            Assert.AreEqual("{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0]]},{\"type\":\"LineString\",\"coordinates\":[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]},{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]]]},{\"type\":\"Point\",\"coordinates\":[1.0,0.0]},{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,0.0],[2.0,0.0]]}]}",
+                serialized);
+        }
+
+        /// <summary>
+        /// Tests serializing a multipoint.
+        /// </summary>
+        [Test]
         public void TestMultiPointSerialization()
         {
             var geometry1 = new Point(new GeoCoordinate(0, 1));
