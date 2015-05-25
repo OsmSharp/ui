@@ -219,9 +219,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         public static string ToGeoJson(this MultiPolygon geometryCollection)
         {
             var jsonWriter = new JTokenWriter();
-            jsonWriter.WriteStartArray();
             GeoJsonConverter.Write(jsonWriter, geometryCollection);
-            jsonWriter.WriteEndArray();
             return jsonWriter.Token.ToString();
         }
 
@@ -232,35 +230,65 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <param name="geometryCollection"></param>
         internal static void Write(JsonWriter writer, MultiPolygon geometryCollection)
         {
+            writer.WriteStartObject();
+            writer.WritePropertyName("type");
+            writer.WriteValue("MultiPolygon");
+            writer.WritePropertyName("coordinates");
+            writer.WriteStartArray();
             foreach (Polygon geometry in geometryCollection)
             {
-                GeoJsonConverter.Write(writer, geometry);
+                writer.WriteStartArray();
+                writer.WriteStartArray();
+                foreach (var coordinate in geometry.Ring.Coordinates)
+                {
+                    writer.WriteStartArray();
+                    writer.WriteValue(coordinate.Longitude);
+                    writer.WriteValue(coordinate.Latitude);
+                    writer.WriteEndArray();
+                }
+                writer.WriteEndArray();
+                foreach (var hole in geometry.Holes)
+                {
+                    writer.WriteStartArray();
+                    foreach (var coordinate in hole.Coordinates)
+                    {
+                        writer.WriteStartArray();
+                        writer.WriteValue(coordinate.Longitude);
+                        writer.WriteValue(coordinate.Latitude);
+                        writer.WriteEndArray();
+                    }
+                    writer.WriteEndArray();
+                }
+                writer.WriteEndArray();
             }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Generates GeoJson for the given geometry.
         /// </summary>
+        /// <param name="writer"></param>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        internal static void Write(JsonWriter jsonWriter, LineairRing geometry)
+        internal static void Write(JsonWriter writer, LineairRing geometry)
         {
-            jsonWriter.WriteStartObject();
-            jsonWriter.WritePropertyName("type");
-            jsonWriter.WriteValue("Polygon");
-            jsonWriter.WritePropertyName("coordinates");
-            jsonWriter.WriteStartArray();
-            jsonWriter.WriteStartArray();
+            writer.WriteStartObject();
+            writer.WritePropertyName("type");
+            writer.WriteValue("Polygon");
+            writer.WritePropertyName("coordinates");
+            writer.WriteStartArray();
+            writer.WriteStartArray();
             foreach(var coordinate in geometry.Coordinates)
             {
-                jsonWriter.WriteStartArray();
-                jsonWriter.WriteValue(coordinate.Longitude);
-                jsonWriter.WriteValue(coordinate.Latitude);
-                jsonWriter.WriteEndArray();
+                writer.WriteStartArray();
+                writer.WriteValue(coordinate.Longitude);
+                writer.WriteValue(coordinate.Latitude);
+                writer.WriteEndArray();
             }
-            jsonWriter.WriteEndArray();
-            jsonWriter.WriteEndArray();
-            jsonWriter.WriteEndObject();
+            writer.WriteEndArray();
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
         /// <summary>

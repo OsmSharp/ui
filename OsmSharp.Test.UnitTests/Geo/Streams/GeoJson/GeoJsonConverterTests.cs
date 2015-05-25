@@ -145,11 +145,7 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
             var serialized = geometryCollection.ToGeoJson();
             serialized = serialized.RemoveWhitespace();
 
-            Assert.AreEqual("[" +
-                "{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]}," +
-                "{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]]}," +
-                "{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0],[0.0,0.0]]]}" +
-                "]",
+            Assert.AreEqual("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]],[[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0],[0.0,0.0]]]]}",
                 serialized);
         }
 
