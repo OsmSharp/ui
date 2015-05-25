@@ -554,6 +554,39 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Tests deserializing a multipoint.
+        /// </summary>
+        [Test]
+        public void TestMultiPointDeserialization()
+        {
+            var geometry = "{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,0.0],[1.0,1.0],[0.0,1.0]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiPoint>(geometry);
+            var multiPoint = geometry as MultiPoint;
+            var points = new List<Point>(multiPoint);
+            Assert.AreEqual(0, points[0].Coordinate.Latitude);
+            Assert.AreEqual(1, points[0].Coordinate.Longitude);
+            Assert.AreEqual(1, points[1].Coordinate.Latitude);
+            Assert.AreEqual(1, points[1].Coordinate.Longitude);
+            Assert.AreEqual(1, points[2].Coordinate.Latitude);
+            Assert.AreEqual(0, points[2].Coordinate.Longitude);
+
+            geometry = "{\"coordinates\":[[1.0,0.0],[1.0,1.0],[0.0,1.0]],\"type\":\"MultiPoint\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiPoint>(geometry);
+            multiPoint = geometry as MultiPoint;
+            points = new List<Point>(multiPoint);
+            Assert.AreEqual(0, points[0].Coordinate.Latitude);
+            Assert.AreEqual(1, points[0].Coordinate.Longitude);
+            Assert.AreEqual(1, points[1].Coordinate.Latitude);
+            Assert.AreEqual(1, points[1].Coordinate.Longitude);
+            Assert.AreEqual(1, points[2].Coordinate.Latitude);
+            Assert.AreEqual(0, points[2].Coordinate.Longitude);
+        }
+
+        /// <summary>
         /// Tests serializing a feature.
         /// </summary>
         [Test]

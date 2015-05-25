@@ -541,7 +541,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
                 case "Polygon":
                     return GeoJsonConverter.BuildPolygon(coordinates);
                 case "MultiPoint":
-                    return GeoJsonConverter.BuildPoint(coordinates);
+                    return GeoJsonConverter.BuildMultiPoint(coordinates);
                 case "MultiLineString":
                     return GeoJsonConverter.BuildMultiLineString(coordinates);
                 case "MultiPolygon":
@@ -695,6 +695,29 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <returns></returns>
         internal static MultiPoint BuildMultiPoint(List<object> coordinates)
         {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if (coordinates.Count > 1)
+            {
+                var multiPointCoordinates = new List<GeoCoordinate>();
+                for (int idx = 0; idx < coordinates.Count; idx++)
+                {
+                    var pointCoordinate = coordinates[idx] as List<object>;
+                    if (pointCoordinate != null &&
+                        pointCoordinate.Count == 2 &&
+                        pointCoordinate[0] is double &&
+                        pointCoordinate[1] is double)
+                    {
+                        multiPointCoordinates.Add(new Math.Geo.GeoCoordinate(
+                            (double)pointCoordinate[1], (double)pointCoordinate[0]));
+                    }
+                }
+                var points = new List<Point>();
+                foreach(var pointCoordinate in multiPointCoordinates)
+                {
+                    points.Add(new Point(pointCoordinate));
+                }
+                return new MultiPoint(points);
+            }
             throw new Exception("Invalid coordinate collection.");
         }
 
