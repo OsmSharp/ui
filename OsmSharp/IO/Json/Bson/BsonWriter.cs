@@ -275,7 +275,6 @@ namespace OsmSharp.IO.Json.Bson
         /// Writes a <see cref="UInt32"/> value.
         /// </summary>
         /// <param name="value">The <see cref="UInt32"/> value to write.</param>
-        [CLSCompliant(false)]
         public override void WriteValue(uint value)
         {
             if (value > int.MaxValue)
@@ -299,7 +298,6 @@ namespace OsmSharp.IO.Json.Bson
         /// Writes a <see cref="UInt64"/> value.
         /// </summary>
         /// <param name="value">The <see cref="UInt64"/> value to write.</param>
-        [CLSCompliant(false)]
         public override void WriteValue(ulong value)
         {
             if (value > long.MaxValue)
@@ -353,7 +351,6 @@ namespace OsmSharp.IO.Json.Bson
         /// Writes a <see cref="UInt16"/> value.
         /// </summary>
         /// <param name="value">The <see cref="UInt16"/> value to write.</param>
-        [CLSCompliant(false)]
         public override void WriteValue(ushort value)
         {
             base.WriteValue(value);
@@ -386,7 +383,6 @@ namespace OsmSharp.IO.Json.Bson
         /// Writes a <see cref="SByte"/> value.
         /// </summary>
         /// <param name="value">The <see cref="SByte"/> value to write.</param>
-        [CLSCompliant(false)]
         public override void WriteValue(sbyte value)
         {
             base.WriteValue(value);
