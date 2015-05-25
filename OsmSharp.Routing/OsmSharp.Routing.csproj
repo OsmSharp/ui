@@ -136,8 +136,6 @@
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
-    <Compile Include="Osm\IRoutingProgressConsumer.cs" />
-    <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\GraphOsmStreamTargetBase.cs" />
     <Compile Include="Osm\Streams\GraphOsmStreamTarget.cs" />
