@@ -32,12 +32,10 @@
 //
 using System;
 using System.Collections;
-using System.Globalization;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using System.Diagnostics;
-using OsmSharp;
 
-namespace System.Collections.Generic
+namespace OsmSharp.Collections
 {
     /// <summary>
     ///  Represents a collection of associated keys and values
