@@ -23,6 +23,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
+using OsmSharp.Routing.Vehicles;
 using ProtoBuf;
 using ProtoBuf.Meta;
 using System.Collections.Generic;
@@ -61,7 +62,21 @@ namespace OsmSharp.Routing.CH.Serialization
         /// <returns></returns>
         protected override RouterDataSource<CHEdgeData> DoDeserialize(LimitedStream stream, bool lazy, IEnumerable<string> vehicles)
         {
-            return RouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, !lazy);
+            var routerDataSource = RouterDataSource<CHEdgeData>.Deserialize(stream, CHEdgeData.SizeUints, CHEdgeData.MapFromDelegate, CHEdgeData.MapToDelegate, !lazy);
+            if(vehicles != null)
+            {
+                foreach(var vehicleName in vehicles)
+                {
+                    Vehicle vehicle;
+                    if(!Vehicle.TryGetByUniqueName(vehicleName, out vehicle))
+                    {
+                        OsmSharp.Logging.Log.TraceEvent("CHEdgeSerializer", Logging.TraceEventType.Information,
+                            string.Format("Vehicle profile {0} not found during serialization. It won't be supported by the router.", vehicleName));
+                    }
+                    routerDataSource.AddSupportedProfile(vehicle);
+                }
+            }
+            return routerDataSource;
         }
     }
 }

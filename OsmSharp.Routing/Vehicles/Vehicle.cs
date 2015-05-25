@@ -117,19 +117,34 @@ namespace OsmSharp.Routing.Vehicles
         /// <returns></returns>
         public static Vehicle GetByUniqueName(string uniqueName)
         {
+            Vehicle vehicle;
+            if(!Vehicle.TryGetByUniqueName(uniqueName, out vehicle))
+            { // vehicle name not found.
+                throw new ArgumentOutOfRangeException(string.Format("Vehicle profile with name {0} not found or not registered.", uniqueName));
+            }
+            return vehicle;
+        }
+
+        /// <summary>
+        /// Tries to the the vehicle given it's unique name.
+        /// </summary>
+        /// <param name="uniqueName"></param>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static bool TryGetByUniqueName(string uniqueName, out Vehicle vehicle)
+        {
             if (uniqueName == null) { throw new ArgumentNullException("uniqueName"); }
 
-            Vehicle vehicle = null;
-            if(VehiclesByName == null)
+            if (VehiclesByName == null)
             { // no vehicles have been registered.
                 Vehicle.RegisterVehicles();
             }
             uniqueName = uniqueName.ToLowerInvariant();
-            if(!VehiclesByName.TryGetValue(uniqueName, out vehicle))
+            if (!VehiclesByName.TryGetValue(uniqueName, out vehicle))
             { // vehicle name not registered.
-                throw new ArgumentOutOfRangeException(string.Format("Vehicle profile with name {0} not found or not registered.", uniqueName));
+                return false;
             }
-            return vehicle;
+            return true;
         }
 
         /// <summary>
