@@ -75,6 +75,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="IO\MemoryMappedFiles\TempMemoryMappedFile.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="MapControl.cs">
       <SubType>UserControl</SubType>
@@ -108,8 +109,6 @@
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -281,7 +281,7 @@ namespace OsmSharp.IO.MemoryMappedFiles
         /// <summary>
         /// Disposes of all resources associated with this files.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             while (_accessors.Count > 0)
             {
