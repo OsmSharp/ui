@@ -59,25 +59,13 @@ namespace OsmSharp.Logging
 			switch (type) {
 			case TraceEventType.Critical:
 			case TraceEventType.Error:
-                //Android.Util.Log.Error (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                             DateTime.Now.Ticks));
                 this.WriteLine(message);
-                //this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                             DateTime.Now.Ticks));
 				break;
 			case TraceEventType.Warning:
-                //Android.Util.Log.Warn (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                            DateTime.Now.Ticks));
                 this.WriteLine(message);
-                //this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                            DateTime.Now.Ticks));
 				break;
 			default:
-                //Android.Util.Log.Info (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                            DateTime.Now.Ticks));
                 this.WriteLine(message);
-                //this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-                //                                            DateTime.Now.Ticks));
 				break;
 			}
         }

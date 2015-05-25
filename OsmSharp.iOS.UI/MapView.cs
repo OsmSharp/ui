@@ -528,7 +528,7 @@ namespace OsmSharp.iOS.UI
 							this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
 								normalView, view);
 							long afterViewChanged = DateTime.Now.Ticks;
-							OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
+							OsmSharp.Logging.Log.TraceEvent("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
 								"View change took: {0}ms @ zoom level {1}",
 								(new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
