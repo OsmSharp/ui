@@ -482,6 +482,211 @@ namespace OsmSharp.Geo.Streams.GeoJson
             writer.WriteValue(geometry.Coordinate.Latitude);
             writer.WriteEndArray();
             writer.WriteEndObject();
+        } /// <summary>
+        /// Reads GeoJson and returns the geometry.
+        /// </summary>
+        /// <param name="geometry"></param>
+        /// <returns></returns>
+        public static Point ToPoint(this string geoJson)
+        {
+            var jsonReader = new JsonTextReader(new StringReader(geoJson));
+            jsonReader.Read();
+            return (Point)GeoJsonConverter.Read(jsonReader);
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns the geometry.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static Geometry Read(JsonReader jsonReader)
+        {
+            var geometryType = string.Empty;
+            var coordinates = new List<object>();
+            List<Geometry> geometries = null;
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonToken.EndObject)
+                { // end of geometry.
+                    break;
+                }
+
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    if ((string)jsonReader.Value == "type")
+                    { // the geometry type.
+                        geometryType = jsonReader.ReadAsString();
+                    }
+                    else if ((string)jsonReader.Value == "geometries")
+                    { // the geometries if a geometry collection.
+                        geometries = GeoJsonConverter.ReadGeometryArray(jsonReader);
+                    }
+                    else if ((string)jsonReader.Value == "coordinates")
+                    { // the coordinates.
+                        coordinates = GeoJsonConverter.ReadCoordinateArrays(jsonReader);
+                    }
+                }
+            }
+
+            // data has been read, instantiate the actual object.
+            switch(geometryType)
+            {
+                case "Point":
+                    return GeoJsonConverter.BuildPoint(coordinates);
+                case "LineString":
+                    return GeoJsonConverter.BuildLineString(coordinates);
+                case "LineairRing":
+                    return GeoJsonConverter.BuildLineairRing(coordinates);
+                case "Polygon":
+                    return GeoJsonConverter.BuildPolygon(coordinates);
+                case "MultiPoint":
+                    return GeoJsonConverter.BuildPoint(coordinates);
+                case "MultiLineString":
+                    return GeoJsonConverter.BuildMultiLineString(coordinates);
+                case "MultiPolygon":
+                    return GeoJsonConverter.BuildMultiPolygon(coordinates);
+                case "GeometryCollection":
+                    return GeoJsonConverter.BuildGeometryCollection(geometries);
+
+            }
+            throw new Exception(string.Format("Unknown geometry type: {0}", geometryType));
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns the list of geometries..
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static List<Geometry> ReadGeometryArray(JsonReader jsonReader)
+        {
+            var geometries = new List<Geometry>();
+            jsonReader.Read();
+            while(jsonReader.TokenType != JsonToken.EndArray)
+            {
+                geometries.Add(GeoJsonConverter.Read(jsonReader));
+            }
+            return geometries;
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns a list of coordinates.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static List<object> ReadCoordinateArrays(JsonReader jsonReader)
+        {
+            var coordinates = new List<object>();
+            jsonReader.Read();
+            if(jsonReader.TokenType == JsonToken.StartArray)
+            {
+                coordinates.Add(GeoJsonConverter.ReadCoordinateArrays(jsonReader));
+            }
+            else if(jsonReader.TokenType == JsonToken.Float)
+            {
+                while(jsonReader.TokenType != JsonToken.EndArray)
+                {
+                    coordinates.Add((double)jsonReader.Value);
+                    jsonReader.Read();
+                }
+            }
+            else
+            {
+                throw new Exception(string.Format("Invalid token in coordinates array: {0}", jsonReader.TokenType.ToInvariantString()));
+            }
+            return coordinates;
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static Point BuildPoint(List<object> coordinates)
+        {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if(coordinates.Count == 1)
+            {
+                var pointCoordinate = coordinates[0] as List<object>;
+                if(pointCoordinate != null &&
+                    pointCoordinate.Count == 2 &&
+                    pointCoordinate[0] is double &&
+                    pointCoordinate[1] is double)
+                {
+                    return new Point(new Math.Geo.GeoCoordinate(
+                        (double)pointCoordinate[1], (double)pointCoordinate[0]));
+                }
+            }
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static LineString BuildLineString(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static LineairRing BuildLineairRing(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static Polygon BuildPolygon(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static MultiPoint BuildMultiPoint(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static MultiLineString BuildMultiLineString(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static MultiPolygon BuildMultiPolygon(List<object> coordinates)
+        {
+            throw new Exception("Invalid coordinate collection.");
+        }
+
+        /// <summary>
+        /// Builds the geometry from the given geometries.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        internal static GeometryCollection BuildGeometryCollection(List<Geometry> geometries)
+        {
+            return new GeometryCollection(geometries);
         }
 
         /// <summary>

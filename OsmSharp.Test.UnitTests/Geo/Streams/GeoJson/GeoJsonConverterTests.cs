@@ -223,6 +223,21 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
 
             Assert.AreEqual("{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}",
                 serialized);
+        }        
+        
+        /// <summary>
+        /// Tests deserializing a point.
+        /// </summary>
+        [Test]
+        public void TestPointDeserialization()
+        {
+            var geometry = "{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}".ToPoint();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Point>(geometry);
+            var point = geometry as Point;
+            Assert.AreEqual(0, point.Coordinate.Latitude);
+            Assert.AreEqual(1, point.Coordinate.Longitude);
         }
 
         /// <summary>
