@@ -254,6 +254,93 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Tests deserializing a multipolygon.
+        /// </summary>
+        [Test]
+        public void TestMultiPolygonDeserialization()
+        {
+            var geometry = "{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]],[[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0],[0.0,0.0]]]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiPolygon>(geometry);
+            var polygons = new List<Polygon>(geometry as MultiPolygon);
+            Assert.AreEqual(3, polygons.Count);
+            Assert.AreEqual(5, polygons[0].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[4].Longitude);
+            Assert.AreEqual(5, polygons[1].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[4].Longitude);
+            Assert.AreEqual(5, polygons[2].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[4].Longitude);
+
+            geometry = "{\"coordinates\":[[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],[[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0],[0.0,0.0]]],[[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0],[0.0,0.0]]]],\"type\":\"MultiPolygon\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiPolygon>(geometry);
+            polygons = new List<Polygon>(geometry as MultiPolygon);
+            Assert.AreEqual(3, polygons.Count);
+            Assert.AreEqual(5, polygons[0].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygons[0].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[0].Ring.Coordinates[4].Longitude);
+            Assert.AreEqual(5, polygons[1].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(2, polygons[1].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[1].Ring.Coordinates[4].Longitude);
+            Assert.AreEqual(5, polygons[2].Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(3, polygons[2].Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygons[2].Ring.Coordinates[4].Longitude);
+        }
+
+        /// <summary>
         /// Tests serializing a linestring.
         /// </summary>
         [Test]

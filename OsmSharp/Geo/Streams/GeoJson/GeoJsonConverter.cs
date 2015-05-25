@@ -767,13 +767,23 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <returns></returns>
         internal static MultiPolygon BuildMultiPolygon(List<object> coordinates)
         {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if (coordinates.Count >= 1)
+            {
+                var polygons = new List<Polygon>();
+                foreach (List<object> coordinates1 in coordinates)
+                {
+                    polygons.Add(GeoJsonConverter.BuildPolygon(coordinates1));
+                }
+                return new MultiPolygon(polygons);
+            }
             throw new Exception("Invalid coordinate collection.");
         }
 
         /// <summary>
         /// Builds the geometry from the given geometries.
         /// </summary>
-        /// <param name="coordinates"></param>
+        /// <param name="geometries"></param>
         /// <returns></returns>
         internal static GeometryCollection BuildGeometryCollection(List<Geometry> geometries)
         {
