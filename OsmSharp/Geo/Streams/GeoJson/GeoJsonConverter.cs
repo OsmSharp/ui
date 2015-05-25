@@ -538,8 +538,6 @@ namespace OsmSharp.Geo.Streams.GeoJson
                     return GeoJsonConverter.BuildPoint(coordinates);
                 case "LineString":
                     return GeoJsonConverter.BuildLineString(coordinates);
-                case "LineairRing":
-                    return GeoJsonConverter.BuildLineairRing(coordinates);
                 case "Polygon":
                     return GeoJsonConverter.BuildPolygon(coordinates);
                 case "MultiPoint":
@@ -655,18 +653,38 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        internal static LineairRing BuildLineairRing(List<object> coordinates)
-        {
-            throw new Exception("Invalid coordinate collection.");
-        }
-
-        /// <summary>
-        /// Builds the geometry from the given coordinates.
-        /// </summary>
-        /// <param name="coordinates"></param>
-        /// <returns></returns>
         internal static Polygon BuildPolygon(List<object> coordinates)
         {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if (coordinates.Count >= 1)
+            {
+                var polygonCoordinates = new List<List<GeoCoordinate>>();
+                foreach (List<object> coordinates1 in coordinates)
+                {
+                    var lineStringCoordinates = new List<GeoCoordinate>();
+                    for (int idx = 0; idx < coordinates1.Count; idx++)
+                    {
+                        var pointCoordinate = coordinates1[idx] as List<object>;
+                        if (pointCoordinate != null &&
+                            pointCoordinate.Count == 2 &&
+                            pointCoordinate[0] is double &&
+                            pointCoordinate[1] is double)
+                        {
+                            lineStringCoordinates.Add(new Math.Geo.GeoCoordinate(
+                                (double)pointCoordinate[1], (double)pointCoordinate[0]));
+                        }
+                    }
+                    polygonCoordinates.Add(lineStringCoordinates);
+                }
+
+                var outer = new LineairRing(polygonCoordinates[0]);
+                var holes = new List<LineairRing>();
+                for (int idx = 1; idx < polygonCoordinates.Count; idx++)
+                {
+                    holes.Add(new LineairRing(polygonCoordinates[idx]));
+                }
+                return new Polygon(outer, holes);
+            }
             throw new Exception("Invalid coordinate collection.");
         }
 

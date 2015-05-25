@@ -22,6 +22,7 @@ using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Geo.Streams.GeoJson;
 using OsmSharp.Math.Geo;
+using System.Collections.Generic;
 
 namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
 {
@@ -105,6 +106,109 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
 
             Assert.AreEqual("{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]],[[0.25,0.25],[0.75,0.25],[0.75,0.75],[0.25,0.75],[0.25,0.25]]]}",
                 serialized);
+        }
+
+        /// <summary>
+        /// Tests deserializing a polygon.
+        /// </summary>
+        [Test]
+        public void TestPolygonDeserialization()
+        {
+            var geometry = "{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Polygon>(geometry);
+            var polygon = geometry as Polygon;
+            Assert.AreEqual(5, polygon.Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Longitude);
+
+            geometry = "{\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]]],\"type\":\"Polygon\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Polygon>(geometry);
+            polygon = geometry as Polygon;
+            Assert.AreEqual(5, polygon.Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Longitude);
+
+            geometry = "{\"type\":\"Polygon\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]],[[0.25,0.25],[0.75,0.25],[0.75,0.75],[0.25,0.75],[0.25,0.25]]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Polygon>(geometry);
+            polygon = geometry as Polygon;
+            Assert.AreEqual(5, polygon.Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Longitude);
+            Assert.IsNotNull(polygon.Holes);
+            var holes = new List<LineairRing>(polygon.Holes);
+            Assert.AreEqual(1, holes.Count);
+            Assert.AreEqual(5, holes[0].Coordinates.Count);
+            Assert.AreEqual(0.25, holes[0].Coordinates[0].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[0].Longitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[1].Latitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[1].Longitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[2].Latitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[2].Longitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[3].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[3].Longitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[4].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[4].Longitude);
+
+            geometry = "{\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0],[0.0,0.0]],[[0.25,0.25],[0.75,0.25],[0.75,0.75],[0.25,0.75],[0.25,0.25]]],\"type\":\"Polygon\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Polygon>(geometry);
+            polygon = geometry as Polygon;
+            Assert.AreEqual(5, polygon.Ring.Coordinates.Count);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[0].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[1].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[1].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Latitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[2].Longitude);
+            Assert.AreEqual(1, polygon.Ring.Coordinates[3].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[3].Longitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Latitude);
+            Assert.AreEqual(0, polygon.Ring.Coordinates[4].Longitude);
+            Assert.IsNotNull(polygon.Holes);
+            holes = new List<LineairRing>(polygon.Holes);
+            Assert.AreEqual(1, holes.Count);
+            Assert.AreEqual(5, holes[0].Coordinates.Count);
+            Assert.AreEqual(0.25, holes[0].Coordinates[0].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[0].Longitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[1].Latitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[1].Longitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[2].Latitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[2].Longitude);
+            Assert.AreEqual(0.75, holes[0].Coordinates[3].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[3].Longitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[4].Latitude);
+            Assert.AreEqual(0.25, holes[0].Coordinates[4].Longitude);
         }
 
         /// <summary>
