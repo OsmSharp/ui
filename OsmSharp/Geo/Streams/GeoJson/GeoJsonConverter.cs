@@ -16,6 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.IO.Json;
 using OsmSharp.IO.Json.Linq;
@@ -28,6 +30,152 @@ namespace OsmSharp.Geo.Streams.GeoJson
     public static class GeoJsonConverter
     {
         /// <summary>
+        /// Generates GeoJson for the given feature collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="featureCollection"></param>
+        public static string ToGeoJson(this FeatureCollection featureCollection)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, featureCollection);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given feature collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, FeatureCollection featureCollection)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("type");
+            writer.WriteValue("FeatureCollection");
+            writer.WritePropertyName("features");
+            writer.WriteStartArray();
+            foreach(var feature in featureCollection)
+            {
+                GeoJsonConverter.Write(writer, feature);
+            }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given feature.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="feature"></param>
+        public static string ToGeoJson(this Feature feature)
+        {
+            var jsonWriter = new JTokenWriter();
+            GeoJsonConverter.Write(jsonWriter, feature);
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given feature.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, Feature feature)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("type");
+            writer.WriteValue("Feature");
+            writer.WritePropertyName("properties");
+            writer.WriteStartObject();
+            GeoJsonConverter.Write(writer, feature.Attributes);
+            writer.WriteEndObject();
+            writer.WritePropertyName("geometry"); 
+            if (feature.Geometry is LineairRing)
+            {
+                GeoJsonConverter.Write(writer, feature.Geometry as LineairRing);
+            }
+            else if(feature.Geometry is Point)
+            {
+                GeoJsonConverter.Write(writer, feature.Geometry as Point);
+            }
+            else if(feature.Geometry is LineString)
+            {
+                GeoJsonConverter.Write(writer, feature.Geometry as LineString);
+            }
+            else if(feature.Geometry is Polygon)
+            {
+                GeoJsonConverter.Write(writer, feature.Geometry as Polygon);
+            }
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given attribute collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, GeometryAttributeCollection attributes)
+        {
+            foreach(var attribute in attributes)
+            {
+                writer.WritePropertyName(attribute.Key);
+                writer.WriteValue(attribute.Value);
+            }
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        public static string ToGeoJson(this MultiPoint geometryCollection)
+        {
+            var jsonWriter = new JTokenWriter();
+            jsonWriter.WriteStartArray();
+            GeoJsonConverter.Write(jsonWriter, geometryCollection);
+            jsonWriter.WriteEndArray();
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, MultiPoint geometryCollection)
+        {
+            foreach(Point geometry in geometryCollection)
+            {
+                GeoJsonConverter.Write(writer, geometry);
+            }
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        public static string ToGeoJson(this MultiLineString geometryCollection)
+        {
+            var jsonWriter = new JTokenWriter();
+            jsonWriter.WriteStartArray();
+            GeoJsonConverter.Write(jsonWriter, geometryCollection);
+            jsonWriter.WriteEndArray();
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, MultiLineString geometryCollection)
+        {
+            foreach (LineString geometry in geometryCollection)
+            {
+                GeoJsonConverter.Write(writer, geometry);
+            }
+        }
+
+        /// <summary>
         /// Generates GeoJson for this geometry.
         /// </summary>
         /// <param name="geometry"></param>
@@ -37,6 +185,33 @@ namespace OsmSharp.Geo.Streams.GeoJson
             var jsonWriter = new JTokenWriter();
             GeoJsonConverter.Write(jsonWriter, geometry);
             return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        public static string ToGeoJson(this MultiPolygon geometryCollection)
+        {
+            var jsonWriter = new JTokenWriter();
+            jsonWriter.WriteStartArray();
+            GeoJsonConverter.Write(jsonWriter, geometryCollection);
+            jsonWriter.WriteEndArray();
+            return jsonWriter.Token.ToString();
+        }
+
+        /// <summary>
+        /// Generates GeoJson for the given geometry collection.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="geometryCollection"></param>
+        internal static void Write(JsonWriter writer, MultiPolygon geometryCollection)
+        {
+            foreach (Polygon geometry in geometryCollection)
+            {
+                GeoJsonConverter.Write(writer, geometry);
+            }
         }
 
         /// <summary>
