@@ -825,5 +825,21 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
                 "]}",
                 serialized);
         }
+
+        /// <summary>
+        /// Tests deserializing a feature collection.
+        /// </summary>
+        [Test]
+        public void TestFeatureCollectionDeserialization()
+        {
+            var featureCollection = ("{\"type\":\"FeatureCollection\",\"features\":[" +
+                "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}}," +
+                "{\"type\":\"Feature\",\"properties\":{\"key1\":\"value1\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}}" +
+                "]}").ToFeatureCollection();
+
+            Assert.IsNotNull(featureCollection);
+            Assert.IsInstanceOf<FeatureCollection>(featureCollection);
+            Assert.AreEqual(2, featureCollection.Count);
+        }
     }
 }

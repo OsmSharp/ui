@@ -47,6 +47,75 @@ namespace OsmSharp.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Reads GeoJson and returns the feature collection.
+        /// </summary>
+        /// <param name="geoJson"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatureCollection(this string geoJson)
+        {
+            var jsonReader = new JsonTextReader(new StringReader(geoJson));
+            return GeoJsonConverter.ReadFeatureCollection(jsonReader);
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns the feature collection.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static FeatureCollection ReadFeatureCollection(JsonReader jsonReader)
+        {
+            var type = string.Empty;
+            List<Feature> features = null;
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonToken.EndObject)
+                { // end of geometry.
+                    break;
+                }
+
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    if ((string)jsonReader.Value == "type")
+                    { // the geometry type.
+                        type = jsonReader.ReadAsString();
+                    }
+                    else if ((string)jsonReader.Value == "features")
+                    { // the geometry.
+                        features = GeoJsonConverter.ReadFeatureArray(jsonReader);
+                    }
+                }
+            }
+            switch (type)
+            {
+                case "FeatureCollection":
+                    if (features == null)
+                    {
+                        return new FeatureCollection();
+                    }
+                    return new FeatureCollection(features);
+            }
+            throw new Exception("Invalid type.");
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns the list of features.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static List<Feature> ReadFeatureArray(JsonReader jsonReader)
+        {
+            var features = new List<Feature>();
+            jsonReader.Read();
+            while (jsonReader.TokenType != JsonToken.EndArray)
+            {
+                features.Add(GeoJsonConverter.ReadFeature(jsonReader));
+                jsonReader.Read();
+            }
+            return features;
+        }
+
+
+        /// <summary>
         /// Generates GeoJson for the given feature collection.
         /// </summary>
         /// <param name="writer"></param>
