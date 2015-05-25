@@ -167,9 +167,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         public static string ToGeoJson(this MultiLineString geometryCollection)
         {
             var jsonWriter = new JTokenWriter();
-            jsonWriter.WriteStartArray();
             GeoJsonConverter.Write(jsonWriter, geometryCollection);
-            jsonWriter.WriteEndArray();
             return jsonWriter.Token.ToString();
         }
 
@@ -180,10 +178,25 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <param name="geometryCollection"></param>
         internal static void Write(JsonWriter writer, MultiLineString geometryCollection)
         {
+            writer.WriteStartObject();
+            writer.WritePropertyName("type");
+            writer.WriteValue("MultiLineString");
+            writer.WritePropertyName("coordinates");
+            writer.WriteStartArray();
             foreach (LineString geometry in geometryCollection)
             {
-                GeoJsonConverter.Write(writer, geometry);
+                writer.WriteStartArray();
+                foreach (var coordinate in geometry.Coordinates)
+                {
+                    writer.WriteStartArray();
+                    writer.WriteValue(coordinate.Longitude);
+                    writer.WriteValue(coordinate.Latitude);
+                    writer.WriteEndArray();
+                }
+                writer.WriteEndArray();
             }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -362,18 +375,6 @@ namespace OsmSharp.Geo.Streams.GeoJson
             jsonWriter.WriteValue(geometry.Coordinate.Latitude);
             jsonWriter.WriteEndArray();
             jsonWriter.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Reads GeoJson and returns the geometry.
-        /// </summary>
-        /// <param name="geometry"></param>
-        /// <returns></returns>
-        public static Point ToPoint(this string geoJson)
-        {
-            var jsonReader = new JsonTextReader(new StringReader(geoJson));
-            jsonReader.Read();
-            return (Point)GeoJsonConverter.Read(jsonReader);
         }
     }
 }
