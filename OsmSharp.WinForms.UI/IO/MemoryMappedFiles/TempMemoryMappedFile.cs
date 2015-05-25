@@ -50,7 +50,7 @@ namespace OsmSharp.WinForms.UI.IO.MemoryMappedFiles
         /// </summary>
         /// <param name="tempFile"></param>
         public TempMemoryMappedFile(FileInfo tempFile)
-            : this(tempFile.Open(FileMode.Append, FileAccess.ReadWrite, FileShare.None), tempFile)
+            : this(tempFile.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None), tempFile)
         {
 
         }
