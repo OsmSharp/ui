@@ -83,6 +83,97 @@ namespace OsmSharp.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Reads GeoJson and returns the feature.
+        /// </summary>
+        /// <param name="geoJson"></param>
+        /// <returns></returns>
+        public static Feature ToFeature(this string geoJson)
+        {
+            var jsonReader = new JsonTextReader(new StringReader(geoJson));
+            return GeoJsonConverter.ReadFeature(jsonReader);
+        }
+
+        /// <summary>
+        /// Reads GeoJson and returns the feature.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static Feature ReadFeature(JsonReader jsonReader)
+        {
+            var type = string.Empty;
+            Geometry geometry = null;
+            GeometryAttributeCollection attributes = null;
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonToken.EndObject)
+                { // end of geometry.
+                    break;
+                }
+
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    if ((string)jsonReader.Value == "type")
+                    { // the geometry type.
+                        type = jsonReader.ReadAsString();
+                    }
+                    else if ((string)jsonReader.Value == "geometry")
+                    { // the geometry.
+                        geometry = GeoJsonConverter.ReadGeometry(jsonReader);
+                    }
+                    else if ((string)jsonReader.Value == "properties")
+                    { // the properties/attributes.
+                        attributes = GeoJsonConverter.ReadAttributes(jsonReader);
+                    }
+                }
+            }
+            switch(type)
+            {
+                case "Feature":
+                    if(geometry == null)
+                    {
+                        throw new Exception("No geometry found.");
+                    }
+                    if(attributes != null)
+                    {
+                        return new Feature(geometry, attributes);
+                    }
+                    return new Feature(geometry);
+            }
+            throw new Exception("Invalid type.");
+        }
+
+        /// <summary>
+        /// Reads the properties/attributes.
+        /// </summary>
+        /// <param name="jsonReader"></param>
+        /// <returns></returns>
+        internal static GeometryAttributeCollection ReadAttributes(JsonReader jsonReader)
+        {
+            var attributes = new SimpleGeometryAttributeCollection();
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonToken.EndObject)
+                { // end of geometry.
+                    break;
+                }
+                
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    var key = (string)jsonReader.Value;
+                    jsonReader.Read();
+                    var value = jsonReader.Value;
+
+                    attributes.Add(new GeometryAttribute()
+                    {
+                        Key = key,
+                        Value = value
+                    });
+                }
+            }
+            return attributes;
+        }
+
+        /// <summary>
         /// Generates GeoJson for the given feature.
         /// </summary>
         /// <param name="writer"></param>
@@ -493,7 +584,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         public static Geometry ToGeometry(this string geoJson)
         {
             var jsonReader = new JsonTextReader(new StringReader(geoJson));
-            return GeoJsonConverter.Read(jsonReader);
+            return GeoJsonConverter.ReadGeometry(jsonReader);
         }
 
         /// <summary>
@@ -501,7 +592,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// </summary>
         /// <param name="jsonReader"></param>
         /// <returns></returns>
-        internal static Geometry Read(JsonReader jsonReader)
+        internal static Geometry ReadGeometry(JsonReader jsonReader)
         {
             var geometryType = string.Empty;
             var coordinates = new List<object>();
@@ -564,7 +655,7 @@ namespace OsmSharp.Geo.Streams.GeoJson
             jsonReader.Read();
             while(jsonReader.TokenType != JsonToken.EndArray)
             {
-                geometries.Add(GeoJsonConverter.Read(jsonReader));
+                geometries.Add(GeoJsonConverter.ReadGeometry(jsonReader));
                 jsonReader.Read();
             }
             return geometries;

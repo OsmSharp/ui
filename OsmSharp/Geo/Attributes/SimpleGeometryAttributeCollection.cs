@@ -164,7 +164,18 @@ namespace OsmSharp.Geo.Attributes
         /// <returns></returns>
         public override bool ContainsKeyValue(string key, object value)
         {
-            return this.Any(tag => tag.Key == key && tag.Value == value);
+            return this.Any(tag =>
+                {
+                    if (tag.Key.Equals(key))
+                    {
+                        if (tag.Value == null)
+                        {
+                            return value == null;   
+                        }
+                        return tag.Value.Equals(value);
+                    }
+                    return false;
+                });
         }
 
         /// <summary>

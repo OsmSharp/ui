@@ -773,6 +773,31 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Tests deserializing a feature.
+        /// </summary>
+        [Test]
+        public void TestFeatureDeserialization()
+        {
+            var feature = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}}".ToFeature();
+
+            Assert.IsNotNull(feature);
+            Assert.IsInstanceOf<Feature>(feature);
+            Assert.AreEqual(0, feature.Attributes.Count);
+            var geometry = feature.Geometry;
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Point>(geometry);
+
+            feature = "{\"type\":\"Feature\",\"properties\":{\"key1\":\"value1\"},\"geometry\":{\"type\":\"Point\",\"coordinates\":[1.0,0.0]}}".ToFeature();
+            Assert.IsNotNull(feature);
+            Assert.IsInstanceOf<Feature>(feature);
+            Assert.AreEqual(1, feature.Attributes.Count);
+            Assert.IsTrue(feature.Attributes.ContainsKeyValue("key1", "value1"));
+            geometry = feature.Geometry;
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<Point>(geometry);
+        }
+
+        /// <summary>
         /// Tests serializing a feature collection.
         /// </summary>
         [Test]
