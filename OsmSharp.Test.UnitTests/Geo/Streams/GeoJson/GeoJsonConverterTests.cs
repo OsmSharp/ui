@@ -352,6 +352,81 @@ namespace OsmSharp.Test.Unittests.Geo.Streams.GeoJson
         }
 
         /// <summary>
+        /// Test deserializing a multilinestring.
+        /// </summary>
+        [Test]
+        public void TestMultiLineStringDeserialization()
+        {
+            var geometry = "{\"type\":\"MultiLineString\",\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]],[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0]],[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0]]]}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiLineString>(geometry);
+            var linestrings = new List<LineString>(geometry as MultiLineString);
+            Assert.AreEqual(3, linestrings.Count);
+            Assert.AreEqual(4, linestrings[0].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[0].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[1].Latitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[1].Longitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[2].Latitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[2].Longitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[3].Longitude);
+            Assert.AreEqual(4, linestrings[1].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[1].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[1].Latitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[1].Longitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[2].Latitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[2].Longitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[3].Longitude);
+            Assert.AreEqual(4, linestrings[2].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[2].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[1].Latitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[1].Longitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[2].Latitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[2].Longitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[3].Longitude);
+
+            geometry = "{\"coordinates\":[[[0.0,0.0],[1.0,0.0],[1.0,1.0],[0.0,1.0]],[[0.0,0.0],[2.0,0.0],[2.0,2.0],[0.0,2.0]],[[0.0,0.0],[3.0,0.0],[3.0,3.0],[0.0,3.0]]],\"type\":\"MultiLineString\"}".ToGeometry();
+
+            Assert.IsNotNull(geometry);
+            Assert.IsInstanceOf<MultiLineString>(geometry);
+            linestrings = new List<LineString>(geometry as MultiLineString);
+            Assert.AreEqual(3, linestrings.Count);
+            Assert.AreEqual(4, linestrings[0].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[0].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[1].Latitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[1].Longitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[2].Latitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[2].Longitude);
+            Assert.AreEqual(1, linestrings[0].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[0].Coordinates[3].Longitude);
+            Assert.AreEqual(4, linestrings[1].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[1].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[1].Latitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[1].Longitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[2].Latitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[2].Longitude);
+            Assert.AreEqual(2, linestrings[1].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[1].Coordinates[3].Longitude);
+            Assert.AreEqual(4, linestrings[2].Coordinates.Count);
+            Assert.AreEqual(0, linestrings[2].Coordinates[0].Latitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[0].Longitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[1].Latitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[1].Longitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[2].Latitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[2].Longitude);
+            Assert.AreEqual(3, linestrings[2].Coordinates[3].Latitude);
+            Assert.AreEqual(0, linestrings[2].Coordinates[3].Longitude);
+        }
+
+        /// <summary>
         /// Tests serializing a point.
         /// </summary>
         [Test]

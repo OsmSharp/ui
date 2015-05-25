@@ -705,6 +705,35 @@ namespace OsmSharp.Geo.Streams.GeoJson
         /// <returns></returns>
         internal static MultiLineString BuildMultiLineString(List<object> coordinates)
         {
+            if (coordinates == null) { throw new ArgumentNullException(); }
+            if (coordinates.Count >= 1)
+            {
+                var multiLineStringCoordinates = new List<List<GeoCoordinate>>();
+                foreach (List<object> coordinates1 in coordinates)
+                {
+                    var lineStringCoordinates = new List<GeoCoordinate>();
+                    for (int idx = 0; idx < coordinates1.Count; idx++)
+                    {
+                        var pointCoordinate = coordinates1[idx] as List<object>;
+                        if (pointCoordinate != null &&
+                            pointCoordinate.Count == 2 &&
+                            pointCoordinate[0] is double &&
+                            pointCoordinate[1] is double)
+                        {
+                            lineStringCoordinates.Add(new Math.Geo.GeoCoordinate(
+                                (double)pointCoordinate[1], (double)pointCoordinate[0]));
+                        }
+                    }
+                    multiLineStringCoordinates.Add(lineStringCoordinates);
+                }
+
+                var multiLineStrings = new List<LineString>();
+                for (int idx = 0; idx < multiLineStringCoordinates.Count; idx++)
+                {
+                    multiLineStrings.Add(new LineString(multiLineStringCoordinates[idx]));
+                }
+                return new MultiLineString(multiLineStrings);
+            }
             throw new Exception("Invalid coordinate collection.");
         }
 
