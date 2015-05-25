@@ -62,6 +62,8 @@
     <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
       <Link>Data\SQLite\SQLite.cs</Link>
     </Compile>
+    <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
+    <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="MapView.cs">
       <Link>MapView.cs</Link>
     </Compile>

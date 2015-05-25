@@ -373,6 +373,10 @@
     <Compile Include="IO\MemoryMappedFiles\Accessors\MemoryMappedAccessorUInt64.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
+    <Compile Include="IO\Web\HttpStatusCode.cs" />
+    <Compile Include="IO\Web\HttpWebRequest.cs" />
+    <Compile Include="IO\Web\HttpWebResponse.cs" />
+    <Compile Include="IO\Web\WebException.cs" />
     <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
     <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
       <DependentUpon>gpx.xsd</DependentUpon>

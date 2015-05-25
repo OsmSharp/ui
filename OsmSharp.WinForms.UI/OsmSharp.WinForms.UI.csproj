@@ -76,6 +76,8 @@
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="IO\MemoryMappedFiles\TempMemoryMappedFile.cs" />
+    <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
+    <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="MapControl.cs">
       <SubType>UserControl</SubType>

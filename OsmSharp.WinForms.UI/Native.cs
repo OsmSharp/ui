@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.WinForms.UI.IO.Web;
 using OsmSharp.WinForms.UI.Renderer.Images;
 using System.IO;
 
@@ -37,6 +38,12 @@ namespace OsmSharp.WinForms.UI
                 {
                     return new NativeImageCache();
                 });
+
+            // register the native http webrequest.
+            OsmSharp.IO.Web.HttpWebRequest.CreateNativeWebRequest = (url) =>
+                {
+                    return new NativeHttpWebRequest(url);
+                };
         }
     }
 }

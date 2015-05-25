@@ -16,33 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Android.UI.IO.Web;
-using OsmSharp.Android.UI.Renderer.Images;
+using System;
 
-namespace OsmSharp.Android.UI
+namespace OsmSharp.IO.Web
 {
     /// <summary>
-    /// Class responsable for creating native hooks for plaform-specific functionality.
+    /// A web exception.
     /// </summary>
-    public static class Native
+    public class WebException : Exception
     {
         /// <summary>
-        /// Initializes some iOS-specifics for OsmSharp to use.
+        /// Creates a new web exception.
         /// </summary>
-        public static void Initialize()
+        /// <param name="response"></param>
+        public WebException(HttpWebResponse response)
         {
-            // intialize the native image cache factory.
-            OsmSharp.UI.Renderer.Images.NativeImageCacheFactory.SetDelegate(
-                () =>
-            {
-                return new NativeImageCache();
-            });
-
-            // register the native http webrequest.
-            OsmSharp.IO.Web.HttpWebRequest.CreateNativeWebRequest = (url) =>
-            {
-                return new NativeHttpWebRequest(url);
-            };
+            this.Response = response;
         }
+
+        /// <summary>
+        /// Gets or sets the response.
+        /// </summary>
+        public HttpWebResponse Response { get; private set; }
     }
 }

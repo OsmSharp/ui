@@ -18,6 +18,7 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Collections.Cache;
+using OsmSharp.IO.Web;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
@@ -28,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 
 namespace OsmSharp.UI.Map.Layers
@@ -212,10 +212,12 @@ namespace OsmSharp.UI.Map.Layers
                 // load the tile.
                 string url = this.FormatURL(tile);
 
-                var request = (HttpWebRequest)HttpWebRequest.Create(
-                                  url);
+                var request = HttpWebRequest.Create(url);
                 request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-                //request.Headers[HttpRequestHeader.UserAgent] = "OsmSharp/4.0";
+                if(request.IsUserAgentSupported)
+                { // set user-agent if possible.
+                    request.UserAgent = "OsmSharp/4";
+                }
 
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
 
@@ -316,7 +318,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="myResp">My resp.</param>
         /// <param name="tile">Tile.</param>
-        private void Response(WebResponse myResp, Tile tile)
+        private void Response(HttpWebResponse myResp, Tile tile)
         {
             if (_cache == null) { return; }
             try

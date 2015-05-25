@@ -41,6 +41,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
+    <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Renderer\CGContextRenderer.cs" />
     <Compile Include="Renderer\CGContextWrapper.cs" />
     <Compile Include="Log\TextViewTraceListener.cs" />
