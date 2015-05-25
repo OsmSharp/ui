@@ -126,7 +126,15 @@ namespace OsmSharp.IO.MemoryMappedFiles
                 stream.WriteByte((byte)size);
                 for (int offset = 0; offset < size; offset++)
                 {
-                    stream.Write(BitConverter.GetBytes(structure[idx + offset]), 0, 4);
+                    var bytes = BitConverter.GetBytes(structure[idx + offset]);
+                    if(stream.Position + bytes.Length <= stream.Length)
+                    { // write is possible.
+                        stream.Write(bytes, 0, 4);
+                    }
+                    else
+                    { // write went pas end of stream, return -1 to indicate failiure to write data.
+                        return -1;
+                    }
                 }
                 length++;
             }
