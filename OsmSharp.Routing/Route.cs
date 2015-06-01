@@ -241,20 +241,21 @@ namespace OsmSharp.Routing
             if (route1.Vehicle != route2.Vehicle) { throw new ArgumentException("Route vechicles do not match!"); }
 
             // get the end/start point.
-            RouteSegment end = route1.Segments[route1.Segments.Length - 1];
-            RouteSegment start = route2.Segments[0];
+            var end = route1.Segments[route1.Segments.Length - 1];
+            var endTime = end.Time;
+            var endDistance = end.Distance;
+            var start = route2.Segments[0];
 
             // only do all this if the routes are 'concatenable'.
             if (end.Latitude == start.Latitude &&
                 end.Longitude == start.Longitude)
             {
                 // construct the new route.
-                Route route = new Route();
+                var route = new Route();
 
                 // concatenate points.
-                List<RouteSegment> entries = new List<RouteSegment>();
-                // add points for the first route except the last point.
-                for (int idx = 0; idx < route1.Segments.Length - 1; idx++)
+                var entries = new List<RouteSegment>();
+                for (var idx = 0; idx < route1.Segments.Length - 1; idx++)
                 {
                     if (clone)
                     {
@@ -267,8 +268,7 @@ namespace OsmSharp.Routing
                 }
 
                 // merge last and first entry.
-                RouteSegment mergedEntry =
-                    route1.Segments[route1.Segments.Length - 1].Clone() as RouteSegment;
+                var mergedEntry = route1.Segments[route1.Segments.Length - 1].Clone() as RouteSegment;
                 mergedEntry.Type = RouteSegmentType.Along;
                 if (route2.Segments[0].Points != null && route2.Segments[0].Points.Length > 0)
                 { // merge in important points from the second route too but do not keep duplicates.
@@ -299,7 +299,7 @@ namespace OsmSharp.Routing
                 entries.Add(mergedEntry);
 
                 // add points of the next route.
-                for (int idx = 1; idx < route2.Segments.Length; idx++)
+                for (var idx = 1; idx < route2.Segments.Length; idx++)
                 {
                     if (clone)
                     {
@@ -309,20 +309,16 @@ namespace OsmSharp.Routing
                     {
                         entries.Add(route2.Segments[idx]);
                     }
+                    entries[entries.Count - 1].Distance = entries[entries.Count - 1].Distance + endDistance;
+                    entries[entries.Count - 1].Time = entries[entries.Count - 1].Time + endTime;
                 }
                 route.Segments = entries.ToArray();
 
                 // concatenate tags.
-                List<RouteTags> tags = new List<RouteTags>();
+                var tags = new List<RouteTags>();
                 if (route1.Tags != null) { tags.AddRange(route1.Tags); }
                 if (route2.Tags != null) { tags.AddRange(route2.Tags); }
                 route.Tags = tags.ToArray();
-
-                //// calculate metrics.
-                //Routing.Core.Metrics.Time.TimeCalculator calculator = new OsmSharp.Routing.Metrics.Time.TimeCalculator();
-                //Dictionary<string, double> metrics = calculator.Calculate(route);
-                //route.TotalDistance = metrics[Routing.Core.Metrics.Time.TimeCalculator.DISTANCE_KEY];
-                //route.TotalTime = metrics[Routing.Core.Metrics.Time.TimeCalculator.TIME_KEY];
 
                 // set the vehicle.
                 route.Vehicle = route1.Vehicle;
