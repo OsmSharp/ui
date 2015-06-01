@@ -273,10 +273,15 @@ namespace OsmSharp.Geo.Streams.GeoJson
             if (attributes == null) { throw new ArgumentNullException("attributes"); }
 
             writer.WriteStartObject();
+            var keys = new HashSet<string>();
             foreach (var attribute in attributes)
             {
-                writer.WritePropertyName(attribute.Key);
-                writer.WriteValue(attribute.Value);
+                if (!keys.Contains(attribute.Key))
+                {
+                    writer.WritePropertyName(attribute.Key);
+                    writer.WriteValue(attribute.Value);
+                    keys.Add(attribute.Key);
+                }
             }
             writer.WriteEndObject();
         }
