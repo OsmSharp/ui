@@ -238,7 +238,11 @@ namespace OsmSharp.Routing
             if (route2 == null) return route1;
             if (route1.Segments.Length == 0) return route2;
             if (route2.Segments.Length == 0) return route1;
-            if (route1.Vehicle != route2.Vehicle) { throw new ArgumentException("Route vechicles do not match!"); }
+            var vehicle = route1.Vehicle;
+            if (route1.Vehicle != route2.Vehicle)
+            { // vehicles are different, is possible, vehicles also set in each segment.
+                vehicle = null;
+            }
 
             // get the end/start point.
             var end = route1.Segments[route1.Segments.Length - 1];
@@ -321,7 +325,7 @@ namespace OsmSharp.Routing
                 route.Tags = tags.ToArray();
 
                 // set the vehicle.
-                route.Vehicle = route1.Vehicle;
+                route.Vehicle = vehicle;
                 return route;
             }
             else
@@ -759,6 +763,7 @@ namespace OsmSharp.Routing
                     clone.Names[idx] = this.Names[idx].Clone() as RouteTags;
                 }
             }
+            clone.Vehicle = this.Vehicle;
             return clone;
         }
 
