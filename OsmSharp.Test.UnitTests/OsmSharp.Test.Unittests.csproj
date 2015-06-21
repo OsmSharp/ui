@@ -201,6 +201,7 @@
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparizonTests.cs" />
     <Compile Include="Routing\Graph\DirectedGraphTests.cs" />
+    <Compile Include="Routing\Graph\GraphExtensionsTests.cs" />
     <Compile Include="Routing\Graph\MemoryMappedGraphTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionSerializedContractedTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />

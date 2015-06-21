@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Math.Algorithms;
 using System;
 using System.Collections.Generic;
 
@@ -24,12 +25,12 @@ namespace OsmSharp.Routing.Graph
     /// <summary>
     /// Holds extensions for graphs.
     /// </summary>
-    public static class IGraphExtensions
+    public static class GraphExtensions
     {
         /// <summary>
         /// Holds the default hilbert steps.
         /// </summary>
-        private static int DefaultHilbertSteps = 8;
+        public static int DefaultHilbertSteps = (int)System.Math.Pow(2, 18);
 
         /// <summary>
         /// Copies all data from the given graph.
@@ -70,7 +71,7 @@ namespace OsmSharp.Routing.Graph
         public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph)
             where TEdgeData : struct, IGraphEdgeData
         {
-            graph.SortHilbert(IGraphExtensions.DefaultHilbertSteps);
+            graph.SortHilbert(GraphExtensions.DefaultHilbertSteps);
         }
 
         /// <summary>
@@ -88,15 +89,17 @@ namespace OsmSharp.Routing.Graph
             uint left = 1;
             uint right = graph.VertexCount;
 
-            IGraphExtensions.SortHilbert(graph, n, left, right);
+            GraphExtensions.SortHilbert(graph, n, left, right);
         }
 
         /// <summary>
         /// Sorts the vertices in the given graph based on a hilbert curve.
         /// </summary>
         /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="graph"></param>
-        /// <param name="n"></param>
+        /// <param name="graph">The graph to sort.</param>
+        /// <param name="n">The hilbert accuracy.</param>
+        /// <param name="left">The first vertex to consider.</param>
+        /// <param name="right">The last vertex to consider.</param>
         private static void SortHilbert<TEdgeData>(GraphBase<TEdgeData> graph, int n, uint left, uint right)
             where TEdgeData : struct, IGraphEdgeData
         {
@@ -105,11 +108,11 @@ namespace OsmSharp.Routing.Graph
 
             if (left < right)
             { // left is still to the left.
-                uint pivot = IGraphExtensions.SortHilbertPartition(graph, n, left, right);
+                uint pivot = GraphExtensions.SortHilbertPartition(graph, n, left, right);
                 if (left <= pivot && pivot <= right)
                 {
-                    IGraphExtensions.SortHilbert(graph, n, left, pivot - 1);
-                    IGraphExtensions.SortHilbert(graph, n, pivot, right);
+                    GraphExtensions.SortHilbert(graph, n, left, pivot - 1);
+                    GraphExtensions.SortHilbert(graph, n, pivot, right);
                 }
             }
         }
@@ -127,19 +130,19 @@ namespace OsmSharp.Routing.Graph
             where TEdgeData : struct, IGraphEdgeData
         { // get the pivot value.
             uint start = left;
-            ulong pivotValue = graph.HilbertDistance(n, left);
+            var pivotValue = graph.HilbertDistance(n, left);
             left++;
 
             while (true)
             {
-                ulong leftValue = graph.HilbertDistance(n, left);
+                var leftValue = graph.HilbertDistance(n, left);
                 while (left <= right && leftValue <= pivotValue)
                 { // move the left to the first value bigger than pivot.
                     left++;
                     leftValue = graph.HilbertDistance(n, left);
                 }
 
-                ulong rightValue = graph.HilbertDistance(n, right);
+                var rightValue = graph.HilbertDistance(n, right);
                 while (left <= right && rightValue > pivotValue)
                 { // move the right to the first value smaller than pivot.
                     right--;
@@ -166,12 +169,12 @@ namespace OsmSharp.Routing.Graph
         /// <param name="n"></param>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public static ulong HilbertDistance<TEdgeData>(this GraphBase<TEdgeData> graph, int n, uint vertex)
+        public static long HilbertDistance<TEdgeData>(this GraphBase<TEdgeData> graph, int n, uint vertex)
             where TEdgeData : struct, IGraphEdgeData
         {
             float latitude, longitude;
             graph.GetVertex(vertex, out latitude, out longitude);
-            return OsmSharp.Math.Algorithms.HilbertCurve.HilbertDistance(latitude, longitude, n);
+            return HilbertCurve.HilbertDistance(latitude, longitude, n);
         }
 
         /// <summary>

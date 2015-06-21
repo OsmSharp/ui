@@ -45,7 +45,8 @@ namespace OsmSharp.Math.Geo.Simple
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[{0}:{1}]", this.Latitude.ToInvariantString(), this.Longitude.ToInvariantString());
+            return string.Format("[{0}, {1}]", this.Latitude.ToInvariantString(), 
+                this.Longitude.ToInvariantString());
         }
     }
 }

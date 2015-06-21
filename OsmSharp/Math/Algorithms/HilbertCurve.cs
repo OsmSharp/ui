@@ -33,11 +33,13 @@ namespace OsmSharp.Math.Algorithms
         /// <param name="longitude">The longitude.</param>
         /// <param name="n">The accuracy, used to divide the lat/lon space.</param>
         /// <returns></returns>
-        public static ulong HilbertDistance(float latitude, float longitude, int n)
+        public static long HilbertDistance(float latitude, float longitude, long n)
         {
             // calculate x, y.
-            ulong x = (ulong)(((longitude + 180) / 360.0) * n);
-            ulong y = (ulong)(((latitude + 90) / 180.0) * n);
+            var x = (long)System.Math.Floor(((longitude + 180) / 360.0) * n);
+            if (x >= n) { x = n - 1; }
+            var y = (long)System.Math.Floor(((latitude + 90) / 180.0) * n);
+            if (y >= n) { y = n - 1; }
 
             // calculate hilbert value for x-y and n.
             return HilbertCurve.xy2d(n, x, y);
@@ -50,43 +52,61 @@ namespace OsmSharp.Math.Algorithms
         /// <param name="x">The x-coordinate.</param>
         /// <param name="y">The y-coordinate.</param>
         /// <returns></returns>
-        private static ulong xy2d(int n, ulong x, ulong y)
+        private static long xy2d(long n, long x, long y)
         {
-            int rx, ry, s;
-            ulong d = 0;
+            long rx, ry, s;
+            long d = 0;
             for (s = n / 2; s > 0; s /= 2)
             {
-                rx = (x & (ulong)s) > 0 ? 1 : 0;
-                ry = (y & (ulong)s) > 0 ? 1 : 0;
-                d += (ulong)(s * s * ((3 * rx) ^ ry));
+                rx = (x & s) > 0 ? 1 : 0;
+                ry = (y & s) > 0 ? 1 : 0;
+                d += (s * s * ((3 * rx) ^ ry));
                 rot(s, ref x, ref y, rx, ry);
             }
             return d;
         }
 
         /// <summary>
+        /// Calculates x and y from hilbert distance.
+        /// </summary>
+        /// <param name="n">Size of space (height/width).</param>
+        /// <param name="d">The hibert distance.</param>
+        /// <param name="x">The output x-coordinate.</param>
+        /// <param name="y">The output y-coordinate.</param>
+        private static void d2xy(long n, long d, out long x, long y)
+        {
+            long rx, ry, s;
+            long t = d;
+            x = y = 0;
+            for (s = 1; s < n; s *= 2)
+            {
+                rx = 1 & (t / 2);
+                ry = 1 & (t ^ rx);
+                rot(s, ref x, ref y, rx, ry);
+                x += (s * rx);
+                y += (s * ry);
+                t /= 4;
+            }
+        }
+
+        /// <summary>
         /// Rotate/flip a quadrant appropriately
         /// </summary>
-        /// <param name="n"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="rx"></param>
-        /// <param name="ry"></param>
-        private static void rot(int n, ref ulong x, ref ulong y, int rx, int ry)
+        private static void rot(long n, ref long x, ref long y, long rx, long ry)
         {
             if (ry == 0)
             {
                 if (rx == 1)
                 {
-                    x = (ulong)n - 1 - x;
-                    y = (ulong)n - 1 - y;
+                    x = n - 1 - x;
+                    y = n - 1 - y;
                 }
 
                 //Swap x and y
-                ulong t = x;
+                var t = x;
                 x = y;
                 y = t;
             }
-        }
+        } 
     }
 }

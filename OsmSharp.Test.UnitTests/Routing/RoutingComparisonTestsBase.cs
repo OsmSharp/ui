@@ -82,10 +82,6 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Tests one route.
         /// </summary>
-        /// <param name="embeddedName"></param>
-        /// <param name="contract"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
         protected void TestCompareOne(string embeddedName, GeoCoordinate from, GeoCoordinate to)
         {
             // build the routing settings.

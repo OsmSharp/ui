@@ -97,7 +97,7 @@
     <Compile Include="Graph\Routing\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializerBase.cs" />
     <Compile Include="IEdgeMatcher.cs" />
-    <Compile Include="Graph\IGraphExtensions.cs" />
+    <Compile Include="Graph\GraphExtensions.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\DutchLanguageGenerator.cs" />

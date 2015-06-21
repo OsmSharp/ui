@@ -871,10 +871,10 @@ namespace OsmSharp.Routing.Osm.Streams
         {
             base.OnAfterPull();
 
-            //// sort vertices.
-            //OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
-            //    "Spatially sorting vertices...");
-            //_graph.SortHilbert();
+            // sort vertices.
+            OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
+                "Spatially sorting vertices...");
+            _graph.SortHilbert();
 
             // execute pre-processor.
             var preProcessor = this.GetPreprocessor();
