@@ -332,5 +332,162 @@ namespace OsmSharp.Test.Unittests.Routing.Graph
                 }
             }
         }
+
+        /// <summary>
+        /// Tests the hilbert search function.
+        /// </summary>
+        [Test]
+        public void SearchHilbertTest4()
+        {
+            var n = GraphExtensions.DefaultHilbertSteps;
+
+            // build graph.
+            var graph = new Graph<Edge>();
+            var vertex1 = graph.AddVertex(-90, -180);
+            var vertex2 = graph.AddVertex(-90, -60);
+            var vertex3 = graph.AddVertex(-30, -60);
+            var vertex4 = graph.AddVertex(-30, -180);
+            var vertex5 = graph.AddVertex(30, -180);
+            var vertex6 = graph.AddVertex(90, -180);
+            var vertex7 = graph.AddVertex(90, -60);
+            var vertex8 = graph.AddVertex(30, -60);
+            var vertex9 = graph.AddVertex(30, 60);
+            var vertex10 = graph.AddVertex(90, 60);
+            var vertex11 = graph.AddVertex(90, 180);
+            var vertex12 = graph.AddVertex(30, 180);
+            var vertex13 = graph.AddVertex(-30, 180);
+            var vertex14 = graph.AddVertex(-30, 60);
+            var vertex15 = graph.AddVertex(-90, 60);
+            var vertex16 = graph.AddVertex(-90, 180);
+
+            // search vertex.
+            uint vertex;
+            int count;
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-90, -180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex1, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-90, -60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex2, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-30, -60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex3, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-30, -180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex4, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(30, -180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex5, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(90, -180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex6, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(90, -60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex7, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(30, -60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex8, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(30, 60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex9, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(90, 60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex10, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(90, 180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex11, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(30, 180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex12, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-30, 180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex13, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-30, 60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex14, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-90, 60, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex15, vertex);
+            Assert.AreEqual(1, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-90, 180, n), n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex16, vertex);
+            Assert.AreEqual(1, count);
+            
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(30, 60, n) + 1, n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex9, vertex);
+            Assert.AreEqual(0, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(90, -180, n) + 1, n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex6, vertex);
+            Assert.AreEqual(0, count);
+
+            Assert.IsTrue(graph.SearchHilbert(HilbertCurve.HilbertDistance(-30, 60, n) + 1, n, 1, 16, out vertex, out count));
+            Assert.AreEqual(vertex14, vertex);
+            Assert.AreEqual(0, count);
+        }
+
+        /// <summary>
+        /// Tests the hilbert search function.
+        /// </summary>
+        [Test]
+        public void SearchHilbertTest5()
+        {
+            var n = GraphExtensions.DefaultHilbertSteps;
+
+            // build graph.
+            var graph = new Graph<Edge>();
+            var vertex1 = graph.AddVertex(-90, -180);
+            var vertex2 = graph.AddVertex(-90, -60);
+            var vertex3 = graph.AddVertex(-30, -60);
+            var vertex4 = graph.AddVertex(-30, -180);
+            var vertex5 = graph.AddVertex(30, -180);
+            var vertex6 = graph.AddVertex(90, -180);
+            var vertex7 = graph.AddVertex(90, -60);
+            var vertex8 = graph.AddVertex(30, -60);
+            var vertex9 = graph.AddVertex(30, 60);
+            var vertex10 = graph.AddVertex(90, 60);
+            var vertex11 = graph.AddVertex(90, 180);
+            var vertex12 = graph.AddVertex(30, 180);
+            var vertex13 = graph.AddVertex(-30, 180);
+            var vertex14 = graph.AddVertex(-30, 60);
+            var vertex15 = graph.AddVertex(-90, 60);
+            var vertex16 = graph.AddVertex(-90, 180);
+
+            // search.
+            var found = graph.SearchHilbert(30, 60, 0.001f);
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Count);
+            Assert.AreEqual(vertex9, found[0]);
+
+            found = graph.SearchHilbert(30, -180, 0.001f);
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Count);
+            Assert.AreEqual(vertex5, found[0]);
+
+            found = graph.SearchHilbert(30, 180, 0.001f);
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Count);
+            Assert.AreEqual(vertex12, found[0]);
+
+            found = graph.SearchHilbert(-30, -60, 0.001f);
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Count);
+            Assert.AreEqual(vertex3, found[0]);
+        }
     }
 }

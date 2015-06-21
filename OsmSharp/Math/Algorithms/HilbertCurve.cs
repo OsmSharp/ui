@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 namespace OsmSharp.Math.Algorithms
 {
     /// <summary>
@@ -29,9 +30,6 @@ namespace OsmSharp.Math.Algorithms
         /// <summary>
         /// Calculates hilbert distance.
         /// </summary>
-        /// <param name="latitude">The latitude.</param>
-        /// <param name="longitude">The longitude.</param>
-        /// <param name="n">The accuracy, used to divide the lat/lon space.</param>
         /// <returns></returns>
         public static long HilbertDistance(float latitude, float longitude, long n)
         {
@@ -43,6 +41,29 @@ namespace OsmSharp.Math.Algorithms
 
             // calculate hilbert value for x-y and n.
             return HilbertCurve.xy2d(n, x, y);
+        }
+
+        /// <summary>
+        /// Calculates all distinct hilbert distances inside of the given bounding box.
+        /// </summary>
+        /// <returns></returns>
+        public static List<long> HilbertDistances(float minLatitude, float minLongitude,
+            float maxLatitude, float maxLongitude, long n)
+        {
+            var deltaLat = 180.0f / n;
+            var deltaLon = 360.0f / n;
+            var distances = new List<long>((int)(
+                ((maxLatitude - minLatitude) / deltaLat) *
+                ((maxLongitude - minLongitude) / deltaLon)));
+
+            for(var latitude = minLatitude; latitude < maxLatitude; latitude = latitude + deltaLat)
+            {
+                for (var longitude = minLongitude; longitude < maxLongitude; longitude = longitude + deltaLon)
+                {
+                    distances.Add(HilbertCurve.HilbertDistance(latitude, longitude, n));
+                }
+            }
+            return distances;
         }
 
         /// <summary>

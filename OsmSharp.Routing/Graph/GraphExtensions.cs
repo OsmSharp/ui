@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the default hilbert steps.
         /// </summary>
-        public static int DefaultHilbertSteps = (int)System.Math.Pow(2, 18);
+        public static int DefaultHilbertSteps = (int)System.Math.Pow(2, 15);
 
         /// <summary>
         /// Copies all data from the given graph.
@@ -63,11 +63,153 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Searches the graph for nearby vertices assuming it has been sorted.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        public static List<uint> SearchHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, float latitude, float longitude,
+            float offset)
+            where TEdgeData : struct, IGraphEdgeData
+        {
+            return GraphExtensions.SearchHilbert(graph, GraphExtensions.DefaultHilbertSteps, latitude, longitude, offset);
+        }
+
+        /// <summary>
+        /// Searches the graph for nearby vertices assuming it has been sorted.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        public static List<uint> SearchHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, int n, float latitude, float longitude,
+            float offset)
+            where TEdgeData : struct, IGraphEdgeData
+        {
+            var targets = HilbertCurve.HilbertDistances(
+                System.Math.Max(latitude - offset, -90), 
+                System.Math.Max(longitude - offset, -180),
+                System.Math.Min(latitude + offset, 90), 
+                System.Math.Min(longitude + offset, 180), n);
+            targets.Sort();
+            var vertices = new List<uint>();
+
+            var targetIdx = 0;
+            var vertex1 = (uint)1;
+            var vertex2 = (uint)graph.VertexCount;
+            float vertexLat, vertexLon;
+            while(targetIdx < targets.Count)
+            {
+                uint vertex;
+                int count;
+                if(GraphExtensions.SearchHilbert(graph, targets[targetIdx], n, vertex1, vertex2, out vertex, out count))
+                { // the search was successful.
+                    if(count > 0)
+                    { // there have been vertices found.
+                        if (graph.GetVertex(vertex, out vertexLat, out vertexLon))
+                        { // the vertex was found.
+                            if(System.Math.Abs(latitude - vertexLat) < offset &&
+                               System.Math.Abs(longitude - vertexLon) < offset)
+                            { // within offset.
+                                vertices.Add(vertex);
+                            }
+                        }
+                    }
+
+                    // update vertex1.
+                    vertex1 = vertex;
+                }
+
+                // move to next target.
+                targetIdx++;
+            }
+            return vertices;
+        }
+
+        /// <summary>
+        /// Searches the graph for nearby vertices assuming it has been sorted.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        public static bool SearchHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, long hilbert, int n,
+            uint vertex1, uint vertex2, out uint vertex, out int count)
+            where TEdgeData : struct, IGraphEdgeData
+        {
+            var hilbert1 = GraphExtensions.HilbertDistance(graph, n, vertex1);
+            var hilbert2 = GraphExtensions.HilbertDistance(graph, n, vertex2);
+            while (vertex1 <= vertex2)
+            {
+                // check the current hilbert distances.
+                if(hilbert1 > hilbert2)
+                { // situation is impossible and probably the graph is not sorted.
+                    throw new Exception("Graph not sorted: Binary search using hilbert distance not possible.");
+                }
+                if (hilbert1 == hilbert)
+                { // found at hilbert1.
+                    var lower = vertex1;
+                    hilbert1 = GraphExtensions.HilbertDistance(graph, n, lower - 1);
+                    while (hilbert1 == hilbert)
+                    {
+                        lower--;
+                        hilbert1 = GraphExtensions.HilbertDistance(graph, n, lower - 1);
+                    }
+                    var upper = vertex1;
+                    hilbert1 = GraphExtensions.HilbertDistance(graph, n, upper - 1);
+                    while (hilbert1 == hilbert)
+                    {
+                        upper++;
+                        hilbert1 = GraphExtensions.HilbertDistance(graph, n, upper - 1);
+                    }
+                    vertex = lower;
+                    count = (int)(upper - lower) + 1;
+                    return true;
+                }
+                if (hilbert2 == hilbert)
+                { // found at hilbert2.
+                    var lower = vertex2;
+                    hilbert2 = GraphExtensions.HilbertDistance(graph, n, lower - 1);
+                    while (hilbert2 == hilbert)
+                    {
+                        lower--;
+                        hilbert2 = GraphExtensions.HilbertDistance(graph, n, lower - 1);
+                    }
+                    var upper = vertex2;
+                    hilbert2 = GraphExtensions.HilbertDistance(graph, n, upper + 1);
+                    while (hilbert2 == hilbert)
+                    {
+                        upper++;
+                        hilbert2 = GraphExtensions.HilbertDistance(graph, n, upper + 1);
+                    }
+                    vertex = lower;
+                    count = (int)(upper - lower) + 1;
+                    return true;
+                }
+                if(hilbert1 == hilbert2 ||
+                    vertex1 == vertex2 ||
+                    vertex1 == vertex2 - 1)
+                { // search is finished.
+                    vertex = vertex1;
+                    count = 0;
+                    return true;
+                }
+
+                // Binary search: calculate hilbert distance of the middle.
+                var vertexMiddle = vertex1 + (uint)((vertex2 - vertex1) / 2);
+                var hilbertMiddle = GraphExtensions.HilbertDistance(graph, n, vertexMiddle);
+                if(hilbert <= hilbertMiddle)
+                { // target is in first part.
+                    vertex2 = vertexMiddle;
+                    hilbert2 = hilbertMiddle;
+                }
+                else
+                { // target is in the second part.
+                    vertex1 = vertexMiddle;
+                    hilbert1 = hilbertMiddle;
+                }
+            }
+            vertex = vertex1;
+            count = 0;
+            return false;
+        }
+
+        /// <summary>
         /// Sorts the vertices in the given graph based on a hilbert curve using the default step count.
         /// </summary>
         /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="graph"></param>
-        /// <param name="n"></param>
         public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph)
             where TEdgeData : struct, IGraphEdgeData
         {
@@ -78,8 +220,6 @@ namespace OsmSharp.Routing.Graph
         /// Sorts the vertices in the given graph based on a hilbert curve.
         /// </summary>
         /// <typeparam name="TEdgeData"></typeparam>
-        /// <param name="graph"></param>
-        /// <param name="n"></param>
         public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, int n)
             where TEdgeData : struct, IGraphEdgeData
         {

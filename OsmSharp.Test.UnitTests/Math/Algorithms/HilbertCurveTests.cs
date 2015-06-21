@@ -32,7 +32,7 @@ namespace OsmSharp.Test.Unittests.Math.Algorithms
     public class HilbertCurveTests
     {
         /// <summary>
-        /// Tests simple curve calculations.
+        /// Tests simple distance calculations.
         /// </summary>
         [Test]
         public void TestHilbertDistance2()
@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Math.Algorithms
         }
 
         /// <summary>
-        /// Tests simple curve calculations.
+        /// Tests simple distance calculations.
         /// </summary>
         [Test]
         public void TestHilbertDistance4()
@@ -68,6 +68,33 @@ namespace OsmSharp.Test.Unittests.Math.Algorithms
             Assert.AreEqual(13, HilbertCurve.HilbertDistance(-90 + (45 * 1) + 25.5f, -180 + (90 * 2) + 45f, 4));
             Assert.AreEqual(14, HilbertCurve.HilbertDistance(-90 + (45 * 0) + 25.5f, -180 + (90 * 2) + 45f, 4));
             Assert.AreEqual(15, HilbertCurve.HilbertDistance(-90 + (45 * 0) + 25.5f, -180 + (90 * 3) + 45f, 4));
+        }
+
+        /// <summary>
+        /// Tests simple curve calculations.
+        /// </summary>
+        [Test]
+        public void TestHilbertDistances1()
+        {
+            var distances = HilbertCurve.HilbertDistances(-90, -180, 90, 180, 2);
+            var expectedDistances = new long[] { 0, 1, 2, 3 };
+
+            Assert.AreEqual(expectedDistances.Length, distances.Count);
+            foreach(var expectedDistance in expectedDistances)
+            {
+                Assert.IsTrue(distances.Remove(expectedDistance));
+            }
+            Assert.AreEqual(0, distances.Count);
+
+            distances = HilbertCurve.HilbertDistances(-90, -180, 90, 180, 4);
+            expectedDistances = new long[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            Assert.AreEqual(expectedDistances.Length, distances.Count);
+
+            foreach (var expectedDistance in expectedDistances)
+            {
+                Assert.IsTrue(distances.Remove(expectedDistance));
+            }
+            Assert.AreEqual(0, distances.Count);
         }
     }
 }
