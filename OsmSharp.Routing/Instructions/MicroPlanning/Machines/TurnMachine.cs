@@ -112,13 +112,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                             }
                             return false;
                         case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
-                            // test to see if this is cross road or anything.
-                            int left_count = MicroPlannerHelper.GetLeft(point, (machine as MicroPlannerMachine).Planner.Interpreter);
-                            int right_count = MicroPlannerHelper.GetRight(point, (machine as MicroPlannerMachine).Planner.Interpreter);
-                            if (left_count > 0 && right_count > 0)
-                            { // this straight-on is important.
-                                return true;
-                            }
                             return false;
                     }
                     return true;
@@ -166,7 +159,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // descide what type of instruction to request be generated.  
-            var metaData = new Dictionary<string, object>();         
+            var metaData = new Dictionary<string, object>();
             var streetFrom = latestArc.Tags;
             var streetTo = latestPoint.Next.Tags;
             var streetCountTurn = 0;
