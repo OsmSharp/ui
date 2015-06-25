@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.IO;
+using OsmSharp.Math.Random;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -175,15 +176,22 @@ namespace OsmSharp
         /// Shuffles the list using Fisher-Yates shuffle.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random rng = new Random();
-            int n = list.Count;
+            list.Shuffle(OsmSharp.Math.Random.StaticRandomGenerator.Get());
+        }
+
+        /// <summary>
+        /// Shuffles the list using Fisher-Yates shuffle.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Shuffle<T>(this IList<T> list, IRandomGenerator random)
+        {
+            var n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                var k = random.Generate(n + 1);
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
