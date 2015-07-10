@@ -354,11 +354,17 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates a route between one source and many target points.
         /// </summary>
-        /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        {
+            return this.CalculateOneToManyWeight(vehicle, source, targets, new HashSet<int>());
+        }
+
+        /// <summary>
+        /// Calculates a route between one source and many target points.
+        /// </summary>
+        /// <returns></returns>
+        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             foreach (var target in targets)
             {
@@ -374,17 +380,23 @@ namespace OsmSharp.Routing
                 }
             }
 
-            return _router.CalculateOneToManyWeight(vehicle, source, targets);
+            return _router.CalculateOneToManyWeight(vehicle, source, targets, invalidSet);
         }
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
         /// </summary>
-        /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        {
+            return this.CalculateManyToManyWeight(vehicle, sources, targets, new HashSet<int>());
+        }
+
+        /// <summary>
+        /// Calculates all routes between many sources/targets.
+        /// </summary>
+        /// <returns></returns>
+        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             foreach (var source in sources)
             {
@@ -403,7 +415,7 @@ namespace OsmSharp.Routing
                 }
             }
 
-            return _router.CalculateManyToManyWeight(vehicle, sources, targets);
+            return _router.CalculateManyToManyWeight(vehicle, sources, targets, invalidSet);
         }
 
         /// <summary>
