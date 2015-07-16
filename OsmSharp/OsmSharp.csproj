@@ -96,6 +96,7 @@
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\Sorting\QuickSort.cs" />
     <Compile Include="Collections\SparseArray.cs" />
     <Compile Include="Collections\SparseLargeBitArray32.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />

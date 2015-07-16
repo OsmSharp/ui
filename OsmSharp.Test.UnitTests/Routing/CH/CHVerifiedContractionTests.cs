@@ -19,9 +19,9 @@
 using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.CH.Preprocessing;
+using OsmSharp.Routing.CH.Preprocessing.Witnesses;
+using OsmSharp.Routing.CH.Preprocessing.Ordering;
 using OsmSharp.Routing.CH;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
@@ -63,7 +63,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(3);
 
@@ -139,7 +139,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             graph.AddEdge(vertex3, vertex2, new CHEdgeData(1, false, true, true, 10));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(3);
 
@@ -237,7 +237,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             Assert.IsFalse(graph.ContainsEdges(vertex5, vertex5));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph, 
+            var preProcessor = new CHPreprocessor(graph, 
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 
@@ -321,7 +321,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             graph.AddEdge(vertex4, vertex2, new CHEdgeData(1, false, true, true, 15));
 
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
             preProcessor.Contract(4);
 
@@ -365,7 +365,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);
@@ -418,7 +418,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);
@@ -473,7 +473,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             var graph = new DirectedGraph<CHEdgeData>();
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(graph,
+            var preProcessor = new CHPreprocessor(graph,
                 new EdgeDifferenceContractedSearchSpace(graph, witnessCalculator), witnessCalculator);
 
             var vertex1 = graph.AddVertex(1, 0);

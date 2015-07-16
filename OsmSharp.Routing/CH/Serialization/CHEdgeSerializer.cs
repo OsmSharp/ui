@@ -20,7 +20,7 @@ using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Serialization;
 using OsmSharp.Routing.Vehicles;

@@ -21,7 +21,7 @@
 //using OsmSharp.Osm.Xml.Streams;
 //using OsmSharp.Routing;
 //using OsmSharp.Routing.CH;
-//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Routing.CH.Preprocessing;
 //using OsmSharp.Routing.Graph.Routing;
 //using OsmSharp.Routing.Osm.Interpreter;
 //using OsmSharp.Routing.Osm.Streams.Graphs;

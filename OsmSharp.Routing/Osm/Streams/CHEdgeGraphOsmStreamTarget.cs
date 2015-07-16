@@ -24,10 +24,11 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Preprocessing;
+using OsmSharp.Routing.CH.Preprocessing.Ordering;
+using OsmSharp.Routing.CH.Preprocessing.Witnesses;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -46,17 +47,26 @@ namespace OsmSharp.Routing.Osm.Streams
         /// Holds the vehicle profile this pre-processing target is for.
         /// </summary>
         private readonly Vehicle _vehicle;
+        
+        /// <summary>
+        /// Creates a CH data processing target.
+        /// </summary>
+        public CHEdgeGraphOsmStreamTarget(RouterDataSourceBase<CHEdgeData> graph,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
+            : this(graph, interpreter, tagsIndex, vehicle, (g) =>
+            {
+                return new DefaultPreprocessor(g);
+            })
+        {
+
+        }
 
         /// <summary>
         /// Creates a CH data processing target.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(RouterDataSourceBase<CHEdgeData> graph,
-            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
-            : base(graph, interpreter, tagsIndex)
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle, Func<GraphBase<CHEdgeData>, IPreprocessor> createPreprocessor)
+            : base(graph, interpreter, tagsIndex, createPreprocessor)
         {
             if (!graph.IsDirected) { throw new ArgumentOutOfRangeException("Only directed graphs can be used for contraction hiearchies."); }
 
@@ -154,17 +164,6 @@ namespace OsmSharp.Routing.Osm.Streams
             ITagsIndex tagsIndex, TagsCollectionBase tags)
         {
             return _vehicle.CanTraverse(tags);
-        }
-
-        /// <summary>
-        /// Returns the preprocessor.
-        /// </summary>
-        /// <returns></returns>
-        public override Graph.PreProcessor.IPreProcessor GetPreprocessor()
-        {
-            var witnessCalculator = new DykstraWitnessCalculator();
-            var edgeDifference = new EdgeDifferenceContractedSearchSpace(this.Graph, witnessCalculator);
-            return new CHPreProcessor(this.Graph, edgeDifference, witnessCalculator);
         }
 
         #region Static Processing Functions

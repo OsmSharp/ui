@@ -112,36 +112,6 @@ namespace OsmSharp.Test.Unittests.Routing
         }
 
         /// <summary>
-        /// Tests one failing route specifically again.
-        /// </summary>
-        [Test]
-        public void TestRegression2Regression1()
-        {
-            this.TestCompareOne("test_routing_regression2.osm", new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
-                new OsmSharp.Math.Geo.GeoCoordinate(51.0206158, 3.9932989));
-        }
-
-        /// <summary>
-        /// Tests one failing route specifically again.
-        /// </summary>
-        [Test]
-        public void TestRegression2Regression2()
-        {
-            this.TestCompareOne("test_routing_regression2.osm", 
-                new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
-                new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
-        }
-
-        /// <summary>
-        /// Compares all routes possible against a reference implementation.
-        /// </summary>
-        [Test]
-        public void TestRegression2()
-        {
-            this.TestCompareAll("test_routing_regression2.osm");
-        }
-
-        /// <summary>
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]

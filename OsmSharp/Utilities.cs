@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -536,7 +536,6 @@ namespace OsmSharp
             return longArray;
         }
 
-
         /// <summary>
         /// Delta encodes an array.
         /// </summary>
@@ -647,7 +646,7 @@ namespace OsmSharp
         }
 
         /// <summary>
-        /// 
+        /// Typed try get value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dictionary"></param>

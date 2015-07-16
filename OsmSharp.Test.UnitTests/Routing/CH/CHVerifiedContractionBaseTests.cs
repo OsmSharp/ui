@@ -23,9 +23,9 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Preprocessing;
+using OsmSharp.Routing.CH.Preprocessing.Ordering;
+using OsmSharp.Routing.CH.Preprocessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -189,12 +189,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(_data,
+            var preProcessor = new CHPreprocessor(_data,
                 new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += 
-                new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+                new CHPreprocessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
             preProcessor.OnAfterContractionEvent += 
-                new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+                new CHPreprocessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
             preProcessor.Start();
         }
 

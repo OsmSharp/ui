@@ -110,16 +110,16 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestResolvedTags()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(
                 data, interpreter, basicRouter);
-            RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            var source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
-            RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            var target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            Route route = router.Calculate(Vehicle.Car, source, target);
+            var route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Segments.Length);
 
@@ -175,14 +175,14 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void DoTestShortest1()
         {
             var interpreter = new OsmRoutingInterpreter();
-            IRoutingAlgorithmData<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
-            IRoutingAlgorithm<TEdgeData> basicRouter = this.BuildBasicRouter(data);
-            Router router = this.BuildRouter(
+            var data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(
                 data, interpreter, basicRouter);
-            RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
-            RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
+            var source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            var target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
 
-            Route route = router.Calculate(Vehicle.Car, source, target);
+            var route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Segments.Length);
         }

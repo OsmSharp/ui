@@ -16,16 +16,39 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.Graph.PreProcessor
+using System;
+using OsmSharp.Logging;
+using System.Diagnostics;
+
+namespace OsmSharp.WinForms.UI.Logging
 {
     /// <summary>
-    /// Abstract representation of a pre-processor.
+    /// A log trace listener that writes message to the debug.
     /// </summary>
-    public interface IPreprocessor
+    public class DebugTraceListener : OsmSharp.Logging.TraceListener
     {
         /// <summary>
-        /// Starts the pre-processing.
+        /// Creates a new debug trace listener.
         /// </summary>
-        void Start();
+        public DebugTraceListener()
+        {
+
+        }
+
+        /// <summary>
+        /// Writes the given message to the debug.
+        /// </summary>
+        public override void Write(string message)
+        {
+            Debug.Write(message);
+        }
+
+        /// <summary>
+        /// Writes the given message to the debug.
+        /// </summary>
+        public override void WriteLine(string message)
+        {
+            Debug.WriteLine(message);
+        }
     }
 }

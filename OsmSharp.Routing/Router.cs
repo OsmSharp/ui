@@ -21,7 +21,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
@@ -68,11 +68,9 @@ namespace OsmSharp.Routing
 
             // read from the OSM-stream.
             var memoryData = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            memoryData.DropVertexIndex();
             var targetData = new GraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
-            memoryData.RebuildVertexIndex();
 
             // creates the edge router.
             var typedRouter = new TypedRouterEdge(

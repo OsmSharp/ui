@@ -28,11 +28,13 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Vehicles;
+using System;
 using System.Collections.Generic;
 
 namespace OsmSharp.Routing.Osm.Streams
@@ -43,50 +45,21 @@ namespace OsmSharp.Routing.Osm.Streams
     public abstract class GraphOsmStreamTargetBase<TEdgeData> : OsmStreamTarget
         where TEdgeData : struct, IGraphEdgeData 
     {
-        /// <summary>
-        /// Holds the dynamic graph.
-        /// </summary>
         private readonly RouterDataSourceBase<TEdgeData> _graph;
-
-        /// <summary>
-        /// The interpreter for osm data.
-        /// </summary>
         private readonly IOsmRoutingInterpreter _interpreter;
-
-        /// <summary>
-        /// Holds the tags index.
-        /// </summary>
         private ITagsIndex _tagsIndex;
-
-        /// <summary>
-        /// Holds the osm data cache.
-        /// </summary>
         private readonly OsmDataCache _dataCache;
-
-        /// <summary>
-        /// True when this target is in pre-index mode.
-        /// </summary>
         private bool _preIndexMode;
-
-        /// <summary>
-        /// Holds the collect intermediates flag.
-        /// </summary>
         private bool _collectIntermediates;
-
-        /// <summary>
-        /// Holds the store tags flag.
-        /// </summary>
         protected bool _storeTags = true;
+        private readonly Func<GraphBase<TEdgeData>, IPreprocessor> _createPreprocessor;
 
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="graph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="tagsIndex"></param>
         protected GraphOsmStreamTargetBase(RouterDataSourceBase<TEdgeData> graph,
-            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex)
-            : this(graph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Func<GraphBase<TEdgeData>, IPreprocessor> createPreprocessor)
+            : this(graph, interpreter, tagsIndex, createPreprocessor, new HugeDictionary<long, uint>(), true, new CoordinateIndex())
         {
 
         }
@@ -94,15 +67,9 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="graph">The graph that will be filled.</param>
-        /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="tagsIndex"></param>
-        /// <param name="idTransformations"></param>
-        /// <param name="collectIntermediates"></param>
-        /// <param name="coordinates"></param>
         protected GraphOsmStreamTargetBase(
             RouterDataSourceBase<TEdgeData> graph, IOsmRoutingInterpreter interpreter,
-            ITagsIndex tagsIndex, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
+            ITagsIndex tagsIndex, Func<GraphBase<TEdgeData>, IPreprocessor> createPreprocessor, HugeDictionary<long, uint> idTransformations, bool collectIntermediates, ICoordinateIndex coordinates)
         {
             _graph = graph;
             _interpreter = interpreter;
@@ -114,6 +81,7 @@ namespace OsmSharp.Routing.Osm.Streams
             _relevantNodes = new OsmSharp.Collections.LongIndex.LongIndex.LongIndex();
             _restricedWays = new HashSet<long>();
             _collapsedNodes = new Dictionary<long, KeyValuePair<KeyValuePair<long, uint>, KeyValuePair<long, uint>>>();
+            _createPreprocessor = createPreprocessor;
 
             _collectIntermediates = collectIntermediates;
             _dataCache = new OsmDataCacheMemory();
@@ -443,11 +411,6 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Adds an edge.
         /// </summary>
-        /// <param name="forward"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="tags"></param>
-        /// <param name="intermediates"></param>
         protected virtual void AddRoadEdge(TagsCollectionBase tags, uint from, uint to, List<GeoCoordinateSimple> intermediates)
         {
             float latitude;
@@ -605,11 +568,6 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Gets an edge from the given graph taking into account 'can have duplicates'.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="existingData"></param>
-        /// <param name="shape"></param>
         /// <returns></returns>
         private bool GetEdge(GraphBase<TEdgeData> graph, uint from, uint to, out TEdgeData existingData, out ICoordinateCollection shape)
         {
@@ -666,7 +624,6 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Adds a given relation.
         /// </summary>
-        /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
             if (_interpreter.IsRestriction(OsmGeoType.Relation, relation.Tags))
@@ -789,15 +746,6 @@ namespace OsmSharp.Routing.Osm.Streams
         }
 
         /// <summary>
-        /// Returns a pre-processor if needed.
-        /// </summary>
-        /// <returns></returns>
-        public virtual IPreProcessor GetPreprocessor()
-        {
-            return null;
-        }
-
-        /// <summary>
         /// Registers the source for this target.
         /// </summary>
         /// <param name="source"></param>
@@ -871,18 +819,16 @@ namespace OsmSharp.Routing.Osm.Streams
         {
             base.OnAfterPull();
 
-            // sort vertices.
-            OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
-                "Spatially sorting vertices...");
-            _graph.SortHilbert();
-
             // execute pre-processor.
-            var preProcessor = this.GetPreprocessor();
-            if (preProcessor != null)
-            { // there is a pre-processor, trigger execution.
-                OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
-                    "Starting preprocessing...");
-                preProcessor.Start();
+            if (_createPreprocessor != null)
+            { // there is a function to create a preprocessor.
+                var preprocessor = _createPreprocessor(_graph);
+                if (preprocessor != null)
+                { // there is a pre-processor, trigger execution.
+                    OsmSharp.Logging.Log.TraceEvent("GraphOsmStreamTargetBase", Logging.TraceEventType.Information,
+                        "Starting preprocessing...");
+                    preprocessor.Start();
+                }
             }
 
             // trim the graph.

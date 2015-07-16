@@ -56,7 +56,12 @@ namespace OsmSharp.Math.Algorithms
                 ((maxLatitude - minLatitude) / deltaLat) *
                 ((maxLongitude - minLongitude) / deltaLon)));
 
-            for(var latitude = minLatitude; latitude < maxLatitude; latitude = latitude + deltaLat)
+            minLatitude = System.Math.Max(minLatitude - deltaLat, -90);
+            minLongitude = System.Math.Max(minLongitude - deltaLon, -180);
+            maxLatitude = System.Math.Min(maxLatitude + deltaLat, 90);
+            maxLongitude = System.Math.Min(maxLongitude + deltaLon, 180);
+
+            for (var latitude = minLatitude; latitude < maxLatitude; latitude = latitude + deltaLat)
             {
                 for (var longitude = minLongitude; longitude < maxLongitude; longitude = longitude + deltaLon)
                 {

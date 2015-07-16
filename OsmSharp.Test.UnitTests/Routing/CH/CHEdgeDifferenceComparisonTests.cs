@@ -22,9 +22,9 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Preprocessing;
+using OsmSharp.Routing.CH.Preprocessing.Ordering;
+using OsmSharp.Routing.CH.Preprocessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams;
@@ -113,35 +113,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         public void TestCHEdgeDifferenceRegression1()
         {
             this.TestCompareAll("test_routing_regression1.osm");
-        }
-
-        /// <summary>
-        /// Tests one failing route specifically again.
-        /// </summary>
-        [Test]
-        public void TestCHEdgeDifferenceRegression2Regression1()
-        {
-            this.TestCompareOne("test_routing_regression2.osm", new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
-                new OsmSharp.Math.Geo.GeoCoordinate(51.0206158, 3.9932989));
-        }
-
-        /// <summary>
-        /// Tests one failing route specifically again.
-        /// </summary>
-        [Test]
-        public void TestCHEdgeDifferenceRegression2Regression2()
-        {
-            this.TestCompareOne("test_routing_regression2.osm", new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
-                new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
-        }
-
-        /// <summary>
-        /// Compares all routes possible against a reference implementation.
-        /// </summary>
-        [Test]
-        public void TestCHEdgeDifferenceRegression2()
-        {
-            this.TestCompareAll("test_routing_regression2.osm");
         }
 
         /// <summary>

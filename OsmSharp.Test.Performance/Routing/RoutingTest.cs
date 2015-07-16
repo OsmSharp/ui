@@ -86,11 +86,9 @@ namespace OsmSharp.Test.Performance.Routing
             var reader = new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream);
             var interpreter = new OsmRoutingInterpreter();
             var data = new RouterDataSource<Edge>(new Graph<Edge>(), tagsIndex);
-            data.DropVertexIndex();
             var targetData = new GraphOsmStreamTarget(data, interpreter, tagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
-            data.RebuildVertexIndex();
 
             RoutingTest.Test(data, vehicle, testCount);
         }
@@ -116,7 +114,7 @@ namespace OsmSharp.Test.Performance.Routing
                 vertex++;
             }
 
-            data.SortHilbert(1000);
+            data.BuildHilbertRank(1000);
 
             // copy.
             var graphCopy = new Graph<Edge>();

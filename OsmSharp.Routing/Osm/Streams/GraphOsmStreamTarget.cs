@@ -25,7 +25,6 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.PreProcessor;
-using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Vehicles;
@@ -47,12 +46,12 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="graph">The graph.</param>
-        /// <param name="interpreter">Inteprets the OSM-data.</param>
-        /// <param name="tagsIndex">Holds all the tags.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex)
-            : this(graph, interpreter, tagsIndex, null, true, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, null, true, new CoordinateIndex(), (g) =>
+            {
+                return new HilbertSortingPreprocessor<Edge>(g);
+            })
         {
 
         }
@@ -60,13 +59,22 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="graph">The graph.</param>
-        /// <param name="interpreter">Inteprets the OSM-data.</param>
-        /// <param name="tagsIndex">Holds all the tags.</param>
-        /// <param name="coordinates"></param>
+        public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Func<GraphBase<Edge>, IPreprocessor> createPreprocessor)
+            : this(graph, interpreter, tagsIndex, null, true, new CoordinateIndex(), createPreprocessor)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, ICoordinateIndex coordinates)
-            : this(graph, interpreter, tagsIndex, null, true, coordinates)
+            : this(graph, interpreter, tagsIndex, null, true, coordinates, (g) =>
+            {
+                return new HilbertSortingPreprocessor<Edge>(g);
+            })
         {
 
         }
@@ -81,7 +89,10 @@ namespace OsmSharp.Routing.Osm.Streams
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
             IEnumerable<Vehicle> vehicles)
-            : this(graph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, vehicles, true, new CoordinateIndex(), (g) =>
+            {
+                return new HilbertSortingPreprocessor<Edge>(g);
+            })
         {
 
         }
@@ -89,15 +100,13 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="graph">The graph.</param>
-        /// <param name="interpreter">Inteprets the OSM-data.</param>
-        /// <param name="tagsIndex">Holds all the tags.</param>
-        /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        /// <param name="collectIntermediates">The collect intermediates flag.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
             IEnumerable<Vehicle> vehicles, bool collectIntermediates)
-            : this(graph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex())
+            : this(graph, interpreter, tagsIndex, vehicles, collectIntermediates, new CoordinateIndex(), (g) =>
+            {
+                return new HilbertSortingPreprocessor<Edge>(g);
+            })
         {
 
         }
@@ -105,16 +114,10 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="graph">The graph.</param>
-        /// <param name="interpreter">Inteprets the OSM-data.</param>
-        /// <param name="tagsIndex">Holds all the tags.</param>
-        /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
-        /// <param name="collectIntermediates">The collect intermediates flag.</param>
-        /// <param name="coordinates">The coordinates index.</param>
         public GraphOsmStreamTarget(RouterDataSourceBase<Edge> graph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex,
-            IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates)
-            : base(graph, interpreter, tagsIndex, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
+            IEnumerable<Vehicle> vehicles, bool collectIntermediates, ICoordinateIndex coordinates, Func<GraphBase<Edge>, IPreprocessor> createPreprocessor)
+            : base(graph, interpreter, tagsIndex, createPreprocessor, new HugeDictionary<long, uint>(), collectIntermediates, coordinates)
         {
             _vehicles = new HashSet<Vehicle>();
             if (vehicles != null)
@@ -183,7 +186,7 @@ namespace OsmSharp.Routing.Osm.Streams
         {
             if (_vehicles.Count > 0)
             { // limit only to vehicles in this list.
-                foreach (Vehicle vehicle in _vehicles)
+                foreach (var vehicle in _vehicles)
                 {
                     if (vehicle.CanTraverse(tags))
                     { // one of them is enough.
@@ -193,15 +196,6 @@ namespace OsmSharp.Routing.Osm.Streams
                 return false;
             }
             return edgeInterpreter.IsRoutable(tags);
-        }
-
-        /// <summary>
-        /// Returns the pre-processor.
-        /// </summary>
-        /// <returns></returns>
-        public override IPreProcessor GetPreprocessor()
-        {
-            return null;
         }
 
         #region Static Processing Functions

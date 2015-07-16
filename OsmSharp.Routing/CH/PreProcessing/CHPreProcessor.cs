@@ -28,12 +28,12 @@ using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.Preprocessing
 {
     /// <summary>
     /// Pre-processor to construct a Contraction Hierarchy (CH).
     /// </summary>
-    public class CHPreProcessor : IPreProcessor
+    public class CHPreprocessor : IPreprocessor
     {
         /// <summary>
         /// Holds the data target.
@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        public CHPreProcessor(GraphBase<CHEdgeData> target,
+        public CHPreprocessor(GraphBase<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
         {
@@ -60,6 +60,17 @@ namespace OsmSharp.Routing.CH.PreProcessing
             for (int idx = 0; idx < _lowestPriorities.Length; idx++)
             { // uncontracted = priority != float.MinValue.
                 _lowestPriorities[idx] = float.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets the target graph.
+        /// </summary>
+        public GraphBase<CHEdgeData> Target
+        {
+            get
+            {
+                return _target;
             }
         }
 
@@ -79,7 +90,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Holds a witness calculator just for contraction.
         /// </summary>
         private INodeWitnessCalculator _contractionWitnessCalculator = 
-            new OsmSharp.Routing.CH.PreProcessing.Witnesses.DykstraWitnessCalculator(int.MaxValue);
+            new OsmSharp.Routing.CH.Preprocessing.Witnesses.DykstraWitnessCalculator(int.MaxValue);
 
         /// <summary>
         /// Starts pre-processing all nodes

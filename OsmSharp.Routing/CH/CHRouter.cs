@@ -22,7 +22,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;

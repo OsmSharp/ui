@@ -23,9 +23,9 @@ using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Preprocessing;
+using OsmSharp.Routing.CH.Preprocessing.Ordering;
+using OsmSharp.Routing.CH.Preprocessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
@@ -64,7 +64,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // do the pre-processing part.
             var witnessCalculator = new DykstraWitnessCalculator();
-            var preProcessor = new CHPreProcessor(data,
+            var preProcessor = new CHPreprocessor(data,
                 new EdgeDifferenceContractedSearchSpace(data, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 

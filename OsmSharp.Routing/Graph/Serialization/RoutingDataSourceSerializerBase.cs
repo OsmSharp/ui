@@ -205,7 +205,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        /// <param name="metaTags"></param>
         public void Serialize(Stream stream, RouterDataSource<TEdgeData> graph)
         {
             this.Serialize(stream, graph, new TagsCollection());

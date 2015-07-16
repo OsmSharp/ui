@@ -122,7 +122,7 @@ namespace OsmSharp.Test.Unittests.Routing
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Tests one shortest route calculation.
         /// </summary>
         [Test]
         public void TestShortest1()
@@ -131,7 +131,7 @@ namespace OsmSharp.Test.Unittests.Routing
         }
 
         /// <summary>
-        /// Test is the CH router can calculate another route.
+        /// Tests another shortest route calculation.
         /// </summary>
         [Test]
         public void TestShortest2()

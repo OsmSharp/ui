@@ -40,6 +40,32 @@ namespace OsmSharp.Math.Geo.Simple
         public float Longitude { get; set; }
 
         /// <summary>
+        /// Returns true if the given obj is a GeoCoordinateSimple and represents the exact same location.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if(obj is GeoCoordinateSimple)
+            {
+                var coord = (GeoCoordinateSimple)obj;
+                return coord.Latitude == this.Latitude &&
+                    coord.Longitude == this.Longitude;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Longitude.GetHashCode() ^
+                this.Latitude.GetHashCode();
+        }
+
+        /// <summary>
         /// Returns a string describing this object.
         /// </summary>
         /// <returns></returns>

@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.Preprocessing
 {
     /// <summary>
     /// A weight calculator for the node ordering.

@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {

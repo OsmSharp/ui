@@ -26,7 +26,7 @@
 //using OsmSharp.Routing.CH.Serialization.Sorted;
 //using OsmSharp.Routing.CH;
 //using OsmSharp.Routing.Graph;
-//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Routing.CH.Preprocessing;
 
 //namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
 //{

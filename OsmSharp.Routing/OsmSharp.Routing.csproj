@@ -61,6 +61,9 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="CH\Preprocessing\DefaultPreprocessor.cs" />
+    <Compile Include="Graph\PreProcessor\HilbertSortingPreprocessor.cs" />
+    <Compile Include="Graph\PreProcessor\MultiPreprocessor.cs" />
     <Compile Include="Instructions\ArcAggregation\AggregatedHelper.cs" />
     <Compile Include="Instructions\ArcAggregation\ArcAggregator.cs" />
     <Compile Include="Instructions\ArcAggregation\Output\Aggregated.cs" />
@@ -69,13 +72,13 @@
     <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
-    <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
-    <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
-    <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
-    <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />
-    <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
-    <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpaceNew.cs" />
-    <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="CH\Preprocessing\CHPreprocessor.cs" />
+    <Compile Include="CH\Preprocessing\INodeWeightCalculator.cs" />
+    <Compile Include="CH\Preprocessing\INodeWitnessCalculator.cs" />
+    <Compile Include="CH\Preprocessing\Ordering\EdgeDifference.cs" />
+    <Compile Include="CH\Preprocessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
+    <Compile Include="CH\Preprocessing\Ordering\EdgeDifferenceContractedSearchSpaceNew.cs" />
+    <Compile Include="CH\Preprocessing\Witnesses\DykstraWitnessCalculator.cs" />
     <Compile Include="CH\Serialization\CHEdgeSerializer.cs" />
     <Compile Include="Graph\RouterDataSource.cs" />
     <Compile Include="Graph\EdgeEnumerator.cs" />
@@ -86,7 +89,7 @@
     <Compile Include="Graph\INeighbourEnumerator.cs" />
     <Compile Include="Graph\DirectedGraph.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Graph\PreProcessor\IPreProcessor.cs" />
+    <Compile Include="Graph\PreProcessor\IPreprocessor.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Graph\Routing\DykstraBase.cs" />
     <Compile Include="Graph\Routing\Dykstra.cs" />

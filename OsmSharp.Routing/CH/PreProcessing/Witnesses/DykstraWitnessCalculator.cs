@@ -26,7 +26,7 @@ using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections;
 
-namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
+namespace OsmSharp.Routing.CH.Preprocessing.Witnesses
 {
     /// <summary>
     /// A simple dykstra witness calculator.

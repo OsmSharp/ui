@@ -263,7 +263,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                 // compare networks.
                 Assert.IsNotNull(network);
                 Assert.AreEqual(referenceNetwork.VertexCount, network.VertexCount);
-                for (uint vertex = 0; vertex < network.VertexCount; vertex++)
+                for (uint vertex = 1; vertex < network.VertexCount; vertex++)
                 {
                     float referenceLatitude, referenceLongitude, latitude, longitude;
                     Assert.IsTrue(referenceNetwork.GetVertex(vertex, out referenceLatitude, out referenceLongitude));

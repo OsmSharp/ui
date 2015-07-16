@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graphs.PreProcessing
     /// <summary>
     /// Pre-processor to simplify a graph.
     /// </summary>
-    public class GraphSimplificationPreprocessor : IPreProcessor
+    public class GraphSimplificationPreprocessor : IPreprocessor
     {
         /// <summary>
         /// Holds the graph.

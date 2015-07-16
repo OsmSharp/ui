@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -19,13 +19,30 @@
 namespace OsmSharp.Routing.Graph.PreProcessor
 {
     /// <summary>
-    /// Abstract representation of a pre-processor.
+    /// A preprocessor that represents a sequence of other processors.
     /// </summary>
-    public interface IPreprocessor
+    public class MultiPreprocessor : IPreprocessor
     {
+        private readonly IPreprocessor[] _preprocessors;
+
         /// <summary>
-        /// Starts the pre-processing.
+        /// Creates a new multi-preprocessor.
         /// </summary>
-        void Start();
+        /// <param name="preprocessors"></param>
+        public MultiPreprocessor(params IPreprocessor[] preprocessors)
+        {
+            _preprocessors = preprocessors;
+        }
+
+        /// <summary>
+        /// Starts this preprocessor.
+        /// </summary>
+        public void Start()
+        {
+            for(var i = 0; i < _preprocessors.Length; i++)
+            {
+                _preprocessors[i].Start();
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OsmSharp.Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.Preprocessing
 {
     /// <summary>
     /// Represents the data on a contracted edge.

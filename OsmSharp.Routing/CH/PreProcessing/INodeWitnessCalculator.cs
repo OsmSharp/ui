@@ -19,7 +19,7 @@
 using OsmSharp.Routing.Graph;
 using System.Collections.Generic;
 
-namespace OsmSharp.Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.Preprocessing
 {
     /// <summary>
     /// A witness calculator.
@@ -41,13 +41,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Calculates all witnesses from one source to multiple targets.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="from"></param>
-        /// <param name="tos"></param>
-        /// <param name="tosWeights"></param>
-        /// <param name="maxSettles"></param>
-        /// <param name="forwardExists"></param>
-        /// <param name="backwardExists"></param>
         void Exists(GraphBase<CHEdgeData> graph, uint from, List<uint> tos, List<float> tosWeights, int maxSettles,
             ref bool[] forwardExists, ref bool[] backwardExists, uint toIgnore);
 

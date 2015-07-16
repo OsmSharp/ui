@@ -45,11 +45,6 @@ namespace OsmSharp.Routing.Graph
         private readonly GraphBase<TEdgeData> _graph;
 
         /// <summary>
-        /// Holds the index of vertices per bounding box.
-        /// </summary>
-        private ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
-
-        /// <summary>
         /// Holds the tags index.
         /// </summary>
         private readonly ITagsIndex _tagsIndex;
@@ -71,7 +66,6 @@ namespace OsmSharp.Routing.Graph
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
             _graph = graph;
-            _vertexIndex = null; // do not create an index initially.
             _tagsIndex = tagsIndex;
 
             _supportedVehicles = new HashSet<Vehicle>();
@@ -99,10 +93,41 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns all supported profiles.
         /// </summary>
-        public IEnumerable<Vehicle> GetSupportedProfiles()
+        public override IEnumerable<Vehicle> GetSupportedProfiles()
         {
             return _supportedVehicles;
         }
+
+        /// <summary>
+        /// Rebuilds indexes.
+        /// </summary>
+        public void RebuildIndexes()
+        {
+            _reverseDirectNeighbours = null;
+            this.BuildReverse();
+        }
+
+        /// <summary>
+        /// Holds the memory mapped file last used to store the indexes.
+        /// </summary>
+        private MemoryMappedFile _file;
+
+        /// <summary>
+        /// Rebuilds indexes.
+        /// </summary>
+        /// <param name="file">The memory mapped file to use to store the indexes.</param>
+        public void RebuildIndexes(MemoryMappedFile file)
+        {
+            _file = file;
+
+            _reverseDirectNeighbours = null;
+            this.BuildReverse();
+        }
+
+        /// <summary>
+        /// Holds the index of vertices per bounding box.
+        /// </summary>
+        private ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
 
         /// <summary>
         /// Deactivates the vertex index.
@@ -130,45 +155,14 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Rebuilds indexes.
+        /// Returns all edges inside the given bounding box.
         /// </summary>
-        public void RebuildIndexes()
-        {
-            this.DropVertexIndex();
-            this.RebuildVertexIndex();
-            _reverseDirectNeighbours = null;
-            this.BuildReverse();
-        }
-
-        /// <summary>
-        /// Holds the memory mapped file last used to store the indexes.
-        /// </summary>
-        private MemoryMappedFile _file;
-
-        /// <summary>
-        /// Rebuilds indexes.
-        /// </summary>
-        /// <param name="file">The memory mapped file to use to store the indexes.</param>
-        public void RebuildIndexes(MemoryMappedFile file)
-        {
-            _file = file;
-
-            this.DropVertexIndex();
-            this.RebuildVertexIndex();
-            _reverseDirectNeighbours = null;
-            this.BuildReverse();
-        }
-
-
-        /// <summary>
-        /// Returns all arcs inside the given bounding box.
-        /// </summary>
-        /// <param name="box"></param>
         /// <returns></returns>
         public override INeighbourEnumerator<TEdgeData> GetEdges(
             GeoCoordinateBox box)
         {
-            if (_vertexIndex == null) {
+            if (_vertexIndex == null)
+            {
                 // rebuild on-the-fly.
                 this.RebuildVertexIndex();
             }
@@ -183,7 +177,7 @@ namespace OsmSharp.Routing.Graph
             {
                 var localArcs = this.GetEdges(vertexId);
                 uint arcIdx = 0;
-                while(localArcs.MoveNext())
+                while (localArcs.MoveNext())
                 {
                     if (localArcs.EdgeData.RepresentsNeighbourRelations)
                     {
@@ -194,8 +188,8 @@ namespace OsmSharp.Routing.Graph
                         //}
                         //else
                         //{ // not inverted.
-                            neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
-                                localArcs.EdgeData));
+                        neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
+                            localArcs.EdgeData));
                         //}
                     }
                     arcIdx++;
@@ -204,7 +198,6 @@ namespace OsmSharp.Routing.Graph
             return new NeighbourEnumerator(this, neighbours);
         }
 
-
         /// <summary>
         /// Gets an edge-shape based on the from vertex and the index of the edge.
         /// </summary>
@@ -212,7 +205,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="index">The index of the edge.</param>
         /// <param name="shape">The shape, if any, to return.</param>
         /// <returns></returns>
-        internal bool GetShapeForArc(uint vertex, uint index, out ICoordinateCollection shape)
+        internal bool GetShapeForEdge(uint vertex, uint index, out ICoordinateCollection shape)
         {
             var localArcs = this.GetEdges(vertex);
             uint edgeIdx = 0;
@@ -237,9 +230,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if a given vertex is in the graph.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
         /// <returns></returns>
         public override bool GetVertex(uint id, out float latitude, out float longitude)
         {
@@ -247,7 +237,7 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Returns an empty edge enumerator.
+        /// Returns an edge enumerator.
         /// </summary>
         /// <returns></returns>
         public override EdgeEnumerator<TEdgeData> GetEdgeEnumerator()
@@ -258,7 +248,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns the edge enumerator for the given vertex.
         /// </summary>
-        /// <param name="vertexId"></param>
         /// <returns></returns>
         public override EdgeEnumerator<TEdgeData> GetEdges(uint vertexId)
         {
@@ -325,8 +314,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertexId"></param>
-        /// <param name="neighbour"></param>
         /// <returns></returns>
         public override bool ContainsEdge(uint vertexId, uint neighbour, TEdgeData data)
         {
@@ -336,9 +323,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if the given vertex has the given neighbour.
         /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         public override EdgeEnumerator<TEdgeData> GetEdges(uint vertex1, uint vertex2)
         {
@@ -348,9 +332,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if the given vertex has the given neighbour.
         /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
         public override bool GetEdge(uint vertex1, uint vertex2, out TEdgeData data)
         {
@@ -360,9 +341,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if the given vertex has the given neighbour.
         /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="shape"></param>
         /// <returns></returns>
         public override bool GetEdgeShape(uint vertex1, uint vertex2, out ICoordinateCollection shape)
         {
@@ -377,12 +355,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public override uint AddVertex(float latitude, float longitude)
         {
-            uint vertex = _graph.AddVertex(latitude, longitude);
-            if (_vertexIndex != null)
-            {
-                _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                    vertex);
-            }
+            var vertex = _graph.AddVertex(latitude, longitude);
             return vertex;
         }
 
@@ -478,20 +451,6 @@ namespace OsmSharp.Routing.Graph
         public override void Compress()
         {
             _graph.Compress();
-
-            // rebuild index.
-            if (_vertexIndex != null)
-            {
-                float latitude, longitude;
-                _vertexIndex.Clear();
-                for (uint idx = 0; idx < _graph.VertexCount; idx++)
-                {
-                    if (_graph.GetVertex(idx, out latitude, out longitude))
-                    {
-                        _vertexIndex.Add(new GeoCoordinate(latitude, longitude), idx);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -535,7 +494,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route.
         /// </summary>
-        /// <param name="route"></param>
         public override void AddRestriction(uint[] route)
         {
             if (route == null) { throw new ArgumentNullException(); }
@@ -557,8 +515,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
         /// </summary>
-        /// <param name="vehicleType"></param>
-        /// <param name="route"></param>
         public override void AddRestriction(string vehicleType, uint[] route)
         {
             if (route == null) { throw new ArgumentNullException(); }
@@ -586,9 +542,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns all restricted routes that start in the given vertex.
         /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="vertex"></param>
-        /// <param name="routes"></param>
         /// <returns></returns>
         public override bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
@@ -627,9 +580,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns true if there is a restriction that ends with the given vertex.
         /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="vertex"></param>
-        /// <param name="routes"></param>
         /// <returns></returns>
         public override bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
         {
@@ -828,7 +778,7 @@ namespace OsmSharp.Routing.Graph
                 get
                 {
                     ICoordinateCollection shape;
-                    if (_source.GetShapeForArc(_neighbours[_current].Item1, _neighbours[_current].Item3, out shape))
+                    if (_source.GetShapeForEdge(_neighbours[_current].Item1, _neighbours[_current].Item3, out shape))
                     {
                         return shape;
                     }
@@ -888,14 +838,31 @@ namespace OsmSharp.Routing.Graph
             }
         }
 
+        /// <summary>
+        /// Returns true if this graph is directed.
+        /// </summary>
         public override bool IsDirected
         {
             get { return _graph.IsDirected; }
         }
 
+        /// <summary>
+        /// Returns true if this graph can have duplicates.
+        /// </summary>
         public override bool CanHaveDuplicates
         {
             get { return _graph.CanHaveDuplicates; }
+        }
+
+        /// <summary>
+        /// Sorts the graph based on the given transformations.
+        /// </summary>
+        public override void Sort(HugeArrayBase<uint> transformations)
+        {
+            _vertexIndex = null;
+            _reverseDirectNeighbours = null;
+
+            _graph.Sort(transformations);
         }
 
         #region Serialization
@@ -935,10 +902,6 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Deserializes a graph router data source from the given stream.
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="edgeDataSize"></param>
-        /// <param name="mapFrom"></param>
-        /// <param name="mapTo"></param>
         /// <returns></returns>
         public new static RouterDataSource<TEdgeData> Deserialize(System.IO.Stream stream, int edgeDataSize,
             MappedHugeArray<TEdgeData, uint>.MapFrom mapFrom, MappedHugeArray<TEdgeData, uint>.MapTo mapTo, bool copy)

@@ -20,7 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Osm.Xml.Streams;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Vehicles;

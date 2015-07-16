@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Sorting;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
 using System;
@@ -38,14 +39,7 @@ namespace OsmSharp.Routing.Graph
         protected const int EDGE_SIZE = 1; // holds only the target vertext.
         protected const uint NO_EDGE = uint.MaxValue; // a dummy value indication that there is no edge.
 
-        /// <summary>
-        /// Holds the next id.
-        /// </summary>
         private uint _nextVertexId;
-
-        /// <summary>
-        /// Holds the next edge id.
-        /// </summary>
         private uint _nextEdgeId;
 
         /// <summary>
@@ -334,7 +328,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public override bool GetVertex(uint id, out float latitude, out float longitude)
         {
-            if (_nextVertexId > id)
+            if (_nextVertexId > id & id > 0)
             {
                 latitude = _coordinates[id].Latitude;
                 longitude = _coordinates[id].Longitude;
@@ -970,6 +964,37 @@ namespace OsmSharp.Routing.Graph
             {
                 return _readonly;
             }
+        }
+
+        /// <summary>
+        /// Sorts the graph based on the given transformations.
+        /// </summary>
+        public override void Sort(HugeArrayBase<uint> transformations)
+        {
+            // update edges.
+            for (var i = 0; i <_nextEdgeId; i++)
+            {
+                _edges[i] = transformations[_edges[i]];
+            }
+
+            // sort vertices and coordinates.
+            QuickSort.Sort((i) => transformations[i], (i, j) =>
+            {
+                var temp = _coordinates[i];
+                _coordinates[i] = _coordinates[j];
+                _coordinates[j] = temp;
+
+                var tempRef = _vertices[i * 2];
+                _vertices[i * 2] = _vertices[j * 2];
+                _vertices[j * 2] = tempRef;
+                tempRef = _vertices[i * 2 + 1];
+                _vertices[i * 2 + 1] = _vertices[j * 2 + 1];
+                _vertices[j * 2 + 1] = tempRef;
+
+                var trans = transformations[i];
+                transformations[i] = transformations[j];
+                transformations[j] = trans;
+            }, 1, _nextVertexId - 1);
         }
 
         #region Serialization

@@ -19,6 +19,7 @@
 using OsmSharp.Collections.Arrays;
 using OsmSharp.Collections.Arrays.MemoryMapped;
 using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Sorting;
 using OsmSharp.IO;
 using OsmSharp.IO.MemoryMappedFiles;
 using OsmSharp.Math.Geo.Simple;
@@ -354,7 +355,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public override bool GetVertex(uint id, out float latitude, out float longitude)
         {
-            if (_nextVertexId > id)
+            if (_nextVertexId > id && id > 0)
             {
                 latitude = _coordinates[id].Latitude;
                 longitude = _coordinates[id].Longitude;
@@ -1384,6 +1385,52 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
+        /// Sorts the graph based on the given transformations.
+        /// </summary>
+        public override void Sort(HugeArrayBase<uint> transformations)
+        {
+            // update edges.
+            for (var i = 0; i < _nextEdgeId; i = i + 4)
+            {
+                if (_edges[i + NODEA] != NO_EDGE)
+                {
+                    _edges[i + NODEA] = transformations[_edges[i + NODEA]];
+                }
+                if (_edges[i + NODEB] != NO_EDGE)
+                {
+                    _edges[i + NODEB] = transformations[_edges[i + NODEB]];
+                }
+            }
+
+            // sort vertices and coordinates.
+            QuickSort.Sort((i) => 
+                {
+                    if(i < 0)
+                    { // return 'false: this value doesn't exist.
+                        return long.MaxValue;
+                    }
+                    else if(i >= transformations.Length)
+                    {
+                        return long.MaxValue;
+                    }
+                    return transformations[i];
+                }, (i, j) =>
+                {
+                    var temp = _coordinates[i];
+                    _coordinates[i] = _coordinates[j];
+                    _coordinates[j] = temp;
+
+                    var tempRef = _vertices[i];
+                    _vertices[i] = _vertices[j];
+                    _vertices[j] = tempRef;
+
+                    var trans = transformations[i];
+                    transformations[i] = transformations[j];
+                    transformations[j] = trans;
+                }, 0, this.VertexCount);
+        }
+
+        /// <summary>
         /// Disposes of all native resources associated with this memory dynamic graph.
         /// </summary>
         public void Dispose()
@@ -1545,6 +1592,5 @@ namespace OsmSharp.Routing.Graph
 
             return new Graph<TEdgeData>(vertexCoordinateArray, vertexArray, edgeArray, edgeDataArray, shapes);
         }
-
     }
 }

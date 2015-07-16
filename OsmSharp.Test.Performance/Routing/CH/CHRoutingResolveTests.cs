@@ -22,7 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using OsmSharp.Routing.CH.Serialization;

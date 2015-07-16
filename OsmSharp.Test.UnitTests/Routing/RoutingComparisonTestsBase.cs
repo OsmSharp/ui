@@ -122,7 +122,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             // build the reference router.;
             var referenceRouter = this.BuildDykstraRouter(
-                this.BuildDykstraDataSource(interpreter, embeddedName), interpreter, 
+                data, interpreter, 
                     new Dykstra());
 
             // build the router to be tested.
@@ -174,6 +174,8 @@ namespace OsmSharp.Test.Unittests.Routing
                     int testNumber = fromIdx * resolved.Length + toIdx;
                     if (testNumber % testEveryOther == 0)
                     {
+                        OsmSharp.Logging.Log.TraceEvent("RoutingComparisonTestBase.TestCompareAll", Logging.TraceEventType.Information,
+                            "Testing point {0} -> {1}", fromIdx, toIdx);
                         var referenceRoute = referenceRouter.Calculate(Vehicle.Car,
                             resolvedReference[fromIdx], resolvedReference[toIdx]);
                         var route = router.Calculate(Vehicle.Car,

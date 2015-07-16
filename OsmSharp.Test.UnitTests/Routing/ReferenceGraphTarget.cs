@@ -50,14 +50,5 @@ namespace OsmSharp.Test.Unittests.Routing
         {
 
         }
-
-        /// <summary>
-        /// Returns the preprocessor.
-        /// </summary>
-        /// <returns></returns>
-        public override IPreProcessor GetPreprocessor()
-        {
-            return null;
-        }
     }
 }

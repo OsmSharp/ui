@@ -149,6 +149,7 @@
     <Compile Include="Collections\HugeHashSetTests.cs" />
     <Compile Include="Collections\Indexes\MemoryMapped\MemoryMappedIndexTests.cs" />
     <Compile Include="Collections\MemoryMapped\MemoryMappedHugeDictionaryTests.cs" />
+    <Compile Include="Collections\Sorting\QuickSortTests.cs" />
     <Compile Include="Collections\SparseLargeBitArray32Tests.cs" />
     <Compile Include="Collections\LargeBitArray32Tests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />
@@ -310,7 +311,6 @@
     <EmbeddedResource Include="tsp_real.csv" />
     <EmbeddedResource Include="tsp_real.osm" />
     <EmbeddedResource Include="test_routing_regression1.osm" />
-    <EmbeddedResource Include="test_routing_regression2.osm" />
     <EmbeddedResource Include="test_routing_regression4.osm" />
     <EmbeddedResource Include="test_routing_regression5.osm" />
     <EmbeddedResource Include="test_routing_regression6.osm" />

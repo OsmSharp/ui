@@ -20,7 +20,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Preprocessing;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
