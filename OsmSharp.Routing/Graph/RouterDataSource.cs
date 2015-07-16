@@ -122,38 +122,8 @@ namespace OsmSharp.Routing.Graph
 
             _reverseDirectNeighbours = null;
             this.BuildReverse();
-        }
-
-        /// <summary>
-        /// Holds the index of vertices per bounding box.
-        /// </summary>
-        private ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
-
-        /// <summary>
-        /// Deactivates the vertex index.
-        /// </summary>
-        public void DropVertexIndex()
-        {
-            _vertexIndex = null;
-        }
-
-        /// <summary>
-        /// Rebuilds the vertex index.
-        /// </summary>
-        public void RebuildVertexIndex()
-        {
-            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
-            for (uint vertex = 0; vertex <= _graph.VertexCount; vertex++)
-            {
-                float latitude, longitude;
-                if (_graph.GetVertex(vertex, out latitude, out longitude))
-                {
-                    _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
-                        vertex);
-                }
-            }
-        }
-
+        }       
+        
         /// <summary>
         /// Returns all edges inside the given bounding box.
         /// </summary>
@@ -161,19 +131,13 @@ namespace OsmSharp.Routing.Graph
         public override INeighbourEnumerator<TEdgeData> GetEdges(
             GeoCoordinateBox box)
         {
-            if (_vertexIndex == null)
-            {
-                // rebuild on-the-fly.
-                this.RebuildVertexIndex();
-            }
-
             // get all the vertices in the given box.
-            var vertices = _vertexIndex.GetInside(
-                box);
+            var vertices = this.SearchHilbert((float)box.Center[1], (float)box.Center[0],
+                (float)System.Math.Max(box.DeltaLat, box.DeltaLon));
 
             // loop over all vertices and get the arcs.
             var neighbours = new List<Tuple<uint, uint, uint, TEdgeData>>();
-            foreach (uint vertexId in vertices)
+            foreach (var vertexId in vertices)
             {
                 var localArcs = this.GetEdges(vertexId);
                 uint arcIdx = 0;
@@ -181,16 +145,8 @@ namespace OsmSharp.Routing.Graph
                 {
                     if (localArcs.EdgeData.RepresentsNeighbourRelations)
                     {
-                        //if (localArcs.isInverted)
-                        //{
-                        //    neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
-                        //        (TEdgeData)localArcs.EdgeData.Reverse()));
-                        //}
-                        //else
-                        //{ // not inverted.
                         neighbours.Add(new Tuple<uint, uint, uint, TEdgeData>(vertexId, localArcs.Neighbour, arcIdx,
                             localArcs.EdgeData));
-                        //}
                     }
                     arcIdx++;
                 }
@@ -859,7 +815,6 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         public override void Sort(HugeArrayBase<uint> transformations)
         {
-            _vertexIndex = null;
             _reverseDirectNeighbours = null;
 
             _graph.Sort(transformations);
