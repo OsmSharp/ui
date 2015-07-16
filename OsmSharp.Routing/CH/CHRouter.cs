@@ -262,10 +262,10 @@ namespace OsmSharp.Routing.CH
         /// <param name="parameters"></param>
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, HashSet<int> invalidSet)
         {
-            double[][] manyToManyResult = this.CalculateManyToManyWeight(
-                graph, interpreter, vehicle, new PathSegmentVisitList[] { source }, targets, max, null);
+            var manyToManyResult = this.CalculateManyToManyWeight(
+                graph, interpreter, vehicle, new PathSegmentVisitList[] { source }, targets, max, null, invalidSet);
 
             return manyToManyResult[0];
         }
@@ -273,19 +273,12 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates all weights from multiple sources to multiple targets.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
-        /// <param name="max"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, HashSet<int> invalidSet)
         {
             return this.DoCalculateManyToMany(
-                   graph, interpreter, sources, targets, max, int.MaxValue);
+                   graph, interpreter, sources, targets, max, int.MaxValue, invalidSet);
         }
 
         /// <summary>
@@ -783,15 +776,9 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates all shortest paths between the given vertices.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
-        /// <param name="max"></param>
-        /// <param name="maxSettles"></param>
         /// <returns></returns>
         private double[][] DoCalculateManyToMany(IRoutingAlgorithmData<CHEdgeData> graph, IRoutingInterpreter interpreter,
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int maxSettles)
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int maxSettles, HashSet<int> invalidSet)
         {
             // TODO: implement switching of from/to when to < from.
 
@@ -819,21 +806,27 @@ namespace OsmSharp.Routing.CH
             for (int idx = 0; idx < sources.Length; idx++)
             {
                 // calculate all from's.
-                Dictionary<long, double> result =
-                    this.SearchForwardFromBucket(graph, buckets, sources[idx], targetIds);
+                var result = this.SearchForwardFromBucket(graph, buckets, sources[idx], targetIds);
 
                 var toWeights = new double[targetIds.Length];
                 for (int toIdx = 0; toIdx < targetIds.Length; toIdx++)
                 {
                     if (result.ContainsKey(targetIds[toIdx]))
-                    {
+                    { // the the actual weight...
                         toWeights[toIdx] = result[targetIds[toIdx]];
+                    }
+                    else
+                    { // ... or make sure that there is a way to recognize unset weights.
+                        toWeights[toIdx] = double.MaxValue;
+                        if (result.Count > targets.Length / 2)
+                        { // ... assume to->from only when targets found.
+                            invalidSet.Add(toIdx);
+                        }
                     }
                 }
 
                 weights[idx] = toWeights;
                 result.Clear();
-
 
                 float progress = (float)System.Math.Round((((double)idx / (double)sources.Length) * 100));
                 if (progress != latestProgress)

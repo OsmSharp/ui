@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using Android.Content;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.Android.UI.Controls;
@@ -96,6 +97,53 @@ namespace OsmSharp.Android.UI
             this.Initialize();
         }
 
+        private MapView(Context context, IMapViewSurface surface, IAttributeSet attrs, int defStyle)
+            : base(context, attrs, defStyle)
+        {
+            //It's possible to avoid this copy+paste by making this the sole constructor and
+            //having MapView(Context,Surface) defer to this code, provided that we create a stub attribute set.
+            //However this would be contrary to the frameworks design intent and methods for doing
+            //so are not documented; doing so will invoke undefined behavior.
+
+            _mapView = surface;
+            _mapView.Initialize(this);
+            _markers = new List<MapMarker>();
+            _controls = new List<MapControl>();
+
+            this.Initialize();
+        }
+        #endregion
+
+        #region Android AXML required constructors
+        /// <summary>
+        /// Initializes a new instance of the MapView, using the provided context to create the view surface. This method is implemented for AXML compatibility.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        public MapView(Context context)
+            : this(context, new MapViewSurface(context))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MapView, using the provided context to create the view surface. This method is implemented for AXML compatibility.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="attrs">Attribute set decoded from AXML sources.</param>
+        public MapView(Context context, IAttributeSet attrs)
+            : this(context, new MapViewSurface(context), attrs, 0)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MapView, using the provided context to create the view surface. This method is implemented for AXML compatibility.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="attrs">Attribute set decoded from AXML sources.</param>
+        /// <param name="defStyle">A reference to a style resource that supplies default values for the view. Can be 0 to not look for defaults.</param>
+        public MapView(Context context, IAttributeSet attrs, int defStyle)
+            : this(context, new MapViewSurface(context), attrs, defStyle)
+        {
+        }
         #endregion
 
         /// <summary>
@@ -569,7 +617,7 @@ namespace OsmSharp.Android.UI
         /// Notifies controls that there was a map tap.
         /// </summary>
         /// <remarks>>This is used to close popups on markers when the map is tapped.</remarks>
-        internal void NotifyMapTapToControls() 
+        internal void NotifyMapTapToControls()
         {
             foreach (var marker in _markers)
             {
@@ -609,7 +657,7 @@ namespace OsmSharp.Android.UI
         /// Initialize this instance.
         /// </summary>
         private void Initialize()
-        {			
+        {
             this.AddView(_mapView as View);
         }
 

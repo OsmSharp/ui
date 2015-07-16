@@ -250,11 +250,8 @@ namespace OsmSharp.Routing.Routers
         /// <summary>
         /// Calculates all the weights from source to all the targets.
         /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
         /// <returns></returns>
-        public virtual double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public virtual double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -264,17 +261,14 @@ namespace OsmSharp.Routing.Routers
             }
 
             return _router.CalculateOneToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, source, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
+                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null, invalidSet);
         }
 
         /// <summary>
         /// Calculates all the weights between all the sources and all the targets.
         /// </summary>
-        /// <param name="vehicle"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
         /// <returns></returns>
-        public virtual double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public virtual double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -284,7 +278,7 @@ namespace OsmSharp.Routing.Routers
             }
 
             return _router.CalculateManyToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources, false),
-                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null);
+                this.RouteResolvedGraph(vehicle, targets, true), double.MaxValue, null, invalidSet);
         }
 
         /// <summary>

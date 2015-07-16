@@ -94,13 +94,6 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <summary>
         /// Calculates the shortest path from all sources to all targets.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
-        /// <param name="maxSearch"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         public PathSegment<long>[][] CalculateManyToMany(IRoutingAlgorithmData<Edge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters)
@@ -172,7 +165,7 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="parameters"></param>
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(IRoutingAlgorithmData<Edge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, HashSet<int> invalidSet)
         {
             var many = this.DoCalculation(graph, interpreter, vehicle,
                    source, targets, max, false, false, null);
@@ -187,6 +180,7 @@ namespace OsmSharp.Routing.Graph.Routing
                 else
                 {
                     weights[idx] = double.MaxValue;
+                    invalidSet.Add(idx);
                 }
             }
             return weights;
@@ -204,12 +198,13 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <param name="parameters"></param>
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(IRoutingAlgorithmData<Edge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters)
+            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, 
+            HashSet<int> invalidSet)
         {
             var results = new double[sources.Length][];
             for (int idx = 0; idx < sources.Length; idx++)
             {
-                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max, null);
+                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max, parameters, invalidSet);
 
                 OsmSharp.Logging.Log.TraceEvent("Dykstra", TraceEventType.Information, "Calculating weights... {0}%",
                     (int)(((float)idx / (float)sources.Length) * 100));

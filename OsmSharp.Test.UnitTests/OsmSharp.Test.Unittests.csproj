@@ -181,7 +181,6 @@
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
     <Compile Include="Osm\TagParsingTests.cs" />
     <Compile Include="Math\VRP\Core\Routes\DepotRouteTests.cs" />
-    <Compile Include="Osm\API\APITests.cs" />
     <Compile Include="Math\VRP\Core\Routes\DynamicAsymmetricMultiRouteTests.cs" />
     <Compile Include="Math\VRP\Core\Routes\DynamicAsymmetricRouteTests.cs" />
     <Compile Include="Math\VRP\Core\Routes\MultiRouteTest.cs" />

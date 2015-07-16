@@ -73,7 +73,6 @@
     <Compile Include="API\APIConnection.cs" />
     <Compile Include="API\APIException.cs" />
     <Compile Include="Cache\OsmDataCache.cs" />
-    <Compile Include="Cache\OsmDataCacheDisk.cs" />
     <Compile Include="Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />

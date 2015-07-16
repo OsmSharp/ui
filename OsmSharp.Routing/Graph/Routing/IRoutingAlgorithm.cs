@@ -50,17 +50,10 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <summary>
         /// Calculates all routes between all source and all target vertices.
         /// </summary>
-        /// <param name="_data_graph"></param>
-        /// <param name="_interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
-        /// <param name="maxSearch"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
-        PathSegment<long>[][] CalculateManyToMany(IRoutingAlgorithmData<TEdgeData> _data_graph, IRoutingInterpreter _interpreter,
-            Vehicle vehicle, PathSegmentVisitList[] sources,
-            PathSegmentVisitList[] targets, double maxSearch, Dictionary<string, object> parameters);
+        PathSegment<long>[][] CalculateManyToMany(IRoutingAlgorithmData<TEdgeData> dataGraph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch, 
+            Dictionary<string, object> parameters);
 
         /// <summary>
         /// Calculates the weight of the shortest path between two given vertices.
@@ -93,30 +86,16 @@ namespace OsmSharp.Routing.Graph.Routing
         /// <summary>
         /// Calculates all routes from a given source to all given targets.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
-        /// <param name="max"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         double[] CalculateOneToManyWeight(IRoutingAlgorithmData<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, HashSet<int> invalidSet);
 
         /// <summary>
         /// Calculates all routes from a given sources to all given targets.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
-        /// <param name="max"></param>
-        /// <param name="parameters"></param>
         /// <returns></returns>
         double[][] CalculateManyToManyWeight(IRoutingAlgorithmData<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters);
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, Dictionary<string, object> parameters, HashSet<int> invalidSet);
 
         /// <summary>
         /// Returns true if range calculation is supported.

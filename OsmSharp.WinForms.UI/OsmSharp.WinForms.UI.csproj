@@ -75,6 +75,7 @@
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Cache\OsmDataCacheDisk.cs" />
     <Compile Include="IO\MemoryMappedFiles\TempMemoryMappedFile.cs" />
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />

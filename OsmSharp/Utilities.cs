@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.IO;
+using OsmSharp.Math.Random;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -175,15 +176,22 @@ namespace OsmSharp
         /// Shuffles the list using Fisher-Yates shuffle.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random rng = new Random();
-            int n = list.Count;
+            list.Shuffle(OsmSharp.Math.Random.StaticRandomGenerator.Get());
+        }
+
+        /// <summary>
+        /// Shuffles the list using Fisher-Yates shuffle.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Shuffle<T>(this IList<T> list, IRandomGenerator random)
+        {
+            var n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                var k = random.Generate(n + 1);
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
@@ -708,6 +716,51 @@ namespace OsmSharp
             return obj is IConvertible ? ((IConvertible)obj).ToString(CultureInfo.InvariantCulture)
                 : obj is IFormattable ? ((IFormattable)obj).ToString(null, CultureInfo.InvariantCulture)
                 : obj.ToString();
+        }
+
+        /// <summary>
+        /// Shrinks and copies the given list, removes elements with indices in the toRemove set.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static List<T> ShrinkAndCopyList<T>(this List<T> list, HashSet<int> toRemove)
+        {
+            var shrinked = new List<T>(System.Math.Max(list.Count - toRemove.Count, 0));
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (!toRemove.Contains(i))
+                {
+                    shrinked.Add(list[i]);
+                }
+            }
+            return shrinked;
+        }
+
+        /// <summary>
+        /// Shrinks and copies the matrix and removes rows/columns with indices in the toRemove set.
+        /// </summary>
+        /// <returns></returns>
+        public static double[][] SchrinkAndCopyMatrix(this double[][] matrix, HashSet<int> toRemove)
+        {
+            var schrunk = new double[matrix.Length - toRemove.Count][];
+            var schrunkX = 0;
+            for (var x = 0; x < matrix.Length; x++)
+            {
+                if (!toRemove.Contains(x))
+                { // keep this element.
+                    var schrunkY = 0;
+                    schrunk[schrunkX] = new double[matrix.Length - toRemove.Count];
+                    for (var y = 0; y < matrix[x].Length; y++)
+                    {
+                        if(!toRemove.Contains(y))
+                        { // keep this element.
+                            schrunk[schrunkX][schrunkY] = matrix[x][y];
+                            schrunkY++;
+                        }
+                    }
+                    schrunkX++;
+                }
+            }
+            return schrunk;
         }
     }
 

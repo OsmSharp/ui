@@ -31,6 +31,8 @@ namespace OsmSharp.Routing.Vehicles
         /// </summary>
         public Pedestrian()
         {
+            AccessibleTags.Add("services", string.Empty);
+            AccessibleTags.Add("steps", string.Empty);
             AccessibleTags.Add("footway", string.Empty);
             AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);

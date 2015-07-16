@@ -95,16 +95,13 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
+        double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
         /// </summary>
-        /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="sources"></param>
-        /// <param name="targets"></param>
         /// <returns></returns>
-        double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets);
+        double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet);
 
         #endregion
 

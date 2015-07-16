@@ -43,12 +43,29 @@ namespace OsmSharp.Math.Random
         }
 
         /// <summary>
+        /// Resets the static generator to the default.
+        /// </summary>
+        public static void Reset()
+        {
+            _generator = new RandomGenerator();
+        }
+
+        /// <summary>
         /// Sets the seed of the static generator.
         /// </summary>
         /// <param name="seed"></param>
         public static void Set(int seed)
         {
             _generator = new RandomGenerator(seed);
+        }
+
+        /// <summary>
+        /// Sets the static random generator.
+        /// </summary>
+        /// <param name="generator"></param>
+        public static void Set(IRandomGenerator generator)
+        {
+            _generator = generator;
         }
     }
 }
