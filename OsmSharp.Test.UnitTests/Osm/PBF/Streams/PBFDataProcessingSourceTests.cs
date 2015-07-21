@@ -54,5 +54,29 @@ namespace OsmSharp.Test.Unittests.Osm.PBF.Streams
                 target.Pull();
             }
         }
+
+        /// <summary>
+        /// A regression test on initializing a stream.
+        /// </summary>
+        [Test]
+        public void MoveNextWayRegression1()
+        {
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.Test.Unittests.kempen-big.osm.pbf"))
+            {
+                using (var reader = new PBFOsmStreamSource(fileStream))
+                {
+                    reader.Initialize();
+                    var counter = 0;
+                    while (reader.MoveNextWay())
+                    {
+                        if (counter++ % 10000 == 0)
+                        {
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -292,6 +292,9 @@
     <EmbeddedResource Include="test_segments.osm" />
     <EmbeddedResource Include="tsp_one.csv" />
     <EmbeddedResource Include="tsp_two.csv" />
+    <EmbeddedResource Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
+      <Link>kempen-big.osm.pbf</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="regression1.gpx">
       <SubType>Designer</SubType>

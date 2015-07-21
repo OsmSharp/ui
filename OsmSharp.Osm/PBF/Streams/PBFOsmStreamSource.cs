@@ -300,18 +300,15 @@ namespace OsmSharp.Osm.PBF.Streams
         /// <returns></returns>
         private KeyValuePair<PrimitiveBlock, object> MoveToNextPrimitive(bool ignoreNodes, bool ignoreWays, bool ignoreRelations)
         {
-            KeyValuePair<PrimitiveBlock, object> next = this.DeQueuePrimitive();
+            var next = this.DeQueuePrimitive();
             if (next.Value == null)
             {
-                PrimitiveBlock block = _reader.MoveNext();
-                if (block != null)
+                var block = _reader.MoveNext();
+                while (block != null && !_decompressor.ProcessPrimitiveBlock(block, ignoreNodes, ignoreWays, ignoreRelations))
                 {
-                    while (!_decompressor.ProcessPrimitiveBlock(block, ignoreNodes, ignoreWays, ignoreRelations))
-                    {
-                        block = _reader.MoveNext();
-                    }
-                    next = this.DeQueuePrimitive();
+                    block = _reader.MoveNext();
                 }
+                next = this.DeQueuePrimitive();
             }
             return next;
         }
