@@ -237,5 +237,14 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             this.DoTestResolveCase2();
         }
+
+        /// <summary>
+        /// Tests argument checks on router.
+        /// </summary>
+        [Test]
+        public void TestArgumentNullExceptions()
+        {
+            this.DoTestArgumentChecks("test_network.osm");
+        }
     }
 }

@@ -174,6 +174,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (target == null) { throw new ArgumentNullException("target"); }
+
             if(source.Vehicle.UniqueName != target.Vehicle.UniqueName)
             { // vehicles are different.
                 throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
@@ -199,6 +203,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max = float.MaxValue, bool geometryOnly = false)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (target == null) { throw new ArgumentNullException("target"); }
+
             if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
             { // vehicles are different.
                 throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
@@ -222,6 +230,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+
             foreach (var target in targets)
             {
                 if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
@@ -250,6 +262,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+
             foreach (var target in targets)
             {
                 if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
@@ -278,6 +294,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+
             foreach (var target in targets)
             {
                 if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
@@ -306,6 +326,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, float max = float.MaxValue, bool geometryOnly = false)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (sources == null) { throw new ArgumentNullException("sources"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+
             foreach (var source in sources)
             {
                 foreach (var target in targets)
@@ -335,6 +359,10 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (target == null) { throw new ArgumentNullException("target"); }
+
             if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
             { // vehicles are different.
                 throw new ArgumentException(string.Format("Not all vehicle profiles match, {0} and {1} are given, expecting identical profiles.",
@@ -364,6 +392,11 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, HashSet<int> invalidSet)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (source == null) { throw new ArgumentNullException("source"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+            if (invalidSet == null) { throw new ArgumentNullException("invalidSet"); }
+
             foreach (var target in targets)
             {
                 if (source.Vehicle.UniqueName != target.Vehicle.UniqueName)
@@ -396,6 +429,11 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets, HashSet<int> invalidSet)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (sources == null) { throw new ArgumentNullException("source"); }
+            if (targets == null) { throw new ArgumentNullException("targets"); }
+            if (invalidSet == null) { throw new ArgumentNullException("invalidSet"); }
+
             foreach (var source in sources)
             {
                 foreach (var target in targets)
@@ -433,6 +471,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgine, float weight)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (orgine == null) { throw new ArgumentNullException("orgine"); }
+
             if (vehicle.UniqueName != orgine.Vehicle.UniqueName)
             { // vehicles are different.
                 throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
@@ -451,6 +492,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (point == null) { throw new ArgumentNullException("point"); }
+
             if (vehicle.UniqueName != point.Vehicle.UniqueName)
             { // vehicles are different.
                 throw new ArgumentException(string.Format("Given vehicle profile does not match resolved points, {0} and {1} are given, expecting identical profiles.",
@@ -469,6 +513,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] points, float weight)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (points == null) { throw new ArgumentNullException("points"); }
+
             foreach (var point in points)
             {
                 if (vehicle.UniqueName != point.Vehicle.UniqueName)
@@ -489,6 +536,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+            
             return _router.Resolve(vehicle, coordinate, false);
         }
 
@@ -501,6 +551,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+            
             return _router.Resolve(vehicle, coordinate, verticesOnly);
         }
 
@@ -513,6 +566,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+            
             return _router.Resolve(vehicle, delta, coordinate);
         }
 
@@ -527,6 +583,11 @@ namespace OsmSharp.Routing
         public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, 
             TagsCollectionBase matchingTags)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+            if (matcher == null) { throw new ArgumentNullException("matcher"); }
+            if (matchingTags == null) { throw new ArgumentNullException("matchingTags"); }
+            
             return _router.Resolve(vehicle, coordinate, matcher, matchingTags);
         }
 
@@ -542,6 +603,11 @@ namespace OsmSharp.Routing
         public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, 
             IEdgeMatcher matcher, TagsCollectionBase matchingTags)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+            if (matcher == null) { throw new ArgumentNullException("matcher"); }
+            if (matchingTags == null) { throw new ArgumentNullException("matchingTags"); }
+
             return _router.Resolve(vehicle, delta, coordinate, matcher, matchingTags);
         }
 
@@ -553,6 +619,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+
             return _router.Resolve(vehicle, coordinate);
         }
 
@@ -565,6 +634,9 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+
             return _router.Resolve(vehicle, delta, coordinate);
         }
 
@@ -579,6 +651,11 @@ namespace OsmSharp.Routing
         public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates, IEdgeMatcher matcher, 
             TagsCollectionBase[] matchingTags)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinates == null) { throw new ArgumentNullException("coordinates"); }
+            if (matcher == null) { throw new ArgumentNullException("matcher"); }
+            if (matchingTags == null) { throw new ArgumentNullException("matchingTags"); }
+
             return _router.Resolve(vehicle, coordinates, matcher, matchingTags);
         }
 
@@ -594,6 +671,11 @@ namespace OsmSharp.Routing
         public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinates, 
             IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinates == null) { throw new ArgumentNullException("coordinates"); }
+            if (matcher == null) { throw new ArgumentNullException("matcher"); }
+            if (matchingTags == null) { throw new ArgumentNullException("matchingTags"); }
+
             return _router.Resolve(vehicle, delta, coordinates, matcher, matchingTags);
         }
 
@@ -606,6 +688,9 @@ namespace OsmSharp.Routing
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
         public GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+
             return _router.Search(vehicle, coordinate);
         }
 
@@ -619,6 +704,9 @@ namespace OsmSharp.Routing
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
         public GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
+            if (vehicle == null) { throw new ArgumentNullException("vehicle"); }
+            if (coordinate == null) { throw new ArgumentNullException("coordinate"); }
+
             return _router.Search(vehicle, delta, coordinate);
         }
 

@@ -100,6 +100,16 @@ namespace OsmSharp.Routing.Graph
         public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, int n)
             where TEdgeData : struct, IGraphEdgeData
         {
+            graph.SortHilbert(GraphExtensions.DefaultHilbertSteps, null);
+        }
+
+        /// <summary>
+        /// Copies all data from the given graph.
+        /// </summary>
+        /// <typeparam name="TEdgeData"></typeparam>
+        public static void SortHilbert<TEdgeData>(this GraphBase<TEdgeData> graph, int n, Action<uint, uint> transform)
+            where TEdgeData : struct, IGraphEdgeData
+        {
             // build ranks.
             var ranks = graph.BuildHilbertRank(n);
 
@@ -107,6 +117,10 @@ namespace OsmSharp.Routing.Graph
             var transformations = new HugeArray<uint>(ranks.Length);
             for (uint i = 0; i < ranks.Length; i++)
             {
+                if(transform != null)
+                {
+                    transform(ranks[i], i);
+                }
                 transformations[ranks[i]] = i;
             }
 

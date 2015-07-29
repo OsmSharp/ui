@@ -26,6 +26,7 @@ using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Vehicles;
+using System;
 
 namespace OsmSharp.Test.Unittests.Routing
 {
@@ -665,6 +666,72 @@ namespace OsmSharp.Test.Unittests.Routing
                     Assert.AreEqual(weight, weights[fromIdx][toIdx]);
                 }
             }
+        }
+
+        /// <summary>
+        /// Tests argument checks on router.
+        /// </summary>
+        protected void DoTestArgumentChecks(string filename)
+        {
+            var interpreter = new OsmRoutingInterpreter();
+            var data = this.BuildData(interpreter, string.Format("OsmSharp.Test.Unittests.{0}", filename));
+            var basicRouter = this.BuildBasicRouter(data);
+            var router = this.BuildRouter(data, interpreter, basicRouter);
+
+            var anyCoordinate = new GeoCoordinate(0, 0);
+            var anyRouterPoint = new RouterPoint(-1, Vehicle.Car, anyCoordinate);
+            var anyRouterPointArray = new RouterPoint[] { anyRouterPoint };
+            var anyVehicle = Vehicle.Car;
+
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(null, anyRouterPoint, anyRouterPoint));
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(anyVehicle, null, anyRouterPoint));
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(anyVehicle, anyRouterPoint, null));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateWeight(null, anyRouterPoint, anyRouterPoint));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateWeight(anyVehicle, null, anyRouterPoint));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateWeight(anyVehicle, anyRouterPoint, null));
+
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(null, anyRouterPoint, anyRouterPoint, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(anyVehicle, null, anyRouterPoint, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.Calculate(anyVehicle, anyRouterPoint, null, float.MaxValue, false));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(null, anyRouterPoint, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(anyVehicle, null, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(anyVehicle, anyRouterPoint, null));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(null, anyRouterPoint, anyRouterPointArray,float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(anyVehicle, null, anyRouterPointArray, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateToClosest(anyVehicle, anyRouterPoint, null, float.MaxValue, false));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToMany(null, anyRouterPoint, anyRouterPointArray, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToMany(anyVehicle, null, anyRouterPointArray, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToMany(anyVehicle, anyRouterPoint, null, float.MaxValue, false));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToManyWeight(null, anyRouterPoint, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToManyWeight(anyVehicle, null, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToManyWeight(anyVehicle, anyRouterPoint, null));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateOneToManyWeight(anyVehicle, anyRouterPoint, anyRouterPointArray, null));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToMany(null, anyRouterPointArray, anyRouterPointArray, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToMany(anyVehicle, null, anyRouterPointArray, float.MaxValue, false));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToMany(anyVehicle, anyRouterPointArray, null, float.MaxValue, false));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToManyWeight(null, anyRouterPointArray, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToManyWeight(anyVehicle, null, anyRouterPointArray));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToManyWeight(anyVehicle, anyRouterPointArray, null));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateManyToManyWeight(anyVehicle, anyRouterPointArray, anyRouterPointArray, null));
+
+            Assert.Throws<ArgumentNullException>(() => router.CalculateRange(null, anyRouterPoint, 100));
+            Assert.Throws<ArgumentNullException>(() => router.CalculateRange(anyVehicle, null, 100));
+
+            Assert.Throws<ArgumentNullException>(() => router.CheckConnectivity(null, anyRouterPoint, 100));
+            Assert.Throws<ArgumentNullException>(() => router.CheckConnectivity(anyVehicle, (RouterPoint)null, 100));
+
+            Assert.Throws<ArgumentNullException>(() => router.CheckConnectivity(null, anyRouterPointArray, 100));
+            Assert.Throws<ArgumentNullException>(() => router.CheckConnectivity(anyVehicle, (RouterPoint[])null, 100));
+
+            Assert.Throws<ArgumentNullException>(() => router.Resolve(null, anyCoordinate));
+            Assert.Throws<ArgumentNullException>(() => router.Resolve(anyVehicle, (GeoCoordinate)null));
         }
     }
 }
