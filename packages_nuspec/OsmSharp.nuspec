@@ -40,10 +40,10 @@
 	      <file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid\OsmSharp.Routing.dll" />
 	      <file src="OutputAndroid\OsmSharp.UI.dll" target="lib\MonoAndroid\OsmSharp.UI.dll" />
 	      <file src="OutputAndroid\OsmSharp.Android.UI.dll" target="lib\MonoAndroid\OsmSharp.Android.UI.dll" />
-	      <file src="OutputiOS\OsmSharp.dll" target="lib\MonoTouch\OsmSharp.dll" />
-	      <file src="OutputiOS\OsmSharp.Osm.dll" target="lib\MonoTouch\OsmSharp.Osm.dll" />
-	      <file src="OutputiOS\OsmSharp.Routing.dll" target="lib\MonoTouch\OsmSharp.Routing.dll" />
-	      <file src="OutputiOS\OsmSharp.UI.dll" target="lib\MonoTouch\OsmSharp.UI.dll" />
-	      <file src="OutputiOS\OsmSharp.iOS.UI.dll" target="lib\MonoTouch\OsmSharp.iOS.UI.dll" />
+	      <file src="OutputiOS\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />
+	      <file src="OutputiOS\OsmSharp.Osm.dll" target="lib\Xamarin.iOS10\OsmSharp.Osm.dll" />
+	      <file src="OutputiOS\OsmSharp.Routing.dll" target="lib\Xamarin.iOS10\OsmSharp.Routing.dll" />
+	      <file src="OutputiOS\OsmSharp.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.UI.dll" />
+	      <file src="OutputiOS\OsmSharp.iOS.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.iOS.UI.dll" />
     </files>
 </package>
