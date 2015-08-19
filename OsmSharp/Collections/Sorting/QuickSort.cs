@@ -31,14 +31,36 @@ namespace OsmSharp.Collections.Sorting
         public static void Sort(Func<long, long> value, Action<long, long> swap, long left, long right)
         {
             if (left < right)
-            { // left is still to the left.
-                var pivot = QuickSort.Partition(value, swap, left, right);
-                if (left <= pivot && pivot <= right)
+            {
+                var stack = new System.Collections.Generic.Stack<Pair>();
+                stack.Push(new Pair(left, right));
+                while (stack.Count > 0)
                 {
-                    QuickSort.Sort(value, swap, left, pivot - 1);
-                    QuickSort.Sort(value, swap, pivot + 1, right);
+                    var pair = stack.Pop();
+                    var pivot = QuickSort.Partition(value, swap, pair.Left, pair.Right);
+                    if (pair.Left < pivot)
+                    {
+                        stack.Push(new Pair(pair.Left, pivot - 1));
+                    }
+                    if (pivot < pair.Right)
+                    {
+                        stack.Push(new Pair(pivot + 1, pair.Right));
+                    }
                 }
             }
+        }
+
+        private struct Pair
+        {
+            public Pair(long left, long right)
+                : this()
+            {
+                this.Left = left;
+                this.Right = right;
+            }
+
+            public long Left { get; set; }
+            public long Right { get; set; }
         }
 
         /// <summary>
@@ -53,8 +75,15 @@ namespace OsmSharp.Collections.Sorting
                 return right;
             }
 
+            // select the middle one as the pivot value to counteract sorting.
+            var pivot = (left + right) / (long)2;
+            if(pivot != left)
+            { // switch.
+                swap(pivot, left);
+            }
+
             // start with the left as pivot value.
-            var pivot = left;
+            pivot = left;
             var pivotValue = value(pivot);
 
             while (true)
@@ -88,8 +117,10 @@ namespace OsmSharp.Collections.Sorting
 
                 if (left == right)
                 { // we are done searching, left == right.
-                    // make sure the pivot value is where it is supposed to be.
-                    swap(pivot, left);
+                    if (pivot != left)
+                    { // make sure the pivot value is where it is supposed to be.
+                        swap(pivot, left);
+                    }
                     return left;
                 }
 
