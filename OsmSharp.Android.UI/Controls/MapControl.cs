@@ -162,13 +162,13 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="location">The location the view has to stay at.</param>
         /// <param name="view">The view being wrapped.</param>
         /// <param name="alignment">The alignment.</param>
-        protected MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment)
+		protected MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment)
         {
             _view = view;
             _location = location;
             _alignment = alignment;
 
-            this.MoveWithMap = true;
+			this.MoveWithMap = true;
         }
 
         /// <summary>
@@ -179,13 +179,8 @@ namespace OsmSharp.Android.UI.Controls
         /// <param name="alignment">The alignment.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        public MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment, int width, int height)
+		public MapControl(TView view, GeoCoordinate location, MapControlAlignmentType alignment, int width, int height): this(view, location, alignment)
         {
-            _view = view;
-            _location = location;
-            _alignment = alignment;
-
-            this.MoveWithMap = true;
             this.SetSize(width, height);
         }
 
@@ -199,11 +194,20 @@ namespace OsmSharp.Android.UI.Controls
             _view.SetMinimumWidth(width);
             _view.SetMinimumHeight(height);
 
-            var layoutParams = new FrameLayout.LayoutParams(width, height + 5);
-            layoutParams.LeftMargin = -1;
-            layoutParams.TopMargin = -1;
-            layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-            _view.LayoutParameters = layoutParams;
+			if (_view.LayoutParameters != null) {
+				_view.LayoutParameters.Width = width;
+				_view.LayoutParameters.Height = height;
+			} else {
+				var layoutParams = new FrameLayout.LayoutParams (width, height);
+				layoutParams.LeftMargin = -1;
+				layoutParams.TopMargin = -1;
+				layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
+				_view.LayoutParameters = layoutParams;
+			}
+
+			if (Host != null) {
+				Host.NotifyControlChange (this);
+			}
         }
 
         /// <summary>
