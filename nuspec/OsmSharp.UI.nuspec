@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
-        <id>OsmSharp</id>
+        <id>OsmSharp.UI</id>
         <version>$version$</version>
-        <title>OsmSharp - OpenStreetMap SDK for .NET/Mono</title>
+        <title>OsmSharp.UI - OpenStreetMap SDK for .NET/Mono</title>
         <authors>Ben Abelshausen</authors>
         <owners>Ben Abelshausen</owners>
         <licenseUrl>http://raw.github.com/xivk/OsmSharp/master/license.txt</licenseUrl>
@@ -18,31 +18,18 @@
             <dependency id="protobuf-net" version="2.0.0.668" />
             <dependency id="Zlib.Portable" version="1.9.2" />
             <dependency id="Antlr3.Runtime.PCL" version="1.9.2" />
+            <dependency id="OsmSharp.Core" version="0.0.0" />
+            <dependency id="OsmSharp.Routing" version="0.0.0" />
         </dependencies>
     </metadata>
     <files>
-        <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.Routing.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\net40\OsmSharp.Routing.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net45\OsmSharp.Osm.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\net45\OsmSharp.Routing.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net45\OsmSharp.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net45\OsmSharp.UI.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net45\OsmSharp.WinForms.UI.dll" />
-	      <file src="OutputAndroid\OsmSharp.dll" target="lib\MonoAndroid\OsmSharp.dll" />
-	      <file src="OutputAndroid\OsmSharp.Osm.dll" target="lib\MonoAndroid\OsmSharp.Osm.dll" />
-	      <file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid\OsmSharp.Routing.dll" />
 	      <file src="OutputAndroid\OsmSharp.UI.dll" target="lib\MonoAndroid\OsmSharp.UI.dll" />
 	      <file src="OutputAndroid\OsmSharp.Android.UI.dll" target="lib\MonoAndroid\OsmSharp.Android.UI.dll" />
-	      <file src="OutputiOS\OsmSharp.dll" target="lib\Xamarin.iOS10\OsmSharp.dll" />
-	      <file src="OutputiOS\OsmSharp.Osm.dll" target="lib\Xamarin.iOS10\OsmSharp.Osm.dll" />
-	      <file src="OutputiOS\OsmSharp.Routing.dll" target="lib\Xamarin.iOS10\OsmSharp.Routing.dll" />
 	      <file src="OutputiOS\OsmSharp.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.UI.dll" />
 	      <file src="OutputiOS\OsmSharp.iOS.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.iOS.UI.dll" />
     </files>
