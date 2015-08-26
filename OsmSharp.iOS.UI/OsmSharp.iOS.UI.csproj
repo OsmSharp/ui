@@ -42,9 +42,6 @@
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="GoogleMaps">
-      <HintPath>..\Components\googlemapsios-1.9.0.2\lib\ios-unified\GoogleMaps.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
@@ -53,9 +50,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
-      <Link>Data\SQLite\SQLite.cs</Link>
-    </Compile>
+    <Compile Include="Data\SQLite\SQLite.cs" />
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="MapView.cs">

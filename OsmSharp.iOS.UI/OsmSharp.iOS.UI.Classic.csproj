@@ -61,6 +61,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Data\SQLite\SQLite.cs" />
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Renderer\CGContextRenderer.cs" />
@@ -69,9 +70,6 @@
     <Compile Include="Log\ConsoleTraceListener.cs" />
     <Compile Include="Renderer\Images\NativeImage.cs" />
     <Compile Include="Renderer\Images\NativeImageCache.cs" />
-    <Compile Include="..\packages\sqlite-net.1.0.8\content\SQLite.cs">
-      <Link>Data\SQLite\SQLite.cs</Link>
-    </Compile>
     <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="Controls\IMapControlHost.cs" />
     <Compile Include="Controls\MapControl.cs" />
