@@ -1,6 +1,0 @@
-﻿# Comments are lines which start with '#'
-# Blank lines are ignored.
-
-# MONO_GC_PARAMS=nursery-size=4096k
-# MONO_GC_PARAMS=soft-heap-limit=1g
-# MONO_GC_PARAMS=evacuation-threshold=90

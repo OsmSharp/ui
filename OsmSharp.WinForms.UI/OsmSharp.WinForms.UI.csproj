@@ -65,11 +65,31 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OsmSharp, Version=0.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\net40\OsmSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Osm, Version=0.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\net40\OsmSharp.Osm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Routing, Version=0.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Routing.0.0.0.11-beta\lib\net40\OsmSharp.Routing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyVersion.cs">
@@ -100,19 +120,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
-      <Name>OsmSharp.Osm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
-      <Name>OsmSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{1524C255-2EE5-4C0C-A64C-56CE39A062E3}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

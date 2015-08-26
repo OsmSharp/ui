@@ -1,88 +1,39 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{98F92B6F-59CB-4E97-9C3E-A2D0AA01F74B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp", "OsmSharp\OsmSharp.csproj", "{077997FD-A61D-4DC0-B4B0-7429BF9824E8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm", "OsmSharp.Osm\OsmSharp.Osm.csproj", "{E20DC51A-431E-49F7-8018-53FE0DE80386}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Routing", "OsmSharp.Routing\OsmSharp.Routing.csproj", "{2F4D2B40-D557-4640-96E1-693D598012A6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{92459B73-D776-40E8-8045-59BE08611D8E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{D0FB86D6-B451-487B-825D-908B7D0AB54C}"
-EndProject
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Android.UI", "OsmSharp.Android.UI\OsmSharp.Android.UI.csproj", "{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Android.UI.Sample", "OsmSharp.Android.UI.Sample\OsmSharp.Android.UI.Sample.csproj", "{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Android.Test.Performance", "OsmSharp.Android.Test.Performance\OsmSharp.Android.Test.Performance.csproj", "{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI", "OsmSharp.UI\OsmSharp.UI.csproj", "{1524C255-2EE5-4C0C-A64C-56CE39A062E3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{B36B3DEB-9D69-4EBD-BB8C-59AAAA24FCD2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Test.Performance.Android", "OsmSharp.Test.Performance\OsmSharp.Test.Performance.Android.csproj", "{0391C9D0-A95A-4204-A800-F000CB8779FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0391C9D0-A95A-4204-A800-F000CB8779FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0391C9D0-A95A-4204-A800-F000CB8779FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0391C9D0-A95A-4204-A800-F000CB8779FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0391C9D0-A95A-4204-A800-F000CB8779FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{077997FD-A61D-4DC0-B4B0-7429BF9824E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{077997FD-A61D-4DC0-B4B0-7429BF9824E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{077997FD-A61D-4DC0-B4B0-7429BF9824E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{077997FD-A61D-4DC0-B4B0-7429BF9824E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F4D2B40-D557-4640-96E1-693D598012A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F4D2B40-D557-4640-96E1-693D598012A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F4D2B40-D557-4640-96E1-693D598012A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F4D2B40-D557-4640-96E1-693D598012A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E20DC51A-431E-49F7-8018-53FE0DE80386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E20DC51A-431E-49F7-8018-53FE0DE80386}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E20DC51A-431E-49F7-8018-53FE0DE80386}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E20DC51A-431E-49F7-8018-53FE0DE80386}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{077997FD-A61D-4DC0-B4B0-7429BF9824E8} = {98F92B6F-59CB-4E97-9C3E-A2D0AA01F74B}
-		{E20DC51A-431E-49F7-8018-53FE0DE80386} = {98F92B6F-59CB-4E97-9C3E-A2D0AA01F74B}
-		{2F4D2B40-D557-4640-96E1-693D598012A6} = {98F92B6F-59CB-4E97-9C3E-A2D0AA01F74B}
-		{D0FB86D6-B451-487B-825D-908B7D0AB54C} = {92459B73-D776-40E8-8045-59BE08611D8E}
-		{1524C255-2EE5-4C0C-A64C-56CE39A062E3} = {92459B73-D776-40E8-8045-59BE08611D8E}
-		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8} = {D0FB86D6-B451-487B-825D-908B7D0AB54C}
-		{7DDE6457-9D4A-4AD1-9885-28DB60B68E36} = {D0FB86D6-B451-487B-825D-908B7D0AB54C}
-		{68A8917B-3DBF-4BD6-9823-86ACE48D4D02} = {D0FB86D6-B451-487B-825D-908B7D0AB54C}
-		{0391C9D0-A95A-4204-A800-F000CB8779FD} = {B36B3DEB-9D69-4EBD-BB8C-59AAAA24FCD2}
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = OsmSharp.Android.UI.Sample\OsmSharp.Android.UI.Sample.csproj
+		{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}.Release|x64.ActiveCfg = Release|Any CPU
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|x64.ActiveCfg = Debug|x64
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Debug|x64.Build.0 = Debug|x64
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|x64.ActiveCfg = Release|x64
+		{1524C255-2EE5-4C0C-A64C-56CE39A062E3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = OsmSharp.Android.UI.Sample\OsmSharp.Android.UI.Sample.csproj
 	EndGlobalSection
 EndGlobal

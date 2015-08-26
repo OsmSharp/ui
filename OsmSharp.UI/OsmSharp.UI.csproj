@@ -60,6 +60,7 @@
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyVersion.cs">
@@ -175,6 +176,18 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="OsmSharp, Version=0.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Osm, Version=0.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OsmSharp.Routing, Version=0.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Routing.0.0.0.11-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Routing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
@@ -182,20 +195,6 @@
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
-      <Name>OsmSharp.Osm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
-      <Project>{2F4D2B40-D557-4640-96E1-693D598012A6}</Project>
-      <Name>OsmSharp.Routing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
-      <Name>OsmSharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
