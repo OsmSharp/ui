@@ -6,8 +6,8 @@
     <ProjectGuid>{0739A23C-1D40-477F-AE7C-38518B499567}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.UI.Test.Unittests</RootNamespace>
-    <AssemblyName>OsmSharp.UI.Test.Unittests</AssemblyName>
+    <RootNamespace>OsmSharp.UI.Test</RootNamespace>
+    <AssemblyName>OsmSharp.UI.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -19,7 +19,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.UI.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,7 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.UI.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -36,7 +36,7 @@
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <DocumentationFile>..\Output\Debug\x86\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x86\OsmSharp.UI.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -44,19 +44,19 @@
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <DocumentationFile>..\Output\Release\x86\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x86\OsmSharp.UI.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\Output\Debug\x64\</OutputPath>
-    <DocumentationFile>..\Output\Debug\x64\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x64\OsmSharp.UI.Test.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\Output\Release\x64\</OutputPath>
-    <DocumentationFile>..\Output\Release\x64\OsmSharp.UI.Test.Unittests.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x64\OsmSharp.UI.Test.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
