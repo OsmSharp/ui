@@ -40,8 +40,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestDomainDefault()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.default.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.default.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -60,8 +60,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestDomainColorNamed()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.color-named.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.color-named.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -69,7 +69,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(2, tree.ChildCount);
 
             // parse into domain.
-            MapCSSFile file = MapCSSDomainParser.Parse(tree);
+            var file = MapCSSDomainParser.Parse(tree);
             Assert.IsNotNull(file);
             Assert.AreEqual(1, file.Rules.Count);
             Assert.AreEqual(1, file.Rules[0].Declarations.Count);
@@ -99,13 +99,13 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestMetaSettingsCSS()
         {
             // create CSS.
-            string css = "meta { " +
+            var css = "meta { " +
                 "   title: \"Parking lanes\"; /* title shown in the menu */ " +
                 "   icon: \"images/logo.png\"; /* small icon shown in the menu next to the title */ " + 
                 "} ";
 
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsingString(css);
+            var result = this.TestMapCSSParsingString(css);
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -113,7 +113,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(1, tree.ChildCount);
 
             // parse into domain.
-            MapCSSFile file = MapCSSDomainParser.Parse(tree);
+            var file = MapCSSDomainParser.Parse(tree);
             Assert.IsNotNull(file);
             Assert.AreEqual(0, file.Rules.Count);
 
@@ -128,8 +128,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestDomainColorShort()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.color-short.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.color-short.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -137,7 +137,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(2, tree.ChildCount);
 
             // parse into domain.
-            MapCSSFile file = MapCSSDomainParser.Parse(tree);
+            var file = MapCSSDomainParser.Parse(tree);
             Assert.IsNotNull(file);
             Assert.AreEqual(1, file.Rules.Count);
             Assert.AreEqual(1, file.Rules[0].Declarations.Count);
@@ -161,8 +161,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestDomainColor()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.color.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.color.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -194,7 +194,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         private AstParserRuleReturnScope<object, IToken> TestMapCSSParsing(string embeddedPath)
         {
             // get the text from the embedded test file.
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedPath);
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedPath);
             Assert.IsNotNull(stream);
             var reader = new StreamReader(stream);
             string s = reader.ReadToEnd();

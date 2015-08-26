@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -37,8 +37,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestColouredAddresses()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.coloured-addresses.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.coloured-addresses.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -53,8 +53,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestDefault()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.default.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.default.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -69,8 +69,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestGisrussa()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.gisrussa.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.gisrussa.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -85,8 +85,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestHideNodes()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.Hide_nodes.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.Hide_nodes.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -101,8 +101,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestLanduses()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.landuses.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.landuses.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -117,8 +117,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestOamStyle()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.oam-style.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.oam-style.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -133,8 +133,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestOpenstreetinfo()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.openstreetinfo.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.openstreetinfo.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -169,7 +169,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         {
             // parses the MapCSS.
             AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.potlatch2.mapcss");
+                "OsmSharp.UI.Test.data.MapCSS.potlatch2.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -186,8 +186,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             //TODO: this css will not parse; the meta section is a problem!
 
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.opencyclemap.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.opencyclemap.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             Antlr.Runtime.Tree.CommonTree tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -220,8 +220,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         public void TestTrivial()
         {
             // parses the MapCSS.
-            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-                "OsmSharp.UI.Test.Unittests.Data.MapCSS.trivial.mapcss");
+            var result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Test.data.MapCSS.trivial.mapcss");
 
             // Test the very minimum; no errors during parsing says a lot already!
             var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
@@ -236,7 +236,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
         private AstParserRuleReturnScope<object, IToken> TestMapCSSParsing(string embeddedPath)
         {
             // get the text from the embedded test file.
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedPath);
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedPath);
             Assert.IsNotNull(stream);
             var reader = new StreamReader(stream);
             string s = reader.ReadToEnd();

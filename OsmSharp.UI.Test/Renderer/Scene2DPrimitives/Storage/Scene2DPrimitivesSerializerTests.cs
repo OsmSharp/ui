@@ -52,13 +52,13 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
             // load mapcss style interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.UI.Test.Unittests.Data.MapCSS.test.mapcss"),
+                    "OsmSharp.UI.Test.data.MapCSS.test.mapcss"),
                 imageSource);
 
             // initialize the data source.
             var xmlSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.UI.Test.Unittests.Data.test.osm"));
+                    "OsmSharp.UI.Test.data.test.osm"));
             IEnumerable<OsmGeo> dataSource = xmlSource;
             MemoryDataSource source = MemoryDataSource.CreateFrom(xmlSource);
 

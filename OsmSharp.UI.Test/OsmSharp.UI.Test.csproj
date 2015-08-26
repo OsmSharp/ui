@@ -110,23 +110,23 @@
     <Compile Include="UI\View2DTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\MapCSS\coloured-addresses.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\default.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\gisrussa.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\Hide_nodes.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\landuses.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\oam-style.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\opencyclemap.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\openstreetinfo.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\osmosnimki-hybrid.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\potlatch2.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\sport_styles.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\trivial.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\color-named.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\color-short.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\color.mapcss" />
-    <EmbeddedResource Include="Data\MapCSS\test.mapcss" />
-    <EmbeddedResource Include="Data\test.osm" />
+    <EmbeddedResource Include="data\MapCSS\coloured-addresses.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\default.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\gisrussa.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\Hide_nodes.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\landuses.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\oam-style.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\opencyclemap.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\openstreetinfo.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\osmosnimki-hybrid.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\potlatch2.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\sport_styles.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\trivial.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\color-named.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\color-short.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\color.mapcss" />
+    <EmbeddedResource Include="data\MapCSS\test.mapcss" />
+    <EmbeddedResource Include="data\test.osm" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
