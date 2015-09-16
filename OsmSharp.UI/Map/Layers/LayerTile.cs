@@ -221,20 +221,14 @@ namespace OsmSharp.UI.Map.Layers
 
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Information, "Request tile@" + url);
 
-                Action<HttpWebResponse> responseAction = ((HttpWebResponse obj) =>
-                {
-                    this.Response(obj, tile);
-
-                    _loading.Remove(tile);
-                });
-                Action wrapperAction = () =>
-                {
                     request.BeginGetResponse(new AsyncCallback((iar) =>
                     {
+						var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
                         try
                         {
-                            var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
-                            responseAction(response);
+							this.Response(response, tile);
+
+							_loading.Remove(tile);
                         }
                         catch (WebException ex)
                         { // catch webexceptions.
@@ -279,14 +273,12 @@ namespace OsmSharp.UI.Map.Layers
                         { // oops, exceptions that are not webexceptions!?
                             OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);
                         }
+						finally 
+						{
+							response.Close();
+						}
                     }), request);
-                };
-                wrapperAction.BeginInvoke(new AsyncCallback((iar) =>
-                {
-                    var action = (Action)iar.AsyncState;
-                    action.EndInvoke(iar);
-                }), wrapperAction);
-            }
+			}
             catch (Exception ex)
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerTile", Logging.TraceEventType.Error, ex.Message);

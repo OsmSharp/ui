@@ -30,18 +30,21 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.6-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="OsmSharp">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.35-beta\lib\Xamarin.iOS10\OsmSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\packages\OsmSharp.Core.0.0.0.35-beta\lib\Xamarin.iOS10\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\packages\OsmSharp.Routing.0.0.0.17-beta\lib\Xamarin.iOS10\OsmSharp.Routing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
@@ -114,5 +117,8 @@
     <BundleResource Include="Images\marker-and-shadow%402x.png">
       <Link>Images\marker-and-shadow%402x.png</Link>
     </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

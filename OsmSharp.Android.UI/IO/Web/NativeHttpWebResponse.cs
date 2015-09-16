@@ -23,7 +23,7 @@ namespace OsmSharp.Android.UI.IO.Web
     /// <summary>
     /// A native implementation the HttpWebResponse.
     /// </summary>
-    internal class NativeHttpWebResponse : OsmSharp.IO.Web.HttpWebResponse
+	internal class NativeHttpWebResponse : OsmSharp.IO.Web.HttpWebResponse
     {
         /// <summary>
         /// Holds the http webresponse.
@@ -66,5 +66,13 @@ namespace OsmSharp.Android.UI.IO.Web
         {
             return _httpWebResponse.GetResponseStream();
         }
+
+		/// <summary>
+		/// Close this instance.
+		/// </summary>
+		public override void Close ()
+		{
+			_httpWebResponse.Close ();
+		}
     }
 }

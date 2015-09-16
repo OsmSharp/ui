@@ -23,7 +23,7 @@ namespace OsmSharp.WinForms.UI.IO.Web
     /// <summary>
     /// A native implementation the HttpWebRequest.
     /// </summary>
-    internal class NativeHttpWebRequest : OsmSharp.IO.Web.HttpWebRequest
+	internal class NativeHttpWebRequest : OsmSharp.IO.Web.HttpWebRequest
     {
         /// <summary>
         /// Holds the http webrequest.
@@ -97,5 +97,13 @@ namespace OsmSharp.WinForms.UI.IO.Web
         {
             return new NativeHttpWebResponse((System.Net.HttpWebResponse)_httpWebRequest.EndGetResponse(iar));
         }
+
+		/// <summary>
+		/// Abort this instance.
+		/// </summary>
+		public override Void Abort ()
+		{
+			throw new System.NotImplementedException ();
+		}
     }
 }
