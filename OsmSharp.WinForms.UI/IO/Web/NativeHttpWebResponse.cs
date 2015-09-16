@@ -70,7 +70,7 @@ namespace OsmSharp.WinForms.UI.IO.Web
 		/// <summary>
 		/// Close this instance.
 		/// </summary>
-		public override Void Close ()
+		public override void Close ()
 		{
 			throw new System.NotImplementedException ();
 		}

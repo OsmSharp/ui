@@ -101,7 +101,7 @@ namespace OsmSharp.WinForms.UI.IO.Web
 		/// <summary>
 		/// Abort this instance.
 		/// </summary>
-		public override Void Abort ()
+		public override void Abort ()
 		{
 			throw new System.NotImplementedException ();
 		}
