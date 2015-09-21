@@ -174,6 +174,8 @@ namespace OsmSharp.Android.UI
                 new CanvasRenderer2D(1));
         }
 
+		protected MapView MapView { get { return _mapView; } }
+
         /// <summary>
         /// Suspended rendering.
         /// </summary>
