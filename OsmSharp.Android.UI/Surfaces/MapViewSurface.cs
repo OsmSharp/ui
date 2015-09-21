@@ -965,7 +965,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="detector"></param>
         /// <returns></returns>
-        public bool OnTap(TapGestureDetector detector)
+        public virtual bool OnTap(TapGestureDetector detector)
         {
             // recreate the view.
             View2D view = this.CreateView();
