@@ -514,16 +514,17 @@ namespace OsmSharp.Android.UI
         /// <param name="projection"></param>
         /// <param name="mapControl"></param>
         internal void NotifyMapChangeToControl(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapControl mapControl)
-        {
-            if (mapControl != null &&
-                mapControl.Handle != IntPtr.Zero)
-            {
-                this.RemoveView(mapControl.BaseView);
-                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
-                {
-                    this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
-                }
-            }
+		{
+			if (mapControl != null &&
+				mapControl.Handle != IntPtr.Zero)
+			{
+				//this.RemoveView(mapControl.BaseView);
+				if (mapControl.SetLayout (pixelsWidth, pixelsHeight, view, projection)) {
+
+					//this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
+					UpdateViewLayout (mapControl.BaseView, mapControl.LayoutParams);
+				}
+			}
         }
 
         /// <summary>
