@@ -465,7 +465,7 @@ namespace OsmSharp.Android.UI
         {
             lock (_controls)
             {
-                this.ZoomToControls(_controls, 15);
+                this.ZoomToControls(_controls, percentage);
             }
         }
 
