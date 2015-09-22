@@ -518,11 +518,12 @@ namespace OsmSharp.Android.UI
             if (mapControl != null &&
                 mapControl.Handle != IntPtr.Zero)
             {
-                this.RemoveView(mapControl.BaseView);
-                if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
-                {
-                    this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
-                }
+                //this.RemoveView(mapControl.BaseView);
+                mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection);
+                //if (mapControl.SetLayout(pixelsWidth, pixelsHeight, view, projection))
+                //{
+                //    this.AddView(mapControl.BaseView, mapControl.BaseView.LayoutParameters);
+                //}
             }
         }
 
