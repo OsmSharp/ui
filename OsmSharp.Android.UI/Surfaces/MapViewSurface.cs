@@ -174,6 +174,8 @@ namespace OsmSharp.Android.UI
                 new CanvasRenderer2D(1));
         }
 
+		protected MapView MapView { get { return _mapView; } }
+
         /// <summary>
         /// Suspended rendering.
         /// </summary>
@@ -965,7 +967,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         /// <param name="detector"></param>
         /// <returns></returns>
-        public bool OnTap(TapGestureDetector detector)
+        public virtual bool OnTap(TapGestureDetector detector)
         {
             // recreate the view.
             View2D view = this.CreateView();

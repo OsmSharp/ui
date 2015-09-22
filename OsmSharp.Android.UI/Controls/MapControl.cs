@@ -68,6 +68,10 @@ namespace OsmSharp.Android.UI.Controls
             set;
         }
 
+		public abstract FrameLayout.LayoutParams LayoutParams {
+			get;
+		}
+
         /// <summary>
         /// holds pointer to user-object
         /// </summary>
@@ -156,6 +160,8 @@ namespace OsmSharp.Android.UI.Controls
         /// </summary>
         private MapControlAlignmentType _alignment;
 
+		protected FrameLayout.LayoutParams _layoutParams;
+
         /// <summary>
         /// Creates a MapControl based on the given view.
         /// </summary>
@@ -167,6 +173,7 @@ namespace OsmSharp.Android.UI.Controls
             _view = view;
             _location = location;
             _alignment = alignment;
+			_layoutParams = this.View.LayoutParameters as FrameLayout.LayoutParams;
 
 			this.MoveWithMap = true;
         }
@@ -189,10 +196,10 @@ namespace OsmSharp.Android.UI.Controls
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        protected void SetSize(int width, int height)
-        {
-            _view.SetMinimumWidth(width);
-            _view.SetMinimumHeight(height);
+		protected void SetSize(int width, int height)
+		{
+		    _view.SetMinimumWidth(width);
+		    _view.SetMinimumHeight(height);
 
 			if (_view.LayoutParameters != null) {
 				_view.LayoutParameters.Width = width;
@@ -205,10 +212,12 @@ namespace OsmSharp.Android.UI.Controls
 				_view.LayoutParameters = layoutParams;
 			}
 
+			_layoutParams = this.View.LayoutParameters as FrameLayout.LayoutParams;
+
 			if (Host != null) {
 				Host.NotifyControlChange (this);
 			}
-        }
+		}
 
         /// <summary>
         /// Returns the view.
@@ -220,6 +229,14 @@ namespace OsmSharp.Android.UI.Controls
                 return _view;
             }
         }
+
+		public override FrameLayout.LayoutParams LayoutParams
+		{
+			get
+			{
+				return _layoutParams;
+			}
+		}
 
         /// <summary>
         /// Returns the base view.
