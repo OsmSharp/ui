@@ -157,13 +157,13 @@ namespace OsmSharp.Android.UI
             // initialize the gesture detection.
             this.SetOnTouchListener(this);
             _scaleGestureDetector = new ScaleGestureDetector(
-                this.Context, this);
+                Application.Context, this);
             _rotateGestureDetector = new RotateGestureDetector(
-                this.Context, this);
+                Application.Context, this);
             _moveGestureDetector = new MoveGestureDetector(
-                this.Context, this);
+                Application.Context, this);
             _tagGestureDetector = new TapGestureDetector(
-                this.Context, this);
+                Application.Context, this);
 
             _makerLayer = new LayerPrimitives(
                 new WebMercator());
@@ -1255,6 +1255,11 @@ namespace OsmSharp.Android.UI
             {
                 this._map = null;
             }
+
+            this._scaleGestureDetector = null;
+            this._tagGestureDetector = null;
+            this._moveGestureDetector = null;
+            this._rotateGestureDetector = null;
         }
 
         private class MapViewControlZoomEvent
