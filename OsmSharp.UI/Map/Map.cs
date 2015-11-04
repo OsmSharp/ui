@@ -19,9 +19,6 @@
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
-using OsmSharp.Routing;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
@@ -366,33 +363,6 @@ namespace OsmSharp.UI.Map
             layerGpx.AddGpx(gpxStream);
             this.AddLayer(layerGpx);
             return layerGpx;
-        }
-
-        /// <summary>
-        /// Adds a new route layer with the given route loaded.
-        /// </summary>
-        /// <param name="route"></param>
-        /// <returns></returns>
-        public LayerRoute AddLayerRoute(Route route)
-        {
-            var layerRoute = new LayerRoute(this.Projection);
-            layerRoute.AddRoute(route);
-            this.AddLayer(layerRoute);
-            return layerRoute;
-        }
-
-        /// <summary>
-        /// Adds a graph layer with the given data and style.
-        /// </summary>
-        /// <param name="dataSource"></param>
-        /// <param name="styleInterpreter"></param>
-        /// <returns></returns>
-        public LayerGraph AddLayerGraph(IRoutingAlgorithmData<Edge> dataSource,
-            StyleInterpreter styleInterpreter)
-        {
-            var layerGraph = new LayerGraph(dataSource, styleInterpreter);
-            this.AddLayer(layerGraph);
-            return layerGraph;
         }
 
         /// <summary>
