@@ -1,5 +1,5 @@
 // OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2015 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,15 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Map;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
-using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.UI.Renderer.Scene;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -33,14 +34,8 @@ namespace OsmSharp.UI.Map.Layers
     /// </summary>
     public class LayerPrimitives : Layer
     {
-        /// <summary>
-        /// Holds the projection for this layer.
-        /// </summary>
-        private IProjection _projection;
-        /// <summary>
-        /// Holds the scene.
-        /// </summary>
-        private Scene2D _scene;
+        private readonly IProjection _projection; // Holds the projection for this layer.
+        private readonly Scene2D _scene; // Holds the scene.
 
         /// <summary>
         /// Creates a new primitives layer.
@@ -60,12 +55,10 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Adds a point.
         /// </summary>
-        /// <returns>The point.</returns>
-        /// <param name="coordinate">Coordinate.</param>
-        /// <param name="sizePixels">Size pixels.</param>
-        /// <param name="color"></param>
         public void AddPoint(GeoCoordinate coordinate, float sizePixels, int color)
         {
+            if (coordinate == null) { throw new ArgumentNullException(); }
+
             // update envelope.
             if (_envelope == null)
             { // create initial envelope.
@@ -83,13 +76,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Adds a line.
         /// </summary>
-        /// <param name="point1"></param>
-        /// <param name="point2"></param>
-        /// <param name="sizePixels"></param>
-        /// <param name="color"></param>
-        /// <returns></returns>
         public void AddLine(GeoCoordinate point1, GeoCoordinate point2, float sizePixels, int color)
         {
+            if (point1 == null) { throw new ArgumentNullException(); }
+            if (point2 == null) { throw new ArgumentNullException(); }
+
             // update envelope.
             if (_envelope == null)
             { // create initial envelope.
@@ -116,12 +107,10 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Adds a polyline.
         /// </summary>
-        /// <param name="points"></param>
-        /// <param name="sizePixels"></param>
-        /// <param name="color"></param>
-        /// <returns></returns>
         public void AddPolyline(GeoCoordinate[] points, float sizePixels, int color)
         {
+            if (points == null) { throw new ArgumentNullException(); }
+
             var x = new double[points.Length];
             var y = new double[points.Length];
             for(int idx = 0; idx < points.Length; idx++)
@@ -148,15 +137,12 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
-        /// Adds a polyline.
+        /// Adds a polygon.
         /// </summary>
-        /// <param name="points"></param>
-        /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="fill"></param>
-        /// <returns></returns>
         public void AddPolygon(GeoCoordinate[] points, int color, float width, bool fill)
         {
+            if (points == null) { throw new ArgumentNullException(); }
+
             var x = new double[points.Length];
             var y = new double[points.Length];
             for (int idx = 0; idx < points.Length; idx++)
@@ -180,6 +166,100 @@ namespace OsmSharp.UI.Map.Layers
                 _scene.AddStylePolygon(pointsId.Value, 0, float.MinValue, float.MaxValue, color, width, fill);
                 this.RaiseLayerChanged();
             }
+        }
+
+        /// <summary>
+        /// Adds all features in the given feature collection.
+        /// </summary>
+        public void AddFeatures(FeatureCollection features, int color, float width, bool fill)
+        {
+            if (features == null) { throw new ArgumentNullException(); }
+
+            foreach (var feature in features)
+            {
+                this.AddFeature(feature, color, width, fill);
+            }
+        }
+
+        /// <summary>
+        /// Adds the given feature.
+        /// </summary>
+        public void AddFeature(Feature feature, int color, float width, bool fill)
+        {
+            if (feature == null) { throw new ArgumentNullException(); }
+
+            this.AddGeometry(feature.Geometry, color, width, fill);
+        }
+
+        /// <summary>
+        /// Adds the given geometry.
+        /// </summary>
+        private void AddGeometry(Geometry geometry, int color, float width, bool fill)
+        {
+            if (geometry == null) { throw new ArgumentNullException(); }
+
+            if (geometry is Point)
+            {
+                this.AddGeometry(geometry as Point, color, width);
+            }
+            else if (geometry is Polygon)
+            {
+                this.AddGeometry(geometry as Polygon, color, width, fill);
+            }
+            else if (geometry is LineString)
+            {
+                this.AddGeometry(geometry as LineString, color, width);
+            }
+            else if (geometry is LineairRing)
+            {
+                this.AddGeometry(geometry as LineairRing, color, width, fill);
+            }
+        }
+
+        /// <summary>
+        /// Adds a point.
+        /// </summary>
+        private void AddGeometry(Point geometry, int color, float size)
+        {
+            if (geometry == null) { throw new ArgumentNullException(); }
+
+            this.AddPoint(geometry.Coordinate, size, color);
+        }
+
+        /// <summary>
+        /// Adds a polygon.
+        /// </summary>
+        private void AddGeometry(Polygon geometry, int color, float width, bool fill)
+        {
+            if (geometry == null) { throw new ArgumentNullException(); }
+
+            if(geometry.Holes != null &&
+               geometry.Holes.Count() > 0)
+            {
+                OsmSharp.Logging.Log.TraceEvent("LayerPrimitive.AddGeometry", Logging.TraceEventType.Warning,
+                    "Polygons with holes are not supported, only showing outerring.");
+            }
+            this.AddPolygon(geometry.Ring.Coordinates.ToArray(), color, width, fill);
+        }
+
+        /// <summary>
+        /// Adds a linestring.
+        /// </summary>
+        private void AddGeometry(LineString geometry, int color, float width)
+        {
+            if (geometry == null) { throw new ArgumentNullException(); }
+
+            this.AddPolyline(geometry.Coordinates.ToArray(), width, color);
+        }
+
+        /// <summary>
+        /// Adds a ring.
+        /// </summary>
+        private void AddGeometry(LineairRing geometry, int color, float width, bool fill)
+        {
+            if (geometry == null) { throw new ArgumentNullException(); }
+
+            this.AddPolygon(geometry.Coordinates.ToArray(), color, width, fill);
         }
 
         /// <summary>
