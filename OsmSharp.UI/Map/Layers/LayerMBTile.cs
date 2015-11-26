@@ -160,6 +160,8 @@ namespace OsmSharp.UI.Map.Layers
                 // build the tile range.
                 var range = TileRange.CreateAroundBoundingBox(new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
                     map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1])), zoomLevel);
+
+				OsmSharp.Logging.Log.TraceEvent ("LayerMBTile", OsmSharp.Logging.TraceEventType.Verbose, string.Format ("Requesting {0} tiles for view.", range.Count));
                 
                 // request all missing tiles.
                 lock (_connection)
@@ -170,8 +172,10 @@ namespace OsmSharp.UI.Map.Layers
                     foreach (var tile in range.EnumerateInCenterFirst())
                     {
                         Image2D value;
-                        if(_cache.TryPeek(tile, out value))
-                        { // tile is already in cache.
+						if(_cache.TryPeek(tile, out value))
+                        {
+							// Tile is already in cache. We used TryGet, and not TryPeek, to inform the cache
+							// that we intend to use the datum in question.
                             continue;
                         }
                         Tile invertTile = tile.InvertY();

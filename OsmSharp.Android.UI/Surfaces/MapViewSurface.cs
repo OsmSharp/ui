@@ -181,6 +181,21 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private bool _renderingSuspended = false;
 
+		/// <summary>
+		/// Do we need a new render?
+		/// </summary>
+		private bool _renderingIsDirty = false;
+
+		/// <summary>
+		/// Cancellation token for the most recently launched rendering loop.
+		/// </summary>
+		private CancellationTokenSource _renderingLoopCancellationTokenSource;
+
+		/// <summary>
+		/// A lock to engage when starting or stopping the rendering loop, which is therefore nonatomic.
+		/// </summary>
+		private readonly object _renderingLoopToggleLock = new object();
+
         /// <summary>
         /// Holds the off screen buffered image.
         /// </summary>
@@ -201,10 +216,10 @@ namespace OsmSharp.Android.UI
         /// </summary>
         private MapRenderer<global::Android.Graphics.Canvas> _cacheRenderer;
 
-        /// <summary>
-        /// Holds the rendering thread.
-        /// </summary>
-        private Thread _renderingThread;
+		/// <summary>
+		/// Holds the rendering loop thread.
+		/// </summary>
+		private Thread _renderingLoopThread;
 
         /// <summary>
         /// Holds the extra parameter.
@@ -231,61 +246,23 @@ namespace OsmSharp.Android.UI
         {
             try
             {
-                if (this.SurfaceWidth == 0)
-                { // nothing to render yet!
-                    return;
-                }
-
                 // create the view that would be use for rendering.
                 View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
                     this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
                     this.MapCenter, _invertX, _invertY, this.MapTilt);
 
                 // ... and compare to the previous rendered view.
-                if (!force && _previouslyRenderedView != null &&
-                    view.Equals(_previouslyRenderedView))
-                {
-                    return;
+                if (force || _previouslyRenderedView != null || !view.Equals(_previouslyRenderedView))
+				{
+					StartRenderingLoopIfNecessary();
+					_renderingIsDirty = true;
                 }
                 _previouslyRenderedView = view;
-
-                // end existing rendering thread.
-                if (_renderingThread != null &&
-                    _renderingThread.IsAlive)
-                {
-                    if (_cacheRenderer.IsRunning)
-                    {
-                        this.Map.ViewChangedCancel();
-                        _cacheRenderer.CancelAndWait();
-                    }
-                }
-
-                // start new rendering thread.
-                _renderingThread = new Thread(new ThreadStart(Render));
-                _renderingThread.Start();
             }
             catch (Exception ex)
             {
                 OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Critical,
                     string.Format("An unhandled exception occured:{0}", ex.ToString()));
-            }
-        }
-
-        /// <summary>
-        /// Stops the current rendering if in progress.
-        /// </summary>
-        internal void StopRendering()
-        {
-            // stop current rendering.
-            if (_renderingThread != null &&
-                _renderingThread.IsAlive)
-            { // a rendering thread is alive.
-                if (_cacheRenderer != null &&
-                    _cacheRenderer.IsRunning)
-                { // there is a running cache renderer and thus there is something to cancel.
-                    this.Map.ViewChangedCancel();
-                    _cacheRenderer.CancelAndWait();
-                }
             }
         }
 
@@ -325,160 +302,181 @@ namespace OsmSharp.Android.UI
             }
         }
 
-        /// <summary>
-        /// Renders the current complete scene.
-        /// </summary>
-        private void Render()
-        {
-            try
-            {
-                if (_renderingSuspended)
-                { // no rendering when rendering is suspended.
-                    return;
-                }
+		private void StartRenderingLoopIfNecessary() {
+			lock (_renderingLoopToggleLock) {
+				if (_renderingLoopThread == null) {
+					_renderingLoopCancellationTokenSource = new CancellationTokenSource ();
+					var token = _renderingLoopCancellationTokenSource.Token;
+					ThreadStart starter = () => RenderingLoop (token);
+					_renderingLoopThread = new Thread (starter);
+					_renderingLoopThread.Start ();
+					OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Verbose, "Started rendering loop");
+				}
+			}
+		}
 
-                if (_cacheRenderer.IsRunning)
-                { // cancel previous render.
-                    _cacheRenderer.CancelAndWait();
-                }
+		private void StopRenderingLoop() {
+			lock (_renderingLoopToggleLock) {
+				if (_renderingLoopCancellationTokenSource != null) {
+					_renderingLoopCancellationTokenSource.Cancel ();
+					_renderingLoopCancellationTokenSource = null;
+					_renderingLoopThread = null;
+					OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Verbose, "Stopped rendering loop");
+				}
+			}
+		}
 
-                // make sure only on thread at the same time is using the renderer.
-                lock (_cacheRenderer)
-                {
-                    this.Map.ViewChangedCancel();
+		private void RenderingLoop(CancellationToken cancellationToken) {
+			while (cancellationToken.IsCancellationRequested == false) {
+				var surfaceSizeFailure = this.SurfaceWidth * this.SurfaceHeight == 0;
+				var cannotRender = surfaceSizeFailure || _renderingSuspended;
 
-                    // build the layers list.
-                    var layers = new List<Layer>();
-                    for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
-                    { // get the layer.
-                        if (this.Map[layerIdx].IsVisible)
-                        {
-                            layers.Add(this.Map[layerIdx]);
-                        }
-                    }
+				if (surfaceSizeFailure)
+				{ // nothing to render yet!
+					return;
+				}
+				var renderNow = _renderingIsDirty && !cannotRender;
+				if (!renderNow) {
+					const int standardSleepDuration = 20;
+					Thread.Sleep (standardSleepDuration);
+				} else {
+					_renderingIsDirty = false;
+					try
+					{
+						// make sure only on thread at the same time is using the renderer.
+						lock (_cacheRenderer)
+						{
+							this.Map.ViewChangedCancel();
 
-                    // add the internal layers.
-                    layers.Add(_makerLayer);
+							// build the layers list.
+							var layers = new List<Layer>();
+							for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
+							{ // get the layer.
+								if (this.Map[layerIdx].IsVisible)
+								{
+									layers.Add(this.Map[layerIdx]);
+								}
+							}
 
-                    if (this.SurfaceHeight == 0)
-                    { // the surface has no height yet. Impossible to render like this.
-                        return;
-                    }
+							// add the internal layers.
+							layers.Add(_makerLayer);
 
-                    // get old image if available.
-                    NativeImage image = null;
-                    if (_offScreenBuffer != null)
-                    { // get the native image from the off-screen buffer.
-                        image = _offScreenBuffer.NativeImage as NativeImage;
-                    }
+							// get old image if available.
+							NativeImage image = null;
+							if (_offScreenBuffer != null)
+							{ // get the native image from the off-screen buffer.
+								image = _offScreenBuffer.NativeImage as NativeImage;
+							}
 
-                    // resize image if needed.
-                    float sizeX = this.SurfaceWidth;
-                    float sizeY = this.SurfaceHeight;
-                    //if(this.MapAllowTilt)
-                    //{ // when rotation is allowed make sure a square is rendered.
-                    //    sizeX = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
-                    //    sizeY = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
-                    //}
-                    // float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
-                    if (image == null ||
-                        image.Image.Width != (int)(sizeX * _extra) ||
-                        image.Image.Height != (int)(sizeY * _extra))
-                    { // create a bitmap and render there.
-                        if (image != null)
-                        { // make sure to dispose the old image.
-                            image.Dispose();
-                        }
-                        image = new NativeImage(global::Android.Graphics.Bitmap.CreateBitmap((int)(sizeX * _extra),
-                            (int)(sizeY * _extra),
-                            global::Android.Graphics.Bitmap.Config.Argb8888));
-                    }
+							// resize image if needed.
+							float sizeX = this.SurfaceWidth;
+							float sizeY = this.SurfaceHeight;
+							//if(this.MapAllowTilt)
+							//{ // when rotation is allowed make sure a square is rendered.
+							//    sizeX = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
+							//    sizeY = System.Math.Max(this.SurfaceWidth, this.SurfaceHeight);
+							//}
+							// float size = System.Math.Max(this.SurfaceHeight, this.SurfaceWidth);
+							if (image == null ||
+								image.Image.Width != (int)(sizeX * _extra) ||
+								image.Image.Height != (int)(sizeY * _extra))
+							{ // create a bitmap and render there.
+								if (image != null)
+								{ // make sure to dispose the old image.
+									image.Dispose();
+								}
+								image = new NativeImage(global::Android.Graphics.Bitmap.CreateBitmap((int)(sizeX * _extra),
+									(int)(sizeY * _extra),
+									global::Android.Graphics.Bitmap.Config.Argb8888));
+							}
 
-                    // create and reset the canvas.
-                    using (var canvas = new global::Android.Graphics.Canvas(image.Image))
-                    {
-                        canvas.DrawColor(new global::Android.Graphics.Color(
-                            SimpleColor.FromKnownColor(KnownColor.White).Value));
+							// create and reset the canvas.
+							using (var canvas = new global::Android.Graphics.Canvas(image.Image))
+							{
+								canvas.DrawColor(new global::Android.Graphics.Color(
+									SimpleColor.FromKnownColor(KnownColor.White).Value));
 
-                        // create the view.
-                        double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
-                        float mapZoom = this.MapZoom;
-                        float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+								// create the view.
+								double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+								float mapZoom = this.MapZoom;
+								float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
-                        // create the view for this control.
-                        float scaledNormalWidth = image.Image.Width / _bufferFactor;
-                        float scaledNormalHeight = image.Image.Height / _bufferFactor;
-                        var view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                                 scaledNormalWidth * _extra, scaledNormalHeight * _extra, sceneZoomFactor,
-                                                 _invertX, _invertY, this.MapTilt);
+								// create the view for this control.
+								float scaledNormalWidth = image.Image.Width / _bufferFactor;
+								float scaledNormalHeight = image.Image.Height / _bufferFactor;
+								var view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+									scaledNormalWidth * _extra, scaledNormalHeight * _extra, sceneZoomFactor,
+									_invertX, _invertY, this.MapTilt);
 
-                        long before = DateTime.Now.Ticks;
+								long before = DateTime.Now.Ticks;
 
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                                                        "Rendering Start");
+								OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
+									"Rendering Start");
 
-                        // notify the map that the view has changed.
-                        if (_previouslyChangedView == null ||
-                            !_previouslyChangedView.Equals(view))
-                        { // report change once!
-                            var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                scaledNormalWidth, scaledNormalHeight, sceneZoomFactor,
-                                _invertX, _invertY, this.MapTilt);
-                            this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
-                                                  normalView, view);
-                            _previouslyChangedView = view;
-                            long afterViewChanged = DateTime.Now.Ticks;
-                            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                                                            "View change took: {0}ms @ zoom level {1}",
-                                                            (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
-                        }
+								// notify the map that the view has changed.
+								if (_previouslyChangedView == null ||
+									!_previouslyChangedView.Equals(view))
+								{ // report change once!
+									var normalView = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+										scaledNormalWidth, scaledNormalHeight, sceneZoomFactor,
+										_invertX, _invertY, this.MapTilt);
+									this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
+										normalView, view);
+									_previouslyChangedView = view;
+									long afterViewChanged = DateTime.Now.Ticks;
+									OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
+										"View change took: {0}ms @ zoom level {1}",
+										(new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+								}
 
-                        // does the rendering.
-                        _cacheRenderer.Density = this.MapScaleFactor;
-                        bool complete = _cacheRenderer.Render(canvas, _map.Projection, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
+								// does the rendering.
+								_cacheRenderer.Density = this.MapScaleFactor;
+								bool complete = _cacheRenderer.Render(canvas, _map.Projection, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
-                        long afterRendering = DateTime.Now.Ticks;
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
-                                                        "Rendering took: {0}ms @ zoom level {1} and {2}",
-                                                        (new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom, this.MapCenter);
-                        if (complete)
-                        { // there was no cancellation, the rendering completely finished.
-                            // add the result to the scene cache.
-                            // add the newly rendered image again.           
-                            if (_offScreenBuffer == null)
-                            { // create the offscreen buffer first.
-                                _offScreenBuffer = new ImageTilted2D(view.Rectangle, image, float.MinValue, float.MaxValue);
-                            }
-                            else
-                            { // augment the previous buffer.
-                                _offScreenBuffer.Bounds = view.Rectangle;
-                                _offScreenBuffer.NativeImage = image;
-                            }
+								long afterRendering = DateTime.Now.Ticks;
+								OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", TraceEventType.Information,
+									"Rendering took: {0}ms @ zoom level {1} and {2}",
+									(new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom, this.MapCenter);
+								if (complete)
+								{ // there was no cancellation, the rendering completely finished.
+									// add the result to the scene cache.
+									// add the newly rendered image again.           
+									if (_offScreenBuffer == null)
+									{ // create the offscreen buffer first.
+										_offScreenBuffer = new ImageTilted2D(view.Rectangle, image, float.MinValue, float.MaxValue);
+									}
+									else
+									{ // augment the previous buffer.
+										_offScreenBuffer.Bounds = view.Rectangle;
+										_offScreenBuffer.NativeImage = image;
+									}
 
-                            var temp = _onScreenBuffer;
-                            _onScreenBuffer = _offScreenBuffer;
-                            _offScreenBuffer = temp;
-                        }
+									var temp = _onScreenBuffer;
+									_onScreenBuffer = _offScreenBuffer;
+									_offScreenBuffer = temp;
+								}
 
-                        long after = DateTime.Now.Ticks;
+								long after = DateTime.Now.Ticks;
 
-                        if (complete)
-                        { // report a successful render to listener.
-                            _listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
-                        }
-                    }
-                }
+								if (complete)
+								{ // report a successful render to listener.
+									_listener.NotifyRenderSuccess(view, mapZoom, (int)new TimeSpan(after - before).TotalMilliseconds);
+								}
+							}
+						}
 
-                // notify the the current surface of the new rendering.
-                this.PostInvalidate();
-            }
-            catch (Exception ex)
-            { // exceptions can be thrown when the mapview is disposed while rendering.
-                // don't worry too much about these, the mapview is garbage anyway.
-                OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Critical,
-                    string.Format("An unhandled exception occured:{0}", ex.ToString()));
-            }
-        }
+						// notify the the current surface of the new rendering.
+						this.PostInvalidate();
+					}
+					catch (Exception ex)
+					{ // exceptions can be thrown when the mapview is disposed while rendering.
+						// don't worry too much about these, the mapview is garbage anyway.
+						OsmSharp.Logging.Log.TraceEvent("MapViewSurface", TraceEventType.Critical,
+							string.Format("An unhandled exception occured:{0}", ex.ToString()));
+					}
+				}
+			}
+		}
 
         /// <summary>
         /// The map center.
@@ -1233,6 +1231,8 @@ namespace OsmSharp.Android.UI
                 // release these resources
             }
 
+			StopRenderingLoop ();
+
             // Release the unmanaged resource in any case as they will not be 
             // released by GC
             this._cacheRenderer = null;
@@ -1334,7 +1334,7 @@ namespace OsmSharp.Android.UI
         /// </summary>
         void IInvalidatableMapSurface.CancelRender()
         {
-            this.StopRendering();
+			OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Warning, "Request to cancel render ignored");
         }
 
         /// <summary>
@@ -1371,9 +1371,6 @@ namespace OsmSharp.Android.UI
 
                 // suspend rendering.
                 _renderingSuspended = true;
-
-                // stop current rendering if any.
-                this.StopRendering();
             }
             catch (Exception ex)
             {
@@ -1426,8 +1423,7 @@ namespace OsmSharp.Android.UI
                 { // stop all ongoing animations.
                     _mapViewAnimator.Stop();
                 }
-                // stop current rendering if any.
-                this.StopRendering();
+				StopRenderingLoop ();
             }
             catch (Exception ex)
             {

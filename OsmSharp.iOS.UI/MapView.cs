@@ -362,10 +362,21 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private int _backgroundColor;
 		/// <summary>
-		/// Holds the rendering thread.
+		/// Holds the rendering loop thread.
 		/// </summary>
-		private Thread _renderingThread;
-
+		private Thread _renderingLoopThread;
+		/// <summary>
+		/// Do we need a new render?
+		/// </summary>
+		private bool _renderingIsDirty = false;
+		/// <summary>
+		/// Cancellation token for the most recently launched rendering loop.
+		/// </summary>
+		private CancellationTokenSource _renderingLoopCancellationTokenSource;
+		/// <summary>
+		/// A lock to engage when starting or stopping the rendering loop, which is therefore nonatomic.
+		/// </summary>
+		private readonly object _renderingLoopToggleLock = new object();
 		/// <summary>
 		/// Holds a boolean that holds triggered notify movement.
 		/// </summary>
@@ -381,70 +392,54 @@ namespace OsmSharp.iOS.UI
 				return;
 			}
 
-			OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
-				"Rendering triggered!");
-
-//			if (Monitor.TryEnter(_cacheRenderer, 300))
-//			{ // entered the exclusive lock area.
-				try
-				{
-					// create the view that would be use for rendering.
-					float size = (float)System.Math.Max(_rect.Width, _rect.Height);
-					View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-						this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
-						this.MapCenter, _invertX, _invertY, this.MapTilt);
-
-					// ... and compare to the previous rendered view.
-					if (_previouslyRenderedView != null &&
-						view.Equals(_previouslyRenderedView) &&
-						!force)
-					{
-						_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
-						return;
-					}
-					_previouslyRenderedView = view;
-
-					// end existing rendering thread.
-					if (_renderingThread != null &&
-						_renderingThread.IsAlive)
-					{
-						if (_cacheRenderer.IsRunning)
-						{
-							_cacheRenderer.CancelAndWait();
-						}
-					}
-
-					// start new rendering thread.
-					_renderingThread = new Thread(new ThreadStart(Render));
-					_renderingThread.Start();
-
-					OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
-						"Rendering thread started!");
+			try
+			{
+				// create the view that would be use for rendering.
+				float size = (float)System.Math.Max(_rect.Width, _rect.Height);
+				View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
+					this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
+					this.MapCenter, _invertX, _invertY, this.MapTilt);
+				
+				if(force || _previouslyRenderedView == null || !view.Equals(_previouslyRenderedView)) {
+					_renderingIsDirty = true;
+					StartRenderingLoopIfNecessary();
 				}
-				catch
-				{
-					OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
-						"Exception Occured: Rendering thread not started!");
+				else {
+					_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
 				}
-//				finally
-//				{
-//					Monitor.Exit(_cacheRenderer);
-//				}
-//			}
+
+				_previouslyRenderedView = view;
+
+				OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
+					"Rendering triggered.");
+			}
+			catch
+			{
+				OsmSharp.Logging.Log.TraceEvent("MapView.TriggerRendering", TraceEventType.Information,
+					"Exception Occured: Rendering not triggered.");
+			}
 		}
 
-		/// <summary>
-		/// Stops the current rendering.
-		/// </summary>
-		internal void StopRendering()
-		{
-			// end existing rendering thread.
-			if (_renderingThread != null &&
-				_renderingThread.IsAlive)
-			{
-				if (_cacheRenderer.IsRunning)
-				{
-					_cacheRenderer.CancelAndWait();
+		private void StartRenderingLoopIfNecessary() {
+			lock (_renderingLoopToggleLock) {
+				if (_renderingLoopThread == null) {
+					_renderingLoopCancellationTokenSource = new CancellationTokenSource ();
+					var token = _renderingLoopCancellationTokenSource.Token;
+					ThreadStart starter = () => RenderingLoop (token);
+					_renderingLoopThread = new Thread (starter);
+					_renderingLoopThread.Start ();
+					OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Verbose, "Started rendering loop");
+				}
+			}
+		}
+
+		private void StopRenderingLoop() {
+			lock (_renderingLoopToggleLock) {
+				if (_renderingLoopCancellationTokenSource != null) {
+					_renderingLoopCancellationTokenSource.Cancel ();
+					_renderingLoopCancellationTokenSource = null;
+					_renderingLoopThread = null;
+					OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Verbose, "Stopped rendering loop");
 				}
 			}
 		}
@@ -467,132 +462,112 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Render the current complete scene.
 		/// </summary>
-		void Render()
+		private void RenderingLoop(CancellationToken cancellationToken)
 		{
-			try
-			{
-				//if (Monitor.TryEnter(_cacheRenderer, 10))
-				lock(_cacheRenderer)
-				{
-					try
-					{
-						// use object
-						var rect = _rect;
+			while (cancellationToken.IsCancellationRequested == false) {
+				var rect = _rect;
 
-						// create the view.
-						var size = (float)System.Math.Max(_rect.Width, _rect.Height);
-						var view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-							this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-							this.MapCenter, _invertX, _invertY, this.MapTilt);
-						if (rect.Width == 0)
-						{ // only render if a proper size is known.
-							return;
-						}
+				var surfaceSizeFailure = rect.Width == 0 || rect.Height == 0;
+				var cannotRender = surfaceSizeFailure;
 
-						// calculate width/height.
-						var imageWidth = (int)(size * _extra * _scaleFactor);
-						var imageHeight = (int)(size * _extra * _scaleFactor);
+				var renderNow = _renderingIsDirty && !cannotRender;
+				if (!renderNow) {
+					const int standardSleepDuration = 20;
+					Thread.Sleep (standardSleepDuration);
+				} else {
+					_renderingIsDirty = false;
+					lock (_cacheRenderer) {
+						try {
+							// create the view.
+							var size = (float)System.Math.Max (_rect.Width, _rect.Height);
+							var view = _cacheRenderer.Create ((int)(size * _extra), (int)(size * _extra),
+								           this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
+								           this.MapCenter, _invertX, _invertY, this.MapTilt);
 
-						// create a new bitmap context.
-						var space = CGColorSpace.CreateDeviceRGB();
-						int bytesPerPixel = 4;
-						int bytesPerRow = bytesPerPixel * imageWidth;
-						int bitsPerComponent = 8;
+							// calculate width/height.
+							var imageWidth = (int)(size * _extra * _scaleFactor);
+							var imageHeight = (int)(size * _extra * _scaleFactor);
 
-						// get old image if available.
-						var image = new CGBitmapContext(null, imageWidth, imageHeight,
-							bitsPerComponent, bytesPerRow,
-							space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
-							CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+							// create a new bitmap context.
+							var space = CGColorSpace.CreateDeviceRGB ();
+							int bytesPerPixel = 4;
+							int bytesPerRow = bytesPerPixel * imageWidth;
+							int bitsPerComponent = 8;
 
-						long before = DateTime.Now.Ticks;
+							// get old image if available.
+							var image = new CGBitmapContext (null, imageWidth, imageHeight,
+								            bitsPerComponent, bytesPerRow,
+								            space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
+								            CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
 
-						// build the layers list.
-						var layers = new List<Layer>();
-						for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
-						{
-							layers.Add(this.Map[layerIdx]);
-						}
+							long before = DateTime.Now.Ticks;
 
-						// add the internal layer.
-						try
-						{
-							image.SetFillColor(1, 1, 1, 1);
-							image.FillRect(new CGRect(
+							// build the layers list.
+							var layers = new List<Layer> ();
+							for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
+								layers.Add (this.Map [layerIdx]);
+							}
+
+							image.SetFillColor (1, 1, 1, 1);
+							image.FillRect (new CGRect (
 								0, 0, imageWidth, imageHeight));
 
 							// notify the map that the view has changed.
-							var normalView = _cacheRenderer.Create((float)_rect.Width, (float)_rect.Height,
-								this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
-								this.MapCenter, _invertX, _invertY, this.MapTilt);
-							this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter,
+							var normalView = _cacheRenderer.Create ((float)_rect.Width, (float)_rect.Height,
+								                 this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
+								                 this.MapCenter, _invertX, _invertY, this.MapTilt);
+							this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter,
 								normalView, view);
 							long afterViewChanged = DateTime.Now.Ticks;
-							OsmSharp.Logging.Log.TraceEvent("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
+							OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
 								"View change took: {0}ms @ zoom level {1}",
-								(new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+								(new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
 							float zoomFactor = this.MapZoom;
-							float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+							float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
 
 							// does the rendering.
-							bool complete = _cacheRenderer.Render(new CGContextWrapper(image,
-								new CGRect(0, 0, (int)(size * _extra), (int)(size * _extra))),
-								_map.Projection, layers, view, sceneZoomFactor);
+							bool complete = _cacheRenderer.Render (new CGContextWrapper (image,
+								                new CGRect (0, 0, (int)(size * _extra), (int)(size * _extra))),
+								                _map.Projection, layers, view, sceneZoomFactor);
 
 							long afterRendering = DateTime.Now.Ticks;
 
-							if (complete)
-							{ // there was no cancellation, the rendering completely finished.
-								lock (_bufferSynchronisation)
-								{
+							if (complete) { // there was no cancellation, the rendering completely finished.
+								lock (_bufferSynchronisation) {
 									if (_onScreenBuffer != null &&
-										_onScreenBuffer.NativeImage != null)
-									{ // on screen buffer.
-										_onScreenBuffer.NativeImage.Dispose();
+									    _onScreenBuffer.NativeImage != null) { // on screen buffer.
+										_onScreenBuffer.NativeImage.Dispose ();
 									}
 
 									// add the newly rendered image again.           
-									_onScreenBuffer = new ImageTilted2D(view.Rectangle, 
-										new NativeImage(image.ToImage()), float.MinValue, float.MaxValue);
+									_onScreenBuffer = new ImageTilted2D (view.Rectangle, 
+										new NativeImage (image.ToImage ()), float.MinValue, float.MaxValue);
 
 									// store the previous view.
 									_previouslyRenderedView = view;
 								}
 
 								// make sure this view knows that there is a new rendering.
-								this.InvokeOnMainThread(SetNeedsDisplay);
+								this.InvokeOnMainThread (SetNeedsDisplay);
 							}
 
 							long after = DateTime.Now.Ticks;
 
-							if(complete)
-							{ // notify invalidation listener about a succesfull rendering.
-								OsmSharp.Logging.Log.TraceEvent("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
-									"Rendering succesfull after {0}ms.", new TimeSpan(after - before).TotalMilliseconds);
+							if (complete) { // notify invalidation listener about a succesfull rendering.
+								OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
+									"Rendering succesfull after {0}ms.", new TimeSpan (after - before).TotalMilliseconds);
 
-								_listener.NotifyRenderSuccess(view, zoomFactor, (int)new TimeSpan(after - before).TotalMilliseconds);
+								_listener.NotifyRenderSuccess (view, zoomFactor, (int)new TimeSpan (after - before).TotalMilliseconds);
+							} else { // rendering incomplete.
+								OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
+									"Rendering cancelled.", new TimeSpan (after - before).TotalMilliseconds);
 							}
-							else
-							{ // rendering incomplete.
-								OsmSharp.Logging.Log.TraceEvent("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
-									"Rendering cancelled.", new TimeSpan(after - before).TotalMilliseconds);
-							}
+						} catch (Exception) {
+							_cacheRenderer.Reset ();
 						}
-						finally
-						{
-
-						}
-					}
-					finally
-					{ // make sure the object lock is release.
-						Monitor.Exit(_cacheRenderer);
 					}
 				}
-			}
-			catch (Exception)
-			{
-				_cacheRenderer.Reset();
 			}
 		}
 
@@ -876,7 +851,7 @@ namespace OsmSharp.iOS.UI
 		/// <returns><c>true</c> if this instance cancel render; otherwise, <c>false</c>.</returns>
 		void IInvalidatableMapSurface.CancelRender()
 		{
-			this.StopRendering();
+			OsmSharp.Logging.Log.TraceEvent ("MapViewSurface", TraceEventType.Warning, "Request to cancel render ignored");
 		}
 
 		/// <summary>
@@ -1815,6 +1790,17 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
+		public override void WillMoveToWindow (UIWindow window)
+		{
+			base.WillMoveToWindow (window);
+
+			if (window == null) {
+				OsmSharp.Logging.Log.TraceEvent ("MapView", TraceEventType.Verbose, "Removed from window.");
+
+				StopRenderingLoop ();
+			}
+		}
+
 		/// <summary>
 		/// Dispose the specified disposing.
 		/// </summary>
@@ -1823,17 +1809,15 @@ namespace OsmSharp.iOS.UI
 		{
 			base.Dispose(disposing);
 
+			OsmSharp.Logging.Log.TraceEvent ("MapView", TraceEventType.Verbose, "Disposing MapView");
+
 			if (_onScreenBuffer != null &&
 				_onScreenBuffer.NativeImage != null)
 			{
 				_onScreenBuffer.NativeImage.Dispose();
 			}
 
-			if (_renderingThread != null)
-			{
-				_renderingThread.Abort();
-				_renderingThread = null;
-			}
+			StopRenderingLoop ();
 		}
 	}
 }
