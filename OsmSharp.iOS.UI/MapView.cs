@@ -34,6 +34,9 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using System.Collections.ObjectModel;
 using OsmSharp.iOS.UI.Controls;
+using CoreAnimation;
+
+
 #if __UNIFIED__
 using CoreGraphics;
 using Foundation;
@@ -170,6 +173,9 @@ namespace OsmSharp.iOS.UI
 		{
 			// register the default listener.
 			(this as IInvalidatableMapSurface).RegisterListener(new DefaultTrigger(this));
+
+			_displayLink = CADisplayLink.Create (OnPreRender);
+			_displayLink.AddToRunLoop (NSRunLoop.Current, NSRunLoopMode.Default);
 
 			// enable all interactions by default.
 			this.MapAllowPan = true;
@@ -378,9 +384,13 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private readonly object _renderingLoopToggleLock = new object();
 		/// <summary>
-		/// Holds a boolean that holds triggered notify movement.
+		/// If true, we need to notify movement at some point in the near future.
 		/// </summary>
-		private bool _triggeredNotifyMovement = false;
+		private bool _notifyMovementWanted = false;
+		/// <summary>
+		/// This display link performs notification of movement if a trigger is wanted. This must be on the primary thread.
+		/// </summary>
+		private CADisplayLink _displayLink;
 
 		/// <summary>
 		/// Notifies change
@@ -589,7 +599,7 @@ namespace OsmSharp.iOS.UI
 				this.StopCurrentAnimation();
 				if (rotation.State == UIGestureRecognizerState.Ended)
 				{
-					this.NotifyMovementByInvoke();;
+					this.NotifyMovement();;
 
 					_mapViewBefore = null;
 
@@ -611,10 +621,7 @@ namespace OsmSharp.iOS.UI
 					this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.NotifyMovementByInvoke();
-
-					// raise map move event.
-					this.RaiseMapMove();
+					this.NotifyMovement();
 				}
 			}
 		}
@@ -637,7 +644,7 @@ namespace OsmSharp.iOS.UI
 				this.StopCurrentAnimation();
 				if (pinch.State == UIGestureRecognizerState.Ended)
 				{
-					this.NotifyMovementByInvoke();
+					this.NotifyMovement();
 
 					_mapZoomLevelBefore = null;
 
@@ -658,10 +665,7 @@ namespace OsmSharp.iOS.UI
 					zoomFactor = zoomFactor * pinch.Scale;
 					MapZoom = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-					this.NotifyMovementByInvoke();
-
-					// raise map move event.
-					this.RaiseMapMove();
+					this.NotifyMovement();
 				}
 			}
 		}
@@ -684,7 +688,7 @@ namespace OsmSharp.iOS.UI
 				CGPoint offset = pan.TranslationInView(this);
 				if (pan.State == UIGestureRecognizerState.Ended)
 				{
-					this.NotifyMovementByInvoke();
+					this.NotifyMovement();
 
 					// raise map touched event.
 					this.RaiseMapTouched();
@@ -709,10 +713,7 @@ namespace OsmSharp.iOS.UI
 					this.MapCenter = this.Map.Projection.ToGeoCoordinates(
 						sceneCenter[0], sceneCenter[1]);
 
-					this.NotifyMovementByInvoke();
-
-					// raise map move event.
-					this.RaiseMapMove();
+					this.NotifyMovement();
 				}
 			}
 		}
@@ -794,32 +795,34 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Notifies that there was movement by invoking NotifyMovement on the main thread.
 		/// </summary>
-		private void NotifyMovementByInvoke()
-		{ // make sure that there are not too many queued events and movement notifications.
-			if (!_triggeredNotifyMovement)
-			{ // notify move on main thread.
-				_triggeredNotifyMovement = true;
-				this.InvokeOnMainThread(NotifyMovement);
-			}
+		private void NotifyMovement()
+		{
+			_notifyMovementWanted = true;
 		}
 
 		/// <summary>
-		/// Notifies that there was movement.
+		/// This method is called on the main thread prior to the rendering of any frame.
 		/// </summary>
-		private void NotifyMovement()
+		private void OnPreRender()
 		{
-			// invalidate the map.
-			this.InvalidateMap();
-			_triggeredNotifyMovement = false;
+			if (_notifyMovementWanted) {
+				_notifyMovementWanted = false;
 
-			// change the map markers.
-			CGRect rect = this.Frame;
-			if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
-			{
-				// create the current view.
-				View2D view = this.CreateView(rect);
+				// invalidate the map.
+				this.InvalidateMap();
 
-				_listener.NotifyChange(view, this.MapZoom);
+				// change the map markers.
+				CGRect rect = this.Frame;
+				if (rect.Width > 0 && rect.Height > 0 && this.Map != null)
+				{
+					// create the current view.
+					View2D view = this.CreateView(rect);
+
+					_listener.NotifyChange(view, this.MapZoom);
+				}
+
+				// raise map move event.
+				this.RaiseMapMove();
 			}
 		}
 
@@ -922,7 +925,7 @@ namespace OsmSharp.iOS.UI
 					_mapZoom = value;
 				}
 
-				this.NotifyMovementByInvoke();
+				this.NotifyMovement();
 			}
 		}
 
@@ -968,7 +971,7 @@ namespace OsmSharp.iOS.UI
 			{
 				_mapTilt = value;
 
-				this.NotifyMovementByInvoke();
+				this.NotifyMovement();
 			}
 		}
 
@@ -1003,7 +1006,7 @@ namespace OsmSharp.iOS.UI
 					}
 				}
 
-				this.NotifyMovementByInvoke();
+				this.NotifyMovement();
 			}
 		}
 
@@ -1116,7 +1119,7 @@ namespace OsmSharp.iOS.UI
 			MapTilt = mapTilt;
 			MapZoom = mapZoom;
 
-			this.NotifyMovementByInvoke();
+			this.NotifyMovement();
 		}
 
 		/// <summary>
@@ -1379,7 +1382,7 @@ namespace OsmSharp.iOS.UI
 				this.MapCenter = center;
 				this.MapZoom = zoom;
 
-				this.NotifyMovementByInvoke();
+				this.NotifyMovement();
 			}
 		}
 
@@ -1544,7 +1547,7 @@ namespace OsmSharp.iOS.UI
 				this.MapCenter = center;
 				this.MapZoom = zoom;
 
-				this.NotifyMovementByInvoke();
+				this.NotifyMovement();
 			}
 		}
 
@@ -1726,7 +1729,6 @@ namespace OsmSharp.iOS.UI
 				_listener.Invalidate();
 			}
 			_previouslyRenderedView = null;
-			_triggeredNotifyMovement = false;
 			_previouslyRenderedView = null;
 			//_cacheRenderer.CancelAndWait ();
 			//this.NotifyMovementByInvoke();
@@ -1808,6 +1810,11 @@ namespace OsmSharp.iOS.UI
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
+
+			if (_displayLink != null) {
+				_displayLink.Invalidate ();
+				_displayLink = null;
+			}
 
 			OsmSharp.Logging.Log.TraceEvent ("MapView", TraceEventType.Verbose, "Disposing MapView");
 

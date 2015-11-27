@@ -172,7 +172,7 @@ namespace OsmSharp.UI.Map.Layers
                     foreach (var tile in range.EnumerateInCenterFirst())
                     {
                         Image2D value;
-						if(_cache.TryPeek(tile, out value))
+						if(_cache.TryGet(tile, out value))
                         {
 							// Tile is already in cache. We used TryGet, and not TryPeek, to inform the cache
 							// that we intend to use the datum in question.
