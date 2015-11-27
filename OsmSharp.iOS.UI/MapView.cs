@@ -266,20 +266,21 @@ namespace OsmSharp.iOS.UI
 			else
 			{
 				var panGesture = new UIPanGestureRecognizer(Pan);
+				var pinchGesture = new UIPinchGestureRecognizer(Pinch);
+				var rotationGesture = new UIRotationGestureRecognizer(Rotate);
+
 				panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) =>
 				{
-					return true;
+					return other != rotationGesture;
 				};
 				this.AddGestureRecognizer(panGesture);
 
-				var pinchGesture = new UIPinchGestureRecognizer(Pinch);
 				pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) =>
 				{
 					return true;
 				};
 				this.AddGestureRecognizer(pinchGesture);
 
-				var rotationGesture = new UIRotationGestureRecognizer(Rotate);
 				rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) =>
 				{
 					return true;
