@@ -660,7 +660,7 @@ namespace OsmSharp.iOS.UI
 				}
 				else
 				{
-					MapZoom = _mapZoomLevelBefore.Value;
+					MapZoom = _mapZoomLevelBefore.GetValueOrDefault (1.0f);
 
 					double zoomFactor = this.Map.Projection.ToZoomFactor(MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
