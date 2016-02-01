@@ -24,7 +24,7 @@ namespace OsmSharp.iOS.UI
     /// <summary>
     /// An iOS-specific implementation of an SQLiteConnection.
     /// </summary>
-    public class SQLiteConnection : OsmSharp.Data.SQLite.SQLiteConnectionBase
+    public class SQLiteConnection : OsmSharp.UI.Data.SQLite.SQLiteConnectionBase
     {
         /// <summary>
         /// Holds the 'native' or platform-specific connection.

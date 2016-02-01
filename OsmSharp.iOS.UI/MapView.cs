@@ -34,10 +34,10 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 using System.Collections.ObjectModel;
 using OsmSharp.iOS.UI.Controls;
-using CoreAnimation;
 
 
 #if __UNIFIED__
+using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -46,6 +46,7 @@ using MonoTouch.UIKit;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
+using MonoTouch.CoreAnimation;
 
 // Type Mappings Unified to monotouch.dll
 using CGRect = global::System.Drawing.RectangleF;

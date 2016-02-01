@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
-using OsmSharp.Data.SQLite;
+using OsmSharp.UI.Data.SQLite;
 using OsmSharp.Collections.Cache;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Math.Geo.Projections;

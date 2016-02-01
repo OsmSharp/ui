@@ -38,12 +38,12 @@
     <DocumentationFile>..\OutputAndroid\OsmSharp.Android.UI.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\MonoAndroid\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=1.3.0.119, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\MonoAndroid\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\MonoAndroid\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=1.3.0.119, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\MonoAndroid\OsmSharp.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
