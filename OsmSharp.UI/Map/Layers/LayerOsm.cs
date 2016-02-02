@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -31,23 +31,13 @@ namespace OsmSharp.UI.Map.Layers
     /// </summary>
     public class LayerOsm : Layer
     {
-        /// <summary>
-        /// Holds the source of the OSM raw data.
-        /// </summary>
-        private readonly IDataSourceReadOnly _dataSource;
-
-        /// <summary>
-        /// Holds the style scene manager.
-        /// </summary>
-        private readonly StyleSceneManager _styleSceneManager;
+        private readonly ISnapshotDb _dataSource; // Holds the source of the OSM raw data.
+        private readonly StyleSceneManager _styleSceneManager; // Holds the style scene manager.
 
         /// <summary>
         /// Creates a new OSM data layer.
         /// </summary>
-        /// <param name="dataSource"></param>
-        /// <param name="styleInterpreter"></param>
-        /// <param name="projection"></param>
-        public LayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter, IProjection projection)
+        public LayerOsm(ISnapshotDb dataSource, StyleInterpreter styleInterpreter, IProjection projection)
         {
             // build the zoom-level cutoffs.
             List<float> zoomFactors = new List<float>();
@@ -63,12 +53,8 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Called when the view on the map containing this layer has changed.
         /// </summary>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="view"></param>
-        /// <param name="extraView"></param>
-        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, 
+            View2D extraView)
         {
             this.BuildScene(map, zoomFactor, center, extraView);
         }
@@ -76,9 +62,6 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Returns all objects from this layer visible for the given parameters.
         /// </summary>
-        /// <param name="zoomFactor"></param>
-        /// <param name="view"></param>
-        /// <returns></returns>
         protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             return _styleSceneManager.Scene.Get(view, zoomFactor);
@@ -100,10 +83,6 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Builds the scene.
         /// </summary>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             // build the boundingbox.
@@ -115,18 +94,6 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         #endregion
-
-        /// <summary>
-        /// Returns the bounding rectangle of this layer (if available).
-        /// </summary>
-        /// <remarks>Not all layers, formats support getting an envolope. Property can return null even on some types of bounded data.</remarks>
-        public override GeoCoordinateBox Envelope
-        {
-            get
-            {
-                return _dataSource.BoundingBox;
-            }
-        }
 
         /// <summary>
         /// Closes this layer.

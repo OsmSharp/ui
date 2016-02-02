@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,11 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
@@ -100,12 +96,9 @@ namespace OsmSharp.UI.Map.Styles
         /// <summary>
         /// Fills the scene with objects from the given datasource that existing inside the given boundingbox with the given projection.
         /// </summary>
-        /// <param name="dataSource"></param>
-        /// <param name="box"></param>
-        /// <param name="projection"></param>
-        public void FillScene(IDataSourceReadOnly dataSource, GeoCoordinateBox box, IProjection projection)
+        public void FillScene(ISnapshotDb db, GeoCoordinateBox box, IProjection projection)
         {
-            IList<Osm.OsmGeo> osmGeos = dataSource.Get(box, null);
+            var osmGeos = db.Get(box);
             foreach (var osmGeo in osmGeos)
             { // translate each object into scene object.
                 LongIndex index = null;
@@ -125,7 +118,7 @@ namespace OsmSharp.UI.Map.Styles
                 { // object was not yet interpreted.
                     index.Add(osmGeo.Id.Value);
 
-                    _interpreter.Translate(_scene, projection, dataSource, osmGeo);
+                    _interpreter.Translate(_scene, projection, db.ToOsmGeoSource(), osmGeo);
                 }
             }
         }

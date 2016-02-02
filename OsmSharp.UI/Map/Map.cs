@@ -368,12 +368,9 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Adds a layer displaying osm data from a given data source using the given style.
         /// </summary>
-        /// <param name="dataSource"></param>
-        /// <param name="styleInterpreter"></param>
-        /// <returns></returns>
-        public LayerOsm AddLayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
+        public LayerOsm AddLayerOsm(ISnapshotDb dataSource, StyleInterpreter styleInterpreter)
         {
-            LayerOsm layerOsm = new LayerOsm(dataSource, styleInterpreter, this.Projection);
+            var layerOsm = new LayerOsm(dataSource, styleInterpreter, this.Projection);
             this.AddLayer(layerOsm);
             return layerOsm;
         }
