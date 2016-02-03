@@ -22,16 +22,14 @@
         </dependencies>
     </metadata>
     <files>
-      <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll" />
-      <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
-      <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
-      <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net45\OsmSharp.UI.dll" />
-      <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net45\OsmSharp.WinForms.UI.dll" />
-	    <file src="OutputAndroid\OsmSharp.UI.dll" target="lib\MonoAndroid\OsmSharp.UI.dll" />
-	    <file src="OutputAndroid\OsmSharp.Android.UI.dll" target="lib\MonoAndroid\OsmSharp.Android.UI.dll" />
-      <file src="OutputiOS\OsmSharp.UI.dll" target="lib\MonoTouch10\OsmSharp.UI.dll" />
-      <file src="OutputiOS\OsmSharp.iOS.UI.dll" target="lib\MonoTouch10\OsmSharp.iOS.UI.dll" />
-	    <file src="OutputiOS\Unified\OsmSharp.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.UI.dll" />
-	    <file src="OutputiOS\Unified\OsmSharp.iOS.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.iOS.UI.dll" />
+      <file src="Output\OsmSharp.UI.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll" />
+      <file src="Output\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
+      <file src="Output\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
+      <file src="Output\OsmSharp.UI.dll" target="lib\net45\OsmSharp.UI.dll" />
+      <file src="Output\OsmSharp.WinForms.UI.dll" target="lib\net45\OsmSharp.WinForms.UI.dll" />
+	    <file src="Output\OsmSharp.UI.dll" target="lib\MonoAndroid\OsmSharp.UI.dll" />
+	    <file src="Output\OsmSharp.Android.UI.dll" target="lib\MonoAndroid\OsmSharp.Android.UI.dll" />
+	    <file src="Output\OsmSharp.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.UI.dll" />
+	    <file src="Output\OsmSharp.iOS.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.iOS.UI.dll" />
     </files>
 </package>
