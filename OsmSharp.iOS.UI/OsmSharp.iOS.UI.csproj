@@ -6,28 +6,30 @@
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>OsmSharp.iOS_Unified.UI</RootNamespace>
+    <RootNamespace>OsmSharp.iOS.UI</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>OsmSharp.iOS_Unified.UI</AssemblyName>
+    <AssemblyName>OsmSharp.iOS.UI</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\OutputiOS\Unified\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DocumentationFile>..\Output\OsmSharp.iOS.UI.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\OutputiOS\Unified\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DocumentationFile>..\Output\OsmSharp.iOS.UI.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator'">
     <OutputPath>..\OutputiOS\Unified\</OutputPath>
@@ -42,13 +44,13 @@
     <OutputPath>..\OutputiOS\Unified\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\Xamarin.iOS10\OsmSharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OsmSharp, Version=1.0.2.109, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=0.0.0.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.0.48-beta\lib\Xamarin.iOS10\OsmSharp.Osm.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OsmSharp.Osm, Version=1.0.2.109, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.Osm.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -80,7 +82,6 @@
     <Compile Include="Renderer\CGContextWrapper.cs" />
     <Compile Include="Renderer\Images\NativeImage.cs" />
     <Compile Include="Renderer\Images\NativeImageCache.cs" />
-    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup />
