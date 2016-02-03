@@ -16,16 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Data.SQLite;
 using System.IO;
-using System.Reflection;
 
 namespace OsmSharp.Android.UI.Data.SQLite
 {
     /// <summary>
     /// An Android-specific implementation of an SQLiteConnection.
     /// </summary>
-    public class SQLiteConnection : OsmSharp.Data.SQLite.SQLiteConnectionBase
+    public class SQLiteConnection : OsmSharp.UI.Data.SQLite.SQLiteConnectionBase
     {
         /// <summary>
         /// Holds the 'native' or platform-specific connection.

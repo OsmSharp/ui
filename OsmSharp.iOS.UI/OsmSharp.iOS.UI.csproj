@@ -64,57 +64,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\IMapControlHost.cs" />
+    <Compile Include="Controls\MapControl.cs" />
+    <Compile Include="Controls\MapControlAlignmentType.cs" />
     <Compile Include="Data\SQLite\SQLite.cs" />
+    <Compile Include="Data\SQLite\SQLiteConnection.cs" />
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
-    <Compile Include="MapView.cs">
-      <Link>MapView.cs</Link>
-    </Compile>
-    <Compile Include="Renderer\CGContextRenderer.cs">
-      <Link>Renderer\CGContextRenderer.cs</Link>
-    </Compile>
-    <Compile Include="Renderer\CGContextWrapper.cs">
-      <Link>Renderer\CGContextWrapper.cs</Link>
-    </Compile>
-    <Compile Include="Controls\MapControl.cs">
-      <Link>Controls\MapControl.cs</Link>
-    </Compile>
-    <Compile Include="Controls\IMapControlHost.cs">
-      <Link>Controls\IMapControlHost.cs</Link>
-    </Compile>
-    <Compile Include="Controls\MapControlAlignmentType.cs">
-      <Link>Controls\MapControlAlignmentType.cs</Link>
-    </Compile>
-    <Compile Include="Data\SQLite\SQLiteConnection.cs">
-      <Link>Data\SQLite\SQLiteConnection.cs</Link>
-    </Compile>
-    <Compile Include="Log\ConsoleTraceListener.cs">
-      <Link>Log\ConsoleTraceListener.cs</Link>
-    </Compile>
-    <Compile Include="Log\TextViewTraceListener.cs">
-      <Link>Log\TextViewTraceListener.cs</Link>
-    </Compile>
-    <Compile Include="Markers\MapMarker.cs">
-      <Link>Markers\MapMarker.cs</Link>
-    </Compile>
-    <Compile Include="Renderer\Images\NativeImage.cs">
-      <Link>Renderer\Images\NativeImage.cs</Link>
-    </Compile>
-    <Compile Include="Renderer\Images\NativeImageCache.cs">
-      <Link>Renderer\Images\NativeImageCache.cs</Link>
-    </Compile>
-    <Compile Include="Native.cs">
-      <Link>Native.cs</Link>
-    </Compile>
+    <Compile Include="Log\ConsoleTraceListener.cs" />
+    <Compile Include="Log\TextViewTraceListener.cs" />
+    <Compile Include="MapView.cs" />
+    <Compile Include="Markers\MapMarker.cs" />
+    <Compile Include="Native.cs" />
+    <Compile Include="Renderer\CGContextRenderer.cs" />
+    <Compile Include="Renderer\CGContextWrapper.cs" />
+    <Compile Include="Renderer\Images\NativeImage.cs" />
+    <Compile Include="Renderer\Images\NativeImageCache.cs" />
+    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Images\" />
-    <Folder Include="Log\" />
-    <Folder Include="Markers\" />
-    <Folder Include="Renderer\Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BundleResource Include="Images\layers.png">
       <Link>Images\layers.png</Link>
@@ -131,5 +100,29 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\layers.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\layers%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker-and-shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker-and-shadow%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker-shadow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker-shadow%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Images\marker%402x.png" />
   </ItemGroup>
 </Project>

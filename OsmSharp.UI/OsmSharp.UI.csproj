@@ -174,12 +174,12 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp, Version=1.3.0.119, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=1.0.2.109, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.1.0.2\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=1.3.0.119, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.1.3.0-rc1-0119\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=1.0.2.109, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.1.0.2\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\OsmSharp.Osm.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net">

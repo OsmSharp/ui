@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 //
 
+using OsmSharp.iOS.SQLite;
 using System;
 using System.Collections;
 using System.Collections.Generic;
