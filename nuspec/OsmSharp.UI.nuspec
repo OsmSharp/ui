@@ -23,10 +23,8 @@
     </metadata>
     <files>
       <file src="Output\OsmSharp.UI.dll" target="lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll" />
-      <file src="Output\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
-      <file src="Output\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
-      <file src="Output\OsmSharp.UI.dll" target="lib\net45\OsmSharp.UI.dll" />
-      <file src="Output\OsmSharp.WinForms.UI.dll" target="lib\net45\OsmSharp.WinForms.UI.dll" />
+      <file src="Output\OsmSharp.UI.dll" target="lib\net452\OsmSharp.UI.dll" />
+      <file src="Output\OsmSharp.WinForms.UI.dll" target="lib\net452\OsmSharp.WinForms.UI.dll" />
 	    <file src="Output\OsmSharp.UI.dll" target="lib\MonoAndroid\OsmSharp.UI.dll" />
 	    <file src="Output\OsmSharp.Android.UI.dll" target="lib\MonoAndroid\OsmSharp.Android.UI.dll" />
 	    <file src="Output\OsmSharp.UI.dll" target="lib\Xamarin.iOS10\OsmSharp.UI.dll" />
