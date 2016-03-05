@@ -63,6 +63,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private const float OffsetCasingLeftRight = 2.1f;
         private const float OffsetLinePattern = 2.9f;
         private const float OffsetLine = 3;
+        private const float OffsetArrow = 3;
         private const float OffsetPoint = 4;
         private const float OffsetDefaultPoint = 4.1f;
         private const float OffsetLineText = 4.9f;
@@ -561,7 +562,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 // simplify.
                 if (x.Length > 2)
                 {
-                    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.0001);
+                    var simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.0001);
                     x = simplified[0];
                     y = simplified[1];
                 }
@@ -607,16 +608,31 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
                     if (renderAsLine)
                     { // was not rendered as an area.
+                        int[] dashes;
+                        if (!rule.TryGetProperty("dashes", out dashes))
+                        {
+                            dashes = null;
+                        }
+                        int[] arrowDashes;
+                        if (!rule.TryGetProperty("arrowDashes", out arrowDashes))
+                        {
+                            arrowDashes = null;
+                        }
+                        DeclarationArrowsEnum arrowDirection;
+                        int arrowColor = 0;
+                        bool showArrows = false;
+                        if (rule.TryGetProperty("arrows", out arrowDirection) &&
+                            rule.TryGetProperty("arrowColor", out arrowColor) &&
+                            arrowDashes != null)
+                        {
+                            showArrows = true;
+                        }
+
                         // the way has to rendered as a line.
                         LineJoin lineJoin;
                         if (!rule.TryGetProperty("lineJoin", out lineJoin))
                         {
                             lineJoin = LineJoin.Miter;
-                        }
-                        int[] dashes;
-                        if (!rule.TryGetProperty("dashes", out dashes))
-                        {
-                            dashes = null;
                         }
                         if (rule.TryGetProperty("color", out color))
                         {
@@ -653,6 +669,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
+
+                                if (showArrows)
+                                {
+                                    scene.AddStyleLineArrow(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                        minZoom, maxZoom, arrowColor, 1, arrowDashes);
                                 }
 
                                 int textColor;
@@ -882,6 +904,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 case DeclarationIntEnum.CasingColor:
                                     properties.AddProperty("casingColor", declarationInt.Eval(mapCSSObject));
                                     break;
+                                case DeclarationIntEnum.ArrowColor:
+                                    properties.AddProperty("arrowColor", declarationInt.Eval(mapCSSObject));
+                                    break;
                                 case DeclarationIntEnum.Extrude:
                                     properties.AddProperty("extrude", declarationInt.Eval(mapCSSObject));
                                     break;
@@ -973,6 +998,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     throw new ArgumentOutOfRangeException();
                             }
                         }
+                        else if (declaration is DeclarationArrows)
+                        {
+                            var declarationArrows = declaration as DeclarationArrows;
+                            switch (declarationArrows.Qualifier)
+                            {
+                                case DeclarationArrowsQualifier.Arrows:
+                                    properties.AddProperty("arrows", declarationArrows.Eval(mapCSSObject));
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
                         else if (declaration is DeclarationURL)
                         {
                             byte[] image;
@@ -1016,8 +1053,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         else if (declaration is DeclarationDashes)
                         {
                             var declarationDashes = (declaration as DeclarationDashes);
-                            properties.AddProperty("dashes", declarationDashes.Eval(
-                                mapCSSObject));
+                            switch(declarationDashes.Qualifier)
+                            {
+                                case DeclarationDashesEnum.Dashes:
+                                    properties.AddProperty("dashes", declarationDashes.Eval(
+                                        mapCSSObject));
+                                    break;
+                                case DeclarationDashesEnum.CasingDashes:
+                                    properties.AddProperty("casingDashes", declarationDashes.Eval(
+                                        mapCSSObject));
+                                    break;
+                                case DeclarationDashesEnum.ArrowDashes:
+                                    properties.AddProperty("arrowDashes", declarationDashes.Eval(
+                                        mapCSSObject));
+                                    break;
+                            }
                         }
                     }
 

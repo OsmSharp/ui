@@ -1248,6 +1248,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             // add declaration.
                             rule.Declarations.Add(casingColor);
                             break;
+                        case "arrow-color":
+                            var arrowColor = new DeclarationInt();
+                            arrowColor.Qualifier = DeclarationIntEnum.ArrowColor;
+                            if (evalCall != null)
+                            {
+                                arrowColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                arrowColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(arrowColor);
+                            break;
                         case "text-halo-color":
                             var textHaloColor = new DeclarationInt();
                             textHaloColor.Qualifier = DeclarationIntEnum.TextHaloColor;
@@ -1333,6 +1349,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             // add declaration.
                             rule.Declarations.Add(casingDashes);
                             break;
+                        case "arrow-dashes":
+                            var arrowDashes = new DeclarationDashes();
+                            arrowDashes.Qualifier = DeclarationDashesEnum.ArrowDashes;
+                            if (evalCall != null)
+                            {
+                                arrowDashes.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                arrowDashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(arrowDashes);
+                            break;
                         case "font-family":
                             var fontFamily = new DeclarationString();
                             fontFamily.Qualifier = DeclarationStringEnum.FontFamily;
@@ -1362,6 +1393,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
 
                             // add declaration.
                             rule.Declarations.Add(text);
+                            break;
+                        case "arrows":
+                            var arrow = new DeclarationArrows();
+                            arrow.Qualifier = DeclarationArrowsQualifier.Arrows;
+                            switch(valueString)
+                            {
+                                case "forward":
+                                    arrow.Value = DeclarationArrowsEnum.Forward;
+                                    break;
+                                case "backard":
+                                    arrow.Value = DeclarationArrowsEnum.Backward;
+                                    break;
+                                default:
+                                    throw new MapCSSDomainParserException("arrows", "Expected forward or backward.");
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(arrow);
                             break;
                         default:
                             var declarationCustom = new DeclarationCustom();

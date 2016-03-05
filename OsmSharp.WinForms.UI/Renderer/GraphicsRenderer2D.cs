@@ -188,13 +188,6 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <summary>
 	    /// Draws a line on the target. The coordinates given are scene coordinates.
 	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="lineJoin"></param>
-	    /// <param name="dashes"></param>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
             OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, int[] dashes)
 	    {
@@ -229,8 +222,8 @@ namespace OsmSharp.WinForms.UI.Renderer
 		        default:
 		            throw new ArgumentOutOfRangeException("lineJoin");
 		    }
-            _pen.StartCap = LineCap.Round;
-            _pen.EndCap = LineCap.Round;
+            _pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+            _pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
@@ -248,17 +241,26 @@ namespace OsmSharp.WinForms.UI.Renderer
             _pen.Width = this.ToPixels(width);
             target.Target.DrawLines(_pen, points);
 		}
+        
+        /// <summary>
+        /// Draws a series of arrows along a line on the target. The coordinates given are scene coordinates.
+        /// </summary>
+        protected override void DrawArrowsAlongLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width,
+            int[] dashes)
+        {
+            this.DrawLine(target, x, y, color, width, OsmSharp.UI.Renderer.Primitives.LineJoin.None, dashes);
+        }
 
-	    /// <summary>
-	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="fill">If set to <c>true</c> fill.</param>
-	    protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
+        /// <summary>
+        /// Draws a polygon on the target. The coordinates given are scene coordinates.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="fill">If set to <c>true</c> fill.</param>
+        protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
             double width, bool fill)
         {
             float widthInPixels = this.ToPixels(width);

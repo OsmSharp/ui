@@ -236,8 +236,16 @@ namespace OsmSharp.UI.Renderer
                                     continue;
                                 }
                             }
-                            this.DrawLine(target, x, y, line.Color,
-                                this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                            if (line.IsArrowLine)
+                            {
+                                this.DrawArrowsAlongLine(target, x, y, line.Color,
+                                    this.FromPixels(target, view, line.Width), line.Dashes);
+                            }
+                            else
+                            {
+                                this.DrawLine(target, x, y, line.Color,
+                                    this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                            }
                             break;
                         case Primitive2DType.Polygon2D:
                             Polygon2D polygon = (Polygon2D)primitive;
@@ -381,16 +389,22 @@ namespace OsmSharp.UI.Renderer
 		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
             LineJoin lineJoin, int[] dashes);
 
-	    /// <summary>
-	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="fill">If set to <c>true</c> fill.</param>
-		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
+        /// <summary>
+        /// Draws arrows along a line.
+        /// </summary>
+        protected abstract void DrawArrowsAlongLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width,
+            int[] dashes);
+
+        /// <summary>
+        /// Draws a polygon on the target. The coordinates given are scene coordinates.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="fill">If set to <c>true</c> fill.</param>
+        protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
 
 	    /// <summary>
 	    /// Draws an icon on the target unscaled but centered at the given scene coordinates.

@@ -698,9 +698,17 @@ namespace OsmSharp.iOS.UI
 				current = next;
 			}
 		}
+        
+        /// <summary>
+        /// Draws arrows along a line.
+        /// </summary>
+        protected override void DrawArrowsAlongLine(Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, int[] dashes)
+        {
+            this.DrawLine(target, x, y, color, width, LineJoin.None, dashes);
+        }
 
-		#endregion
+        #endregion
 
-	}
+    }
 }
 
