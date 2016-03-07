@@ -1402,7 +1402,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                 case "forward":
                                     arrow.Value = DeclarationArrowsEnum.Forward;
                                     break;
-                                case "backard":
+                                case "backward":
                                     arrow.Value = DeclarationArrowsEnum.Backward;
                                     break;
                                 default:

@@ -248,19 +248,139 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override void DrawArrowsAlongLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width,
             int[] dashes)
         {
-            this.DrawLine(target, x, y, color, width, OsmSharp.UI.Renderer.Primitives.LineJoin.None, dashes);
+            if (dashes == null || dashes.Length != 2)
+            {
+                return;
+            }
+
+            var gap = dashes[1];
+            var dash = dashes[0];
+
+            _pen.DashStyle = DashStyle.Solid;
+            _pen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
+            _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+            _pen.Color = Color.FromArgb(color);
+            _pen.Width = this.ToPixels(width);
+
+            var points = new PointF[x.Length];
+            for (int idx = 0; idx < x.Length; idx++)
+            {
+                var transformed = this.Tranform(x[idx], y[idx]);
+                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
+            }
+
+            var list = new List<PointF>(3);
+            var g = true;
+            var segment = 0;
+            var pos = (float)0;
+            var leftOver = (float)gap;
+            while (segment < points.Length - 1 ||
+                pos < 1)
+            { // move to the next position.
+                var s = points[segment];
+                var e = points[segment + 1];
+                var dx = e.X - s.X;
+                var dy = e.Y - s.Y;
+                var len = (float)System.Math.Sqrt(dx * dx + dy * dy);
+                var leftOverSegment = len * (1 - pos);
+
+                while (leftOverSegment < leftOver)
+                {
+                    leftOver -= leftOverSegment;
+
+                    if (!g)
+                    {
+                        list.Add(e);
+                    }
+                    segment++;
+                    if (segment >= points.Length - 1)
+                    {
+                        break;
+                    }
+                    s = points[segment];
+                    e = points[segment + 1];
+                    dx = e.X - s.X;
+                    dy = e.Y - s.Y;
+                    len = (float)System.Math.Sqrt(dx * dx + dy * dy);
+                    leftOverSegment = len;
+                    pos = 0;
+                }
+                if (segment >= points.Length - 1)
+                {
+                    break;
+                }
+
+                // should be in this segment.
+                pos = (leftOver / len) + pos;
+                var point = new PointF(s.X + dx * pos, 
+                    s.Y + dy * pos);
+                if (g)
+                {
+                    list.Add(point);
+                    g = false;
+                    leftOver = dash;
+                }
+                else
+                { // render line.
+                    list.Add(point);
+                    target.Target.DrawLines(_pen, list.ToArray());
+                    list.Clear();
+                    g = true;
+                    leftOver = gap;
+                }
+            }
         }
 
         /// <summary>
-        /// Draws a polygon on the target. The coordinates given are scene coordinates.
+        /// A more advanced dash drawing method.
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="fill">If set to <c>true</c> fill.</param>
-        protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
+        private static void DrawDashedLine(Graphics g, Pen p, float dash, float gap, PointF s, PointF e)
+        {
+            float dx = e.X - s.X;
+            float dy = e.Y - s.Y;
+
+            float len = (float)System.Math.Sqrt(dx * dx + dy * dy);
+            float remainder = len;
+
+            float vx = dx / len;
+            float vy = dy / len;
+
+            if (len <= dash + gap)
+            {
+                return;
+            }
+
+            var last = s;
+
+            while (remainder > dash + gap)
+            {
+                var p1 = new PointF(last.X, last.Y);
+                var p2 = new PointF(p1.X + vx * dash, p1.Y + vy * dash);
+
+                g.DrawLine(p, p1, p2);
+
+                last = new PointF(p2.X + vx * gap, p2.X + vy * gap);
+
+                remainder = remainder - dash - gap;
+            }
+
+            if (remainder > 0)
+            {
+                // g.DrawLine(p, last, e);
+            }
+        }
+
+
+    /// <summary>
+    /// Draws a polygon on the target. The coordinates given are scene coordinates.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="color">Color.</param>
+    /// <param name="width">Width.</param>
+    /// <param name="fill">If set to <c>true</c> fill.</param>
+    protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
             double width, bool fill)
         {
             float widthInPixels = this.ToPixels(width);

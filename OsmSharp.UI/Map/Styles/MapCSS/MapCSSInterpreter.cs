@@ -673,8 +673,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
                                 if (showArrows)
                                 {
-                                    scene.AddStyleLineArrow(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                        minZoom, maxZoom, arrowColor, 1, arrowDashes);
+                                    if (arrowDirection == DeclarationArrowsEnum.Backward)
+                                    {
+                                        var reverseX = new double[x.Length];
+                                        x.CopyToReverse(reverseX, 0);
+                                        var reverseY = new double[y.Length];
+                                        y.CopyToReverse(reverseY, 0);
+                                        uint? pointsIdReversed = scene.AddPoints(reverseX, reverseY);
+                                        if (pointsIdReversed.HasValue)
+                                        {
+                                            scene.AddStyleLineArrow(pointsIdReversed.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                                minZoom, maxZoom, arrowColor, 1, arrowDashes);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        scene.AddStyleLineArrow(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                            minZoom, maxZoom, arrowColor, 1, arrowDashes);
+                                    }
                                 }
 
                                 int textColor;
