@@ -39,43 +39,32 @@ namespace OsmSharp.WinForms.UI.Renderer
     public class GraphicsRenderer2D : Renderer2D<Graphics>
 	{
         private Pen _pen = new Pen(Color.Black);
+        private readonly float _scale1 = 1;
+
+        /// <summary>
+        /// Creates a new graphics renderer.
+        /// </summary>
+        public GraphicsRenderer2D(float scale = 1)
+        {
+            _scale1 = scale;
+        }
 
         #region Caching Implementation
 
         /// <summary>
         /// Called right before rendering starts.
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="view"></param>
         protected override void OnBeforeRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            //// create a bitmap and render there.
-            //var bitmap = new Bitmap((int)target.Width, (int)target.Height);
-            //target.BackTarget = target.Target;
-            //target.BackTarget.CompositingMode = CompositingMode.SourceOver;
-            //target.Target = Graphics.FromImage(bitmap);
-            //target.Target.CompositingMode = CompositingMode.SourceOver;
-            //target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
-            //target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
-            //target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
 
-            //target.Tag = bitmap;
         }
 
         /// <summary>
         /// Called right after rendering.
         /// </summary>
-        /// <param name="target"></param>
-        /// <param name="view"></param>
         protected override void OnAfterRender(Target2DWrapper<Graphics> target, View2D view)
         {
-            //target.Target.Flush();
-            //target.Target = target.BackTarget;
-            //var bitmap = target.Tag as Bitmap;
-            //if (bitmap != null)
-            //{
-            //    target.Target.DrawImageUnscaled(bitmap, 0, 0);
-            //}
+
         }
 
         #endregion
@@ -85,34 +74,19 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <summary>
         /// Creates a wrapper for the given target.
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
         public override Target2DWrapper<Graphics> CreateTarget2DWrapper(Graphics target)
         {
             return new Target2DWrapper<Graphics>(target,target.VisibleClipBounds.Width,
                 target.VisibleClipBounds.Height);
         }
+        
+	    private View2D _view; // Keeps the view.
+        private Target2DWrapper<Graphics> _target; // Holds the target.
+        private Matrix2D _toView; // Holds the to-view transformation matrix.
 
         /// <summary>
-        /// Keeps the view.
+        /// Transforms the target using the specified view.
         /// </summary>
-	    private View2D _view;
-
-        /// <summary>
-        /// Holds the target.
-        /// </summary>
-        private Target2DWrapper<Graphics> _target;
-
-        /// <summary>
-        /// Holds the to-view transformation matrix.
-        /// </summary>
-        private Matrix2D _toView;
-
-	    /// <summary>
-	    /// Transforms the target using the specified view.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="view">View.</param>
         protected override void Transform(Target2DWrapper<Graphics> target, View2D view)
 	    {
 	        _view = view;
@@ -124,9 +98,6 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <summary>
         /// Transforms the y-coordinate to screen coordinates.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
         private double[] Tranform(double x, double y)
         {
             double newX, newY;
@@ -137,7 +108,6 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <summary>
         /// Returns the size in pixels.
         /// </summary>
-        /// <returns></returns>
         private float ToPixels(double sceneSize)
         {
             double scaleX = _target.Width / _view.Width;
@@ -148,22 +118,16 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <summary>
 	    /// Returns the size in pixels.
 	    /// </summary>
-	    /// <returns>The pixels.</returns>
-	    /// <param name="target"></param>
-	    /// <param name="view">View.</param>
-	    /// <param name="sizeInPixels">Size in pixels.</param>
 	    protected override double FromPixels(Target2DWrapper<Graphics> target, View2D view, double sizeInPixels)
         {
             double scaleX = target.Width / view.Width;
 
-            return sizeInPixels / scaleX;
+            return (sizeInPixels) / scaleX;
         }
 
 	    /// <summary>
 	    /// Draws the backcolor.
 	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="backColor"></param>
 	    protected override void DrawBackColor(Target2DWrapper<Graphics> target, int backColor)
         {
             target.Target.Clear(Color.FromArgb(backColor));
@@ -172,13 +136,10 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <summary>
 	    /// Draws a point on the target. The coordinates given are scene coordinates.
 	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="size">Size.</param>
 	    protected override void DrawPoint(Target2DWrapper<Graphics> target, double x, double y, int color, double size)
 	    {
+            size = size * _scale1;
+
             double[] transformed = this.Tranform(x, y);
 	        float sizeInPixels = this.ToPixels(size);
             target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), (float)transformed[0] - (sizeInPixels / 2.0f), (float)transformed[1] - (sizeInPixels / 2.0f),
@@ -190,8 +151,8 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// </summary>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
             OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, int[] dashes)
-	    {
-//	        float widthInPixels = this.ToPixels(width);
+        {
+            width = width * _scale1;
 
             _pen.DashStyle = DashStyle.Solid;
             if (dashes != null)
@@ -248,6 +209,8 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override void DrawArrowsAlongLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width,
             int[] dashes)
         {
+            width = width * _scale1;
+
             if (dashes == null || dashes.Length != 2)
             {
                 return;
@@ -330,46 +293,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 }
             }
         }
-
-        /// <summary>
-        /// A more advanced dash drawing method.
-        /// </summary>
-        private static void DrawDashedLine(Graphics g, Pen p, float dash, float gap, PointF s, PointF e)
-        {
-            float dx = e.X - s.X;
-            float dy = e.Y - s.Y;
-
-            float len = (float)System.Math.Sqrt(dx * dx + dy * dy);
-            float remainder = len;
-
-            float vx = dx / len;
-            float vy = dy / len;
-
-            if (len <= dash + gap)
-            {
-                return;
-            }
-
-            var last = s;
-
-            while (remainder > dash + gap)
-            {
-                var p1 = new PointF(last.X, last.Y);
-                var p2 = new PointF(p1.X + vx * dash, p1.Y + vy * dash);
-
-                g.DrawLine(p, p1, p2);
-
-                last = new PointF(p2.X + vx * gap, p2.X + vy * gap);
-
-                remainder = remainder - dash - gap;
-            }
-
-            if (remainder > 0)
-            {
-                // g.DrawLine(p, last, e);
-            }
-        }
-
+        
 
     /// <summary>
     /// Draws a polygon on the target. The coordinates given are scene coordinates.
@@ -383,6 +307,8 @@ namespace OsmSharp.WinForms.UI.Renderer
     protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
             double width, bool fill)
         {
+            width = width * _scale1;
+
             float widthInPixels = this.ToPixels(width);
 
             var points = new PointF[x.Length];
@@ -480,6 +406,8 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
             int? haloColor, int? haloRadius, string fontName)
         {
+            size = size * _scale1;
+
             float sizeInPixels = this.ToPixels(size);
             var textColor = Color.FromArgb(color);
             var font = new Font(fontName, sizeInPixels);
@@ -523,6 +451,8 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
             double size, int? haloColor, int? haloRadius, string fontName)
         {
+            size = size * _scale1;
+
             if (x.Length > 1)
             {
                 float sizeInPixels = this.ToPixels(size);

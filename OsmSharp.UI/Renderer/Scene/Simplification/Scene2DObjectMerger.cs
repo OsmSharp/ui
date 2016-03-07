@@ -171,6 +171,15 @@ namespace OsmSharp.UI.Renderer.Scene.Simplification
                     target.AddText(target.AddPoint(scenePoint.X, scenePoint.Y), styleText.Layer, styleText.MinZoom, styleText.MaxZoom,
                         styleText.Size, text, styleText.Color, styleText.HaloColor, styleText.HaloRadius, styleText.Font);
                 }
+                else if (sceneObject.Value.Enum == SceneObjectType.LineArrowObject)
+                {
+                    var sceneLineArrowObject = (sceneObject.Value as SceneLineArrowObject);
+                    var scenePoints = source.GetPoints(sceneLineArrowObject.GeoId);
+                    var style = source.GetStyleLineArrow(sceneLineArrowObject.StyleId);
+
+                    target.AddStyleLineArrow(target.AddPoints(scenePoints.X, scenePoints.Y).Value, style.Layer, style.MinZoom, style.MaxZoom,
+                        style.Color, style.Width, style.Dashes);
+                }
             }
 
             // loop until there are no more candidates.

@@ -1231,6 +1231,15 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Returns the arrow line style for the given id.
+        /// </summary>
+        public StyleLineArrows GetStyleLineArrow(uint id)
+        {
+            return _lineStyleArrows.Get(id);
+        }
+
+
+        /// <summary>
         /// Converts the given object to a Scene2DPrimitive.
         /// </summary>
         /// <param name="id"></param>
