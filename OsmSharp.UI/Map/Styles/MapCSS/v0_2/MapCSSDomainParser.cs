@@ -856,6 +856,29 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             // add declaration.
                             rule.Declarations.Add(maxWidth);
                             break;
+                        case "arrow-width":
+                            var arrowWidth = new DeclarationInt();
+                            arrowWidth.Qualifier = DeclarationIntEnum.ArrowWidth;
+                            if (evalCall != null)
+                            {
+                                arrowWidth.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    arrowWidth.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                        string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
+                            }
+
+                            // add declaration.
+                            rule.Declarations.Add(arrowWidth);
+                            break;
                         case "fill-opacity":
                             var fillOpacity = new DeclarationFloat();
                             fillOpacity.Qualifier = DeclarationFloatEnum.FillOpacity;

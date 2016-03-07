@@ -620,6 +620,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         }
                         DeclarationArrowsEnum arrowDirection;
                         int arrowColor = 0;
+                        int arrowWidth = 1;
+                        if(!rule.TryGetProperty("arrowWidth", out arrowWidth))
+                        {
+                            arrowWidth = 1;
+                        }
+
                         bool showArrows = false;
                         if (rule.TryGetProperty("arrows", out arrowDirection) &&
                             rule.TryGetProperty("arrowColor", out arrowColor) &&
@@ -683,13 +689,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                         if (pointsIdReversed.HasValue)
                                         {
                                             scene.AddStyleLineArrow(pointsIdReversed.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                                minZoom, maxZoom, arrowColor, 1, arrowDashes);
+                                                minZoom, maxZoom, arrowColor, arrowWidth, arrowDashes);
                                         }
                                     }
                                     else
                                     {
                                         scene.AddStyleLineArrow(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                            minZoom, maxZoom, arrowColor, 1, arrowDashes);
+                                            minZoom, maxZoom, arrowColor, arrowWidth, arrowDashes);
                                     }
                                 }
 
@@ -922,6 +928,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     break;
                                 case DeclarationIntEnum.ArrowColor:
                                     properties.AddProperty("arrowColor", declarationInt.Eval(mapCSSObject));
+                                    break;
+                                case DeclarationIntEnum.ArrowWidth:
+                                    properties.AddProperty("arrowWidth", declarationInt.Eval(mapCSSObject));
                                     break;
                                 case DeclarationIntEnum.Extrude:
                                     properties.AddProperty("extrude", declarationInt.Eval(mapCSSObject));

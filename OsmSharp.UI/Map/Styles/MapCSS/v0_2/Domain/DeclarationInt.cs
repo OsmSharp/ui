@@ -47,6 +47,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         MaxWidth,
         TextHaloColor,
         TextHaloRadius,
-        ArrowColor
+        ArrowColor,
+        ArrowWidth
     }
 }
