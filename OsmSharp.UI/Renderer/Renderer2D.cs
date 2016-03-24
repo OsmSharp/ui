@@ -193,8 +193,8 @@ namespace OsmSharp.UI.Renderer
                 double epsilon = Scene2D.CalculateSimplificationEpsilon(new WebMercator(), zoomFactor);
 
 	            // loop over all primitives in the scene.
-                int simplifiedLines = 0;
-                int droppedLines = 0;
+                //int simplifiedLines = 0;
+                //int droppedLines = 0;
                 foreach (Primitive2D primitive in primitives)
 	            { // the primitive is visible.
 					if (_cancelFlag) {
@@ -213,29 +213,30 @@ namespace OsmSharp.UI.Renderer
 
                             x = line.X;
                             y = line.Y;
-                            if (x.Length > 4 && line.MaxZoom > zoomFactor * 2 && line.MaxZoom < 512)
-                            { // try and simplify.
-                                double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
-                                    epsilon);
-                                if (simplified[0].Length < line.X.Length)
-                                {
-                                    simplifiedLines++;
-                                    x = simplified[0];
-                                    y = simplified[1];
-                                }
-                                double distance = epsilon * 2;
-                                if (simplified[0].Length == 2)
-                                { // check if the simplified version is smaller than epsilon.
-                                    distance = System.Math.Sqrt(
-                                        System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
-                                        System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
-                                }
-                                if (distance < epsilon)
-                                {
-                                    droppedLines++;
-                                    continue;
-                                }
-                            }
+                            //if (x.Length > 4 && line.MaxZoom > zoomFactor * 2 && line.MaxZoom < 512)
+                            //{ // try and simplify.
+                            //    var simplified = new double[][] { x, y };
+                            //    //double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                            //    //    epsilon);
+                            //    if (simplified[0].Length < line.X.Length)
+                            //    {
+                            //        simplifiedLines++;
+                            //        x = simplified[0];
+                            //        y = simplified[1];
+                            //    }
+                            //    double distance = epsilon * 2;
+                            //    if (simplified[0].Length == 2)
+                            //    { // check if the simplified version is smaller than epsilon.
+                            //        distance = System.Math.Sqrt(
+                            //            System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
+                            //            System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
+                            //    }
+                            //    if (distance < epsilon)
+                            //    {
+                            //        droppedLines++;
+                            //        continue;
+                            //    }
+                            //}
                             this.DrawLine(target, x, y, line.Color,
                                 this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
                             break;

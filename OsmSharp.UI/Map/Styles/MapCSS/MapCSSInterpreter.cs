@@ -278,10 +278,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <summary>
         /// Translates OSM objects into basic renderable primitives.
         /// </summary>
-        /// <param name="scene">The scene to add primitives to.</param>
-        /// <param name="projection">The projection used to convert the objects.</param>
-        /// <param name="osmGeo">The osm object.</param>
-        /// <returns></returns>
         public override void Translate(Scene2D scene, IProjection projection, ICompleteOsmGeo osmGeo)
         {
             // set the scene backcolor.
@@ -399,13 +395,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 way.Nodes[idx].Coordinate.Latitude);
                         }
 
-                        // simplify.
-                        if (x.Length > 2)
-                        {
-                            double[][] simplified = SimplifyCurve.Simplify(new double[][] { x, y }, 0.0001);
-                            x = simplified[0];
-                            y = simplified[1];
-                        }
+                        //// simplify.
+                        //if (x.Length > 2)
+                        //{
+                        //    double[][] simplified = SimplifyCurve.Simplify(new double[][] { x, y }, 0.0001);
+                        //    x = simplified[0];
+                        //    y = simplified[1];
+                        //}
                     }
                     uint? points = scene.AddPoints(x, y);
                     if (points.HasValue)
@@ -414,6 +410,46 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Translates OSM objects into basic renderable primitives.
+        /// </summary>
+        public override void Translate(Scene2D scene, IProjection projection, Feature feature)
+        {
+            // set the scene backcolor.
+            scene.BackColor = this.GetCanvasColor().Value;
+
+            if (feature == null || feature.Geometry == null) { return; }
+
+            if (_mapCSSFile == null) { return; }
+
+            // store the object count.
+            int countBefore = scene.Count;
+
+            if (feature.Geometry is LineString)
+            {
+                this.TranslateLineString(scene, projection, feature);
+            }
+            else if (feature.Geometry is MultiLineString)
+            {
+                foreach(var lineString in (feature.Geometry as MultiLineString))
+                {
+                    this.TranslateLineString(scene, projection, new Feature(lineString, feature.Attributes));
+                }
+            }
+            else if(feature.Geometry is Polygon)
+            {
+                this.TranslatePolygon(scene, projection, feature);
+            }
+            else if(feature.Geometry is MultiPolygon)
+            {
+                this.TranslateMultiPolygon(scene, projection, feature);
+            }
+            else if(feature.Geometry is LineairRing)
+            {
+                this.TranslateLineairRing(scene, projection, feature);
             }
         }
 
@@ -558,13 +594,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         way.Nodes[idx].Coordinate.Latitude);
                 }
 
-                // simplify.
-                if (x.Length > 2)
-                {
-                    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.0001);
-                    x = simplified[0];
-                    y = simplified[1];
-                }
+                //// simplify.
+                //if (x.Length > 2)
+                //{
+                //    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.0001);
+                //    x = simplified[0];
+                //    y = simplified[1];
+                //}
             }
 
             // add the z-index.
@@ -708,6 +744,201 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         }
 
         /// <summary>
+        /// Translates a way.
+        /// </summary>
+        private bool TranslateLineString(Scene2D scene, IProjection projection, Feature feature)
+        {
+            var way = CompleteWay.Create(-1);
+            var tags = new TagsCollection();
+            foreach(var attr in feature.Attributes)
+            {
+                if (attr.Value != null)
+                {
+                    tags.Add(attr.Key, attr.Value.ToInvariantString());
+                }
+            }
+            var lineString = feature.Geometry as LineString;
+            way.Tags = tags;
+            for(var i = 0; i < lineString.Coordinates.Count; i++)
+            {
+                way.Nodes.Add(new Node()
+                {
+                    Id = -i,
+                    Latitude = lineString.Coordinates[i].Latitude,
+                    Longitude = lineString.Coordinates[i].Longitude
+                });
+            }
+
+            // build the rules.
+            var rules = this.BuildRules(new MapCSSObject(way));
+
+            // validate what's there.
+            if (rules.Count == 0)
+            {
+                return false;
+            }
+
+            bool success = false;
+
+            // get x/y.
+            double[] x = null, y = null;
+            if (x == null)
+            { // pre-calculate x/y.
+                x = new double[way.Nodes.Count];
+                y = new double[way.Nodes.Count];
+                for (int idx = 0; idx < way.Nodes.Count; idx++)
+                {
+                    x[idx] = projection.LongitudeToX(
+                        way.Nodes[idx].Coordinate.Longitude);
+                    y[idx] = projection.LatitudeToY(
+                        way.Nodes[idx].Coordinate.Latitude);
+                }
+
+                //// simplify.
+                //if (x.Length > 2)
+                //{
+                //    double[][] simplified = SimplifyCurve.Simplify(new double[][] { x, y }, 0.0001);
+                //    x = simplified[0];
+                //    y = simplified[1];
+                //}
+            }
+
+            // add the z-index.
+            foreach (var rule in rules)
+            {
+                float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
+                float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
+
+                int zIndex;
+                if (!rule.TryGetProperty<int>("zIndex", out zIndex))
+                {
+                    zIndex = 0;
+                }
+
+                // interpret the results.
+                if (x != null &&
+                    x.Length > 1)
+                { // there is a valid interpretation of this way.
+                    int color;
+                    bool renderAsLine = true;
+                    if (way.IsOfType(MapCSSTypes.Area))
+                    { // the way is an area. check if it can be rendered as an area.
+                        int fillColor;
+                        if (rule.TryGetProperty("fillColor", out fillColor))
+                        { // render as an area.
+                            uint? pointsId = scene.AddPoints(x, y);
+                            if (pointsId.HasValue)
+                            {
+                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                                success = true;
+                                if (rule.TryGetProperty("color", out color))
+                                {
+                                    scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                    success = true;
+                                }
+                            }
+                            renderAsLine = false; // was validly rendered als a line.
+                        }
+                    }
+
+                    if (renderAsLine)
+                    { // was not rendered as an area.
+                        // the way has to rendered as a line.
+                        LineJoin lineJoin;
+                        if (!rule.TryGetProperty("lineJoin", out lineJoin))
+                        {
+                            lineJoin = LineJoin.Miter;
+                        }
+                        int[] dashes;
+                        if (!rule.TryGetProperty("dashes", out dashes))
+                        {
+                            dashes = null;
+                        }
+                        if (rule.TryGetProperty("color", out color))
+                        {
+                            float casingWidth;
+                            int casingColor;
+                            if (!rule.TryGetProperty("casingWidth", out casingWidth))
+                            {
+                                casingWidth = 0;
+                            }
+                            if (!rule.TryGetProperty("casingColor", out casingColor))
+                            { // casing: use the casing layer.
+                                casingColor = -1;
+                            }
+                            float width;
+                            if (!rule.TryGetProperty("width", out width))
+                            {
+                                width = 1;
+                            }
+                            uint? pointsId = scene.AddPoints(x, y);
+                            success = true;
+                            if (pointsId.HasValue)
+                            {
+                                if (casingWidth > 0)
+                                { // adds the casing
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                                }
+                                if (dashes == null)
+                                { // dashes not set, use line offset.
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
+                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
+                                else
+                                { // dashes set, use line pattern offset.
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
+                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
+
+                                int textColor;
+                                int fontSize;
+                                string nameTag;
+                                if (!rule.TryGetProperty("fontSize", out fontSize))
+                                {
+                                    fontSize = 10;
+                                }
+                                if (rule.TryGetProperty("text", out nameTag) &&
+                                    rule.TryGetProperty("textColor", out textColor))
+                                {
+                                    int haloColor;
+                                    int? haloColorNullable = null;
+                                    if (rule.TryGetProperty("textHaloColor", out haloColor))
+                                    {
+                                        haloColorNullable = haloColor;
+                                    }
+                                    int haloRadius;
+                                    int? haloRadiusNullable = null;
+                                    if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                                    {
+                                        haloRadiusNullable = haloRadius;
+                                    }
+                                    string fontFamily;
+                                    if (!rule.TryGetProperty("fontFamily", out fontFamily))
+                                    {
+                                        fontFamily = "Arial"; // just some default font.
+                                    }
+                                    string name;
+                                    if (way.Tags.TryGetValue(nameTag, out name))
+                                    {
+                                        scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                { // don't report as an error when no nodes.
+                    success = true;
+                }
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Translates a relation.
         /// </summary>
         /// <param name="scene">The scene to add primitives to.</param>
@@ -778,13 +1009,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         lineairRing.Coordinates[idx].Latitude);
                 }
 
-                // simplify.
-                if (x.Length > 2)
-                {
-                    double[][] simplified = SimplifyCurve.Simplify(new double[][] { x, y }, 0.0001);
-                    x = simplified[0];
-                    y = simplified[1];
-                }
+                //// simplify.
+                //if (x.Length > 2)
+                //{
+                //    double[][] simplified = SimplifyCurve.Simplify(new double[][] { x, y }, 0.0001);
+                //    x = simplified[0];
+                //    y = simplified[1];
+                //}
             }
             // add the z-index.
             foreach (var rule in rules)

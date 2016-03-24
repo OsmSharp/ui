@@ -27,6 +27,7 @@ using OsmSharp;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.UI.Map.Styles
 {
@@ -44,10 +45,6 @@ namespace OsmSharp.UI.Map.Styles
         /// <summary>
         /// Translates the given OSM objects into corresponding geometries.
         /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="projection"></param>
-        /// <param name="source"></param>
-        /// <param name="osmGeo"></param>
         public virtual void Translate(Scene2D scene, IProjection projection, IDataSourceReadOnly source, OsmGeo osmGeo)
         {
             switch (osmGeo.Type)
@@ -68,6 +65,11 @@ namespace OsmSharp.UI.Map.Styles
                     break;
             }
         }
+
+        /// <summary>
+        /// Transates the given feature.
+        /// </summary>
+        public abstract void Translate(Scene2D scene, IProjection projection, Feature feature);
 
         /// <summary>
         /// Translates the given OSM objects into corresponding geometries.

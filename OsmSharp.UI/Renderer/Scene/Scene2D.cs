@@ -103,14 +103,13 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         private IProjection _projection;
 
-
+        private bool _simplify = true;
+        
         /// <summary>
         /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
         /// </summary>
-        /// <param name="projection"></param>
-        /// <param name="zooms"></param>
-        public Scene2D(IProjection projection, List<float> zoomLevels)
-            :this(projection, zoomLevels, false)
+        public Scene2D(IProjection projection, List<float> zoomLevels, bool simplify = true)
+            :this(projection, zoomLevels, false, simplify)
         {
 
         }
@@ -118,11 +117,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
         /// </summary>
-        /// <param name="projection"></param>
-        /// <param name="zooms"></param>
-        /// <param name="zoomsAreProjected"></param>
-        public Scene2D(IProjection projection, List<float> zooms, bool zoomsAreProjected)
+        public Scene2D(IProjection projection, List<float> zooms, bool zoomsAreProjected, bool simplify = true)
         {
+            _simplify = simplify;
             _nextId = 0;
             _projection = projection;
             _zoomFactors = new List<float>(zooms);
@@ -171,10 +168,8 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Creates a new scene that keeps objects (and simplifies) for one zoom-level.
         /// </summary>
-        /// <param name="projection"></param>
-        /// <param name="zoomLevel">The zoom level.</param>
-        public Scene2D(IProjection projection, float zoomLevel)
-            : this(projection, new List<float>(new float[] { zoomLevel }))
+        public Scene2D(IProjection projection, float zoomLevel, bool simplify = true)
+            : this(projection, new List<float>(new float[] { zoomLevel }), simplify)
         {
 
         }
@@ -334,9 +329,12 @@ namespace OsmSharp.UI.Renderer.Scene
             }
 
             // calculate simplification epislon and simplify.
-            double epsilon = this.CalculateSimplificationEpsilon(_zoomFactors[0]);
-            double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
-                                                            epsilon);
+            var epsilon = this.CalculateSimplificationEpsilon(_zoomFactors[0]);
+            var simplified = new double[][] { x, y };
+            if (_simplify)
+            {
+                simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(simplified, epsilon);
+            }
             BoxF2D rectangle = new BoxF2D(x, y);
             if (rectangle.Delta[0] < epsilon && rectangle.Delta[1] < epsilon)
             {
@@ -1082,7 +1080,11 @@ namespace OsmSharp.UI.Renderer.Scene
                 { // ok this object does existing inside the current range.
                     // simplify the algorithm.
                     double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
-                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points, epsilon);
+                    var simplified = points;
+                    if (_simplify)
+                    {
+                        simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points, epsilon);
+                    }
                     double distance = epsilon * 2;
                     if (simplified[0].Length == 2)
                     { // check if the simplified version is smaller than epsilon.
@@ -1240,8 +1242,12 @@ namespace OsmSharp.UI.Renderer.Scene
 
                     // simplify the algorithm.
                     double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
-                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
-                                                                    epsilon);
+                    var simplified = points;
+                    if (_simplify)
+                    {
+                        simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
+                                                                        epsilon);
+                    }
                     double distance = epsilon * 2;
                     if (simplified[0].Length == 2)
                     { // check if the simplified version is smaller than epsilon.
@@ -1358,8 +1364,12 @@ namespace OsmSharp.UI.Renderer.Scene
 
                     // simplify the algorithm.
                     double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
-                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
-                                                                    epsilon);
+                    var simplified = points;
+                    if (_simplify)
+                    {
+                        simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points,
+                                                                        epsilon);
+                    }
                     double distance = epsilon * 2;
                     if (simplified[0].Length == 2)
                     { // check if the simplified version is smaller than epsilon.
