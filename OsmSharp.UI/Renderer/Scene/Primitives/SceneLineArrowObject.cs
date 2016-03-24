@@ -16,40 +16,22 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using ProtoBuf;
+
 namespace OsmSharp.UI.Renderer.Scene.Primitives
 {
     /// <summary>
-    /// Represents an object type.
+    /// Represents a line.
     /// </summary>
-    internal enum SceneObjectType
+    [ProtoContract]
+    internal class SceneLineArrowObject : SceneObject
     {
         /// <summary>
-        /// Text object.
+        /// Creates a new line.
         /// </summary>
-        TextObject,
-        /// <summary>
-        /// Polygon object.
-        /// </summary>
-        PolygonObject,
-        /// <summary>
-        /// Line object.
-        /// </summary>
-        LineObject,
-        /// <summary>
-        /// Line text object.
-        /// </summary>
-        LineTextObject,
-        /// <summary>
-        /// Line arrow object.
-        /// </summary>
-        LineArrowObject,
-        /// <summary>
-        /// Point object.
-        /// </summary>
-        PointObject,
-        /// <summary>
-        /// Icon object.
-        /// </summary>
-        IconObject
+        public SceneLineArrowObject()
+        {
+            this.Enum = SceneObjectType.LineArrowObject;
+        }
     }
 }

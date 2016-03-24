@@ -94,6 +94,7 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationArrows.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFloat.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Renderer\Primitives\Text2D.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneIconObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneLineArrowObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneLineObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneLineTextObject.cs" />
     <Compile Include="Renderer\Scene\Primitives\SceneObject.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Renderer\Scene\Storage\SceneObjectRTreeSerializer.cs" />
     <Compile Include="Renderer\Scene\Storage\SceneSerializer.cs" />
     <Compile Include="Renderer\Scene\Styles\StyleLine.cs" />
+    <Compile Include="Renderer\Scene\Styles\StyleLineArrows.cs" />
     <Compile Include="Renderer\Scene\Styles\StylePoint.cs" />
     <Compile Include="Renderer\Scene\Styles\StylePolygon.cs" />
     <Compile Include="Renderer\Scene\Styles\StyleText.cs" />

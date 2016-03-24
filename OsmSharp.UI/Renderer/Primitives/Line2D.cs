@@ -27,12 +27,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Creates a new line2D.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
         public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, int[] dashes)
         {
             this.X = x;
@@ -41,6 +35,7 @@ namespace OsmSharp.UI.Renderer.Primitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.IsArrowLine = false;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -76,14 +71,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Creates a new line2D.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
-        /// <param name="minZoom"></param>
-        /// <param name="maxZoom"></param>
         public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             float minZoom, float maxZoom)
         {
@@ -93,6 +80,7 @@ namespace OsmSharp.UI.Renderer.Primitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.IsArrowLine = false;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -128,15 +116,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// <summary>
         /// Creates a new line2D.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="minX"></param>
-        /// <param name="maxX"></param>
-        /// <param name="minY"></param>
-        /// <param name="maxY"></param>
         public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             int minX, int maxX, int minY, int maxY)
         {
@@ -146,6 +125,7 @@ namespace OsmSharp.UI.Renderer.Primitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.IsArrowLine = false;
 
             MinX = minX;
             MaxX = maxX;
@@ -184,6 +164,15 @@ namespace OsmSharp.UI.Renderer.Primitives
         /// </summary>
         /// <value>The x.</value>
         public double[] X
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the arrow line flag.
+        /// </summary>
+        public bool IsArrowLine
         {
             get;
             set;
@@ -303,5 +292,56 @@ namespace OsmSharp.UI.Renderer.Primitives
         Miter,
         Bevel,
         None
+    }
+
+    /// <summary>
+    /// Enumerates the different linecaps.
+    /// </summary>
+    public enum LineCap
+    {
+        /// <summary>
+        /// Specifies a mask used to check whether a line cap is an anchor cap.
+        /// </summary>
+        AnchorMask,
+        /// <summary>
+        /// Specifies an arrow-shaped anchor cap.
+        /// </summary>
+        ArrowAnchor,
+        /// <summary>
+        /// Specifies a custom line cap.
+        /// </summary>
+        Custom,
+        /// <summary>
+        /// Specifies a diamond anchor cap.
+        /// </summary>
+        DiamondAnchor,
+        /// <summary>
+        /// Specifies a flat line cap.
+        /// </summary>
+        Flat,
+        /// <summary>
+        /// Specifies no anchor.
+        /// </summary>
+        NoAnchor,
+        /// <summary>
+        /// Specifies a round line cap.
+        /// </summary>
+        Round,
+        /// <summary>
+        /// Specifies a round anchor cap.
+        /// </summary>
+        RoundAnchor,
+        /// <summary>
+        /// Specifies a square line cap.
+        /// </summary>
+        Square,
+        /// <summary>
+        /// Specifies a square anchor line cap.
+        /// </summary>
+        SquareAnchor,
+        /// <summary>
+        /// Specifies a triangular line cap.
+        /// </summary>
+        Triangle
     }
 }

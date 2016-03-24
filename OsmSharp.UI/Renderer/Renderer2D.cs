@@ -213,32 +213,17 @@ namespace OsmSharp.UI.Renderer
 
                             x = line.X;
                             y = line.Y;
-                            //if (x.Length > 4 && line.MaxZoom > zoomFactor * 2 && line.MaxZoom < 512)
-                            //{ // try and simplify.
-                            //    var simplified = new double[][] { x, y };
-                            //    //double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
-                            //    //    epsilon);
-                            //    if (simplified[0].Length < line.X.Length)
-                            //    {
-                            //        simplifiedLines++;
-                            //        x = simplified[0];
-                            //        y = simplified[1];
-                            //    }
-                            //    double distance = epsilon * 2;
-                            //    if (simplified[0].Length == 2)
-                            //    { // check if the simplified version is smaller than epsilon.
-                            //        distance = System.Math.Sqrt(
-                            //            System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
-                            //            System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
-                            //    }
-                            //    if (distance < epsilon)
-                            //    {
-                            //        droppedLines++;
-                            //        continue;
-                            //    }
-                            //}
-                            this.DrawLine(target, x, y, line.Color,
-                                this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+
+                            if (line.IsArrowLine)
+                            {
+                                this.DrawArrowsAlongLine(target, x, y, line.Color,
+                                    this.FromPixels(target, view, line.Width), line.Dashes);
+                            }
+                            else
+                            {
+                                this.DrawLine(target, x, y, line.Color,
+                                    this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                            }
                             break;
                         case Primitive2DType.Polygon2D:
                             Polygon2D polygon = (Polygon2D)primitive;
@@ -382,16 +367,22 @@ namespace OsmSharp.UI.Renderer
 		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
             LineJoin lineJoin, int[] dashes);
 
-	    /// <summary>
-	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="fill">If set to <c>true</c> fill.</param>
-		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
+        /// <summary>
+        /// Draws arrows along a line.
+        /// </summary>
+        protected abstract void DrawArrowsAlongLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width,
+            int[] dashes);
+
+        /// <summary>
+        /// Draws a polygon on the target. The coordinates given are scene coordinates.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="fill">If set to <c>true</c> fill.</param>
+        protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
 
 	    /// <summary>
 	    /// Draws an icon on the target unscaled but centered at the given scene coordinates.

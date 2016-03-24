@@ -38,44 +38,14 @@ namespace OsmSharp.UI.Renderer.Scene
     /// </summary>
     public class Scene2D : IPrimitives2DSource
     {
-        /// <summary>
-        /// Holds the string table.
-        /// </summary>
         private ObjectTable<string> _stringTable;
-
-        /// <summary>
-        /// Holds the zoom ranges.
-        /// </summary>
         private ObjectTable<Scene2DZoomRange> _zoomRanges;
-
-        /// <summary>
-        /// Holds the index of point.
-        /// </summary>
         private ObjectTable<ScenePoint> _pointIndex;
-
-        /// <summary>
-        /// Holds the index of points.
-        /// </summary>
         private ObjectTable<ScenePoints> _pointsIndex;
-
-        /// <summary>
-        /// Holds the point styles.
-        /// </summary>
         private ObjectTable<StylePoint> _pointStyles;
-
-        /// <summary>
-        /// Holds the text styles.
-        /// </summary>
         private ObjectTable<StyleText> _textStyles;
-
-        /// <summary>
-        /// Holds the line styles.
-        /// </summary>
         private ObjectTable<StyleLine> _lineStyles;
-
-        /// <summary>
-        /// Holds the polygon styles.
-        /// </summary>
+        private ObjectTable<StyleLineArrows> _lineStyleArrows;
         private ObjectTable<StylePolygon> _polygonStyles;
 
         /// <summary>
@@ -149,6 +119,7 @@ namespace OsmSharp.UI.Renderer.Scene
             _textStyles = new ObjectTable<StyleText>(true);
             _lineStyles = new ObjectTable<StyleLine>(true);
             _polygonStyles = new ObjectTable<StylePolygon>(true);
+            _lineStyleArrows = new ObjectTable<StyleLineArrows>(true);
 
             // geo indexes.
             _pointIndex = new ObjectTable<ScenePoint>(true);
@@ -528,6 +499,19 @@ namespace OsmSharp.UI.Renderer.Scene
                                     {
                                         primitives.Add(
                                             this.ConvertToPrimitive(id, line, styleLine));
+                                    }
+                                }
+                                break;
+                            case SceneObjectType.LineArrowObject:
+                                var lineArrow = sceneObject as SceneLineArrowObject;
+                                var styleLineArrow = _lineStyleArrows.Get(lineArrow.StyleId);
+                                points = _pointsIndex.Get(lineArrow.GeoId);
+                                if (Scene2DZoomRange.Contains(styleLineArrow.MinZoom, styleLineArrow.MaxZoom, zoom))
+                                {
+                                    if (view.IsVisible(points.X, points.Y, false))
+                                    {
+                                        primitives.Add(this.ConvertToPrimitive(id, 
+                                            lineArrow, styleLineArrow));
                                     }
                                 }
                                 break;
@@ -1057,15 +1041,71 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Adds a line with the given points and style.
         /// </summary>
-        /// <param name="pointsId"></param>
-        /// <param name="layer"></param>
-        /// <param name="minZoom"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="color"></param>
-        /// <param name="width"></param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
-        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
+        public List<uint> AddStyleLineArrow(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width,
+            int[] dashes)
+        {// add the line but simplify it for higher zoom levels.
+            List<uint> newIds = new List<uint>();
+            // get the geometry.
+            ScenePoints pointsPair = _pointsIndex.Get(pointsId);
+            double[][] points = new double[][] { pointsPair.X, pointsPair.Y };
+
+            for (int idx = 0; idx < _zoomFactors.Count; idx++)
+            {
+                float minimumZoomFactor, maximumZoomFactor, simplificationZoomFactor;
+                // check the current object's zoom range against the current min/max zoom factor.
+                if (this.CheckZoomRanges(idx, minZoom, maxZoom, out minimumZoomFactor, out maximumZoomFactor, out simplificationZoomFactor))
+                { // ok this object does existing inside the current range.
+                    // simplify the algorithm.
+                    double epsilon = this.CalculateSimplificationEpsilon(simplificationZoomFactor);
+                    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(points, epsilon);
+                    double distance = epsilon * 2;
+                    if (simplified[0].Length == 2)
+                    { // check if the simplified version is smaller than epsilon.
+                        OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(
+                            simplified[0][0], simplified[0][1]);
+                        OsmSharp.Math.Primitives.PointF2D point2 = new OsmSharp.Math.Primitives.PointF2D(
+                            simplified[1][0], simplified[1][1]);
+                        distance = point1.Distance(point2);
+                    }
+                    if (distance >= epsilon)
+                    { // the object needs to be added for the current zoom range.
+                        uint geometryId = pointsId;
+                        // check if there is a need to add a simplified geometry.
+                        if (simplified[0].Length < points[0].Length)
+                        { // add a new simplified geometry.
+                            geometryId = _pointsIndex.Add(new ScenePoints(simplified[0], simplified[1]));
+                        }
+
+                        // add to the scene.
+                        // build the style.
+                        var style = new StyleLineArrows()
+                        {
+                            Color = color,
+                            Dashes = dashes,
+                            Width = width,
+                            Layer = layer,
+                            MinZoom = minimumZoomFactor,
+                            MaxZoom = maximumZoomFactor
+                        };
+                        ushort styleId = (ushort)_lineStyleArrows.Add(style);
+
+                        // add the scene object.
+                        uint id = _nextId;
+                        _sceneObjects[idx].Add(id, 
+                            new SceneLineArrowObject() { StyleId = styleId, GeoId = pointsId });
+                        _nextId++;
+                        newIds.Add(id);
+                    }
+                }
+            }
+            return newIds;
+        }
+
+        /// <summary>
+        /// Adds a line with the given points and style.
+        /// </summary>
+        public List<uint> AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin,
+            int[] dashes)
         {// add the line but simplify it for higher zoom levels.
             List<uint> newIds = new List<uint>();
             // get the geometry.
@@ -1119,7 +1159,7 @@ namespace OsmSharp.UI.Renderer.Scene
 
                         // add the scene object.
                         uint id = _nextId;
-                        _sceneObjects[idx].Add(id, 
+                        _sceneObjects[idx].Add(id,
                             new SceneLineObject() { StyleId = styleId, GeoId = pointsId });
                         _nextId++;
                         newIds.Add(id);
@@ -1195,6 +1235,15 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Returns the arrow line style for the given id.
+        /// </summary>
+        public StyleLineArrows GetStyleLineArrow(uint id)
+        {
+            return _lineStyleArrows.Get(id);
+        }
+
+
+        /// <summary>
         /// Converts the given object to a Scene2DPrimitive.
         /// </summary>
         /// <param name="id"></param>
@@ -1208,6 +1257,24 @@ namespace OsmSharp.UI.Renderer.Scene
             var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, style.LineJoin, style.Dashes, style.MinZoom, style.MaxZoom);
             primitive.Id = id;
             primitive.Layer = style.Layer;
+
+            return primitive;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Primitive2D ConvertToPrimitive(uint id, SceneLineArrowObject sceneObject, StyleLineArrows style)
+        {
+            var geo = _pointsIndex.Get(sceneObject.GeoId);
+
+            var primitive = new Line2D(geo.X, geo.Y, style.Color, style.Width, LineJoin.None, style.Dashes, style.MinZoom, style.MaxZoom);
+            primitive.Id = id;
+            primitive.Layer = style.Layer;
+            primitive.IsArrowLine = true;
 
             return primitive;
         }

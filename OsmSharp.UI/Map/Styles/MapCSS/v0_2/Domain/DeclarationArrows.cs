@@ -9,27 +9,34 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// <summary>
     /// Strongly typed MapCSS v0.2 Declaration class.
     /// </summary>
-    public class DeclarationDashes : Declaration<DeclarationDashesEnum, int[]>
+    public class DeclarationArrows : Declaration<DeclarationArrowsQualifier, DeclarationArrowsEnum>
     {
 
     }
 
     /// <summary>
-    /// Strongly typed MapCSS v0.2 Declaration class.
+    /// Arrows qualifier.
     /// </summary>
-    public enum DeclarationDashesEnum
+    public enum DeclarationArrowsQualifier
     {
         /// <summary>
-        /// Dashes option.
+        /// Arrows.
         /// </summary>
-        Dashes,
+        Arrows
+    }
+
+    /// <summary>
+    /// Strongly typed MapCSS v0.2 Declaration class.
+    /// </summary>
+    public enum DeclarationArrowsEnum
+    {
         /// <summary>
-        /// Casing dashes option.
+        /// Forward option.
         /// </summary>
-        CasingDashes,
+        Forward,
         /// <summary>
-        /// Arrow dashes.
+        /// Backward option.
         /// </summary>
-        ArrowDashes
+        Backward
     }
 }
