@@ -18,39 +18,41 @@
 
 using OsmSharp.Collections;
 using OsmSharp.Collections.Cache;
-using OsmSharp.UI.Renderer.Scene;
-using System.Collections.Generic;
-using System.Threading;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
+using OsmSharp.UI.Renderer.Images;
+using OsmSharp.UI.Renderer.Primitives;
 using System;
-using System.Net;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Renderer.Primitives;
+using System.Net;
+using System.Threading;
 
-namespace OsmSharp.UI.Map.Layers.VectorTiles
+namespace OsmSharp.UI.Map.Layers.Tiles
 {
     /// <summary>
-    /// A base class that can be used for any tile source that implements caching and HTTP-logic.
+    /// A url-based tile source.
     /// </summary>
-    public abstract class VectorTileSourceBase : IVectorTileSource
+    public class UrlTileSource : ITileSource
     {
         private readonly string _tilesURL; // hold the tile url.
-        private readonly LRUCache<ulong, IEnumerable<Primitive2D>> _cache; // the cached tiles.
+        private readonly LRUCache<ulong, Image2D> _cache; // the cached tiles.
         private const int _maxThreads = 4; // maximum concurrent threads to get tiles.
         private readonly LimitedStack<ulong> _stack; // holds the tiles queue for load.
         private readonly Dictionary<ulong, int> _attempts; // holds the attemps per tile.
         private readonly Timer _timer; // Holds the timer.
         private readonly IProjection _projection; // Holds the projection.
+        private readonly NativeImageCacheBase _nativeImageCache; // Holds the native image cache.
 
         /// <summary>
         /// Creates a new tile source.
         /// </summary>
-        public VectorTileSourceBase(string url, IProjection projection, int tileCacheSize)
+        public UrlTileSource(string url, IProjection projection, int tileCacheSize)
         {
+            _nativeImageCache = NativeImageCacheFactory.Create();
             _tilesURL = url;
-            _cache = new LRUCache<ulong, IEnumerable<Primitive2D>>(tileCacheSize);
+            _cache = new LRUCache<ulong, Image2D>(tileCacheSize);
             // _cache.OnRemove += OnRemove;
             _stack = new LimitedStack<ulong>(tileCacheSize, tileCacheSize);
             _timer = new Timer(this.LoadQueuedTiles, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
@@ -67,11 +69,6 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// Event raised when new data is available.
         /// </summary>
         public event Action SourceChanged;
-
-        /// <summary>
-        /// Event raised when a tile is loaded.
-        /// </summary>
-        public event Action<Tile, IEnumerable<Primitive2D>> TileLoaded;
 
         /// <summary>
         /// Gets or sets a function to override tile loading.
@@ -96,17 +93,17 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// <summary>
         /// Gets the scene for the given tile.
         /// </summary>
-        public bool TryGet(Tile tile, out IEnumerable<Primitive2D> scene)
+        public bool TryGet(Tile tile, out Image2D image)
         {
-            return _cache.TryGet(tile.Id, out scene);
+            return _cache.TryGet(tile.Id, out image);
         }
 
         /// <summary>
         /// Gets the scene for the given tile without logging this is a cache hit.
         /// </summary>
-        public bool TryPeek(Tile tile, out IEnumerable<Primitive2D> scene)
+        public bool TryPeek(Tile tile, out Image2D image)
         {
-            return _cache.TryPeek(tile.Id, out scene);
+            return _cache.TryPeek(tile.Id, out image);
         }
 
         /// <summary>
@@ -126,13 +123,13 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     {
                         if (tile.IsValid)
                         { // make sure all tiles are valid.
-                            IEnumerable<Primitive2D> temp;
+                            Image2D temp;
                             if (!_cache.TryPeek(tile.Id, out temp) &&
                                 !_loading.Contains(tile.Id))
                             { // not cached and not loading.
                                 _stack.Push(tile.Id);
 
-                                OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", Logging.TraceEventType.Information, 
+                                OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", Logging.TraceEventType.Information,
                                     "Queued tile:" + tile.ToString());
                             }
                         }
@@ -149,7 +146,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets the projection.
         /// </summary>
@@ -214,16 +211,16 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     return;
                 }
 
-                IEnumerable<Primitive2D> scene2D;
+                Image2D image;
                 if (_cache == null)
                 {
                     return;
                 }
                 lock (_cache)
                 { // check again for the tile.
-                    if (_cache.TryGet(tile.Id, out scene2D))
+                    if (_cache.TryGet(tile.Id, out image))
                     { // tile is already there!
-                        _cache.Add(tile.Id, scene2D); // add again to update status.
+                        _cache.Add(tile.Id, image); // add again to update status.
                         return;
                     }
 
@@ -324,26 +321,22 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// </summary>
         private void ProcessResponseStream(Stream stream, Tile tile)
         {
-            IEnumerable<Primitive2D> scene = null;
+            Image2D image = null;
             using (stream)
             { // read vector data.
-                scene = this.Get(tile, stream);
+                image = this.Get(tile, stream);
             }
 
-            if (scene != null)
+            if (image != null)
             {
                 lock (_cache)
                 { // add the result to the cache.
-                    _cache.Add(tile.Id, scene);
+                    _cache.Add(tile.Id, image);
                 }
 
                 if (!_suspended)
                 { // only raise the event when not suspended but do no throw away a tile, that would be a waste.
                     this.RaiseSourceChanged();
-                    if (this.TileLoaded != null)
-                    {
-                        this.TileLoaded(tile, scene);
-                    }
                 }
             }
         }
@@ -374,7 +367,18 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// <summary>
         /// Converts the response stream into a scene object.
         /// </summary>
-        protected abstract IEnumerable<Primitive2D> Get(Tile tile, Stream stream);
+        protected virtual Image2D Get(Tile tile, Stream stream)
+        {
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+
+            var image = memoryStream.ToArray();
+            memoryStream.Dispose();
+
+            var box = tile.ToBox(_projection);
+            var nativeImage = _nativeImageCache.Obtain(image);
+            return new Image2D(box.Min[0], box.Min[1], box.Max[1], box.Max[0], nativeImage);
+        }
 
         /// <summary>
         /// Returns a formatted URL to get the tile from.
@@ -495,7 +499,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// <summary>
         /// Finalizer.
         /// </summary>
-        ~VectorTileSourceBase()
+        ~UrlTileSource()
         {
             // The object went out of scope and finalized is called
             // Lets call dispose in to release unmanaged resources 

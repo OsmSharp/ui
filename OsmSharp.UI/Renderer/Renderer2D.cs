@@ -99,8 +99,8 @@ namespace OsmSharp.UI.Renderer
 			}
 			catch(Exception ex)
             {
-				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, 
-				                                 ex.Message);
+				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", 
+                    OsmSharp.Logging.TraceEventType.Error, ex.Message);
 				this.SetRunning (false);
 				throw ex;
 			}
@@ -181,10 +181,6 @@ namespace OsmSharp.UI.Renderer
 	    /// <summary>
 	    /// Renders the primities for the given scene.
 	    /// </summary>
-	    /// <param name="target"></param>
-        /// <param name="view"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="primitives"></param>
         private bool RenderPrimitives(Target2DWrapper<TTarget> target, View2D view, float zoomFactor, 
             IEnumerable<Primitive2D> primitives)
         {
@@ -230,29 +226,7 @@ namespace OsmSharp.UI.Renderer
 
                             x = polygon.X;
                             y = polygon.Y;
-                            //if (x.Length > 4 && polygon.MaxZoom > zoomFactor * 2 && polygon.MaxZoom < 512)
-                            //{ // try and simplify.
-                            //    double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
-                            //        epsilon);
-                            //    if (simplified[0].Length < polygon.X.Length)
-                            //    {
-                            //        simplifiedLines++;
-                            //        x = simplified[0];
-                            //        y = simplified[1];
-                            //    }
-                            //    double distance = epsilon * 2;
-                            //    if (simplified[0].Length == 2)
-                            //    { // check if the simplified version is smaller than epsilon.
-                            //        distance = System.Math.Sqrt(
-                            //            System.Math.Pow((simplified[0][0] - simplified[0][1]), 2) +
-                            //            System.Math.Pow((simplified[1][0] - simplified[1][1]), 2));
-                            //    }
-                            //    //if (distance < epsilon)
-                            //    //{
-                            //    //    droppedLines++;
-                            //    //    continue;
-                            //    //}
-                            //}
+
                             this.DrawPolygon(target, x, y, polygon.Color,
                                 this.FromPixels(target, view, polygon.Width), polygon.Fill);
                             break;
@@ -288,8 +262,7 @@ namespace OsmSharp.UI.Renderer
 				return true;
 			}
 			catch(Exception ex) {
-				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, 
-				                                 ex.Message);
+				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", OsmSharp.Logging.TraceEventType.Error, ex.Message);
 				throw ex;
 			}
         }

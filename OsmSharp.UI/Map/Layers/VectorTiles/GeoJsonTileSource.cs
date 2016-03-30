@@ -23,6 +23,12 @@ using OsmSharp.Geo.Streams.GeoJson;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer;
+using System.Collections.Generic;
+using OsmSharp.UI.Renderer.Primitives;
+using System.Linq;
+using OsmSharp.IO.Json;
+using OsmSharp.Geo.Features;
 
 namespace OsmSharp.UI.Map.Layers.VectorTiles
 {
@@ -32,37 +38,93 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
     public class GeoJsonTileSource : VectorTileSourceBase
     {
         private readonly StyleInterpreter _style;
+        private readonly bool _multiple;
 
         /// <summary>
         /// Creates a new geojson tile source.
         /// </summary>
-        public GeoJsonTileSource(string url, IProjection projection, StyleInterpreter style, int tileCacheSize = 50) 
+        public GeoJsonTileSource(string url, IProjection projection, StyleInterpreter style, int tileCacheSize = 50, bool multiple = false) 
             : base(url, projection, tileCacheSize)
         {
             _style = style;
+            _multiple = multiple;
         }
 
         /// <summary>
         /// Gets a scene from the given stream.
         /// </summary>
-        protected override Scene2D Get(Tile tile, Stream stream)
+        protected override IEnumerable<Primitive2D> Get(Tile tile, Stream stream)
         {
             using (var streamReader = new StreamReader(stream))
             {
-                var json = streamReader.ReadToEnd();
-                if (json.Length <= 42)
-                {
-                    return null;
-                }
-                var features = json.ToFeatureCollection();
+                var jsonReader = new OsmSharp.IO.Json.JsonTextReader(streamReader);
 
-                var scene = new Scene2D(this.Projection, tile.Zoom, false);
-                foreach (var feature in features)
+                if (_multiple)
                 {
-                    _style.Translate(scene, this.Projection, feature);
+                    return this.ReadMultiLayer(tile, jsonReader);
                 }
-                return scene;
+                return this.ReadSingleLayer(tile, jsonReader);
             }
+        }
+        
+        /// <summary>
+        /// Reads a single layer.
+        /// </summary>
+        public IEnumerable<Primitive2D> ReadSingleLayer(Tile tile, JsonReader jsonReader)
+        {
+            var features = OsmSharp.Geo.Streams.GeoJson.GeoJsonConverter.ReadFeatureCollection(jsonReader);
+            var scene = new Scene2D(this.Projection, tile.Zoom, false);
+
+            foreach (var feature in features)
+            {
+                _style.Translate(scene, this.Projection, feature);
+            }
+
+            var box = tile.Box.Resize(0.001);
+            var zoomFactor = (float)this.Projection.ToZoomFactor(tile.Zoom);
+            var testView = View2D.CreateFromBounds(
+                this.Projection.LatitudeToY(box.MaxLat),
+                this.Projection.LongitudeToX(box.MinLon),
+                this.Projection.LatitudeToY(box.MinLat),
+                this.Projection.LongitudeToX(box.MaxLon));
+            return scene.Get(testView, zoomFactor);
+        }
+
+        /// <summary>
+        /// Reads a multi layer.
+        /// </summary>
+        public IEnumerable<Primitive2D> ReadMultiLayer(Tile tile, JsonReader jsonReader)
+        {
+            var scene = new Scene2D(this.Projection, tile.Zoom, false);
+            var type = string.Empty;
+            while (jsonReader.Read())
+            {
+                if (jsonReader.TokenType == JsonToken.EndObject)
+                { // end of geometry.
+                    break;
+                }
+
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    var name = jsonReader.Value;
+                    var features = GeoJsonConverter.ReadFeatureCollection(jsonReader);
+                    
+                    foreach (var feature in features)
+                    {
+                        feature.Attributes.AddOrReplace("layer", name);
+                        _style.Translate(scene, this.Projection, feature);
+                    }
+                }
+            }
+
+            var box = tile.Box.Resize(0.001);
+            var zoomFactor = (float)this.Projection.ToZoomFactor(tile.Zoom);
+            var testView = View2D.CreateFromBounds(
+                this.Projection.LatitudeToY(box.MaxLat),
+                this.Projection.LongitudeToX(box.MinLon),
+                this.Projection.LatitudeToY(box.MinLat),
+                this.Projection.LongitudeToX(box.MaxLon));
+            return scene.Get(testView, zoomFactor);
         }
     }
 }

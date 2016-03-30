@@ -429,7 +429,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // store the object count.
             int countBefore = scene.Count;
 
-            if (feature.Geometry is LineString)
+            if (feature.Geometry is Point)
+            {
+                this.TranslatePoint(scene, projection, feature);
+            }
+            else if (feature.Geometry is LineString)
             {
                 this.TranslateLineString(scene, projection, feature);
             }
@@ -780,7 +784,30 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         }
 
         /// <summary>
-        /// Translates a way.
+        /// Translates a point.
+        /// </summary>
+        private bool TranslatePoint(Scene2D scene, IProjection projection, Feature feature)
+        {
+            var node = new Node();
+            var tags = new TagsCollection();
+            foreach (var attr in feature.Attributes)
+            {
+                if (attr.Value != null)
+                {
+                    tags.Add(attr.Key, attr.Value.ToInvariantString());
+                }
+            }
+            var point = feature.Geometry as Point;
+            node.Tags = tags;
+            node.Latitude = point.Coordinate[1];
+            node.Longitude = point.Coordinate[0];
+
+            this.TranslateNode(scene, projection, node);
+            return true;
+        }
+
+        /// <summary>
+        /// Translates a linestring.
         /// </summary>
         private bool TranslateLineString(Scene2D scene, IProjection projection, Feature feature)
         {

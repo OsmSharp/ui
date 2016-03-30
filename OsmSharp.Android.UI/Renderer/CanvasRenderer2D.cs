@@ -382,12 +382,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws an image on the target.
 		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="left"></param>
-		/// <param name="top"></param>
-		/// <param name="right"></param>
-		/// <param name="bottom"></param>
-        /// <param name="nativeImage"></param>
 		protected override void DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
 		    double left, double top, double right, double bottom, INativeImage nativeImage)
 		{
@@ -398,10 +392,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Draws the image.
 		/// </summary>
-		/// <returns>The image.</returns>
-		/// <param name="target">Target.</param>
-		/// <param name="bounds">Bounds.</param>
-        /// <param name="nativeImage">Image data.</param>
         protected override void DrawImage(Target2DWrapper<Canvas> target, RectangleF2D bounds, INativeImage nativeImage)
 		{
             double transformed1_0, transformed1_1;
@@ -433,6 +423,7 @@ namespace OsmSharp.Android.UI
                     _paint);
             }
 			target.Target.Restore ();
+            
 		}
 
 		/// <summary>

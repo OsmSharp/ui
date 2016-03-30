@@ -41,7 +41,6 @@ namespace OsmSharp.UI.Map
 		/// <summary>
         /// Initializes a new instance of the MapRenderer class.
 		/// </summary>
-		/// <param name="renderer">The renderer to use.</param>
 		public MapRenderer(Renderer2D<TTarget> renderer)
 		{
 		    _renderer = renderer;
@@ -50,11 +49,6 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Render the specified target, projection, layers, zoomFactor and coordinate.
         /// </summary>
-        /// <param name="target">The target to render on.</param>
-        /// <param name="projection">The projection being used to render.</param>
-        /// <param name="layers">The layers to rendering in the given order.</param>
-        /// <param name="viewRender">The view to determine what to render and to show.</param>
-        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
 		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, float zoomFactor)
         {
             return this.Render(target, projection, layers, view, view, zoomFactor);
@@ -63,12 +57,6 @@ namespace OsmSharp.UI.Map
 		/// <summary>
 		/// Render the specified target, projection, layers, zoomFactor and coordinate.
 		/// </summary>
-        /// <param name="target">The target to render on.</param>
-        /// <param name="projection">The projection being used to render.</param>
-        /// <param name="layers">The layers to rendering in the given order.</param>
-        /// <param name="view">The view to show.</param>
-        /// <param name="viewRender">The view to determine what to render. It may be needed to render a bit more along the edges.</param>
-        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
 		public bool Render(TTarget target, IProjection projection, List<Layer> layers, View2D view, View2D viewRender, float zoomFactor)
 		{	
 			// create and concatenate primitives from all layers.
@@ -97,15 +85,19 @@ namespace OsmSharp.UI.Map
 			
 			// render the scenes.
             return _renderer.Render(target, view, zoomFactor, primitives, backcolor);
-		}
+        }
+
+        /// <summary>
+        /// Render the specified target, projection, layers, zoomFactor and coordinate.
+        /// </summary>
+        public bool Render(TTarget target, IProjection projection, IEnumerable<Primitive2D> primitives, View2D view, float zoomFactor, int? backcolor)
+        {
+            return _renderer.Render(target, view, zoomFactor, primitives, backcolor);
+        }
 
         /// <summary>
         /// Renders the given map on the target using the given view.
         /// </summary>
-        /// <param name="target">The target to render on.</param>
-        /// <param name="map">The map as a collection of layers and projection to render.</param>
-        /// <param name="view">The view to determine what to render.</param>
-        /// <param name="zoomFactor">The zoom factor relative to the projection.</param>
         public bool Render(TTarget target, Map map, View2D view, float zoomFactor)
         {
             return this.Render(target, map, view, view, zoomFactor);
@@ -147,36 +139,16 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Creates a view.
         /// </summary>
-        /// <param name="height"></param>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="width"></param>
-        /// <param name="xInverted">True when the x-axis on the target is inverted (right->left).</param>
-        /// <param name="yInverted">True when the y-axis on the target is inverted (top->bottom).</param>
-        /// <returns></returns>
-        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted)
+        public View2D Create(float width, float height, IProjection projection, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted)
         {
-            return this.Create(width, height, map, zoomFactor, center, xInverted, yInverted, 0);
+            return this.Create(width, height, projection, zoomFactor, center, xInverted, yInverted, 0);
         }
 
         /// <summary>
         /// Creates a view.
         /// </summary>
-        /// <param name="height"></param>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="width"></param>
-        /// <param name="angle"></param>
-        /// <param name="xInverted">True when the x-axis on the target is inverted (right->left).</param>
-        /// <param name="yInverted">True when the y-axis on the target is inverted (top->bottom).</param>
-        /// <returns></returns>
-        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted, Degree angle)
+        public View2D Create(float width, float height, IProjection projection, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted, Degree angle)
         {
-            // get the projection.
-            IProjection projection = map.Projection;
-
             // calculate the center/zoom in scene coordinates.
             double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
             float sceneZoomFactor = zoomFactor;

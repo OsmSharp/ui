@@ -346,9 +346,9 @@ namespace OsmSharp.UI.Map
         /// Adds a new tile layer.
         /// </summary>
         /// <param name="tileUrl">The tile URL.</param>
-        public LayerTile AddLayerTile(string tileUrl)
+        public OldLayerTile AddLayerTile(string tileUrl)
         {
-            var layerTile = new LayerTile(tileUrl);
+            var layerTile = new OldLayerTile(tileUrl);
             this.AddLayer(layerTile);
             return layerTile;
         }

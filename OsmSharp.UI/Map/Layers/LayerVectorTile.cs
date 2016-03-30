@@ -21,7 +21,6 @@ using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Map.Layers.VectorTiles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Primitives;
-using OsmSharp.UI.Renderer.Scene;
 using System;
 using System.Collections.Generic;
 
@@ -34,15 +33,17 @@ namespace OsmSharp.UI.Map.Layers
     {
         private readonly int _minZoomLevel = 0; // Holds the minimum zoom level.
         private readonly int _maxZoomLevel = 18; // Holds the maximum zoom level.
+        private readonly int _maxOverzoom; // Holds the maximum overzoom.
         private const float _zoomMinOffset = 0.5f; // Holds the offset to calculate the minimum zoom.
         private readonly IVectorTileSource _source; // the tile source.
         
         /// <summary>
         /// Creates a new vector tiles layer.
         /// </summary>
-        public LayerVectorTiles(IVectorTileSource source)
+        public LayerVectorTiles(IVectorTileSource source, int maxOverzoom)
         {
             _source = source;
+            _maxOverzoom = maxOverzoom;
 
             _source.SourceChanged += _source_SourceChanged;
         }
@@ -67,6 +68,11 @@ namespace OsmSharp.UI.Map.Layers
                 // calculate the current zoom level.
                 var zoomLevel = (int)System.Math.Round(_source.Projection.ToZoomLevel(zoomFactor), 0);
 
+                if (zoomLevel > _maxOverzoom)
+                {
+                    zoomLevel = _maxOverzoom;
+                }
+
                 if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
                 {
                     // build the bounding box.
@@ -76,12 +82,12 @@ namespace OsmSharp.UI.Map.Layers
 
                     var tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
                     
-                    Scene2D scene;
+                    IEnumerable<Primitive2D> scene;
                     foreach (var tile in tileRange)
                     {
                         if (_source.TryGet(tile, out scene))
                         { // add to the primitives list.
-                            foreach (var primitive in scene.Get(view, zoomFactor))
+                            foreach (var primitive in scene)
                             {
                                 primitives.Add(primitive);
                             }
@@ -146,6 +152,11 @@ namespace OsmSharp.UI.Map.Layers
             {
                 // calculate the current zoom level.
                 var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
+
+                if (zoomLevel > _maxOverzoom)
+                {
+                    zoomLevel = _maxOverzoom;
+                }
 
                 if (zoomLevel >= _minZoomLevel && zoomLevel <= _maxZoomLevel)
                 {

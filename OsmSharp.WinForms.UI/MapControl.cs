@@ -95,7 +95,7 @@ namespace OsmSharp.WinForms.UI
         {
             get
             {
-                return _renderer.Create(this.Width, this.Height, this.Map,
+                return _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             }
         }
@@ -202,7 +202,7 @@ namespace OsmSharp.WinForms.UI
             }
 
             // render the map.
-            var view = _renderer.Create(this.Width, this.Height, this.Map,
+            var view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                 (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             if (_quickMode)
             { // only render the cached scene.
@@ -317,7 +317,7 @@ namespace OsmSharp.WinForms.UI
 
                 this.MapCenter = _oldCenter;
 
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map, 
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map.Projection, 
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 double x, y;
@@ -404,7 +404,7 @@ namespace OsmSharp.WinForms.UI
             if (this.Height == 0 || this.Width == 0) { return; }
 
             // notify the map.
-            var view = _renderer.Create(this.Width, this.Height, this.Map,
+            var view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                 (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
                 view, view);
@@ -442,7 +442,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                var view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
@@ -487,7 +487,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
@@ -531,7 +531,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                var view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
@@ -576,7 +576,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
@@ -620,7 +620,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.
@@ -674,7 +674,7 @@ namespace OsmSharp.WinForms.UI
         {
             if (this.Map != null)
             {
-                var view = _renderer.Create(this.Width, this.Height, this.Map,
+                var view = _renderer.Create(this.Width, this.Height, this.Map.Projection,
                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
 
                 // get scene coordinates.

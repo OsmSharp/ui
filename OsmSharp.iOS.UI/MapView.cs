@@ -406,16 +406,18 @@ namespace OsmSharp.iOS.UI
 			try
 			{
 				// create the view that would be use for rendering.
-				float size = (float)System.Math.Max(_rect.Width, _rect.Height);
-				View2D view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
-					this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
+				var size = (float)System.Math.Max(_rect.Width, _rect.Height);
+				var view = _cacheRenderer.Create((int)(size * _extra), (int)(size * _extra),
+					this.Map.Projection, (float)this.Map.Projection.ToZoomFactor(this.MapZoom), 
 					this.MapCenter, _invertX, _invertY, this.MapTilt);
 				
-				if(force || _previouslyRenderedView == null || !view.Equals(_previouslyRenderedView)) {
+				if (force || _previouslyRenderedView == null || !view.Equals(_previouslyRenderedView))
+                {
 					_renderingIsDirty = true;
 					StartRenderingLoopIfNecessary();
 				}
-				else {
+				else
+                {
 					_listener.NotifyRenderSuccess(view, this.MapZoom, 0);
 				}
 
@@ -492,7 +494,7 @@ namespace OsmSharp.iOS.UI
 							// create the view.
 							var size = (float)System.Math.Max (_rect.Width, _rect.Height);
 							var view = _cacheRenderer.Create ((int)(size * _extra), (int)(size * _extra),
-								           this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
+								           this.Map.Projection, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
 								           this.MapCenter, _invertX, _invertY, this.MapTilt);
 
 							// calculate width/height.
@@ -525,17 +527,17 @@ namespace OsmSharp.iOS.UI
 
 							// notify the map that the view has changed.
 							var normalView = _cacheRenderer.Create ((float)_rect.Width, (float)_rect.Height,
-								                 this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
+								                 this.Map.Projection, (float)this.Map.Projection.ToZoomFactor (this.MapZoom),
 								                 this.MapCenter, _invertX, _invertY, this.MapTilt);
 							this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter,
 								normalView, view);
-							long afterViewChanged = DateTime.Now.Ticks;
+							var afterViewChanged = DateTime.Now.Ticks;
 							OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", TraceEventType.Information,
 								"View change took: {0}ms @ zoom level {1}",
 								(new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
-							float zoomFactor = this.MapZoom;
-							float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
+							var zoomFactor = this.MapZoom;
+							var sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
 
 							// does the rendering.
 							bool complete = _cacheRenderer.Render (new CGContextWrapper (image,

@@ -19,26 +19,19 @@
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer.Primitives;
-using OsmSharp.UI.Renderer.Scene;
 using System;
-using System.Collections.Generic;
 
-namespace OsmSharp.UI.Map.Layers.VectorTiles
+namespace OsmSharp.UI.Map.Layers.Tiles
 {
     /// <summary>
-    /// Abstract representation of a vector tile source.
+    /// Abstract representation of a tile source.
     /// </summary>
-    public interface IVectorTileSource : IDisposable
+    public interface ITileSource : IDisposable
     {
         /// <summary>
         /// Event raised when new data is available in this source.
         /// </summary>
         event Action SourceChanged;
-
-        /// <summary>
-        /// Event raised when a tile is loaded.
-        /// </summary>
-        event Action<Tile, IEnumerable<Primitive2D>> TileLoaded;
 
         /// <summary>
         /// Pauses all activity.
@@ -74,12 +67,12 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// <summary>
         /// Tries to get a tile in the form of a scene object.
         /// </summary>
-        bool TryGet(Tile tile, out IEnumerable<Primitive2D> scene);
+        bool TryGet(Tile tile, out Image2D image);
 
         /// <summary>
         /// Tries to peek a tile in the form of a scene object.
         /// </summary>
-        bool TryPeek(Tile tile, out IEnumerable<Primitive2D> scene);
+        bool TryPeek(Tile tile, out Image2D image);
 
         /// <summary>
         /// Prepares this source for the given tile range.

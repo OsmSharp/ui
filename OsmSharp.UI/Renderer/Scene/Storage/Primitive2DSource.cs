@@ -53,12 +53,10 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         /// <summary>
         /// Returns all objects visible for the given parameters.
         /// </summary>
-        /// <param name="view"></param>
-        /// <param name="zoomFactor"></param>
-        /// <returns></returns>
         public IEnumerable<Primitive2D> Get(View2D view, float zoomFactor)
         {
-            ISpatialIndexReadonly<Primitive2D> sceneAtZoom = _rTrees[0];
+            var sceneAtZoom = _rTrees[0];
+
             // find the part of this scene containing the objects for the requested zoom.
             for (int idx = 1; idx < _zoomFactors.Length; idx++)
             {

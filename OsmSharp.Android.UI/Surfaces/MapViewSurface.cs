@@ -44,7 +44,7 @@ namespace OsmSharp.Android.UI
     /// <summary>
     /// Map view surface.
     /// </summary>
-    public class MapViewSurface : View, IMapViewSurface,
+    public class MapViewSurface : SurfaceView, IMapViewSurface,
             ScaleGestureDetector.IOnScaleGestureListener,
             RotateGestureDetector.IOnRotateGestureListener,
             MoveGestureDetector.IOnMoveGestureListener,
@@ -54,6 +54,9 @@ namespace OsmSharp.Android.UI
     {
         private bool _invertX = false;
         private bool _invertY = false;
+
+        private global::Android.Graphics.Bitmap _backBuffer;
+        private global::Android.Graphics.Canvas _backBufferCanvas;
 
         /// <summary>
         /// Holds the primitives layer.
@@ -248,7 +251,7 @@ namespace OsmSharp.Android.UI
             {
                 // create the view that would be use for rendering.
                 View2D view = _cacheRenderer.Create((int)(this.SurfaceWidth * _extra), (int)(this.SurfaceHeight * _extra),
-                    this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                    this.Map.Projection, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
                     this.MapCenter, _invertX, _invertY, this.MapTilt);
 
                 // ... and compare to the previous rendered view.
@@ -439,17 +442,17 @@ namespace OsmSharp.Android.UI
 									(new TimeSpan(afterRendering - before).TotalMilliseconds), this.MapZoom, this.MapCenter);
 								if (complete)
 								{ // there was no cancellation, the rendering completely finished.
-									// add the result to the scene cache.
-									// add the newly rendered image again.           
-									if (_offScreenBuffer == null)
-									{ // create the offscreen buffer first.
-										_offScreenBuffer = new ImageTilted2D(view.Rectangle, image, float.MinValue, float.MaxValue);
-									}
-									else
-									{ // augment the previous buffer.
-										_offScreenBuffer.Bounds = view.Rectangle;
-										_offScreenBuffer.NativeImage = image;
-									}
+                                  // add the result to the scene cache.
+                                  // add the newly rendered image again.           
+                                    if (_offScreenBuffer == null)
+                                    { // create the offscreen buffer first.
+                                        _offScreenBuffer = new ImageTilted2D(view.Rectangle, image, float.MinValue, float.MaxValue);
+                                    }
+                                    else
+                                    { // augment the previous buffer.
+                                        _offScreenBuffer.Bounds = view.Rectangle;
+                                        _offScreenBuffer.NativeImage = image;
+                                    }
 
 									var temp = _onScreenBuffer;
 									_onScreenBuffer = _offScreenBuffer;
@@ -552,7 +555,7 @@ namespace OsmSharp.Android.UI
                     if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
                     {
                         // create the current view.
-                        View2D view = this.CreateView();
+                        var view = this.CreateView();
 
                         // notify listener.
                         if (view != null)
@@ -729,7 +732,7 @@ namespace OsmSharp.Android.UI
         {
             try
             {
-                base.OnDraw(canvas);
+                // base.OnDraw(canvas);
 
                 if (_renderingSuspended)
                 { // do nothing when rendering is suspended.
@@ -753,17 +756,28 @@ namespace OsmSharp.Android.UI
                     _mapView.RaiseMapInitialized();
                 }
 
+                if (_backBufferCanvas == null)
+                {
+                    _backBuffer = global::Android.Graphics.Bitmap.CreateBitmap(
+                        this.Width, this.Height, global::Android.Graphics.Bitmap.Config.Argb8888);
+                    _backBufferCanvas = new global::Android.Graphics.Canvas(_backBuffer);
+                }
+
                 if (_onScreenBuffer != null)
                 { // there is a buffer.
                     // render only the cached scene.
-                    canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
+                    var c = this.Holder.LockCanvas();
+                    _backBufferCanvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
                     View2D view = this.CreateView();
                     float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
                     _renderer.SceneRenderer.Render(
-                        canvas,
+                        _backBufferCanvas,
                         view,
                         zoomFactor,
                         new Primitive2D[] { _onScreenBuffer });
+                    c.DrawBitmap(_backBuffer, 0, 0, new global::Android.Graphics.Paint(
+                        global::Android.Graphics.PaintFlags.AntiAlias));
+                    this.Holder.UnlockCanvasAndPost(c);
                 }
             }
             catch (Exception ex)
