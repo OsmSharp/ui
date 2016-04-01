@@ -37,12 +37,13 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
     public abstract class VectorTileSourceBase : IVectorTileSource
     {
         private readonly string _tilesURL; // hold the tile url.
-        private readonly LRUCache<ulong, IEnumerable<Primitive2D>> _cache; // the cached tiles.
+        private LRUCache<ulong, IEnumerable<Primitive2D>> _cache; // the cached tiles.
         private const int _maxThreads = 4; // maximum concurrent threads to get tiles.
-        private readonly LimitedStack<ulong> _stack; // holds the tiles queue for load.
-        private readonly Dictionary<ulong, int> _attempts; // holds the attemps per tile.
+        private LimitedStack<ulong> _stack; // holds the tiles queue for load.
+        private Dictionary<ulong, int> _attempts; // holds the attemps per tile.
         private readonly Timer _timer; // Holds the timer.
         private readonly IProjection _projection; // Holds the projection.
+        private int _millis = 400;
 
         /// <summary>
         /// Creates a new tile source.
@@ -60,6 +61,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         }
 
         private bool _suspended; // Holds the suspended flag.
+        private bool _changed = false;
         private int _currentZoom; // Holds the current zoom.
         private HashSet<ulong> _loading = new HashSet<ulong>(); // Holds the tiles that are currently loading.
 
@@ -77,6 +79,11 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// Gets or sets a function to override tile loading.
         /// </summary>
         public Func<Tile, Stream> TileOverride { get; set; }
+
+        /// <summary>
+        /// A function to filter primitives.
+        /// </summary>
+        public Func<IEnumerable<Primitive2D>, IEnumerable<Primitive2D>> FilterPrimitives { get; set; }
 
         /// <summary>
         /// Raises the source changed event.
@@ -114,40 +121,31 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// </summary>
         public void Prepare(TileRange range)
         {
-            // build the tile range.
-            lock (_stack)
-            { // make sure the tile range is not in use.
-                _stack.Clear();
+            var stack = new LimitedStack<ulong>(_stack.Limit, _stack.Limit);
+            
+            _currentZoom = range.Zoom;
+            foreach (var tile in range.EnumerateInCenterFirst().Reverse())
+            {
+                if (tile.IsValid)
+                { // make sure all tiles are valid.
+                    IEnumerable<Primitive2D> temp;
+                    if (!_cache.TryPeek(tile.Id, out temp) &&
+                        !_loading.Contains(tile.Id))
+                    { // not cached and not loading.
+                        stack.Push(tile.Id);
 
-                lock (_cache)
-                {
-                    _currentZoom = range.Zoom;
-                    foreach (var tile in range.EnumerateInCenterFirst().Reverse())
-                    {
-                        if (tile.IsValid)
-                        { // make sure all tiles are valid.
-                            IEnumerable<Primitive2D> temp;
-                            if (!_cache.TryPeek(tile.Id, out temp) &&
-                                !_loading.Contains(tile.Id))
-                            { // not cached and not loading.
-                                _stack.Push(tile.Id);
-
-                                OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", Logging.TraceEventType.Information, 
-                                    "Queued tile:" + tile.ToString());
-                            }
-                        }
-                    }
-                    _timer.Change(0, 100);
-
-                    if (_stack.Count > 0)
-                    { // reset the attempts.
-                        lock (_attempts)
-                        {
-                            _attempts.Clear();
-                        }
+                        OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", Logging.TraceEventType.Information,
+                            "Queued tile:" + tile.ToString());
                     }
                 }
             }
+            _timer.Change(0, _millis);
+
+            if (stack.Count > 0)
+            {
+                _attempts = new Dictionary<ulong, int>();
+            }
+            _stack = stack;
         }
         
         /// <summary>
@@ -173,23 +171,42 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     return;
                 }
 
+                var loadTile = ulong.MaxValue;
                 lock (_stack)
-                { // make sure that access to the queue is synchronized.
-                    int queue = _stack.Count;
-                    while (_stack.Count > queue + _loading.Count - _maxThreads && _stack.Count > 0)
-                    { // there are queued items.
-                        LoadTile(_stack.Pop());
+                {
+                    if (_stack.Count > 0 && _loading.Count < _maxThreads)
+                    {
+                        loadTile = _stack.Pop();
                     }
+                }
 
-                    if (_stack.Count == 0)
-                    { // dispose of timer.
-                        _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                while (loadTile != ulong.MaxValue)
+                { // there are queued items.
+                    LoadTile(loadTile);
+
+                    loadTile = ulong.MaxValue;
+                    lock (_stack)
+                    {
+                        if (_stack.Count > 0 && _loading.Count < _maxThreads)
+                        {
+                            loadTile = _stack.Pop();
+                        }
                     }
+                }
+
+                if (_stack.Count == 0)
+                { // dispose of timer.
+                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 }
             }
             catch (Exception ex)
             { // don't worry about exceptions here.
                 OsmSharp.Logging.Log.TraceEvent("LayerVectorTiles", Logging.TraceEventType.Error, ex.Message);
+            }
+            
+            if (_changed)
+            {
+                this.RaiseSourceChanged();
             }
         }
 
@@ -237,6 +254,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     if (overrideStream != null)
                     {
                         this.ProcessResponseStream(overrideStream, tile);
+                        _loading.Remove(tile.Id);
                         return;
                     }
                 }
@@ -295,7 +313,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                                         lock (_stack)
                                         {
                                             _stack.Push(tile.Id);
-                                            _timer.Change(0, 150);
+                                            _timer.Change(0, _millis);
                                         }
                                     }
                                 }
@@ -332,6 +350,11 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
 
             if (scene != null)
             {
+                if (this.FilterPrimitives != null)
+                {
+                    scene = this.FilterPrimitives(scene);
+                }
+
                 lock (_cache)
                 { // add the result to the cache.
                     _cache.Add(tile.Id, scene);
@@ -339,12 +362,12 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
 
                 if (!_suspended)
                 { // only raise the event when not suspended but do no throw away a tile, that would be a waste.
-                    this.RaiseSourceChanged();
                     if (this.TileLoaded != null)
                     {
                         this.TileLoaded(tile, scene);
                     }
                 }
+                _changed = true;
             }
         }
 
