@@ -917,6 +917,28 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             dashes = null;
                         }
+                        
+                        int[] arrowDashes;
+                        if (!rule.TryGetProperty("arrowDashes", out arrowDashes))
+                        {
+                            arrowDashes = null;
+                        }
+                        DeclarationArrowsEnum arrowDirection;
+                        int arrowColor = 0;
+                        int arrowWidth = 1;
+                        if (!rule.TryGetProperty("arrowWidth", out arrowWidth))
+                        {
+                            arrowWidth = 1;
+                        }
+
+                        bool showArrows = false;
+                        if (rule.TryGetProperty("arrows", out arrowDirection) &&
+                            rule.TryGetProperty("arrowColor", out arrowColor) &&
+                            arrowDashes != null)
+                        {
+                            showArrows = true;
+                        }
+
                         if (rule.TryGetProperty("color", out color))
                         {
                             float casingWidth;
@@ -952,6 +974,28 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 { // dashes set, use line pattern offset.
                                     scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
                                         minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
+                                
+                                if (showArrows)
+                                {
+                                    if (arrowDirection == DeclarationArrowsEnum.Backward)
+                                    {
+                                        var reverseX = new double[x.Length];
+                                        x.CopyToReverse(reverseX, 0);
+                                        var reverseY = new double[y.Length];
+                                        y.CopyToReverse(reverseY, 0);
+                                        uint? pointsIdReversed = scene.AddPoints(reverseX, reverseY);
+                                        if (pointsIdReversed.HasValue)
+                                        {
+                                            scene.AddStyleLineArrow(pointsIdReversed.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                                minZoom, maxZoom, arrowColor, arrowWidth, arrowDashes);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        scene.AddStyleLineArrow(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                            minZoom, maxZoom, arrowColor, arrowWidth, arrowDashes);
+                                    }
                                 }
 
                                 int textColor;
