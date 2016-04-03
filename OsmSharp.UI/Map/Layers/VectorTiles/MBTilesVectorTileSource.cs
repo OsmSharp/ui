@@ -139,8 +139,8 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                             }
                         }
                     }
-                    _timer.Change(0, 100);
                 }
+                _timer.Change(0, 500);
             }
         }
 
@@ -167,6 +167,12 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     while (_stack.Count >= queue && _stack.Count > 0)
                     { // there are queued items.
                         var tile = new Tile(_stack.Pop());
+
+                        IEnumerable<Primitive2D> existing;
+                        if (_cache.TryGet(tile.Id, out existing))
+                        {
+                            continue;
+                        }
                         
                         IEnumerable<Primitive2D> scene = null;
 
@@ -208,11 +214,11 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                         {
                             this.TileLoaded(tile, scene);
                         }
-                    }
-
-                    if (this.SourceChanged != null)
-                    {
-                        this.SourceChanged();
+                        
+                        if (this.SourceChanged != null)
+                        {
+                            this.SourceChanged();
+                        }
                     }
 
                     if (_stack.Count == 0)
