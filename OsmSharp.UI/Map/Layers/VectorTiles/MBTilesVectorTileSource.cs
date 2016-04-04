@@ -41,7 +41,7 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
     {
         private readonly SQLiteConnectionBase _connection; // holds the connection.
         private readonly LRUCache<ulong, IEnumerable<Primitive2D>> _cache; // the cached tiles.
-        private readonly LimitedStack<ulong> _stack; // holds the tiles queue for load.
+        private LimitedStack<ulong> _stack; // holds the tiles queue for load.
         private readonly Timer _timer; // Holds the timer.
 
         /// <summary>
@@ -118,30 +118,25 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
         /// </summary>
         public void Prepare(TileRange range)
         {
-            // build the tile range.
-            lock (_stack)
-            { // make sure the tile range is not in use.
-                _stack.Clear();
+            var stack = new LimitedStack<ulong>(_stack.Limit, _stack.Limit);
 
-                lock (_cache)
-                {
-                    foreach (var tile in range.EnumerateInCenterFirst().Reverse())
-                    {
-                        if (tile.IsValid)
-                        { // make sure all tiles are valid.
-                            IEnumerable<Primitive2D> temp;
-                            if (!_cache.TryPeek(tile.Id, out temp))
-                            { // not cached and not loading.
-                                _stack.Push(tile.Id);
+            foreach (var tile in range.EnumerateInCenterFirst().Reverse())
+            {
+                if (tile.IsValid)
+                { // make sure all tiles are valid.
+                    IEnumerable<Primitive2D> temp;
+                    if (!_cache.TryPeek(tile.Id, out temp))
+                    { // not cached and not loading.
+                        stack.Push(tile.Id);
 
-                                OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", TraceEventType.Information,
-                                    "Queued tile:" + tile.ToString());
-                            }
-                        }
+                        OsmSharp.Logging.Log.TraceEvent("VectorTileSourceBase", TraceEventType.Information,
+                            "Queued tile:" + tile.ToString());
                     }
                 }
-                _timer.Change(0, 500);
             }
+            _timer.Change(0, 200);
+
+            _stack = stack;
         }
 
         /// <summary>
