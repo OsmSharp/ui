@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace OsmSharp.UI.Map.Layers.VectorTiles
@@ -156,70 +157,97 @@ namespace OsmSharp.UI.Map.Layers.VectorTiles
                     return;
                 }
 
-                lock (_stack)
+                var tiles = new List<ulong>();
+                var stack = _stack;
+                var cache = _cache;
+                lock (stack)
                 { // make sure that access to the queue is synchronized.
-                    int queue = _stack.Count;
-                    while (_stack.Count >= queue && _stack.Count > 0)
+                    while (stack.Count > 0 && tiles.Count < 4)
                     { // there are queued items.
-                        var tile = new Tile(_stack.Pop());
+                        var tileId = stack.Pop();
 
                         IEnumerable<Primitive2D> existing;
-                        if (_cache.TryGet(tile.Id, out existing))
+                        if (!cache.TryGet(tileId, out existing))
                         {
-                            continue;
+                            tiles.Add(tileId);
                         }
-                        
-                        IEnumerable<Primitive2D> scene = null;
+                    }
+                }
 
-                        // request all missing tiles.
-                        lock (_connection)
+                IEnumerable<Primitive2D> scene = null;
+                var query = new StringBuilder("select zoom_level, tile_column, tile_row, tile_data from tiles where ");
+                if (tiles.Count > 0)
+                {
+                    var tile = new Tile(tiles[0]);
+                    query.AppendFormat("(zoom_level = {0} and tile_column = {1} and tile_row = {2})",
+                        tile.Zoom, tile.X, tile.Y);
+                    for (var i = 1; i < tiles.Count; i++)
+                    {
+                        tile = new Tile(tiles[i]);
+                        query.AppendFormat(" or (zoom_level = {0} and tile_column = {1} and tile_row = {2})",
+                            tile.Zoom, tile.X, tile.Y);
+                    }
+
+                    OsmSharp.Logging.Log.TraceEvent("MBTilesVectorTileSource", TraceEventType.Information,
+                        query.ToInvariantString());
+
+                    // request all missing tiles.
+                    List<tiles> tileResults = null;
+                    lock (_connection)
+                    {
+                        tileResults = _connection.Query<tiles>(query.ToString());
+                    }
+
+                    var changed = false;
+                    OsmSharp.Logging.Log.TraceEvent("MBTilesVectorTileSource", TraceEventType.Information,
+                        "Tiles loaded: {0}", tileResults.Count);
+                    foreach (var mbTile in tileResults)
+                    {
+                        using (var stream = new MemoryStream(mbTile.tile_data))
                         {
-                            var tiles = _connection.Query<tiles>("SELECT * FROM tiles WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?",
-                                tile.Zoom, tile.X, tile.Y);
-                            foreach (var mbTile in tiles)
+                            tile = new Tile(mbTile.tile_column, mbTile.tile_row, mbTile.zoom_level);
+                            var box = tile.Box.Resize(0.001);
+                            var source = Scene2D.Deserialize(stream, true);
+                            var zoomFactor = (float)this.Projection.ToZoomFactor(tile.Zoom);
+                            var view = View2D.CreateFromBounds(
+                                this.Projection.LatitudeToY(box.MaxLat),
+                                this.Projection.LongitudeToX(box.MinLon),
+                                this.Projection.LatitudeToY(box.MinLat),
+                                this.Projection.LongitudeToX(box.MaxLon));
+                            scene = source.Get(view, zoomFactor);
+
+                            if (scene == null)
                             {
-                                using (var stream = new MemoryStream(mbTile.tile_data))
-                                {
-                                    var box = tile.Box.Resize(0.001);
-                                    var source = Scene2D.Deserialize(stream, true);
-                                    var zoomFactor = (float)this.Projection.ToZoomFactor(tile.Zoom);
-                                    var view = View2D.CreateFromBounds(
-                                        this.Projection.LatitudeToY(box.MaxLat),
-                                        this.Projection.LongitudeToX(box.MinLon),
-                                        this.Projection.LatitudeToY(box.MinLat),
-                                        this.Projection.LongitudeToX(box.MaxLon));
-                                    scene = source.Get(view, zoomFactor);
-                                }
+                                scene = Enumerable.Empty<Primitive2D>();
+                            }
+                            changed = true;
+
+                            if (this.FilterPrimitives != null)
+                            {
+                                scene = this.FilterPrimitives(scene);
+                            }
+
+                            lock (_cache)
+                            {
+                                _cache.Add(tile.Id, scene);
+                            }
+
+                            if (this.TileLoaded != null)
+                            {
+                                this.TileLoaded(tile, scene);
                             }
                         }
-
-                        if (scene == null)
-                        {
-                            scene = Enumerable.Empty<Primitive2D>();
-                        }
-
-                        if (this.FilterPrimitives != null)
-                        {
-                            scene = this.FilterPrimitives(scene);
-                        }
-
-                        _cache.Add(tile.Id, scene);
-
-                        if (this.TileLoaded != null)
-                        {
-                            this.TileLoaded(tile, scene);
-                        }
-                        
-                        if (this.SourceChanged != null)
-                        {
-                            this.SourceChanged();
-                        }
                     }
 
-                    if (_stack.Count == 0)
-                    { // dispose of timer.
-                        _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    if (changed && this.SourceChanged != null)
+                    {
+                        this.SourceChanged();
                     }
+                }
+
+                if (_stack.Count == 0)
+                { // dispose of timer.
+                    _timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 }
             }
             catch (Exception ex)
