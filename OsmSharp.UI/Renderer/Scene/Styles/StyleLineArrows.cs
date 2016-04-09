@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
+// Copyright (C) 2016 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,41 +16,50 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using ProtoBuf;
+
 namespace OsmSharp.UI.Renderer.Scene.Styles
 {
     /// <summary>
     /// A style to indicate a series of arrays along a line.
     /// </summary>
+    [ProtoContract]
     public class StyleLineArrows
     {
         /// <summary>
         /// Gets or set the color.
         /// </summary>
+        [ProtoMember(1)]
         public int Color { get; set; }
 
         /// <summary>
         /// Gets or sets the width.
         /// </summary>
+        [ProtoMember(2)]
         public float Width { get; set; }
 
         /// <summary>
         /// Gets or sets teh line dashes.
         /// </summary>
+        [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public int[] Dashes { get; set; }
 
         /// <summary>
         /// Gets or sets the layer.
         /// </summary>
+        [ProtoMember(4)]
         public uint Layer { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
+        [ProtoMember(5)]
         public float MinZoom { get; set; }
 
         /// <summary>
         /// Gets or sets the minzoom.
         /// </summary>
+        [ProtoMember(6)]
         public float MaxZoom { get; set; }
 
         /// <summary>
