@@ -28,6 +28,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     public enum TextPositionEnum
     {
         Line,
-        Center
+        Center,
+        Offset
     }
 }

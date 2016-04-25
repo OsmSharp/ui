@@ -436,6 +436,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                                     case "center":
                                         textPosition.Value = TextPositionEnum.Center;
                                         break;
+                                    case "offset":
+                                        textPosition.Value = TextPositionEnum.Offset;
+                                        break;
                                     default:
                                         throw new MapCSSDomainParserException(declarationTree,
                                                                                 string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));

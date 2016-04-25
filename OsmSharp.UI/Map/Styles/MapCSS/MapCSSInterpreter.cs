@@ -136,19 +136,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (selector.Type)
                             {
                                 case SelectorTypeEnum.Node:
-                                    _keysForNodes = null;
+                                    _keysForNodes.Add("*");
                                     break;
                                 case SelectorTypeEnum.Way:
-                                    _keysForWays = null;
+                                    _keysForWays.Add("*");
                                     break;
                                 case SelectorTypeEnum.Relation:
-                                    _keysForRelations = null;
+                                    _keysForRelations.Add("*");
                                     break;
                                 case SelectorTypeEnum.Line:
-                                    _keysForLines = null;
+                                    _keysForLines.Add("*");
                                     break;
                                 case SelectorTypeEnum.Area:
-                                    _keysForAreas = null;
+                                    _keysForAreas.Add("*");
                                     break;
                             }
                         }
@@ -299,12 +299,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             {
                 case CompleteOsmType.Node:
                     if (!_mapCSSFile.HasNodeIdSelector &&
-                        osmGeo.Tags.Count == 0)
-                    { // this node can never be selected, no tags and no id selectors.
-                        break;
-                    }
-                    if (!_mapCSSFile.HasNodeIdSelector &&
-                        _keysForNodes != null &&
+                        !_keysForNodes.Contains("*") &&
                         !osmGeo.Tags.ContainsOneOfKeys(_keysForNodes))
                     { // no good keys present.
                         break;
@@ -312,13 +307,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     this.TranslateNode(scene, projection, osmGeo as Node);
                     break;
                 case CompleteOsmType.Way:
-                    var relevantWayTags = osmGeo.Tags;
-                    if (_keysForWays != null)
-                    { // filter the collection.
-                        relevantWayTags = relevantWayTags.KeepKeysOf(_keysForWays);
-                    }
+                    var relevantWayTags = osmGeo.Tags.KeepKeysOf(_keysForWays);
                     if (!_mapCSSFile.HasWayIdSelector &&
-                        _keysForWays != null &&
+                        !_keysForWays.Contains("*") &&
                         relevantWayTags.Count == 0)
                     { // no good keys present.
                         break;
@@ -334,7 +325,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     break;
                 case CompleteOsmType.Relation:
                     if (!_mapCSSFile.HasRelationIdSelector &&
-                        _keysForRelations != null &&
+                        !_keysForRelations.Contains("*") &&
                         !osmGeo.Tags.ContainsOneOfKeys(_keysForRelations))
                     { // no good keys present.
                         break;
