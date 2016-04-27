@@ -385,10 +385,10 @@ namespace OsmSharp.UI.Map.Layers
         protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
-            if(_suspended)
-            { // just return an empty primitives list if suspended.
-                return primitives;
-            }
+            //if(_suspended)
+            //{ // just return an empty primitives list if suspended.
+            //    return primitives;
+            //}
             try
             {
                 // calculate the current zoom level.

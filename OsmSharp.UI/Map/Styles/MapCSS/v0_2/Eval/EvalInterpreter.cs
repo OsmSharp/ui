@@ -12,6 +12,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
     /// </summary>
     public class EvalInterpreter
     {
+        #region instance
+
         /// <summary>
         /// Creates a new eval interpreter.
         /// </summary>
@@ -40,6 +42,101 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
             }
         }
 
+        #endregion instance
+
+        #region atomar
+
+        /// <summary>
+        /// Interpreters the given eval function.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="evalFunction">Eval function.</param>
+        /// <param name="tags">Tags.</param>
+        public string InterpretString(string evalFunction, ITagsSource tags)
+        {
+            if (string.IsNullOrWhiteSpace(evalFunction)) { throw new ArgumentOutOfRangeException("evalFunction cannot be null"); }
+
+            // trim eval function.
+            evalFunction = evalFunction.Trim();
+
+            // calculate the result.
+            return this.Interpreter(evalFunction, tags);
+        }
+        
+        /// <summary>
+        /// Interpreters the given eval function.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="evalFunction"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public double InterpretDouble(string evalFunction, ITagsSource tags)
+        {
+            string result = this.InterpretString(evalFunction, tags);
+
+            // parse to double.
+            double resultDouble = 0;
+            if (!double.TryParse(result, out resultDouble))
+            {
+                OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
+                                                string.Format("Cannot convert '{0}' to double.", result));
+            }
+            return resultDouble;
+        }
+        /// <summary>
+        /// Interpreters the given eval function.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="evalFunction"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public float InterpretFloat(string evalFunction, ITagsSource tags)
+        {
+            string result = this.InterpretString(evalFunction, tags);
+
+            // parse to float.
+            float resultFloat = 0;
+            if (!float.TryParse(result, out resultFloat))
+            {
+                OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
+                                                string.Format("Cannot convert '{0}' to float.", result));
+            }
+            return resultFloat;
+        }
+        /// <summary>
+        /// Interpreters the given eval function.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="evalFunction"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public int InterpretInt(string evalFunction, ITagsSource tags)
+        {
+            string result = this.InterpretString(evalFunction, tags);
+
+            // parse to double.
+            int resultInt = 0;
+            if (!int.TryParse(result, out resultInt))
+            {
+                OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
+                                                string.Format("Cannot convert '{0}' to int.", result));
+            }
+            return resultInt;
+        }
+        /// <summary>
+        /// Returns the interpreted value of the boolstring according to the MapCSS eval boolean datatype rules.
+        /// </summary>
+        /// <param name="evalFunction"></param>
+        /// <returns></returns>
+        public bool InterpretBool(string evalFunction, ITagsSource tags)
+        {
+            string result = this.InterpretString(evalFunction, tags);
+            return !(result == null || result == "false" || result == string.Empty || result == "no");
+        }
+
+
+        #endregion atomar
+
         private const string TAG_TOKEN = "tag";
 
         private const string PROP_TOKEN = "prop";
@@ -51,82 +148,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
         private const string MAX_TOKEN = "max";
 
         private const string MIN_TOKEN = "min";
-
-		/// <summary>
-		/// Interpreters the given eval function.
-		/// </summary>
-		/// <returns>The string.</returns>
-		/// <param name="evalFunction">Eval function.</param>
-		/// <param name="tags">Tags.</param>
-		public string InterpretString(string evalFunction, ITagsSource tags){
-			if (string.IsNullOrWhiteSpace(evalFunction)) { throw new ArgumentOutOfRangeException("evalFunction cannot be null"); }
-
-			// trim eval function.
-			evalFunction = evalFunction.Trim();
-
-			// calculate the result.
-			return this.Interpreter (evalFunction, tags);
-		}
-
-        /// <summary>
-        /// Interpreters the given eval function.
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="evalFunction"></param>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public double InterpretDouble(string evalFunction, ITagsSource tags)
-        {
-			string result = this.InterpretString (evalFunction, tags);
-
-			// parse to double.
-			double resultDouble = 0;
-			if (!double.TryParse (result, out resultDouble)) {
-				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
-				                                string.Format ("Cannot convert '{0}' to double.", result));
-			}
-			return resultDouble;
-		}
-
-		/// <summary>
-		/// Interpreters the given eval function.
-		/// </summary>
-		/// <typeparam name="TValue"></typeparam>
-		/// <param name="evalFunction"></param>
-		/// <param name="tags"></param>
-		/// <returns></returns>
-		public float InterpretFloat(string evalFunction, ITagsSource tags)
-		{
-			string result = this.InterpretString (evalFunction, tags);
-
-			// parse to float.
-			float resultFloat = 0;
-			if (!float.TryParse (result, out resultFloat)) {
-				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
-												string.Format ("Cannot convert '{0}' to float.", result));
-			}
-			return resultFloat;
-		}
-
-		/// <summary>
-		/// Interpreters the given eval function.
-		/// </summary>
-		/// <typeparam name="TValue"></typeparam>
-		/// <param name="evalFunction"></param>
-		/// <param name="tags"></param>
-		/// <returns></returns>
-		public int InterpretInt(string evalFunction, ITagsSource tags)
-		{
-			string result = this.InterpretString (evalFunction, tags);
-
-			// parse to double.
-			int resultInt = 0;
-			if (!int.TryParse (result, out resultInt)) {
-				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", OsmSharp.Logging.TraceEventType.Error,
-												string.Format ("Cannot convert '{0}' to int.", result));
-			}
-			return resultInt;
-		}
 
         /// <summary>
         /// Interpreters the given expression.
@@ -157,7 +178,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
             { // evaluate expression and decide on the next expression.
                 string[] args = this.ParseFunction(expression);
                 if (args.Length != 3) { throw new EvalInterpreterException("Invalid argument count: {0}", expression); }
-                if (this.ParseBool(this.Interpreter(args[0], tags)))
+                if (this.InterpretBool(this.Interpreter(args[0], tags)))
                 { // evaluate and return the true-part.
                     return this.Interpreter(args[1], tags);
                 }
@@ -182,12 +203,35 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
             }
             else if (expression.StartsWith(MAX_TOKEN))
             { // returns the maximum value of all arguments.
+                string[] args = this.ParseFunction(expression);
 
+                return null;
             }
             else if (expression.StartsWith(MIN_TOKEN))
             { // returns the minimum value of all arguments.
-
+                return null;
             }
+            //else if (expression.StartsWith(NUM_TOKEN))
+            //{ // returns the minimum value of all arguments.
+            //    return null;
+            //}
+            //else if (expression.StartsWith(STR_TOKEN))
+            //{ // returns the minimum value of all arguments.
+            //    return null;
+            //}
+            //else if (expression.StartsWith(BOOLEAN_TOKEN))
+            //{ // returns the minimum value of all arguments.
+            //    return null;
+            //}
+            //else if (expression.StartsWith(INT_TOKEN))
+            //{ // returns the minimum value of all arguments.
+            //    return null;
+            //}
+
+            //metric
+            //    sqrt
+            //    concat
+            return null;
             throw new EvalInterpreterException("Failed to evaluate expression: {0}", expression);
         }
 
@@ -238,6 +282,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
             }
             return result;
         }
+        /// <summary>
+        /// Returns the interpreted value of the boolstring according to the MapCSS eval boolean datatype rules.
+        /// </summary>
+        /// <param name="boolean"></param>
+        /// <returns></returns>
+        public bool InterpretBool(string boolean)
+        {
+            return !(boolean == null || boolean == "false" || boolean == string.Empty || boolean == "no");
+        }
 
         /// <summary>
         /// Returns true if the given string represents none.
@@ -246,17 +299,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
         /// <returns></returns>
         private bool IsNone(string noneString)
         {
-            return noneString == null || noneString == string.Empty;
-        }
-
-        /// <summary>
-        /// Returns the interpreted value of the boolstring according to the MapCSS eval boolean datatype rules.
-        /// </summary>
-        /// <param name="boolString"></param>
-        /// <returns></returns>
-        private bool ParseBool(string boolString)
-        {
-            return !(boolString == null || boolString == "false" || boolString == string.Empty || boolString == "no");
+            return string.IsNullOrEmpty(noneString);
         }
 
         /// <summary>
