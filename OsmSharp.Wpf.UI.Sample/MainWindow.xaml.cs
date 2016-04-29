@@ -41,10 +41,10 @@ namespace OsmSharp.Wpf.UI.Sample
 
 
             var testLayer = new LayerOsm(MemoryDataSource.CreateFrom(source), mapCssInterpreter, new WebMercator());
-            //map.AddLayer(testLayer);
+            map.AddLayer(testLayer);
 
 
-              map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
+            //  map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
             // map.BackColor = SimpleColor.FromKnownColor(OsmSharp.UI.KnownColor.Black).Value;
 

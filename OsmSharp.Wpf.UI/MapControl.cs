@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
@@ -26,84 +31,31 @@ namespace OsmSharp.Wpf.UI
     {
         #region fields
 
-        /// <summary>
-        /// An event is queued already.
-        /// </summary>
-        private bool _isQueued;
-        private bool _isSuspendMapChanging;
-
-        /// <summary>
-        /// Holds the map renderer.
-        /// </summary>
+        private readonly IProjection _defaultProjection;
+        private readonly MapRenderingManager _mapRenderingManager;
         private readonly MapRenderer<RenderContext> _renderer;
 
-        /// <summary>
-        /// Holds the map.
-        /// </summary>
         private Map _map;
 
-        /// <summary>
-        /// Coordinates where dragging started.
-        /// </summary>
         private Point? _draggingCoordinates;
-        /// <summary>
-        /// Coordinates of the old center.
-        /// </summary>
-        private GeoCoordinate _oldCenter;
-
-        private bool _isRenderCachedScene;
-        private BitmapSource _cachedScene;
 
         #endregion fields
 
         #region constructors
 
-        /// <summary>
-        /// Creates a new map control.
-        /// </summary>
         public MapControl()
         {
+            _defaultProjection = new WebMercator();
             _renderer = new MapRenderer<RenderContext>(new DrawingRenderer2D());
+            _mapRenderingManager = new MapRenderingManager();
 
             MapAllowPan = true;
             MapAllowZoom = true;
-
-            //CacheMode = new BitmapCache
-            //{
-            //    EnableClearType = true,
-            //    RenderAtScale = 8,
-            //    SnapsToDevicePixels = true
-            //};
         }
 
         #endregion constructors
 
         #region events
-
-        /// <summary>
-        /// Event raised when the map was first touched.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
-
-        /// <summary>
-        /// Event raised when the map is touched.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouched;
-
-        /// <summary>
-        /// Event raised after the map was touched.
-        /// </summary>
-        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
-
-        /// <summary>
-        /// Raised when the map is moved.
-        /// </summary>
-        public event MapViewDelegates.MapMoveDelegate MapMove;
-
-        /// <summary>
-        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
-        /// </summary>
-        public event MapViewDelegates.MapInitialized MapInitialized;
 
         #region MapMouseDown
 
@@ -118,13 +70,10 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseDown(MouseEventArgs e)
         {
-            if (Map != null)
-            {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
-                var args = new MapControlEventArgs(e, geoCoordinates);
-                OnMapMouseDown(args);
-                MapMouseDown?.Invoke(this, args);
-            }
+            var geoCoordinates = _mapRenderingManager.CurrentScene.ToGeoCoordinates(e.GetPosition(this));
+            var args = new MapControlEventArgs(e, geoCoordinates);
+            OnMapMouseDown(args);
+            MapMouseDown?.Invoke(this, args);
         }
         /// <summary>
         /// Called on a mouse up event.
@@ -150,9 +99,9 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseMove(MouseEventArgs e)
         {
-            if (Map != null)
+            if (_currentScene != null)
             {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
+                var geoCoordinates = _currentScene.ToGeoCoordinates(e.GetPosition(this));
                 var args = new MapControlEventArgs(e, geoCoordinates);
                 OnMapMouseMove(args);
                 MapMouseMove?.Invoke(this, args);
@@ -182,9 +131,9 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseUp(MouseEventArgs e)
         {
-            if (Map != null)
+            if (_currentScene != null)
             {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
+                var geoCoordinates = _currentScene.ToGeoCoordinates(e.GetPosition(this));
                 var args = new MapControlEventArgs(e, geoCoordinates);
                 OnMapMouseUp(args);
                 MapMouseUp?.Invoke(this, args);
@@ -214,9 +163,9 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseWheel(MouseEventArgs e)
         {
-            if (Map != null)
+            if (_currentScene != null)
             {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
+                var geoCoordinates = _currentScene.ToGeoCoordinates(e.GetPosition(this));
                 var args = new MapControlEventArgs(e, geoCoordinates);
                 OnMapMouseWheel(args);
                 MapMouseWheel?.Invoke(this, args);
@@ -246,9 +195,9 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseDoubleClick(MouseEventArgs e)
         {
-            if (Map != null)
+            if (_currentScene != null)
             {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
+                var geoCoordinates = _currentScene.ToGeoCoordinates(e.GetPosition(this));
                 var args = new MapControlEventArgs(e, geoCoordinates);
                 OnMapMouseDoubleClick(args);
                 MapMouseDoubleClick?.Invoke(this, args);
@@ -278,9 +227,9 @@ namespace OsmSharp.Wpf.UI
         /// <param name="e"></param>
         private void RaiseOnMapMouseClick(MouseEventArgs e)
         {
-            if (Map != null)
+            if (_currentScene != null)
             {
-                var geoCoordinates = ToGeoCoordinates(e.GetPosition(this));
+                var geoCoordinates = _currentScene.ToGeoCoordinates(e.GetPosition(this));
                 var args = new MapControlEventArgs(e, geoCoordinates);
                 OnMapMouseClick(args);
                 MapMouseClick?.Invoke(this, args);
@@ -301,36 +250,12 @@ namespace OsmSharp.Wpf.UI
 
         #region propreties
 
-        /// <summary>
-        /// The center coordinates.
-        /// </summary>
+        public IProjection Projection => Map != null ? Map.Projection : _defaultProjection;
+
         public GeoCoordinate MapCenter { get; set; }
-        /// <summary>
-        /// The zoom factor.
-        /// </summary>
         public float MapZoom { get; set; }
-        /// <summary>
-        /// Gets or sets the MapTilt.
-        /// </summary>
         public Degree MapTilt { get; set; }
 
-        /// <summary>
-        /// Gets the current view.
-        /// </summary>
-        public View2D CurrentView => CreateSceneView(MapCenter, MapZoom);
-
-        /// <summary>
-        /// Returns the current ActualWidth.
-        /// </summary>
-        public int CurrentWidth => (int)System.Math.Ceiling(ActualWidth);
-        /// <summary>
-        /// Returns the current ActualHeight.
-        /// </summary>
-        public int CurrentHeight => (int)System.Math.Ceiling(ActualHeight);
-
-        /// <summary>
-        /// Gets/sets the map.
-        /// </summary>
         public Map Map
         {
             get { return _map; }
@@ -338,37 +263,16 @@ namespace OsmSharp.Wpf.UI
             {
                 if (_map != null)
                 {
-                    _map.MapChanged -= MapChanged;
+                    _map.MapChanged -= MapChangedAsync;
                 }
                 _map = value;
                 if (_map != null)
                 {
-                    _map.MapChanged += MapChanged;
+                    _map.MapChanged += MapChangedAsync;
                 }
             }
         }
 
-        /// <summary>
-        /// Returns the density.
-        /// </summary>
-        public float Density => 1;
-
-        /// <summary>
-        /// Gets or sets the map bounding box.
-        /// </summary>
-        public GeoCoordinateBox MapBoundingBox { get; set; }
-        /// <summary>
-        /// Gets or sets the minimum zoom level.
-        /// </summary>
-        public float MapMinZoomLevel { get; set; }
-        /// <summary>
-        /// Gets or sets the maximum zoom level.
-        /// </summary>
-        public float MapMaxZoomLevel { get; set; }
-
-        /// <summary>
-        /// Gets or sets the map tilt flag.
-        /// </summary>
         public bool MapAllowTilt
         {
             get { return false; }
@@ -377,35 +281,12 @@ namespace OsmSharp.Wpf.UI
                 // no map tilt functionality.
             }
         }
-
-        /// <summary>
-        /// Gets or sets the map pan flag.
-        /// </summary>
         public bool MapAllowPan { get; set; }
-        /// <summary>
-        /// Gets or sets the map zoom flag.
-        /// </summary>
         public bool MapAllowZoom { get; set; }
 
         #endregion propreties
 
         #region utils
-
-        private Rect BuildSceneRect()
-        {
-            var size = new Size(RenderSize.Width, RenderSize.Height);
-            return new Rect(new Point(0, 0), size);
-        }
-
-        private View2D CreateSceneView(GeoCoordinate mapCenter, double mapZoom)
-        {
-            var sceneRect = BuildSceneRect();
-            return Map != null
-                ? _renderer.Create((float) sceneRect.Width, (float) sceneRect.Height, Map,
-                    (float) Map.Projection.ToZoomFactor(mapZoom),
-                    mapCenter, false, true)
-                : null;
-        }
 
         private void Refresh()
         {
@@ -417,38 +298,26 @@ namespace OsmSharp.Wpf.UI
 
             InvalidateVisual();
         }
-
-        private void MapChanged()
+        private async Task RenderMapAsync(MapRenderingScene scene)
         {
-            if (!_isSuspendMapChanging)
+            await Task.Run(() =>
             {
-                Refresh();
-            }
+                var renderScene = _mapRenderingManager.LastScene;
+                if (renderScene != null && Map != null)
+                {
+                    var context = new RenderContext(renderScene.RenderSize);
+                    _renderer.Render(context, Map, renderScene.CreateView(Projection),
+                        (float)Projection.ToZoomFactor(MapZoom));
+                    renderScene.MapImage = context.BuildScene();
+                    renderScene.MapImage.Freeze();
+                    _mapRenderingManager.OnRender(renderScene);
+                }
+            });
         }
-        private void SuspendMapChanging()
+        private async void MapChangedAsync()
         {
-            _isRenderCachedScene = true;
-            _isSuspendMapChanging = true;
-            Map?.Pause();
-        }
-        private void ResumeMapChanging()
-        {
-            _isRenderCachedScene = false;
-            _isSuspendMapChanging = false;
-            Map?.Resume();
-        }
-
-        private void QueueNotifyMapViewChanged()
-        {
-            _isQueued = true;
-        }
-        private void DeQueueNotifyMapViewChanged(object sender, ElapsedEventArgs e)
-        {
-            if (_isQueued)
-            {
-                NotifyMapViewChanged();
-                _isQueued = false;
-            }
+            await RenderMapAsync();
+            Refresh();
         }
 
         #endregion utils
@@ -462,8 +331,6 @@ namespace OsmSharp.Wpf.UI
             if (MapAllowPan && e.LeftButton == MouseButtonState.Pressed)
             {
                 _draggingCoordinates = e.GetPosition(this);
-                _oldCenter = MapCenter;
-
                 SuspendMapChanging();
             }
             RaiseOnMapMouseDown(e);
@@ -492,7 +359,7 @@ namespace OsmSharp.Wpf.UI
                         _draggingCoordinates.Value.Y - currentCoordinates.Y};
                 var newCenter = new Point(RenderSize.Width / 2.0d + delta[0], RenderSize.Height / 2.0d + delta[1]);
 
-                MapCenter = ToGeoCoordinates(newCenter, CreateSceneView(_oldCenter, MapZoom));
+                MapCenter = _currentScene.ToGeoCoordinates(newCenter);
                 Refresh();
             }
             RaiseOnMapMouseMove(e);
@@ -539,6 +406,8 @@ namespace OsmSharp.Wpf.UI
         {
             base.OnInitialized(e);
 
+            _mapRenderingManager.Initialize(MapCenter, MapZoom, MapTilt, RenderSize);
+
             var timer = new Timer {Interval = 200};
             timer.Elapsed += DeQueueNotifyMapViewChanged;
             timer.Enabled = true;
@@ -555,79 +424,45 @@ namespace OsmSharp.Wpf.UI
         {
             base.OnRender(drawingContext);
 
-            if (Map != null)
+            var ticksBefore = DateTime.Now.Ticks;
+
+            drawingContext.PushClip(new RectangleGeometry(new Rect(new Point(0, 0), RenderSize)));
+            if (_currentScene != null)
             {
-                var ticksBefore = DateTime.Now.Ticks;
-                drawingContext.PushClip(new RectangleGeometry(new Rect(new Point(0, 0), RenderSize)));
-
-                var renderRect = new Rect(RenderSize);
-                var sceneRect = BuildSceneRect();
-                var view = CreateSceneView(MapCenter, MapZoom);
-                if (!_isRenderCachedScene)
+                lock (_sceneLock)
                 {
-                    var context = new RenderContext(sceneRect.Size);
-                    _renderer.Render(context, Map, view, (float)Map.Projection.ToZoomFactor(MapZoom));
-                    _cachedScene = context.BuildScene();
-
-                    drawingContext.DrawImage(_cachedScene, renderRect);
+                    _currentScene.RenderScene(drawingContext, MapCenter, MapZoom, MapTilt);
                 }
-                else
-                {
-                    var newCenter = ToPixel(MapCenter);
-                    var oldCenter = ToPixel(_oldCenter);
-                    var offsetX = oldCenter.X - newCenter.X;
-                    var offsetY = oldCenter.Y - newCenter.Y;
-
-                    drawingContext.PushTransform(new TranslateTransform(offsetX, offsetY));
-                    drawingContext.DrawImage(_cachedScene, renderRect);
-                    drawingContext.Pop();
-                }
-                
-                drawingContext.Pop();
-
-                var ticksAfter = DateTime.Now.Ticks;
-                var message = $"Rendering took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";
-                Logging.Log.TraceEvent("Wpf.MapControl.RenderPerfomance", TraceEventType.Information, message);
             }
+            drawingContext.Pop();
+
+            var ticksAfter = DateTime.Now.Ticks;
+            var message = $"Rendering took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";
+            Logging.Log.TraceEvent("Wpf.MapControl.RenderPerfomance", TraceEventType.Information, message);
+
         }
 
         #endregion overrides
 
         #region methods
 
-        public GeoCoordinate ToGeoCoordinates(Point point, View2D sceneView = null)
+        public void NotifyMapViewChanged()
         {
             if (Map != null)
             {
-                if (sceneView == null)
-                {
-                    sceneView = CreateSceneView(MapCenter, MapZoom);
-                }
+                var ticksBefore = DateTime.Now.Ticks;
 
-                double x, y;
-                var fromMatrix = sceneView.CreateFromViewPort(RenderSize.Width, RenderSize.Height);
-                fromMatrix.Apply(point.X, point.Y, out x, out y);
-                return Map.Projection.ToGeoCoordinates(x, y);
+                // notify the map.
+                var newScene  = new MapRenderingScene(Map.Projection, MapCenter, MapZoom, MapTilt, RenderSize);
+                var view = newScene.CreateView();
+                Map.ViewChanged((float)Map.Projection.ToZoomFactor(MapZoom), MapCenter, view, view);
+
+                MapChangedAsync();
+
+                var ticksAfter = DateTime.Now.Ticks;
+                var message = $"Map view changed notification took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";
+                Logging.Log.TraceEvent("Wpf.MapControl.NotifyMapViewChangedPerfomance", TraceEventType.Information, message);
             }
-            return null;
-        }
-        public Point ToPixel(GeoCoordinate coordinate, View2D sceneView = null)
-        {
-            if (Map != null)
-            {
-                if (sceneView == null)
-                {
-                    sceneView = CreateSceneView(MapCenter, MapZoom);
-                }
-
-                var projectionPoint =  Map.Projection.ToPixel(coordinate);
-
-                double x, y;
-                var fromMatrix = sceneView.CreateToViewPort(RenderSize.Width, RenderSize.Height);
-                fromMatrix.Apply(projectionPoint[0], projectionPoint[1], out x, out y);
-                return new Point(x, y);
-            }
-            return new Point();
         }
 
         public void ZoomIn(float delta = 0.2f)
@@ -641,27 +476,66 @@ namespace OsmSharp.Wpf.UI
             QueueNotifyMapViewChanged();
         }
 
-        public void NotifyMapViewChanged()
-        {
-            if (Map != null)
-            {
-                var ticksBefore = DateTime.Now.Ticks;
-
-                // notify the map.
-                var view = CreateSceneView(MapCenter, MapZoom);
-                Map.ViewChanged((float)Map.Projection.ToZoomFactor(MapZoom), MapCenter, view, view);
-
-                Refresh();
-
-                var ticksAfter = DateTime.Now.Ticks;
-                var message = $"Map view changed notification took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";
-                Logging.Log.TraceEvent("Wpf.MapControl.NotifyMapViewChangedPerfomance", TraceEventType.Information, message);
-            }
-        }
-
         #endregion methods
 
         #region IMapView implementation
+
+        /// <summary>
+        /// Event raised when the map was first touched.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedDown;
+
+        /// <summary>
+        /// Event raised when the map is touched.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Event raised after the map was touched.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouchedUp;
+
+        /// <summary>
+        /// Raised when the map is moved.
+        /// </summary>
+        public event MapViewDelegates.MapMoveDelegate MapMove;
+
+        /// <summary>
+        /// Raised when the map was first initialized, meaning it has a size and it was rendered for the first time.
+        /// </summary>
+        public event MapViewDelegates.MapInitialized MapInitialized;
+
+        /// <summary>
+        /// Gets the current view.
+        /// </summary>
+        public View2D CurrentView => _currentScene?.CreateView();
+
+        /// <summary>
+        /// Returns the current ActualWidth.
+        /// </summary>
+        public int CurrentWidth => RenderSize.Width.ToInt();
+        /// <summary>
+        /// Returns the current ActualHeight.
+        /// </summary>
+        public int CurrentHeight => RenderSize.Height.ToInt();
+
+        /// <summary>
+        /// Returns the density.
+        /// </summary>
+        public float Density => 1;
+
+        /// <summary>
+        /// Gets or sets the map bounding box.
+        /// </summary>
+        public GeoCoordinateBox MapBoundingBox { get; set; }
+        /// <summary>
+        /// Gets or sets the minimum zoom level.
+        /// </summary>
+        public float MapMinZoomLevel { get; set; }
+        /// <summary>
+        /// Gets or sets the maximum zoom level.
+        /// </summary>
+        public float MapMaxZoomLevel { get; set; }
 
         void IMapView.Invalidate()
         {
@@ -685,6 +559,154 @@ namespace OsmSharp.Wpf.UI
         }
 
         #endregion IMapView implementation
+    }
+
+    public class MapRenderingScene
+    {
+        public MapRenderingScene(GeoCoordinate center, double zoom, Degree mapTilt)
+        {
+            Projection = projection;
+            Center = center;
+            Zoom = zoom;
+            Tilt = mapTilt;
+            RenderSize = renderSize;
+        }
+
+        public GeoCoordinate Center { get; }
+        public double Zoom { get; }
+        public Degree Tilt { get; }
+
+        public BitmapSource MapImage { get; set; }
+
+        public View2D CreateView(IProjection projection)
+        {
+            var zoomFactor = projection.ToZoomFactor(Zoom);
+            var sceneCenter = projection.ToPixel(Center.Latitude, Center.Longitude);
+            var invertY = (true != !projection.DirectionY);
+
+            return View2D.CreateFrom(sceneCenter[0], sceneCenter[1],
+                                             RenderSize.Width, RenderSize.Height, zoomFactor,
+                                             false, invertY, Tilt);
+        }
+
+        public GeoCoordinate ToGeoCoordinates(Point point, IProjection projection)
+        {
+            var sceneView = CreateView(projection);
+            double x, y;
+            var fromMatrix = sceneView.CreateFromViewPort(RenderSize.Width, RenderSize.Height);
+            fromMatrix.Apply(point.X, point.Y, out x, out y);
+            return projection.ToGeoCoordinates(x, y);
+        }
+        public Point ToPixel(GeoCoordinate coordinate, IProjection projection)
+        {
+            var sceneView = CreateView(projection);
+            var projectionPoint = projection.ToPixel(coordinate);
+
+            double x, y;
+            var fromMatrix = sceneView.CreateToViewPort(RenderSize.Width, RenderSize.Height);
+            fromMatrix.Apply(projectionPoint[0], projectionPoint[1], out x, out y);
+            return new Point(x, y);
+        }
+
+        public void RenderScene(DrawingContext context, Size renderSize, GeoCoordinate cener, double zoom, Degree tilt)
+        {
+            //var newCenter = ToPixel(MapCenter);
+            //var oldCenter = ToPixel(_oldCenter);
+            //var offsetX = oldCenter.X - newCenter.X;
+            //var offsetY = oldCenter.Y - newCenter.Y;
+
+            //drawingContext.PushTransform(new TranslateTransform(offsetX, offsetY));
+            //lock (_sceneLock)
+            //{
+            //    drawingContext.DrawImage(_cachedScene, renderRect);
+            //}
+            //drawingContext.Pop();
+
+
+            //context.DrawImage(_cachedScene, renderRect);
+        }
+    }
+
+    public class MapRenderingManager
+    {
+        private readonly object _lockHistory = new object();
+        private readonly int _capacity;
+
+        private Func<MapRenderingScene, Task> _renderAction;
+        private readonly List<MapRenderingScene> _renderdScenes;
+        private readonly List<MapRenderingScene> _renderingScenes;
+
+        public MapRenderingManager(int capacity = 5)
+        {
+            _capacity = capacity;
+            _renderdScenes = new List<MapRenderingScene>();
+            _renderingScenes = new List<MapRenderingScene>();
+        }
+
+        public MapRenderingScene RenderingScene { get; private set; }
+        public MapRenderingScene LastScene
+        {
+            get
+            {
+                lock (_lockHistory)
+                {
+                    return _renderdScenes.Last();
+                }
+            }
+        }
+
+        private void RenderMapAsync()
+        {
+            while (true)
+            {
+                
+            }
+        }
+
+        public void Initialize(GeoCoordinate center, double zoom, Degree tilt)
+        {
+            Push(center, zoom, tilt);
+        }
+
+        public void SuspendRendering()
+        {
+        }
+        public void ResumeRendering()
+        {
+        }
+
+        public void Push(GeoCoordinate center, double zoom, Degree tilt)
+        {
+            lock (_lockHistory)
+            {
+                _renderdScenes.Add(new MapRenderingScene(center, zoom, tilt, renderSize));
+                if (_renderdScenes.Count > _capacity)
+                {
+                    _renderdScenes.RemoveRange(0, _renderdScenes.Count - _capacity);
+                }
+            }
+        }
+
+        public void OnRender(MapRenderingScene scene)
+        {
+            lock (_lockHistory)
+            {
+                if (RenderingScene == null)
+                {
+                    RenderingScene = scene;
+                }
+                else
+                {
+                    var current = _renderdScenes.IndexOf(RenderingScene);
+                    var index = _renderdScenes.IndexOf(scene);
+
+                    if (index > current)
+                    {
+                        RenderingScene = scene;
+                    }
+                }
+            }
+        }
     }
 
     public class MapControlEvent
