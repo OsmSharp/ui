@@ -209,8 +209,8 @@ namespace OsmSharp.Wpf.UI.Renderer
             var pathLength = points.Length();
             var textLength = formatedText.Width + text.Length*haloRadius.GetValueOrDefault()*2;
             var scalingFactor = 1;//textLength;
-            var progress = 0d;
             var offsetX = pathLength/2d - textLength/2d;
+            var progress = offsetX / pathLength;
 
             foreach (var ch in formattedChars)
             {
@@ -220,7 +220,7 @@ namespace OsmSharp.Wpf.UI.Renderer
                 Point point, tangent;
 
                 pathGeometry.GetPointAtFractionLength(progress, out point, out tangent);
-                drawingContext.PushTransform(new TranslateTransform(point.X + offsetX - width/2, point.Y - height / 2));
+                drawingContext.PushTransform(new TranslateTransform(point.X - width/2, point.Y - height / 2));
                 drawingContext.PushTransform(new RotateTransform(System.Math.Atan2(tangent.Y, tangent.X)* 180 / System.Math.PI, width / 2, height / 2));
                 drawingContext.PushTransform(new ScaleTransform(scalingFactor, scalingFactor));
 

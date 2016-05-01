@@ -163,7 +163,7 @@ namespace OsmSharp.Wpf.UI.Renderer
                 points[idx] = Tranform(x[idx], y[idx]);
 		    }
             target.Render().DrawLine(points, width, color.ToColor(), PenLineCap.Round, PenLineCap.Round,
-                 lineJoin.ToPenLineJoin(), dashes.ToDashStyle(width/2));
+                 lineJoin.ToPenLineJoin(), dashes.ToDashStyle(0));
         }
 
 	    /// <summary>

@@ -23,19 +23,19 @@ way :area { color: gray; width: 1; fill-color: red; fill-opacity: 0.1; }
   The default z-index is 5. If an object matches multiple rules with the same
   z-index then the rules are "merged" (but individual properties become one or the other)  */
 
-/*way[highway=motorway],way[highway=motorway_link],
-way[highway=trunk],way[highway=trunk_link],
-way[highway=primary],way[highway=primary_link],
-way[highway=secondary],way[highway=secondary_link],
-way[highway=tertiary],way[highway=tertiary_link],
-way[highway=residential]                             { text: name; text-color: black; font-size: 7; text-position: line;}*/
-way[highway=motorway],way[highway=motorway_link]    { z-index: 9; color: #bfbfcf; width: 7; casing-color: #506077; casing-width: 9; }
+way|z16-[highway=motorway],way|z16-[highway=motorway_link],
+way|z16-[highway=trunk],way|z16-[highway=trunk_link],
+way|z16-[highway=primary],way|z16-[highway=primary_link],
+way|z16-[highway=secondary],way|z16-[highway=secondary_link],
+way|z16-[highway=tertiary],way|z16-[highway=tertiary_link],
+way|z16-[highway=residential]                             { text: name; text-color: black; font-size: 15; text-position: line;}
+way[highway=motorway],way[highway=motorway_link]    { z-index: 9; color: #bfbfcf; width: 7; casing-color: #506077; casing-width: 9; dashes=; }
 way[highway=trunk],way[highway=trunk_link]          { z-index: 9; color: #c8d8c8; width: 7; casing-color: #477147; casing-width: 9; }
 way[highway=primary],way[highway=primary_link]      { z-index: 8; color: #d8c8c8; width: 7; casing-color: #8d4346; casing-width: 9; }
 way[highway=secondary],way[highway=secondary_link]  { z-index: 7; color: #eeeec9; width: 7; casing-color: #a37b48; casing-width: 9; }
 way[highway=tertiary],way[highway=unclassified]     { z-index: 6; color: #eeeec9; width: 5; casing-color: #999999; casing-width: 7; }
 way[highway=residential]                            { z-index: 5; color: white; width: 5; casing-color: #999; casing-width: 7; }
-way[highway=service]                                { color: white; width: 3; casing-color: #999; casing-width: 5; }
+way[highway=service]                                { color: white; width: 3; casing-color: #999; casing-width: 5; } 
 
 /* Pedestrian precincts need to be treated carefully. Only closed-loops with an explicit
 area=yes tag should be filled. The below doesn't yet work as intended. */
@@ -110,13 +110,14 @@ node[barrier=cattle_grid] { icon-image: icons/cattle_grid.png; }*/
 	
 /* We can stack styles at different z-index (depth) */
 
+
 way[railway=rail]
 	{ z-index: 6; color: #444444; width: 5; } 
 	{ z-index: 7; color: white; width: 3; dashes: 12,12; }
 way[railway=platform] { color:black; width: 2; }
 way[railway=subway]
         { z-index: 6; color: #444444; width: 5; }
-        { z-index: 7; color: white; width: 3; dashes: 8,8; }
+        { z-index: 7; color: white; width: 3; dashes: 8,8; } 
 
 /* Bridge */
 way[bridge=yes], way[bridge=viaduct], way[bridge=suspension]
