@@ -225,8 +225,8 @@ namespace OsmSharp.Wpf.UI.Renderer
 	        {
                 var leftTop = Tranform(left, top);
                 var rightBottom = Tranform(right, bottom);
-                var width = System.Math.Round(rightBottom.X - leftTop.X);
-                var height = System.Math.Round(rightBottom.Y - leftTop.Y);
+                var width = rightBottom.X - leftTop.X;
+                var height = rightBottom.Y - leftTop.Y;
 
                 var destRect = new Rect(leftTop, new Size(width, height));
                 target.Render().DrawImage(destRect, wpfNativeImage.Image);
@@ -294,4 +294,6 @@ namespace OsmSharp.Wpf.UI.Renderer
 
         #endregion
     }
+
+    //TODO fix dashes, fix image line
 }

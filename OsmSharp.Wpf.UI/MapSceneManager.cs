@@ -88,7 +88,15 @@ namespace OsmSharp.Wpf.UI
         }
         private void MapChanged()
         {
-            RenderingSceneAsync(GetLastScene());
+            var scene = GetLastScene();
+            if (scene != null)
+            {
+                RenderingSceneAsync(scene);
+            }
+            else
+            {
+                Console.WriteLine("MapChanged scene null");
+            }
         }
 
         public void Initialize(Map map, GeoCoordinate center, double zoom, Degree tilt, Size sceneSize)
@@ -173,6 +181,7 @@ namespace OsmSharp.Wpf.UI
         }
         public void Preview(GeoCoordinate cener, double zoom, Degree tilt)
         {
+            Map.Pause();
             _previewScene = new MapRenderingScene(cener, zoom, tilt)
             {
                 PreviousScene = GetLastScene()
@@ -183,9 +192,14 @@ namespace OsmSharp.Wpf.UI
         {
             if (_previewScene != null)
             {
+                Map.Resume();
+                var newScene = new MapRenderingScene(_previewScene.Center, _previewScene.Zoom, _previewScene.Tilt)
+                {
+                    PreviousScene = GetLastScene()
+                };
                 lock (_historyLock)
                 {
-                    _renderedScenes.Enqueue(_previewScene);
+                    _renderedScenes.Enqueue(newScene);
                     while (_renderedScenes.Count > _historyCapacity)
                     {
                         _renderedScenes.Dequeue();
@@ -193,10 +207,10 @@ namespace OsmSharp.Wpf.UI
                 }
                 if (SceneSize.Width > 0 && SceneSize.Height > 0)
                 {
-                    var view = CreateView(_previewScene);
-                    Map.ViewChanged((float)Map.Projection.ToZoomFactor(_previewScene.Zoom), _previewScene.Center, view,
+                    var view = CreateView(newScene);
+                    Map.ViewChanged((float)Map.Projection.ToZoomFactor(newScene.Zoom), newScene.Center, view,
                         view);
-                    RenderingSceneAsync(_previewScene);
+                    RenderingSceneAsync(newScene);
                 }
                 _previewScene = null;
             }

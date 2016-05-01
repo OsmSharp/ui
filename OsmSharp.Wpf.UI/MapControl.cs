@@ -23,7 +23,7 @@ namespace OsmSharp.Wpf.UI
         #region fields
 
         private readonly MapSceneManager _mapSceneManager;
-        private readonly Queue<MapRenderingScene> _renderingScenes;
+        private readonly Stack<MapRenderingScene> _renderingScenes;
         private readonly object _renderingScenesLock = new object();
 
         private Point? _draggingCoordinates;
@@ -37,7 +37,7 @@ namespace OsmSharp.Wpf.UI
             _mapSceneManager = new MapSceneManager();
             _mapSceneManager.RenderScene += OnRenderScene;
 
-            _renderingScenes = new Queue<MapRenderingScene>();
+            _renderingScenes = new Stack<MapRenderingScene>();
 
             MapCenter = new GeoCoordinate(0,0);
             MapZoom = 0;
@@ -262,8 +262,8 @@ namespace OsmSharp.Wpf.UI
             {
                 lock (_renderingScenesLock)
                 {
-                    _renderingScenes.Clear();
-                    _renderingScenes.Enqueue(scene);
+                    //Console.WriteLine("_renderingScenes count = "+_renderingScenes.Count);
+                    _renderingScenes.Push(scene);
                 }
                 Refresh();
             }
@@ -292,6 +292,21 @@ namespace OsmSharp.Wpf.UI
                 context.DrawImage(scene.SceneImage, renderRect);
                 //context.Pop();
             }
+
+            //if (scene.SceneImage == null)
+            //{
+            //    if (scene.PreviousScene != null)
+            //    {
+            //        if (scene.PreviousScene.SceneImage == null)
+            //        {
+            //            Console.WriteLine("RenderScene scene null");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("RenderScene scene null");
+            //    }   
+            //}
         }
        
         #endregion utils
@@ -404,7 +419,7 @@ namespace OsmSharp.Wpf.UI
             {
                 if (_renderingScenes.Count > 0)
                 {
-                    scene = _renderingScenes.Dequeue();
+                    scene = _renderingScenes.Pop();
                 }
             }
             if (scene != null)
@@ -413,6 +428,10 @@ namespace OsmSharp.Wpf.UI
                 RenderScene(drawingContext, RenderSize, scene);
                 drawingContext.Pop();
             }
+            //else
+            //{
+            //    Console.WriteLine("OnRender scene null");
+            //}
 
             var ticksAfter = DateTime.Now.Ticks;
             var message = $"Rendering took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -21,11 +23,9 @@ namespace OsmSharp.Wpf.UI.Sample
 
             Native.Initialize();
 
-            OsmSharp.Logging.Log.Enable();
-            OsmSharp.Logging.Log.RegisterListener(
-                new DebugTraceListener());
-
-
+            //OsmSharp.Logging.Log.Enable();
+            //OsmSharp.Logging.Log.RegisterListener(
+            //    new DebugTraceListener());
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -44,7 +44,7 @@ namespace OsmSharp.Wpf.UI.Sample
            map.AddLayer(testLayer);
 
 
-              //map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
+             // map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
             // map.BackColor = SimpleColor.FromKnownColor(OsmSharp.UI.KnownColor.Black).Value;
 
