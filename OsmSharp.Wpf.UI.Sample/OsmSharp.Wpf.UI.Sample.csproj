@@ -103,9 +103,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Data\bremen-latest.osm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Data\color.mapcss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
