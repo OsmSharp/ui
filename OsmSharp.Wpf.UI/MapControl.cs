@@ -39,6 +39,9 @@ namespace OsmSharp.Wpf.UI
 
             _renderingScenes = new Stack<MapRenderingScene>();
 
+            MapMinZoomLevel = 0;
+            MapMaxZoomLevel = 10000;
+
             MapCenter = new GeoCoordinate(0,0);
             MapZoom = 0;
             MapTilt = new Degree(0);
@@ -229,19 +232,43 @@ namespace OsmSharp.Wpf.UI
 
         #region propreties
 
-        public GeoCoordinate MapCenter { get; set; }
-        public float MapZoom { get; set; }
-        public Degree MapTilt { get; set; }
+        public GeoCoordinate MapCenter
+        {
+            get { return (GeoCoordinate)GetValue(MapCenterProperty); }
+            set { SetValue(MapCenterProperty, value); }
+        }
+        public float MapZoom
+        {
+            get { return (float)GetValue(MapZoomProperty); }
+            set { SetValue(MapZoomProperty, value); }
+        }
+        public Degree MapTilt
+        {
+            get { return (Degree)GetValue(MapTiltProperty); }
+            set { SetValue(MapTiltProperty, value); }
+        }
 
         public Map Map
         {
-            get { return _mapSceneManager.Map; }
-            set { _mapSceneManager.Initialize(value, MapCenter, MapZoom, MapTilt, RenderSize); }
+            get { return (Map)GetValue(MapProperty); }
+            set { SetValue(MapProperty, value); }
         }
 
-        public bool MapAllowPan { get; set; }
-        public bool MapAllowZoom { get; set; }
-        public bool MapAllowTilt { get { return false; } set { } }
+        public bool MapAllowPan
+        {
+            get { return (bool)GetValue(MapAllowPanProperty); }
+            set { SetValue(MapAllowPanProperty, value); }
+        }
+        public bool MapAllowZoom
+        {
+            get { return (bool)GetValue(MapAllowZoomProperty); }
+            set { SetValue(MapAllowZoomProperty, value); }
+        }
+        public bool MapAllowTilt
+        {
+            get { return (bool)GetValue(MapAllowTiltProperty); }
+            set { SetValue(MapAllowTiltProperty, value); }
+        }
 
         #endregion propreties
 
@@ -444,6 +471,15 @@ namespace OsmSharp.Wpf.UI
 
         public void NotifyMapViewChanged()
         {
+            if (MapZoom < MapMinZoomLevel)
+            {
+                MapZoom = MapMinZoomLevel;
+            }
+            if (MapZoom > MapMaxZoomLevel)
+            {
+                MapZoom = MapMinZoomLevel;
+            }
+
             _mapSceneManager.View(MapCenter, MapZoom, MapTilt);
         }
 
@@ -541,6 +577,49 @@ namespace OsmSharp.Wpf.UI
         }
 
         #endregion IMapView implementation
+
+        #region dependency properties
+
+        public static readonly DependencyProperty MapCenterProperty;
+        public static readonly DependencyProperty MapZoomProperty;
+        public static readonly DependencyProperty MapTiltProperty;
+
+        public static readonly DependencyProperty MapProperty;
+
+        public static readonly DependencyProperty MapAllowPanProperty;
+        public static readonly DependencyProperty MapAllowZoomProperty;
+        public static readonly DependencyPropertyKey MapAllowTiltPropertyKey;
+        public static readonly DependencyProperty MapAllowTiltProperty;
+
+        static MapControl()
+        {
+            MapCenterProperty = DependencyProperty.Register("MapCenter",
+               typeof(GeoCoordinate), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinate(0, 0)));
+            MapZoomProperty = DependencyProperty.Register("MapZoom",
+               typeof(float), typeof(MapControl), new UIPropertyMetadata(0f));
+            MapTiltProperty = DependencyProperty.Register("MapTilt",
+               typeof(Degree), typeof(MapControl), new UIPropertyMetadata(new Degree(0)));
+
+            MapProperty = DependencyProperty.Register("Map",
+                typeof(Map), typeof(MapControl), 
+                new UIPropertyMetadata(new Map(new WebMercator()),
+                    (o, e) =>
+                    {
+                        var mapControl = o as MapControl;
+                        mapControl?._mapSceneManager.Initialize(mapControl.Map, mapControl.MapCenter, mapControl.MapZoom,
+                            mapControl.MapTilt, mapControl.RenderSize);
+                    }));
+
+            MapAllowPanProperty = DependencyProperty.Register("MapAllowPan",
+              typeof(bool), typeof(MapControl), new UIPropertyMetadata(true));
+            MapAllowZoomProperty = DependencyProperty.Register("MapAllowZoom",
+               typeof(bool), typeof(MapControl), new UIPropertyMetadata(true));
+            MapAllowTiltPropertyKey = DependencyProperty.RegisterReadOnly("MapAllowTilt",
+               typeof(bool), typeof(MapControl), new UIPropertyMetadata(false));
+            MapAllowTiltProperty = MapAllowTiltPropertyKey.DependencyProperty;
+        }
+
+        #endregion dependency properties
     }
 
     public class MapControlEvent
