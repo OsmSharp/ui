@@ -38,9 +38,6 @@ namespace OsmSharp.Wpf.UI
             _mapSceneManager.RenderScene += OnRenderScene;
 
             _renderingScenes = new Stack<MapRenderingScene>();
-
-            MapMinZoomLevel = 0;
-            MapMaxZoomLevel = 10000;
             
             var zoomInBind = new CommandBinding(MapControlCommands.ZoomIn);
             zoomInBind.Executed += (sender, args) => ZoomIn();
@@ -640,7 +637,7 @@ namespace OsmSharp.Wpf.UI
                     mapControl?.NotifyMapViewChanged();
                 }));
             MapMaxZoomLevelProperty = DependencyProperty.Register("MapMaxZoomLevel",
-             typeof(float), typeof(MapControl), new UIPropertyMetadata(10000f, (o, e) =>
+             typeof(float), typeof(MapControl), new UIPropertyMetadata(20f, (o, e) =>
                 {
                     var mapControl = o as MapControl;
                     mapControl?.NotifyMapViewChanged();
