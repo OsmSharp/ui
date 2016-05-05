@@ -64,6 +64,7 @@
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Log\DebugTraceListener.cs" />
+    <Compile Include="MapControlCommands.cs" />
     <Compile Include="MapSceneManager.cs" />
     <Compile Include="MapControl.cs" />
     <Compile Include="MapControlEventArgs.cs" />

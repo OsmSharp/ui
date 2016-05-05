@@ -41,13 +41,21 @@ namespace OsmSharp.Wpf.UI
 
             MapMinZoomLevel = 0;
             MapMaxZoomLevel = 10000;
+            
+            var zoomInBind = new CommandBinding(MapControlCommands.ZoomIn);
+            zoomInBind.Executed += (sender, args) => ZoomIn();
+            zoomInBind.CanExecute += (sender, args) =>args.CanExecute = true;
+            CommandBindings.Add(zoomInBind);
 
-            MapCenter = new GeoCoordinate(0,0);
-            MapZoom = 0;
-            MapTilt = new Degree(0);
+            var zoomOutBind = new CommandBinding(MapControlCommands.ZoomOut);
+            zoomOutBind.Executed += (sender, args) => ZoomOut();
+            zoomOutBind.CanExecute += (sender, args) => args.CanExecute = true;
+            CommandBindings.Add(zoomOutBind);
 
-            MapAllowPan = true;
-            MapAllowZoom = true;
+            var showFullMapBind = new CommandBinding(MapControlCommands.ShowFullMap);
+            showFullMapBind.Executed += (sender, args) => ShowFullMap();
+            showFullMapBind.CanExecute += (sender, args) => args.CanExecute = true;
+            CommandBindings.Add(showFullMapBind);
         }
 
         #endregion constructors
@@ -231,6 +239,23 @@ namespace OsmSharp.Wpf.UI
         #endregion events
 
         #region propreties
+
+        public GeoCoordinateBox MapBoundingBox
+        {
+            get { return (GeoCoordinateBox)GetValue(MapBoundingBoxProperty); }
+            set { SetValue(MapBoundingBoxProperty, value); }
+        }
+
+        public float MapMinZoomLevel
+        {
+            get { return (float)GetValue(MapMinZoomLevelProperty); }
+            set { SetValue(MapMinZoomLevelProperty, value); }
+        }
+        public float MapMaxZoomLevel
+        {
+            get { return (float)GetValue(MapMaxZoomLevelProperty); }
+            set { SetValue(MapMaxZoomLevelProperty, value); }
+        }
 
         public GeoCoordinate MapCenter
         {
@@ -480,6 +505,12 @@ namespace OsmSharp.Wpf.UI
                 MapZoom = MapMinZoomLevel;
             }
 
+            //if (MapBoundingBox != null)
+            //{
+            //    MapBoundingBox.ExpandWith();
+
+            //}
+
             _mapSceneManager.View(MapCenter, MapZoom, MapTilt);
         }
 
@@ -491,6 +522,17 @@ namespace OsmSharp.Wpf.UI
         public void ZoomOut(float delta = 0.2f)
         {
             MapZoom -= delta;
+            NotifyMapViewChanged();
+        }
+
+        public void ShowFullMap()
+        {
+            if (MapBoundingBox != null)
+            {
+                MapCenter = MapBoundingBox.Center;
+            }
+            MapZoom = MapMinZoomLevel;
+
             NotifyMapViewChanged();
         }
 
@@ -542,19 +584,6 @@ namespace OsmSharp.Wpf.UI
         /// </summary>
         public float Density => 1;
 
-        /// <summary>
-        /// Gets or sets the map bounding box.
-        /// </summary>
-        public GeoCoordinateBox MapBoundingBox { get; set; }
-        /// <summary>
-        /// Gets or sets the minimum zoom level.
-        /// </summary>
-        public float MapMinZoomLevel { get; set; }
-        /// <summary>
-        /// Gets or sets the maximum zoom level.
-        /// </summary>
-        public float MapMaxZoomLevel { get; set; }
-
         void IMapView.Invalidate()
         {
             Refresh();
@@ -580,6 +609,11 @@ namespace OsmSharp.Wpf.UI
 
         #region dependency properties
 
+        public static readonly DependencyProperty MapBoundingBoxProperty;
+
+        public static readonly DependencyProperty MapMinZoomLevelProperty;
+        public static readonly DependencyProperty MapMaxZoomLevelProperty;
+
         public static readonly DependencyProperty MapCenterProperty;
         public static readonly DependencyProperty MapZoomProperty;
         public static readonly DependencyProperty MapTiltProperty;
@@ -593,6 +627,25 @@ namespace OsmSharp.Wpf.UI
 
         static MapControl()
         {
+            MapBoundingBoxProperty = DependencyProperty.Register("MapBoundingBox",
+               typeof(GeoCoordinateBox), typeof(MapControl), new UIPropertyMetadata(null, (o, e) =>
+               {
+                   var mapControl = o as MapControl;
+                   mapControl?.NotifyMapViewChanged();
+               }));
+            MapMinZoomLevelProperty = DependencyProperty.Register("MapMinZoomLevel",
+                typeof(float), typeof(MapControl), new UIPropertyMetadata(0f, (o, e) =>
+                {
+                    var mapControl = o as MapControl;
+                    mapControl?.NotifyMapViewChanged();
+                }));
+            MapMaxZoomLevelProperty = DependencyProperty.Register("MapMaxZoomLevel",
+             typeof(float), typeof(MapControl), new UIPropertyMetadata(10000f, (o, e) =>
+                {
+                    var mapControl = o as MapControl;
+                    mapControl?.NotifyMapViewChanged();
+                }));
+
             MapCenterProperty = DependencyProperty.Register("MapCenter",
                typeof(GeoCoordinate), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinate(0, 0)));
             MapZoomProperty = DependencyProperty.Register("MapZoom",
