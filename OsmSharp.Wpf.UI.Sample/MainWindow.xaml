@@ -12,5 +12,11 @@
         <Button Content="+" HorizontalAlignment="Left" Margin="42,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ZoomIn" CommandTarget="{Binding ElementName=MapControl}" />
         <Button Content="-" HorizontalAlignment="Left" Margin="122,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ZoomOut" CommandTarget="{Binding ElementName=MapControl}" />
         <Button Content="All" HorizontalAlignment="Left" Margin="202,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ShowFullMap" CommandTarget="{Binding ElementName=MapControl}" />
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="332,14,0,0" TextWrapping="Wrap" Text="{Binding ElementName=MapControl, Path=MapZoom}" VerticalAlignment="Top"/>
+        <Slider x:Name="slider" HorizontalAlignment="Right" Margin="511,59,0,0" VerticalAlignment="Top" Height="217" Orientation="Vertical"
+                Minimum="{Binding ElementName=MapControl, Path=MapMinZoomLevel}"
+                Maximum="{Binding ElementName=MapControl, Path=MapMaxZoomLevel}"
+                Value="{Binding ElementName=MapControl, Path=MapZoom}"/>
+        <TextBlock  HorizontalAlignment="Left" Margin="30,300,0,0" TextWrapping="Wrap" Text="{Binding ElementName=MapControl, Path=MapCenter}" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

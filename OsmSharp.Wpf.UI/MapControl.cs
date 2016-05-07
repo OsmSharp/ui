@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
@@ -18,7 +21,7 @@ namespace OsmSharp.Wpf.UI
     /// <summary>
     /// A map control.
     /// </summary>
-    public class MapControl : FrameworkElement, IMapView
+    public class MapControl : FrameworkElement, IMapView, INotifyPropertyChanged
     {
         #region fields
 
@@ -58,6 +61,12 @@ namespace OsmSharp.Wpf.UI
         #endregion constructors
 
         #region events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         #region MapMouseDown
 
@@ -240,61 +249,115 @@ namespace OsmSharp.Wpf.UI
         public GeoCoordinateBox MapBoundingBox
         {
             get { return (GeoCoordinateBox)GetValue(MapBoundingBoxProperty); }
-            set { SetValue(MapBoundingBoxProperty, value); }
+            set { SetValue(MapBoundingBoxProperty, value); OnPropertyChanged(); }
         }
 
         public float MapMinZoomLevel
         {
             get { return (float)GetValue(MapMinZoomLevelProperty); }
-            set { SetValue(MapMinZoomLevelProperty, value); }
+            set { SetValue(MapMinZoomLevelProperty, value); OnPropertyChanged(); }
         }
         public float MapMaxZoomLevel
         {
             get { return (float)GetValue(MapMaxZoomLevelProperty); }
-            set { SetValue(MapMaxZoomLevelProperty, value); }
+            set { SetValue(MapMaxZoomLevelProperty, value); OnPropertyChanged(); }
         }
 
         public GeoCoordinate MapCenter
         {
             get { return (GeoCoordinate)GetValue(MapCenterProperty); }
-            set { SetValue(MapCenterProperty, value); }
+            set { SetValue(MapCenterProperty, value); OnPropertyChanged(); }
         }
         public float MapZoom
         {
             get { return (float)GetValue(MapZoomProperty); }
-            set { SetValue(MapZoomProperty, value); }
+            set { SetValue(MapZoomProperty, value); OnPropertyChanged(); }
         }
         public Degree MapTilt
         {
             get { return (Degree)GetValue(MapTiltProperty); }
-            set { SetValue(MapTiltProperty, value); }
+            set { SetValue(MapTiltProperty, value); OnPropertyChanged(); }
         }
 
         public Map Map
         {
             get { return (Map)GetValue(MapProperty); }
-            set { SetValue(MapProperty, value); }
+            set { SetValue(MapProperty, value); OnPropertyChanged(); }
         }
 
         public bool MapAllowPan
         {
             get { return (bool)GetValue(MapAllowPanProperty); }
-            set { SetValue(MapAllowPanProperty, value); }
+            set { SetValue(MapAllowPanProperty, value); OnPropertyChanged(); }
         }
         public bool MapAllowZoom
         {
             get { return (bool)GetValue(MapAllowZoomProperty); }
-            set { SetValue(MapAllowZoomProperty, value); }
+            set { SetValue(MapAllowZoomProperty, value); OnPropertyChanged(); }
         }
         public bool MapAllowTilt
         {
             get { return (bool)GetValue(MapAllowTiltProperty); }
-            set { SetValue(MapAllowTiltProperty, value); }
+            set { SetValue(MapAllowTiltProperty, value); OnPropertyChanged(); }
         }
 
         #endregion propreties
 
         #region utils
+
+        private void AdjustMapScene()
+        {
+            if (MapZoom < MapMinZoomLevel)
+            {
+                MapZoom = MapMinZoomLevel;
+            }
+            if (MapZoom > MapMaxZoomLevel)
+            {
+                MapZoom = MapMaxZoomLevel;
+            }
+
+            var scene = new MapRenderingScene(MapCenter, MapZoom, MapTilt);
+            var geoLeftTop = _mapSceneManager.ToGeoCoordinates(new Point(0, RenderSize.Height), scene);
+            var geoRightBottom = _mapSceneManager.ToGeoCoordinates(new Point(RenderSize.Width, 0), scene);
+
+            var lat = MapCenter.Latitude;
+            var lon = MapCenter.Longitude;
+
+            var width = geoRightBottom.Longitude - geoLeftTop.Longitude;
+            var height = geoRightBottom.Latitude - geoLeftTop.Latitude;
+
+            if (width < MapBoundingBox.DeltaLon)
+            {
+                if (geoLeftTop.Longitude < MapBoundingBox.MinLon)
+                {
+                    lon += MapBoundingBox.MinLon - geoLeftTop.Longitude;
+                }
+                if (geoRightBottom.Longitude > MapBoundingBox.MaxLon)
+                {
+                    lon += MapBoundingBox.MaxLon - geoRightBottom.Longitude;
+                }
+            }
+            else
+            {
+                lon = MapBoundingBox.Center.Longitude;
+            }
+            if (height < MapBoundingBox.DeltaLat)
+            {
+                if (geoLeftTop.Latitude < MapBoundingBox.MinLat)
+                {
+                    lat += MapBoundingBox.MinLat - geoLeftTop.Latitude;
+                }
+                if (geoRightBottom.Latitude > MapBoundingBox.MaxLat)
+                {
+                    lat +=  MapBoundingBox.MaxLat - geoRightBottom.Latitude;
+                }
+            }
+            else
+            {
+                lat = MapBoundingBox.Center.Latitude;
+            }
+            MapCenter = new GeoCoordinate(lat, lon);
+        }
 
         private void Refresh()
         {
@@ -397,6 +460,7 @@ namespace OsmSharp.Wpf.UI
                 var newCenter = new Point(RenderSize.Width / 2.0d + delta[0], RenderSize.Height / 2.0d + delta[1]);
 
                 MapCenter = _mapSceneManager.ToGeoCoordinates(newCenter);
+                AdjustMapScene();
                 _mapSceneManager.Preview(MapCenter, MapZoom, MapTilt);
             }
             RaiseOnMapMouseMove(e);
@@ -493,21 +557,7 @@ namespace OsmSharp.Wpf.UI
 
         public void NotifyMapViewChanged()
         {
-            if (MapZoom < MapMinZoomLevel)
-            {
-                MapZoom = MapMinZoomLevel;
-            }
-            if (MapZoom > MapMaxZoomLevel)
-            {
-                MapZoom = MapMinZoomLevel;
-            }
-
-            //if (MapBoundingBox != null)
-            //{
-            //    MapBoundingBox.ExpandWith();
-
-            //}
-
+            AdjustMapScene();
             _mapSceneManager.View(MapCenter, MapZoom, MapTilt);
         }
 
@@ -524,10 +574,7 @@ namespace OsmSharp.Wpf.UI
 
         public void ShowFullMap()
         {
-            if (MapBoundingBox != null)
-            {
-                MapCenter = MapBoundingBox.Center;
-            }
+            MapCenter = MapBoundingBox.Center;
             MapZoom = MapMinZoomLevel;
 
             NotifyMapViewChanged();
@@ -625,7 +672,7 @@ namespace OsmSharp.Wpf.UI
         static MapControl()
         {
             MapBoundingBoxProperty = DependencyProperty.Register("MapBoundingBox",
-               typeof(GeoCoordinateBox), typeof(MapControl), new UIPropertyMetadata(null, (o, e) =>
+               typeof(GeoCoordinateBox), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinateBox(new GeoCoordinate(-80, -180), new GeoCoordinate(80, 180)), (o, e) =>
                {
                    var mapControl = o as MapControl;
                    mapControl?.NotifyMapViewChanged();

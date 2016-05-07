@@ -41,18 +41,19 @@ namespace OsmSharp.Wpf.UI.Sample
 
 
             var testLayer = new LayerOsm(MemoryDataSource.CreateFrom(source), mapCssInterpreter, new WebMercator());
-           map.AddLayer(testLayer);
+           //map.AddLayer(testLayer);
 
 
-             // map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
+              map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
             // map.BackColor = SimpleColor.FromKnownColor(OsmSharp.UI.KnownColor.Black).Value;
 
             //  set control properties.
+            MapControl.MapZoom = 14;
             MapControl.Map = map;
             MapControl.MapCenter = testLayer.Envelope.Center;
            // MapControl.MapCenter = new GeoCoordinate(51.2667, 4.7914); // wechel
-            MapControl.MapZoom = 14;
+          
 
             MapControl.NotifyMapViewChanged();
         }
