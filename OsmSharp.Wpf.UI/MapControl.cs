@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -246,6 +247,22 @@ namespace OsmSharp.Wpf.UI
 
         #region propreties
 
+        public Brush BorderBrush
+        {
+            get { return (Brush)GetValue(BorderBrushProperty); }
+            set { SetValue(BorderBrushProperty, value); OnPropertyChanged(); }
+        }
+        public Thickness BorderThickness
+        {
+            get { return (Thickness)GetValue(BorderThicknessProperty); }
+            set { SetValue(BorderThicknessProperty, value); OnPropertyChanged(); }
+        }
+        public Brush Background
+        {
+            get { return (Brush)GetValue(BackgroundProperty); }
+            set { SetValue(BackgroundProperty, value); OnPropertyChanged(); }
+        }
+
         public GeoCoordinateBox MapBoundingBox
         {
             get { return (GeoCoordinateBox)GetValue(MapBoundingBoxProperty); }
@@ -401,8 +418,13 @@ namespace OsmSharp.Wpf.UI
             if (scene.SceneImage != null)
             {
                 //context.PushOpacity(1, new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(100))).CreateClock());
+                context.DrawRectangle(Background, null, renderRect);
                 context.DrawImage(scene.SceneImage, renderRect);
                 //context.Pop();
+            }
+            else
+            {
+                context.DrawRectangle(Background, null, renderRect);
             }
 
             //if (scene.SceneImage == null)
@@ -537,14 +559,14 @@ namespace OsmSharp.Wpf.UI
             }
             if (scene != null)
             {
-                drawingContext.PushClip(new RectangleGeometry(new Rect(new Point(0, 0), RenderSize)));
+                drawingContext.PushClip(new RectangleGeometry(new Rect(RenderSize)));
                 RenderScene(drawingContext, RenderSize, scene);
                 drawingContext.Pop();
             }
-            //else
-            //{
-            //    Console.WriteLine("OnRender scene null");
-            //}
+            else
+            {
+                drawingContext.DrawRectangle(Background, null, new Rect(RenderSize));
+            }
 
             var ticksAfter = DateTime.Now.Ticks;
             var message = $"Rendering took: {(new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds)}ms @ zoom level {MapZoom}";
@@ -653,6 +675,10 @@ namespace OsmSharp.Wpf.UI
 
         #region dependency properties
 
+        public static readonly DependencyProperty BorderBrushProperty;
+        public static readonly DependencyProperty BorderThicknessProperty;
+        public static readonly DependencyProperty BackgroundProperty;
+
         public static readonly DependencyProperty MapBoundingBoxProperty;
 
         public static readonly DependencyProperty MapMinZoomLevelProperty;
@@ -671,6 +697,10 @@ namespace OsmSharp.Wpf.UI
 
         static MapControl()
         {
+            BorderBrushProperty = Control.BorderBrushProperty.AddOwner(typeof(MapControl));
+            BorderThicknessProperty = Control.BorderThicknessProperty.AddOwner(typeof(MapControl));
+            BackgroundProperty = Control.BackgroundProperty.AddOwner(typeof(MapControl));
+
             MapBoundingBoxProperty = DependencyProperty.Register("MapBoundingBox",
                typeof(GeoCoordinateBox), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinateBox(new GeoCoordinate(-80, -180), new GeoCoordinate(80, 180)), (o, e) =>
                {

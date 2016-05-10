@@ -8,7 +8,7 @@
         Title="MainWindow" Height="357.415" Width="549.47">
     <Grid Margin="0">
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="400,10,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
-        <ui:MapControl x:Name="MapControl"  Margin="30,43,54,50" />
+        <ui:MapControl x:Name="MapControl"  Margin="30,43,54,50" Background="Brown" />
         <Button Content="+" HorizontalAlignment="Left" Margin="42,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ZoomIn" CommandTarget="{Binding ElementName=MapControl}" />
         <Button Content="-" HorizontalAlignment="Left" Margin="122,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ZoomOut" CommandTarget="{Binding ElementName=MapControl}" />
         <Button Content="All" HorizontalAlignment="Left" Margin="202,19,0,0" VerticalAlignment="Top" Width="75" Command="ui:MapControlCommands.ShowFullMap" CommandTarget="{Binding ElementName=MapControl}" />
