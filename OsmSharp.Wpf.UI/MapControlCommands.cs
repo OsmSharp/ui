@@ -7,6 +7,8 @@ namespace OsmSharp.Wpf.UI
     /// </summary>
     public static class MapControlCommands
     {
+        public static RoutedUICommand NotifyMapViewChanged = new RoutedUICommand("Обновить", "Refresh", typeof(MapControl));
+
         public static RoutedUICommand ZoomIn = new RoutedUICommand("Приблизить", "ZoomIn", typeof(MapControl));
         public static RoutedUICommand ZoomOut = new RoutedUICommand("Отдалить", "ZoomOut", typeof(MapControl));
 

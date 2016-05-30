@@ -31,6 +31,9 @@ namespace OsmSharp.Wpf.UI
         private readonly object _renderingScenesLock = new object();
 
         private Point? _draggingCoordinates;
+        private bool _isReady;
+
+        private bool _isSuspendNotifyMapViewChanged;
 
         #endregion fields
 
@@ -42,7 +45,15 @@ namespace OsmSharp.Wpf.UI
             _mapSceneManager.RenderScene += OnRenderScene;
 
             _renderingScenes = new Stack<MapRenderingScene>();
-            
+
+            _isSuspendNotifyMapViewChanged = false;
+            _isReady = true;
+
+            var notifyMapViewChanged = new CommandBinding(MapControlCommands.NotifyMapViewChanged);
+            notifyMapViewChanged.Executed += (sender, args) => NotifyMapViewChanged();
+            notifyMapViewChanged.CanExecute += (sender, args) => args.CanExecute = true;
+            CommandBindings.Add(notifyMapViewChanged);
+
             var zoomInBind = new CommandBinding(MapControlCommands.ZoomIn);
             zoomInBind.Executed += (sender, args) => ZoomIn();
             zoomInBind.CanExecute += (sender, args) =>args.CanExecute = true;
@@ -247,6 +258,12 @@ namespace OsmSharp.Wpf.UI
 
         #region propreties
 
+        public bool IsReady
+        {
+            get { return _isReady; }
+            private set { _isReady = value; OnPropertyChanged(); }
+        }
+
         public Brush BorderBrush
         {
             get { return (Brush)GetValue(BorderBrushProperty); }
@@ -288,7 +305,14 @@ namespace OsmSharp.Wpf.UI
         public float MapZoom
         {
             get { return (float)GetValue(MapZoomProperty); }
-            set { SetValue(MapZoomProperty, value); OnPropertyChanged(); }
+            set
+            {
+                if (System.Math.Abs(MapZoom - value) > 0.0001)
+                {
+                    SetValue(MapZoomProperty, value);
+                    OnPropertyChanged();
+                }
+            }
         }
         public Degree MapTilt
         {
@@ -324,6 +348,12 @@ namespace OsmSharp.Wpf.UI
 
         private void AdjustMapScene()
         {
+            var suspending = !_isSuspendNotifyMapViewChanged;
+            if (suspending)
+            {
+                SuspendNotifyMapViewChanged();
+            }
+
             if (MapZoom < MapMinZoomLevel)
             {
                 MapZoom = MapMinZoomLevel;
@@ -333,47 +363,55 @@ namespace OsmSharp.Wpf.UI
                 MapZoom = MapMaxZoomLevel;
             }
 
-            var scene = new MapRenderingScene(MapCenter, MapZoom, MapTilt);
-            var geoLeftTop = _mapSceneManager.ToGeoCoordinates(new Point(0, RenderSize.Height), scene);
-            var geoRightBottom = _mapSceneManager.ToGeoCoordinates(new Point(RenderSize.Width, 0), scene);
+            if (RenderSize.Width > 0 && RenderSize.Height > 0)
+            {
+                var scene = new MapRenderingScene(MapCenter, MapZoom, MapTilt);
+                var geoLeftTop = _mapSceneManager.ToGeoCoordinates(new Point(0, RenderSize.Height), scene);
+                var geoRightBottom = _mapSceneManager.ToGeoCoordinates(new Point(RenderSize.Width, 0), scene);
 
-            var lat = MapCenter.Latitude;
-            var lon = MapCenter.Longitude;
+                var lat = MapCenter.Latitude;
+                var lon = MapCenter.Longitude;
 
-            var width = geoRightBottom.Longitude - geoLeftTop.Longitude;
-            var height = geoRightBottom.Latitude - geoLeftTop.Latitude;
+                var width = geoRightBottom.Longitude - geoLeftTop.Longitude;
+                var height = geoRightBottom.Latitude - geoLeftTop.Latitude;
 
-            if (width < MapBoundingBox.DeltaLon)
-            {
-                if (geoLeftTop.Longitude < MapBoundingBox.MinLon)
+                if (width < MapBoundingBox.DeltaLon)
                 {
-                    lon += MapBoundingBox.MinLon - geoLeftTop.Longitude;
+                    if (geoLeftTop.Longitude < MapBoundingBox.MinLon)
+                    {
+                        lon += MapBoundingBox.MinLon - geoLeftTop.Longitude;
+                    }
+                    if (geoRightBottom.Longitude > MapBoundingBox.MaxLon)
+                    {
+                        lon += MapBoundingBox.MaxLon - geoRightBottom.Longitude;
+                    }
                 }
-                if (geoRightBottom.Longitude > MapBoundingBox.MaxLon)
+                else
                 {
-                    lon += MapBoundingBox.MaxLon - geoRightBottom.Longitude;
+                    lon = MapBoundingBox.Center.Longitude;
                 }
-            }
-            else
-            {
-                lon = MapBoundingBox.Center.Longitude;
-            }
-            if (height < MapBoundingBox.DeltaLat)
-            {
-                if (geoLeftTop.Latitude < MapBoundingBox.MinLat)
+                if (height < MapBoundingBox.DeltaLat)
                 {
-                    lat += MapBoundingBox.MinLat - geoLeftTop.Latitude;
+                    if (geoLeftTop.Latitude < MapBoundingBox.MinLat)
+                    {
+                        lat += MapBoundingBox.MinLat - geoLeftTop.Latitude;
+                    }
+                    if (geoRightBottom.Latitude > MapBoundingBox.MaxLat)
+                    {
+                        lat += MapBoundingBox.MaxLat - geoRightBottom.Latitude;
+                    }
                 }
-                if (geoRightBottom.Latitude > MapBoundingBox.MaxLat)
+                else
                 {
-                    lat +=  MapBoundingBox.MaxLat - geoRightBottom.Latitude;
+                    lat = MapBoundingBox.Center.Latitude;
                 }
+                MapCenter = new GeoCoordinate(lat, lon);
             }
-            else
+
+            if (suspending)
             {
-                lat = MapBoundingBox.Center.Latitude;
+                ResumeNotifyMapViewChanged(false);
             }
-            MapCenter = new GeoCoordinate(lat, lon);
         }
 
         private void Refresh()
@@ -418,14 +456,14 @@ namespace OsmSharp.Wpf.UI
             if (scene.SceneImage != null)
             {
                 //context.PushOpacity(1, new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(100))).CreateClock());
-                context.DrawRectangle(Background, null, renderRect);
+                //context.DrawRectangle(Background, null, renderRect);
                 context.DrawImage(scene.SceneImage, renderRect);
                 //context.Pop();
             }
-            else
-            {
-                context.DrawRectangle(Background, null, renderRect);
-            }
+            //else
+            //{
+            //    context.DrawRectangle(Background, null, renderRect);
+            //}
 
             //if (scene.SceneImage == null)
             //{
@@ -451,6 +489,8 @@ namespace OsmSharp.Wpf.UI
         {
             base.OnMouseDown(e);
 
+            SuspendNotifyMapViewChanged();
+
             if (MapAllowPan && e.LeftButton == MouseButtonState.Pressed)
             {
                 _draggingCoordinates = e.GetPosition(this);
@@ -467,6 +507,8 @@ namespace OsmSharp.Wpf.UI
             {
                 _mapSceneManager.PreviewComplete();
             }
+
+            ResumeNotifyMapViewChanged(false);
             RaiseOnMapMouseUp(e);
         }
 
@@ -501,6 +543,8 @@ namespace OsmSharp.Wpf.UI
                 _mapSceneManager.PreviewComplete();
                 _draggingCoordinates = null;
             }
+
+            ResumeNotifyMapViewChanged(false);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -509,6 +553,7 @@ namespace OsmSharp.Wpf.UI
 
             if (MapAllowZoom)
             {
+                SuspendNotifyMapViewChanged();
                 //TODO корректировка центра
                 //var scene = _mapSceneManager.CurrentScene;
                 MapZoom += (float)(e.Delta / 200.0);
@@ -516,7 +561,7 @@ namespace OsmSharp.Wpf.UI
 
                 //var zoomGoordinates = _mapSceneManager.ToGeoCoordinates(zoomPosition, scene);
 
-                NotifyMapViewChanged();
+                ResumeNotifyMapViewChanged();
             }
             RaiseOnMapMouseWheel(e);
         }
@@ -534,11 +579,13 @@ namespace OsmSharp.Wpf.UI
         {
             base.OnInitialized(e);
 
+            AdjustMapScene();
             _mapSceneManager.Initialize(Map, MapCenter, MapZoom, MapTilt, RenderSize);
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            AdjustMapScene();
             var newSize = base.MeasureOverride(availableSize);
             _mapSceneManager.SetSceneSize(availableSize);
             return newSize;
@@ -577,29 +624,44 @@ namespace OsmSharp.Wpf.UI
 
         #region methods
 
+        public void SuspendNotifyMapViewChanged()
+        {
+            _isSuspendNotifyMapViewChanged = true;
+        }
+        public void ResumeNotifyMapViewChanged(bool fireNotifyMapViewChanged = true)
+        {
+            _isSuspendNotifyMapViewChanged = false;
+            if (fireNotifyMapViewChanged)
+            {
+                NotifyMapViewChanged();
+            }
+
+        }
         public void NotifyMapViewChanged()
         {
-            AdjustMapScene();
-            _mapSceneManager.View(MapCenter, MapZoom, MapTilt);
+            if (!_isSuspendNotifyMapViewChanged)
+            {
+                IsReady = false;
+                AdjustMapScene();
+                _mapSceneManager.View(MapCenter, MapZoom, MapTilt);
+            }
         }
 
         public void ZoomIn(float delta = 0.2f)
         {
             MapZoom += delta;
-            NotifyMapViewChanged();
         }
         public void ZoomOut(float delta = 0.2f)
         {
             MapZoom -= delta;
-            NotifyMapViewChanged();
         }
 
         public void ShowFullMap()
         {
+            SuspendNotifyMapViewChanged();
             MapCenter = MapBoundingBox.Center;
             MapZoom = MapMinZoomLevel;
-
-            NotifyMapViewChanged();
+            ResumeNotifyMapViewChanged();
         }
 
         #endregion methods
@@ -660,11 +722,11 @@ namespace OsmSharp.Wpf.UI
         }
         void IMapView.SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom)
         {
+            SuspendNotifyMapViewChanged();
             MapCenter = center;
             MapZoom = mapZoom;
             MapTilt = mapTilt;
-
-            NotifyMapViewChanged();
+            ResumeNotifyMapViewChanged();
         }
         void IMapView.NotifyMapChange(double pixelsActualWidth, double pixelsActualHeight, View2D view, IProjection projection)
         {
@@ -697,35 +759,39 @@ namespace OsmSharp.Wpf.UI
 
         static MapControl()
         {
+            PropertyChangedCallback notifyMapViewChanged = (o, e) =>
+            {
+                var mapControl = o as MapControl;
+                mapControl?.NotifyMapViewChanged();
+            };
+
             BorderBrushProperty = Control.BorderBrushProperty.AddOwner(typeof(MapControl));
             BorderThicknessProperty = Control.BorderThicknessProperty.AddOwner(typeof(MapControl));
             BackgroundProperty = Control.BackgroundProperty.AddOwner(typeof(MapControl));
 
             MapBoundingBoxProperty = DependencyProperty.Register("MapBoundingBox",
-               typeof(GeoCoordinateBox), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinateBox(new GeoCoordinate(-80, -180), new GeoCoordinate(80, 180)), (o, e) =>
-               {
-                   var mapControl = o as MapControl;
-                   mapControl?.NotifyMapViewChanged();
-               }));
+                typeof(GeoCoordinateBox), typeof(MapControl),
+                new UIPropertyMetadata(new GeoCoordinateBox(new GeoCoordinate(-80, -180), new GeoCoordinate(80, 180)),
+                    notifyMapViewChanged));
             MapMinZoomLevelProperty = DependencyProperty.Register("MapMinZoomLevel",
-                typeof(float), typeof(MapControl), new UIPropertyMetadata(0f, (o, e) =>
-                {
-                    var mapControl = o as MapControl;
-                    mapControl?.NotifyMapViewChanged();
-                }));
+                typeof(float), typeof(MapControl), new UIPropertyMetadata(0f, notifyMapViewChanged));
             MapMaxZoomLevelProperty = DependencyProperty.Register("MapMaxZoomLevel",
-             typeof(float), typeof(MapControl), new UIPropertyMetadata(20f, (o, e) =>
-                {
-                    var mapControl = o as MapControl;
-                    mapControl?.NotifyMapViewChanged();
-                }));
+             typeof(float), typeof(MapControl), new UIPropertyMetadata(20f, notifyMapViewChanged));
 
             MapCenterProperty = DependencyProperty.Register("MapCenter",
-               typeof(GeoCoordinate), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinate(0, 0)));
+               typeof(GeoCoordinate), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinate(0, 0), notifyMapViewChanged));
             MapZoomProperty = DependencyProperty.Register("MapZoom",
-               typeof(float), typeof(MapControl), new UIPropertyMetadata(0f));
+               typeof(float), typeof(MapControl), new UIPropertyMetadata(0f, (o, e) =>
+               {
+                   var newZoom = (float) e.NewValue;
+                   var oldZoom = (float) e.OldValue;
+                   if (System.Math.Abs(newZoom - oldZoom) > 0.0001)
+                   {
+                       notifyMapViewChanged(o, e);
+                   }
+               }));
             MapTiltProperty = DependencyProperty.Register("MapTilt",
-               typeof(Degree), typeof(MapControl), new UIPropertyMetadata(new Degree(0)));
+               typeof(Degree), typeof(MapControl), new UIPropertyMetadata(new Degree(0), notifyMapViewChanged));
 
             MapProperty = DependencyProperty.Register("Map",
                 typeof(Map), typeof(MapControl), 

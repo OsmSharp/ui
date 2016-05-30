@@ -41,12 +41,14 @@ namespace OsmSharp.Wpf.UI.Sample
 
 
             var testLayer = new LayerOsm(MemoryDataSource.CreateFrom(source), mapCssInterpreter, new WebMercator());
-           //map.AddLayer(testLayer);
+           map.AddLayer(testLayer);
 
 
-              map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
+            //   map.AddLayerTile(@"http://b.tile.openstreetmap.org/{z}/{x}/{y}.png");
 
             // map.BackColor = SimpleColor.FromKnownColor(OsmSharp.UI.KnownColor.Black).Value;
+
+            MapControl.SuspendNotifyMapViewChanged();
 
             //  set control properties.
             MapControl.MapZoom = 14;
@@ -55,7 +57,7 @@ namespace OsmSharp.Wpf.UI.Sample
            // MapControl.MapCenter = new GeoCoordinate(51.2667, 4.7914); // wechel
           
 
-            MapControl.NotifyMapViewChanged();
+            MapControl.ResumeNotifyMapViewChanged();
         }
     }
 }

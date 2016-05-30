@@ -36,6 +36,8 @@ namespace OsmSharp.Wpf.UI
             _previewScene = null;
 
             _renderer = new MapRenderer<RenderContext>(new DrawingRenderer2D());
+
+            IsReady = true;
         }
 
         #endregion constructors
@@ -54,6 +56,8 @@ namespace OsmSharp.Wpf.UI
         #endregion events
 
         #region properties
+
+        public bool IsReady { get; private set; }
 
         public Map Map { get; private set; }
         public Size SceneSize { get; private set; }
@@ -181,6 +185,7 @@ namespace OsmSharp.Wpf.UI
         }
         public void Preview(GeoCoordinate cener, double zoom, Degree tilt)
         {
+            IsReady = false;
             Map.Pause();
             _previewScene = new MapRenderingScene(cener, zoom, tilt)
             {
@@ -213,6 +218,8 @@ namespace OsmSharp.Wpf.UI
                     RenderingSceneAsync(newScene);
                 }
                 _previewScene = null;
+
+                IsReady = true;
             }
             
         }
