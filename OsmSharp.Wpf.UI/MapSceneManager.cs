@@ -115,10 +115,10 @@ namespace OsmSharp.Wpf.UI
             if (Map != null)
             {
                 Map.MapChanged -= MapChanged;
+                //Map.RemoveLayer()
             }
             Map = map;
             Map.MapChanged += MapChanged;
-            Map = map;
 
             SceneSize = sceneSize;
             View(center, zoom, tilt);

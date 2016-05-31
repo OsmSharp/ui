@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +14,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
 using OsmSharp.Wpf.UI.Renderer;
@@ -29,6 +32,9 @@ namespace OsmSharp.Wpf.UI
         private readonly MapSceneManager _mapSceneManager;
         private readonly Stack<MapRenderingScene> _renderingScenes;
         private readonly object _renderingScenesLock = new object();
+
+        private readonly List<Tuple<int, Layer>> _customLayers;
+        private LayerPrimitives _canvas;
 
         private Point? _draggingCoordinates;
         private bool _isReady;
@@ -48,6 +54,9 @@ namespace OsmSharp.Wpf.UI
 
             _isSuspendNotifyMapViewChanged = false;
             _isReady = true;
+
+            _customLayers = new List<Tuple<int, Layer>>();
+            _canvas = new LayerPrimitives(new WebMercator());
 
             var notifyMapViewChanged = new CommandBinding(MapControlCommands.NotifyMapViewChanged);
             notifyMapViewChanged.Executed += (sender, args) => NotifyMapViewChanged();
@@ -342,6 +351,15 @@ namespace OsmSharp.Wpf.UI
             set { SetValue(MapAllowTiltProperty, value); OnPropertyChanged(); }
         }
 
+        public IEnumerable<Layer> CustomLayers
+        {
+            get { return _customLayers.Select(l=>l.Item2); }
+        }
+        public LayerPrimitives Canvas
+        {
+            get { return _canvas; }
+        }
+
         #endregion propreties
 
         #region utils
@@ -480,7 +498,36 @@ namespace OsmSharp.Wpf.UI
             //    }   
             //}
         }
-       
+
+        private void InitializeMap()
+        {
+            if (_mapSceneManager.Map != null)
+            {
+                foreach (var layer in _customLayers)
+                {
+                    _mapSceneManager.Map.RemoveLayer(layer.Item2);
+                }
+                _mapSceneManager.Map.RemoveLayer(_canvas);
+            }
+
+            _isSuspendNotifyMapViewChanged = false;
+            AdjustMapScene();
+            _mapSceneManager.Initialize(Map, MapCenter, MapZoom, MapTilt, RenderSize);
+            if (_mapSceneManager.Map != null)
+            {
+                SuspendNotifyMapViewChanged();
+
+                foreach (var layer in _customLayers.OrderBy(l=>l.Item1))
+                {
+                    _mapSceneManager.Map.AddLayer(layer.Item2);
+                }
+                _canvas = new LayerPrimitives(_mapSceneManager.Map.Projection);
+                _mapSceneManager.Map.AddLayer(_canvas);
+
+                ResumeNotifyMapViewChanged();
+            }
+        }
+
         #endregion utils
 
         #region overrides
@@ -579,8 +626,7 @@ namespace OsmSharp.Wpf.UI
         {
             base.OnInitialized(e);
 
-            AdjustMapScene();
-            _mapSceneManager.Initialize(Map, MapCenter, MapZoom, MapTilt, RenderSize);
+            InitializeMap();
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -663,6 +709,52 @@ namespace OsmSharp.Wpf.UI
             MapZoom = MapMinZoomLevel;
             ResumeNotifyMapViewChanged();
         }
+
+        public void AddLayer(Layer layer, int zIndex)
+        {
+            var index = 0;
+            for (var i = 0; i < _customLayers.Count-1; i++)
+            {
+                var fist = _customLayers[i];
+                var second = _customLayers[i +1];
+                if (zIndex >= fist.Item1 && zIndex < second.Item1)
+                {
+                    index = i + 1;
+                }
+            }
+            _customLayers.Insert(index, new Tuple<int, Layer>(zIndex, layer));
+            var fistLayer = _customLayers.FirstOrDefault();
+            if (fistLayer != null)
+            {
+                for (var i = 0; i < _mapSceneManager.Map.LayerCount; i++)
+                {
+                    index++;
+                    if (fistLayer.Item2 == _mapSceneManager.Map[i])
+                    {
+                        break;
+                    }
+                }
+            }
+            _mapSceneManager.Map.InsertLayer(index, layer);
+        }
+        public void RemoveLayer(Layer layer)
+        {
+            _mapSceneManager.Map.RemoveLayer(layer);
+            var item = _customLayers.FirstOrDefault(l => l.Item2 == layer);
+            if (item != null)
+            {
+                _customLayers.Remove(item);
+            }
+        }
+
+        //public void GoTo(GeoCoordinate center, float zoom = float.NaN)
+        //{
+            
+        //}
+        //public void GoTo(GeoCoordinateBox box)
+        //{
+
+        //}
 
         #endregion methods
 
@@ -799,8 +891,7 @@ namespace OsmSharp.Wpf.UI
                     (o, e) =>
                     {
                         var mapControl = o as MapControl;
-                        mapControl?._mapSceneManager.Initialize(mapControl.Map, mapControl.MapCenter, mapControl.MapZoom,
-                            mapControl.MapTilt, mapControl.RenderSize);
+                        mapControl?.InitializeMap();
                     }));
 
             MapAllowPanProperty = DependencyProperty.Register("MapAllowPan",
