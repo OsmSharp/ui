@@ -200,6 +200,7 @@ namespace OsmSharp.Wpf.UI.Renderer
             {
                 var imageSource = new BitmapImage();
                 imageSource.BeginInit();
+                imageSource.CacheOption = BitmapCacheOption.OnLoad;
                 imageSource.StreamSource = stream;
                 imageSource.EndInit();
 
