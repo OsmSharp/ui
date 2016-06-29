@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using OsmSharp.IO.Json;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
@@ -702,21 +703,21 @@ namespace OsmSharp.Wpf.UI
         {
             MapZoom -= delta;
         }
-        public void ZoomToCoordinate(GeoCoordinate coordinate)
+        public void ZoomToCoordinate(GeoCoordinate coordinate, float maxZoom = 19)
         {
             SuspendNotifyMapViewChanged();
 
             MapCenter = coordinate;
-            MapZoom = new GeoCoordinateBox(coordinate, coordinate).GetZoomLevel();
+            MapZoom = System.Math.Min(new GeoCoordinateBox(coordinate, coordinate).GetZoomLevel(), maxZoom);
 
             ResumeNotifyMapViewChanged();
         }
-        public void ZoomToBox(GeoCoordinateBox box)
+        public void ZoomToBox(GeoCoordinateBox box, float maxZoom = 19)
         {
             SuspendNotifyMapViewChanged();
 
             MapCenter = box.Center;
-            MapZoom = box.GetZoomLevel();
+            MapZoom = System.Math.Min(box.GetZoomLevel(), maxZoom);
 
             ResumeNotifyMapViewChanged();
         }
