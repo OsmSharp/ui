@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\OsmDataCacheDisk.cs" />
+    <Compile Include="Extensions\GeoCoordinateBoxExtensions.cs" />
     <Compile Include="IO\Web\NativeHttpWebRequest.cs" />
     <Compile Include="IO\Web\NativeHttpWebResponse.cs" />
     <Compile Include="Log\DebugTraceListener.cs" />

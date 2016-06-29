@@ -17,6 +17,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
+using OsmSharp.Wpf.UI.Extensions;
 using OsmSharp.Wpf.UI.Renderer;
 using TraceEventType = OsmSharp.Logging.TraceEventType;
 
@@ -701,6 +702,24 @@ namespace OsmSharp.Wpf.UI
         {
             MapZoom -= delta;
         }
+        public void ZoomToCoordinate(GeoCoordinate coordinate)
+        {
+            SuspendNotifyMapViewChanged();
+
+            MapCenter = coordinate;
+            MapZoom = new GeoCoordinateBox(coordinate, coordinate).GetZoomLevel();
+
+            ResumeNotifyMapViewChanged();
+        }
+        public void ZoomToBox(GeoCoordinateBox box)
+        {
+            SuspendNotifyMapViewChanged();
+
+            MapCenter = box.Center;
+            MapZoom = box.GetZoomLevel();
+
+            ResumeNotifyMapViewChanged();
+        }
 
         public void ShowFullMap()
         {
@@ -868,7 +887,7 @@ namespace OsmSharp.Wpf.UI
             MapMinZoomLevelProperty = DependencyProperty.Register("MapMinZoomLevel",
                 typeof(float), typeof(MapControl), new UIPropertyMetadata(0f, notifyMapViewChanged));
             MapMaxZoomLevelProperty = DependencyProperty.Register("MapMaxZoomLevel",
-             typeof(float), typeof(MapControl), new UIPropertyMetadata(20f, notifyMapViewChanged));
+             typeof(float), typeof(MapControl), new UIPropertyMetadata(19f, notifyMapViewChanged));
 
             MapCenterProperty = DependencyProperty.Register("MapCenter",
                typeof(GeoCoordinate), typeof(MapControl), new UIPropertyMetadata(new GeoCoordinate(0, 0), notifyMapViewChanged));
