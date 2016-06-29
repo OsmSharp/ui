@@ -42,8 +42,8 @@ namespace OsmSharp.Wpf.UI.Extensions
 
                 if (delta <= l1.Item2 && delta >= l2.Item2)
                 {
-                    var f = delta/(l2.Item1 - l1.Item1);
-                    level = (float)(l2.Item2 + (l1.Item2 - l1.Item2)*f);
+                    var f = delta/(l2.Item2 - l1.Item2);
+                    level = (float)(l2.Item1 + (l1.Item1 - l1.Item1)*f);
                     break;
                 }
             }
