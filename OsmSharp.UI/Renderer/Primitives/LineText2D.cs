@@ -169,12 +169,6 @@ namespace OsmSharp.UI.Renderer.Primitives
         }
 
         /// <summary>
-        /// Gets or sets the tag.
-        /// </summary>
-        /// <value>The tag.</value>
-        public object Tag { get; set; }
-
-        /// <summary>
         /// Gets or sets the text.
         /// </summary>
         public string Text { get; set; }

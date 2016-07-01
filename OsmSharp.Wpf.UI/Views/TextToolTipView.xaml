@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="OsmSharp.Wpf.UI.Views.TextToolTipView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OsmSharp.Wpf.UI.Views"
+             mc:Ignorable="d" 
+             Width="Auto" Height="Auto"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Border Background="{x:Static SystemColors.InfoBrush}" 
+            BorderBrush="{x:Static SystemColors.ActiveBorderBrush}"
+            BorderThickness="1">
+            <TextBlock x:Name="TextBlock" x:FieldModifier="private" Margin="10 5" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+    </Border>
+</UserControl>

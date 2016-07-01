@@ -96,6 +96,7 @@ namespace OsmSharp.Wpf.UI.Sample
 
             var point = _projection.ToPixel(box.Center.Latitude, box.Center.Longitude);
             var p = new Icon2D(point[0], point[1], Create(""));
+            p.ToolTip = "Подсказка";
             result.Add(p);
 
             return result;
@@ -164,19 +165,7 @@ namespace OsmSharp.Wpf.UI.Sample
                         encoder.Save(stream);
                         result = stream.ToArray();
                     }
-                    try
-                    {
-                        using (var s = File.Create("E:\\test.png"))
-                        {
-                            s.Write(result, 0, result.Length);
-                        }
-
-                    }
-                    catch (Exception exc)
-                    {
-
-                        throw;
-                    }
+                   
                 }
                 catch (Exception)
                 {

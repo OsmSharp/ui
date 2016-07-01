@@ -157,6 +157,31 @@ namespace OsmSharp.UI.Map.Layers
         public object Tag { get; set; }
 
         /// <summary>
+        /// Returns all primitives from this layer that exist for the given zoom factor and inside the given view.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="zoomLevel"></param>
+        /// <param name="projection"></param>
+        /// <returns></returns>
+        public virtual IEnumerable<Primitive2D> Load(GeoCoordinateBox box, float zoomLevel, IProjection projection)
+        {
+            var topLeft = projection.ToPixel(box.TopLeft);
+            var bottomRight = projection.ToPixel(box.BottomRight);
+            var zoomFactor = projection.ToZoomFactor(zoomLevel);
+            var view = View2D.CreateFromBounds(topLeft[1], topLeft[0], bottomRight[1], bottomRight[0]);
+
+            return Get((float)zoomFactor, view);
+        }
+        /// <summary>
+        /// Returns all primitives from this layer that exist for the given zoom factor and inside the given view.
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<Primitive2D> Load(View2D view, float zoomFactor)
+        {
+            return Get(zoomFactor, view);
+        }
+
+        /// <summary>
         /// Pauses all activities in this layer.
         /// </summary>
         public virtual void Pause()

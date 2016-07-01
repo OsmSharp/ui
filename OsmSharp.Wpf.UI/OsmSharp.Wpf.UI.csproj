@@ -80,6 +80,9 @@
     <Compile Include="Renderer\RenderExtensions.cs" />
     <Compile Include="Renderer\Images\NativeImage.cs" />
     <Compile Include="Renderer\Images\NativeImageCache.cs" />
+    <Compile Include="Views\TextToolTipView.xaml.cs">
+      <DependentUpon>TextToolTipView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -92,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Instruments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\TextToolTipView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

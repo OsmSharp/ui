@@ -205,6 +205,7 @@ namespace OsmSharp.Wpf.UI.Renderer
                 imageSource.EndInit();
 
                 var leftTop = Tranform(x, y);
+                leftTop.Offset(-imageSource.Width/2, -imageSource.Height/2);
                 target.Render().DrawImage(leftTop, imageSource);
             }
         }

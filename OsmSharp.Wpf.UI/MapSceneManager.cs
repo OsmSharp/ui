@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using OsmSharp.Math.Geo;
+using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
 using OsmSharp.Wpf.UI.Renderer;
 
@@ -227,6 +233,65 @@ namespace OsmSharp.Wpf.UI
         {
             Preview(center, zoom, tilt);
             PreviewComplete();
+        }
+
+        public async Task<Primitive2D> SearchPrimitiveAsync(GeoCoordinate coordinate, CancellationToken cancellationToken)
+        {
+            return await Task.Run(() =>
+            {
+                var scene = CurrentScene;
+                var zoomFactor = (float) Map.Projection.ToZoomFactor(scene.Zoom);
+                var view = CreateView(CurrentScene);
+                var point = ToPixels(coordinate, scene);
+                var backColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
+                var objs = new List<Primitive2D>();
+
+                for (int i = 0; i < Map.LayerCount; i++)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return null;
+                    }
+                    var layer = Map[i];
+                    if (layer.IsLayerVisibleFor((float) scene.Zoom))
+                    {
+                        objs.AddRange(layer.Load(view, zoomFactor));
+                    }
+                }
+                objs.Reverse();
+
+                foreach (var obj in objs.Where(o => o.ToolTip != null))
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return null;
+                    }
+
+                    var context = new RenderContext(SceneSize);
+                    _renderer.SceneRenderer.Render(context, view, zoomFactor, new[] {obj}, backColor);
+                    var image = context.BuildScene();
+                    image.Freeze();
+
+                    int bytePerPixel = (image.Format.BitsPerPixel + 7)/8;
+                    int stride = image.PixelWidth*bytePerPixel;
+                    byte[] data = new byte[stride*image.PixelHeight];
+                    image.CopyPixels(data, stride, 0);
+
+                    //Pbgra32
+                    var pixel = new byte[bytePerPixel];
+                    var offset = stride*(int) point.Y + (int) point.X*bytePerPixel;
+
+                    for (int i = 0; i < bytePerPixel; i++)
+                    {
+                        pixel[i] = data[offset + i];
+                    }
+                    if (pixel.Any(p => p != 0))
+                    {
+                        return obj;
+                    }
+                }
+                return null;
+            }, cancellationToken);
         }
 
         #endregion methods

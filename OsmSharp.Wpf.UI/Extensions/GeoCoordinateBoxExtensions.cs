@@ -49,5 +49,10 @@ namespace OsmSharp.Wpf.UI.Extensions
             }
             return level;
         }
+
+        public static GeoCoordinateBox ToBox(this GeoCoordinate coordinate)
+        {
+            return new GeoCoordinateBox(coordinate, coordinate).Resize(0.001);
+        }
     }
 }

@@ -4,8 +4,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -17,9 +20,11 @@ using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
 using OsmSharp.Wpf.UI.Extensions;
 using OsmSharp.Wpf.UI.Renderer;
+using OsmSharp.Wpf.UI.Views;
 using TraceEventType = OsmSharp.Logging.TraceEventType;
 
 namespace OsmSharp.Wpf.UI
@@ -39,9 +44,15 @@ namespace OsmSharp.Wpf.UI
         private LayerPrimitives _canvas;
 
         private Point? _draggingCoordinates;
+        private Point? _toolTipCoordinates;
         private bool _isReady;
 
         private bool _isSuspendNotifyMapViewChanged;
+
+        private readonly Popup _toolTip;
+        private readonly DispatcherTimer _toolTipShowTimer;
+        private readonly DispatcherTimer _toolTipHideTimer;
+        private CancellationTokenSource _toolTipCancellationTokenSource;
 
         #endregion fields
 
@@ -79,6 +90,19 @@ namespace OsmSharp.Wpf.UI
             showFullMapBind.Executed += (sender, args) => ShowFullMap();
             showFullMapBind.CanExecute += (sender, args) => args.CanExecute = true;
             CommandBindings.Add(showFullMapBind);
+
+            _toolTip = new Popup
+            {
+                PlacementTarget = this,
+                Placement = PlacementMode.Relative,
+                AllowsTransparency = true
+            };
+            _toolTip.MouseEnter += (sender, args) => { _toolTipHideTimer.Stop(); };
+
+            _toolTipShowTimer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(500)};
+            _toolTipShowTimer.Tick += (sender, args) => ShowToolTip();
+            _toolTipHideTimer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(500)};
+            _toolTipHideTimer.Tick += (sender, args) => HideToolTip();
         }
 
         #endregion constructors
@@ -530,6 +554,74 @@ namespace OsmSharp.Wpf.UI
             }
         }
 
+        private void StartShowToolTip()
+        {
+            _toolTipShowTimer.Stop();
+            _toolTipShowTimer.Start();
+        }
+        private void StartHideToolTip()
+        {
+            _toolTipShowTimer.Stop();
+            if (_toolTip.IsOpen && !_toolTipHideTimer.IsEnabled)
+            {
+                _toolTipHideTimer.Start();
+            }
+        }
+        private async void StartToolTilSearch()
+        {
+            if (_toolTipCoordinates != null)
+            {
+                _toolTipCancellationTokenSource = new CancellationTokenSource();
+
+                var geo = _mapSceneManager.ToGeoCoordinates(_toolTipCoordinates.Value);
+                var obj = await _mapSceneManager.SearchPrimitiveAsync(geo, _toolTipCancellationTokenSource.Token);
+                if (obj != null && obj.ToolTip != null)
+                {
+                    if (obj.ToolTip is UIElement)
+                    {
+                        _toolTip.Child = (UIElement)obj.ToolTip;
+                    }
+                    else
+                    {
+                        _toolTip.Child = new TextToolTipView { Text = obj.ToolTip.ToString() };
+                    }
+
+                    _toolTip.HorizontalOffset = _toolTipCoordinates.Value.X + 10;
+                    _toolTip.VerticalOffset = _toolTipCoordinates.Value.Y + 10;
+                    _toolTip.IsOpen = true;
+                }
+            }
+        }
+        private void StopToolTipSearch()
+        {
+            if (_toolTipCancellationTokenSource != null)
+            {
+                _toolTipCancellationTokenSource.Cancel(false);
+                _toolTipCancellationTokenSource = null;
+            }
+        }
+        private void StopToolTip()
+        {
+            _toolTipHideTimer.Stop();
+            _toolTipShowTimer.Stop();
+
+            StopToolTipSearch();
+        }
+
+        private void ShowToolTip()
+        {
+            _toolTipShowTimer.Stop();
+            StopToolTipSearch();
+            StartToolTilSearch();
+        }
+
+        private void HideToolTip()
+        {
+            _toolTipCancellationTokenSource.Cancel(false);
+            _toolTipHideTimer.Stop();
+            _toolTip.IsOpen = false;
+        }
+
         #endregion utils
 
         #region overrides
@@ -545,6 +637,8 @@ namespace OsmSharp.Wpf.UI
                 _draggingCoordinates = e.GetPosition(this);
                 _mapSceneManager.Preview();
             }
+
+            StartHideToolTip();
             RaiseOnMapMouseDown(e);
         }
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -568,14 +662,24 @@ namespace OsmSharp.Wpf.UI
             var currentCoordinates = e.GetPosition(this);
             if (MapAllowPan && e.LeftButton == MouseButtonState.Pressed && _draggingCoordinates != null)
             {
-                var delta = new[] { _draggingCoordinates.Value.X - currentCoordinates.X,
-                        _draggingCoordinates.Value.Y - currentCoordinates.Y};
-                var newCenter = new Point(RenderSize.Width / 2.0d + delta[0], RenderSize.Height / 2.0d + delta[1]);
+                var delta = new[]
+                {
+                    _draggingCoordinates.Value.X - currentCoordinates.X,
+                    _draggingCoordinates.Value.Y - currentCoordinates.Y
+                };
+                var newCenter = new Point(RenderSize.Width/2.0d + delta[0], RenderSize.Height/2.0d + delta[1]);
 
                 MapCenter = _mapSceneManager.ToGeoCoordinates(newCenter);
                 AdjustMapScene();
                 _mapSceneManager.Preview(MapCenter, MapZoom, MapTilt);
             }
+            else
+            {
+                StartHideToolTip();
+                _toolTipCoordinates = currentCoordinates;
+                StartShowToolTip();
+            }
+
             RaiseOnMapMouseMove(e);
         }
 
@@ -591,6 +695,15 @@ namespace OsmSharp.Wpf.UI
             {
                 _mapSceneManager.PreviewComplete();
                 _draggingCoordinates = null;
+            }
+
+            if (!_toolTip.IsMouseOver)
+            {
+                StartHideToolTip();
+            }
+            else
+            {
+                StopToolTip();
             }
 
             ResumeNotifyMapViewChanged(false);
@@ -612,6 +725,9 @@ namespace OsmSharp.Wpf.UI
 
                 ResumeNotifyMapViewChanged();
             }
+
+            StartHideToolTip();
+
             RaiseOnMapMouseWheel(e);
         }
 
@@ -636,6 +752,9 @@ namespace OsmSharp.Wpf.UI
             AdjustMapScene();
             var newSize = base.MeasureOverride(availableSize);
             _mapSceneManager.SetSceneSize(availableSize);
+
+            StartHideToolTip();
+
             return newSize;
         }
         protected override void OnRender(DrawingContext drawingContext)
@@ -705,19 +824,25 @@ namespace OsmSharp.Wpf.UI
         }
         public void ZoomToCoordinate(GeoCoordinate coordinate, float maxZoom = 19)
         {
-            SuspendNotifyMapViewChanged();
-
-            MapCenter = coordinate;
-            MapZoom = System.Math.Min(new GeoCoordinateBox(coordinate, coordinate).GetZoomLevel(), maxZoom);
-
-            ResumeNotifyMapViewChanged();
+            ZoomToBox(coordinate.ToBox(), maxZoom);
         }
         public void ZoomToBox(GeoCoordinateBox box, float maxZoom = 19)
         {
             SuspendNotifyMapViewChanged();
 
+            var currentView = _mapSceneManager.CreateView();
+            var currentPerimeter = currentView.Width*2 + currentView.Height*2;
+
+            var topLeft = _mapSceneManager.Map.Projection.ToPixel(box.TopLeft);
+            var bottomRight = _mapSceneManager.Map.Projection.ToPixel(box.BottomRight);
+            var newPerimeter = (bottomRight[0] - topLeft[0])*2 + (bottomRight[1] - topLeft[1])*2;
+            var perimeterFactor = newPerimeter/currentPerimeter;
+
             MapCenter = box.Center;
-            MapZoom = System.Math.Min(box.GetZoomLevel(), maxZoom);
+            if (perimeterFactor > 3 || perimeterFactor < 1/3f)
+            {
+                MapZoom = System.Math.Min(box.GetZoomLevel(), maxZoom);
+            }
 
             ResumeNotifyMapViewChanged();
         }
