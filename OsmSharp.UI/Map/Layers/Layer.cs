@@ -83,7 +83,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        protected internal abstract IEnumerable<Primitive2D> Get(float zoomFactor, View2D view);
+        public abstract IEnumerable<Primitive2D> Get(float zoomFactor, View2D view);
 
         /// <summary>
         /// Called when the view on the map has changed.
@@ -93,15 +93,14 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         /// <param name="extraView"></param>
-        protected internal virtual void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        public virtual void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             // override in layer implementation if needed.
         }
-
         /// <summary>
         /// Called when the last map view change has to be cancelled.
         /// </summary>
-        protected internal virtual void ViewChangedCancel()
+        public virtual void ViewChangedCancel()
         {
             // override in layer implementation to cancel large map requests.
         }
@@ -124,7 +123,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// An event raised when the content of this layer has changed.
         /// </summary>
-        protected internal event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+        public event Map.LayerChanged LayerChanged;
 
         /// <summary>
         /// Holds the visible flag.
@@ -156,30 +155,6 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public object Tag { get; set; }
 
-        /// <summary>
-        /// Returns all primitives from this layer that exist for the given zoom factor and inside the given view.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <param name="zoomLevel"></param>
-        /// <param name="projection"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<Primitive2D> Load(GeoCoordinateBox box, float zoomLevel, IProjection projection)
-        {
-            var topLeft = projection.ToPixel(box.TopLeft);
-            var bottomRight = projection.ToPixel(box.BottomRight);
-            var zoomFactor = projection.ToZoomFactor(zoomLevel);
-            var view = View2D.CreateFromBounds(topLeft[1], topLeft[0], bottomRight[1], bottomRight[0]);
-
-            return Get((float)zoomFactor, view);
-        }
-        /// <summary>
-        /// Returns all primitives from this layer that exist for the given zoom factor and inside the given view.
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<Primitive2D> Load(View2D view, float zoomFactor)
-        {
-            return Get(zoomFactor, view);
-        }
 
         /// <summary>
         /// Pauses all activities in this layer.

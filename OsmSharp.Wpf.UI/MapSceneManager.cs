@@ -255,7 +255,7 @@ namespace OsmSharp.Wpf.UI
                     var layer = Map[i];
                     if (layer.IsLayerVisibleFor((float) scene.Zoom))
                     {
-                        objs.AddRange(layer.Load(view, zoomFactor));
+                        objs.AddRange(layer.Get(zoomFactor, view));
                     }
                 }
                 objs.Reverse();

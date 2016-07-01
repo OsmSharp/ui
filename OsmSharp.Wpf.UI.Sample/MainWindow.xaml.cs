@@ -85,7 +85,7 @@ namespace OsmSharp.Wpf.UI.Sample
 
         }
 
-        protected override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        public override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var result = new List<Primitive2D>();
             var viewBox = view.OuterBox;

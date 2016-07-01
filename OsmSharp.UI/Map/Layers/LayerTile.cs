@@ -382,7 +382,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="view"></param>
         /// <returns></returns>
-        protected internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        public override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
         {
             var primitives = new List<Primitive2D>();
             //if(_suspended)
@@ -511,7 +511,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         /// <param name="extraView"></param>
-        protected internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
+        public override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view, View2D extraView)
         {
             if (_suspended)
             { // do not accept trigger changes if suspended.
