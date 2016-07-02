@@ -1,26 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using OsmSharp.IO.Json;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
 using OsmSharp.Wpf.UI.Extensions;
 using OsmSharp.Wpf.UI.Renderer;
@@ -617,7 +612,7 @@ namespace OsmSharp.Wpf.UI
 
         private void HideToolTip()
         {
-            _toolTipCancellationTokenSource.Cancel(false);
+            StopToolTipSearch();
             _toolTipHideTimer.Stop();
             _toolTip.IsOpen = false;
         }
