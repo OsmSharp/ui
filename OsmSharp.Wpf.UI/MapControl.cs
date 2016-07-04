@@ -711,12 +711,21 @@ namespace OsmSharp.Wpf.UI
             if (MapAllowZoom)
             {
                 SuspendNotifyMapViewChanged();
-                //TODO корректировка центра
-                //var scene = _mapSceneManager.CurrentScene;
-                MapZoom += (float)(e.Delta / 200.0);
-                //var zoomPosition = e.GetPosition(this);
+                
+                var zoomPosition = e.GetPosition(this);
+                var zoomCoordinates = _mapSceneManager.ToGeoCoordinates(zoomPosition);
 
-                //var zoomGoordinates = _mapSceneManager.ToGeoCoordinates(zoomPosition, scene);
+                var newZoom = MapZoom + (float)(e.Delta / 200.0);
+                var currentZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(MapZoom);
+                var newZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(newZoom);
+
+                MapZoom += (float)(e.Delta / 200.0);
+
+                var deltaLon = (zoomCoordinates.Longitude - MapCenter.Longitude) * currentZoomFactor / newZoomFactor;
+                var deltaLat = (zoomCoordinates.Latitude - MapCenter.Latitude) * currentZoomFactor / newZoomFactor;
+
+                MapCenter = new GeoCoordinate(zoomCoordinates.Latitude - deltaLat, zoomCoordinates.Longitude - deltaLon);
+                MapZoom = newZoom;
 
                 ResumeNotifyMapViewChanged();
             }
@@ -886,15 +895,6 @@ namespace OsmSharp.Wpf.UI
                 _customLayers.Remove(item);
             }
         }
-
-        //public void GoTo(GeoCoordinate center, float zoom = float.NaN)
-        //{
-            
-        //}
-        //public void GoTo(GeoCoordinateBox box)
-        //{
-
-        //}
 
         #endregion methods
 
