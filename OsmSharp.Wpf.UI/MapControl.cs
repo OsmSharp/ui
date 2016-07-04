@@ -710,24 +710,28 @@ namespace OsmSharp.Wpf.UI
 
             if (MapAllowZoom)
             {
-                SuspendNotifyMapViewChanged();
-                
-                var zoomPosition = e.GetPosition(this);
-                var zoomCoordinates = _mapSceneManager.ToGeoCoordinates(zoomPosition);
-
                 var newZoom = MapZoom + (float)(e.Delta / 200.0);
-                var currentZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(MapZoom);
-                var newZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(newZoom);
+                if (newZoom >= MapMinZoomLevel && newZoom <= MapMaxZoomLevel)
+                {
+                    SuspendNotifyMapViewChanged();
 
-                MapZoom += (float)(e.Delta / 200.0);
+                    var zoomPosition = e.GetPosition(this);
+                    var zoomCoordinates = _mapSceneManager.ToGeoCoordinates(zoomPosition);
 
-                var deltaLon = (zoomCoordinates.Longitude - MapCenter.Longitude) * currentZoomFactor / newZoomFactor;
-                var deltaLat = (zoomCoordinates.Latitude - MapCenter.Latitude) * currentZoomFactor / newZoomFactor;
+                    var currentZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(MapZoom);
+                    var newZoomFactor = _mapSceneManager.Map.Projection.ToZoomFactor(newZoom);
 
-                MapCenter = new GeoCoordinate(zoomCoordinates.Latitude - deltaLat, zoomCoordinates.Longitude - deltaLon);
-                MapZoom = newZoom;
+                    MapZoom += (float) (e.Delta/200.0);
 
-                ResumeNotifyMapViewChanged();
+                    var deltaLon = (zoomCoordinates.Longitude - MapCenter.Longitude)*currentZoomFactor/newZoomFactor;
+                    var deltaLat = (zoomCoordinates.Latitude - MapCenter.Latitude)*currentZoomFactor/newZoomFactor;
+
+                    MapCenter = new GeoCoordinate(zoomCoordinates.Latitude - deltaLat,
+                        zoomCoordinates.Longitude - deltaLon);
+                    MapZoom = newZoom;
+
+                    ResumeNotifyMapViewChanged();
+                }
             }
 
             StartHideToolTip();
