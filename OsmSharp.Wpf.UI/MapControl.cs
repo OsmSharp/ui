@@ -484,13 +484,18 @@ namespace OsmSharp.Wpf.UI
                 var offsetX = oldCenter.X - newCenter.X;
                 var offsetY = oldCenter.Y - newCenter.Y;
 
-                //var scale = _previewScene.Zoom / lastScene.Zoom;
+                var scale =  _mapSceneManager.Map.Projection.ToZoomFactor(scene.Zoom) / _mapSceneManager.Map.Projection.ToZoomFactor(scene.PreviousScene.Zoom);
+                var offsetXScale = (scene.PreviousScene.SceneImage.Width - renderSize.Width * scale) /2 / scale;
+                var offsetYScale = (scene.PreviousScene.SceneImage.Height - renderSize.Height * scale) /2 / scale;
 
+                context.PushTransform(new ScaleTransform(scale, scale));
+                context.PushTransform(new TranslateTransform(offsetXScale, offsetYScale));
                 context.PushTransform(new TranslateTransform(offsetX, offsetY));
-                //context.PushTransform(new ScaleTransform(scale, scale));
+
                 context.DrawImage(scene.PreviousScene.SceneImage, renderRect);
                 context.Pop();
-                //context.Pop();
+                context.Pop();
+                context.Pop();
             }
             if (scene.SceneImage != null)
             {

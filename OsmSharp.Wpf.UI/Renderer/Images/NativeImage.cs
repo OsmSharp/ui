@@ -61,7 +61,7 @@ namespace OsmSharp.Wpf.UI.Renderer.Images
 
             // Now since we have done the cleanup already there is nothing left
             // for the Finalizer to do. So lets tell the GC not to call it later.
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         /// <summary>
