@@ -575,20 +575,28 @@ namespace OsmSharp.Wpf.UI
 
                 var geo = _mapSceneManager.ToGeoCoordinates(_toolTipCoordinates.Value);
                 var obj = await _mapSceneManager.SearchPrimitiveAsync(geo, _toolTipCancellationTokenSource.Token);
-                if (obj != null && obj.ToolTip != null)
+                if (obj != null)
                 {
-                    if (obj.ToolTip is UIElement)
+                    var toolTip = obj.ToolTip;
+                    if (obj.ToolTipCreater != null)
                     {
-                        _toolTip.Child = (UIElement)obj.ToolTip;
+                        toolTip = obj.ToolTipCreater(toolTip);
                     }
-                    else
+                    if (toolTip != null)
                     {
-                        _toolTip.Child = new TextToolTipView { Text = obj.ToolTip.ToString() };
-                    }
+                        if (toolTip is UIElement)
+                        {
+                            _toolTip.Child = (UIElement) toolTip;
+                        }
+                        else
+                        {
+                            _toolTip.Child = new TextToolTipView {Text = toolTip.ToString()};
+                        }
 
-                    _toolTip.HorizontalOffset = _toolTipCoordinates.Value.X + 10;
-                    _toolTip.VerticalOffset = _toolTipCoordinates.Value.Y + 10;
-                    _toolTip.IsOpen = true;
+                        _toolTip.HorizontalOffset = _toolTipCoordinates.Value.X + 10;
+                        _toolTip.VerticalOffset = _toolTipCoordinates.Value.Y + 10;
+                        _toolTip.IsOpen = true;
+                    }
                 }
             }
         }
@@ -614,7 +622,6 @@ namespace OsmSharp.Wpf.UI
             StopToolTipSearch();
             StartToolTilSearch();
         }
-
         private void HideToolTip()
         {
             StopToolTipSearch();

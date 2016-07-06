@@ -197,4 +197,11 @@ namespace OsmSharp.UI
         /// <param name="newCenter"></param>
         public delegate void MapInitialized(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
 	}
+    
+    /// <summary>
+    /// Create toolTip
+    /// </summary>
+    /// <param name="toolTip"></param>
+    /// <returns></returns>
+    public delegate object ToolTipCreaterDelegate(object toolTip);
 }
