@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using OsmSharp.Math.Geo;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
@@ -191,13 +188,16 @@ namespace OsmSharp.Wpf.UI
         }
         public void Preview(GeoCoordinate cener, double zoom, Degree tilt)
         {
-            IsReady = false;
-            Map.Pause();
-            _previewScene = new MapRenderingScene(cener, zoom, tilt)
+            if (Map != null)
             {
-                PreviousScene = GetLastScene()
-            };
-            OnRenderScene(_previewScene);
+                IsReady = false;
+                Map.Pause();
+                _previewScene = new MapRenderingScene(cener, zoom, tilt)
+                {
+                    PreviousScene = GetLastScene()
+                };
+                OnRenderScene(_previewScene);
+            }
         }
         public void PreviewComplete()
         {
@@ -227,7 +227,6 @@ namespace OsmSharp.Wpf.UI
 
                 IsReady = true;
             }
-            
         }
         public void View(GeoCoordinate center, double zoom, Degree tilt)
         {
