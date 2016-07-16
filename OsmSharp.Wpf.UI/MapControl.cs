@@ -31,6 +31,8 @@ namespace OsmSharp.Wpf.UI
     {
         #region fields
 
+        private readonly GeoCoordinateBox MaxMapBoundingBox = new GeoCoordinateBox(new GeoCoordinate(-80, -180), new GeoCoordinate(80, 180));
+
         private readonly MapSceneManager _mapSceneManager;
         private readonly Stack<MapRenderingScene> _renderingScenes;
         private readonly object _renderingScenesLock = new object();
@@ -98,6 +100,10 @@ namespace OsmSharp.Wpf.UI
             _toolTipShowTimer.Tick += (sender, args) => ShowToolTip();
             _toolTipHideTimer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(500)};
             _toolTipHideTimer.Tick += (sender, args) => HideToolTip();
+
+            MapMinZoomLevel = 0;
+            MapMaxZoomLevel = 20;
+            MapBoundingBox = MaxMapBoundingBox;
         }
 
         #endregion constructors
@@ -404,6 +410,8 @@ namespace OsmSharp.Wpf.UI
 
             if (RenderSize.Width > 0 && RenderSize.Height > 0)
             {
+                var box = MapBoundingBox ?? MaxMapBoundingBox;
+
                 var scene = new MapRenderingScene(MapCenter, MapZoom, MapTilt);
                 var geoLeftTop = _mapSceneManager.ToGeoCoordinates(new Point(0, RenderSize.Height), scene);
                 var geoRightBottom = _mapSceneManager.ToGeoCoordinates(new Point(RenderSize.Width, 0), scene);
@@ -414,35 +422,35 @@ namespace OsmSharp.Wpf.UI
                 var width = geoRightBottom.Longitude - geoLeftTop.Longitude;
                 var height = geoRightBottom.Latitude - geoLeftTop.Latitude;
 
-                if (width < MapBoundingBox.DeltaLon)
+                if (width < box.DeltaLon)
                 {
-                    if (geoLeftTop.Longitude < MapBoundingBox.MinLon)
+                    if (geoLeftTop.Longitude < box.MinLon)
                     {
-                        lon += MapBoundingBox.MinLon - geoLeftTop.Longitude;
+                        lon += box.MinLon - geoLeftTop.Longitude;
                     }
-                    if (geoRightBottom.Longitude > MapBoundingBox.MaxLon)
+                    if (geoRightBottom.Longitude > box.MaxLon)
                     {
-                        lon += MapBoundingBox.MaxLon - geoRightBottom.Longitude;
-                    }
-                }
-                else
-                {
-                    lon = MapBoundingBox.Center.Longitude;
-                }
-                if (height < MapBoundingBox.DeltaLat)
-                {
-                    if (geoLeftTop.Latitude < MapBoundingBox.MinLat)
-                    {
-                        lat += MapBoundingBox.MinLat - geoLeftTop.Latitude;
-                    }
-                    if (geoRightBottom.Latitude > MapBoundingBox.MaxLat)
-                    {
-                        lat += MapBoundingBox.MaxLat - geoRightBottom.Latitude;
+                        lon += box.MaxLon - geoRightBottom.Longitude;
                     }
                 }
                 else
                 {
-                    lat = MapBoundingBox.Center.Latitude;
+                    lon = box.Center.Longitude;
+                }
+                if (height < box.DeltaLat)
+                {
+                    if (geoLeftTop.Latitude < box.MinLat)
+                    {
+                        lat += box.MinLat - geoLeftTop.Latitude;
+                    }
+                    if (geoRightBottom.Latitude > box.MaxLat)
+                    {
+                        lat += box.MaxLat - geoRightBottom.Latitude;
+                    }
+                }
+                else
+                {
+                    lat = box.Center.Latitude;
                 }
                 MapCenter = new GeoCoordinate(lat, lon);
             }
@@ -723,7 +731,16 @@ namespace OsmSharp.Wpf.UI
             if (MapAllowZoom)
             {
                 var newZoom = MapZoom + (float)(e.Delta / 200.0);
-                if (newZoom >= MapMinZoomLevel && newZoom <= MapMaxZoomLevel)
+                if (newZoom < MapMinZoomLevel)
+                {
+                    newZoom = MapMinZoomLevel;
+                }
+                if (newZoom > MapMaxZoomLevel)
+                {
+                    newZoom = MapMaxZoomLevel;
+                }
+
+                if (System.Math.Abs(newZoom - MapZoom) > 0.001)
                 {
                     SuspendNotifyMapViewChanged();
 
