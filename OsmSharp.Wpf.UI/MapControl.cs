@@ -843,6 +843,12 @@ namespace OsmSharp.Wpf.UI
         }
         public void NotifyMapViewChanged()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(NotifyMapViewChanged);
+                return;
+            }
+
             if (!_isSuspendNotifyMapViewChanged)
             {
                 IsReady = false;
@@ -853,18 +859,39 @@ namespace OsmSharp.Wpf.UI
 
         public void ZoomIn(float delta = 0.2f)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(()=> ZoomIn(delta));
+                return;
+            }
             MapZoom += delta;
         }
         public void ZoomOut(float delta = 0.2f)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ZoomOut(delta));
+                return;
+            }
             MapZoom -= delta;
         }
         public void ZoomToCoordinate(GeoCoordinate coordinate, float maxZoom = 19)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ZoomToCoordinate(coordinate, maxZoom));
+                return;
+            }
             ZoomToBox(coordinate.ToBox(), maxZoom);
         }
         public void ZoomToBox(GeoCoordinateBox box, float maxZoom = 19)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => ZoomToBox(box, maxZoom));
+                return;
+            }
+
             SuspendNotifyMapViewChanged();
 
             var currentView = _mapSceneManager.CreateView();
@@ -886,6 +913,12 @@ namespace OsmSharp.Wpf.UI
 
         public void ShowFullMap()
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(ShowFullMap);
+                return;
+            }
+
             SuspendNotifyMapViewChanged();
             MapCenter = MapBoundingBox.Center;
             MapZoom = MapMinZoomLevel;
