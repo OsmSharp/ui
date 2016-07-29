@@ -71,11 +71,16 @@ namespace OsmSharp.Wpf.UI
 
         #region methods
 
-        private MapRenderingScene GetLastScene()
+        private MapRenderingScene GetLastScene(bool isRendered = false)
         {
             lock (_historyLock)
             {
-                return _renderedScenes.LastOrDefault();
+                IEnumerable<MapRenderingScene> scenes = _renderedScenes;
+                if (isRendered)
+                {
+                    scenes = scenes.Where(s => s.SceneImage != null);
+                }
+                return scenes.LastOrDefault();
             }
         }
         private void RenderingSceneAsync(MapRenderingScene scene)
@@ -90,7 +95,12 @@ namespace OsmSharp.Wpf.UI
                 scene.SceneImage = image;
             }).ContinueWith((t, s) =>
             {
-                OnRenderScene((MapRenderingScene)s);
+                var currentScene = (MapRenderingScene) s;
+                var last = GetLastScene(true);
+                if (last == null || last == currentScene)
+                {
+                    OnRenderScene(currentScene);
+                }
             }, scene);    
         }
         private void MapChanged()
