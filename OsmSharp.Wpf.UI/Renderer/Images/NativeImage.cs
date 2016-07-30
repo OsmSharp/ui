@@ -78,10 +78,10 @@ namespace OsmSharp.Wpf.UI.Renderer.Images
 
             // Release the unmanaged resource in any case as they will not be 
             // released by GC
-            if (_image != null)
-            { // dispose of the native image.
-                Logging.Log.TraceEvent("NativeImage", TraceEventType.Information, "NativeImage dispose");
-            }
+            //if (_image != null)
+            //{ // dispose of the native image.
+            //    Logging.Log.TraceEvent("NativeImage", TraceEventType.Information, "NativeImage dispose");
+            //}
         }
 
         /// <summary>

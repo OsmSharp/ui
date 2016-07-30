@@ -46,6 +46,8 @@ namespace OsmSharp.Wpf.UI
 
         private bool _isSuspendNotifyMapViewChanged;
 
+        private readonly DispatcherTimer _mouseWeelTimer;
+
         private readonly Popup _toolTip;
         private readonly DispatcherTimer _toolTipShowTimer;
         private readonly DispatcherTimer _toolTipHideTimer;
@@ -87,6 +89,9 @@ namespace OsmSharp.Wpf.UI
             showFullMapBind.Executed += (sender, args) => ShowFullMap();
             showFullMapBind.CanExecute += (sender, args) => args.CanExecute = true;
             CommandBindings.Add(showFullMapBind);
+
+            _mouseWeelTimer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(500)};
+            _mouseWeelTimer.Tick += (sender, args) => MouseWeelComplete();
 
             _toolTip = new Popup
             {
@@ -478,6 +483,8 @@ namespace OsmSharp.Wpf.UI
                 {
                     //Console.WriteLine("_renderingScenes count = "+_renderingScenes.Count);
                     _renderingScenes.Push(scene);
+                    Logging.Log.TraceEvent("Wpf.MapControl.Action", TraceEventType.Information,
+                        $"OnRenderScene Push scene {scene.Center} {scene.Zoom} {scene.Tilt}");
                 }
                 Refresh();
             }
@@ -485,7 +492,7 @@ namespace OsmSharp.Wpf.UI
         private void RenderScene(DrawingContext context, Size renderSize, MapRenderingScene scene)
         {
             var renderRect = new Rect(renderSize);
-            if (scene.PreviousScene?.SceneImage != null)
+            if (scene.SceneImage == null && scene.PreviousScene?.SceneImage != null)
             {
                 var newCenter = _mapSceneManager.ToPixels(scene.Center, scene.PreviousScene);
                 var oldCenter = _mapSceneManager.ToPixels(scene.PreviousScene.Center, scene.PreviousScene);
@@ -560,6 +567,14 @@ namespace OsmSharp.Wpf.UI
 
                 ResumeNotifyMapViewChanged();
             }
+        }
+
+        private void MouseWeelComplete()
+        {
+            _mouseWeelTimer.Stop();
+            AdjustMapScene();
+            _mapSceneManager.PreviewComplete();
+            ResumeNotifyMapViewChanged(false);
         }
 
         private void StartShowToolTip()
@@ -759,7 +774,12 @@ namespace OsmSharp.Wpf.UI
                         zoomCoordinates.Longitude - deltaLon);
                     MapZoom = newZoom;
 
-                    ResumeNotifyMapViewChanged();
+                    Logging.Log.TraceEvent("Wpf.MapControl.Action", TraceEventType.Information,
+                       $"MouseWheel to {MapCenter} {MapZoom} {MapTilt}");
+
+                    _mapSceneManager.Preview(MapCenter, MapZoom, MapTilt);
+                    _mouseWeelTimer.Stop();
+                    _mouseWeelTimer.Start();
                 }
             }
 

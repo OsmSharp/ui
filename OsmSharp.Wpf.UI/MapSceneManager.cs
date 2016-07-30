@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 using OsmSharp.UI;
 using OsmSharp.UI.Map;
@@ -85,23 +86,35 @@ namespace OsmSharp.Wpf.UI
         }
         private void RenderingSceneAsync(MapRenderingScene scene)
         {
-            Task.Run(() =>
+            Task.Factory.StartNew(state =>
             {
+                var taskScene = (MapRenderingScene) state;
                 var context = new RenderContext(SceneSize);
-                _renderer.Render(context, Map, CreateView(scene),
-                    (float)Map.Projection.ToZoomFactor(scene.Zoom));
+                _renderer.Render(context, Map, CreateView(taskScene),
+                    (float) Map.Projection.ToZoomFactor(taskScene.Zoom));
                 var image = context.BuildScene();
                 image.Freeze();
-                scene.SceneImage = image;
-            }).ContinueWith((t, s) =>
+                taskScene.SceneImage = image;
+                Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information,
+                    $"RenderingSceneAsync rendered image {taskScene.Center} {taskScene.Zoom} {taskScene.Tilt}");
+                return taskScene;
+            }, scene).ContinueWith(t =>
             {
-                var currentScene = (MapRenderingScene) s;
-                var last = GetLastScene(true);
+                var currentScene = t.Result;
+                var last = GetLastScene();
+
                 if (last == null || last == currentScene)
                 {
+                    Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information,
+                        $"RenderingSceneAsync OnRenderScene {currentScene.Center} {currentScene.Zoom} {currentScene.Tilt}");
                     OnRenderScene(currentScene);
                 }
-            }, scene);    
+                else
+                {
+                    Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information,
+                        $"RenderingSceneAsync nofting OnRenderScene {currentScene.Center} {currentScene.Zoom} {currentScene.Tilt}");
+                }
+            });
         }
         private void MapChanged()
         {
@@ -200,6 +213,7 @@ namespace OsmSharp.Wpf.UI
         {
             if (Map != null)
             {
+                Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information, $"Preview {cener} {zoom} {tilt}");
                 IsReady = false;
                 Map.Pause();
                 _previewScene = new MapRenderingScene(cener, zoom, tilt)
@@ -231,11 +245,14 @@ namespace OsmSharp.Wpf.UI
                     var view = CreateView(newScene);
                     Map.ViewChanged((float)Map.Projection.ToZoomFactor(newScene.Zoom), newScene.Center, view,
                         view);
+
+                    Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information, $"PreviewComplete begin rendering {newScene.Center} {newScene.Zoom} {newScene.Tilt}");
                     RenderingSceneAsync(newScene);
                 }
                 _previewScene = null;
 
                 IsReady = true;
+                Logging.Log.TraceEvent("Wpf.MapSceneManager.Action", TraceEventType.Information, $"PreviewComplete {newScene.Center} {newScene.Zoom} {newScene.Tilt}");
             }
         }
         public void View(GeoCoordinate center, double zoom, Degree tilt)

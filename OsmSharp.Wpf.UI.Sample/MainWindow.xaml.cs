@@ -30,9 +30,9 @@ namespace OsmSharp.Wpf.UI.Sample
 
             Native.Initialize();
 
-            //OsmSharp.Logging.Log.Enable();
-            //OsmSharp.Logging.Log.RegisterListener(
-            //    new DebugTraceListener());
+            OsmSharp.Logging.Log.Enable();
+            OsmSharp.Logging.Log.RegisterListener(
+                new DebugTraceListener());
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
