@@ -223,10 +223,12 @@ namespace OsmSharp.UI.Map.Layers
 
                     request.BeginGetResponse(new AsyncCallback((iar) =>
                     {
-						var response = (HttpWebResponse)((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
+                        HttpWebResponse response = null;
                         try
                         {
-							this.Response(response, tile);
+                            response = ((HttpWebRequest)iar.AsyncState).EndGetResponse(iar);
+
+                            this.Response(response, tile);
 
 							_loading.Remove(tile);
                         }
@@ -275,7 +277,7 @@ namespace OsmSharp.UI.Map.Layers
                         }
 						finally 
 						{
-							response.Close();
+							response?.Close();
 						}
                     }), request);
 			}
