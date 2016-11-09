@@ -1,7 +1,7 @@
 OsmSharp
 ========
 
-This repository is not maintained anymore. Check [osmsharp.com](http://www.osmsharp.com/) for more info.
+**This repository is not maintained anymore. Check [osmsharp.com](http://www.osmsharp.com/) for more info.**
 
 From the website:
 
