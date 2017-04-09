@@ -263,61 +263,68 @@ namespace OsmSharp.Wpf.UI
 
         public async Task<Primitive2D> SearchPrimitiveAsync(GeoCoordinate coordinate, CancellationToken cancellationToken)
         {
-            return await Task.Run(() =>
+            try
             {
-                var scene = CurrentScene;
-                var zoomFactor = (float) Map.Projection.ToZoomFactor(scene.Zoom);
-                var view = CreateView(CurrentScene);
-                var point = ToPixels(coordinate, scene);
-                var backColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
-                var objs = new List<Primitive2D>();
-
-                for (int i = 0; i < Map.LayerCount; i++)
+                return await Task.Run(() =>
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return null;
-                    }
-                    var layer = Map[i];
-                    if (layer.IsLayerVisibleFor((float) scene.Zoom))
-                    {
-                        objs.AddRange(layer.Get(zoomFactor, view));
-                    }
-                }
-                objs.Reverse();
+                    var scene = CurrentScene;
+                    var zoomFactor = (float)Map.Projection.ToZoomFactor(scene.Zoom);
+                    var view = CreateView(CurrentScene);
+                    var point = ToPixels(coordinate, scene);
+                    var backColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
+                    var objs = new List<Primitive2D>();
 
-                foreach (var obj in objs.Where(o => o.ToolTip != null))
-                {
-                    if (cancellationToken.IsCancellationRequested)
+                    for (int i = 0; i < Map.LayerCount; i++)
                     {
-                        return null;
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return null;
+                        }
+                        var layer = Map[i];
+                        if (layer.IsLayerVisibleFor((float)scene.Zoom))
+                        {
+                            objs.AddRange(layer.Get(zoomFactor, view));
+                        }
                     }
+                    objs.Reverse();
 
-                    var context = new RenderContext(SceneSize);
-                    _renderer.SceneRenderer.Render(context, view, zoomFactor, new[] {obj}, backColor);
-                    var image = context.BuildScene();
-                    image.Freeze();
+                    foreach (var obj in objs.Where(o => o != null && o.ToolTip != null))
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return null;
+                        }
 
-                    int bytePerPixel = (image.Format.BitsPerPixel + 7)/8;
-                    int stride = image.PixelWidth*bytePerPixel;
-                    byte[] data = new byte[stride*image.PixelHeight];
-                    image.CopyPixels(data, stride, 0);
+                        var context = new RenderContext(SceneSize);
+                        _renderer.SceneRenderer.Render(context, view, zoomFactor, new[] { obj }, backColor);
+                        var image = context.BuildScene();
+                        image.Freeze();
+
+                        int bytePerPixel = (image.Format.BitsPerPixel + 7) / 8;
+                        int stride = image.PixelWidth * bytePerPixel;
+                        byte[] data = new byte[stride * image.PixelHeight];
+                        image.CopyPixels(data, stride, 0);
 
                     //Pbgra32
                     var pixel = new byte[bytePerPixel];
-                    var offset = stride*(int) point.Y + (int) point.X*bytePerPixel;
+                        var offset = stride * (int)point.Y + (int)point.X * bytePerPixel;
 
-                    for (int i = 0; i < bytePerPixel; i++)
-                    {
-                        pixel[i] = data[offset + i];
+                        for (int i = 0; i < bytePerPixel; i++)
+                        {
+                            pixel[i] = data[offset + i];
+                        }
+                        if (pixel.Any(p => p != 0))
+                        {
+                            return obj;
+                        }
                     }
-                    if (pixel.Any(p => p != 0))
-                    {
-                        return obj;
-                    }
-                }
+                    return null;
+                }, cancellationToken);
+            }
+            catch(TaskCanceledException)
+            {
                 return null;
-            }, cancellationToken);
+            }
         }
 
         #endregion methods

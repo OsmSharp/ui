@@ -590,12 +590,12 @@ namespace OsmSharp.Wpf.UI
                 _toolTipHideTimer.Start();
             }
         }
-        private async void StartToolTilSearch()
+        private async void StartToolTipSearch()
         {
             if (_toolTipCoordinates != null)
             {
                 _toolTipCancellationTokenSource = new CancellationTokenSource();
-
+                
                 var geo = _mapSceneManager.ToGeoCoordinates(_toolTipCoordinates.Value);
                 var obj = await _mapSceneManager.SearchPrimitiveAsync(geo, _toolTipCancellationTokenSource.Token);
                 if (obj != null)
@@ -643,7 +643,7 @@ namespace OsmSharp.Wpf.UI
         {
             _toolTipShowTimer.Stop();
             StopToolTipSearch();
-            StartToolTilSearch();
+            StartToolTipSearch();
         }
         private void HideToolTip()
         {
